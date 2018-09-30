@@ -1,0 +1,385 @@
+---
+title: colab
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "Module support for Collaborative Filtering"
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Collaborative-filtering">Collaborative filtering<a class="anchor-link" href="#Collaborative-filtering">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This package contains all the necessary functions to quickly train a model for a collaborative filtering task.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Overview">Overview<a class="anchor-link" href="#Overview">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Collaborative filtering is when you're tasked to predict how much a user is going to like a certain item. The fastai library contains a <code>CollabFilteringDataset</code> class that will help you create datasets suitable for training, and a function <code>get_colab_learner</code> to build a simple model directly from a ratings table. Let's first see how we can get started before devling in the documentation.</p>
+<p>For our example, we'll use a small subset of the <a href="https://grouplens.org/datasets/movielens/">MovieLens</a> dataset. In there, we have to predict the rating a user gave a given movie (from 0 to 5). It comes in the form of a csv file where each line is the rating of a movie by a given person.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ratings</span> <span class="o">=</span> <span class="n">get_movie_lens</span><span class="p">()</span>
+<span class="n">ratings</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>userId</th>
+      <th>movieId</th>
+      <th>rating</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>73</td>
+      <td>1097</td>
+      <td>4.0</td>
+      <td>1255504951</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>561</td>
+      <td>924</td>
+      <td>3.5</td>
+      <td>1172695223</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>157</td>
+      <td>260</td>
+      <td>3.5</td>
+      <td>1291598691</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>358</td>
+      <td>1210</td>
+      <td>5.0</td>
+      <td>957481884</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>130</td>
+      <td>316</td>
+      <td>2.0</td>
+      <td>1138999234</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We'll first turn the <code>userId</code> and <code>movieId</code> columns in category codes, so that we can replace them with their codes when it's time to feed them to an <code>Embedding</code> layer. This step would be even more important if our csv had names of users, or names of items in it.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">series2cat</span><span class="p">(</span><span class="n">ratings</span><span class="p">,</span> <span class="s1">&#39;userId&#39;</span><span class="p">,</span><span class="s1">&#39;movieId&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now that this step is done, we can directly create a <code>Learner</code> object:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">get_collab_learner</span><span class="p">(</span><span class="n">ratings</span><span class="p">,</span> <span class="n">n_factors</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">pct_val</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">min_score</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_score</span><span class="o">=</span><span class="mf">5.</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And the immediately begin training</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">5e-3</span><span class="p">,</span> <span class="n">wd</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="0a33bee7-58c3-449e-9d6f-61752ee49f32"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#0a33bee7-58c3-449e-9d6f-61752ee49f32');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Total time: 00:02
+epoch  train loss  valid loss
+0      2.347037    1.848229    (00:00)
+1      1.074374    0.703097    (00:00)
+2      0.727364    0.668684    (00:00)
+3      0.628840    0.661857    (00:00)
+4      0.572673    0.659882    (00:00)
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=CollabFilteringDataset></a><code>class</code> <code>CollabFilteringDataset</code></h2>
+<blockquote><p><code>CollabFilteringDataset</code>(<code>user</code>:<code>Series</code>, <code>item</code>:<code>Series</code>, <code>ratings</code>:<code>ndarray</code>) :: <a href="/data.html#DatasetBase"><code>DatasetBase</code></a>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L10">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is the basic class to buil a <code>Dataset</code> suitable for colaborative filtering. <code>user</code> and <code>item</code> should be categorical series that will be replaced with their codes internally and have the corresponding <code>ratings</code>. One of the factory methods will prepare the data in this format.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=from_df></a><code>from_df</code></h4>
+<blockquote><p><code>from_df</code>(<code>rating_df</code>:<code>DataFrame</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>) -&gt; <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L33">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Takes a <code>rating_df</code> ans splits it randomly for train and test following <code>pct_val</code> (unless it's None). <code>user_name</code>, <code>item_name</code> and <code>rating_name</code> give the names of the corresponding columns (defaults to the first, the second and the third column).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=from_csv></a><code>from_csv</code></h4>
+<blockquote><p><code>from_csv</code>(<code>csv_name</code>:<code>str</code>, <code>kwargs</code>) -&gt; <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L49">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Opens the file in <code>csv_name</code> as a <code>DataFrame</code> and feeds it to <code>show_doc.from_df</code> with the <code>kwargs</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-and-Learner">Model and <code>Learner</code><a class="anchor-link" href="#Model-and-Learner">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=EmbeddingDotBias></a><code>class</code> <code>EmbeddingDotBias</code></h3>
+<blockquote><p><code>EmbeddingDotBias</code>(<code>n_factors</code>:<code>int</code>, <code>n_users</code>:<code>int</code>, <code>n_items</code>:<code>int</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L55">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Creates a simple model with <code>Embedding</code> weights and biases for <code>n_users</code> and <code>n_items</code>, with <code>n_factors</code> latent factors. Takes the dot product of the embeddings and adds the bias, then feed the result to a sigmoid rescaled to go from <code>min_score</code> to <code>max_score</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=get_collab_learner></a><code>get_collab_learner</code></h4>
+<blockquote><p><code>get_collab_learner</code>(<code>ratings</code>:<code>DataFrame</code>, <code>n_factors</code>:<code>int</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>test</code>:<code>DataFrame</code>=<code>None</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>, <code>loss_fn</code>:<code>LossFunction</code>=<code>'mse_loss'</code>, <code>kwargs</code>) -&gt; <a href="/basic_train.html#Learner"><code>Learner</code></a>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L70">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Creates a <code>Learner</code> object built from the data in <code>ratings</code>, <code>pct_val</code>, <code>user_name</code>, <code>item_name</code>, <code>rating_name</code> to <code>CollabFilteringDataset</code>. Optionally, creates another <code>CollabFilteringDataset</code> for <code>test</code>. <code>kwargs</code> are fed to <code>DataBunch.create</code> with these datasets. The model is given by <code>EmbeddingDotBias</code> with <code>n_factors</code>, <code>min_score</code> and <code>max_score</code> (the numbers of users and items will be inferred from the data).</p>
+
+</div>
+</div>
+</div>
+</div>
+ 
+
