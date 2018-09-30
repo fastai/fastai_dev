@@ -192,8 +192,6 @@ XXX: travis-ci.org as well.
 
 ### PyPI
 
-(XXX: this is for test.pypi.org for now, will need a section for pypi.org)
-
 1. Build the package (source and wheel)
 
    ```
@@ -210,15 +208,13 @@ XXX: travis-ci.org as well.
 
 3. Test that the uploaded package is found and gets installed:
 
-   Test the webpage: [https://test.pypi.org/project/fastai/](https://test.pypi.org/project/fastai/)
+   Test the webpage: [https://pypi.org/project/fastai/](https://pypi.org/project/fastai/)
 
-   Test installation (use pypi.org for packages that aren't on test.pypi.org)
+   Test installation:
 
    ```
-   pip install --index-url https://test.pypi.org/simple/ --extra-index-url  https://pypi.org/simple/ fastai==1.0.0b4
+   pip install --index-url https://pypi.org/simple/ fastai==1.0.0b7
    ```
-
-   Hmm, it looks like it wants an explicit `fastai==1.0.0b5` argument, otherwise it tries to install `fastai-0.7`.
 
    XXX: May be add: `--force-reinstall` or manually remove preinstalled `fastai` first from your python installation: e.g. `python3.6/site-packages/fastai*`, run `python -m site` to find out the location.
 
@@ -277,7 +273,7 @@ shows nothing.
 2. Build the fastai package (include the `pytorch` channel, for `torch/` dependencies, and fastai test channel for `torchvision/fastai`):
 
    ```
-   conda-build ./conda/ -c pytorch -c fastai/label/test -c fastai/label/main
+   conda-build ./conda/ -c pytorch -c fastai/label/main
    ```
 
    If `conda-build` fails with:
