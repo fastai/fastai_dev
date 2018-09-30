@@ -15,49 +15,6 @@ summary: "Implements [mixup](https://arxiv.org/abs/1710.09412) training method"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
-<span class="o">%</span><span class="k">autoreload</span> 2
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>The autoreload extension is already loaded. To reload it, use:
-  %reload_ext autoreload
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.docs</span> <span class="k">import</span> <span class="o">*</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
@@ -99,20 +56,9 @@ summary: "Implements [mixup](https://arxiv.org/abs/1710.09412) training method"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
 </pre></div>
 
 </div>
@@ -142,10 +88,10 @@ summary: "Implements [mixup](https://arxiv.org/abs/1710.09412) training method"
 
  
  
-<div id="90c46676-52b2-4f6b-989a-d0b827ebc052"></div>
+<div id="34b5081e-b66b-4609-8f92-39172e37b2eb"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#90c46676-52b2-4f6b-989a-d0b827ebc052');
+var element = $('#34b5081e-b66b-4609-8f92-39172e37b2eb');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -157,28 +103,28 @@ var element = $('#90c46676-52b2-4f6b-989a-d0b827ebc052');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 01:48
-epoch  train loss  valid loss
-0      0.145979    0.120332    (00:05)
-1      0.108739    0.087095    (00:05)
-2      0.070191    0.067030    (00:05)
-3      0.052661    0.050815    (00:05)
-4      0.043482    0.052751    (00:05)
-5      0.030989    0.028319    (00:05)
-6      0.032012    0.032017    (00:05)
-7      0.028828    0.020024    (00:05)
-8      0.027663    0.019214    (00:05)
-9      0.021449    0.018527    (00:05)
-10     0.019079    0.020859    (00:05)
-11     0.013967    0.018244    (00:05)
-12     0.013730    0.019252    (00:05)
-13     0.016689    0.016771    (00:05)
-14     0.012292    0.024717    (00:05)
-15     0.014456    0.013594    (00:05)
-16     0.011270    0.040473    (00:05)
-17     0.011406    0.020919    (00:05)
-18     0.010532    0.020605    (00:05)
-19     0.012827    0.014805    (00:05)
+<pre>Total time: 00:47
+epoch  train loss  valid loss  accuracy
+0      0.133583    0.102363    0.961236  (00:02)
+1      0.082058    0.082410    0.972031  (00:02)
+2      0.069833    0.055543    0.981354  (00:02)
+3      0.066950    0.053367    0.981845  (00:02)
+4      0.048239    0.040258    0.984789  (00:02)
+5      0.044019    0.032995    0.987733  (00:02)
+6      0.033873    0.028625    0.988714  (00:02)
+7      0.032364    0.039206    0.981845  (00:02)
+8      0.031153    0.027577    0.989205  (00:02)
+9      0.029979    0.023575    0.990677  (00:02)
+10     0.023657    0.022094    0.991168  (00:02)
+11     0.021728    0.023140    0.990186  (00:02)
+12     0.021997    0.023602    0.989696  (00:02)
+13     0.024850    0.027446    0.991168  (00:02)
+14     0.017646    0.018759    0.991659  (00:02)
+15     0.018809    0.018319    0.991659  (00:02)
+16     0.018132    0.025562    0.990677  (00:02)
+17     0.015993    0.017342    0.991659  (00:02)
+18     0.011576    0.017541    0.991659  (00:02)
+19     0.012041    0.015857    0.993131  (00:02)
 
 </pre>
 </div>
@@ -217,8 +163,9 @@ epoch  train loss  valid loss
 <p>While this works very well, it’s not the fastest way we can do this and this is the first suggestion we will adjust. The main point that slows down this process is wanting two different batches at every iteration (which means loading twice the amount of images and applying to them the other data augmentation function). To avoid this slow down, ou be a little smarter and mixup a batch with a shuffled version of itself (this way the images mixed up are still different).</p>
 <p>Using the same parameter t for the whole batch is another suggestion we will modify. In our experiments, we noticed that the model can train faster if we draw a different <code>t</code> for every image in the batch (both options get to the same result in terms of accuracy, it’s just that one arrives there more slowly).
 The last trick we have to apply with this is that there can be some duplicates with this strategy: let’s say we decide to mix <code>image0</code> with <code>image1</code> then <code>image1</code> with <code>image0</code>, and that we draw <code>t=0.1</code> for the first, and <code>t=0.9</code> for the second. Then</p>
-<p><code>image0 * 0.1 + shuffle0 * (1-0.1) = image0 * 0.1 + image1 * 0.9</code>
-<code>image1 * 0.9 + shuffle1 * (1-0.9) = image1 * 0.9 + image0 * 0.1</code></p>
+<p><code>image0 * 0.1 + shuffle0 * (1-0.1) = image0 * 0.1 + image1 * 0.9</code></p>
+<p>and</p>
+<p><code>image1 * 0.9 + shuffle1 * (1-0.9) = image1 * 0.9 + image0 * 0.1</code></p>
 <p>will be the sames. Of course we have to be a bit unlucky but in practice, we saw there was a drop in accuracy by using this without removing those duplicates. To avoid them, the tricks is to replace the vector of parameters <code>t</code> we drew by:</p>
 <p><code>t = max(t, 1-t)</code></p>
 <p>The beta distribution with the two parameters equal is symmetric in any case, and this way we insure that the biggest coefficient is always near the first image (the non-shuffled batch).</p>
@@ -234,23 +181,10 @@ The last trick we have to apply with this is that there can be some duplicates w
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we will add <a href="/callbacks.mixup.html#MixUpCallback"><code>MixUpCallback</code></a> to our Learner so that it modifies our input and target accordingly.</p>
+<p>Now we will add <a href="/callbacks.mixup.html#MixUpCallback"><code>MixUpCallback</code></a> to our Learner so that it modifies our input and target accordingly. The <code>mixup</code> function does that for us behind the scene, with a few other tweaks detailed below.</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cb</span> <span class="o">=</span> <span class="n">MixUpCallback</span><span class="p">(</span><span class="n">learn</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -258,50 +192,8 @@ The last trick we have to apply with this is that there can be some duplicates w
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Before we train, we have to modify the loss so that it is compatible with Mixup.</p>
-<p>Pytorch was very careful to avoid one-hot encoding targets when it could, so it seems a bit of a drag to undo this. Fortunately for us, if the loss is a classic <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.cross_entropy">cross-entropy</a>, we have</p>
-<p><code>loss(output, new_target) = t * loss(output, target1) + (1-t) * loss(output, target2)</code></p>
-<p>so we won’t one-hot encode anything and just compute those two losses then do the linear combination.</p>
-<p>The class for using the new, mixup-adapted loss, is included in the <a href="/callbacks.mixup.html"><code>callbacks.mixup</code></a> module and we just need to call it when running fit.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span><span class="o">=</span><span class="n">MixUpLoss</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Training the net with Mixup improves our validation loss by x%!</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">cb</span><span class="p">)</span>
+<span class="n">learner</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span><span class="o">.</span><span class="n">mixup</span><span class="p">()</span>
+<span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -318,10 +210,10 @@ The last trick we have to apply with this is that there can be some duplicates w
 
  
  
-<div id="13b3c2ae-c845-41a3-abc2-a51ee86a0fdd"></div>
+<div id="9b32f4af-16fc-4dcb-81ba-f911aa8225b6"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#13b3c2ae-c845-41a3-abc2-a51ee86a0fdd');
+var element = $('#9b32f4af-16fc-4dcb-81ba-f911aa8225b6');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -333,23 +225,28 @@ var element = $('#13b3c2ae-c845-41a3-abc2-a51ee86a0fdd');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 01:27
-epoch  train loss  valid loss
-0      0.367593    0.164917    (00:05)
-1      0.346800    0.136051    (00:05)
-2      0.334471    0.111633    (00:05)
-3      0.324001    0.113102    (00:05)
-4      0.319147    0.093772    (00:05)
-5      0.311415    0.092217    (00:05)
-6      0.311161    0.087219    (00:05)
-7      0.304196    0.085166    (00:05)
-8      0.298274    0.073888    (00:05)
-9      0.304680    0.095128    (00:05)
-10     0.299359    0.082207    (00:05)
-11     0.303683    0.079501    (00:05)
-12     0.302099    0.070518    (00:05)
-13     0.303605    0.069616    (00:05)
-14     0.295498    0.089329    (00:05)
+<pre>Total time: 00:49
+epoch  train loss  valid loss  accuracy
+0      0.380133    0.202769    0.947498  (00:02)
+1      0.357177    0.171234    0.962218  (00:02)
+2      0.329518    0.115624    0.978901  (00:02)
+3      0.322647    0.114372    0.984789  (00:02)
+4      0.317570    0.100772    0.985280  (00:02)
+5      0.309182    0.086424    0.988714  (00:02)
+6      0.306099    0.089540    0.988714  (00:02)
+7      0.315323    0.096520    0.989696  (00:02)
+8      0.306009    0.091482    0.990677  (00:02)
+9      0.302448    0.087128    0.991168  (00:02)
+10     0.307314    0.082438    0.991659  (00:02)
+11     0.307111    0.095313    0.991168  (00:02)
+12     0.304113    0.083817    0.994112  (00:02)
+13     0.308068    0.089792    0.990677  (00:02)
+14     0.300224    0.069017    0.993621  (00:02)
+15     0.302404    0.080377    0.993621  (00:02)
+16     0.301102    0.077373    0.995093  (00:02)
+17     0.302036    0.094481    0.993621  (00:02)
+18     0.291388    0.083959    0.991168  (00:02)
+19     0.298604    0.082650    0.994112  (00:02)
 
 </pre>
 </div>
@@ -361,13 +258,8 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Use-by-calling-.mixup()-on-Learner">Use by calling .mixup() on Learner<a class="anchor-link" href="#Use-by-calling-.mixup()-on-Learner">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/callbacks.mixup.html"><code>MixUpCallback</code></a> module is integrated into the <a href="/basic_train.html#Learner"><code>Learner</code></a> so it can be applied by just calling .mixup() on the <a href="/basic_train.html#Learner"><code>Learner</code></a> object.</p>
+<p>Training the net with Mixup improves the best accuracy from 99.3% to 99.5% (which is a reduction in error rate of 29%!)</p>
+<p>Note that the validation loss is higher than without MixUp, because the model makes less confident predictions: without mixup, most precisions are very close to 0. or 1. (in terms of probability) whereas the model with MixUp will give predictions that are more nuanced. Be sure to know what is the thing you want to optimize (lower loss or better accuracy) before using it.</p>
 
 </div>
 </div>
@@ -377,20 +269,7 @@ epoch  train loss  valid loss
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">mixup</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">MixUpCallback</span><span class="p">,</span> <span class="n">doc_string</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -403,18 +282,12 @@ epoch  train loss  valid loss
 <div class="output_area">
 
 
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=MixUpCallback></a><code>class</code> <code>MixUpCallback</code></h2>
+<blockquote><p><code>MixUpCallback</code>(<code>learner</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/mixup.py#L7">[source]</a></p>
+</blockquote>
 
-
- 
- 
-<div id="3eebf311-2730-4b8b-b0a0-ca66989fed77"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#3eebf311-2730-4b8b-b0a0-ca66989fed77');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "82e3e19fe9c04370b8900928c36482e6", "version_major": 2, "version_minor": 0}
-</script>
 </div>
 
 </div>
@@ -425,12 +298,16 @@ var element = $('#3eebf311-2730-4b8b-b0a0-ca66989fed77');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Methods">Methods<a class="anchor-link" href="#Methods">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
+<p>Create a <code>Callback</code> for mixup on <code>learn</code> with a parameter <code>alpha</code> for the beta distribution. <code>stack_x</code> and <code>stack_y</code> determines if we stack our inputs/targets with the vector lambda drawn or do the linear combination (in general, we stack the inputs or ouputs when they correspond to categories or classes and do the linear combination otherwise).</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Methods">Methods<a class="anchor-link" href="#Methods">&#182;</a></h3>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -442,8 +319,9 @@ var element = $('#3eebf311-2730-4b8b-b0a0-ca66989fed77');
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_batch_begin></a><code>on_batch_begin</code></h4>
-<p><code>on_batch_begin</code>(<code>last_input</code>, <code>last_target</code>, <code>kwargs</code>)</p>
-<p>Set HP before the step is done. Returns xb, yb (which can allow us to modify the input at that step if needed) <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/mixup.py#L14">[source]</a></p>
+<blockquote><p><code>on_batch_begin</code>(<code>last_input</code>, <code>last_target</code>, <code>kwargs</code>)
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/mixup.py#L14">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -452,6 +330,29 @@ var element = $('#3eebf311-2730-4b8b-b0a0-ca66989fed77');
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Draws a vector of lambda following a beta distribution with <code>self.alpha</code> and operates the mixup on <code>last_input</code> and <code>last_target</code> according to <code>self.stack_x</code> and <code>self.stack_y</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Dealing-with-the-loss">Dealing with the loss<a class="anchor-link" href="#Dealing-with-the-loss">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We often have to modify the loss so that it is compatible with Mixup: pytorch was very careful to avoid one-hot encoding targets when it could, so it seems a bit of a drag to undo this. Fortunately for us, if the loss is a classic <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.cross_entropy">cross-entropy</a>, we have</p>
+<p><code>loss(output, new_target) = t * loss(output, target1) + (1-t) * loss(output, target2)</code></p>
+<p>so we won’t one-hot encode anything and just compute those two losses then do the linear combination.</p>
+<p>The following class is used to adapt the loss to mixup. Note that the <code>mixup</code> function will use it to change the <code>Learner.loss_fn</code> if necessary.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -462,9 +363,10 @@ var element = $('#3eebf311-2730-4b8b-b0a0-ca66989fed77');
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2><a id=MixUpLoss></a>class <code>MixUpLoss</code></h2>
-<p><code>MixUpLoss</code>(<code>crit</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
-<p>Adapts the loss function to go with mixup. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/mixup.py#L30">[source]</a></p>
+<h3><a id=MixUpLoss></a><code>class</code> <code>MixUpLoss</code></h3>
+<blockquote><p><code>MixUpLoss</code>(<code>crit</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/mixup.py#L30">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -474,31 +376,12 @@ var element = $('#3eebf311-2730-4b8b-b0a0-ca66989fed77');
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<p><code>forward</code>(<code>output</code>, <code>target</code>)</p>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/mixup.py#L37">[source]</a></p>
-
-</div>
-
-</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a loss function from <code>crit</code> that is compatible with MixUp.</p>
 
 </div>
 </div>
-
 </div>
 </div>
  
