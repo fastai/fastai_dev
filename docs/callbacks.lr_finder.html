@@ -19,19 +19,15 @@ summary: "Tools to help find the optimal learning rate for training"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Learning rate finder plots lr vs loss relationship for a <a href="/basic_train.html#Learner"><code>Learner</code></a>.<br>
-The idea is to reduce the amount of guesswork on picking a good starting learning rate.</p>
-<p><br></p>
+<p>Learning rate finder plots lr vs loss relationship for a <a href="/basic_train.html#Learner"><code>Learner</code></a>. The idea is to reduce the amount of guesswork on picking a good starting learning rate.</p>
 <p><strong>Overview:</strong></p>
 <ol>
 <li>First run lr_find <code>learn.lr_find()</code></li>
 <li>Plot the learning rate vs loss <code>learn.recorder.plot()</code></li>
-<li>Pick a learning rate before it diverges</li>
+<li>Pick a learning rate before it diverges then start training</li>
 </ol>
-<p><br></p>
 <p><strong>Technical Details:</strong> (first <a href="&#39;https://arxiv.org/abs/1506.01186&#39;">described</a> by Leslie Smith)</p>
-<blockquote><p>Train <a href="/text.learner.html#text.learner"><code>learner</code></a> over a epoch. Start with a very low <code>start_lr</code> and change it at each mini-batch until it reaches a very high <code>end_lr</code>. <a href="/basic_train.html#Recorder"><code>Recorder</code></a> will record the loss at each iteration. 
-Plot those losses against the learning rate to find the optimal value before it diverges.</p>
+<blockquote><p>Train <code>Learner</code> over a few iterations. Start with a very low <code>start_lr</code> and change it at each mini-batch until it reaches a very high <code>end_lr</code>. <a href="/basic_train.html#Recorder"><code>Recorder</code></a> will record the loss at each iteration. Plot those losses against the learning rate to find the optimal value before it diverges.</p>
 </blockquote>
 
 </div>
@@ -48,8 +44,7 @@ Plot those losses against the learning rate to find the optimal value before it 
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.docs</span> <span class="k">import</span> <span class="o">*</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">simple_learner</span><span class="p">():</span> <span class="k">return</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
 <span class="n">learn</span> <span class="o">=</span> <span class="n">simple_learner</span><span class="p">()</span>
 </pre></div>
@@ -61,7 +56,8 @@ Plot those losses against the learning rate to find the optimal value before it 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="1.-First-run-lr_find">1. First run <a href="/train.html#lr_find"><code>lr_find</code></a><a class="anchor-link" href="#1.-First-run-lr_find">&#182;</a></h4>
+<p>First we run this command to launch the search.</p>
+
 </div>
 </div>
 </div>
@@ -87,13 +83,13 @@ Plot those losses against the learning rate to find the optimal value before it 
 
  
  
-<div id="84558fde-bd4d-486f-8ed0-7b4611f6b881"></div>
+<div id="04656f1c-bcba-4170-b201-328d259c6c30"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#84558fde-bd4d-486f-8ed0-7b4611f6b881');
+var element = $('#04656f1c-bcba-4170-b201-328d259c6c30');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "3d386fa275364df2bcbc8e929d04dce9", "version_major": 2, "version_minor": 0}
+{"model_id": "921a0bf5331a4979a55afab37499013b", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -105,7 +101,8 @@ var element = $('#84558fde-bd4d-486f-8ed0-7b4611f6b881');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="2.-Plot-the-learning-rate-vs-loss">2. Plot the learning rate vs loss<a class="anchor-link" href="#2.-Plot-the-learning-rate-vs-loss">&#182;</a></h4>
+<p>Then we plot the loss versus the learning rates. We're interested in finding a good order of magnitude of learning rate, so we plot with a log scale.</p>
+
 </div>
 </div>
 </div>
@@ -142,22 +139,14 @@ var element = $('#84558fde-bd4d-486f-8ed0-7b4611f6b881');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="3.-Choose-a-value-just-before-the-minimum">3. Choose a value just before the minimum<a class="anchor-link" href="#3.-Choose-a-value-just-before-the-minimum">&#182;</a></h4><p>Minimum value is on the edge improving and diverging so it is too high.<br>
-Ideally an order of magnitude before, a value that's still aggressive (for quicker training) but still safer from exploding. 
-(In the example case 1e-1)</p>
+<p>Then, we choose a value that is an order of magnitude before the mimum: the minimum value is on the edge diverging so it is too high. An order of magnitude before, a value that's still aggressive (for quicker training) but still safer from exploding. (In this example case 1e-1 is a good choice).</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="4.-Start-training">4. Start training<a class="anchor-link" href="#4.-Start-training">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Just right:</p>
+<p>Let's start training with this optimal value:</p>
 
 </div>
 </div>
@@ -184,10 +173,10 @@ Ideally an order of magnitude before, a value that's still aggressive (for quick
 
  
  
-<div id="55fbeffa-60d2-4fc1-bdc7-98dd18686c6d"></div>
+<div id="68c59ccf-acc0-4edb-ada1-0100f67bfd40"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#55fbeffa-60d2-4fc1-bdc7-98dd18686c6d');
+var element = $('#68c59ccf-acc0-4edb-ada1-0100f67bfd40');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -214,7 +203,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Too High (diverges):</p>
+<p>Picking the minimum isn't a good idea because training will diverge.</p>
 
 </div>
 </div>
@@ -241,10 +230,10 @@ epoch  train loss  valid loss
 
  
  
-<div id="6adf9e8a-c382-4537-b460-03b42f081afe"></div>
+<div id="0db9eb93-7771-4824-bd03-8887304f3161"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6adf9e8a-c382-4537-b460-03b42f081afe');
+var element = $('#0db9eb93-7771-4824-bd03-8887304f3161');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -271,7 +260,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Too low (too slow):</p>
+<p>Picking a value to far below the minimum isn't optimal because training is too slow.</p>
 
 </div>
 </div>
@@ -298,10 +287,10 @@ epoch  train loss  valid loss
 
  
  
-<div id="d8bb0b0b-2145-486c-be5f-f2350875991b"></div>
+<div id="a65b0c1a-8c56-4113-b143-b29b1041b6f5"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#d8bb0b0b-2145-486c-be5f-f2350875991b');
+var element = $('#a65b0c1a-8c56-4113-b143-b29b1041b6f5');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -336,9 +325,9 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=LRFinder></a><code>class</code> <code>LRFinder</code></h2>
-<blockquote><p><code>LRFinder</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>float</code>=<code>1e-05</code>, <code>end_lr</code>:<code>float</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>200</code>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a></p>
+<blockquote><p><code>LRFinder</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>float</code>=<code>1e-05</code>, <code>end_lr</code>:<code>float</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/lr_finder.py#L9">[source]</a></p>
 </blockquote>
-<p>Explore lr vs loss relationship for a learner <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/lr_finder.py#L9">[source]</a></p>
 
 </div>
 
@@ -350,7 +339,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/callbacks.lr_finder.html#LRFinder"><code>LRFinder</code></a></p>
+<p>Creates a <code>LRFinder</code> <code>Callback</code> for <code>learn</code> to go on a mock training from <code>start_lr</code> to <code>end_lr</code> for <code>num_it</code> iterations. Training is interrupted before the end of <code>num_it</code> if the losses diverge too early.</p>
 
 </div>
 </div>
