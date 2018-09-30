@@ -8,6 +8,9 @@ summary:
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Text">Text<a class="anchor-link" href="#Text">&#182;</a></h1>
@@ -21,31 +24,51 @@ summary:
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The <a href="/text.html#text"><code>text</code></a> module of the fastai library contains all the necessary functions to define a Dataset suitable for the various NLP (Natural Language Processing) tasks and quickly generate models you can use for them. Specifically:</p>
 <ul>
-<li><a href="/vision.transform.html#vision.transform"><code>text.transform</code></a> contains all the scripts to preprocess your data, from raw text to token ids,</li>
-<li><a href="/vision.data.html#vision.data"><code>text.data</code></a> contains the definition of <a href="/text.data.html#TextDataset"><code>TextDataset</code></a>, which the main class you'll need in NLP,</li>
-<li><a href="/vision.learner.html#vision.learner"><code>text.learner</code></a> contains helper functions to quickly create a language model or an RNN classifier.</li>
+<li><a href="/text.transform.html#text.transform"><code>text.transform</code></a> contains all the scripts to preprocess your data, from raw text to token ids,</li>
+<li><a href="/text.data.html#text.data"><code>text.data</code></a> contains the definition of <a href="/text.data.html#TextDataset"><code>TextDataset</code></a>, which the main class you'll need in NLP,</li>
+<li><a href="/text.learner.html#text.learner"><code>text.learner</code></a> contains helper functions to quickly create a language model or an RNN classifier.</li>
 </ul>
+<p>Have a look at the links above for full details of the API of each module, of read on for a quick overview.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Quick-introduction-to-NLP">Quick introduction to NLP<a class="anchor-link" href="#Quick-introduction-to-NLP">&#182;</a></h2>
+<h2 id="Quick-Start:-Training-an-IMDb-sentiment-model-with-ULMFiT">Quick Start: Training an IMDb sentiment model with <em>ULMFiT</em><a class="anchor-link" href="#Quick-Start:-Training-an-IMDb-sentiment-model-with-ULMFiT">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's start with a quick end-to-end example of training a model. We'll train a sentiment classifer on a sample of the popular IMDb data, showing 4 steps:</p>
+<ol>
+<li>Reading and viewing the IMDb data</li>
+<li>Getting your data ready for modeling</li>
+<li>Fine-tuning a language model</li>
+<li>Building a classifier</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Reading-and-viewing-the-IMDb-data">Reading and viewing the IMDb data<a class="anchor-link" href="#Reading-and-viewing-the-IMDb-data">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Contrary to images in Computer Vision, text can't directly be transformed into numbers to be fed into a model. The first thing we need to do is to preprocess our data so that we change the raw texts to lists of words, or tokens (a step that is called tokenization) then transform these tokens into numbers (a step that is called numericalization). These numbers are then passed to embedding layers that wil convert them in arrays of floats before passing them through a model.</p>
-<p>You can find on the web plenty of <a href="https://en.wikipedia.org/wiki/Word_embedding">Word Embeddings</a> to directly convert your tokens into floats. Those word embeddings have generally be trained on a large corpus such as wikipedia. Following the work of <a href="https://arxiv.org/abs/1801.06146">ULMFit</a>, the fastai library is more focused on using pre-trained Language Models and fine-tuning them. Word embeddings are just vectors of 300 or 400 floats that somehow represent different words, but a pretrained language model not only has those, but has also been trained to get a representation of full sentences.</p>
-<p>That's why the library is structured around three things:</p>
-<ul>
-<li>get your data preprocessed and ready to use in a minimum amount of code,</li>
-<li>easily create a language model with pretrained weights that you can fine-tune to your dataset,</li>
-<li>easily create other models such as classifiers on top of the encoder of the language model.</li>
-</ul>
-<p>To show examples, we have created a small sample of the <a href="https://www.imdb.com/interfaces/">IMDB dataset</a> which contains 1,000 reviews of movies with labels (positive or negative).</p>
+<p>You can find on the web plenty of <a href="https://en.wikipedia.org/wiki/Word_embedding">Word Embeddings</a> to directly convert your tokens into floats. Those word embeddings have generally be trained on a large corpus such as wikipedia. Following the work of <a href="https://arxiv.org/abs/1801.06146">ULMFiT</a>, the fastai library is more focused on using pre-trained Language Models and fine-tuning them. Word embeddings are just vectors of 300 or 400 floats that represent different words, but a pretrained language model not only has those, but has also been trained to get a representation of full sentences and documents.</p>
+<p>That's why the library is structured around three steps:</p>
+<ol>
+<li>Get your data preprocessed and ready to use in a minimum amount of code,</li>
+<li>Create a language model with pretrained weights that you can fine-tune to your dataset,</li>
+<li>Create other models such as classifiers on top of the encoder of the language model.</li>
+</ol>
+<p>To show examples, we have provided a small sample of the <a href="https://www.imdb.com/interfaces/">IMDB dataset</a> which contains 1,000 reviews of movies with labels (positive or negative).</p>
 
 </div>
 </div>
@@ -56,9 +79,26 @@ summary:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">untar_imdb</span><span class="p">()</span>
+<span class="n">IMDB_PATH</span>
 </pre></div>
 
+    </div>
 </div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>PosixPath(&#39;../data/imdb_sample&#39;)</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -80,11 +120,11 @@ summary:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/imdb_sample/train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="o">/</span><span class="s1">&#39;train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -96,19 +136,6 @@ summary:
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -166,11 +193,11 @@ summary:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">classes</span> <span class="o">=</span> <span class="n">read_classes</span><span class="p">(</span><span class="s1">&#39;../data/imdb_sample/classes.txt&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">classes</span> <span class="o">=</span> <span class="n">read_classes</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="o">/</span><span class="s1">&#39;classes.txt&#39;</span><span class="p">)</span>
 <span class="n">classes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">classes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -193,10 +220,15 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To create a dataset, we can just use the <code>TextDataset.from_csv</code> method. It will automatically do the two step of preprocessing for us. There is more information about those two steps in <a href="/vision.transform.html#vision.transform"><code>text.transform</code></a> where you'll also find how to customize the tokenizer from the fastai defaults. Note that to execute this line, you need to download the english model of spacy, which can be done by typing</p>
+<h3 id="Getting-your-data-ready-for-modeling">Getting your data ready for modeling<a class="anchor-link" href="#Getting-your-data-ready-for-modeling">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To create a dataset, we can just use the <code>TextDataset.from_csv</code> method. It will automatically do the two step of preprocessing for us. There is more information about those two steps in <a href="/text.transform.html#text.transform"><code>text.transform</code></a> where you'll also find how to customize the tokenizer from the fastai defaults. Note that to execute this line, you need to download the english model of spacy, which can be done by typing in your terminal:</p>
 
 <pre><code>python -m spacy download en</code></pre>
-<p>in your terminal.</p>
 
 </div>
 </div>
@@ -206,78 +238,18 @@ summary:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_ds</span> <span class="o">=</span> <span class="n">TextDataset</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="s1">&#39;../data/imdb_sample/&#39;</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="n">Tokenizer</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_ds</span> <span class="o">=</span> <span class="n">TextDataset</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">)</span>
 </pre></div>
 
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Tokenizing train. This might take a while so you should grab a coffee.
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="784d4963-4fed-455a-9de8-89d4c7109101"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#784d4963-4fed-455a-9de8-89d4c7109101');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="1d45f4f5-10bc-45f1-9f65-0fbe11a79e82"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#1d45f4f5-10bc-45f1-9f65-0fbe11a79e82');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Numericalizing train.
-</pre>
-</div>
-</div>
-
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that to avoid redoing this step (which can be quite time-consuming if you have a very large dataset), the fastai library has created a 'tmp' directory in the folder given, to store the tokens (in _tok.npy files), the labels (in _lbl.npy files), the ids of the tokens (in _id.npy files) and the dictionary (itos.pkl). When you reexecute the line in the future, it will directly load those informations.</p>
-<p>To get a <a href="/data.html#DataBunch"><code>DataBunch</code></a> quickly, there are also several factory methods depending on how our data is structured. They are all detailed in <a href="/vision.data.html#vision.data"><code>transform.data</code></a>, here we'll use <a href="/text.data.html#text_data_from_csv"><code>text_data_from_csv</code></a>.</p>
+<p>Note that to avoid redoing this step (which can be quite time-consuming if you have a very large dataset), the fastai library has created a <code>tmp</code> directory in the folder given, to store the tokens (in <code>_tok.npy</code> files), the labels (in <code>_lbl.npy</code> files), the ids of the tokens (in <code>_id.npy</code> files) and the dictionary (<code>itos.pkl</code>). When you reexecute the line in the future, it will directly load that data.</p>
+<p>To get a <a href="/data.html#DataBunch"><code>DataBunch</code></a> quickly, there are also several factory methods depending on how our data is structured. They are all detailed in <a href="/text.data.html#text.data"><code>transform.data</code></a>, here we'll use <a href="/text.data.html#text_data_from_csv"><code>text_data_from_csv</code></a>.</p>
 
 </div>
 </div>
@@ -287,33 +259,34 @@ var element = $('#1d45f4f5-10bc-45f1-9f65-0fbe11a79e82');
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_lm</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../data/imdb_sample/&#39;</span><span class="p">),</span> <span class="n">tokenizer</span><span class="o">=</span><span class="n">Tokenizer</span><span class="p">(),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">lm_data</span><span class="p">)</span>
-<span class="n">data_clas</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../data/imdb_sample/&#39;</span><span class="p">),</span> <span class="n">tokenizer</span><span class="o">=</span><span class="n">Tokenizer</span><span class="p">(),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">classifier_data</span><span class="p">,</span> 
-                               <span class="n">vocab</span><span class="o">=</span><span class="n">data_lm</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Language model data</span>
+<span class="n">data_lm</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">lm_data</span><span class="p">)</span>
+<span class="c1"># Classifier model data</span>
+<span class="n">data_clas</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">classifier_data</span><span class="p">,</span> <span class="n">vocab</span><span class="o">=</span><span class="n">data_lm</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> was called behind the scenes for 'train.csv' and 'valid.csv' but as explained earlier, it only preprocessed the validation set since it had stored the result for the training set. The <code>data_func</code> argument here tells the <a href="/text.data.html#text_data_from_csv"><code>text_data_from_csv</code></a> function how to organize the data. In the first one, we prepare it for a language model, and in the second one, for a classifier (see the differences in <a href="/vision.data.html#vision.data"><code>text.data</code></a>).</p>
-<p>For the classifier, we also pass the vocabulary (correspondance ids to words) that we want to use: this is to ensure that <code>data_class</code> will use the same dictionary as <code>data_lm</code>.</p>
+<p>Note that <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> was called behind the scenes for <code>train.csv</code> and <code>valid.csv</code> but, as explained earlier, it only preprocessed the validation set, since it had stored the result for the training set. The <code>data_func</code> argument here tells the <a href="/text.data.html#text_data_from_csv"><code>text_data_from_csv</code></a> function how to organize the data. In the first one, we prepare it for a language model, and in the second one, for a classifier (see the differences in <a href="/text.data.html#text.data"><code>text.data</code></a>).</p>
+<p>For the classifier, we also pass the vocabulary (mapping from ids to words) that we want to use: this is to ensure that <code>data_clas</code> will use the same dictionary as <code>data_lm</code>.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Fine-tuning-a-language-model">Fine-tuning a language model<a class="anchor-link" href="#Fine-tuning-a-language-model">&#182;</a></h2>
+<h3 id="Fine-tuning-a-language-model">Fine-tuning a language model<a class="anchor-link" href="#Fine-tuning-a-language-model">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can use the <code>data_lm</code> object we created earlier to fine-tune a pretrained language model. <a href="http://www.fast.ai/">fast.ai</a> had an English model available that we can download; uncomment the following lines if you need to.</p>
+<p>We can use the <code>data_lm</code> object we created earlier to fine-tune a pretrained language model. <a href="http://www.fast.ai/">fast.ai</a> has an English model available that we can download.</p>
 
 </div>
 </div>
@@ -326,51 +299,7 @@ var element = $('#1d45f4f5-10bc-45f1-9f65-0fbe11a79e82');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">download_wt103_model</span><span class="p">()</span>
 </pre></div>
 
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="2994c9f1-6ece-4494-a7c0-87d4c47ce0c6"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#2994c9f1-6ece-4494-a7c0-87d4c47ce0c6');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "91013e75fece403ba85e909dbd4af3e9", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="3df1de3b-539a-4e7b-9680-077208db39cd"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#3df1de3b-539a-4e7b-9680-077208db39cd');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "79ff4fb4c51142459ca1e4297b116a28", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
+    </div>
 </div>
 </div>
 
@@ -391,7 +320,43 @@ var element = $('#3df1de3b-539a-4e7b-9680-077208db39cd');
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
+    </div>
 </div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="03af7e49-8d07-4e02-9ceb-e359ffb981cc"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#03af7e49-8d07-4e02-9ceb-e359ffb981cc');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Total time: 00:04
+epoch  train loss  valid loss  accuracy
+0      4.703722    4.206681    0.246971  (00:04)
+
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -412,7 +377,7 @@ var element = $('#3df1de3b-539a-4e7b-9680-077208db39cd');
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -426,10 +391,10 @@ var element = $('#3df1de3b-539a-4e7b-9680-077208db39cd');
 
  
  
-<div id="180733ad-1dec-4771-a720-c8c64eccddea"></div>
+<div id="17c5444b-97aa-49ff-bf4b-f5d95750bccd"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#180733ad-1dec-4771-a720-c8c64eccddea');
+var element = $('#17c5444b-97aa-49ff-bf4b-f5d95750bccd');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -472,14 +437,14 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">save_encoder</span><span class="p">(</span><span class="s1">&#39;ft_enc&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Building-a-classifier">Building a classifier<a class="anchor-link" href="#Building-a-classifier">&#182;</a></h2>
+<h3 id="Building-a-classifier">Building a classifier<a class="anchor-link" href="#Building-a-classifier">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -501,7 +466,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -515,10 +480,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="e0cdc86a-0e19-4ae6-8e40-4fdb10561ac3"></div>
+<div id="6efe49bd-fa80-4352-91b1-03c96c7560f2"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#e0cdc86a-0e19-4ae6-8e40-4fdb10561ac3');
+var element = $('#6efe49bd-fa80-4352-91b1-03c96c7560f2');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -558,7 +523,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mf">5e-3</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">5e-3</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -572,10 +537,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="fa7581ae-f744-4a17-a86b-5bc53683f887"></div>
+<div id="3b052b02-f8f9-435a-983f-0e68ef235922"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#fa7581ae-f744-4a17-a86b-5bc53683f887');
+var element = $('#3b052b02-f8f9-435a-983f-0e68ef235922');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -608,7 +573,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mf">2e-3</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="mf">2e-3</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -622,10 +587,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="8fe5766b-f31c-4a6a-8ce2-6835578c9d9d"></div>
+<div id="9680d2b7-49cc-438c-9f3b-5aec91bbaac7"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#8fe5766b-f31c-4a6a-8ce2-6835578c9d9d');
+var element = $('#9680d2b7-49cc-438c-9f3b-5aec91bbaac7');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
