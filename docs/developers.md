@@ -208,15 +208,16 @@ XXX: travis-ci.org as well.
 
 3. Test that the uploaded package is found and gets installed:
 
-   Test the webpage: [https://pypi.org/project/fastai/](https://pypi.org/project/fastai/)
-
    Test installation:
 
    ```
-   pip install --index-url https://pypi.org/simple/ fastai==1.0.0b7
+   pip install fastai==1.0.0b7
    ```
 
    XXX: May be add: `--force-reinstall` or manually remove preinstalled `fastai` first from your python installation: e.g. `python3.6/site-packages/fastai*`, run `python -m site` to find out the location.
+
+   If the install is not working, check the state of the package: [https://pypi.org/project/fastai/](https://pypi.org/project/fastai/)
+
 
 #### Various Helper Tools
 
@@ -326,27 +327,28 @@ But as shown in the previous section we also have to deal with several dependenc
 
 #### Uploading and Testing
 
-Adding the `--label` option tells conda to make the upload visible only to users who specify that label:
+Upload to the main channel:
 
    ```
-   anaconda upload /path/to/fastai-xxx.tar.bz2 -u fastai --label test
+   anaconda upload /path/to/fastai-xxx.tar.bz2 -u fastai
    ```
 
+If this is just a test release that shouldn't be visible to all, add the `--label test` option. And then only those who use `-c fastai/label/test` in `conda install` command will see this package.
 Any label name can be used. `main` is the only special, implicit label if none other is used.
 
 To test, see that you can find it:
 
    ```
-   conda search --override -c fastai/label/test fastai
+   conda search fastai
    ```
 
 and then validate that the installation works correctly:
 
    ```
-   conda install -c pytorch -c fastai/label/test fastai
+   conda install -c pytorch -c fastai fastai
    ```
 
-Once the testing is successful, copy all of the test package(s) back to the `main` label:
+Alternatively, if the package was first uploaded into a test label, once the testing is successful, copy all of the test package(s) back to the `main` label:
 
    ```
    anaconda label --copy test main
