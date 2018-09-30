@@ -85,8 +85,8 @@ entries:
       title: Overview
       url: applications.html
     - output: web
-      title: colab
-      url: colab.html
+      title: collab
+      url: collab.html
       subfolders:
       - output: web
         subfolderitems:
