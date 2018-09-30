@@ -1,0 +1,208 @@
+---
+title: colab
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "Module support for Collaborative Filtering"
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="colab">colab<a class="anchor-link" href="#colab">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Type an introduction of the package here.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Global-Variable-Definitions:">Global Variable Definitions:<a class="anchor-link" href="#Global-Variable-Definitions:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=ColabFilteringDataset></a><em>class</em> <code>ColabFilteringDataset</code></h3>
+<p>(<code>user</code>:<code>Series</code>, <code>item</code>:<code>Series</code>, <code>ratings</code>:<code>DataFrame</code>) -&gt; <code>NoneType</code> :: Inherits (<a href="fastai.data.html#DatasetBase"><code>DatasetBase</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/colab.py#L9">[source]</a></div></p>
+<p>Base dataset for collaborative filtering</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/colab.html#ColabFilteringDataset"><code>ColabFilteringDataset</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=from_csv></a><code>from_csv</code></h4>
+<p>(<code>csv_name</code>:<code>str</code>, <code>kwargs</code>) -&gt; <code>Tuple</code>[<code>str</code>, <code>str</code>]<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/colab.py#L47">[source]</a></div></p>
+<p>Splits a given table in a csv in a training and validation set</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>ColabFilteringDataset.from_csv</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=from_df></a><code>from_df</code></h4>
+<p>(<code>rating_df</code>:<code>DataFrame</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>) -&gt; <code>Tuple</code>[<code>str</code>, <code>str</code>]<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/colab.py#L32">[source]</a></div></p>
+<p>Splits a given dataframe in a training and validation set</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>ColabFilteringDataset.from_df</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=EmbeddingDotBias></a><em>class</em> <code>EmbeddingDotBias</code></h3>
+<p>(<code>n_factors</code>:<code>int</code>, <code>n_users</code>:<code>int</code>, <code>n_items</code>:<code>int</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/colab.py#L53">[source]</a></div></p>
+<p>Base model for callaborative filtering</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/colab.html#EmbeddingDotBias"><code>EmbeddingDotBias</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=forward></a><code>forward</code></h4>
+<p>(<code>users</code>:<code>LongTensor</code>, <code>items</code>:<code>LongTensor</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/colab.py#L62">[source]</a></div></p>
+<p>Should be overridden by all subclasses.</p>
+<p>.. note::
+    Although the recipe for forward pass needs to be defined within
+    this function, one should call the :class:<code>Module</code> instance afterwards
+    instead of this since the former takes care of running the
+    registered hooks while the latter silently ignores them.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>EmbeddingDotBias.forward</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=get_collab_learner></a><code>get_collab_learner</code></h4>
+<p>(<code>n_factors</code>:<code>int</code>, <code>data</code>:<a href="fastai.data.html#DataBunch"><code>DataBunch</code></a>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>, <code>loss_fn</code>:<code>Callable</code>[<code>Tensor</code>, <code>Tensor</code>, <code>OneEltTensor</code>]=<code>&lt;function mse_loss at 0x11bdebc80&gt;</code>, <code>kwargs</code>) -&gt; <a href="fastai.basic_train.html#Learner"><code>Learner</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/colab.py#L68">[source]</a></div></p>
+<p>Creates a Learner for collaborative filtering</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/colab.html#get_collab_learner"><code>get_collab_learner</code></a></p>
+
+</div>
+</div>
+</div>
+</div>
+ 
+

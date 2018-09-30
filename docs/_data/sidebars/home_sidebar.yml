@@ -1,0 +1,172 @@
+entries:
+- folders:
+  - folderitems:
+    - output: web
+      title: Overview
+      url: overview.html
+    - output: web
+      title: core
+      url: core.html
+    - output: web
+      title: torch_core
+      url: torch_core.html
+    - output: web
+      title: imports
+      url: imports.html
+    - output: web
+      title: data
+      url: data.html
+    - output: web
+      title: layers
+      url: layers.html
+      subfolders:
+      - output: web
+        subfolderitems:
+        - output: web
+          title: Overview
+          url: models.html
+        - output: web
+          title: models.rnn
+          url: models.rnn.html
+        - output: web
+          title: models.unet
+          url: models.unet.html
+        title: models
+    output: web
+    title: Core
+  - folderitems:
+    - output: web
+      title: Overview
+      url: training.html
+    - output: web
+      title: basic_train
+      url: basic_train.html
+    - output: web
+      title: train
+      url: train.html
+    - output: web
+      title: metrics
+      url: metrics.html
+    - output: web
+      title: callback
+      url: callback.html
+      subfolders:
+      - output: web
+        subfolderitems:
+        - output: web
+          title: Overview
+          url: callbacks.html
+        - output: web
+          title: HookCallback
+          url: callbacks.hooks.html
+        - output: web
+          title: MixedPrecision
+          url: callbacks.fp16.html
+        - output: web
+          title: OneCycleScheduler
+          url: callbacks.one_cycle.html
+        - output: web
+          title: LRFinder
+          url: callbacks.lr_finder.html
+        - output: web
+          title: MixUpCallback
+          url: callbacks.mixup.html
+        - output: web
+          title: RNNTrainer
+          url: callbacks.rnn.html
+        - output: web
+          title: GeneralScheduler
+          url: callbacks.general_sched.html
+        title: callbacks
+    output: web
+    title: Training
+  - folderitems:
+    - output: web
+      title: Overview
+      url: applications.html
+    - output: web
+      title: colab
+      url: colab.html
+      subfolders:
+      - output: web
+        subfolderitems:
+        - output: web
+          title: Overview
+          url: vision.html
+        - output: web
+          title: vision.learner
+          url: vision.learner.html
+        - output: web
+          title: vision.transform
+          url: vision.transform.html
+        - output: web
+          title: vision.image
+          url: vision.image.html
+        - output: web
+          title: vision.data
+          url: vision.data.html
+        title: vision
+      - output: web
+        subfolderitems:
+        - output: web
+          title: Overview
+          url: text.html
+        - output: web
+          title: text.learner
+          url: text.learner.html
+        - output: web
+          title: text.transform
+          url: text.transform.html
+        - output: web
+          title: text.data
+          url: text.data.html
+        title: text
+      - output: web
+        subfolderitems:
+        - output: web
+          title: Overview
+          url: tabular.html
+        - output: web
+          title: tabular.transform
+          url: tabular.transform.html
+        - output: web
+          title: tabular.data
+          url: tabular.data.html
+        title: tabular
+    output: web
+    title: Applications
+  - folderitems:
+    - output: web
+      title: Overview
+      url: gen_doc.html
+    - output: web
+      title: gen_doc.gen_notebooks
+      url: gen_doc.gen_notebooks.html
+    - output: web
+      title: gen_doc.sgen_notebooks
+      url: gen_doc.sgen_notebooks.html
+    - output: web
+      title: gen_doc.nbdoc
+      url: gen_doc.nbdoc.html
+    - output: web
+      title: gen_doc.convert2html
+      url: gen_doc.convert2html.html
+    output: web
+    title: Doc authoring
+  - folderitems:
+    - output: web
+      title: Overview
+      url: developers.html
+    - output: web
+      title: Typing
+      url: fastai_typing.html
+    - output: web
+      title: Style guide
+      url: style.html
+    - output: web
+      title: Abbreviation
+      url: abbr.html
+    output: web
+    title: Library development
+  output: web
+  title: Sidebar

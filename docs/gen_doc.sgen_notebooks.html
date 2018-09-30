@@ -1,0 +1,83 @@
+---
+title: gen_doc.sgen_notebooks
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "Script to generate notebooks and update html"
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="gen_doc.sgen_notebooks">gen_doc.sgen_notebooks<a class="anchor-link" href="#gen_doc.sgen_notebooks">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Type an introduction of the package here.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="http://docs.fast.ai/gen_doc.sgen_notebooks.html#update_notebooks"><code>update_notebooks</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Updating-docs-from-within-notebook:">Updating docs from within notebook:<a class="anchor-link" href="#Updating-docs-from-within-notebook:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="http://docs.fast.ai/gen_doc.sgen_notebooks.html#update_notebooks"><code>update_notebooks</code></a> can be run from the notebook.</p>
+<p>Default updates all notebooks in the fastai folder:</p>
+<div class="highlight"><pre><span></span><span class="n">update_notebooks</span><span class="p">()</span>
+</pre></div>
+<p>To update specific python file only + html also:</p>
+<div class="highlight"><pre><span></span><span class="n">update_notebooks</span><span class="p">(</span><span class="s1">&#39;../fastai/gen_doc/nbdoc.py&#39;</span><span class="p">,</span> <span class="n">update_html</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">create_missing</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Updating-notebooks-from-script:">Updating notebooks from script:<a class="anchor-link" href="#Updating-notebooks-from-script:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="http://docs.fast.ai/gen_doc.sgen_notebooks.html#update_notebooks"><code>update_notebooks</code></a> can be run as a script for convenience.</p>
+<p>Default updates all notebooks in the fastai folder:</p>
+<div class="highlight"><pre><span></span>python fastai/gen_doc/sgen_notebooks.py
+</pre></div>
+<p>Or from the tools folder</p>
+<div class="highlight"><pre><span></span>python tools/sgen_notebooks.py
+</pre></div>
+<p>To update specific python file only and html:</p>
+<div class="highlight"><pre><span></span>python fastai/gen_doc/sgen_notebooks.py fastai/vision/transform.py --update_html<span class="o">=</span>True --create-missing<span class="o">=</span>True
+</pre></div>
+<p>To link docs with no accompanying modules:</p>
+<div class="highlight"><pre><span></span>python tools/sgen_notebooks.py docs_src/index.ipynb --update_html<span class="o">=</span>True --update_nb_links<span class="o">=</span>True
+</pre></div>
+
+</div>
+</div>
+</div>
+</div>
+ 
+

@@ -1,0 +1,838 @@
+---
+title: core
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "`fastai.core` contains essential util functions to format and split data"
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="core">core<a class="anchor-link" href="#core">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Type an introduction of the package here.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Global-Variable-Definitions:">Global Variable Definitions:<a class="anchor-link" href="#Global-Variable-Definitions:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>AnnealFunc = Callable[[Number,Number,float], Number]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L6">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>ArgStar = Collection[Any]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L7">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>BatchSamples = Collection[Tuple[Collection[int], int]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L8">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>Classes = Collection[Any]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L9">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>FilePathList = Collection[Path]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L10">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>Floats = Union[float, Collection[float]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L11">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>ImgLabel = str</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L12">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>ImgLabels = Collection[ImgLabel]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L13">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>KWArgs = Dict[str,Any]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L15">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>KeyFunc = Callable[[int], int]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L14">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>ListOrItem = Union[Collection[Any],int,float,str]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L16">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>ListRules = Collection[Callable[[str],str]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L17">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>ListSizes = Collection[Tuple[int,int]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L18">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>NPArrayList = Collection[np.ndarray]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L20">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>NPArrayMask = np.ndarray</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L21">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>NPArrayableList = Collection[Union[np.ndarray, list]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L19">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>NPImage = np.ndarray</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L22">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>OptDataFrame = Optional[DataFrame]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L23">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>OptListOrItem = Optional[ListOrItem]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L24">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>OptRange = Optional[Tuple[float,float]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L25">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>OptStats = Optional[Tuple[np.ndarray, np.ndarray]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L27">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>OptStrList = Optional[StrList]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L38">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>OptStrTuple = Optional[Tuple[str,str]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L26">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>PBar = Union[MasterBar, ProgressBar]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L29">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>PathOrStr = Union[Path,str]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L28">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>Point=Tuple[float,float]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L30">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>Points=Collection[Point]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L31">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>Sizes = List[List[int]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L32">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>SplitArrayList = List[Tuple[np.ndarray,np.ndarray]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L33">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>StartOptEnd=Union[float,Tuple[float,float]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L34">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>StrList = Collection[str]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L35">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>Tokens = Collection[Collection[str]]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L36">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>default_cpus = min(16, num_cpus())</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L45">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=ItemBase></a><em>class</em> <code>ItemBase</code>()<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L138">[source]</a></div></h3>
+<p>All transformable dataset items use this type</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#ItemBase"><code>ItemBase</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=arrays_split></a><code>arrays_split</code></h4>
+<p>(<code>mask</code>:<code>ndarray</code>, <code>arrs</code>:<code>Collection</code>[<code>None</code>[<code>ndarray</code>, <code>list</code>]]) -&gt; <code>List</code>[<code>Tuple</code>[<code>ndarray</code>, <code>ndarray</code>]]<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L65">[source]</a></div></p>
+<p>Given <code>arrs</code> is [a,b,...] and <code>mask</code>index - return[(a[mask],a[~mask]),(b[mask],b[~mask]),...]</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#arrays_split"><code>arrays_split</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=camel2snake></a><code>camel2snake</code>(<code>name</code>:<code>str</code>) -&gt; <code>str</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L86">[source]</a></div></h4>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#camel2snake"><code>camel2snake</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=even_mults></a><code>even_mults</code></h4>
+<p>(<code>start</code>:<code>float</code>, <code>stop</code>:<code>float</code>, <code>n</code>:<code>int</code>) -&gt; <code>ndarray</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L90">[source]</a></div></p>
+<p>Build evenly stepped schedule from start to stop in n steps</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#even_mults"><code>even_mults</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=extract_kwargs></a><code>extract_kwargs</code></h4>
+<p>(<code>names</code>:<code>Collection</code>[<code>str</code>], <code>kwargs</code>:<code>Dict</code>[<code>str</code>, <code>Any</code>])<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L96">[source]</a></div></p>
+<p>Extracts the keys in names from the kwargs.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#extract_kwargs"><code>extract_kwargs</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=find_classes></a><code>find_classes</code></h4>
+<p>(<code>folder</code>:<code>Path</code>) -&gt; <code>Collection</code>[<code>Path</code>]<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L58">[source]</a></div></p>
+<p>Return class subdirectories in imagenet style train <code>folder</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#find_classes"><code>find_classes</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=get_chunk_length></a><code>get_chunk_length</code></h4>
+<p>(<code>csv_name</code>:<code>None</code>[<code>Path</code>, <code>str</code>], <code>chunksize</code>:<code>int</code>) -&gt; <code>int</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L113">[source]</a></div></p>
+<p>Reads the number of chunks in a pandas <code>DataFrame</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#get_chunk_length"><code>get_chunk_length</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=get_total_length></a><code>get_total_length</code></h4>
+<p>(<code>csv_name</code>:<code>None</code>[<code>Path</code>, <code>str</code>], <code>chunksize</code>:<code>int</code>) -&gt; <code>int</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L120">[source]</a></div></p>
+<p>Reads the the total length of a pandas <code>DataFrame</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#get_total_length"><code>get_total_length</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=idx_dict></a><code>idx_dict</code>(<code>a</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L56">[source]</a></div></h4>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#idx_dict"><code>idx_dict</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=ifnone></a><code>ifnone</code>(<code>a</code>:<code>bool</code>, <code>b</code>:<code>Any</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L51">[source]</a></div></h4>
+<p><code>a</code> if its not None, otherwise <code>b</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#ifnone"><code>ifnone</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=is_listy></a><code>is_listy</code>(<code>x</code>:<code>Any</code>) -&gt; <code>bool</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L47">[source]</a></div></h4>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#is_listy"><code>is_listy</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=is_tuple></a><code>is_tuple</code>(<code>x</code>:<code>Any</code>) -&gt; <code>bool</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L48">[source]</a></div></h4>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#is_tuple"><code>is_tuple</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=listify></a><code>listify</code></h4>
+<p>(<code>p</code>:<code>None</code>[<code>Collection</code>[<code>Any</code>], <code>int</code>, <code>float</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>q</code>:<code>None</code>[<code>Collection</code>[<code>Any</code>], <code>int</code>, <code>float</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L75">[source]</a></div></p>
+<p>Makes <code>p</code> same length as <code>q</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#listify"><code>listify</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=maybe_copy></a><code>maybe_copy</code></h4>
+<p>(<code>old_fnames</code>:<code>Collection</code>[<code>None</code>[<code>Path</code>, <code>str</code>]], <code>new_fnames</code>:<code>Collection</code>[<code>None</code>[<code>Path</code>, <code>str</code>]])<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L127">[source]</a></div></p>
+<p>Copies the <code>old_fnames</code> to <code>new_fnames</code> location if new_fnames don't exist or are less recent.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#maybe_copy"><code>maybe_copy</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=noop></a><code>noop</code>(<code>x</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L49">[source]</a></div></h4>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#noop"><code>noop</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=num_cpus></a><code>num_cpus</code>() -&gt; <code>int</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L40">[source]</a></div></h4>
+<p>Get number of cpus</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#num_cpus"><code>num_cpus</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=partition></a><code>partition</code></h4>
+<p>(<code>a</code>:<code>Collection</code>[<code>T_co</code>], <code>sz</code>:<code>int</code>) -&gt; <code>List</code>[<code>Collection</code>[<code>T_co</code>]]<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L105">[source]</a></div></p>
+<p>Splits iterables a in equal parts of size sz</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#partition"><code>partition</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=partition_by_cores></a><code>partition_by_cores</code></h4>
+<p>(<code>a</code>:<code>Collection</code>[<code>T_co</code>], <code>n_cpus</code>:<code>int</code>) -&gt; <code>List</code>[<code>Collection</code>[<code>T_co</code>]]<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L109">[source]</a></div></p>
+<p>Split data equally among CPU cores</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#partition_by_cores"><code>partition_by_cores</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=random_split></a><code>random_split</code></h4>
+<p>(<code>valid_pct</code>:<code>float</code>, <code>arrs</code>:<code>Collection</code>[<code>None</code>[<code>ndarray</code>, <code>list</code>]]) -&gt; <code>List</code>[<code>Tuple</code>[<code>ndarray</code>, <code>ndarray</code>]]<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L70">[source]</a></div></p>
+<p>Randomly <code>array_split</code> with <code>valid_pct</code> ratio. good for creating validation set.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#random_split"><code>random_split</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=series2cat></a><code>series2cat</code>(<code>df</code>:<code>DataFrame</code>, <code>col_names</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L134">[source]</a></div></h4>
+<p>Categorifies the columns in <code>df</code>.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#series2cat"><code>series2cat</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=uniqueify></a><code>uniqueify</code>(<code>x</code>:<code>Series</code>) -&gt; <code>List</code>[<code>Any</code>]<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/core.py#L55">[source]</a></div></h4>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/core.html#uniqueify"><code>uniqueify</code></a></p>
+
+</div>
+</div>
+</div>
+</div>
+ 
+

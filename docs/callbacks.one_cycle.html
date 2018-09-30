@@ -1,0 +1,146 @@
+---
+title: callbacks.one_cycle
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "Supports 1-Cycle style training"
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="callbacks.one_cycle">callbacks.one_cycle<a class="anchor-link" href="#callbacks.one_cycle">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Type an introduction of the package here.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Global-Variable-Definitions:">Global Variable Definitions:<a class="anchor-link" href="#Global-Variable-Definitions:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=OneCycleScheduler></a><em>class</em> <code>OneCycleScheduler</code></h3>
+<p>(<code>learn</code>:<a href="fastai.basic_train.html#Learner"><code>Learner</code></a>, <code>lr_max</code>:<code>float</code>, <code>moms</code>:<code>None</code>[<code>float</code>, <code>Collection</code>[<code>float</code>]]=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.5</code>) -&gt; <code>NoneType</code> :: Inherits (<a href="fastai.callback.html#Callback"><code>Callback</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/one_cycle.py#L8">[source]</a></div></p>
+<p>Manages 1-Cycle style traing as outlined in Leslie Smith's <a href="https://arxiv.org/pdf/1803.09820.pdf">paper</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/callbacks.one_cycle.html#OneCycleScheduler"><code>OneCycleScheduler</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=on_batch_end></a><code>on_batch_end</code>(<code>kwargs</code>:<code>Any</code>) -&gt; <code>NoneType</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/one_cycle.py#L36">[source]</a></div></h4>
+<p>Take one step forward on the annealing schedule for the optim params</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>OneCycleScheduler.on_batch_end</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
+<p>(<code>n_epochs</code>:<code>int</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <code>NoneType</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/one_cycle.py#L23">[source]</a></div></p>
+<p>Initialize our optimization params based on our annealing schedule</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>OneCycleScheduler.on_train_begin</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=steps></a><code>steps</code></h4>
+<p>(<code>steps_cfg</code>:<code>None</code>[<code>float</code>, <code>Tuple</code>[<code>float</code>, <code>float</code>]])<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/one_cycle.py#L18">[source]</a></div></p>
+<p>Build anneal schedule for all of the parameters</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>OneCycleScheduler.steps</code></p>
+
+</div>
+</div>
+</div>
+</div>
+ 
+

@@ -1,0 +1,164 @@
+---
+title: metrics
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "Implements various metrics to measure training accuracy"
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Training-metrics">Training metrics<a class="anchor-link" href="#Training-metrics">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><em>Metrics</em> for training fastai models are simply functions that take <code>input</code> and <code>target</code> tensors, and return some metric of interest for training. You can write your own metrics by defining a function of that type, and passing it to <a href="/basic_train.html#Learner"><code>Learner</code></a> in the [code]metrics[/code] parameter, or use one of the following pre-defined functions.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Predefined-metrics:">Predefined metrics:<a class="anchor-link" href="#Predefined-metrics:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=accuracy></a><code>accuracy</code></h4>
+<p><code>accuracy</code>(<code>input</code>:<code>Tensor</code>, <code>targs</code>:<code>Tensor</code>) -&gt; <code>OneEltTensor</code></p>
+<p>Accuracy <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/metrics.py#L31">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=accuracy_thresh></a><code>accuracy_thresh</code></h4>
+<p><code>accuracy_thresh</code>(<code>y_pred</code>:<code>Tensor</code>, <code>y_true</code>:<code>Tensor</code>, <code>thresh</code>:<code>float</code>=<code>0.5</code>, <code>sigmoid</code>:<code>bool</code>=<code>True</code>) -&gt; <code>OneEltTensor</code>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/metrics.py#L18">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Accuracy for multi-label models, based on comparing predictions to <code>thresh</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=dice></a><code>dice</code></h4>
+<p><code>dice</code>(<code>input</code>:<code>Tensor</code>, <code>targs</code>:<code>Tensor</code>) -&gt; <code>OneEltTensor</code></p>
+<p>Dice coefficient metric for binary target <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/metrics.py#L22">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=fbeta></a><code>fbeta</code></h4>
+<p><code>fbeta</code>(<code>y_pred</code>:<code>Tensor</code>, <code>y_true</code>:<code>Tensor</code>, <code>thresh</code>:<code>float</code>=<code>0.5</code>, <code>beta</code>:<code>float</code>=<code>2</code>, <code>eps</code>:<code>float</code>=<code>1e-09</code>, <code>sigmoid</code>:<code>bool</code>=<code>True</code>) -&gt; <code>OneEltTensor</code></p>
+<p>Computes the f_beta between preds and targets <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/metrics.py#L6">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>See the <a href="https://en.wikipedia.org/wiki/F1_score">F1 score wikipedia page</a> for details.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">exp_rmspe</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=exp_rmspe></a><code>exp_rmspe</code></h4>
+<p><code>exp_rmspe</code>(<code>pred</code>:<code>Tensor</code>, <code>targ</code>:<code>Tensor</code>) -&gt; <code>OneEltTensor</code>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/metrics.py#L38">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+ 
+

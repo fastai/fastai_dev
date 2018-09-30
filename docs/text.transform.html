@@ -1,0 +1,851 @@
+---
+title: text.transform
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "Module helps with formatting NLP data. Tokenizes text and creates vocab indexes"
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="NLP-Preprocessing">NLP Preprocessing<a class="anchor-link" href="#NLP-Preprocessing">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>text.tranform</code> module contains the function that deal behind the scenes with the two main tasks to prepare texts for the models: tokenization and numericalization.</p>
+<p>The first one consists in splitting the raw texts into tokens (wich can be words, or punctuation signs...). The most basic way to do this would be to separate according to spaces, but it's possible to be more subtle; for instance, the contractions like "isn't" or "don't" should be split in ["is","n't"] or ["do","n't"].</p>
+<p>The second one is easier as it just consists in attributing a unique id to each token and mapping each of those tokens to their respective ids.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Tokenization">Tokenization<a class="anchor-link" href="#Tokenization">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Main-class">Main class<a class="anchor-link" href="#Main-class">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This step is actually divided in two phases: first, we apply a certain list of <code>rules</code> to the raw texts as preprocessing, then we use the tokenizer to split them in lists of tokens. Combining together those <code>rules</code>, the <code>tok_func</code>and the <code>lang</code> to process the texts is the role of the <a href="/text.transform.html#Tokenizer"><code>Tokenizer</code></a> class.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=Tokenizer></a>class <code>Tokenizer</code></h3>
+<p><code>Tokenizer</code>(<code>tok_func</code>:<code>Callable</code>=<code>&lt;class 'fastai.text.transform.SpacyTokenizer'&gt;</code>, <code>lang</code>:<code>str</code>=<code>'en'</code>, <code>rules</code>:<code>Collection</code>[<code>Callable</code>[<code>str</code>, <code>str</code>]]=<code>None</code>, <code>special_cases</code>:<code>Collection</code>[<code>str</code>]=<code>None</code>, <code>n_cpus</code>:<code>int</code>=<code>None</code>)
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L77">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This class will process texts by appling them the <code>rules</code> then tokenizing them with <code>tok_func(lang)</code>. <code>special_cases</code> are a list of tokens passed as special to the tokenizer and <code>n_cpus</code> is the number of cpus to use for multi-processing (by default, half the cpus available). We don't directly pass a tokenizer for multi-processing purposes: each process needs to initiate a tokenizer of its own. The rules and special_cases default to</p>
+<p><code>default_rules = [fix_html, replace_rep, replace_wrep, deal_caps, spec_add_spaces, rm_useless_spaces]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L78">[source]</a></div></p>
+<p>and</p>
+<p><code>default_spec_tok = [BOS, FLD, UNK, PAD]</code> <div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L79">[source]</a></div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=process_text></a><code>process_text</code></h4>
+<p><code>process_text</code>(<code>t</code>:<code>str</code>, <code>tok</code>:<a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>) -&gt; <code>List</code>[<code>str</code>]</p>
+<p>Processe one text <code>t</code> with tokenizer <code>tok</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L91">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=process_all></a><code>process_all</code></h4>
+<p><code>process_all</code>(<code>texts</code>:<code>Collection</code>[<code>str</code>]) -&gt; <code>List</code>[<code>List</code>[<code>str</code>]]</p>
+<p>Process a list of <code>texts</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L102">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For an example, we're going to grab some IMDB review. If you haven't done it already, untar this dataset by uncommenting this cell.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#untar_imdb()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/imdb_sample/train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">example_text</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span> <span class="n">example_text</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;Every once in a long while a movie will come along that will be so awful that I feel compelled to warn people. If I labor all my days and I can save but one soul from watching this movie, how great will be my joy.&lt;br /&gt;&lt;br /&gt;Where to begin my discussion of pain. For starters, there was a musical montage every five minutes. There was no character development. Every character was a stereotype. We had swearing guy, fat guy who eats donuts, goofy foreign guy, etc. The script felt as if it were being written as the movie was being shot. The production value was so incredibly low that it felt like I was watching a junior high video presentation. Have the directors, producers, etc. ever even seen a movie before? Halestorm is getting worse and worse with every new entry. The concept for this movie sounded so funny. How could you go wrong with Gary Coleman and a handful of somewhat legitimate actors. But trust me when I say this, things went wrong, VERY WRONG.&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">()</span>
+<span class="n">tok</span> <span class="o">=</span> <span class="n">SpacyTokenizer</span><span class="p">(</span><span class="s1">&#39;en&#39;</span><span class="p">)</span>
+<span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">process_text</span><span class="p">(</span><span class="n">example_text</span><span class="p">,</span> <span class="n">tok</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;every once in a long while a movie will come along that will be so awful that i feel compelled to warn people . if i labor all my days and i can save but one soul from watching this movie , how great will be my joy . \n\n where to begin my discussion of pain . for starters , there was a musical montage every five minutes . there was no character development . every character was a stereotype . we had swearing guy , fat guy who eats donuts , goofy foreign guy , etc . the script felt as if it were being written as the movie was being shot . the production value was so incredibly low that it felt like i was watching a junior high video presentation . have the directors , producers , etc . ever even seen a movie before ? halestorm is getting worse and worse with every new entry . the concept for this movie sounded so funny . how could you go wrong with gary coleman and a handful of somewhat legitimate actors . but trust me when i say this , things went wrong , xxup very xxup wrong .&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As explained before, the tokenizer split the text according to words/punctuations signs but in a smart manner. The rules (see below) also have modified the text a little bit. We can tokenize a list of texts directly at the same time:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/imdb_sample/train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">texts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">()</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">process_all</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+<span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;every once in a long while a movie will come along that will be so awful that i feel compelled to warn people . if i labor all my days and i can save but one soul from watching this movie , how great will be my joy . \n\n where to begin my discussion of pain . for starters , there was a musical montage every five minutes . there was no character development . every character was a stereotype . we had swearing guy , fat guy who eats donuts , goofy foreign guy , etc . the script felt as if it were being written as the movie was being shot . the production value was so incredibly low that it felt like i was watching a junior high video presentation . have the directors , producers , etc . ever even seen a movie before ? halestorm is getting worse and worse with every new entry . the concept for this movie sounded so funny . how could you go wrong with gary coleman and a handful of somewhat legitimate actors . but trust me when i say this , things went wrong , xxup very xxup wrong .&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Customize-the-tokenizer">Customize the tokenizer<a class="anchor-link" href="#Customize-the-tokenizer">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>tok_func</code> must return an instance of the following class:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=BaseTokenizer></a>class <code>BaseTokenizer</code></h3>
+<p><code>BaseTokenizer</code>(<code>lang</code>:<code>str</code>)</p>
+<p>Basic class for a tokenizer function. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L12">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=tokenizer></a><code>tokenizer</code></h4>
+<p><code>tokenizer</code>(<code>t</code>:<code>str</code>) -&gt; <code>List</code>[<code>str</code>]
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L17">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Take a text <code>t</code> and returns the list of its tokens.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=add_special_cases></a><code>add_special_cases</code></h4>
+<p><code>add_special_cases</code>(<code>toks</code>:<code>Collection</code>[<code>str</code>])
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L18">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Record a list of special tokens <code>toks</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The fastai library uses <a href="https://spacy.io/">spacy</a> tokenizers as its default. The following class wraps it as <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=SpacyTokenizer></a>class <code>SpacyTokenizer</code></h3>
+<p><code>SpacyTokenizer</code>(<code>lang</code>:<code>str</code>) :: <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a></p>
+<p>Wrapper around a spacy tokenizer to make it a <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L21">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you want to use your custom tokenizer, just subclass the <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a> and override its <code>tokenizer</code> and <code>add_spec_cases</code> functions.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Rules">Rules<a class="anchor-link" href="#Rules">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Rules are just functions that take a string and return the modified string. This allows you to customize the list of <code>default_rules</code> as you please. Those <code>default_rules</code> are:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=deal_caps></a><code>deal_caps</code></h4>
+<p><code>deal_caps</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L58">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In <code>t</code>, if a word is written in all caps, we put it in a lower case and add a special token before. A model will more easily learn this way the meaning of the sentence. The rest of the capitals are removed.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">deal_caps</span><span class="p">(</span><span class="s2">&quot;I&#39;m suddenly SHOUTING FOR NO REASON!&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#34;i&#39;m suddenly  xxup shouting  xxup for no  xxup reason!&#34;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=fix_html></a><code>fix_html</code></h4>
+<p><code>fix_html</code>(<code>x</code>:<code>str</code>) -&gt; <code>str</code>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L65">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This rules replaces a bunch of HTML characters or norms in plain text ones. For instance <code>&lt;br /&gt;</code> are replaced by <code>\n</code>, <code>&amp;nbsp;</code> by spaces etc...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fix_html</span><span class="p">(</span><span class="s2">&quot;Some HTML&amp;nbsp;text&lt;br /&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;Some HTML&amp; text\n&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=replace_rep></a><code>replace_rep</code></h4>
+<p><code>replace_rep</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L42">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Whenever a character is repeated more than three times in <code>t</code>, we replace the whole thing by 'TK_REP n char' where n is the number of occurences and char the character.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">replace_rep</span><span class="p">(</span><span class="s2">&quot;I&#39;m so excited!!!!!!!!&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#34;I&#39;m so excited xxrep 8 ! &#34;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=replace_wrep></a><code>replace_wrep</code></h4>
+<p><code>replace_wrep</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L50">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Whenever a word is repeated more than four times in <code>t</code>, we replace the whole thing by 'TK_WREP n w' where n is the number of occurences and w the word repeated.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">replace_wrep</span><span class="p">(</span><span class="s2">&quot;I&#39;ve never ever ever ever ever ever ever ever done this.&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#34;I&#39;ve never  xxwrep 7 ever  done this.&#34;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=rm_useless_spaces></a><code>rm_useless_spaces</code></h4>
+<p><code>rm_useless_spaces</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code></p>
+<p>Remove multiple spaces in <code>t</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L38">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">rm_useless_spaces</span><span class="p">(</span><span class="s2">&quot;Inconsistent   use  of     spaces.&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;Inconsistent use of spaces.&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=spec_add_spaces></a><code>spec_add_spaces</code></h4>
+<p><code>spec_add_spaces</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code></p>
+<p>Add spaces around / and # in <code>t</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L34">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">spec_add_spaces</span><span class="p">(</span><span class="s1">&#39;I #like to #put #hashtags #everywhere!&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;I  # like to  # put  # hashtags  # everywhere!&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Numericalization">Numericalization<a class="anchor-link" href="#Numericalization">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To convert our set of tokens to unique ids (and be able to have them go through embeddings), we use the following class:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=Vocab></a>class <code>Vocab</code></h3>
+<p><code>Vocab</code>(<code>path</code>:<code>Union</code>[<code>Path</code>, <code>str</code>])
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L108">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Contain the correspondance between numbers and tokens and numericalize. <code>path</code> should point to the 'tmp' directory with the token and id files.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=create></a><code>create</code></h4>
+<p><code>create</code>(<code>path</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>tokens</code>:<code>Collection</code>[<code>Collection</code>[<code>str</code>]], <code>max_vocab</code>:<code>int</code>, <code>min_freq</code>:<code>int</code>) -&gt; <code>Vocab</code>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L123">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a <a href="/text.transform.html#Vocab"><code>Vocab</code></a> dictionary from a set of <code>tokens</code> in <code>path</code>. Only keeps <code>max_vocab</code> tokens, and only if they appear at least <code>min_freq</code> times, set the rest to <code>UNK</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=numericalize></a><code>numericalize</code></h4>
+<p><code>numericalize</code>(<code>t</code>:<code>Collection</code>[<code>str</code>]) -&gt; <code>List</code>[<code>int</code>]</p>
+<p>Convert a list of tokens <code>t</code> to their ids. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L115">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=textify></a><code>textify</code></h4>
+<p><code>textify</code>(<code>nums</code>:<code>Collection</code>[<code>int</code>]) -&gt; <code>List</code>[<code>str</code>]</p>
+<p>Convert a list of <code>nums</code> to their tokens. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/transform.py#L119">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vocab</span> <span class="o">=</span> <span class="n">Vocab</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;../data/imdb_sample/&#39;</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">max_vocab</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">min_freq</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">vocab</span><span class="o">.</span><span class="n">numericalize</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">2</span><span class="p">])[:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[207, 321, 11, 6, 246, 144, 6, 22, 88, 240]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+ 
+

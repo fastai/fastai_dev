@@ -1,0 +1,119 @@
+---
+title: callbacks.rnn
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "Regroups lr adjustment to seq_len, AR and TAR"
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="callbacks.rnn">callbacks.rnn<a class="anchor-link" href="#callbacks.rnn">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Type an introduction of the package here.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Global-Variable-Definitions:">Global Variable Definitions:<a class="anchor-link" href="#Global-Variable-Definitions:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=RNNTrainer></a><em>class</em> <code>RNNTrainer</code></h3>
+<p>(<code>learn</code>:<a href="fastai.basic_train.html#Learner"><code>Learner</code></a>, <code>bptt</code>:<code>int</code>, <code>alpha</code>:<code>float</code>=<code>0.0</code>, <code>beta</code>:<code>float</code>=<code>0.0</code>, <code>adjust</code>:<code>bool</code>=<code>True</code>) -&gt; <code>NoneType</code> :: Inherits (<a href="fastai.callback.html#Callback"><code>Callback</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/rnn.py#L8">[source]</a></div></p>
+<p><a href="fastai.callback.html#Callback"><code>Callback</code></a> that regroups lr adjustment to seq_len, AR and TAR</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/callbacks.rnn.html#RNNTrainer"><code>RNNTrainer</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
+<p>(<code>last_loss</code>:<code>OneEltTensor</code>, <code>last_input</code>:<code>Tensor</code>, <code>last_output</code>:<code>Tensor</code>, <code>kwargs</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/rnn.py#L21">[source]</a></div></p>
+<p>Returns the loss (which can allow us to modify it, for instance for reg functions)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>RNNTrainer.on_backward_begin</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=on_loss_begin></a><code>on_loss_begin</code></h4>
+<p>(<code>last_output</code>:<code>Tuple</code>[<code>Tensor</code>, <code>Tensor</code>, <code>Tensor</code>], <code>kwargs</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/rnn.py#L16">[source]</a></div></p>
+<p>Called after forward pass but before loss has been computed. Returns the output (which can allow us to modify it)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>RNNTrainer.on_loss_begin</code></p>
+
+</div>
+</div>
+</div>
+</div>
+ 
+
