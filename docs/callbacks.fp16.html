@@ -10,13 +10,13 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
     
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="callbacks.fp16">callbacks.fp16<a class="anchor-link" href="#callbacks.fp16">&#182;</a></h1>
+<h1 id="Mixed-precision-training">Mixed precision training<a class="anchor-link" href="#Mixed-precision-training">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Type an introduction of the package here.</p>
+<p>This module allows the forward and backward passes of your neural net to be done in fp16 (also known as <em>half precision</em>). This is particularly important if you have an NVIDIA GPU with <a href="https://www.nvidia.com/en-us/data-center/tensorcore/">tensor cores</a>, since it can speed up your training by 200% or more.</p>
 
 </div>
 </div>
@@ -48,7 +48,7 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/callbacks.fp16.html#MixedPrecision"><a href="/callbacks.fp16.html#MixedPrecision"><code>MixedPrecision</code></a></a> causes the forward and backward passes of your neural net to be done in fp16 (also known as <em>half precision</em>). This is particularly important if you have an NVIDIA GPU with <a href="https://www.nvidia.com/en-us/data-center/tensorcore/">tensor cores</a>, since it can speed up your training by 200% or more. However, to ensure that accuracy is not impacted, there are a few details that need to be handled - this callback handles those details for you. See below for details.</p>
+<p>To ensure that accuracy is not impacted when using fp16, there are a few details that need to be handled - The <a href="/callbacks.fp16.html#MixedPrecision"><a href="/callbacks.fp16.html#MixedPrecision"><code>MixedPrecision</code></a></a> callback handles those details for you. See below for details.</p>
 <p>Instead of constructing this callback and passing it to a <a href="/basic_train.html#Learner"><code>Learner</code></a>, it's generally easier to just call <a href="/train.html#to_fp16"><code>Learner.to_fp16</code></a>, which modifies the existing object to add <a href="/callbacks.fp16.html#MixedPrecision"><a href="/callbacks.fp16.html#MixedPrecision"><code>MixedPrecision</code></a></a>.</p>
 
 </div>
@@ -92,7 +92,7 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -106,10 +106,10 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 
  
  
-<div id="6a11afb7-a2aa-490e-96f4-7ace8575e001"></div>
+<div id="b3fb0c2f-3536-405a-8368-b9de882a5320"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6a11afb7-a2aa-490e-96f4-7ace8575e001');
+var element = $('#b3fb0c2f-3536-405a-8368-b9de882a5320');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}

@@ -14,23 +14,136 @@ summary: "Supports 1-Cycle style training"
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2/
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The autoreload extension is already loaded. To reload it, use:
+  %reload_ext autoreload
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Type an introduction of the package here.</p>
+<h2 id="What-is-One-Cycle?">What is One Cycle?<a class="anchor-link" href="#What-is-One-Cycle?">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This Callback allows us to easily train a network using Leslie Smith's one cycle policy. To learn more about the 1cycle technique for training neural networks check out <a href="https://arxiv.org/pdf/1803.09820.pdf">Leslie Smith's paper</a> and for a more graphical and intuitive explanation check out <a href="https://sgugger.github.io/the-1cycle-policy.html">Sylvain Gugger's post</a>.</p>
+<p>To use our one cycle policy we will need an <a href="https://sgugger.github.io/how-do-you-find-a-good-learning-rate.html">optimum learning rate</a>. We can find this learning rate by using a learning rate finder which can be called by using <a href="/train.html#lr_find"><code>lr_finder</code></a>. <a href="/train.html#lr_find"><code>Lr_finder</code></a> will try a range of learning rates and plot against the losses. We will pick a value a bit before the minimum, where the loss still improves. Our graph would look something like this:</p>
+<p><img src="imgs/onecycle_finder.png" alt="onecycle_finder"></p>
+<p>Here anything between <code>3x10^-2</code> and <code>10^-2</code> is a good idea.</p>
+<p>Next we will apply the one cycle policy with the chosen learning rate as the maximum learning rate. The one cycle policy has three steps:</p>
+
+<pre><code>1. We progressively increase our learning rate from lr_max/div_factor to lr_max and at the same time we progressively decrease our momentum from mom_max to mom_min.
+2. We do the exact opposite: we progressively decrease our learning rate from lr_max to lr_max/div_factor and at the same time we progressively increase our momentum from mom_min to mom_max.
+3. We further decrease our learning rate from lr_max/div_factor to lr_max/(div_factor x 100) and we keep momentum steady at mom_max.
+
+</code></pre>
+<p>Our learning rate and momentum schedule will have the following form:</p>
+<p><img src="imgs/onecycle_params.png" alt="onecycle_params"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We usually do steps 1 and 2 for an equal amount of iterations that together make ~90% of total iterations. The remaining iterations are used for step 3.</p>
+<p>Note: Each of these transitions (i.e. how do we get from one value to another) is described by the annealing function of choice.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Basic-Training">Basic Training<a class="anchor-link" href="#Basic-Training">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The one cycle policy allows to train very quickly, a phenomenon termed <a href="https://arxiv.org/abs/1708.07120"><em>superconvergence</em></a>. To see this in practice, we will first train a <a href="/"><code>ConvLearner</code></a> and see how our results compare when we use the <a href="/callbacks.onecyclescheduler.html#OneCycleScheduler"><code>OneCycleScheduler</code></a></p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.docs</span> <span class="k">import</span> <span class="o">*</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_folder</span><span class="p">(</span><span class="s1">&#39;../data/cifar10&#39;</span><span class="p">)</span>
+</pre></div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Global-Variable-Definitions:">Global Variable Definitions:<a class="anchor-link" href="#Global-Variable-Definitions:">&#182;</a></h3>
 </div>
 </div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tvm</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -38,11 +151,88 @@ summary: "Supports 1-Cycle style training"
 <div class="output_area">
 
 
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=OneCycleScheduler></a><em>class</em> <code>OneCycleScheduler</code></h3>
-<p>(<code>learn</code>:<a href="fastai.basic_train.html#Learner"><code>Learner</code></a>, <code>lr_max</code>:<code>float</code>, <code>moms</code>:<code>None</code>[<code>float</code>, <code>Collection</code>[<code>float</code>]]=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.5</code>) -&gt; <code>NoneType</code> :: Inherits (<a href="fastai.callback.html#Callback"><code>Callback</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/one_cycle.py#L8">[source]</a></div></p>
-<p>Manages 1-Cycle style traing as outlined in Leslie Smith's <a href="https://arxiv.org/pdf/1803.09820.pdf">paper</a></p>
 
+
+ 
+ 
+<div id="7512c629-0afa-43b7-b7ae-8781ef87580c"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#7512c629-0afa-43b7-b7ae-8781ef87580c');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Total time: 12:50
+epoch  train loss  valid loss  accuracy
+0      1.129074    1.011648    0.638900  (04:16)
+1      0.982394    0.875672    0.691400  (04:16)
+2      0.895645    0.823146    0.711200  (04:16)
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Training-with-the-1cycle-policy">Training with the 1cycle policy<a class="anchor-link" href="#Training-with-the-1cycle-policy">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tvm</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="f0382327-f6e0-4b6e-b06d-f1002be746d9"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#f0382327-f6e0-4b6e-b06d-f1002be746d9');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "f2d2c3459a3f4ab19f3298c500ee8b07", "version_major": 2, "version_minor": 0}
+</script>
 </div>
 
 </div>
@@ -50,6 +240,283 @@ summary: "Supports 1-Cycle style training"
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As we can see, with the 1cycle policy our model achieves a considerably lower loss in the same number of epochs.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cb</span> <span class="o">=</span> <span class="n">OneCycleScheduler</span><span class="p">(</span><span class="n">learn</span><span class="p">,</span> <span class="n">lr_max</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">cb</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="14628c26-a1d2-484c-948e-2cbf51439e4a"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#14628c26-a1d2-484c-948e-2cbf51439e4a');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Total time: 12:47
+epoch  train loss  valid loss  accuracy
+0      1.082182    1.123926    0.605300  (04:15)
+1      0.951011    0.873058    0.699100  (04:16)
+2      0.769955    0.709449    0.755100  (04:15)
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">OneCycleScheduler</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Use-by-calling-.fit_one_cycle()-on-Learner">Use by calling .fit_one_cycle() on Learner<a class="anchor-link" href="#Use-by-calling-.fit_one_cycle()-on-Learner">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As specified in <a href="/basic_train.html"><code>basic_train</code></a>, instead of creating <a href="/callbacks.one_cycle.html#OneCycleScheduler">OneCycleScheduler</a> manually as above, you can simply call <a href="/train.html#fit_one_cycle"><code>Learner.fit_one_cycle</code></a>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="809ebe31-50b7-47ac-9719-7b3ff3dd8702"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#809ebe31-50b7-47ac-9719-7b3ff3dd8702');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "6f85f9751e16441f806250f2c64cc4ac", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-13-f142507f9d90&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>learn<span class="ansi-blue-fg">.</span>fit_one_cycle<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">0.01</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/fastai_pytorch/fastai/train.py</span> in <span class="ansi-cyan-fg">fit_one_cycle</span><span class="ansi-blue-fg">(learn, cyc_len, max_lr, moms, div_factor, pct_start, wd, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">     16</span>     cbs = [OneCycleScheduler(learn, max_lr, moms=moms, div_factor=div_factor,
+<span class="ansi-green-intense-fg ansi-bold">     17</span>                              pct_start=pct_start, **kwargs)]
+<span class="ansi-green-fg">---&gt; 18</span><span class="ansi-red-fg">     </span>learn<span class="ansi-blue-fg">.</span>fit<span class="ansi-blue-fg">(</span>cyc_len<span class="ansi-blue-fg">,</span> max_lr<span class="ansi-blue-fg">,</span> wd<span class="ansi-blue-fg">=</span>wd<span class="ansi-blue-fg">,</span> callbacks<span class="ansi-blue-fg">=</span>cbs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     19</span> 
+<span class="ansi-green-intense-fg ansi-bold">     20</span> <span class="ansi-green-fg">def</span> lr_find<span class="ansi-blue-fg">(</span>learn<span class="ansi-blue-fg">:</span>Learner<span class="ansi-blue-fg">,</span> start_lr<span class="ansi-blue-fg">:</span>float<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">1e-5</span><span class="ansi-blue-fg">,</span> end_lr<span class="ansi-blue-fg">:</span>float<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">10</span><span class="ansi-blue-fg">,</span> num_it<span class="ansi-blue-fg">:</span>int<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">:</span>Any<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/fastai_pytorch/fastai/basic_train.py</span> in <span class="ansi-cyan-fg">fit</span><span class="ansi-blue-fg">(self, epochs, lr, wd, callbacks)</span>
+<span class="ansi-green-intense-fg ansi-bold">    131</span>         callbacks <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>cb<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> cb <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>callback_fns<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">+</span> listify<span class="ansi-blue-fg">(</span>callbacks<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    132</span>         fit(epochs, self.model, self.loss_fn, opt=self.opt, data=self.data, metrics=self.metrics,
+<span class="ansi-green-fg">--&gt; 133</span><span class="ansi-red-fg">             callbacks=self.callbacks+callbacks)
+</span><span class="ansi-green-intense-fg ansi-bold">    134</span> 
+<span class="ansi-green-intense-fg ansi-bold">    135</span>     <span class="ansi-green-fg">def</span> create_opt<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> lr<span class="ansi-blue-fg">:</span>Floats<span class="ansi-blue-fg">,</span> wd<span class="ansi-blue-fg">:</span>Floats<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">0.</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">-&gt;</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/fastai_pytorch/fastai/basic_train.py</span> in <span class="ansi-cyan-fg">fit</span><span class="ansi-blue-fg">(epochs, model, loss_fn, opt, data, callbacks, metrics)</span>
+<span class="ansi-green-intense-fg ansi-bold">     70</span>             <span class="ansi-green-fg">for</span> xb<span class="ansi-blue-fg">,</span>yb <span class="ansi-green-fg">in</span> progress_bar<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">.</span>train_dl<span class="ansi-blue-fg">,</span> parent<span class="ansi-blue-fg">=</span>pbar<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     71</span>                 xb<span class="ansi-blue-fg">,</span> yb <span class="ansi-blue-fg">=</span> cb_handler<span class="ansi-blue-fg">.</span>on_batch_begin<span class="ansi-blue-fg">(</span>xb<span class="ansi-blue-fg">,</span> yb<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 72</span><span class="ansi-red-fg">                 </span>loss<span class="ansi-blue-fg">,</span>_ <span class="ansi-blue-fg">=</span> loss_batch<span class="ansi-blue-fg">(</span>model<span class="ansi-blue-fg">,</span> xb<span class="ansi-blue-fg">,</span> yb<span class="ansi-blue-fg">,</span> loss_fn<span class="ansi-blue-fg">,</span> opt<span class="ansi-blue-fg">,</span> cb_handler<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     73</span>                 <span class="ansi-green-fg">if</span> cb_handler<span class="ansi-blue-fg">.</span>on_batch_end<span class="ansi-blue-fg">(</span>loss<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> <span class="ansi-green-fg">break</span>
+<span class="ansi-green-intense-fg ansi-bold">     74</span> 
+
+<span class="ansi-green-fg">~/fastai_pytorch/fastai/basic_train.py</span> in <span class="ansi-cyan-fg">loss_batch</span><span class="ansi-blue-fg">(model, xb, yb, loss_fn, opt, cb_handler, metrics)</span>
+<span class="ansi-green-intense-fg ansi-bold">     20</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> is_listy<span class="ansi-blue-fg">(</span>xb<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> xb <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>xb<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">     21</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> is_listy<span class="ansi-blue-fg">(</span>yb<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> yb <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>yb<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-fg">---&gt; 22</span><span class="ansi-red-fg">     </span>out <span class="ansi-blue-fg">=</span> model<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>xb<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     23</span>     out <span class="ansi-blue-fg">=</span> cb_handler<span class="ansi-blue-fg">.</span>on_loss_begin<span class="ansi-blue-fg">(</span>out<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     24</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> loss_fn<span class="ansi-blue-fg">:</span> <span class="ansi-green-fg">return</span> out<span class="ansi-blue-fg">.</span>detach<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>yb<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>detach<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    475</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    476</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 477</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    478</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    479</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torch/nn/modules/container.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, input)</span>
+<span class="ansi-green-intense-fg ansi-bold">     90</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     91</span>         <span class="ansi-green-fg">for</span> module <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_modules<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 92</span><span class="ansi-red-fg">             </span>input <span class="ansi-blue-fg">=</span> module<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     93</span>         <span class="ansi-green-fg">return</span> input
+<span class="ansi-green-intense-fg ansi-bold">     94</span> 
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    475</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    476</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 477</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    478</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    479</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torch/nn/modules/container.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, input)</span>
+<span class="ansi-green-intense-fg ansi-bold">     90</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     91</span>         <span class="ansi-green-fg">for</span> module <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_modules<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 92</span><span class="ansi-red-fg">             </span>input <span class="ansi-blue-fg">=</span> module<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     93</span>         <span class="ansi-green-fg">return</span> input
+<span class="ansi-green-intense-fg ansi-bold">     94</span> 
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    475</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    476</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 477</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    478</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    479</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torch/nn/modules/container.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, input)</span>
+<span class="ansi-green-intense-fg ansi-bold">     90</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     91</span>         <span class="ansi-green-fg">for</span> module <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_modules<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 92</span><span class="ansi-red-fg">             </span>input <span class="ansi-blue-fg">=</span> module<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     93</span>         <span class="ansi-green-fg">return</span> input
+<span class="ansi-green-intense-fg ansi-bold">     94</span> 
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    475</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    476</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 477</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    478</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    479</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torchvision/models/resnet.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, x)</span>
+<span class="ansi-green-intense-fg ansi-bold">     39</span>         residual <span class="ansi-blue-fg">=</span> x
+<span class="ansi-green-intense-fg ansi-bold">     40</span> 
+<span class="ansi-green-fg">---&gt; 41</span><span class="ansi-red-fg">         </span>out <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>conv1<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     42</span>         out <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>bn1<span class="ansi-blue-fg">(</span>out<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     43</span>         out <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>relu<span class="ansi-blue-fg">(</span>out<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    475</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    476</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 477</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    478</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    479</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.6/site-packages/torch/nn/modules/conv.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, input)</span>
+<span class="ansi-green-intense-fg ansi-bold">    311</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    312</span>         return F.conv2d(input, self.weight, self.bias, self.stride,
+<span class="ansi-green-fg">--&gt; 313</span><span class="ansi-red-fg">                         self.padding, self.dilation, self.groups)
+</span><span class="ansi-green-intense-fg ansi-bold">    314</span> 
+<span class="ansi-green-intense-fg ansi-bold">    315</span> 
+
+<span class="ansi-red-fg">KeyboardInterrupt</span>: </pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Methods">Methods<a class="anchor-link" href="#Methods">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Global-Variable-Definitions:">Global Variable Definitions:<a class="anchor-link" href="#Global-Variable-Definitions:">&#182;</a></h3>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -59,23 +526,6 @@ summary: "Supports 1-Cycle style training"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_batch_end></a><code>on_batch_end</code>(<code>kwargs</code>:<code>Any</code>) -&gt; <code>NoneType</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/one_cycle.py#L36">[source]</a></div></h4>
-<p>Take one step forward on the annealing schedule for the optim params</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
@@ -87,24 +537,6 @@ summary: "Supports 1-Cycle style training"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
-<p>(<code>n_epochs</code>:<code>int</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <code>NoneType</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/one_cycle.py#L23">[source]</a></div></p>
-<p>Initialize our optimization params based on our annealing schedule</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -114,24 +546,6 @@ summary: "Supports 1-Cycle style training"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=steps></a><code>steps</code></h4>
-<p>(<code>steps_cfg</code>:<code>None</code>[<code>float</code>, <code>Tuple</code>[<code>float</code>, <code>float</code>]])<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/one_cycle.py#L18">[source]</a></div></p>
-<p>Build anneal schedule for all of the parameters</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
