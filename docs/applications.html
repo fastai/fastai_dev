@@ -1,0 +1,44 @@
+---
+title: 
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "An overview of the fields you can apply the fastai library to."
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Applications">Applications<a class="anchor-link" href="#Applications">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The fastai library allows you to train a <code>Model</code> on a certain <code>DataBunch</code> very easily by binding them together inside a <code>Learner</code> object. This module regroups the tools the library provides to help you preprocess and group your data in this format. Specifically:</p>
+<ul>
+<li><code>colab</code> deals with collaborative filtering problems,</li>
+<li><code>tabular</code> deals with tabular (or structured) data,</li>
+<li><code>text</code> deals with Natural Language Processing,</li>
+<li><code>vision</code> deals with all the computer vision problems.</li>
+</ul>
+<p>In each case (except for <code>colab</code>), the module is organized this way:</p>
+<ul>
+<li>a submodule <code>transform</code> deals with the preprocessing (data augmentation for images, cleaning for tabular data, tokenizing and numericalizing for text)</li>
+<li>a submodule <code>data</code> that defines the dataset class(es) to deal with this kind of data</li>
+<li>optionally, a submodule <code>learner</code> that will directly bind this data with a suitable model and add the necessary callbacks.</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+ 
+

@@ -1,0 +1,33 @@
+---
+title: training
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "Overview of the modules of the fastai library that help you train a model."
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Training-a-model">Training a model<a class="anchor-link" href="#Training-a-model">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The fastai library has structured training around a <code>Learner</code> object that binds together a pytorch model, some data with an optimizer and a loss function, which then will allow us to launch training.</p>
+<p><code>basic_train</code> contains the definition of this <code>Learner</code> class along with the wrapper around pytorch optimizer that the library uses. It defines the basic training loop that is used each time you call the <code>fit</code> function in fastai (or one of its variants). This training loop is kept to the minimum number of instructions, and most of its customization happens in <code>Callback</code> objects.</p>
+<p><code>callback</code> contains the definition of those, as well as the <code>CallbackHandler</code> that is responsible for the communication between the training loop and the <code>Callback</code> functions. It maintains a state dictionary to be able to provide to each <code>Callback</code> all the informations of the training loop, easily allowing any tweaks you could think of.</p>
+<p>In <code>callbacks</code>, each <code>Callback</code> is then implemented in separate modules. Some deal with scheduling the hyperparameters, like <code>callbacks.one_cycle</code>, <code>callbacks.lr_finder</code> or <code>callback.general_sched</code>. Others allow special kind of trainings like <code>callbacks.fp16</code> (mixed precision) or <code>callbacks.rnn</code>. The <code>Recorder</code> or <code>callbacks.hooks</code> are useful to save some internal data.</p>
+<p><code>train</code> then implements those callbacks with useful helper functions. Lastly <code>metrics</code> contains all the functions you might want to call to evaluate your results.</p>
+
+</div>
+</div>
+</div>
+</div>
+ 
+
