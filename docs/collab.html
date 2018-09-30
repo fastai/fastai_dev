@@ -1,13 +1,16 @@
 ---
-title: colab
+title: 
 keywords: 
 sidebar: home_sidebar
 tags: 
-summary: "Module support for Collaborative Filtering"
+summary: "Data and learner function for Collaborative Filtering"
 ---
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Collaborative-filtering">Collaborative filtering<a class="anchor-link" href="#Collaborative-filtering">&#182;</a></h1>
@@ -32,7 +35,7 @@ summary: "Module support for Collaborative Filtering"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Collaborative filtering is when you're tasked to predict how much a user is going to like a certain item. The fastai library contains a <code>CollabFilteringDataset</code> class that will help you create datasets suitable for training, and a function <code>get_colab_learner</code> to build a simple model directly from a ratings table. Let's first see how we can get started before devling in the documentation.</p>
+<p>Collaborative filtering is when you're tasked to predict how much a user is going to like a certain item. The fastai library contains a <a href="/collab.html#CollabFilteringDataset"><code>CollabFilteringDataset</code></a> class that will help you create datasets suitable for training, and a function <code>get_colab_learner</code> to build a simple model directly from a ratings table. Let's first see how we can get started before devling in the documentation.</p>
 <p>For our example, we'll use a small subset of the <a href="https://grouplens.org/datasets/movielens/">MovieLens</a> dataset. In there, we have to predict the rating a user gave a given movie (from 0 to 5). It comes in the form of a csv file where each line is the rating of a movie by a given person.</p>
 
 </div>
@@ -151,7 +154,7 @@ summary: "Module support for Collaborative Filtering"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now that this step is done, we can directly create a <code>Learner</code> object:</p>
+<p>Now that this step is done, we can directly create a <a href="/basic_train.html#Learner"><code>Learner</code></a> object:</p>
 
 </div>
 </div>
@@ -198,10 +201,10 @@ summary: "Module support for Collaborative Filtering"
 
  
  
-<div id="0a33bee7-58c3-449e-9d6f-61752ee49f32"></div>
+<div id="b3dd2d72-4b9c-4334-92ef-8211bf59e3d2"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#0a33bee7-58c3-449e-9d6f-61752ee49f32');
+var element = $('#b3dd2d72-4b9c-4334-92ef-8211bf59e3d2');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -253,7 +256,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is the basic class to buil a <code>Dataset</code> suitable for colaborative filtering. <code>user</code> and <code>item</code> should be categorical series that will be replaced with their codes internally and have the corresponding <code>ratings</code>. One of the factory methods will prepare the data in this format.</p>
+<p>This is the basic class to buil a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a> suitable for colaborative filtering. <code>user</code> and <code>item</code> should be categorical series that will be replaced with their codes internally and have the corresponding <code>ratings</code>. One of the factory methods will prepare the data in this format.</p>
 
 </div>
 </div>
@@ -318,7 +321,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Model-and-Learner">Model and <code>Learner</code><a class="anchor-link" href="#Model-and-Learner">&#182;</a></h2>
+<h2 id="Model-and-Learner">Model and <a href="/basic_train.html#Learner"><code>Learner</code></a><a class="anchor-link" href="#Model-and-Learner">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -375,7 +378,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a <code>Learner</code> object built from the data in <code>ratings</code>, <code>pct_val</code>, <code>user_name</code>, <code>item_name</code>, <code>rating_name</code> to <code>CollabFilteringDataset</code>. Optionally, creates another <code>CollabFilteringDataset</code> for <code>test</code>. <code>kwargs</code> are fed to <code>DataBunch.create</code> with these datasets. The model is given by <code>EmbeddingDotBias</code> with <code>n_factors</code>, <code>min_score</code> and <code>max_score</code> (the numbers of users and items will be inferred from the data).</p>
+<p>Creates a <a href="/basic_train.html#Learner"><code>Learner</code></a> object built from the data in <code>ratings</code>, <code>pct_val</code>, <code>user_name</code>, <code>item_name</code>, <code>rating_name</code> to <a href="/collab.html#CollabFilteringDataset"><a href="/collab.html#CollabFilteringDataset"><code>CollabFilteringDataset</code></a></a>. Optionally, creates another <a href="/collab.html#CollabFilteringDataset"><a href="/collab.html#CollabFilteringDataset"><code>CollabFilteringDataset</code></a></a> for <code>test</code>. <code>kwargs</code> are fed to <code>DataBunch.create</code> with these datasets. The model is given by <a href="/collab.html#EmbeddingDotBias"><code>EmbeddingDotBias</code></a> with <code>n_factors</code>, <code>min_score</code> and <code>max_score</code> (the numbers of users and items will be inferred from the data).</p>
 
 </div>
 </div>
