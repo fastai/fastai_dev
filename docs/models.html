@@ -1,0 +1,157 @@
+---
+title: models
+keywords: 
+sidebar: home_sidebar
+tags: 
+summary: "Overview of the models available in fastai"
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Fastai-models-zoo">Fastai models zoo<a class="anchor-link" href="#Fastai-models-zoo">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>On top of the models offered by <a href="https://pytorch.org/docs/stable/torchvision/models.html">torchivision</a>, the fastai library has implementations for the following models:</p>
+<ul>
+<li>Darknet architecture, which is the base of <a href="https://pjreddie.com/media/files/papers/YOLOv3.pdf">Yolo v3</a></li>
+<li>RNN architectures based on the <a href="https://arxiv.org/abs/1708.02182">AWD LSTM</a>, detailed in more details in <code>models.rnn</code></li>
+<li>a simple tabular model</li>
+<li>Unet architecture based on a pretrained model. The original unet is described <a href="https://arxiv.org/abs/1505.04597">here</a>, the model implementation is detailed in <code>models.unet</code></li>
+<li>Wide resnets architectures, as introduced in <a href="https://arxiv.org/abs/1605.07146">this article</a>.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=Darknet></a><code>class</code> <code>Darknet</code></h2>
+<blockquote><p><code>Darknet</code>(<code>num_blocks</code>:<code>Collection</code>[<code>int</code>], <code>num_classes</code>:<code>int</code>, <code>nf</code>=<code>32</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/darknet.py#L16">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a Darknet with blocks of sizes given in <code>num_blocks</code>, ending with <code>num_classes</code> and using <code>nf</code> initial features. Darknet53 uses <code>num_blocks = [1,2,8,8,4]</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=TabularModel></a><code>class</code> <code>TabularModel</code></h2>
+<blockquote><p><code>TabularModel</code>(<code>emb_szs</code>:<code>ListSizes</code>, <code>n_cont</code>:<code>int</code>, <code>out_sz</code>:<code>int</code>, <code>layers</code>:<code>Collection</code>[<code>int</code>], <code>drops</code>:<code>Collection</code>[<code>float</code>], <code>emb_drop</code>:<code>float</code>=<code>0.0</code>, <code>y_range</code>:<code>OptRange</code>=<code>None</code>, <code>use_bn</code>:<code>bool</code>=<code>True</code>, <code>is_reg</code>:<code>bool</code>=<code>False</code>, <code>is_multi</code>:<code>bool</code>=<code>False</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/tabular.py#L6">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a model suitable for tabular data. <code>emb_szs</code> match each categorical variable size with an embedding size, <code>n_cont</code> is the number of continuous variables. The model consists of <code>Embedding</code> layers for the categorical variables, followed by a <code>Dropout</code> of <code>emb_drop</code>, and a <code>BatchNorm</code> for the continuous variables. The results are concatenated and followed by blocks of <code>BatchNorm</code>, <code>Dropout</code>, <code>Linear</code> and <code>ReLU</code> (the first block skip <code>BatchNorm</code> and <code>Dropout</code>).</p>
+<p>The sizes of the blocks are given in <code>layers</code> and the probabilities of the <code>Dropout</code> in <code>drops</code>. The last size is <code>out_sz</code>, and the last activation is determined according to <code>is_reg</code> and <code>is_multi</code>. If <code>is_reg</code> is True, it's a sigmoid rescaled to cover <code>y_range</code>.</p>
+<p>Lastly, if <code>use_bn</code> is set to False, all <code>BatchNorm</code> layers are skipped except the one applied to the continuous variables.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=WideResNet></a><code>class</code> <code>WideResNet</code></h2>
+<blockquote><p><code>WideResNet</code>(<code>num_groups</code>:<code>int</code>, <code>N</code>:<code>int</code>, <code>num_classes</code>:<code>int</code>, <code>k</code>:<code>int</code>=<code>1</code>, <code>drop_p</code>:<code>float</code>=<code>0.0</code>, <code>start_nf</code>:<code>int</code>=<code>16</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/wrn.py#L37">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a wide resnet with blocks <code>num_groups</code> groups, each containing blocks of size <code>N</code>. <code>k</code> is the width of the resnet, <code>start_nf</code> the initial number of features. Dropout of <code>drop_p</code> is applied at the end of each block.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=wrn_22></a><code>wrn_22</code></h4>
+<blockquote><p><code>wrn_22</code>()
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/wrn.py#L54">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Creates a wide resnet for CIFAR-10 with <code>num_groups=3</code>, <code>N=3</code>, <code>k=6</code> and <code>drop_p=0.</code>.</p>
+
+</div>
+</div>
+</div>
+</div>
+ 
+
