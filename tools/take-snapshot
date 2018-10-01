@@ -40,7 +40,7 @@ def nb_add_disclaimer(s, fname):
     date = datetime.datetime.today().strftime('%Y-%m-%d')
     text = f"""<span style='color:green'>**note**: This is a snapshot of the notebook with its outputs preserved. It doesn't always match the original notebook. Please do not modify or submit PRs for this version of the notebook</span>
 
-<span style='color:green'>To modify and submit PRs always work with the original [dev_nb/{fname}](https://github.com/fastai/fastai_pytorch/tree/master/dev_nb/{fname}) notebook.</span>
+<span style='color:green'>To modify and submit PRs always work with the original [dev_nb/{fname}](https://github.com/fastai/fastai/tree/master/dev_nb/{fname}) notebook.</span>
 
 <span style='color:green'>Generated on {date}.</span>
 """
