@@ -8,6 +8,9 @@ summary: "Cleaning and feature engineering functions for structured data"
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Tabular-data-preprocessing">Tabular data preprocessing<a class="anchor-link" href="#Tabular-data-preprocessing">&#182;</a></h1>
@@ -25,13 +28,13 @@ summary: "Cleaning and feature engineering functions for structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This package contains the basic class to define a transformation for preprocessing dataframes of tabular data, as well as basic <code>TabularTransform</code>. Preprocessing includes things like</p>
+<p>This package contains the basic class to define a transformation for preprocessing dataframes of tabular data, as well as basic <a href="/tabular.transform.html#TabularTransform"><a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a></a>. Preprocessing includes things like</p>
 <ul>
 <li>replacing non-numerical variables by categories, then their ids,</li>
 <li>filling missing values,</li>
 <li>normalizing continuous variables.</li>
 </ul>
-<p>In all those steps we have to be careful to use the correspondance we decide on our training set (which id we give to each category, what is the value we put for missing data, or how the mean/std we use to normalize) on our validation or test set. To deal with this, we use a speciall class called <code>TabularTransform</code>.</p>
+<p>In all those steps we have to be careful to use the correspondance we decide on our training set (which id we give to each category, what is the value we put for missing data, or how the mean/std we use to normalize) on our validation or test set. To deal with this, we use a speciall class called <a href="/tabular.transform.html#TabularTransform"><a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a></a>.</p>
 <p>The data used in this document page is a subset of the <a href="https://archive.ics.uci.edu/ml/datasets/adult">adult dataset</a>. It gives a certain amount of data on individuals to train a model to predict wether their salary is greater than \$50k or not.</p>
 
 </div>
@@ -48,7 +51,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:</span><span class="mi">800</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">df</span><span class="p">[</span><span class="mi">800</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -61,7 +64,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -225,7 +228,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <span class="n">cont_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;fnlwgt&#39;</span><span class="p">,</span> <span class="s1">&#39;education-num&#39;</span><span class="p">,</span> <span class="s1">&#39;capital-gain&#39;</span><span class="p">,</span> <span class="s1">&#39;capital-loss&#39;</span><span class="p">,</span> <span class="s1">&#39;hours-per-week&#39;</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -260,7 +263,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a transform for dataframes with categorical variables <code>cat_names</code> and continuous variables <code>cont_names</code>. Note that any column not in one of those lists won't be touched by the <code>TabularTransform</code>.</p>
+<p>Creates a transform for dataframes with categorical variables <code>cat_names</code> and continuous variables <code>cont_names</code>. Note that any column not in one of those lists won't be touched by the <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>.</p>
 <p>Such a class is just a switch between an <code>apply_train</code> and an <code>apply_test</code> function. Those functions apply the changes in place.</p>
 
 </div>
@@ -290,8 +293,8 @@ summary: "Cleaning and feature engineering functions for structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>When subclassing a <code>TabularTransform</code>, we have to overwrite its two methods: <code>apply_train</code> and <code>apply_test</code>. The second one defaults to the first.</p>
-<p>The following <code>TabularTrasnform</code> are implemented in the fastai library. Note that the replacement from categories to codes as well as the normalization of continuous variables are automatically done in a <code>TabularDataset</code>.</p>
+<p>When subclassing a <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>, we have to overwrite its two methods: <code>apply_train</code> and <code>apply_test</code>. The second one defaults to the first.</p>
+<p>The following <code>TabularTrasnform</code> are implemented in the fastai library. Note that the replacement from categories to codes as well as the normalization of continuous variables are automatically done in a <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>.</p>
 
 </div>
 </div>
@@ -393,7 +396,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <span class="n">tfm</span><span class="p">(</span><span class="n">valid_df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -406,7 +409,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -569,7 +572,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -600,7 +603,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">valid_df</span><span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -647,7 +650,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Transform that fills the missing values in <code>cont_names</code>. <code>cat_names</code> variables are left untouched (their missing value will be raplced by code 0 in the <code>TabularDataset</code>). <code>fill_strategy</code> is adopted to replace those nans and if <code>add_col</code> is True, whenever a column <code>c</code> has missing values, a column named <code>c_nan</code> is added and flags the line where the value was missing. The <code>fill_strategy</code> can be:</p>
+<p>Transform that fills the missing values in <code>cont_names</code>. <code>cat_names</code> variables are left untouched (their missing value will be raplced by code 0 in the <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>). <code>fill_strategy</code> is adopted to replace those nans and if <code>add_col</code> is True, whenever a column <code>c</code> has missing values, a column named <code>c_nan</code> is added and flags the line where the value was missing. The <code>fill_strategy</code> can be:</p>
 <ul>
 <li><code>FillStrategy.MEDIAN</code>: nans are replaced by the median value of the column,</li>
 <li><code>FillStrategy.COMMON</code>: nans are replaced by the most common value of the column,</li>
@@ -725,7 +728,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <span class="n">tfm</span><span class="p">(</span><span class="n">valid_df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -738,7 +741,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -907,7 +910,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">valid_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
