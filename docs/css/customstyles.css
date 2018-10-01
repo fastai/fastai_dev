@@ -128,8 +128,11 @@ margin-top: -40px
     background-color: RoyalBlue;
 }
 
-.container #notebook-container{
-    width: 100%;
+
+@media (min-width: 991px) {
+        .container #notebook-container{
+            width: 100%;
+        }
 }
 .post-content img {
     margin: 12px 0px 3px 0px;
