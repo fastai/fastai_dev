@@ -5,12 +5,6 @@ entries:
       title: Overview
       url: overview.html
     - output: web
-      title: core
-      url: core.html
-    - output: web
-      title: torch_core
-      url: torch_core.html
-    - output: web
       title: imports
       url: imports.html
     - output: web
@@ -19,19 +13,12 @@ entries:
     - output: web
       title: layers
       url: layers.html
-      subfolders:
-      - output: web
-        subfolderitems:
-        - output: web
-          title: Overview
-          url: models.html
-        - output: web
-          title: models.rnn
-          url: models.rnn.html
-        - output: web
-          title: models.unet
-          url: models.unet.html
-        title: models
+    - output: web
+      title: core
+      url: core.html
+    - output: web
+      title: torch_core
+      url: torch_core.html
     output: web
     title: Core
   - folderitems:
@@ -83,10 +70,19 @@ entries:
   - folderitems:
     - output: web
       title: Overview
-      url: applications.html
+      url: models.html
     - output: web
-      title: collab
-      url: collab.html
+      title: models.rnn
+      url: models.rnn.html
+    - output: web
+      title: models.unet
+      url: models.unet.html
+    output: web
+    title: Models
+  - folderitems:
+    - output: web
+      title: Overview
+      url: applications.html
       subfolders:
       - output: web
         subfolderitems:
@@ -133,6 +129,9 @@ entries:
           title: tabular.data
           url: tabular.data.html
         title: tabular
+    - output: web
+      title: collab
+      url: collab.html
     output: web
     title: Applications
   - folderitems:

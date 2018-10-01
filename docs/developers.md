@@ -192,8 +192,6 @@ XXX: travis-ci.org as well.
 
 ### PyPI
 
-(XXX: this is for test.pypi.org for now, will need a section for pypi.org)
-
 1. Build the package (source and wheel)
 
    ```
@@ -210,17 +208,16 @@ XXX: travis-ci.org as well.
 
 3. Test that the uploaded package is found and gets installed:
 
-   Test the webpage: [https://test.pypi.org/project/fastai/](https://test.pypi.org/project/fastai/)
-
-   Test installation (use pypi.org for packages that aren't on test.pypi.org)
+   Test installation:
 
    ```
-   pip install --index-url https://test.pypi.org/simple/ --extra-index-url  https://pypi.org/simple/ fastai==1.0.0b4
+   pip install fastai==1.0.0b7
    ```
-
-   Hmm, it looks like it wants an explicit `fastai==1.0.0b5` argument, otherwise it tries to install `fastai-0.7`.
 
    XXX: May be add: `--force-reinstall` or manually remove preinstalled `fastai` first from your python installation: e.g. `python3.6/site-packages/fastai*`, run `python -m site` to find out the location.
+
+   If the install is not working, check the state of the package: [https://pypi.org/project/fastai/](https://pypi.org/project/fastai/)
+
 
 #### Various Helper Tools
 
@@ -277,7 +274,7 @@ shows nothing.
 2. Build the fastai package (include the `pytorch` channel, for `torch/` dependencies, and fastai test channel for `torchvision/fastai`):
 
    ```
-   conda-build ./conda/ -c pytorch -c fastai/label/test -c fastai/label/main
+   conda-build ./conda/ -c pytorch -c fastai/label/main
    ```
 
    If `conda-build` fails with:
@@ -330,27 +327,28 @@ But as shown in the previous section we also have to deal with several dependenc
 
 #### Uploading and Testing
 
-Adding the `--label` option tells conda to make the upload visible only to users who specify that label:
+Upload to the main channel:
 
    ```
-   anaconda upload /path/to/fastai-xxx.tar.bz2 -u fastai --label test
+   anaconda upload /path/to/fastai-xxx.tar.bz2 -u fastai
    ```
 
+If this is just a test release that shouldn't be visible to all, add the `--label test` option. And then only those who use `-c fastai/label/test` in `conda install` command will see this package.
 Any label name can be used. `main` is the only special, implicit label if none other is used.
 
 To test, see that you can find it:
 
    ```
-   conda search --override -c fastai/label/test fastai
+   conda search fastai
    ```
 
 and then validate that the installation works correctly:
 
    ```
-   conda install -c pytorch -c fastai/label/test fastai
+   conda install -c pytorch -c fastai fastai
    ```
 
-Once the testing is successful, copy all of the test package(s) back to the `main` label:
+Alternatively, if the package was first uploaded into a test label, once the testing is successful, copy all of the test package(s) back to the `main` label:
 
    ```
    anaconda label --copy test main

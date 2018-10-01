@@ -3,57 +3,32 @@ title: callbacks.rnn
 keywords: 
 sidebar: home_sidebar
 tags: 
-summary: "Regroups lr adjustment to seq_len, AR and TAR"
+summary: "Regroups LR adjustment to seq_len, AR and TAR for the training of RNNs"
 ---
 
 <div class="container" id="notebook-container">
     
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="callbacks.rnn">callbacks.rnn<a class="anchor-link" href="#callbacks.rnn">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Type an introduction of the package here.</p>
+<div class="cell border-box-sizing code_cell rendered">
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Training-tweaks-for-an-RNN">Training tweaks for an RNN<a class="anchor-link" href="#Training-tweaks-for-an-RNN">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Global-Variable-Definitions:">Global Variable Definitions:<a class="anchor-link" href="#Global-Variable-Definitions:">&#182;</a></h3>
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=RNNTrainer></a><em>class</em> <code>RNNTrainer</code></h3>
-<p>(<code>learn</code>:<a href="fastai.basic_train.html#Learner"><code>Learner</code></a>, <code>bptt</code>:<code>int</code>, <code>alpha</code>:<code>float</code>=<code>0.0</code>, <code>beta</code>:<code>float</code>=<code>0.0</code>, <code>adjust</code>:<code>bool</code>=<code>True</code>) -&gt; <code>NoneType</code> :: Inherits (<a href="fastai.callback.html#Callback"><code>Callback</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/rnn.py#L8">[source]</a></div></p>
-<p><a href="fastai.callback.html#Callback"><code>Callback</code></a> that regroups lr adjustment to seq_len, AR and TAR</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/callbacks.rnn.html#RNNTrainer"><code>RNNTrainer</code></a></p>
+<p>This callback regroups a few tweaks to properly train RNNs. They all come from <a href="https://arxiv.org/abs/1708.02182">this article</a> by Stephen Merity et al.</p>
+<p><strong>Adjusting the learning rate to sequence length:</strong> since we're modifying the bptt at each batch, sometimes by a lot (we divide it by 2 randomly), the learning rate has to be adjusted to take this into account, mainly being multiplied by the ratio <code>seq_len/bptt</code>.</p>
+<p><strong>Activation Regularization:</strong> on top of weight decay, we apply another form of regularization that is pretty similar and consists in adding to the loss a scaled factor of the sum of all the squares of the ouputs (with dropout applied) of the various layers of the RNN. Intuitively, weight decay tries to get the network to learn small weights, this is to get the model to learn to produce smaller activations.</p>
+<p><strong>Temporal Activation Regularization:</strong> lastly, we add to the loss a scaled factor of the sum of the squares of the <code>h_(t+1) - h_t</code>, where <code>h_i</code> is the output (before dropout is applied) of one layer of the RNN at the time step i (word i of the sentence). This will encourage the model to produce activations that don’t vary too fast between two consecutive words of the sentence.</p>
 
 </div>
 </div>
@@ -67,9 +42,10 @@ summary: "Regroups lr adjustment to seq_len, AR and TAR"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
-<p>(<code>last_loss</code>:<code>OneEltTensor</code>, <code>last_input</code>:<code>Tensor</code>, <code>last_output</code>:<code>Tensor</code>, <code>kwargs</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/rnn.py#L21">[source]</a></div></p>
-<p>Returns the loss (which can allow us to modify it, for instance for reg functions)</p>
+<h2><a id=RNNTrainer></a><code>class</code> <code>RNNTrainer</code></h2>
+<blockquote><p><code>RNNTrainer</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>bptt</code>:<code>int</code>, <code>alpha</code>:<code>float</code>=<code>0.0</code>, <code>beta</code>:<code>float</code>=<code>0.0</code>, <code>adjust</code>:<code>bool</code>=<code>True</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a>
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/rnn.py#L9">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -81,7 +57,7 @@ summary: "Regroups lr adjustment to seq_len, AR and TAR"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>RNNTrainer.on_backward_begin</code></p>
+<p>Create a <code>Callback</code> that adds to learner the RNN tweaks for training on data with <code>bptt</code>. <code>alpha</code> is the scale for AR, <code>beta</code> is the scale for TAR. If <code>adjust</code> is False, the learning rate isn't adjusted to the sequence length.</p>
 
 </div>
 </div>
@@ -96,8 +72,9 @@ summary: "Regroups lr adjustment to seq_len, AR and TAR"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_loss_begin></a><code>on_loss_begin</code></h4>
-<p>(<code>last_output</code>:<code>Tuple</code>[<code>Tensor</code>, <code>Tensor</code>, <code>Tensor</code>], <code>kwargs</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/rnn.py#L16">[source]</a></div></p>
-<p>Called after forward pass but before loss has been computed. Returns the output (which can allow us to modify it)</p>
+<blockquote><p><code>on_loss_begin</code>(<code>last_output</code>:<code>Tuple</code>[<code>Tensor</code>, <code>Tensor</code>, <code>Tensor</code>], <code>kwargs</code>)
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/rnn.py#L17">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -109,7 +86,36 @@ summary: "Regroups lr adjustment to seq_len, AR and TAR"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>RNNTrainer.on_loss_begin</code></p>
+<p>The fastai RNNs return <code>last_ouput</code> that are tuples of three elements, the true output (that is returned) and the hidden states before and after dropout (which are saved internally for the next function).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
+<blockquote><p><code>on_backward_begin</code>(<code>last_loss</code>:<code>Rank0Tensor</code>, <code>last_input</code>:<code>Tensor</code>, <code>kwargs</code>)
+<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/rnn.py#L22">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Adjusts the learning rate to the size of <code>last_input</code>. Adds to <code>last_loss</code> the AR and TAR.</p>
 
 </div>
 </div>
