@@ -3,17 +3,31 @@ title: gen_doc.gen_notebooks
 keywords: 
 sidebar: home_sidebar
 tags: 
-summary: "`gen_doc.nbdoc` generates notebook documentation from module functions and links to correct places"
+summary: "Generation of documentation notebook skeletons from python module"
 ---
 
 <div class="container" id="notebook-container">
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.gen_doc.gen_notebooks</span> <span class="k">import</span> <span class="n">update_module_metadata</span>
+<span class="kn">import</span> <span class="nn">fastai.gen_doc.gen_notebooks</span>
+<span class="c1"># For updating jekyll metadata. You MUST reload notebook immediately after executing this cell for changes to save</span>
+<span class="c1"># Leave blank to autopopulate from mod.__doc__</span>
+<span class="n">update_module_metadata</span><span class="p">(</span><span class="n">fastai</span><span class="o">.</span><span class="n">gen_doc</span><span class="o">.</span><span class="n">gen_notebooks</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;gen_doc.gen_notebooks&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="s1">&#39;Generation of documentation notebook skeletons from python module&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="gen_doc.gen_notebooks">gen_doc.gen_notebooks<a class="anchor-link" href="#gen_doc.gen_notebooks">&#182;</a></h1>
+<h1 id="Notebook-generation">Notebook generation<a class="anchor-link" href="#Notebook-generation">&#182;</a></h1>
 </div>
 </div>
 </div>
