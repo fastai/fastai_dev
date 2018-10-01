@@ -406,6 +406,57 @@ Now you need to rebuild the package, and if you changed the `number` to `2`, the
    conda create --dry-run --json -n dummy fastai -c fastai/label/test
    ```
 
+* Other `conda search` tricks:
+
+  `conda search` outputs results as following:
+
+   ```
+   conda search -c pytorch "pytorch-nightly"
+   Loading channels: done
+   # Name                  Version           Build                   Channel
+   pytorch-nightly 0.5.0.dev20180914 py3.5_cpu_0                     pytorch
+   pytorch-nightly 0.5.0.dev20180914 py3.5_cuda8.0.61_cudnn7.1.2_0   pytorch
+   pytorch-nightly 0.5.0.dev20180914 py3.5_cuda9.0.176_cudnn7.1.2_0  pytorch
+   pytorch-nightly 0.5.0.dev20180914 py3.5_cuda9.2.148_cudnn7.1.4_0  pytorch
+   [...]
+   ```
+
+   To narrow the results, e.g. show only python3 cpu builds:
+
+   ```
+   conda search -c pytorch "pytorch-nightly[build=py3*_cpu_0]"
+   ```
+
+   and then feed it to `conda install` with specific `==version=build` after the package name, e.g. `pytorch-nightly==1.0.0.dev20180916=py3.6_cpu_0`
+
+
+   To search for packages for a given system (by default, packages for your current
+platform are shown):
+
+   ```
+   conda search -c pytorch "pytorch-nightly[subdir=osx-64]"
+   ```
+
+   Some of the possible platforms include `linux-32`, `linux-64`, `win-64`, `osx-64`.
+
+   And these can be combined:
+
+   ```
+   conda search -c pytorch "pytorch-nightly[subdir=osx-64, build=py3.7*]"
+   ```
+
+   To search all packages released by user `fastai`:
+
+   ```
+   conda search -c fastai --override
+   ```
+
+   To search all packages released by user `fastai` for a specific platform, e.g. `linux-64`:
+
+   ```
+   conda search -c fastai --override --platform linux-64
+   ```
+
 
 ### Documentation
 
