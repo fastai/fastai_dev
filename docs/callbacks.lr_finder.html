@@ -8,6 +8,9 @@ summary: "Tools to help find the optimal learning rate for training"
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Learning-Rate-Finder">Learning Rate Finder<a class="anchor-link" href="#Learning-Rate-Finder">&#182;</a></h1>
@@ -19,7 +22,7 @@ summary: "Tools to help find the optimal learning rate for training"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Learning rate finder plots lr vs loss relationship for a <a href="/basic_train.html#Learner"><code>Learner</code></a>. The idea is to reduce the amount of guesswork on picking a good starting learning rate.</p>
+<p>Learning rate finder plots lr vs loss relationship for a <code>Learner</code>. The idea is to reduce the amount of guesswork on picking a good starting learning rate.</p>
 <p><strong>Overview:</strong></p>
 <ol>
 <li>First run lr_find <code>learn.lr_find()</code></li>
@@ -27,7 +30,7 @@ summary: "Tools to help find the optimal learning rate for training"
 <li>Pick a learning rate before it diverges then start training</li>
 </ol>
 <p><strong>Technical Details:</strong> (first <a href="&#39;https://arxiv.org/abs/1506.01186&#39;">described</a> by Leslie Smith)</p>
-<blockquote><p>Train <code>Learner</code> over a few iterations. Start with a very low <code>start_lr</code> and change it at each mini-batch until it reaches a very high <code>end_lr</code>. <a href="/basic_train.html#Recorder"><code>Recorder</code></a> will record the loss at each iteration. Plot those losses against the learning rate to find the optimal value before it diverges.</p>
+<blockquote><p>Train <code>Learner</code> over a few iterations. Start with a very low <code>start_lr</code> and change it at each mini-batch until it reaches a very high <code>end_lr</code>. <code>Recorder</code> will record the loss at each iteration. Plot those losses against the learning rate to find the optimal value before it diverges.</p>
 </blockquote>
 
 </div>
@@ -36,6 +39,13 @@ summary: "Tools to help find the optimal learning rate for training"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Choosing-a-good-learning-rate">Choosing a good learning rate<a class="anchor-link" href="#Choosing-a-good-learning-rate">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For a more intuitive explanation, please check out <a href="https://sgugger.github.io/how-do-you-find-a-good-learning-rate.html">Sylvain Gugger's post</a></p>
+
 </div>
 </div>
 </div>
@@ -49,7 +59,7 @@ summary: "Tools to help find the optimal learning rate for training"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">simple_learner</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -69,7 +79,7 @@ summary: "Tools to help find the optimal learning rate for training"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -83,10 +93,10 @@ summary: "Tools to help find the optimal learning rate for training"
 
  
  
-<div id="04656f1c-bcba-4170-b201-328d259c6c30"></div>
+<div id="03d93cf0-ca99-409e-9eb8-682d04d29b91"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#04656f1c-bcba-4170-b201-328d259c6c30');
+var element = $('#03d93cf0-ca99-409e-9eb8-682d04d29b91');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "921a0bf5331a4979a55afab37499013b", "version_major": 2, "version_minor": 0}
@@ -114,7 +124,7 @@ var element = $('#04656f1c-bcba-4170-b201-328d259c6c30');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -159,7 +169,7 @@ var element = $('#04656f1c-bcba-4170-b201-328d259c6c30');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">simple_learner</span><span class="p">()</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -173,10 +183,10 @@ var element = $('#04656f1c-bcba-4170-b201-328d259c6c30');
 
  
  
-<div id="68c59ccf-acc0-4edb-ada1-0100f67bfd40"></div>
+<div id="d1a8db54-fcff-4323-944c-3ba22225cf30"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#68c59ccf-acc0-4edb-ada1-0100f67bfd40');
+var element = $('#d1a8db54-fcff-4323-944c-3ba22225cf30');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -216,7 +226,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">simple_learner</span><span class="p">()</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1e-0</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -230,10 +240,10 @@ epoch  train loss  valid loss
 
  
  
-<div id="0db9eb93-7771-4824-bd03-8887304f3161"></div>
+<div id="be0ca997-797f-4c3c-a202-3c560f40a740"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#0db9eb93-7771-4824-bd03-8887304f3161');
+var element = $('#be0ca997-797f-4c3c-a202-3c560f40a740');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -273,7 +283,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">simple_learner</span><span class="p">()</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -287,10 +297,10 @@ epoch  train loss  valid loss
 
  
  
-<div id="a65b0c1a-8c56-4113-b143-b29b1041b6f5"></div>
+<div id="4e7e9dcd-1c53-4a04-9250-c01f4dcad032"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#a65b0c1a-8c56-4113-b143-b29b1041b6f5');
+var element = $('#4e7e9dcd-1c53-4a04-9250-c01f4dcad032');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -325,8 +335,8 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=LRFinder></a><code>class</code> <code>LRFinder</code></h2>
-<blockquote><p><code>LRFinder</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>float</code>=<code>1e-05</code>, <code>end_lr</code>:<code>float</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/lr_finder.py#L9">[source]</a></p>
+<blockquote><p><code>LRFinder</code>(<code>learn</code>:<code>Learner</code>, <code>start_lr</code>:<code>float</code>=<code>1e-05</code>, <code>end_lr</code>:<code>float</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>) :: <code>LearnerCallback</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/lr_finder.py#L9">[source]</a></p>
 </blockquote>
 
 </div>

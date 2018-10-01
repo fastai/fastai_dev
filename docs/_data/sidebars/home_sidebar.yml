@@ -5,9 +5,6 @@ entries:
       title: Overview
       url: overview.html
     - output: web
-      title: imports
-      url: imports.html
-    - output: web
       title: data
       url: data.html
     - output: web
@@ -101,6 +98,12 @@ entries:
         - output: web
           title: vision.data
           url: vision.data.html
+        - output: web
+          title: vision.model overview
+          url: vision.models.html
+        - output: web
+          title: vision.models.unet
+          url: vision.models.unet.html
         title: vision
       - output: web
         subfolderitems:
@@ -116,6 +119,9 @@ entries:
         - output: web
           title: text.data
           url: text.data.html
+        - output: web
+          title: text.models
+          url: text.models.html
         title: text
       - output: web
         subfolderitems:
@@ -128,6 +134,9 @@ entries:
         - output: web
           title: tabular.data
           url: tabular.data.html
+        - output: web
+          title: tabular.models
+          url: tabular.models.html
         title: tabular
     - output: web
       title: collab

@@ -87,14 +87,14 @@ or
 And then to the mashup:
 
    ```
-   cd fastai_pytorch/fastai/
+   cd fastai/fastai/
    pipreqs --savepath req1.txt .
    pigar -p req2.txt
    perl -pi -e 's| ||g' req2.txt
    cat req1.txt req2.txt | grep "##" | sort | uniq > req.txt
    ```
 
-So this gives us `requirements.txt`-like file which can be used for pip. But we will get pip to sort things out from `setup.py`, by putting `.` inside `fastai_pytorch/requirements.txt`.
+So this gives us `requirements.txt`-like file which can be used for pip. But we will get pip to sort things out from `setup.py`, by putting `.` inside `fastai/requirements.txt`.
 
 Now make a list for `setup.py`'s `install_requires`:
 
@@ -228,7 +228,7 @@ Sometimes with too many local installs/uninstalls into the same environment, esp
    [...]
    Name: fastai
    Version: 1.0.0b1
-   Location: /some/path/to/git/clone/of/fastai_pytorch
+   Location: /some/path/to/git/clone/of/fastai
    ```
 
 Yet `pip` can't uninstall it:
@@ -310,7 +310,7 @@ Once the extra packages have been built you can install them from the build dire
 
 Or upload them first and then install normally via `conda install`.
 
-See `fastai_pytorch/builds/custom-conda-builds` for recipes we created already.
+See `fastai/builds/custom-conda-builds` for recipes we created already.
 
 #### The Problem Of Supporting Different Architectures
 

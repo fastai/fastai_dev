@@ -8,6 +8,9 @@ summary:
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="How-to-contribute-to-jupyter-notebooks">How to contribute to jupyter notebooks<a class="anchor-link" href="#How-to-contribute-to-jupyter-notebooks">&#182;</a></h1>
@@ -64,7 +67,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Underlying documentation functions; most important is <a href="/gen_doc.nbdoc.html#show_doc"><code>show_doc</code></a>.</p>
+<p>Underlying documentation functions; most important is <code>show_doc</code>.</p>
 
 </div>
 </div>
@@ -119,8 +122,8 @@ summary:
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Make sure you follow this recipe:</p>
 
-<pre><code>git clone https://github.com/fastai/fastai_pytorch
-cd fastai_pytorch
+<pre><code>git clone https://github.com/fastai/fastai
+cd fastai
 tools/run-after-git-clone
 
 </code></pre>
@@ -147,7 +150,7 @@ tools/run-after-git-clone
 <pre><code>tools/trust-origin-git-config
 
 </code></pre>
-<p>The last command tells git to invoke configuration stored in <code>fastai_pytorch/.gitconfig</code>, so your <code>git diff</code> and <code>git commit</code> invocations for this particular repository will now go via <code>tools/fastai-nbstripout</code> which will do all the work for you.</p>
+<p>The last command tells git to invoke configuration stored in <code>fastai/.gitconfig</code>, so your <code>git diff</code> and <code>git commit</code> invocations for this particular repository will now go via <code>tools/fastai-nbstripout</code> which will do all the work for you.</p>
 <p>You don't need to run it if you run:</p>
 
 <pre><code>tools/run-after-git-clone
@@ -155,7 +158,7 @@ tools/run-after-git-clone
 </code></pre>
 <p>If you skip this configuration your commit/PR involving notebooks will not be accepted, since it'll carry in it many JSON bits which we don't want in the git repository. Those unwanted bits create collisions and lead to unnecessarily complicated and time wasting merge activities. So please do not skip this step.</p>
 <p>Note: we can't make this happen automatically, since git will ignore a repository-stored <code>.gitconfig</code> for security reasons, unless a user will tell git to use it (and thus trust it).</p>
-<p>If you'd like to check whether you already trusted git with using <code>fastai_pytorch/.gitconfig</code> please look inside <code>fastai_pytorch/.git/config</code>, which should have this entry:</p>
+<p>If you'd like to check whether you already trusted git with using <code>fastai/.gitconfig</code> please look inside <code>fastai/.git/config</code>, which should have this entry:</p>
 
 <pre><code>[include]
         path = ../.gitconfig
@@ -194,6 +197,19 @@ tools/run-after-git-clone
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
 </div>
  

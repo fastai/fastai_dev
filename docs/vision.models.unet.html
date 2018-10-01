@@ -1,22 +1,25 @@
 ---
-title: models.unet
+title: vision.models.unet
 keywords: 
 sidebar: home_sidebar
 tags: 
-summary: 
+summary: "Dynamic Unet that can use any pretrained model as a backbone."
 ---
 
 <div class="container" id="notebook-container">
     
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="vision.models.unet">vision.models.unet<a class="anchor-link" href="#vision.models.unet">&#182;</a></h1>
-</div>
-</div>
+<div class="cell border-box-sizing code_cell rendered">
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Type an introduction of the package here.</p>
+<h1 id="Dynamic-U-Net">Dynamic U-Net<a class="anchor-link" href="#Dynamic-U-Net">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This module builds a dynamic <a href="https://arxiv.org/abs/1505.04597">U-Net</a> from any backbone pretrained on ImageNet, automatically inferring the intermediate sizes.</p>
 
 </div>
 </div>
@@ -26,34 +29,8 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Global-Variable-Definitions:">Global Variable Definitions:<a class="anchor-link" href="#Global-Variable-Definitions:">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=DynamicUnet></a><em>class</em> <code>DynamicUnet</code></h3>
-<p>(<code>encoder</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>n_classes</code>:<code>int</code>) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/models/unet.py#L34">[source]</a></div></p>
-<p>Unet created from a given architecture</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.unet.html#DynamicUnet"><code>DynamicUnet</code></a></p>
+<p><img src="imgs/u-net-architecture.png" alt="U-Net architecure"></p>
+<p>This is the original U-Net. The difference here is that the left part is a pretrained model.</p>
 
 </div>
 </div>
@@ -67,9 +44,10 @@ summary:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=UnetBlock></a><em>class</em> <code>UnetBlock</code></h3>
-<p>(<code>up_in_c</code>:<code>int</code>, <code>x_in_c</code>:<code>int</code>, <code>hook</code>:<a href="http://docs.fast.ai/callbacks.hooks.html#Hook"><code>Hook</code></a>) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/models/unet.py#L14">[source]</a></div></p>
-<p>An basic unet block</p>
+<h2><a id=DynamicUnet></a><code>class</code> <code>DynamicUnet</code></h2>
+<blockquote><p><code>DynamicUnet</code>(<code>encoder</code>:<code>Module</code>, <code>n_classes</code>:<code>int</code>) :: <code>Sequential</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/models/unet.py#L34">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -81,7 +59,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.unet.html#UnetBlock"><code>UnetBlock</code></a></p>
+<p>Builds a U-Net from a given <code>encoder</code> (that can be a pretrained model) and with a final output of <code>n_classes</code>. During the initialization, it uses <code>Hooks</code> to determine the intermediate features sizes by passing a dummy input throught the model.</p>
 
 </div>
 </div>
@@ -95,13 +73,10 @@ summary:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code>(<code>up_in</code>:<code>Tensor</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/models/unet.py#L27">[source]</a></div></h4>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
+<h2><a id=UnetBlock></a><code>class</code> <code>UnetBlock</code></h2>
+<blockquote><p><code>UnetBlock</code>(<code>up_in_c</code>:<code>int</code>, <code>x_in_c</code>:<code>int</code>, <code>hook</code>:<code>Hook</code>) :: <code>Module</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/models/unet.py#L14">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -113,7 +88,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>UnetBlock.forward</code></p>
+<p>Builds a U-Net block that receives the output of the last block to be upsampled (size <code>up_in_c</code>) and the activations features from an intermediate layer of the <code>encoder</code> (size <code>x_in_c</code>, this is the lateral connection). The <code>hook</code> is set to this intermediate layer to store the output needed for this block.</p>
 
 </div>
 </div>
