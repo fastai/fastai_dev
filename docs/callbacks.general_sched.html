@@ -8,6 +8,9 @@ summary:
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="callbacks.general_sched">callbacks.general_sched<a class="anchor-link" href="#callbacks.general_sched">&#182;</a></h1>
@@ -16,7 +19,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a scheduler that lets you train a model with following different <code>TrainingPhase</code>.</p>
+<p>Creates a scheduler that lets you train a model with following different <a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a>.</p>
 
 </div>
 </div>
@@ -35,7 +38,7 @@ summary:
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=TrainingPhase></a><code>class</code> <code>TrainingPhase</code></h2>
 <blockquote><p><code>TrainingPhase</code>(<code>length</code>:<code>int</code>, <code>lrs</code>:<code>Floats</code>, <code>moms</code>:<code>Floats</code>, <code>lr_anneal</code>:<code>AnnealFunc</code>=<code>None</code>, <code>mom_anneal</code>:<code>AnnealFunc</code>=<code>None</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/general_sched.py#L8">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L8">[source]</a></p>
 </blockquote>
 
 </div>
@@ -65,7 +68,7 @@ summary:
 <h2><a id=GeneralScheduler></a><code>class</code> <code>GeneralScheduler</code></h2>
 <blockquote><p><code>GeneralScheduler</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>phases</code>:<code>Collection</code>[<a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a>]) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
 </blockquote>
-<p>Schedule multiple <a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a> for a <a href="/basic_train.html#Learner"><code>Learner</code></a>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/general_sched.py#L21">[source]</a></p>
+<p>Schedule multiple <a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a> for a <a href="/basic_train.html#Learner"><code>Learner</code></a>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L21">[source]</a></p>
 
 </div>
 
@@ -86,7 +89,7 @@ summary:
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_batch_end></a><code>on_batch_end</code></h4>
 <blockquote><p><code>on_batch_end</code>(<code>kwargs</code>:<code>Any</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/general_sched.py#L34">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L34">[source]</a></p>
 </blockquote>
 
 </div>
@@ -115,7 +118,7 @@ summary:
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>n_epochs</code>:<code>int</code>, <code>kwargs</code>:<code>Any</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/general_sched.py#L26">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L26">[source]</a></p>
 </blockquote>
 
 </div>
@@ -185,10 +188,10 @@ summary:
 
  
  
-<div id="5cee5214-0d2f-4d6f-bb0a-b44a80c99f8e"></div>
+<div id="82b4f89b-4551-4fcf-b66e-1138dd20c990"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#5cee5214-0d2f-4d6f-bb0a-b44a80c99f8e');
+var element = $('#82b4f89b-4551-4fcf-b66e-1138dd20c990');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -200,21 +203,21 @@ var element = $('#5cee5214-0d2f-4d6f-bb0a-b44a80c99f8e');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 01:41
+<pre>Total time: 01:42
 epoch  train loss  valid loss
-0      0.110475    0.069255    (00:08)
-1      0.043822    0.024831    (00:07)
-2      0.033244    0.018773    (00:07)
-3      0.019957    0.016614    (00:07)
-4      0.026232    0.019989    (00:07)
-5      0.012464    0.015321    (00:07)
-6      0.006880    0.011774    (00:07)
-7      0.010368    0.009890    (00:07)
-8      0.009105    0.006799    (00:07)
-9      0.004052    0.008395    (00:07)
-10     0.005527    0.007095    (00:07)
-11     0.002244    0.007029    (00:07)
-12     0.003321    0.008339    (00:07)
+0      0.094893    0.058317    (00:07)
+1      0.047180    0.029215    (00:07)
+2      0.029441    0.023446    (00:07)
+3      0.019201    0.023217    (00:07)
+4      0.022522    0.015142    (00:07)
+5      0.015581    0.012590    (00:07)
+6      0.013525    0.012216    (00:07)
+7      0.009146    0.014814    (00:07)
+8      0.004855    0.013819    (00:07)
+9      0.004536    0.012664    (00:07)
+10     0.003782    0.011067    (00:08)
+11     0.004073    0.015901    (00:07)
+12     0.001894    0.011048    (00:07)
 
 </pre>
 </div>

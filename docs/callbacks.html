@@ -8,6 +8,9 @@ summary:
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="List-of-callbacks">List of callbacks<a class="anchor-link" href="#List-of-callbacks">&#182;</a></h1>
@@ -20,7 +23,7 @@ summary:
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>fastai's training loop is highly extensible, with a rich <em>callback</em> system. See the <a href="/callback.html#callback"><code>callback</code></a> docs if you're interested in writing your own callback. See below for a list of callbacks that are provided with fastai, grouped by the module they're defined in.</p>
-<p>Every callback that is passed to <code>Learner</code> with the <code>callback_fns</code> parameter will be automatically stored as an attribute. The attribute name is snake-cased, so for instance <code>ActivationStats</code> will appear as <code>learn.activation_stats</code> (assuming your object is named <code>learn</code>).</p>
+<p>Every callback that is passed to <a href="/basic_train.html#Learner"><code>Learner</code></a> with the <code>callback_fns</code> parameter will be automatically stored as an attribute. The attribute name is snake-cased, so for instance <a href="/callbacks.hooks.html#ActivationStats"><code>ActivationStats</code></a> will appear as <code>learn.activation_stats</code> (assuming your object is named <code>learn</code>).</p>
 
 </div>
 </div>
@@ -33,7 +36,7 @@ summary:
 <h3 id="GeneralScheduler"><a href="/callbacks.general_sched.html#GeneralScheduler"><code>GeneralScheduler</code></a><a class="anchor-link" href="#GeneralScheduler">&#182;</a></h3><p>Create your own multi-stage annealing schemes with a convenient API.</p>
 <h3 id="MixUpCallback"><a href="/callbacks.mixup.html#MixUpCallback"><code>MixUpCallback</code></a><a class="anchor-link" href="#MixUpCallback">&#182;</a></h3><p>Data augmentation using the method from <a href="https://arxiv.org/abs/1710.09412">mixup: Beyond Empirical Risk Minimization</a></p>
 <h3 id="LRFinder"><a href="/callbacks.lr_finder.html#LRFinder"><code>LRFinder</code></a><a class="anchor-link" href="#LRFinder">&#182;</a></h3><p>Use Leslie Smith's <a href="https://www.jeremyjordan.me/nn-learning-rate/">learning rate finder</a> to find a good learning rate for training your model.</p>
-<h3 id="HookCallback"><a href="/callbacks.hooks.html#HookCallback"><code>HookCallback</code></a><a class="anchor-link" href="#HookCallback">&#182;</a></h3><p>Convenient wrapper for registering and automatically deregistering <a href="https://pytorch.org/tutorials/beginner/former_torchies/nn_tutorial.html#forward-and-backward-function-hooks">PyTorch hooks</a>. Also contains pre-defined hook callback: <code>ActivationStats</code>.</p>
+<h3 id="HookCallback"><a href="/callbacks.hooks.html#HookCallback"><code>HookCallback</code></a><a class="anchor-link" href="#HookCallback">&#182;</a></h3><p>Convenient wrapper for registering and automatically deregistering <a href="https://pytorch.org/tutorials/beginner/former_torchies/nn_tutorial.html#forward-and-backward-function-hooks">PyTorch hooks</a>. Also contains pre-defined hook callback: <a href="/callbacks.hooks.html#ActivationStats"><code>ActivationStats</code></a>.</p>
 
 </div>
 </div>

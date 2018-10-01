@@ -8,6 +8,9 @@ summary: "Provides basic training and validation with `Learner`"
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="fastai-training">fastai training<a class="anchor-link" href="#fastai-training">&#182;</a></h1>
@@ -132,10 +135,10 @@ summary: "Provides basic training and validation with `Learner`"
 
  
  
-<div id="9092642d-0a28-4b0e-89e6-3a0f6054a9cf"></div>
+<div id="a992c2fd-17c3-4caf-9922-4e5fd555d1cd"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#9092642d-0a28-4b0e-89e6-3a0f6054a9cf');
+var element = $('#a992c2fd-17c3-4caf-9922-4e5fd555d1cd');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -195,10 +198,10 @@ epoch  train loss  valid loss
 
  
  
-<div id="d42ea521-2487-469c-a03c-7194de7f6547"></div>
+<div id="9cd7b006-f888-4f2c-a668-e60a7a586b72"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#d42ea521-2487-469c-a03c-7194de7f6547');
+var element = $('#9cd7b006-f888-4f2c-a668-e60a7a586b72');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -258,10 +261,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="b1e01c59-e3e3-4287-9685-f82e099d43b7"></div>
+<div id="68391043-5591-47be-aa6a-29a15d875a0f"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b1e01c59-e3e3-4287-9685-f82e099d43b7');
+var element = $('#68391043-5591-47be-aa6a-29a15d875a0f');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -358,10 +361,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="79ec3e96-32d5-4ff4-bcdd-f14c3bfd0b68"></div>
+<div id="accdf98e-f003-4719-9ef7-a8ae73162056"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#79ec3e96-32d5-4ff4-bcdd-f14c3bfd0b68');
+var element = $('#accdf98e-f003-4719-9ef7-a8ae73162056');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -398,9 +401,9 @@ epoch  train loss  valid loss  accuracy
 <li><a href="/vision.html#vision"><code>vision</code></a></li>
 <li><a href="/text.html#text"><code>text</code></a></li>
 <li><a href="/tabular.html#tabular"><code>tabular</code></a></li>
-<li><a href="/colab.html#colab"><code>colab</code></a></li>
+<li><a href="/collab.html#collab"><code>collab</code></a></li>
 </ul>
-<p>For instance, let's use <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> (from <a href="/vision.html#vision"><code>vision</code></a>) to quickly fine-tune a pre-trained Imagenet model for MNIST (not a very practical approach, of course, since MNIST is handwriting and our model is pre-trained on photos!) Note that <a href="https://pytorch.org/docs/stable/models.html#torchvision.models.torchvision.models"><code>tvm</code></a> is the namespace we use for <a href="/models.html#models"><code>torchvision.models</code></a>.</p>
+<p>For instance, let's use <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> (from <a href="/vision.html#vision"><code>vision</code></a>) to quickly fine-tune a pre-trained Imagenet model for MNIST (not a very practical approach, of course, since MNIST is handwriting and our model is pre-trained on photos!) Note that <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision.models"><code>tvm</code></a> is the namespace we use for <a href="/models.html#models"><code>torchvision.models</code></a>.</p>
 
 </div>
 </div>
@@ -428,10 +431,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="a3d2f9a8-11bc-4426-9b27-8a5bb85d200f"></div>
+<div id="4e232f10-3c04-4338-9cbc-0ae2c5329087"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#a3d2f9a8-11bc-4426-9b27-8a5bb85d200f');
+var element = $('#4e232f10-3c04-4338-9cbc-0ae2c5329087');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -474,7 +477,7 @@ epoch  train loss  valid loss  accuracy
 <h2><a id=Learner></a><code>class</code> <code>Learner</code></h2>
 <blockquote><p><code>Learner</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>opt_fn</code>:<code>Callable</code>=<code>'Adam'</code>, <code>loss_fn</code>:<code>Callable</code>=<code>'cross_entropy'</code>, <code>metrics</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>, <code>true_wd</code>:<code>bool</code>=<code>True</code>, <code>bn_wd</code>:<code>bool</code>=<code>True</code>, <code>wd</code>:<code>Floats</code>=<code>0.01</code>, <code>train_bn</code>:<code>bool</code>=<code>True</code>, <code>path</code>:<code>str</code>=<code>None</code>, <code>model_dir</code>:<code>str</code>=<code>'models'</code>, <code>callback_fns</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>, <code>callbacks</code>:<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>]=<code>&lt;factory&gt;</code>, <code>layer_groups</code>:<code>ModuleList</code>=<code>None</code>)</p>
 </blockquote>
-<p>Trains <code>model</code> using <code>data</code> to minimize <code>loss_fn</code> with optimizer <code>opt_fn</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L90">[source]</a></p>
+<p>Trains <code>model</code> using <code>data</code> to minimize <code>loss_fn</code> with optimizer <code>opt_fn</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L90">[source]</a></p>
 
 </div>
 
@@ -513,7 +516,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=fit></a><code>fit</code></h4>
 <blockquote><p><code>fit</code>(<code>epochs</code>:<code>int</code>, <code>lr</code>:<code>Union</code>[<code>float</code>, <code>Collection</code>[<code>float</code>], <code>slice</code>]=<code>slice(None, 0.003, None)</code>, <code>wd</code>:<code>Floats</code>=<code>None</code>, <code>callbacks</code>:<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>]=<code>None</code>)</p>
 </blockquote>
-<p>fit the model on this learner with <code>lr</code> learning rate, <code>wd</code> weight decay for <code>epochs</code> with <code>callbacks</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L125">[source]</a></p>
+<p>fit the model on this learner with <code>lr</code> learning rate, <code>wd</code> weight decay for <code>epochs</code> with <code>callbacks</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L125">[source]</a></p>
 
 </div>
 
@@ -542,7 +545,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=fit_one_cycle></a><code>fit_one_cycle</code></h4>
 <blockquote><p><code>fit_one_cycle</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>cyc_len</code>:<code>int</code>, <code>max_lr</code>:<code>Union</code>[<code>float</code>, <code>Collection</code>[<code>float</code>], <code>slice</code>]=<code>slice(None, 0.003, None)</code>, <code>moms</code>:<code>Point</code>=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.3</code>, <code>wd</code>:<code>float</code>=<code>None</code>, <code>kwargs</code>)</p>
 </blockquote>
-<p>Fits a model following the 1cycle policy <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L11">[source]</a></p>
+<p>Fits a model following the 1cycle policy <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L11">[source]</a></p>
 
 </div>
 
@@ -571,7 +574,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=lr_find></a><code>lr_find</code></h4>
 <blockquote><p><code>lr_find</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>float</code>=<code>1e-05</code>, <code>end_lr</code>:<code>float</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Explore lr from <code>start_lr</code> to <code>end_lr</code> over <code>num_it</code> iterations of <code>learn</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L20">[source]</a></p>
+<p>Explore lr from <code>start_lr</code> to <code>end_lr</code> over <code>num_it</code> iterations of <code>learn</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L20">[source]</a></p>
 
 </div>
 
@@ -606,7 +609,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=to_fp16></a><code>to_fp16</code></h4>
 <blockquote><p><code>to_fp16</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) -&gt; <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
 </blockquote>
-<p>Transforms the learner in FP16 precision <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L26">[source]</a></p>
+<p>Transforms the learner in FP16 precision <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L26">[source]</a></p>
 
 </div>
 
@@ -682,10 +685,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="36a8b41f-1fdf-4e94-95ed-8501fa547495"></div>
+<div id="7d8bc5a5-0122-4576-a225-9e32ffb92220"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#36a8b41f-1fdf-4e94-95ed-8501fa547495');
+var element = $('#7d8bc5a5-0122-4576-a225-9e32ffb92220');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -734,10 +737,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="94964a81-7b55-4e8d-bc07-284a1cb5b332"></div>
+<div id="db40ad10-a10c-4361-b171-d182d0b5809e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#94964a81-7b55-4e8d-bc07-284a1cb5b332');
+var element = $('#db40ad10-a10c-4361-b171-d182d0b5809e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -783,7 +786,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=lr_range></a><code>lr_range</code></h4>
 <blockquote><p><code>lr_range</code>(<code>lr</code>:<code>Union</code>[<code>float</code>, <code>slice</code>]) -&gt; <code>ndarray</code></p>
 </blockquote>
-<p>Build learning rate schedule <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L118">[source]</a></p>
+<p>Build learning rate schedule <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L118">[source]</a></p>
 
 </div>
 
@@ -842,7 +845,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=unfreeze></a><code>unfreeze</code></h4>
 <blockquote><p><code>unfreeze</code>()</p>
 </blockquote>
-<p>unfreeze entire model <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L156">[source]</a></p>
+<p>unfreeze entire model <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L156">[source]</a></p>
 
 </div>
 
@@ -871,7 +874,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=freeze></a><code>freeze</code></h4>
 <blockquote><p><code>freeze</code>()</p>
 </blockquote>
-<p>freeze up to last layer <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L151">[source]</a></p>
+<p>freeze up to last layer <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L151">[source]</a></p>
 
 </div>
 
@@ -900,7 +903,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=freeze_to></a><code>freeze_to</code></h4>
 <blockquote><p><code>freeze_to</code>(<code>n</code>:<code>int</code>)</p>
 </blockquote>
-<p>freeze layers up to layer <code>n</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L144">[source]</a></p>
+<p>freeze layers up to layer <code>n</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L144">[source]</a></p>
 
 </div>
 
@@ -922,7 +925,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=split></a><code>split</code></h4>
 <blockquote><p><code>split</code>(<code>split_on</code>:<code>SplitFuncOrIdxList</code>)</p>
 </blockquote>
-<p>split the model at <code>split_on</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L139">[source]</a></p>
+<p>split the model at <code>split_on</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L139">[source]</a></p>
 
 </div>
 
@@ -964,7 +967,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=load></a><code>load</code></h4>
 <blockquote><p><code>load</code>(<code>name</code>:<code>PathOrStr</code>)</p>
 </blockquote>
-<p>load model <code>name</code> from <code>self.model_dir</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L166">[source]</a></p>
+<p>load model <code>name</code> from <code>self.model_dir</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L166">[source]</a></p>
 
 </div>
 
@@ -986,7 +989,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=save></a><code>save</code></h4>
 <blockquote><p><code>save</code>(<code>name</code>:<code>PathOrStr</code>)</p>
 </blockquote>
-<p>save model with <code>name</code> to <code>self.model_dir</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L162">[source]</a></p>
+<p>save model with <code>name</code> to <code>self.model_dir</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L162">[source]</a></p>
 
 </div>
 
@@ -1013,7 +1016,7 @@ epoch  train loss  valid loss  accuracy
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=init></a><code>init</code></h4>
 <blockquote><p><code>init</code>(<code>init</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L116">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L116">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1043,7 +1046,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=mixup></a><code>mixup</code></h4>
 <blockquote><p><code>mixup</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) -&gt; <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
 </blockquote>
-<p>Adds mixup <a href="https://arxiv.org/abs/1710.09412">https://arxiv.org/abs/1710.09412</a> to the learner <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L33">[source]</a></p>
+<p>Adds mixup <a href="https://arxiv.org/abs/1710.09412">https://arxiv.org/abs/1710.09412</a> to the learner <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L33">[source]</a></p>
 
 </div>
 
@@ -1072,7 +1075,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=pred_batch></a><code>pred_batch</code></h4>
 <blockquote><p><code>pred_batch</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>is_valid</code>:<code>bool</code>=<code>True</code>) -&gt; <code>Tuple</code>[<code>Tensors</code>, <code>Tensors</code>, <code>Tensors</code>]</p>
 </blockquote>
-<p>Returns input, target and output of the model on a batch <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/tta.py#L8">[source]</a></p>
+<p>Returns input, target and output of the model on a batch <a href="https://github.com/fastai/fastai/blob/master/fastai/tta.py#L8">[source]</a></p>
 
 </div>
 
@@ -1101,7 +1104,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=create_opt></a><code>create_opt</code></h4>
 <blockquote><p><code>create_opt</code>(<code>lr</code>:<code>Floats</code>, <code>wd</code>:<code>Floats</code>=<code>0.0</code>)</p>
 </blockquote>
-<p>create optimizer with <code>lr</code> learning rate and <code>wd</code> weight decay <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L135">[source]</a></p>
+<p>create optimizer with <code>lr</code> learning rate and <code>wd</code> weight decay <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L135">[source]</a></p>
 
 </div>
 
@@ -1130,7 +1133,7 @@ epoch  train loss  valid loss  accuracy
 <h2><a id=Recorder></a><code>class</code> <code>Recorder</code></h2>
 <blockquote><p><code>Recorder</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a></p>
 </blockquote>
-<p>A <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a> that records epoch,loss,opt and metric data during training <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L180">[source]</a></p>
+<p>A <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a> that records epoch,loss,opt and metric data during training <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L180">[source]</a></p>
 
 </div>
 
@@ -1165,7 +1168,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=plot></a><code>plot</code></h4>
 <blockquote><p><code>plot</code>(<code>skip_start</code>:<code>int</code>=<code>10</code>, <code>skip_end</code>:<code>int</code>=<code>5</code>)</p>
 </blockquote>
-<p>Plot learning rate and losses, trimmed between <code>skip_start</code> and <code>skip_end</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L233">[source]</a></p>
+<p>Plot learning rate and losses, trimmed between <code>skip_start</code> and <code>skip_end</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L233">[source]</a></p>
 
 </div>
 
@@ -1206,10 +1209,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="31ceb6d8-003b-44bf-8ace-ac97b410d7b3"></div>
+<div id="322b9a57-c7cd-4ae7-8255-44f089e54cf1"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#31ceb6d8-003b-44bf-8ace-ac97b410d7b3');
+var element = $('#322b9a57-c7cd-4ae7-8255-44f089e54cf1');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "4a66ea77434d4523ab04a884f101b076", "version_major": 2, "version_minor": 0}
@@ -1246,7 +1249,7 @@ var element = $('#31ceb6d8-003b-44bf-8ace-ac97b410d7b3');
 <h4><a id=plot_losses></a><code>plot_losses</code></h4>
 <blockquote><p><code>plot_losses</code>()</p>
 </blockquote>
-<p>Plot training and validation losses <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L241">[source]</a></p>
+<p>Plot training and validation losses <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L241">[source]</a></p>
 
 </div>
 
@@ -1286,10 +1289,10 @@ var element = $('#31ceb6d8-003b-44bf-8ace-ac97b410d7b3');
 
  
  
-<div id="d64bdcb5-b310-471d-806a-4b8a00fe468f"></div>
+<div id="13eaad34-b54e-4a65-8e4d-e6e8d43a2197"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#d64bdcb5-b310-471d-806a-4b8a00fe468f');
+var element = $('#13eaad34-b54e-4a65-8e4d-e6e8d43a2197');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -1338,7 +1341,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=plot_lr></a><code>plot_lr</code></h4>
 <blockquote><p><code>plot_lr</code>(<code>show_moms</code>=<code>False</code>)</p>
 </blockquote>
-<p>Plot learning rate, <code>show_moms</code> to include momentum <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L224">[source]</a></p>
+<p>Plot learning rate, <code>show_moms</code> to include momentum <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L224">[source]</a></p>
 
 </div>
 
@@ -1391,7 +1394,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=plot_metrics></a><code>plot_metrics</code></h4>
 <blockquote><p><code>plot_metrics</code>()</p>
 </blockquote>
-<p>Plot metrics collected during training <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L250">[source]</a></p>
+<p>Plot metrics collected during training <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L250">[source]</a></p>
 
 </div>
 
@@ -1464,7 +1467,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
 <blockquote><p><code>on_backward_begin</code>(<code>smooth_loss</code>:<code>Tensor</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Record the loss before any other callback has a chance to modify it. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L199">[source]</a></p>
+<p>Record the loss before any other callback has a chance to modify it. <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L199">[source]</a></p>
 
 </div>
 
@@ -1486,7 +1489,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_batch_begin></a><code>on_batch_begin</code></h4>
 <blockquote><p><code>on_batch_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Record learning rate and momentum at beginning of batch <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L194">[source]</a></p>
+<p>Record learning rate and momentum at beginning of batch <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L194">[source]</a></p>
 
 </div>
 
@@ -1508,7 +1511,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_epoch_end></a><code>on_epoch_end</code></h4>
 <blockquote><p><code>on_epoch_end</code>(<code>epoch</code>:<code>int</code>, <code>num_batch</code>:<code>int</code>, <code>smooth_loss</code>:<code>Tensor</code>, <code>last_metrics</code>=<code>'Collection'</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <code>bool</code></p>
 </blockquote>
-<p>Save epoch info: num_batch, smooth_loss, metrics <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L205">[source]</a></p>
+<p>Save epoch info: num_batch, smooth_loss, metrics <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L205">[source]</a></p>
 
 </div>
 
@@ -1530,7 +1533,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>pbar</code>:<code>PBar</code>, <code>metrics</code>:<code>MetricFuncList</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Initialize recording status at beginning of training <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L187">[source]</a></p>
+<p>Initialize recording status at beginning of training <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L187">[source]</a></p>
 
 </div>
 
@@ -1565,7 +1568,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=fit></a><code>fit</code></h4>
 <blockquote><p><code>fit</code>(<code>epochs</code>:<code>int</code>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>loss_fn</code>:<code>LossFunction</code>, <code>opt</code>:<a href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer"><code>Optimizer</code></a>, <code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>callbacks</code>:<code>Optional</code>[<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>]]=<code>None</code>, <code>metrics</code>:<code>OptMetrics</code>=<code>None</code>)</p>
 </blockquote>
-<p>Fit the <code>model</code> on <code>data</code> and learn using <code>loss</code> and <code>opt</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L57">[source]</a></p>
+<p>Fit the <code>model</code> on <code>data</code> and learn using <code>loss</code> and <code>opt</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L57">[source]</a></p>
 
 </div>
 
@@ -1594,7 +1597,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=train_epoch></a><code>train_epoch</code></h4>
 <blockquote><p><code>train_epoch</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>opt</code>:<a href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer"><code>Optimizer</code></a>, <code>loss_func</code>:<code>LossFunction</code>)</p>
 </blockquote>
-<p>Simple training of <code>model</code> for 1 epoch of <code>dl</code> using optim <code>opt</code> and loss function <code>loss_func</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L48">[source]</a></p>
+<p>Simple training of <code>model</code> for 1 epoch of <code>dl</code> using optim <code>opt</code> and loss function <code>loss_func</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L48">[source]</a></p>
 
 </div>
 
@@ -1623,7 +1626,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=validate></a><code>validate</code></h4>
 <blockquote><p><code>validate</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>loss_fn</code>:<code>OptLossFunc</code>=<code>None</code>, <code>metrics</code>:<code>OptMetrics</code>=<code>None</code>, <code>cb_handler</code>:<code>Optional</code>[<a href="/callback.html#CallbackHandler"><code>CallbackHandler</code></a>]=<code>None</code>, <code>pbar</code>:<code>Union</code>[<code>MasterBar</code>, <code>ProgressBar</code>, <code>NoneType</code>]=<code>None</code>) -&gt; <code>Iterator</code>[<code>Tuple</code>[<code>IntOrTensor</code>, <code>Ellipsis</code>]]</p>
 </blockquote>
-<p>Calculate loss and metrics for the validation set <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L39">[source]</a></p>
+<p>Calculate loss and metrics for the validation set <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L39">[source]</a></p>
 
 </div>
 
@@ -1652,7 +1655,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=loss_batch></a><code>loss_batch</code></h4>
 <blockquote><p><code>loss_batch</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>xb</code>:<code>Tensor</code>, <code>yb</code>:<code>Tensor</code>, <code>loss_fn</code>:<code>OptLossFunc</code>=<code>None</code>, <code>opt</code>:<code>OptOptimizer</code>=<code>None</code>, <code>cb_handler</code>:<code>Optional</code>[<a href="/callback.html#CallbackHandler"><code>CallbackHandler</code></a>]=<code>None</code>, <code>metrics</code>:<code>OptMetrics</code>=<code>None</code>) -&gt; <code>Tuple</code>[<code>Union</code>[<code>Tensor</code>, <code>int</code>, <code>float</code>, <code>str</code>]]</p>
 </blockquote>
-<p>Calculate loss for a batch, calculate metrics, call out to callbacks as necessary <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L15">[source]</a></p>
+<p>Calculate loss for a batch, calculate metrics, call out to callbacks as necessary <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L15">[source]</a></p>
 
 </div>
 
@@ -1687,7 +1690,7 @@ epoch  train loss  valid loss  accuracy
 <h3><a id=LearnerCallback></a><code>class</code> <code>LearnerCallback</code></h3>
 <blockquote><p><code>LearnerCallback</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
 </blockquote>
-<p>Base class for creating callbacks for the <a href="/basic_train.html#Learner"><code>Learner</code></a> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/basic_train.py#L171">[source]</a></p>
+<p>Base class for creating callbacks for the <a href="/basic_train.html#Learner"><code>Learner</code></a> <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L171">[source]</a></p>
 
 </div>
 

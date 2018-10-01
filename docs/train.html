@@ -8,6 +8,9 @@ summary: "Provides advanced training extensions to `fastai.basic_train`. Include
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Additional-training-functions">Additional training functions<a class="anchor-link" href="#Additional-training-functions">&#182;</a></h1>
@@ -53,7 +56,7 @@ summary: "Provides advanced training extensions to `fastai.basic_train`. Include
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=fit_one_cycle></a><code>fit_one_cycle</code></h4>
 <p><code>fit_one_cycle</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>cyc_len</code>:<code>int</code>, <code>max_lr</code>:<code>Union</code>[<code>float</code>, <code>Collection</code>[<code>float</code>], <code>slice</code>]=<code>slice(None, 0.003, None)</code>, <code>moms</code>:<code>Tuple</code>[<code>float</code>, <code>float</code>]=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.3</code>, <code>wd</code>:<code>float</code>=<code>None</code>, <code>kwargs</code>)</p>
-<p>Fits a model following the 1cycle policy <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L11">[source]</a></p>
+<p>Fits a model following the 1cycle policy <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L11">[source]</a></p>
 
 </div>
 
@@ -81,7 +84,7 @@ summary: "Provides advanced training extensions to `fastai.basic_train`. Include
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=lr_find></a><code>lr_find</code></h4>
 <p><code>lr_find</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>float</code>=<code>1e-05</code>, <code>end_lr</code>:<code>float</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>, <code>kwargs</code>:<code>Any</code>)</p>
-<p>Explore lr from <code>start_lr</code> to <code>end_lr</code> over <code>num_it</code> iterations of <code>learn</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L20">[source]</a></p>
+<p>Explore lr from <code>start_lr</code> to <code>end_lr</code> over <code>num_it</code> iterations of <code>learn</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L20">[source]</a></p>
 
 </div>
 
@@ -109,7 +112,7 @@ summary: "Provides advanced training extensions to `fastai.basic_train`. Include
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=to_fp16></a><code>to_fp16</code></h4>
 <p><code>to_fp16</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) -&gt; <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
-<p>Transforms the learner in FP16 precision <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L26">[source]</a></p>
+<p>Transforms the learner in FP16 precision <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L26">[source]</a></p>
 
 </div>
 
@@ -137,7 +140,7 @@ summary: "Provides advanced training extensions to `fastai.basic_train`. Include
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ShowGraph></a>class <code>ShowGraph</code></h2>
 <p><code>ShowGraph</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a></p>
-<p>Updates a graph of learner stats and metrics after each epoch <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L44">[source]</a></p>
+<p>Updates a graph of learner stats and metrics after each epoch <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L44">[source]</a></p>
 
 </div>
 
@@ -198,7 +201,7 @@ summary: "Provides advanced training extensions to `fastai.basic_train`. Include
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_epoch_end></a><code>on_epoch_end</code></h4>
 <p><code>on_epoch_end</code>(<code>n_epochs</code>:<code>int</code>, <code>last_metrics</code>:<code>Collection</code>[<code>Union</code>[<code>Tensor</code>, <code>Number</code>]], <code>kwargs</code>) -&gt; <code>bool</code></p>
-<p>If we have metrics plot them in our pbar graph <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L46">[source]</a></p>
+<p>If we have metrics plot them in our pbar graph <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L46">[source]</a></p>
 
 </div>
 
@@ -219,7 +222,7 @@ summary: "Provides advanced training extensions to `fastai.basic_train`. Include
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=GradientClipping></a>class <code>GradientClipping</code></h2>
 <p><code>GradientClipping</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>clip</code>:<code>float</code>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a></p>
-<p>To do gradient clipping during training. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L64">[source]</a></p>
+<p>To do gradient clipping during training. <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L64">[source]</a></p>
 
 </div>
 
@@ -260,10 +263,10 @@ summary: "Provides advanced training extensions to `fastai.basic_train`. Include
 
  
  
-<div id="de2a3d83-27b9-490c-8b3b-5c4648302de5"></div>
+<div id="3abbd123-a0d0-42cb-bde2-bcaa542b36b5"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#de2a3d83-27b9-490c-8b3b-5c4648302de5');
+var element = $('#3abbd123-a0d0-42cb-bde2-bcaa542b36b5');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -304,7 +307,7 @@ epoch  train loss  valid loss  accuracy
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_backward_end></a><code>on_backward_end</code></h4>
 <p><code>on_backward_end</code>(<code>kwargs</code>)</p>
-<p>Called after backprop but before optimizer step. Useful for true weight decay in AdamW <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L68">[source]</a></p>
+<p>Called after backprop but before optimizer step. Useful for true weight decay in AdamW <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L68">[source]</a></p>
 
 </div>
 
@@ -325,7 +328,7 @@ epoch  train loss  valid loss  accuracy
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=BnFreeze></a>class <code>BnFreeze</code></h2>
 <p><code>BnFreeze</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a></p>
-<p>Freezes moving average statistics in all batchnorm layers <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L57">[source]</a></p>
+<p>Freezes moving average statistics in all batchnorm layers <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L57">[source]</a></p>
 
 </div>
 
@@ -365,10 +368,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="ab694947-78a4-4f40-be6f-c9199d63b9d1"></div>
+<div id="0adfd253-d4e2-45e6-8ec9-c8bcaab3e3c2"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#ab694947-78a4-4f40-be6f-c9199d63b9d1');
+var element = $('#0adfd253-d4e2-45e6-8ec9-c8bcaab3e3c2');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -409,7 +412,7 @@ epoch  train loss  valid loss  accuracy
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_epoch_begin></a><code>on_epoch_begin</code></h4>
 <p><code>on_epoch_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
-<p>Put bn layers in eval mode on epoch_begin <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L59">[source]</a></p>
+<p>Put bn layers in eval mode on epoch_begin <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L59">[source]</a></p>
 
 </div>
 

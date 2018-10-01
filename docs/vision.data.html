@@ -8,6 +8,9 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Computer-vision-data">Computer vision data<a class="anchor-link" href="#Computer-vision-data">&#182;</a></h1>
@@ -249,7 +252,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=image_data_from_folder></a><code>image_data_from_folder</code></h4>
 <p><code>image_data_from_folder</code>(<code>path</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>train</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'train'</code>, <code>valid</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'valid'</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <a href="/data.html#DataBunch"><code>DataBunch</code></a></p>
-<p>Create <a href="/data.html#DataBunch"><code>DataBunch</code></a> from imagenet style dataset in <code>path</code> with <code>train</code>,<code>valid</code>,<code>test</code> subfolders. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L200">[source]</a></p>
+<p>Create <a href="/data.html#DataBunch"><code>DataBunch</code></a> from imagenet style dataset in <code>path</code> with <code>train</code>,<code>valid</code>,<code>test</code> subfolders. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L200">[source]</a></p>
 
 </div>
 
@@ -311,7 +314,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=image_data_from_csv></a><code>image_data_from_csv</code></h4>
 <p><code>image_data_from_csv</code>(<code>path</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>folder</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'.'</code>, <code>csv_labels</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'labels.csv'</code>, <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>suffix</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <a href="/data.html#DataBunch"><code>DataBunch</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L239">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L239">[source]</a></p>
 
 </div>
 
@@ -366,7 +369,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <li><em>classes</em>: List of classes (for the labels)</li>
 <li><em>rows</em>: Will make a square of <code>rows</code> by <code>rows</code> images</li>
 <li><em>figsize</em>: Size of the graph shown</li>
-<li><em>denorm</em>: Optional function to denormalize the data if it was normalized <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L22">[source]</a></li>
+<li><em>denorm</em>: Optional function to denormalize the data if it was normalized <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L22">[source]</a></li>
 </ul>
 
 </div>
@@ -426,7 +429,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=show_images></a><code>show_images</code></h4>
 <p><code>show_images</code>(<code>x</code>:<code>Collection</code>[<a href="/vision.image.html#Image"><code>Image</code></a>], <code>y</code>:<code>int</code>, <code>rows</code>:<code>int</code>, <code>classes</code>:<code>Collection</code>[<code>str</code>], <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(9, 9)</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L31">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L31">[source]</a></p>
 
 </div>
 
@@ -494,7 +497,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=show_xy_images></a><code>show_xy_images</code></h4>
 <p><code>show_xy_images</code>(<code>x</code>:<code>Tensor</code>, <code>y</code>:<code>Tensor</code>, <code>rows</code>:<code>int</code>, <code>figsize</code>:<code>tuple</code>=<code>(9, 9)</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L39">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L39">[source]</a></p>
 
 </div>
 
@@ -586,7 +589,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=normalize></a><code>normalize</code></h4>
 <p><code>normalize</code>(<code>x</code>:<code>Tensor</code>, <code>mean</code>:<code>FloatTensor</code>, <code>std</code>:<code>FloatTensor</code>) -&gt; <code>Tensor</code></p>
-<p>Normalize <code>x</code> with <code>mean</code> and <code>std</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L162">[source]</a></p>
+<p>Normalize <code>x</code> with <code>mean</code> and <code>std</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L162">[source]</a></p>
 
 </div>
 
@@ -607,7 +610,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=denormalize></a><code>denormalize</code></h4>
 <p><code>denormalize</code>(<code>x</code>:<code>Tensor</code>, <code>mean</code>:<code>FloatTensor</code>, <code>std</code>:<code>FloatTensor</code>) -&gt; <code>Tensor</code></p>
-<p>Denormalize <code>x</code> with <code>mean</code> and <code>std</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L165">[source]</a></p>
+<p>Denormalize <code>x</code> with <code>mean</code> and <code>std</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L165">[source]</a></p>
 
 </div>
 
@@ -628,7 +631,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=normalize_funcs></a><code>normalize_funcs</code></h4>
 <p><code>normalize_funcs</code>(<code>mean</code>:<code>FloatTensor</code>, <code>std</code>:<code>FloatTensor</code>, <code>do_y</code>=<code>False</code>, <code>device</code>=<code>None</code>) -&gt; <code>Callable]</code>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L176">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L176">[source]</a></p>
 
 </div>
 
@@ -710,7 +713,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ImageDataset></a>class <code>ImageDataset</code></h2>
 <p><code>ImageDataset</code>(<code>fns</code>:<code>Collection</code>[<code>Path</code>], <code>labels</code>:<code>Collection</code>[<code>str</code>], <code>classes</code>:<code>Optional</code>[<code>Collection</code>[<code>Any</code>]]=<code>None</code>) :: <a href="/data.html#LabelDataset"><code>LabelDataset</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L45">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L45">[source]</a></p>
 
 </div>
 
@@ -738,7 +741,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=from_folder></a><code>from_folder</code></h4>
 <p><code>from_folder</code>(<code>folder</code>:<code>Path</code>, <code>classes</code>:<code>Optional</code>[<code>Collection</code>[<code>Any</code>]]=<code>None</code>, <code>valid_pct</code>:<code>float</code>=<code>0.0</code>, <code>check_ext</code>:<code>bool</code>=<code>True</code>) -&gt; <code>Union</code>[<code>ImageDataset</code>, <code>List</code>[<code>ImageDataset</code>]]
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L67">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L67">[source]</a></p>
 
 </div>
 
@@ -766,7 +769,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=from_single_folder></a><code>from_single_folder</code></h4>
 <p><code>from_single_folder</code>(<code>folder</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>classes</code>:<code>Collection</code>[<code>Any</code>], <code>check_ext</code>=<code>True</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L61">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L61">[source]</a></p>
 
 </div>
 
@@ -794,7 +797,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ImageMultiDataset></a>class <code>ImageMultiDataset</code></h2>
 <p><code>ImageMultiDataset</code>(<code>fns</code>:<code>Collection</code>[<code>Path</code>], <code>labels</code>:<code>Collection</code>[<code>str</code>], <code>classes</code>:<code>Optional</code>[<code>Collection</code>[<code>Any</code>]]=<code>None</code>) :: <a href="/data.html#LabelDataset"><code>LabelDataset</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L82">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L82">[source]</a></p>
 
 </div>
 
@@ -822,7 +825,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=from_folder></a><code>from_folder</code></h4>
 <p><code>from_folder</code>(<code>path</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>folder</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>fns</code>:<code>Series</code>, <code>labels</code>:<code>Collection</code>[<code>str</code>], <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>classes</code>:<code>Optional</code>[<code>Collection</code>[<code>Any</code>]]=<code>None</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L106">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L106">[source]</a></p>
 
 </div>
 
@@ -850,7 +853,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=from_single_folder></a><code>from_single_folder</code></h4>
 <p><code>from_single_folder</code>(<code>folder</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>classes</code>:<code>Collection</code>[<code>Any</code>], <code>check_ext</code>=<code>True</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L99">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L99">[source]</a></p>
 
 </div>
 
@@ -885,7 +888,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_image_files></a><code>get_image_files</code></h4>
 <p><code>get_image_files</code>(<code>c</code>:<code>Path</code>, <code>check_ext</code>:<code>bool</code>=<code>True</code>) -&gt; <code>Collection</code>[<code>Path</code>]
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L16">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L16">[source]</a></p>
 
 </div>
 
@@ -913,7 +916,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=SegmentationDataset></a>class <code>SegmentationDataset</code></h2>
 <p><code>SegmentationDataset</code>(<code>x</code>:<code>Collection</code>[<code>Union</code>[<code>Path</code>, <code>str</code>]], <code>y</code>:<code>Collection</code>[<code>Union</code>[<code>Path</code>, <code>str</code>]]) :: <a href="/data.html#DatasetBase"><code>DatasetBase</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L113">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L113">[source]</a></p>
 
 </div>
 
@@ -941,7 +944,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ObjectDetectDataset></a>class <code>ObjectDetectDataset</code></h2>
 <p><code>ObjectDetectDataset</code>(<code>x_fns</code>:<code>Collection</code>[<code>Path</code>], <code>bbs</code>:<code>Collection</code>[<code>Collection</code>[<code>int</code>]]) :: <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L123">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L123">[source]</a></p>
 
 </div>
 
@@ -976,7 +979,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=DatasetTfm></a>class <code>DatasetTfm</code></h2>
 <p><code>DatasetTfm</code>(<code>ds</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>tfms</code>:<code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]=<code>None</code>, <code>tfm_y</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>:<code>Any</code>) :: <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L134">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L134">[source]</a></p>
 
 </div>
 
@@ -1011,7 +1014,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=transform_datasets></a><code>transform_datasets</code></h4>
 <p><code>transform_datasets</code>(<code>train_ds</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>valid_ds</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>test_ds</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>]=<code>None</code>, <code>tfms</code>:<code>Optional</code>[<code>Tuple</code>[<code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>], <code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]]]=<code>None</code>, <code>kwargs</code>:<code>Any</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L154">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L154">[source]</a></p>
 
 </div>
 

@@ -1,9 +1,9 @@
 ---
-title: tabular
+title: 
 keywords: 
 sidebar: home_sidebar
 tags: 
-summary: 
+summary: "Data, transforms, models, and training for tabular/structured data"
 ---
 
 <div class="container" id="notebook-container">
@@ -22,7 +22,12 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/tabular.html#tabular"><code>tabular</code></a> module contains all the necessary classes to deal with tabular data. In <a href="/text.transform.html#text.transform"><code>tabular.transform</code></a>, we define the <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a> class to help with preprocessing. In <a href="/text.data.html#text.data"><code>tabular.data</code></a>, we define the <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a> that handles that data, as well as the methods to quickly get a <a href="/data.html#DataBunch"><code>DataBunch</code></a>.</p>
+<p><a href="/tabular.html#tabular"><code>tabular</code></a> contains all the necessary classes to deal with tabular data, across two modules:</p>
+<ul>
+<li><a href="/text.transform.html#text.transform"><code>tabular.transform</code></a>: defines the <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a> class to help with preprocessing;</li>
+<li><a href="/text.data.html#text.data"><code>tabular.data</code></a>: defines the <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a> that handles that data, as well as the methods to quickly get a <a href="/data.html#DataBunch"><code>DataBunch</code></a>.</li>
+</ul>
+<p>To create a model, you'll need to use <a href="/tabular.html#tabular"><code>models.tabular</code></a>. See below for and end-to-end example using all these modules.</p>
 
 </div>
 </div>
@@ -35,7 +40,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Tabular data usually comes in the form of a csv file containing variables of different kinds: texts, numbers, and some missing values. The example we'll work with in this section is a sample of the <a href="https://archive.ics.uci.edu/ml/datasets/adult">adult dataset</a> which gives a certain amount of data on individuals to train a model to predict wether their salary is greater than \$50k or not.</p>
+<p>Tabular data usually comes in the form of a delimited file (such as CSV) containing variables of different kinds: text/category, numbers, and perhaps some missing values. The example we'll work with in this section is a sample of the <a href="https://archive.ics.uci.edu/ml/datasets/adult">adult dataset</a> which has some census information on individuals. We'll use it to train a model to predict whether salary is greater than \$50k or not.</p>
 
 </div>
 </div>
@@ -46,12 +51,40 @@ summary:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">untar_adult</span><span class="p">()</span>
-<span class="n">ADULT_PATH</span> <span class="o">=</span> <span class="n">DATA_PATH</span> <span class="o">/</span> <span class="s1">&#39;adult_sample&#39;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ADULT_PATH</span><span class="o">/</span><span class="s1">&#39;adult.csv&#39;</span><span class="p">)</span>
+<span class="n">ADULT_PATH</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>PosixPath(&#39;../data/adult_sample&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ADULT_PATH</span><span class="o">/</span><span class="s1">&#39;adult.csv&#39;</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -63,19 +96,6 @@ summary:
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -207,28 +227,7 @@ summary:
 <li>Continuous variables will be normalized then directly fed to the model.</li>
 </ul>
 <p>Another thing we need to handle are the missing values: our model isn't going to like receiving NaNs so we should remove them in a smart way. All of this preprocessing is done by <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a> objects and <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>.</p>
-<p>First let's split our variables between categoricals and continuous (we can ignore the dependant variable at this stage).</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cat_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">,</span> <span class="s1">&#39;education&#39;</span><span class="p">,</span> <span class="s1">&#39;marital-status&#39;</span><span class="p">,</span> <span class="s1">&#39;occupation&#39;</span><span class="p">,</span> <span class="s1">&#39;relationship&#39;</span><span class="p">,</span> <span class="s1">&#39;race&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;native-country&#39;</span><span class="p">]</span>
-<span class="n">cont_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;fnlwgt&#39;</span><span class="p">,</span> <span class="s1">&#39;education-num&#39;</span><span class="p">,</span> <span class="s1">&#39;capital-gain&#39;</span><span class="p">,</span> <span class="s1">&#39;capital-loss&#39;</span><span class="p">,</span> <span class="s1">&#39;hours-per-week&#39;</span><span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Then we can define a bunch of Transforms that will be applied to those variables. Here we transform all the variables in the <code>cat_names</code> list into categories, and we replace missing values for the ones in <code>cont_names</code> by the median of the corresponding column.</p>
+<p>We can define a bunch of Transforms that will be applied to our variables. Here we transform all categorical variables into categories, and we replace missing values for continuous variables by the median of the corresponding column.</p>
 
 </div>
 </div>
@@ -241,35 +240,69 @@ summary:
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">FillMissing</span><span class="p">,</span> <span class="n">Categorify</span><span class="p">]</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We split our data into training and validation sets.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:</span><span class="mi">800</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">df</span><span class="p">[</span><span class="mi">800</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">tabular_data_from_df</span><span class="p">(</span><span class="n">ADULT_PATH</span><span class="p">,</span> <span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span><span class="p">,</span> <span class="s1">&#39;&gt;=50k&#39;</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="n">cat_names</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="n">cont_names</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:</span><span class="o">-</span><span class="mi">2000</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">df</span><span class="p">[</span><span class="o">-</span><span class="mi">2000</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>First let's split our variables between categoricals and continuous (we can ignore the dependant variable at this stage). fastai will assume all variables that aren't dependent or categorical are continuous, unless we explicitly pass a list to the <code>cont_names</code> parameter when constructing our <a href="/data.html#DataBunch"><code>DataBunch</code></a>.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">))</span>
-<span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">10</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dep_var</span> <span class="o">=</span> <span class="s1">&#39;&gt;=50k&#39;</span>
+<span class="n">cat_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">,</span> <span class="s1">&#39;education&#39;</span><span class="p">,</span> <span class="s1">&#39;marital-status&#39;</span><span class="p">,</span> <span class="s1">&#39;occupation&#39;</span><span class="p">,</span> <span class="s1">&#39;relationship&#39;</span><span class="p">,</span> <span class="s1">&#39;race&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;native-country&#39;</span><span class="p">]</span>
 </pre></div>
 
-    </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we're ready to pass these details to <a href="/tabular.data.html#tabular_data_from_df"><code>tabular_data_from_df</code></a> to create the <a href="/data.html#DataBunch"><code>DataBunch</code></a> that we'll use for training.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">tabular_data_from_df</span><span class="p">(</span><span class="n">ADULT_PATH</span><span class="p">,</span> <span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span><span class="p">,</span> <span class="n">dep_var</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="n">cat_names</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">cont_names</span><span class="p">)</span>  <span class="c1"># `cont_names` defaults to: set(df)-set(cat_names)-{dep_var}</span>
+</pre></div>
+
+</div>
 </div>
 </div>
 
@@ -278,32 +311,55 @@ summary:
 
 <div class="output_area">
 
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(tensor([[ 4, 13,  2,  4,  1,  5,  2, 28,  2],
-         [ 2, 15,  2,  0,  1,  3,  2, 28,  1],
-         [ 1, 15,  4,  1,  4,  5,  2, 28,  1],
-         [ 4, 10,  4,  0,  2,  5,  2, 28,  1],
-         [ 4, 12,  1,  3,  2,  5,  2, 28,  2],
-         [ 7,  9,  2, 11,  1,  5,  2, 28,  2],
-         [ 4, 15,  4,  6,  4,  5,  2, 28,  2],
-         [ 4, 12,  4,  0,  2,  5,  2, 28,  1],
-         [ 4,  1,  2, 14,  1,  5,  2, 28,  2],
-         [ 3, 15,  6,  0,  2,  5,  1, 28,  2]], device=&#39;cuda:0&#39;),
- tensor([[ 1.6002, -0.7512, -0.1152, -0.1364, -0.2289,  0.3617],
-         [ 0.5984,  1.1684, -0.1152, -0.1364, -0.2289, -0.0503],
-         [-1.4823, -0.2425, -0.1152, -0.1364, -0.2289, -0.0503],
-         [-0.7117, -0.6892,  1.5310, -0.1364, -0.2289, -0.0503],
-         [ 0.1360, -0.8950, -0.1152, -0.1364, -0.2289,  0.3617],
-         [-0.5575,  0.5824, -0.1152, -0.1364, -0.2289, -0.2151],
-         [-1.2511, -0.8314, -0.1152, -0.1364, -0.2289, -1.6982],
-         [-0.6346, -0.7895, -0.6640, -0.1364,  4.0259,  0.1145],
-         [ 1.6772, -0.9276, -0.1152, -0.1364, -0.2289, -0.0503],
-         [ 2.4478, -0.1643, -0.1152, -0.1364, -0.2289, -1.9454]],
-        device=&#39;cuda:0&#39;))</pre>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;hours-per-week&#39;, &#39;fnlwgt&#39;, &#39;age&#39;, &#39;capital-gain&#39;, &#39;capital-loss&#39;, &#39;education-num&#39;]
+</pre>
+</div>
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can grab a mini-batch of data and take a look (note that <code>to_np</code> here converts from pytorch tensor to numpy):</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">cat_x</span><span class="p">,</span><span class="n">cont_x</span><span class="p">),</span><span class="n">y</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cat_x</span><span class="p">,</span> <span class="n">cont_x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">to_np</span><span class="p">(</span><span class="n">o</span><span class="p">[:</span><span class="mi">5</span><span class="p">]))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[ 5 10  3 11  1  5  2 40  1]
+ [ 5 12  3  4  1  5  2 40  1]
+ [ 5 16  3  2  1  5  2 40  1]
+ [ 5  2  1 13  2  5  1 40  1]
+ [ 5 12  3  7  1  5  2 40  1]]
+[[ 0.7721204  -0.0401719   1.7117627  -0.14592563 -0.21676035  1.1458108 ]
+ [ 0.28737482  1.320818    1.1259431  -0.14592563 -0.21676035 -0.42159945]
+ [ 0.7721204  -1.2330674  -0.5582884  -0.14592563 -0.21676035 -0.02974687]
+ [-0.03578891 -0.02159784  0.83303326 -0.14592563 -0.21676035 -1.2053045 ]
+ [-0.03578891 -0.7227921  -0.19215111 -0.14592563 -0.21676035 -0.42159945]]
+[1 1 0 0 0]
+</pre>
+</div>
 </div>
 
 </div>
@@ -325,7 +381,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Once we have our data ready in a <a href="/data.html#DataBunch"><code>DataBunch</code></a>, we just need to create a model to then define a <a href="/basic_train.html#Learner"><code>Learner</code></a> and start training. The fastai library has a default <a href="/models.tabular.html#TabularModel"><code>TabularModel</code></a> in <a href="/tabular.html#tabular"><code>models.tabular</code></a>.</p>
+<p>Once we have our data ready in a <a href="/data.html#DataBunch"><code>DataBunch</code></a>, we just need to create a model to then define a <a href="/basic_train.html#Learner"><code>Learner</code></a> and start training. The fastai library has a flexible and powerful <a href="/models.tabular.html#TabularModel"><code>TabularModel</code></a> in <a href="/tabular.html#tabular"><code>models.tabular</code></a>. To use that function, we just need to specify the embedding sizes for each of our categorical variables.</p>
 
 </div>
 </div>
@@ -335,75 +391,12 @@ summary:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.models.tabular</span> <span class="k">import</span> <span class="n">TabularModel</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">get_tabular_learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="n">emb_szs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;native-country&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-    </div>
 </div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>To use that function, we just need to specify the embedding sizes for each of our categorical variables.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cat_szs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">cat_names</span><span class="p">]</span>
-<span class="n">emb_szs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">c</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cat_szs</span><span class="p">]</span>
-<span class="n">emb_szs</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[(9, 5), (16, 8), (7, 4), (15, 8), (7, 4), (6, 3), (3, 2), (30, 15), (3, 2)]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">TabularModel</span><span class="p">(</span><span class="n">emb_szs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_names</span><span class="p">),</span> <span class="n">out_sz</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">1000</span><span class="p">,</span><span class="mi">500</span><span class="p">],</span> <span class="n">drops</span><span class="o">=</span><span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.01</span><span class="p">],</span> <span class="n">emb_drop</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
-<span class="n">learner</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">binary_cross_entropy</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learner</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">)</span>
-</pre></div>
-
-    </div>
 </div>
 </div>
 
@@ -417,10 +410,10 @@ summary:
 
  
  
-<div id="6108dce5-22b8-4963-8fcf-f2b6b0242a11"></div>
+<div id="6082ba93-825e-42d6-843f-70aad1407c6c"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6108dce5-22b8-4963-8fcf-f2b6b0242a11');
+var element = $('#6082ba93-825e-42d6-843f-70aad1407c6c');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -432,27 +425,14 @@ var element = $('#6108dce5-22b8-4963-8fcf-f2b6b0242a11');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:01
-epoch  train loss  valid loss
-0      0.655111    0.685396    (00:01)
+<pre>Total time: 00:05
+epoch  train loss  valid loss  accuracy
+0      0.331778    0.346305    0.834000  (00:05)
 
 </pre>
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
 

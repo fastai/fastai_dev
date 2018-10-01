@@ -8,6 +8,9 @@ summary:
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Welcome-to-fastai">Welcome to fastai<a class="anchor-link" href="#Welcome-to-fastai">&#182;</a></h1>
@@ -16,7 +19,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The fastai library simplifies training fast and accurate neural nets using modern best practices. It's based on research in to deep learning best practices undertaken at <a href="http://www.fast.ai">fast.ai</a>. If you're looking for the source code, head over to the <a href="https://github.com/fastai/fastai_pytorch">fastai_pytorch repo</a> on GitHub.</p>
+<p>The fastai library simplifies training fast and accurate neural nets using modern best practices. It's based on research in to deep learning best practices undertaken at <a href="http://www.fast.ai">fast.ai</a>. If you're looking for the source code, head over to the <a href="https://github.com/fastai/fastai">fastai repo</a> on GitHub.</p>
 
 </div>
 </div>
@@ -73,7 +76,7 @@ summary:
 <h4><a id=rotate></a><code>rotate</code></h4>
 <blockquote><p><code>rotate</code>(<code>degrees</code>:<a href="/vision.image.html#uniform"><code>uniform</code></a>) -&gt; <a href="/vision.image.html#Image"><code>Image</code></a> :: <a href="/vision.image.html#TfmAffine"><code>TfmAffine</code></a></p>
 </blockquote>
-<p>Rotate image by <code>degrees</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/transform.py#L22">[source]</a></p>
+<p>Rotate image by <code>degrees</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/transform.py#L22">[source]</a></p>
 
 </div>
 
@@ -178,7 +181,7 @@ summary:
 <li><a href="/layers.html#layers"><code>layers</code></a>, which contains basic functions to define custom layers or groups of layers</li>
 <li><a href="/metrics.html#metrics"><code>metrics</code></a>, which contains all the metrics</li>
 </ul>
-<p>From <a href="/layers.html#layers"><code>layers</code></a>, we have all the modules in the models folder that are defined. Then from <a href="/vision.data.html#vision.data"><code>data</code></a> we can split on one of the four main <em>applications</em>, which each has their own module: <a href="/vision.html#vision"><code>vision</code></a>, <a href="/text.html#text"><code>text</code></a> <a href="/colab.html#colab"><code>colab</code></a>, or <a href="/tabular.html#tabular"><code>tabular</code></a>. Each of those submodules is built in the same way with:</p>
+<p>From <a href="/layers.html#layers"><code>layers</code></a>, we have all the modules in the models folder that are defined. Then from <a href="/vision.data.html#vision.data"><code>data</code></a> we can split on one of the four main <em>applications</em>, which each has their own module: <a href="/vision.html#vision"><code>vision</code></a>, <a href="/text.html#text"><code>text</code></a> <a href="/collab.html#collab"><code>collab</code></a>, or <a href="/tabular.html#tabular"><code>tabular</code></a>. Each of those submodules is built in the same way with:</p>
 <ul>
 <li>a submodule named <a href="/vision.transform.html#vision.transform"><code>transform</code></a> that handles the transformations of our data (data augmentation for computer vision, numericalizing and tokenizing for text and preprocessing for tabular)</li>
 <li>a submodule named <a href="/vision.data.html#vision.data"><code>data</code></a> that contains the class that will create datasets and the helper functions to create <a href="/data.html#DataBunch"><code>DataBunch</code></a> objects.</li>
@@ -190,7 +193,7 @@ summary:
 <li><a href="/callbacks.html#callbacks"><code>callbacks</code></a> (depends on <a href="/basic_train.html#basic_train"><code>basic_train</code></a>) is a submodule defining various callbacks, such as for mixed precision training or 1cycle annealing;</li>
 <li><code>learn</code> (depends on <a href="/callbacks.html#callbacks"><code>callbacks</code></a>) defines helper functions to invoke the callbacks more easily.</li>
 </ul>
-<p>The module <a href="/tta.html#tta"><code>tta</code></a> (for Test Time Augmentation) depends on <a href="/basic_train.html#basic_train"><code>basic_train</code></a>, the module <a href="/colab.html#colab"><code>colab</code></a> (for collaborative filtering) depends on <a href="/basic_train.html#basic_train"><code>basic_train</code></a> and <a href="/layers.html#layers"><code>layers</code></a>, so does the module <a href="/train.html#train"><code>vision.train</code></a> (for our models with a skeleton trained on imagenet and a custom head for classification) and the module <a href="/train.html#train"><code>text.train</code></a> (to automatically get learner objects for NLP) depends on <a href="/callbacks.html#callbacks"><code>callbacks</code></a> (specifically the <a href="/callbacks.rnn.html#callbacks.rnn"><code>rnn</code></a> callback) and <a href="/models.html#models"><code>models</code></a> (specifically the rnn models).</p>
+<p>The module <a href="/tta.html#tta"><code>tta</code></a> (for Test Time Augmentation) depends on <a href="/basic_train.html#basic_train"><code>basic_train</code></a>, the module <a href="/collab.html#collab"><code>collab</code></a> (for collaborative filtering) depends on <a href="/basic_train.html#basic_train"><code>basic_train</code></a> and <a href="/layers.html#layers"><code>layers</code></a>, so does the module <a href="/train.html#train"><code>vision.train</code></a> (for our models with a skeleton trained on imagenet and a custom head for classification) and the module <a href="/train.html#train"><code>text.train</code></a> (to automatically get learner objects for NLP) depends on <a href="/callbacks.html#callbacks"><code>callbacks</code></a> (specifically the <a href="/callbacks.rnn.html#callbacks.rnn"><code>rnn</code></a> callback) and <a href="/models.html#models"><code>models</code></a> (specifically the rnn models).</p>
 <p>Here is a graph of the key module dependencies:</p>
 
 </div>

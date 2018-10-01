@@ -8,6 +8,9 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Mixed-precision-training">Mixed precision training<a class="anchor-link" href="#Mixed-precision-training">&#182;</a></h1>
@@ -36,7 +39,7 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 <h2><a id=MixedPrecision></a><code>class</code> <code>MixedPrecision</code></h2>
 <blockquote><p><code>MixedPrecision</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
 </blockquote>
-<p>Callback that handles mixed-precision training <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/fp16.py#L56">[source]</a></p>
+<p>Callback that handles mixed-precision training <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L56">[source]</a></p>
 
 </div>
 
@@ -66,7 +69,7 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 <h4><a id=to_fp16></a><code>to_fp16</code></h4>
 <blockquote><p><code>to_fp16</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) -&gt; <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
 </blockquote>
-<p>Transforms the learner in FP16 precision <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/train.py#L26">[source]</a></p>
+<p>Transforms the learner in FP16 precision <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L26">[source]</a></p>
 
 </div>
 
@@ -106,10 +109,10 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 
  
  
-<div id="b3fb0c2f-3536-405a-8368-b9de882a5320"></div>
+<div id="5682fd54-d278-4953-a26b-490e6f4b774b"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b3fb0c2f-3536-405a-8368-b9de882a5320');
+var element = $('#5682fd54-d278-4953-a26b-490e6f4b774b');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -167,7 +170,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
 <blockquote><p><code>on_backward_begin</code>(<code>last_loss</code>:<code>Rank0Tensor</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <code>Rank0Tensor</code></p>
 </blockquote>
-<p>Scale gradients up by <code>loss_scale</code> to prevent underflow <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/fp16.py#L90">[source]</a></p>
+<p>Scale gradients up by <code>loss_scale</code> to prevent underflow <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L90">[source]</a></p>
 
 </div>
 
@@ -189,7 +192,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_backward_end></a><code>on_backward_end</code></h4>
 <blockquote><p><code>on_backward_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Convert the gradients back to FP32 and divide them by the scale. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/fp16.py#L95">[source]</a></p>
+<p>Convert the gradients back to FP32 and divide them by the scale. <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L95">[source]</a></p>
 
 </div>
 
@@ -211,7 +214,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_loss_begin></a><code>on_loss_begin</code></h4>
 <blockquote><p><code>on_loss_begin</code>(<code>last_output</code>:<code>Tensor</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <code>Tensor</code></p>
 </blockquote>
-<p>Converts half precision output to FP32 to avoid reduction overflow. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/fp16.py#L86">[source]</a></p>
+<p>Converts half precision output to FP32 to avoid reduction overflow. <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L86">[source]</a></p>
 
 </div>
 
@@ -233,7 +236,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_step_end></a><code>on_step_end</code></h4>
 <blockquote><p><code>on_step_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Update the params from master to model and zero grad <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/fp16.py#L101">[source]</a></p>
+<p>Update the params from master to model and zero grad <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L101">[source]</a></p>
 
 </div>
 
@@ -255,7 +258,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Ensures everything is in half precision mode <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/fp16.py#L63">[source]</a></p>
+<p>Ensures everything is in half precision mode <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L63">[source]</a></p>
 
 </div>
 
@@ -277,7 +280,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=on_train_end></a><code>on_train_end</code></h4>
 <blockquote><p><code>on_train_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Removes half precision transforms added at <code>on_train_begin</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/fp16.py#L80">[source]</a></p>
+<p>Removes half precision transforms added at <code>on_train_begin</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L80">[source]</a></p>
 
 </div>
 

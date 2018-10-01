@@ -22,17 +22,18 @@ summary: "An overview of the fields you can apply the fastai library to."
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The fastai library allows you to train a <code>Model</code> on a certain <code>DataBunch</code> very easily by binding them together inside a <code>Learner</code> object. This module regroups the tools the library provides to help you preprocess and group your data in this format. Specifically:</p>
+<p>The fastai library allows you to train a <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Model</code></a> on a certain <a href="/data.html#DataBunch"><code>DataBunch</code></a> very easily by binding them together inside a <a href="/basic_train.html#Learner"><code>Learner</code></a> object. This module regroups the tools the library provides to help you preprocess and group your data in this format. Specifically:</p>
 <ul>
-<li><code>colab</code> deals with collaborative filtering problems,</li>
-<li><code>tabular</code> deals with tabular (or structured) data,</li>
-<li><code>text</code> deals with Natural Language Processing,</li>
-<li><code>vision</code> deals with all the computer vision problems.</li>
+<li><code>collab</code> deals with collaborative filtering problems,</li>
+<li><a href="/tabular.html#tabular"><code>tabular</code></a> deals with tabular (or structured) data,</li>
+<li><a href="/text.html#text"><code>text</code></a> deals with Natural Language Processing,</li>
+<li><a href="/vision.html#vision"><code>vision</code></a> deals with all the computer vision problems.</li>
 </ul>
-<p>In each case (except for <code>colab</code>), the module is organized this way:</p>
+<p>In each case (except for <code>collab</code>), the module is organized this way:</p>
 <ul>
 <li>a submodule <code>transform</code> deals with the preprocessing (data augmentation for images, cleaning for tabular data, tokenizing and numericalizing for text)</li>
-<li>a submodule <code>data</code> that defines the dataset class(es) to deal with this kind of data</li>
+<li>a submodule <a href="/data.html#data"><code>data</code></a> that defines the dataset class(es) to deal with this kind of data</li>
+<li>a submodule <a href="/models.html#models"><code>models</code></a> that defines the specific models used for this kind of data</li>
 <li>optionally, a submodule <code>learner</code> that will directly bind this data with a suitable model and add the necessary callbacks.</li>
 </ul>
 

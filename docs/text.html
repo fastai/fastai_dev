@@ -82,7 +82,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">IMDB_PATH</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -124,7 +124,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -197,7 +197,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">classes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">classes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -241,7 +241,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_ds</span> <span class="o">=</span> <span class="n">TextDataset</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -265,7 +265,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">data_clas</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">classifier_data</span><span class="p">,</span> <span class="n">vocab</span><span class="o">=</span><span class="n">data_lm</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -299,7 +299,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">download_wt103_model</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -320,7 +320,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -334,10 +334,10 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 
  
  
-<div id="91bd7cc3-3693-4cde-9c4f-efebcdd24da9"></div>
+<div id="408b41ba-e95f-4f3e-b34c-bcf98527e5b9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#91bd7cc3-3693-4cde-9c4f-efebcdd24da9');
+var element = $('#408b41ba-e95f-4f3e-b34c-bcf98527e5b9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -377,7 +377,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -391,10 +391,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="b84a9d29-f42d-4574-9e10-0d7d19a9f102"></div>
+<div id="52adad81-e403-447a-b593-f55deac68b54"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b84a9d29-f42d-4574-9e10-0d7d19a9f102');
+var element = $('#52adad81-e403-447a-b593-f55deac68b54');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -437,7 +437,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">save_encoder</span><span class="p">(</span><span class="s1">&#39;ft_enc&#39;</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -466,7 +466,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -480,10 +480,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="52961537-8029-4b2f-bb56-24b25f3fd5f6"></div>
+<div id="ab41b6a8-892b-43be-b8b5-dd9078102c02"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#52961537-8029-4b2f-bb56-24b25f3fd5f6');
+var element = $('#ab41b6a8-892b-43be-b8b5-dd9078102c02');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -523,7 +523,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mf">5e-3</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">5e-3</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -537,10 +537,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="42e896ee-7cbd-4c73-97fe-950bea8fbfcf"></div>
+<div id="ef89408b-0fed-432e-9278-17aff1ccd6a2"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#42e896ee-7cbd-4c73-97fe-950bea8fbfcf');
+var element = $('#ef89408b-0fed-432e-9278-17aff1ccd6a2');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -573,7 +573,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mf">2e-3</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="mf">2e-3</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -587,10 +587,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="3f2283ad-d7bb-47f3-90a2-03cc932b99b1"></div>
+<div id="fe977f42-d171-4f20-9f77-f995083ba5d2"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#3f2283ad-d7bb-47f3-90a2-03cc932b99b1');
+var element = $('#fe977f42-d171-4f20-9f77-f995083ba5d2');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}

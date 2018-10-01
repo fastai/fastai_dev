@@ -8,6 +8,9 @@ summary: "Tools to help find the optimal learning rate for training"
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Learning-Rate-Finder">Learning Rate Finder<a class="anchor-link" href="#Learning-Rate-Finder">&#182;</a></h1>
@@ -19,7 +22,7 @@ summary: "Tools to help find the optimal learning rate for training"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Learning rate finder plots lr vs loss relationship for a <a href="/basic_train.html#Learner"><code>Learner</code></a>. The idea is to reduce the amount of guesswork on picking a good starting learning rate.</p>
+<p>Learning rate finder plots lr vs loss relationship for a <a href="/basic_train.html#Learner"><a href="/basic_train.html#Learner"><code>Learner</code></a></a>. The idea is to reduce the amount of guesswork on picking a good starting learning rate.</p>
 <p><strong>Overview:</strong></p>
 <ol>
 <li>First run lr_find <code>learn.lr_find()</code></li>
@@ -27,7 +30,7 @@ summary: "Tools to help find the optimal learning rate for training"
 <li>Pick a learning rate before it diverges then start training</li>
 </ol>
 <p><strong>Technical Details:</strong> (first <a href="&#39;https://arxiv.org/abs/1506.01186&#39;">described</a> by Leslie Smith)</p>
-<blockquote><p>Train <code>Learner</code> over a few iterations. Start with a very low <code>start_lr</code> and change it at each mini-batch until it reaches a very high <code>end_lr</code>. <a href="/basic_train.html#Recorder"><code>Recorder</code></a> will record the loss at each iteration. Plot those losses against the learning rate to find the optimal value before it diverges.</p>
+<blockquote><p>Train <a href="/basic_train.html#Learner"><code>Learner</code></a> over a few iterations. Start with a very low <code>start_lr</code> and change it at each mini-batch until it reaches a very high <code>end_lr</code>. <a href="/basic_train.html#Recorder"><code>Recorder</code></a> will record the loss at each iteration. Plot those losses against the learning rate to find the optimal value before it diverges.</p>
 </blockquote>
 
 </div>
@@ -36,6 +39,13 @@ summary: "Tools to help find the optimal learning rate for training"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Choosing-a-good-learning-rate">Choosing a good learning rate<a class="anchor-link" href="#Choosing-a-good-learning-rate">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For a more intuitive explanation, please check out <a href="https://sgugger.github.io/how-do-you-find-a-good-learning-rate.html">Sylvain Gugger's post</a></p>
+
 </div>
 </div>
 </div>
@@ -83,10 +93,10 @@ summary: "Tools to help find the optimal learning rate for training"
 
  
  
-<div id="04656f1c-bcba-4170-b201-328d259c6c30"></div>
+<div id="f117f30b-d26e-4375-90d9-ff2f32999505"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#04656f1c-bcba-4170-b201-328d259c6c30');
+var element = $('#f117f30b-d26e-4375-90d9-ff2f32999505');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "921a0bf5331a4979a55afab37499013b", "version_major": 2, "version_minor": 0}
@@ -173,10 +183,10 @@ var element = $('#04656f1c-bcba-4170-b201-328d259c6c30');
 
  
  
-<div id="68c59ccf-acc0-4edb-ada1-0100f67bfd40"></div>
+<div id="c4a6fa72-0ef8-4756-bd86-2e6628f0a5c1"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#68c59ccf-acc0-4edb-ada1-0100f67bfd40');
+var element = $('#c4a6fa72-0ef8-4756-bd86-2e6628f0a5c1');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -230,10 +240,10 @@ epoch  train loss  valid loss
 
  
  
-<div id="0db9eb93-7771-4824-bd03-8887304f3161"></div>
+<div id="05c4de95-d5a8-476b-bd4e-d23299e5e1bb"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#0db9eb93-7771-4824-bd03-8887304f3161');
+var element = $('#05c4de95-d5a8-476b-bd4e-d23299e5e1bb');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -287,10 +297,10 @@ epoch  train loss  valid loss
 
  
  
-<div id="a65b0c1a-8c56-4113-b143-b29b1041b6f5"></div>
+<div id="d8cf1c14-9310-4af4-bd49-25fa27f3e4d4"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#a65b0c1a-8c56-4113-b143-b29b1041b6f5');
+var element = $('#d8cf1c14-9310-4af4-bd49-25fa27f3e4d4');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -326,7 +336,7 @@ epoch  train loss  valid loss
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=LRFinder></a><code>class</code> <code>LRFinder</code></h2>
 <blockquote><p><code>LRFinder</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>float</code>=<code>1e-05</code>, <code>end_lr</code>:<code>float</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/callbacks/lr_finder.py#L9">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/lr_finder.py#L9">[source]</a></p>
 </blockquote>
 
 </div>
@@ -339,7 +349,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a <code>LRFinder</code> <code>Callback</code> for <code>learn</code> to go on a mock training from <code>start_lr</code> to <code>end_lr</code> for <code>num_it</code> iterations. Training is interrupted before the end of <code>num_it</code> if the losses diverge too early.</p>
+<p>Creates a <a href="/callbacks.lr_finder.html#LRFinder"><code>LRFinder</code></a> <a href="/callback.html#Callback"><code>Callback</code></a> for <code>learn</code> to go on a mock training from <code>start_lr</code> to <code>end_lr</code> for <code>num_it</code> iterations. Training is interrupted before the end of <code>num_it</code> if the losses diverge too early.</p>
 
 </div>
 </div>

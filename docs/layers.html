@@ -8,6 +8,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="layers">layers<a class="anchor-link" href="#layers">&#182;</a></h1>
@@ -33,9 +36,10 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=AdaptiveConcatPool2d></a><em>class</em> <code>AdaptiveConcatPool2d</code></h3>
-<p>(<code>sz</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L59">[source]</a></div></p>
-<p>Layer that concats <code>AdaptiveAvgPool2d</code> and <code>AdaptiveMaxPool2d</code></p>
+<h2><a id=AdaptiveConcatPool2d></a><code>class</code> <code>AdaptiveConcatPool2d</code></h2>
+<blockquote><p><code>AdaptiveConcatPool2d</code>(<code>sz</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
+</blockquote>
+<p>Layer that concats <code>AdaptiveAvgPool2d</code> and <code>AdaptiveMaxPool2d</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L60">[source]</a></p>
 
 </div>
 
@@ -62,13 +66,14 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>x</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L66">[source]</a></div></p>
+<blockquote><p><code>forward</code>(<code>x</code>)</p>
+</blockquote>
 <p>Should be overridden by all subclasses.</p>
 <p>.. note::
     Although the recipe for forward pass needs to be defined within
     this function, one should call the :class:<code>Module</code> instance afterwards
     instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
+    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L67">[source]</a></p>
 
 </div>
 
@@ -94,9 +99,10 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=CrossEntropyFlat></a><em>class</em> <code>CrossEntropyFlat</code></h3>
-<p>(<code>weight</code>=<code>None</code>, <code>size_average</code>=<code>None</code>, <code>ignore_index</code>=<code>-100</code>, <code>reduce</code>=<code>None</code>, <code>reduction</code>=<code>'elementwise_mean'</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.CrossEntropyLoss"><code>CrossEntropyLoss</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L92">[source]</a></div></p>
-<p>Same as <code>nn.CrossEntropyLoss</code>, but flattens input and target</p>
+<h2><a id=CrossEntropyFlat></a><code>class</code> <code>CrossEntropyFlat</code></h2>
+<blockquote><p><code>CrossEntropyFlat</code>(<code>weight</code>=<code>None</code>, <code>size_average</code>=<code>None</code>, <code>ignore_index</code>=<code>-100</code>, <code>reduce</code>=<code>None</code>, <code>reduction</code>=<code>'elementwise_mean'</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.CrossEntropyLoss"><code>CrossEntropyLoss</code></a></p>
+</blockquote>
+<p>Same as <code>nn.CrossEntropyLoss</code>, but flattens input and target <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L93">[source]</a></p>
 
 </div>
 
@@ -123,13 +129,14 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>input</code>:<code>Tensor</code>, <code>target</code>:<code>Tensor</code>) -&gt; <code>OneEltTensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L94">[source]</a></div></p>
+<blockquote><p><code>forward</code>(<code>input</code>:<code>Tensor</code>, <code>target</code>:<code>Tensor</code>) -&gt; <code>Rank0Tensor</code></p>
+</blockquote>
 <p>Should be overridden by all subclasses.</p>
 <p>.. note::
     Although the recipe for forward pass needs to be defined within
     this function, one should call the :class:<code>Module</code> instance afterwards
     instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
+    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L95">[source]</a></p>
 
 </div>
 
@@ -155,9 +162,10 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=Debugger></a><em>class</em> <code>Debugger</code></h3>
-<p>() :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L68">[source]</a></div></p>
-<p>A module to debug inside a model</p>
+<h2><a id=Debugger></a><code>class</code> <code>Debugger</code></h2>
+<blockquote><p><code>Debugger</code>() :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
+</blockquote>
+<p>A module to debug inside a model <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L69">[source]</a></p>
 
 </div>
 
@@ -184,13 +192,14 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>x</code>:<code>Tensor</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L70">[source]</a></div></p>
+<blockquote><p><code>forward</code>(<code>x</code>:<code>Tensor</code>) -&gt; <code>Tensor</code></p>
+</blockquote>
 <p>Should be overridden by all subclasses.</p>
 <p>.. note::
     Although the recipe for forward pass needs to be defined within
     this function, one should call the :class:<code>Module</code> instance afterwards
     instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
+    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L71">[source]</a></p>
 
 </div>
 
@@ -217,8 +226,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=Flatten></a><code>Flatten</code></h4>
-<p>() -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L20">[source]</a></div></p>
-<p>Flattens <code>x</code> to a single dimension, often used at the end of a model</p>
+<blockquote><p><code>Flatten</code>() -&gt; <code>Tensor</code></p>
+</blockquote>
+<p>Flattens <code>x</code> to a single dimension, often used at the end of a model <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L21">[source]</a></p>
 
 </div>
 
@@ -244,9 +254,10 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=Lambda></a><em>class</em> <code>Lambda</code></h3>
-<p>(<code>func</code>:<code>Callable</code>[<code>Tensor</code>, <code>Tensor</code>]) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L7">[source]</a></div></p>
-<p>An easy way to create a pytorch layer for a simple <code>func</code></p>
+<h2><a id=Lambda></a><code>class</code> <code>Lambda</code></h2>
+<blockquote><p><code>Lambda</code>(<code>func</code>:<code>LambdaFunc</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
+</blockquote>
+<p>An easy way to create a pytorch layer for a simple <code>func</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L8">[source]</a></p>
 
 </div>
 
@@ -273,13 +284,14 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>x</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L14">[source]</a></div></p>
+<blockquote><p><code>forward</code>(<code>x</code>)</p>
+</blockquote>
 <p>Should be overridden by all subclasses.</p>
 <p>.. note::
     Although the recipe for forward pass needs to be defined within
     this function, one should call the :class:<code>Module</code> instance afterwards
     instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
+    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L15">[source]</a></p>
 
 </div>
 
@@ -306,8 +318,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=PoolFlatten></a><code>PoolFlatten</code></h4>
-<p>() -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L24">[source]</a></div></p>
-<p>Apply <code>nn.AdaptiveAvgPool2d</code> to <code>x</code> and then flatten the result</p>
+<blockquote><p><code>PoolFlatten</code>() -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a></p>
+</blockquote>
+<p>Apply <code>nn.AdaptiveAvgPool2d</code> to <code>x</code> and then flatten the result <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L25">[source]</a></p>
 
 </div>
 
@@ -334,8 +347,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=ResizeBatch></a><code>ResizeBatch</code></h4>
-<p>(<code>size</code>:<code>int</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L16">[source]</a></div></p>
-<p>Layer that resizes x to <code>size</code>, good for connecting mismatched layers</p>
+<blockquote><p><code>ResizeBatch</code>(<code>size</code>:<code>int</code>) -&gt; <code>Tensor</code></p>
+</blockquote>
+<p>Layer that resizes x to <code>size</code>, good for connecting mismatched layers <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L17">[source]</a></p>
 
 </div>
 
@@ -361,9 +375,10 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=StdUpsample></a><em>class</em> <code>StdUpsample</code></h3>
-<p>(<code>n_in</code>:<code>int</code>, <code>n_out</code>:<code>int</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L74">[source]</a></div></p>
-<p>Standard upsample module</p>
+<h2><a id=StdUpsample></a><code>class</code> <code>StdUpsample</code></h2>
+<blockquote><p><code>StdUpsample</code>(<code>n_in</code>:<code>int</code>, <code>n_out</code>:<code>int</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
+</blockquote>
+<p>Standard upsample module <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L75">[source]</a></p>
 
 </div>
 
@@ -390,13 +405,14 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>x</code>:<code>Tensor</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L81">[source]</a></div></p>
+<blockquote><p><code>forward</code>(<code>x</code>:<code>Tensor</code>) -&gt; <code>Tensor</code></p>
+</blockquote>
 <p>Should be overridden by all subclasses.</p>
 <p>.. note::
     Although the recipe for forward pass needs to be defined within
     this function, one should call the :class:<code>Module</code> instance afterwards
     instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
+    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L82">[source]</a></p>
 
 </div>
 
@@ -423,8 +439,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=bn_drop_lin></a><code>bn_drop_lin</code></h4>
-<p>(<code>n_in</code>:<code>int</code>, <code>n_out</code>:<code>int</code>, <code>bn</code>:<code>bool</code>=<code>True</code>, <code>p</code>:<code>float</code>=<code>0.0</code>, <code>actn</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]=<code>None</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L28">[source]</a></div></p>
-<p><code>n_in</code>-&gt;bn-&gt;dropout-&gt;linear(<code>n_in</code>,<code>n_out</code>)-&gt;<code>actn</code></p>
+<blockquote><p><code>bn_drop_lin</code>(<code>n_in</code>:<code>int</code>, <code>n_out</code>:<code>int</code>, <code>bn</code>:<code>bool</code>=<code>True</code>, <code>p</code>:<code>float</code>=<code>0.0</code>, <code>actn</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]=<code>None</code>)</p>
+</blockquote>
+<p><code>n_in</code>-&gt;bn-&gt;dropout-&gt;linear(<code>n_in</code>,<code>n_out</code>)-&gt;<code>actn</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L29">[source]</a></p>
 
 </div>
 
@@ -451,8 +468,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=conv2d></a><code>conv2d</code></h4>
-<p>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>, <code>padding</code>:<code>int</code>=<code>None</code>, <code>bias</code>=<code>False</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Conv2d"><code>Conv2d</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L36">[source]</a></div></p>
-<p>Create <code>nn.Conv2d</code> layer: <code>ni</code> inputs, <code>nf</code> outputs, <code>ks</code> kernel size. <code>padding</code> defaults to <code>k//2</code></p>
+<blockquote><p><code>conv2d</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>, <code>padding</code>:<code>int</code>=<code>None</code>, <code>bias</code>=<code>False</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Conv2d"><code>Conv2d</code></a></p>
+</blockquote>
+<p>Create <code>nn.Conv2d</code> layer: <code>ni</code> inputs, <code>nf</code> outputs, <code>ks</code> kernel size. <code>padding</code> defaults to <code>k//2</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L37">[source]</a></p>
 
 </div>
 
@@ -479,8 +497,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=conv2d_relu></a><code>conv2d_relu</code></h4>
-<p>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>, <code>padding</code>:<code>int</code>=<code>None</code>, <code>bn</code>:<code>bool</code>=<code>False</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L48">[source]</a></div></p>
-<p>Create a <a href="http://docs.fast.ai/layers.html#conv2d"><code>conv2d</code></a> layer with <code>nn.ReLU</code> activation and optional(<code>bn</code>) <code>nn.BatchNorm2d</code></p>
+<blockquote><p><code>conv2d_relu</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>, <code>padding</code>:<code>int</code>=<code>None</code>, <code>bn</code>:<code>bool</code>=<code>False</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a></p>
+</blockquote>
+<p>Create a <a href="/layers.html#conv2d"><code>conv2d</code></a> layer with <code>nn.ReLU</code> activation and optional(<code>bn</code>) <code>nn.BatchNorm2d</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L49">[source]</a></p>
 
 </div>
 
@@ -507,8 +526,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=conv2d_trans></a><code>conv2d_trans</code></h4>
-<p>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>2</code>, <code>stride</code>:<code>int</code>=<code>2</code>, <code>padding</code>:<code>int</code>=<code>0</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.ConvTranspose2d"><code>ConvTranspose2d</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L55">[source]</a></div></p>
-<p>Create <code>nn.nn.ConvTranspose2d</code> layer: <code>ni</code> inputs, <code>nf</code> outputs, <code>ks</code> kernel size. <code>padding</code> defaults to 0</p>
+<blockquote><p><code>conv2d_trans</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>2</code>, <code>stride</code>:<code>int</code>=<code>2</code>, <code>padding</code>:<code>int</code>=<code>0</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.ConvTranspose2d"><code>ConvTranspose2d</code></a></p>
+</blockquote>
+<p>Create <code>nn.nn.ConvTranspose2d</code> layer: <code>ni</code> inputs, <code>nf</code> outputs, <code>ks</code> kernel size. <code>padding</code> defaults to 0 <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L56">[source]</a></p>
 
 </div>
 
@@ -535,8 +555,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=conv_layer></a><code>conv_layer</code></h4>
-<p>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L41">[source]</a></div></p>
-<p>Create Conv2d-&gt;BatchNorm2d-&gt;LeakyReLu layer: <code>ni</code> input, <code>nf</code> out filters, <code>ks</code> kernel, <code>stride</code>:stride</p>
+<blockquote><p><code>conv_layer</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a></p>
+</blockquote>
+<p>Create Conv2d-&gt;BatchNorm2d-&gt;LeakyReLu layer: <code>ni</code> input, <code>nf</code> out filters, <code>ks</code> kernel, <code>stride</code>:stride <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L42">[source]</a></p>
 
 </div>
 
@@ -563,8 +584,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_embedding></a><code>get_embedding</code></h4>
-<p>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L111">[source]</a></div></p>
-<p>Creates an embedding layer</p>
+<blockquote><p><code>get_embedding</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
+</blockquote>
+<p>Creates an embedding layer <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L115">[source]</a></p>
 
 </div>
 
@@ -591,8 +613,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=simple_cnn></a><code>simple_cnn</code></h4>
-<p>(<code>actns</code>:<code>Collection</code>[<code>int</code>], <code>kernel_szs</code>:<code>Collection</code>[<code>int</code>], <code>strides</code>:<code>Collection</code>[<code>int</code>]) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L98">[source]</a></div></p>
-<p>CNN with <a href="http://docs.fast.ai/layers.html#conv2d_relu"><code>conv2d_relu</code></a> layers defined by <code>actns</code>, <code>kernel_szs</code> and <code>strides</code></p>
+<blockquote><p><code>simple_cnn</code>(<code>actns</code>:<code>Collection</code>[<code>int</code>], <code>kernel_szs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>strides</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a></p>
+</blockquote>
+<p>CNN with <a href="/layers.html#conv2d_relu"><code>conv2d_relu</code></a> layers defined by <code>actns</code>, <code>kernel_szs</code> and <code>strides</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L99">[source]</a></p>
 
 </div>
 
@@ -619,8 +642,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=std_upsample_head></a><code>std_upsample_head</code></h4>
-<p>(<code>c</code>, <code>nfs</code>:<code>Collection</code>[<code>int</code>]) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L84">[source]</a></div></p>
-<p>Creates a sequence of upsample layers</p>
+<blockquote><p><code>std_upsample_head</code>(<code>c</code>, <code>nfs</code>:<code>Collection</code>[<code>int</code>]) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
+</blockquote>
+<p>Creates a sequence of upsample layers <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L85">[source]</a></p>
 
 </div>
 
@@ -647,8 +671,9 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=trunc_normal_></a><code>trunc_normal_</code></h4>
-<p>(<code>x</code>:<code>Tensor</code>, <code>mean</code>:<code>float</code>=<code>0.0</code>, <code>std</code>:<code>float</code>=<code>1.0</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/layers.py#L106">[source]</a></div></p>
-<p>Truncated normal initialization</p>
+<blockquote><p><code>trunc_normal_</code>(<code>x</code>:<code>Tensor</code>, <code>mean</code>:<code>float</code>=<code>0.0</code>, <code>std</code>:<code>float</code>=<code>1.0</code>) -&gt; <code>Tensor</code></p>
+</blockquote>
+<p>Truncated normal initialization <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L110">[source]</a></p>
 
 </div>
 

@@ -3,7 +3,7 @@ title: text.learner
 keywords: 
 sidebar: home_sidebar
 tags: 
-summary: "`Learner` support for NLP"
+summary: "Model training for NLP"
 ---
 
 <div class="container" id="notebook-container">
@@ -13,14 +13,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="NLP-Learners">NLP Learners<a class="anchor-link" href="#NLP-Learners">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>This module contains the main class to quickly define a <a href="/basic_train.html#Learner"><code>Learner</code></a> (and automatically generates an appropriate model) from your NLP data.</p>
-
+<h1 id="NLP-model-creation-and-training">NLP model creation and training<a class="anchor-link" href="#NLP-model-creation-and-training">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -29,13 +22,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Class-RNNLearner">Class RNNLearner<a class="anchor-link" href="#Class-RNNLearner">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>This is the class that handles the whole creation of a <a href="/basic_train.html#Learner"><code>Learner</code></a>, be it for a language model or an RNN classifier. It handles the conversion of weights from a pretrained model as well as saving or loading the encoder.</p>
+<p>The main thing here is <a href="/text.learner.html#RNNLearner"><code>RNNLearner</code></a>. There are also some utility functions to help create and update text models.</p>
 
 </div>
 </div>
@@ -51,7 +38,7 @@ summary: "`Learner` support for NLP"
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=RNNLearner></a><code>class</code> <code>RNNLearner</code></h2>
 <blockquote><p><code>RNNLearner</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>split_func</code>:<code>OptSplitFunc</code>=<code>None</code>, <code>clip</code>:<code>float</code>=<code>None</code>, <code>adjust</code>:<code>bool</code>=<code>False</code>, <code>alpha</code>:<code>float</code>=<code>2.0</code>, <code>beta</code>:<code>float</code>=<code>1.0</code>, <code>kwargs</code>) :: <a href="/basic_train.html#Learner"><code>Learner</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/learner.py#L42">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L42">[source]</a></p>
 </blockquote>
 
 </div>
@@ -64,7 +51,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates an <a href="/text.learner.html#RNNLearner"><code>RNNLearner</code></a> from <a href="/text.data.html#text.data"><code>data</code></a> and a <code>model</code> with a text data using a certain <code>bptt</code>. The <code>split_func</code> is used to properly split the model in different groups for gradual unfreezing and differential learning rates. Gradient clipping of <code>clip</code> is optionnally applied. <code>adjust</code>, <code>alpha</code> and <code>beta</code> are all passed to create an instance of <a href="/callbacks.rnn.html#RNNTrainer"><code>RNNTrainer</code></a>.</p>
+<p>Handles the whole creation of a <a href="/basic_train.html#Learner"><code>Learner</code></a> from <a href="/text.data.html#text.data"><code>data</code></a> and a <code>model</code> with a text data using a certain <code>bptt</code>. The <code>split_func</code> is used to properly split the model in different groups for gradual unfreezing and differential learning rates. Gradient clipping of <code>clip</code> is optionally applied. <code>adjust</code>, <code>alpha</code> and <code>beta</code> are all passed to create an instance of <a href="/callbacks.rnn.html#RNNTrainer"><code>RNNTrainer</code></a>. Can be used for a language model or an RNN classifier. It also handles the conversion of weights from a pretrained model as well as saving or loading the encoder.</p>
 
 </div>
 </div>
@@ -85,8 +72,8 @@ summary: "`Learner` support for NLP"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=classifier></a><code>classifier</code></h4>
-<blockquote><p><code>classifier</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>max_len</code>:<code>int</code>=<code>1400</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>layers</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>drops</code>:<code>Collection</code>[<code>float</code>]=<code>None</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>) -&gt; <code>RNNLearner</code>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/learner.py#L83">[source]</a></p>
+<blockquote><p><code>classifier</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>max_len</code>:<code>int</code>=<code>1400</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>lin_ftrs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>ps</code>:<code>Collection</code>[<code>float</code>]=<code>None</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>) -&gt; <code>RNNLearner</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L83">[source]</a></p>
 </blockquote>
 
 </div>
@@ -119,7 +106,7 @@ summary: "`Learner` support for NLP"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">RNNLearner</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -135,7 +122,7 @@ summary: "`Learner` support for NLP"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=language_model></a><code>language_model</code></h4>
 <blockquote><p><code>language_model</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>tie_weights</code>:<code>bool</code>=<code>True</code>, <code>bias</code>:<code>bool</code>=<code>True</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>pretrained_fnames</code>:<code>OptStrTuple</code>=<code>None</code>, <code>kwargs</code>) -&gt; <code>RNNLearner</code>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/learner.py#L68">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L68">[source]</a></p>
 </blockquote>
 
 </div>
@@ -163,7 +150,7 @@ summary: "`Learner` support for NLP"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">RNNLearner</span><span class="o">.</span><span class="n">language_model</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pretrained_fnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lstm_wt103&#39;</span><span class="p">,</span> <span class="s1">&#39;itos_wt103&#39;</span><span class="p">],</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -186,7 +173,7 @@ summary: "`Learner` support for NLP"
 <h4><a id=load_encoder></a><code>load_encoder</code></h4>
 <blockquote><p><code>load_encoder</code>(<code>name</code>:<code>str</code>)</p>
 </blockquote>
-<p>Load the encoder <code>name</code> from the model directory. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/learner.py#L56">[source]</a></p>
+<p>Load the encoder <code>name</code> from the model directory. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L56">[source]</a></p>
 
 </div>
 
@@ -208,7 +195,7 @@ summary: "`Learner` support for NLP"
 <h4><a id=save_encoder></a><code>save_encoder</code></h4>
 <blockquote><p><code>save_encoder</code>(<code>name</code>:<code>str</code>)</p>
 </blockquote>
-<p>Save the encoder to <code>name</code> inside the model directory. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/learner.py#L52">[source]</a></p>
+<p>Save the encoder to <code>name</code> inside the model directory. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L52">[source]</a></p>
 
 </div>
 
@@ -229,7 +216,7 @@ summary: "`Learner` support for NLP"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=load_pretrained></a><code>load_pretrained</code></h4>
 <blockquote><p><code>load_pretrained</code>(<code>wgts_fname</code>:<code>str</code>, <code>itos_fname</code>:<code>str</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/learner.py#L60">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L60">[source]</a></p>
 </blockquote>
 
 </div>
@@ -242,7 +229,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Opens the weights in the <code>wgts_fname</code> of model diretory of the <a href="/text.learner.html#RNNLearner"><code>RNNLearner</code></a> and the dictionary in <code>itos_fname</code> then adapts the pretrained weights to the vocabulary of the <a href="/text.data.html#text.data"><code>data</code></a>.</p>
+<p>Opens the weights in the <code>wgts_fname</code> of <code>self.model_dir</code> and the dictionary in <code>itos_fname</code>m then adapts the pretrained weights to the vocabulary of the <code>data</code>.</p>
 
 </div>
 </div>
@@ -265,7 +252,7 @@ summary: "`Learner` support for NLP"
 <h4><a id=lm_split></a><code>lm_split</code></h4>
 <blockquote><p><code>lm_split</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>) -&gt; <code>List</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]</p>
 </blockquote>
-<p>Split a RNN <code>model</code> in groups for differential learning rates. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/learner.py#L27">[source]</a></p>
+<p>Split a RNN <code>model</code> in groups for differential learning rates. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L27">[source]</a></p>
 
 </div>
 
@@ -287,7 +274,7 @@ summary: "`Learner` support for NLP"
 <h4><a id=rnn_classifier_split></a><code>rnn_classifier_split</code></h4>
 <blockquote><p><code>rnn_classifier_split</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>) -&gt; <code>List</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]</p>
 </blockquote>
-<p>Split a RNN <code>model</code> in groups for differential learning rates. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/learner.py#L34">[source]</a></p>
+<p>Split a RNN <code>model</code> in groups for differential learning rates. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L34">[source]</a></p>
 
 </div>
 
@@ -308,7 +295,7 @@ summary: "`Learner` support for NLP"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=convert_weights></a><code>convert_weights</code></h4>
 <blockquote><p><code>convert_weights</code>(<code>wgts</code>:<code>Weights</code>, <code>stoi_wgts</code>:<code>Dict</code>[<code>str</code>, <code>int</code>], <code>itos_new</code>:<code>StrList</code>) -&gt; <code>Weights</code>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/text/learner.py#L11">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L11">[source]</a></p>
 </blockquote>
 
 </div>
@@ -321,7 +308,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Convert the <code>wgts</code> from an old disctionary <code>stoi_wgts</code> (correspondance word to id) to a new dictionary <code>itos_new</code> (correspondans id to word).</p>
+<p>Convert the <code>wgts</code> from an dictionary <code>stoi_wgts</code> (mapping of word to id) to a new dictionary <code>itos_new</code> (correspondans id to word).</p>
 
 </div>
 </div>

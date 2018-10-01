@@ -201,10 +201,10 @@ summary: "Data and learner function for Collaborative Filtering"
 
  
  
-<div id="b3dd2d72-4b9c-4334-92ef-8211bf59e3d2"></div>
+<div id="5aee82ea-eccb-4a27-bce3-72dc6edd10ab"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b3dd2d72-4b9c-4334-92ef-8211bf59e3d2');
+var element = $('#5aee82ea-eccb-4a27-bce3-72dc6edd10ab');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -243,7 +243,7 @@ epoch  train loss  valid loss
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=CollabFilteringDataset></a><code>class</code> <code>CollabFilteringDataset</code></h2>
 <blockquote><p><code>CollabFilteringDataset</code>(<code>user</code>:<code>Series</code>, <code>item</code>:<code>Series</code>, <code>ratings</code>:<code>ndarray</code>) :: <a href="/data.html#DatasetBase"><code>DatasetBase</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L10">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L10">[source]</a></p>
 </blockquote>
 
 </div>
@@ -272,7 +272,7 @@ epoch  train loss  valid loss
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=from_df></a><code>from_df</code></h4>
 <blockquote><p><code>from_df</code>(<code>rating_df</code>:<code>DataFrame</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>) -&gt; <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L33">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L33">[source]</a></p>
 </blockquote>
 
 </div>
@@ -301,7 +301,7 @@ epoch  train loss  valid loss
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=from_csv></a><code>from_csv</code></h4>
 <blockquote><p><code>from_csv</code>(<code>csv_name</code>:<code>str</code>, <code>kwargs</code>) -&gt; <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L49">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L49">[source]</a></p>
 </blockquote>
 
 </div>
@@ -336,7 +336,7 @@ epoch  train loss  valid loss
 <div class="output_markdown rendered_html output_subarea ">
 <h3><a id=EmbeddingDotBias></a><code>class</code> <code>EmbeddingDotBias</code></h3>
 <blockquote><p><code>EmbeddingDotBias</code>(<code>n_factors</code>:<code>int</code>, <code>n_users</code>:<code>int</code>, <code>n_items</code>:<code>int</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L55">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L55">[source]</a></p>
 </blockquote>
 
 </div>
@@ -365,7 +365,7 @@ epoch  train loss  valid loss
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_collab_learner></a><code>get_collab_learner</code></h4>
 <blockquote><p><code>get_collab_learner</code>(<code>ratings</code>:<code>DataFrame</code>, <code>n_factors</code>:<code>int</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>test</code>:<code>DataFrame</code>=<code>None</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>, <code>loss_fn</code>:<code>LossFunction</code>=<code>'mse_loss'</code>, <code>kwargs</code>) -&gt; <a href="/basic_train.html#Learner"><code>Learner</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/collab.py#L70">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L70">[source]</a></p>
 </blockquote>
 
 </div>

@@ -8,6 +8,9 @@ summary:
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="tabular.models">tabular.models<a class="anchor-link" href="#tabular.models">&#182;</a></h1>
@@ -52,7 +55,7 @@ summary:
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Create a model suitable for tabular data. <code>emb_szs</code> match each categorical variable size with an embedding size, <code>n_cont</code> is the number of continuous variables. The model consists of <code>Embedding</code> layers for the categorical variables, followed by a <code>Dropout</code> of <code>emb_drop</code>, and a <code>BatchNorm</code> for the continuous variables. The results are concatenated and followed by blocks of <code>BatchNorm</code>, <code>Dropout</code>, <code>Linear</code> and <code>ReLU</code> (the first block skip <code>BatchNorm</code> and <code>Dropout</code>, the last block skips the <code>ReLU</code>).</p>
-<p>The sizes of the blocks are given in <code>layers</code> and the probabilities of the <code>Dropout</code> in <code>drops</code>. The last size is <code>out_sz</code>, and we add a last activation that is a sigmoid rescaled to cover <code>y_range</code> (if it's not <code>None</code>). Lastly, if <code>use_bn</code> is set to False, all <code>BatchNorm</code> layers are skipped except the one applied to the continuous variables.</p>
+<p>The sizes of the blocks are given in <a href="/layers.html#layers"><code>layers</code></a> and the probabilities of the <code>Dropout</code> in <code>drops</code>. The last size is <code>out_sz</code>, and we add a last activation that is a sigmoid rescaled to cover <code>y_range</code> (if it's not <code>None</code>). Lastly, if <code>use_bn</code> is set to False, all <code>BatchNorm</code> layers are skipped except the one applied to the continuous variables.</p>
 
 </div>
 </div>

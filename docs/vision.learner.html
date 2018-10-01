@@ -8,6 +8,9 @@ summary: "`Learner` support for computer vision"
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Computer-Vision-Learner">Computer Vision Learner<a class="anchor-link" href="#Computer-Vision-Learner">&#182;</a></h1>
@@ -51,7 +54,7 @@ summary: "`Learner` support for computer vision"
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ConvLearner></a><code>class</code> <code>ConvLearner</code></h2>
 <blockquote><p><code>ConvLearner</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>arch</code>:<code>Callable</code>, <code>cut</code>:<code>Union</code>[<code>int</code>, <code>Callable</code>]=<code>None</code>, <code>pretrained</code>:<code>bool</code>=<code>True</code>, <code>lin_ftrs</code>:<code>Optional</code>[<code>Collection</code>[<code>int</code>]]=<code>None</code>, <code>ps</code>:<code>Floats</code>=<code>0.5</code>, <code>custom_head</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]=<code>None</code>, <code>split_on</code>:<code>Union</code>[<code>Callable</code>, <code>Collection</code>[<code>ModuleList</code>], <code>NoneType</code>]=<code>None</code>, <code>kwargs</code>:<code>Any</code>) :: <a href="/basic_train.html#Learner"><code>Learner</code></a>
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/learner.py#L44">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L44">[source]</a></p>
 </blockquote>
 
 </div>
@@ -116,10 +119,10 @@ summary: "`Learner` support for computer vision"
 
  
  
-<div id="55ebf163-fca9-4239-a65b-98f3db727a80"></div>
+<div id="2b899eeb-08ce-4784-ae60-ca0d62ae3ede"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#55ebf163-fca9-4239-a65b-98f3db727a80');
+var element = $('#2b899eeb-08ce-4784-ae60-ca0d62ae3ede');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -168,7 +171,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=create_body></a><code>create_body</code></h4>
 <blockquote><p><code>create_body</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>cut</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>, <code>body_fn</code>:<code>Callable</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]=<code>None</code>)</p>
 </blockquote>
-<p>Cut off the body of a typically pretrained <code>model</code> at <code>cut</code> or as specified by <code>body_fn</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/learner.py#L9">[source]</a></p>
+<p>Cut off the body of a typically pretrained <code>model</code> at <code>cut</code> or as specified by <code>body_fn</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L9">[source]</a></p>
 
 </div>
 
@@ -189,7 +192,7 @@ epoch  train loss  valid loss  accuracy
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=create_head></a><code>create_head</code></h4>
 <blockquote><p><code>create_head</code>(<code>nf</code>:<code>int</code>, <code>nc</code>:<code>int</code>, <code>lin_ftrs</code>:<code>Optional</code>[<code>Collection</code>[<code>int</code>]]=<code>None</code>, <code>ps</code>:<code>Floats</code>=<code>0.5</code>)
-<a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/learner.py#L19">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L19">[source]</a></p>
 </blockquote>
 
 </div>
@@ -225,7 +228,7 @@ epoch  train loss  valid loss  accuracy
 <h4><a id=num_features></a><code>num_features</code></h4>
 <blockquote><p><code>num_features</code>(<code>m</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>) -&gt; <code>int</code></p>
 </blockquote>
-<p>Return the number of output features for a <code>model</code>. <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/learner.py#L14">[source]</a></p>
+<p>Return the number of output features for a <code>model</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L14">[source]</a></p>
 
 </div>
 
@@ -247,7 +250,7 @@ epoch  train loss  valid loss  accuracy
 <h2><a id=ClassificationInterpretation></a><code>class</code> <code>ClassificationInterpretation</code></h2>
 <blockquote><p><code>ClassificationInterpretation</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>y_pred</code>:<code>Tensor</code>, <code>y_true</code>:<code>Tensor</code>, <code>loss_class</code>:<code>type</code>=<code>'CrossEntropyLoss'</code>, <code>sigmoid</code>:<code>bool</code>=<code>True</code>)</p>
 </blockquote>
-<p>Interpretation methods for classification models <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/learner.py#L60">[source]</a></p>
+<p>Interpretation methods for classification models <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L60">[source]</a></p>
 
 </div>
 
@@ -289,10 +292,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="9444ae9d-d45c-4278-9038-80e6a5f00e10"></div>
+<div id="54b426c5-75f7-4991-a0a4-bd8083e5e821"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#9444ae9d-d45c-4278-9038-80e6a5f00e10');
+var element = $('#54b426c5-75f7-4991-a0a4-bd8083e5e821');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -338,7 +341,7 @@ epoch  train loss  valid loss
 <h4><a id=plot_top_losses></a><code>plot_top_losses</code></h4>
 <blockquote><p><code>plot_top_losses</code>(<code>k</code>, <code>largest</code>=<code>True</code>, <code>figsize</code>=<code>(12, 12)</code>)</p>
 </blockquote>
-<p>Show images in <code>top_losses</code> along with their loss, label, and prediction <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/learner.py#L73">[source]</a></p>
+<p>Show images in <code>top_losses</code> along with their loss, label, and prediction <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L73">[source]</a></p>
 
 </div>
 
@@ -398,7 +401,7 @@ epoch  train loss  valid loss
 <h4><a id=top_losses></a><code>top_losses</code></h4>
 <blockquote><p><code>top_losses</code>(<code>k</code>, <code>largest</code>=<code>True</code>)</p>
 </blockquote>
-<p><code>k</code> largest(/smallest) losses <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/learner.py#L69">[source]</a></p>
+<p><code>k</code> largest(/smallest) losses <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L69">[source]</a></p>
 
 </div>
 
@@ -447,7 +450,7 @@ epoch  train loss  valid loss
 <h4><a id=plot_confusion_matrix></a><code>plot_confusion_matrix</code></h4>
 <blockquote><p><code>plot_confusion_matrix</code>(<code>normalize</code>:<code>bool</code>=<code>False</code>, <code>title</code>:<code>str</code>=<code>'Confusion matrix'</code>, <code>cmap</code>:<code>Any</code>=<code>'Blues'</code>, <code>figsize</code>:<code>tuple</code>=<code>None</code>)</p>
 </blockquote>
-<p>Plot the confusion matrix <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/learner.py#L90">[source]</a></p>
+<p>Plot the confusion matrix <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L90">[source]</a></p>
 
 </div>
 
@@ -510,7 +513,7 @@ epoch  train loss  valid loss
 <h4><a id=confusion_matrix></a><code>confusion_matrix</code></h4>
 <blockquote><p><code>confusion_matrix</code>()</p>
 </blockquote>
-<p>Confusion matrix as an <code>np.ndarray</code> <a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/learner.py#L84">[source]</a></p>
+<p>Confusion matrix as an <code>np.ndarray</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L84">[source]</a></p>
 
 </div>
 

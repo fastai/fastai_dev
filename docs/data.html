@@ -8,6 +8,9 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="data">data<a class="anchor-link" href="#data">&#182;</a></h1>
@@ -39,9 +42,10 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=DataBunch></a><em>class</em> <code>DataBunch</code></h3>
-<p>(<code>train_dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>valid_dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>test_dl</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch.html#torch.device"><code>device</code></a>=<code>None</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>[]]]=<code>None</code>, <code>path</code>:<code>None</code>[<code>Path</code>, <code>str</code>]=<code>'.'</code>, <code>collate_fn</code>:<code>Callable</code>[]=<code>&lt;function data_collate at 0x1a1a0c4598&gt;</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/data.py#L56">[source]</a></div></p>
-<p>Bind <code>train_dl</code>,<code>valid_dl</code> and<code>test_dl</code> to <code>device</code>. tfms are DL tfms (normalize). <code>path</code> is for models.</p>
+<h2><a id=DataBunch></a><code>class</code> <code>DataBunch</code></h2>
+<blockquote><p><code>DataBunch</code>(<code>train_dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>valid_dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>test_dl</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch.html#torch.device"><code>device</code></a>=<code>None</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>]]=<code>None</code>, <code>path</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>)</p>
+</blockquote>
+<p>Bind <code>train_dl</code>,<code>valid_dl</code> and<code>test_dl</code> to <code>device</code>. tfms are DL tfms (normalize). <code>path</code> is for models. <a href="https://github.com/fastai/fastai/blob/master/fastai/data.py#L57">[source]</a></p>
 
 </div>
 
@@ -68,8 +72,9 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=_create_with_tfm></a><code>_create_with_tfm</code></h4>
-<p>(<code>train_ds</code>, <code>valid_ds</code>, <code>test_ds</code>=<code>None</code>, <code>path</code>=<code>'.'</code>, <code>bs</code>=<code>64</code>, <code>ds_tfms</code>=<code>None</code>, <code>num_workers</code>=<code>8</code>, <code>tfms</code>=<code>None</code>, <code>device</code>=<code>None</code>, <code>size</code>=<code>None</code>, <code>kwargs</code>) -&gt; <code>str</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/vision/data.py#L142">[source]</a></div></p>
-<p><a href="fastai.data.html#DataBunch"><code>DataBunch</code></a> factory. <code>bs</code> batch size, <code>ds_tfms</code> for <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>tfms</code> for <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a></p>
+<blockquote><p><code>_create_with_tfm</code>(<code>train_ds</code>, <code>valid_ds</code>, <code>test_ds</code>=<code>None</code>, <code>path</code>=<code>'.'</code>, <code>bs</code>=<code>64</code>, <code>ds_tfms</code>=<code>None</code>, <code>num_workers</code>=<code>8</code>, <code>tfms</code>=<code>None</code>, <code>device</code>=<code>None</code>, <code>size</code>=<code>None</code>, <code>kwargs</code>) -&gt; <code>DataBunch</code></p>
+</blockquote>
+<p><a href="/data.html#DataBunch"><code>DataBunch</code></a> factory. <code>bs</code> batch size, <code>ds_tfms</code> for <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>tfms</code> for <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L187">[source]</a></p>
 
 </div>
 
@@ -96,8 +101,9 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=holdout></a><code>holdout</code></h4>
-<p>(<code>is_test</code>:<code>bool</code>=<code>False</code>) -&gt; <a href="fastai.data.html#DeviceDataLoader"><code>DeviceDataLoader</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/data.py#L80">[source]</a></div></p>
-<p>Returns correct holdout <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a> for test vs validation (<code>is_test</code>)</p>
+<blockquote><p><code>holdout</code>(<code>is_test</code>:<code>bool</code>=<code>False</code>) -&gt; <a href="/data.html#DeviceDataLoader"><code>DeviceDataLoader</code></a></p>
+</blockquote>
+<p>Returns correct holdout <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a> for test vs validation (<code>is_test</code>). <a href="https://github.com/fastai/fastai/blob/master/fastai/data.py#L81">[source]</a></p>
 
 </div>
 
@@ -116,6 +122,25 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=_labels_to_csv></a><code>_labels_to_csv</code></h4>
+<blockquote><p><code>_labels_to_csv</code>(<code>dest</code>:<code>str</code>)</p>
+</blockquote>
+<p>Save file names and labels in <code>data</code> as CSV to file name <code>dest</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L214">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -126,8 +151,10 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=DatasetBase></a><em>class</em> <code>DatasetBase</code>() :: Inherits (<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/data.py#L5">[source]</a></div></h3>
-<p>Base class for all fastai datasets</p>
+<h2><a id=DatasetBase></a><code>class</code> <code>DatasetBase</code></h2>
+<blockquote><p><code>DatasetBase</code>() :: <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a></p>
+</blockquote>
+<p>Base class for all fastai datasets. <a href="https://github.com/fastai/fastai/blob/master/fastai/data.py#L6">[source]</a></p>
 
 </div>
 
@@ -153,9 +180,10 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=DeviceDataLoader></a><em>class</em> <code>DeviceDataLoader</code></h3>
-<p>(<code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch.html#torch.device"><code>device</code></a>, <code>tfms</code>:<code>List</code>[<code>Callable</code>[]]=<code>None</code>, <code>collate_fn</code>:<code>Callable</code>[]=<code>&lt;function data_collate at 0x1a1a0c4598&gt;</code>) -&gt; <code>NoneType</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/data.py#L22">[source]</a></div></p>
-<p>Binds a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> to a <code>torch.device</code></p>
+<h2><a id=DeviceDataLoader></a><code>class</code> <code>DeviceDataLoader</code></h2>
+<blockquote><p><code>DeviceDataLoader</code>(<code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch.html#torch.device"><code>device</code></a>, <code>tfms</code>:<code>List</code>[<code>Callable</code>]=<code>None</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>)</p>
+</blockquote>
+<p>Bind a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> to a <a href="https://pytorch.org/docs/stable/torch.html#torch.device"><code>torch.device</code></a>. <a href="https://github.com/fastai/fastai/blob/master/fastai/data.py#L23">[source]</a></p>
 
 </div>
 
@@ -181,7 +209,10 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=add_tfm></a><code>add_tfm</code>(<code>tfm</code>:<code>Callable</code>[]) -&gt; <code>NoneType</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/data.py#L35">[source]</a></div></h4>
+<h4><a id=add_tfm></a><code>add_tfm</code></h4>
+<blockquote><p><code>add_tfm</code>(<code>tfm</code>:<code>Callable</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/data.py#L36">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -208,8 +239,9 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=data_collate></a><code>data_collate</code></h4>
-<p>(<code>batch</code>:<code>Collection</code>[<code>None</code>[<code>Tensor</code>, <a href="fastai.core.html#ItemBase"><code>ItemBase</code></a>, <code>str</code>, <code>float</code>, <code>int</code>]]) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/torch_core.py#L55">[source]</a></div></p>
-<p>Convert <code>batch</code> items to tensor data</p>
+<blockquote><p><code>data_collate</code>(<code>batch</code>:<code>ItemsList</code>) -&gt; <code>Tensor</code></p>
+</blockquote>
+<p>Convert <code>batch</code> items to tensor data <a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L78">[source]</a></p>
 
 </div>
 
@@ -236,8 +268,9 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=create></a><code>create</code></h4>
-<p>(<code>dataset</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>bs</code>:<code>int</code>=<code>1</code>, <code>shuffle</code>:<code>bool</code>=<code>False</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch.html#torch.device"><code>device</code></a>=<code>device(type='cpu')</code>, <code>tfms</code>:<code>Collection</code>[<code>Callable</code>[]]=<code>None</code>, <code>num_workers</code>:<code>int</code>=<code>8</code>, <code>collate_fn</code>:<code>Callable</code>[]=<code>&lt;function data_collate at 0x1a1a0c4598&gt;</code>, <code>kwargs</code>:<code>Any</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/data.py#L49">[source]</a></div></p>
-<p>Create DeviceDataLoader from <code>dataset</code> with <code>batch_size</code> and <code>shuffle</code>: processs using <code>num_workers</code></p>
+<blockquote><p><code>create</code>(<code>dataset</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>bs</code>:<code>int</code>=<code>1</code>, <code>shuffle</code>:<code>bool</code>=<code>False</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch.html#torch.device"><code>device</code></a>=<code>device(type='cpu')</code>, <code>tfms</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>, <code>num_workers</code>:<code>int</code>=<code>8</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>, <code>kwargs</code>:<code>Any</code>)</p>
+</blockquote>
+<p>Create DeviceDataLoader from <code>dataset</code> with <code>batch_size</code> and <code>shuffle</code>: processs using <code>num_workers</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/data.py#L50">[source]</a></p>
 
 </div>
 
@@ -263,8 +296,10 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=proc_batch></a><code>proc_batch</code>(<code>b</code>:<code>Tensor</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/data.py#L38">[source]</a></div></h4>
-<p>Proces batch <code>b</code> of <code>Tensor</code></p>
+<h4><a id=proc_batch></a><code>proc_batch</code></h4>
+<blockquote><p><code>proc_batch</code>(<code>b</code>:<code>Tensor</code>) -&gt; <code>Tensor</code></p>
+</blockquote>
+<p>Proces batch <code>b</code> of <code>TensorImage</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/data.py#L39">[source]</a></p>
 
 </div>
 
@@ -290,7 +325,10 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=remove_tfm></a><code>remove_tfm</code>(<code>tfm</code>:<code>Callable</code>[]) -&gt; <code>NoneType</code><div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/data.py#L36">[source]</a></div></h4>
+<h4><a id=remove_tfm></a><code>remove_tfm</code></h4>
+<blockquote><p><code>remove_tfm</code>(<code>tfm</code>:<code>Callable</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/data.py#L37">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -316,8 +354,10 @@ summary: "`fastai.data` loads and manages datasets with `DataBunch`"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=LabelDataset></a><em>class</em> <code>LabelDataset</code>() :: Inherits (<a href="fastai.data.html#DatasetBase"><code>DatasetBase</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai_pytorch/blob/master/fastai/data.py#L14">[source]</a></div></h3>
-<p>Base class for fastai datasets that do classification</p>
+<h2><a id=LabelDataset></a><code>class</code> <code>LabelDataset</code></h2>
+<blockquote><p><code>LabelDataset</code>() :: <a href="/data.html#DatasetBase"><code>DatasetBase</code></a></p>
+</blockquote>
+<p>Base class for fastai datasets that do classification. <a href="https://github.com/fastai/fastai/blob/master/fastai/data.py#L15">[source]</a></p>
 
 </div>
 
