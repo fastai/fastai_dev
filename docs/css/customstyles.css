@@ -128,9 +128,11 @@ margin-top: -40px
     background-color: RoyalBlue;
 }
 
-.container #notebook-container{
-    width: 100%;
-}
+.container #notebook-container{ 
+    width: 100%;        
+    box-sizing: content-box;
+            }
+
 .post-content img {
     margin: 12px 0px 3px 0px;
     width: auto;
