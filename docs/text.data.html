@@ -75,7 +75,7 @@ summary: "NLP data loading pipeline; Supports csv, folders, and preprocessed dat
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=text_data_from_folder></a><code>text_data_from_folder</code></h4>
-<blockquote><p><code>text_data_from_folder</code>(<code>path</code>:<code>PathOrStr</code>, <code>tokenizer</code>:<code>Tokenizer</code>=<code>None</code>, <code>train</code>:<code>str</code>=<code>'train'</code>, <code>valid</code>:<code>str</code>=<code>'valid'</code>, <code>test</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>shuffle</code>:<code>bool</code>=<code>True</code>, <code>data_func</code>:<code>Callable</code>[<code>Collection</code>`DatasetBase<code>\],</code>PathOrStr<code>,</code>KWArgs<code>,</code>DataBunch<code>\]=</code>'standard_data'<code>,</code>vocab<code>:</code>Vocab<code>=</code>None<code>,</code>kwargs`)
+<blockquote><p><code>text_data_from_folder</code>(<code>path</code>:<code>PathOrStr</code>, <code>tokenizer</code>:<a href="/text.transform.html#Tokenizer"><code>Tokenizer</code></a>=<code>None</code>, <code>train</code>:<code>str</code>=<code>'train'</code>, <code>valid</code>:<code>str</code>=<code>'valid'</code>, <code>test</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>shuffle</code>:<code>bool</code>=<code>True</code>, <code>data_func</code>:<code>Callable</code>[<code>Collection</code>[<a href="/data.html#DatasetBase"><code>DatasetBase</code></a>], <code>PathOrStr</code>, <code>KWArgs</code>, <a href="/data.html#DataBunch"><code>DataBunch</code></a>]=<code>'standard_data'</code>, <code>vocab</code>:<a href="/text.transform.html#Vocab"><code>Vocab</code></a>=<code>None</code>, <code>kwargs</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/text/data.py#L315">[source]</a></p>
 </blockquote>
 
@@ -203,27 +203,10 @@ summary: "NLP data loading pipeline; Supports csv, folders, and preprocessed dat
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">untar_imdb</span><span class="p">()</span>
-<span class="n">IMDB_PATH</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">untar_data</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">)</span>
 </pre></div>
 
-    </div>
 </div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>PosixPath(&#39;../data/imdb_sample&#39;)</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -243,7 +226,7 @@ summary: "NLP data loading pipeline; Supports csv, folders, and preprocessed dat
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="o">/</span><span class="s1">&#39;train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -315,7 +298,7 @@ summary: "NLP data loading pipeline; Supports csv, folders, and preprocessed dat
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_lm</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">lm_data</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -714,7 +697,7 @@ summary: "NLP data loading pipeline; Supports csv, folders, and preprocessed dat
 <span class="n">texts</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1032,7 +1015,7 @@ summary: "NLP data loading pipeline; Supports csv, folders, and preprocessed dat
     <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1201,7 +1184,7 @@ torch.Size([73, 64])
 <span class="n">x</span><span class="p">[:</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 

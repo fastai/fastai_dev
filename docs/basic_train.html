@@ -13,7 +13,7 @@ summary: "Provides basic training and validation with `Learner`"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="fastai-training">fastai training<a class="anchor-link" href="#fastai-training">&#182;</a></h1>
+<h1 id="Basic-training-classes">Basic training classes<a class="anchor-link" href="#Basic-training-classes">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -28,439 +28,6 @@ summary: "Provides basic training and validation with `Learner`"
 <li><code>Learner.fit_one_cycle</code> will launch a training using the 1cycle policy, to help you train your model fast.</li>
 <li><code>Learner.to_fp16</code> will convert your model in half precision and halp you launch a training in mixed precision.</li>
 </ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Basic-training-overview">Basic training overview<a class="anchor-link" href="#Basic-training-overview">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We'll do a quick overview of the key pieces of fastai's training modules. See the separate module docs (linked below) for details on each. We'll use the classic MNIST dataset for the training documentation, cut down to just 3's and 7's. The data is available in the fastai repo in the <code>docs/</code> directory.</p>
-<p>To minimize the boilerplate in our docs we've defined the basic imports and paths we need in <code>fastai.docs</code>. It also has a <code>get_mnist</code> function to grab a <code>DataBunch</code> of the data for us.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.docs</span> <span class="k">import</span> <span class="o">*</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Basic-training-with-Learner">Basic training with <code>Learner</code><a class="anchor-link" href="#Basic-training-with-Learner">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can create minimal simple CNNs using <code>simple_cnn</code> (see <code>models</code> for details on creating models):</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The most important object for training models is <code>Learner</code>, which needs to know, at minimum, what data to train with and what model to train.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>That's enough to train a model, which is done using <code>fit</code>. If you have a CUDA-capable GPU it will be used automatically. You have to say how many epochs to train for.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="bafb166e-33fc-492d-8157-c5d5a864dce7"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#bafb166e-33fc-492d-8157-c5d5a864dce7');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:01
-epoch  train loss  valid loss
-0      0.141770    0.118284    (00:01)
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Viewing-metrics">Viewing metrics<a class="anchor-link" href="#Viewing-metrics">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>To see how our training is going, we can request that it reports various <code>metrics</code> after each epoch. You can pass it to the constructor, or set it later. Note that metrics are always calculated on the validation set.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">]</span>
-<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="7227fc51-73f6-42ce-8deb-17a5c8791fc6"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#7227fc51-73f6-42ce-8deb-17a5c8791fc6');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:01
-epoch  train loss  valid loss  accuracy
-0      0.098428    0.100905    0.969087  (00:01)
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Extending-training-with-callbacks">Extending training with callbacks<a class="anchor-link" href="#Extending-training-with-callbacks">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>You can use <code>callback</code>s to modify training in almost any way you can imagine. For instance, we've provided a callback to implement Leslie Smith's 1cycle training method.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cb</span> <span class="o">=</span> <span class="n">OneCycleScheduler</span><span class="p">(</span><span class="n">learn</span><span class="p">,</span> <span class="n">lr_max</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
-<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">cb</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="75642c6e-5916-4e6b-8f12-d96aa51ad27b"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#75642c6e-5916-4e6b-8f12-d96aa51ad27b');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:01
-epoch  train loss  valid loss  accuracy
-0      0.061372    0.053892    0.981354  (00:01)
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>Recorder</code> callback is automatically added for you, and you can use it to see what happened in your training, e.g.:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_lr</span><span class="p">(</span><span class="n">show_moms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Extending-Learner-with-train">Extending <code>Learner</code> with <code>train</code><a class="anchor-link" href="#Extending-Learner-with-train">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Many of the callbacks can be used more easily by taking advantage of the <code>Learner</code> extensions in <code>train</code>. For instance, instead of creating OneCycleScheduler manually as above, you can simply call <code>Learner.fit_one_cycle</code>:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="f5a67b3d-0fed-4d46-adf2-d27c0392d333"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#f5a67b3d-0fed-4d46-adf2-d27c0392d333');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:01
-epoch  train loss  valid loss  accuracy
-0      0.042174    0.042751    0.986261  (00:01)
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Applications">Applications<a class="anchor-link" href="#Applications">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that if you're training a model for one of our supported <em>applications</em>, there's a lot of help available to you in the application modules:</p>
-<ul>
-<li><code>vision</code></li>
-<li><code>text</code></li>
-<li><code>tabular</code></li>
-<li><code>collab</code></li>
-</ul>
-<p>For instance, let's use <code>ConvLearner</code> (from <code>vision</code>) to quickly fine-tune a pre-trained Imagenet model for MNIST (not a very practical approach, of course, since MNIST is handwriting and our model is pre-trained on photos!) Note that <code>tvm</code> is the namespace we use for <code>torchvision.models</code>.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tvm</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
-<span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="1d091275-8009-4fc0-8bbf-9bd4c6c6754c"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#1d091275-8009-4fc0-8bbf-9bd4c6c6754c');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:05
-epoch  train loss  valid loss  accuracy
-0      0.108365    0.065326    0.976938  (00:05)
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>That's it for our little overview. More details follow on the classes and functions in <code>basic_train</code>; see the links to other training modules above for additional functionality.</p>
 
 </div>
 </div>
@@ -658,7 +225,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -671,7 +238,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -685,10 +252,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="a3772312-5947-4914-b484-46e679e0f5b3"></div>
+<div id="bcdf51c1-86e1-4de4-a88c-b2682ca5922e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#a3772312-5947-4914-b484-46e679e0f5b3');
+var element = $('#bcdf51c1-86e1-4de4-a88c-b2682ca5922e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -723,7 +290,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_lr</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span> <span class="n">wd</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span><span class="mf">1e-4</span><span class="p">,</span><span class="mf">1e-1</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -737,10 +304,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="41080eae-9c7c-4d8b-8068-6482347b8f1f"></div>
+<div id="c72cde0e-4225-4f1a-bee9-05c063286ad6"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#41080eae-9c7c-4d8b-8068-6482347b8f1f');
+var element = $('#c72cde0e-4225-4f1a-bee9-05c063286ad6');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -772,7 +339,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">Learner</span><span class="o">.</span><span class="n">lr_range</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -812,7 +379,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">lr_range</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">)),</span> <span class="n">learn</span><span class="o">.</span><span class="n">lr_range</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mf">3e-4</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1195,7 +762,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1209,10 +776,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="49340b99-9683-4444-adf5-9f910226c0b1"></div>
+<div id="9a3fab90-87a4-4f07-940c-bde239bcad56"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#49340b99-9683-4444-adf5-9f910226c0b1');
+var element = $('#9a3fab90-87a4-4f07-940c-bde239bcad56');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "4a66ea77434d4523ab04a884f101b076", "version_major": 2, "version_minor": 0}
@@ -1275,7 +842,7 @@ var element = $('#49340b99-9683-4444-adf5-9f910226c0b1');
 <span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_losses</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1289,10 +856,10 @@ var element = $('#49340b99-9683-4444-adf5-9f910226c0b1');
 
  
  
-<div id="cf63b466-32fb-4294-b542-f98cb7e98545"></div>
+<div id="1c819f49-0148-445c-b18d-825280cd6f8e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#cf63b466-32fb-4294-b542-f98cb7e98545');
+var element = $('#1c819f49-0148-445c-b18d-825280cd6f8e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -1359,7 +926,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_lr</span><span class="p">(</span><span class="n">show_moms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1419,7 +986,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_metrics</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
