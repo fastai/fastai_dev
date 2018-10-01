@@ -1,9 +1,9 @@
 ---
-title: text.models
+title: models.rnn
 keywords: 
 sidebar: home_sidebar
 tags: 
-summary: 
+summary: "Implements the AWD-LSTM and an RNN classifier"
 ---
 
 <div class="container" id="notebook-container">
@@ -22,7 +22,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This module fully implements the <a href="https://arxiv.org/pdf/1708.02182.pdf">AWD-LSTM</a> from Stephen Merity et al. The main idea of the article is to use a <a href="http://www.pnas.org/content/79/8/2554">RNN</a> with dropout everywhere, but in an intelligent way. There is a difference with the usual dropout, which is why you’ll see a <code>RNNDropout</code> module: we zero things, as is usual in dropout, but we always zero the same thing according to the sequence dimension (which is the first dimension in pytorch). This ensures consistency when updating the hidden state through the whole sentences/articles.</p>
+<p>This module fully implements the <a href="https://arxiv.org/pdf/1708.02182.pdf">AWD-LSTM</a> from Stephen Merity et al. The main idea of the article is to use a <a href="http://www.pnas.org/content/79/8/2554">RNN</a> with dropout everywhere, but in an intelligent way. There is a difference with the usual dropout, which is why you’ll see a <a href="/models.rnn.html#RNNDropout"><code>RNNDropout</code></a> module: we zero things, as is usual in dropout, but we always zero the same thing according to the sequence dimension (which is the first dimension in pytorch). This ensures consistency when updating the hidden state through the whole sentences/articles.</p>
 <p>This being given, there are five different dropouts in the AWD-LSTM:</p>
 <ul>
 <li>the first one, embedding dropout, is applied when we look the ids of our tokens inside the embedding matrix (to transform them from numbers to a vector of float). We zero some lines of it, so random ids are sent to a vector of zeros instead of being sent to their embedding vector.</li>
@@ -42,16 +42,6 @@ summary:
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">get_language_model</span><span class="p">,</span> <span class="n">doc_string</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -61,7 +51,7 @@ summary:
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_language_model></a><code>get_language_model</code></h4>
-<blockquote><p><code>get_language_model</code>(<code>vocab_sz</code>:<code>int</code>, <code>emb_sz</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>n_layers</code>:<code>int</code>, <code>pad_token</code>:<code>int</code>, <code>tie_weights</code>:<code>bool</code>=<code>True</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>bias</code>:<code>bool</code>=<code>True</code>, <code>bidir</code>:<code>bool</code>=<code>False</code>, <code>output_p</code>:<code>float</code>=<code>0.4</code>, <code>hidden_p</code>:<code>float</code>=<code>0.2</code>, <code>input_p</code>:<code>float</code>=<code>0.6</code>, <code>embed_p</code>:<code>float</code>=<code>0.1</code>, <code>weight_p</code>:<code>float</code>=<code>0.5</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<blockquote><p><code>get_language_model</code>(<code>vocab_sz</code>:<code>int</code>, <code>emb_sz</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>n_layers</code>:<code>int</code>, <code>pad_token</code>:<code>int</code>, <code>tie_weights</code>:<code>bool</code>=<code>True</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>bias</code>:<code>bool</code>=<code>True</code>, <code>output_p</code>:<code>float</code>=<code>0.4</code>, <code>hidden_p</code>:<code>float</code>=<code>0.2</code>, <code>input_p</code>:<code>float</code>=<code>0.6</code>, <code>embed_p</code>:<code>float</code>=<code>0.1</code>, <code>weight_p</code>:<code>float</code>=<code>0.5</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L205">[source]</a></p>
 </blockquote>
 
@@ -83,16 +73,6 @@ summary:
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">get_rnn_classifier</span><span class="p">,</span> <span class="n">doc_string</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -123,30 +103,15 @@ summary:
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=EmbeddingDropout></a><em>class</em> <code>EmbeddingDropout</code></h3>
-<p>(<code>emb</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>embed_p</code>:<code>float</code>) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L50">[source]</a></div></p>
-<p>Applies dropout in the embedding layer by zeroing out some elements of the embedding vector.</p>
-
-</div>
-
-</div>
-
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Basic-NLP-modules">Basic NLP modules<a class="anchor-link" href="#Basic-NLP-modules">&#182;</a></h2>
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#EmbeddingDropout"><code>EmbeddingDropout</code></a></p>
+<p>On top of the pytorch or the fastai <a href="/layers.html#layers"><code>layers</code></a>, the language models use some custom layers specific to NLP.</p>
 
 </div>
 </div>
@@ -160,14 +125,10 @@ summary:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>words</code>:<code>LongTensor</code>, <code>scale</code>:<code>Optional</code>[<code>float</code>]=<code>None</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L59">[source]</a></div></p>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
+<h3><a id=EmbeddingDropout></a><code>class</code> <code>EmbeddingDropout</code></h3>
+<blockquote><p><code>EmbeddingDropout</code>(<code>emb</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>embed_p</code>:<code>float</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L50">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -179,7 +140,271 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>EmbeddingDropout.forward</code></p>
+<p>Applies a dropout with probability <code>embed_p</code> to an embedding layer <code>emb</code> in training mode. Each row of the embedding matrix has a probability <code>embed_p</code> of being replaced by zeros while the others are rescaled accordingly.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">enc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">padding_idx</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">enc_dp</span> <span class="o">=</span> <span class="n">EmbeddingDropout</span><span class="p">(</span><span class="n">enc</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">tst_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,(</span><span class="mi">8</span><span class="p">,))</span>
+<span class="n">enc_dp</span><span class="p">(</span><span class="n">tst_input</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>tensor([[ 0.0000,  0.0000,  0.0000, -0.0000, -0.0000,  0.0000, -0.0000],
+        [ 0.8444, -0.8950, -0.7440,  0.9375,  1.0407, -0.6192,  0.4821],
+        [-1.9462, -0.3018, -0.0422, -1.7010,  0.5663, -0.8133, -0.0367],
+        [-0.0000,  0.0000,  0.0000,  0.0000, -0.0000, -0.0000,  0.0000],
+        [ 3.9847,  3.1350,  2.8408, -3.6548, -1.0186,  1.7506, -1.3603],
+        [ 0.0000,  0.0000,  0.0000, -0.0000, -0.0000, -0.0000, -0.0000],
+        [-4.0268, -2.4269,  2.3209, -0.3243, -1.6055, -1.3608,  0.4655],
+        [-3.4586,  3.0780,  2.9428, -3.8629,  0.6396, -0.8378, -1.0522]],
+       grad_fn=&lt;EmbeddingBackward&gt;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=RNNDropout></a><code>class</code> <code>RNNDropout</code></h3>
+<blockquote><p><code>RNNDropout</code>(<code>p</code>:<code>float</code>=<code>0.5</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L11">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Applies a dropout with probability <code>p</code> consistently over the first dimension in training mode.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dp</span> <span class="o">=</span> <span class="n">RNNDropout</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">tst_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">tst_input</span><span class="p">,</span> <span class="n">dp</span><span class="p">(</span><span class="n">tst_input</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(tensor([[[ 0.3035, -0.5677, -0.3388,  1.2217,  0.3325, -0.4691, -0.0517],
+          [ 0.0070,  1.9497, -1.4526,  1.6338, -0.2380,  0.4030, -0.7704],
+          [-1.3806,  0.4710, -0.1631, -0.5893, -1.7183, -1.2850, -0.3287]],
+ 
+         [[-1.0775,  0.1940, -0.4856, -0.5217, -1.7239, -0.4365,  0.3934],
+          [ 2.4286,  0.2146, -1.0913,  0.4197, -0.1836,  1.9187,  0.3242],
+          [-0.1235, -0.4573,  0.0116, -0.8257,  0.9690, -0.1584,  0.9877]],
+ 
+         [[ 0.2453, -0.9624, -2.1222,  0.1307,  1.2131, -0.9540,  1.3581],
+          [ 0.1412,  1.2920,  0.2446, -0.4857, -0.0986, -0.4935, -0.8928],
+          [ 0.8967,  1.5670,  0.3258,  1.2222, -2.0801,  0.0805, -1.2240]]]),
+ tensor([[[ 0.0000, -0.8110, -0.4841,  1.7453,  0.0000, -0.6702, -0.0739],
+          [ 0.0000,  2.7852, -0.0000,  0.0000, -0.3400,  0.5757, -1.1005],
+          [-0.0000,  0.6728, -0.2330, -0.8418, -2.4546, -1.8357, -0.4695]],
+ 
+         [[-0.0000,  0.2771, -0.6937, -0.7453, -0.0000, -0.6236,  0.5620],
+          [ 0.0000,  0.3065, -0.0000,  0.0000, -0.2622,  2.7410,  0.4631],
+          [-0.0000, -0.6533,  0.0165, -1.1796,  1.3843, -0.2263,  1.4110]],
+ 
+         [[ 0.0000, -1.3748, -3.0317,  0.1866,  0.0000, -1.3628,  1.9401],
+          [ 0.0000,  1.8457,  0.0000, -0.0000, -0.1409, -0.7049, -1.2755],
+          [ 0.0000,  2.2386,  0.4655,  1.7460, -2.9716,  0.1150, -1.7486]]]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=WeightDropout></a><code>class</code> <code>WeightDropout</code></h3>
+<blockquote><p><code>WeightDropout</code>(<code>module</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>weight_p</code>:<code>float</code>, <code>layer_names</code>:<code>StrList</code>=<code>['weight_hh_l0']</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L23">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Applies dropout of probability <code>weight_p</code> to the layers in <code>layer_names</code> of <code>module</code> in training mode. A copy of those weights is kept so that the dropout mask can change at every batch.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">module</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">dp_module</span> <span class="o">=</span> <span class="n">WeightDropout</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+<span class="nb">getattr</span><span class="p">(</span><span class="n">dp_module</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;weight_hh_l0&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Parameter containing:
+tensor([[ 0.2589,  0.4894],
+        [ 0.3660, -0.5721],
+        [-0.4000, -0.2764],
+        [ 0.5950, -0.5937],
+        [-0.2155,  0.1092],
+        [-0.4131,  0.0684],
+        [ 0.5688, -0.6756],
+        [ 0.0249,  0.1041]], requires_grad=True)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It's at the beginning of a forward pass that the dropout is applied to the weights.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">x</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">dp_module</span><span class="p">(</span><span class="n">tst_input</span><span class="p">,</span><span class="n">h</span><span class="p">)</span>
+<span class="nb">getattr</span><span class="p">(</span><span class="n">dp_module</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;weight_hh_l0&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>tensor([[ 0.0000,  0.8156],
+        [ 0.6100, -0.0000],
+        [-0.6667, -0.4607],
+        [ 0.9917, -0.9894],
+        [-0.3592,  0.0000],
+        [-0.6884,  0.1139],
+        [ 0.9480, -0.0000],
+        [ 0.0414,  0.1735]], grad_fn=&lt;MulBackward0&gt;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=SequentialRNN></a><code>class</code> <code>SequentialRNN</code></h3>
+<blockquote><p><code>SequentialRNN</code>(<code>args</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L151">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a <code>Sequentiall</code> module with <code>args</code> that has a <code>reset</code> function.</p>
 
 </div>
 </div>
@@ -193,9 +418,10 @@ summary:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=LinearDecoder></a><em>class</em> <code>LinearDecoder</code></h3>
-<p>(<code>n_out</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>output_p</code>:<code>float</code>, <code>tie_encoder</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>=<code>None</code>, <code>bias</code>:<code>bool</code>=<code>True</code>) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L132">[source]</a></div></p>
-<p>To go on top of a RNN_Core module</p>
+<h4><a id=reset></a><code>reset</code></h4>
+<blockquote><p><code>reset</code>()
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L153">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -207,558 +433,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#LinearDecoder"><code>LinearDecoder</code></a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>input</code>:<code>Tuple</code>[<code>Tensor</code>, <code>Tensor</code>]) -&gt; <code>Tuple</code>[<code>Tensor</code>, <code>Tensor</code>, <code>Tensor</code>]<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L145">[source]</a></div></p>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>LinearDecoder.forward</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=MultiBatchRNNCore></a><em>class</em> <code>MultiBatchRNNCore</code></h3>
-<p>(<code>bptt</code>:<code>int</code>, <code>max_seq</code>:<code>int</code>, <code>args</code>, <code>kwargs</code>) :: Inherits (<a href="fastai.models.rnn.html#RNNCore"><code>RNNCore</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L157">[source]</a></div></p>
-<p>Creates a RNNCore module that can process a full sentence.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#MultiBatchRNNCore"><code>MultiBatchRNNCore</code></a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=concat></a><code>concat</code></h4>
-<p>(<code>arrs</code>:<code>Collection</code>[<code>Tensor</code>]) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L164">[source]</a></div></p>
-<p>Concatenates the arrays along the batch dimension.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>MultiBatchRNNCore.concat</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>input</code>:<code>LongTensor</code>) -&gt; <code>Tuple</code>[<code>Tensor</code>, <code>Tensor</code>]<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L168">[source]</a></div></p>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>MultiBatchRNNCore.forward</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=PoolingLinearClassifier></a><em>class</em> <code>PoolingLinearClassifier</code></h3>
-<p>(<code>layers</code>:<code>Collection</code>[<code>int</code>], <code>drops</code>:<code>Collection</code>[<code>float</code>]) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L179">[source]</a></div></p>
-<p>Creates a linear classifier with pooling.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#PoolingLinearClassifier"><code>PoolingLinearClassifier</code></a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>input</code>:<code>Tuple</code>[<code>Tensor</code>, <code>Tensor</code>]) -&gt; <code>Tuple</code>[<code>Tensor</code>, <code>Tensor</code>, <code>Tensor</code>]<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L195">[source]</a></div></p>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>PoolingLinearClassifier.forward</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=pool></a><code>pool</code></h4>
-<p>(<code>x</code>:<code>Tensor</code>, <code>bs</code>:<code>int</code>, <code>is_max</code>:<code>bool</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L190">[source]</a></div></p>
-<p>Pools the tensor along the seq_len dimension.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>PoolingLinearClassifier.pool</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=RNNCore></a><em>class</em> <code>RNNCore</code></h3>
-<p>(<code>vocab_sz</code>:<code>int</code>, <code>emb_sz</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>n_layers</code>:<code>int</code>, <code>pad_token</code>:<code>int</code>, <code>bidir</code>:<code>bool</code>=<code>False</code>, <code>hidden_p</code>:<code>float</code>=<code>0.2</code>, <code>input_p</code>:<code>float</code>=<code>0.6</code>, <code>embed_p</code>:<code>float</code>=<code>0.1</code>, <code>weight_p</code>:<code>float</code>=<code>0.5</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L73">[source]</a></div></p>
-<p>AWD-LSTM/QRNN inspired by <a href="https://arxiv.org/abs/1708.02182">https://arxiv.org/abs/1708.02182</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#RNNCore"><code>RNNCore</code></a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<p>(<code>input</code>:<code>LongTensor</code>) -&gt; <code>Tuple</code>[<code>Tensor</code>, <code>Tensor</code>]<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L104">[source]</a></div></p>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>RNNCore.forward</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=one_hidden></a><code>one_hidden</code>(<code>l</code>:<code>int</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L120">[source]</a></div></h4>
-<p>Returns one hidden state</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>RNNCore.one_hidden</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=reset></a><code>reset</code>()<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L125">[source]</a></div></h4>
-<p>Resets the hidden states</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>RNNCore.reset</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=RNNDropout></a><em>class</em> <code>RNNDropout</code>(<code>p</code>:<code>float</code>=<code>0.5</code>) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L11">[source]</a></div></h3>
-<p>Dropout that is consistent on the seq_len dimension</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#RNNDropout"><code>RNNDropout</code></a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code>(<code>x</code>:<code>Tensor</code>) -&gt; <code>Tensor</code><div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L18">[source]</a></div></h4>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>RNNDropout.forward</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=SequentialRNN></a><em>class</em> <code>SequentialRNN</code>(<code>args</code>) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L151">[source]</a></div></h3>
-<p>A sequential module that passes the reset call to its children.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#SequentialRNN"><code>SequentialRNN</code></a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=reset></a><code>reset</code>()<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L153">[source]</a></div></h4>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>SequentialRNN.reset</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=WeightDropout></a><em>class</em> <code>WeightDropout</code></h3>
-<p>(<code>module</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>weight_p</code>:<code>float</code>, <code>layer_names</code>:<code>Collection</code>[<code>str</code>]=<code>['weight_hh_l0']</code>) :: Inherits (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L23">[source]</a></div></p>
-<p>A module that warps another layer in which some weights will be replaced by 0 during training.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#WeightDropout"><code>WeightDropout</code></a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=_setweights></a><code>_setweights</code>()<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L34">[source]</a></div></h4>
-<p>Applies dropout to the raw weights</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>WeightDropout._setweights</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code>(<code>args</code>:<code>Collection</code>[<code>Any</code>])<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L40">[source]</a></div></h4>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>WeightDropout.forward</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=reset></a><code>reset</code>()<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L47">[source]</a></div></h4>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>WeightDropout.reset</code></p>
+<p>Call the <code>reset</code> function of <a href="/torch_core.html#children"><code>self.children</code></a> (if they have one).</p>
 
 </div>
 </div>
@@ -773,8 +448,9 @@ summary:
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=dropout_mask></a><code>dropout_mask</code></h4>
-<p>(<code>x</code>:<code>Tensor</code>, <code>sz</code>:<code>Collection</code>[<code>int</code>], <code>p</code>:<code>float</code>)<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L7">[source]</a></div></p>
-<p>Returns a dropout mask of the same type as x, size sz, with probability p to cancel an element.</p>
+<blockquote><p><code>dropout_mask</code>(<code>x</code>:<code>Tensor</code>, <code>sz</code>:<code>Collection</code>[<code>int</code>], <code>p</code>:<code>float</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L7">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -786,7 +462,81 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#dropout_mask"><code>dropout_mask</code></a></p>
+<p>Create a dropout mask of size <code>sz</code>, the same type as <code>x</code> and probability <code>p</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">dropout_mask</span><span class="p">(</span><span class="n">tst_input</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>tensor([[1.4286, 1.4286, 0.0000, 1.4286, 1.4286, 1.4286, 0.0000],
+        [0.0000, 0.0000, 1.4286, 1.4286, 0.0000, 1.4286, 1.4286],
+        [0.0000, 1.4286, 1.4286, 0.0000, 1.4286, 1.4286, 1.4286]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Such a mask is then expanded in the sequence length dimension and multiplied by the input to do an <code>RNNDropout</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Language-model-modules">Language model modules<a class="anchor-link" href="#Language-model-modules">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=RNNCore></a><code>class</code> <code>RNNCore</code></h3>
+<blockquote><p><code>RNNCore</code>(<code>vocab_sz</code>:<code>int</code>, <code>emb_sz</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>n_layers</code>:<code>int</code>, <code>pad_token</code>:<code>int</code>, <code>bidir</code>:<code>bool</code>=<code>False</code>, <code>hidden_p</code>:<code>float</code>=<code>0.2</code>, <code>input_p</code>:<code>float</code>=<code>0.6</code>, <code>embed_p</code>:<code>float</code>=<code>0.1</code>, <code>weight_p</code>:<code>float</code>=<code>0.5</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L73">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create an AWD-LSTM encoder with an embedding layer of <code>vocab_sz</code> by <code>emb_sz</code>, a hidden size of <code>n_hid</code>, <code>n_layers</code> layers. <code>pad_token</code> is passed to the <code>Embedding</code>, if <code>bidir</code> is True, the model is bidirectional. If <code>qrnn</code> is True, we use QRNN cells instead of LSTMs. Dropouts are <code>embed_p</code>, <code>input_p</code>, <code>weight_p</code> and <code>hidden_p</code>.</p>
 
 </div>
 </div>
@@ -800,9 +550,32 @@ summary:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_language_model></a><code>get_language_model</code></h4>
-<p>(<code>vocab_sz</code>:<code>int</code>, <code>emb_sz</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>n_layers</code>:<code>int</code>, <code>pad_token</code>:<code>int</code>, <code>tie_weights</code>:<code>bool</code>=<code>True</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>bias</code>:<code>bool</code>=<code>True</code>, <code>output_p</code>:<code>float</code>=<code>0.4</code>, <code>hidden_p</code>:<code>float</code>=<code>0.2</code>, <code>input_p</code>:<code>float</code>=<code>0.6</code>, <code>embed_p</code>:<code>float</code>=<code>0.1</code>, <code>weight_p</code>:<code>float</code>=<code>0.5</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L205">[source]</a></div></p>
-<p>To create a full AWD-LSTM</p>
+<h4><a id=reset></a><code>reset</code></h4>
+<blockquote><p><code>reset</code>()</p>
+</blockquote>
+<p>Reset the hidden states. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L125">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=LinearDecoder></a><code>class</code> <code>LinearDecoder</code></h3>
+<blockquote><p><code>LinearDecoder</code>(<code>n_out</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>output_p</code>:<code>float</code>, <code>tie_encoder</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>=<code>None</code>, <code>bias</code>:<code>bool</code>=<code>True</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L132">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -814,7 +587,42 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#get_language_model"><code>get_language_model</code></a></p>
+<p>Create a the decoder to go on top of an <code>RNNCore</code> encoder and create a language model. <code>n_hid</code> is the dimension of the last hidden state of the encoder, <code>n_out</code> the size of the output. Dropout of <code>output_p</code> is applied. If a <code>tie_encoder</code> is passed, it will be used for the weights of the linear layer, that will have <code>bias</code> or not.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Classifier-modules">Classifier modules<a class="anchor-link" href="#Classifier-modules">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=MultiBatchRNNCore></a><code>class</code> <code>MultiBatchRNNCore</code></h3>
+<blockquote><p><code>MultiBatchRNNCore</code>(<code>bptt</code>:<code>int</code>, <code>max_seq</code>:<code>int</code>, <code>args</code>, <code>kwargs</code>) :: <a href="/text.models.html#RNNCore"><code>RNNCore</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L157">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Wrap an <code>RNNCore</code> to make it process full sentences: text is passed by chunks of sequence length <code>bptt</code> and only the last <code>max_seq</code> outputs are kept for the next layer. <code>args</code> and <code>kwargs</code> are passed to the <code>RNNCore</code>.</p>
 
 </div>
 </div>
@@ -828,9 +636,32 @@ summary:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_rnn_classifier></a><code>get_rnn_classifier</code></h4>
-<p>(<code>bptt</code>:<code>int</code>, <code>max_seq</code>:<code>int</code>, <code>n_class</code>:<code>int</code>, <code>vocab_sz</code>:<code>int</code>, <code>emb_sz</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>n_layers</code>:<code>int</code>, <code>pad_token</code>:<code>int</code>, <code>layers</code>:<code>Collection</code>[<code>int</code>], <code>drops</code>:<code>Collection</code>[<code>float</code>], <code>bidir</code>:<code>bool</code>=<code>False</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>hidden_p</code>:<code>float</code>=<code>0.2</code>, <code>input_p</code>:<code>float</code>=<code>0.6</code>, <code>embed_p</code>:<code>float</code>=<code>0.1</code>, <code>weight_p</code>:<code>float</code>=<code>0.5</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a><div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L214">[source]</a></div></p>
-<p>Creates a RNN classifier model</p>
+<h4><a id=concat></a><code>concat</code></h4>
+<blockquote><p><code>concat</code>(<code>arrs</code>:<code>Collection</code>[<code>Tensor</code>]) -&gt; <code>Tensor</code></p>
+</blockquote>
+<p>Concatenate the arrays along the batch dimension. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L164">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=PoolingLinearClassifier></a><code>class</code> <code>PoolingLinearClassifier</code></h3>
+<blockquote><p><code>PoolingLinearClassifier</code>(<code>layers</code>:<code>Collection</code>[<code>int</code>], <code>drops</code>:<code>Collection</code>[<code>float</code>]) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L179">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -842,7 +673,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#get_rnn_classifier"><code>get_rnn_classifier</code></a></p>
+<p>Create a linear classifier that sits on an <code>RNNCore</code> encoder. The last output, <code>MaxPooling</code> of all the outputs and <code>AvgPooling</code> of all the outputs are concatenated, then blocks of <code>bn_drop_lin</code> are stacked, according to the values in <code>layers</code> and <code>drops</code>.</p>
 
 </div>
 </div>
@@ -856,9 +687,10 @@ summary:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=repackage_var></a><code>repackage_var</code></h4>
-<p>(<code>h</code>:<code>None</code>[<code>Tensor</code>, <code>Collection</code>[<code>str</code>]]) -&gt; <code>None</code>[<code>Tensor</code>, <code>Collection</code>[<code>str</code>]]<div style="text-align: right"><a href="https://github.com/fastai/fastai/blob/master/fastai/models/rnn.py#L69">[source]</a></div></p>
-<p>Detaches h from its history.</p>
+<h4><a id=pool></a><code>pool</code></h4>
+<blockquote><p><code>pool</code>(<code>x</code>:<code>Tensor</code>, <code>bs</code>:<code>int</code>, <code>is_max</code>:<code>bool</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L190">[source]</a></p>
+</blockquote>
 
 </div>
 
@@ -870,7 +702,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/models.rnn.html#repackage_var"><code>repackage_var</code></a></p>
+<p>Pool <code>x</code> (of batch size <code>bs</code>) along the batch dimension. <code>is_max</code> decides if we do an <code>AvgPooling</code> or a <code>MaxPooling</code>.</p>
 
 </div>
 </div>
