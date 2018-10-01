@@ -19,7 +19,7 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This module contains many layer classes that we might be interested in using in our models. These layers complement the default <a href="https://pytorch.org/docs/stable/nn.html">Pytorch layers</a> which we can also use in our models.</p>
+<p>This module contains many layer classes that we might be interested in using in our models. These layers complement the default <a href="https://pytorch.org/docs/stable/nn.html">Pytorch layers</a> which we can also use as predefined layers.</p>
 
 </div>
 </div>
@@ -29,35 +29,48 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.docs</span> <span class="k">import</span> <span class="o">*</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.docs</span> <span class="k">import</span> <span class="o">*</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">??</span>get_mnist
-</pre></div>
+<div class="output_wrapper">
+<div class="output">
 
-    </div>
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=AdaptiveConcatPool2d></a><code>class</code> <code>AdaptiveConcatPool2d</code></h2>
+<blockquote><p><code>AdaptiveConcatPool2d</code>(<code>sz</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
+</blockquote>
+<p>Layer that concats <code>AdaptiveAvgPool2d</code> and <code>AdaptiveMaxPool2d</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L60">[source]</a></p>
+
+</div>
+
+</div>
+
 </div>
 </div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="AdaptiveConcatPool2d">AdaptiveConcatPool2d<a class="anchor-link" href="#AdaptiveConcatPool2d">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
+<p>The <a href="/layers.html#AdaptiveConcatPool2d"><code>AdaptiveConcatPool2d</code></a> object uses adaptive average pooling and adaptive max pooling and concatenates them both. We use this because it provides the model with the information of both methods and improves performance. This technique is called <code>adaptive</code> because it allows us to decide on what output dimensions we want, instead of choosing the input's dimensions to fit a desired output size.</p>
+<p>Let's try training with Adaptive Average Pooling first, then with Adaptive Max Pooling and finally with the concatenation of them both to see how they fare in performance.</p>
+<p>We will first define a <a href="/layers.html#simple_cnn"><code>simple_cnn</code></a> using <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.AdaptiveMaxPool2d">Adapative Max Pooling</a>.</p>
 
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -67,19 +80,10 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>AdaptiveConcatPool2d</code> object uses adaptive average pooling and adaptive max pooling and concatenates them both. This is positive because it uses the information of both methods and improves performance. This technique is called <code>adaptive</code> because it allows us to decide on what output dimensions we want, instead of choosing the input's dimensions to fit a given desired output.</p>
-<p>Let's try training with Adaptive Average Pooling first, then with Adaptive Max Pooling and finally with the concatenation of them both to see how they fare in performance.</p>
-<p>We will first define a <code>simple_cnn</code> using <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.AdaptiveMaxPool2d">Adapative Max Pooling</a>.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -98,7 +102,7 @@ summary: "`fastai.layers` provides essential functions to building and modifying
     <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -113,7 +117,7 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 <span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -127,10 +131,10 @@ summary: "`fastai.layers` provides essential functions to building and modifying
 
  
  
-<div id="12046bf3-c7f0-42ff-8a99-6d19e2185152"></div>
+<div id="31674b1c-6691-4d93-81fc-e8c6e4bdb9f9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#12046bf3-c7f0-42ff-8a99-6d19e2185152');
+var element = $('#31674b1c-6691-4d93-81fc-e8c6e4bdb9f9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -144,11 +148,11 @@ var element = $('#12046bf3-c7f0-42ff-8a99-6d19e2185152');
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:27
 epoch  train loss  valid loss  accuracy
-0      0.083610    0.076819    0.976938  (00:05)
-1      0.046277    0.051196    0.984789  (00:05)
-2      0.029490    0.037488    0.987733  (00:05)
-3      0.027417    0.031515    0.986261  (00:05)
-4      0.021957    0.030983    0.987733  (00:05)
+0      0.103762    0.091423    0.968106  (00:05)
+1      0.063399    0.072915    0.974975  (00:05)
+2      0.046143    0.046770    0.983317  (00:05)
+3      0.033929    0.036166    0.984298  (00:05)
+4      0.027374    0.029849    0.989205  (00:05)
 
 </pre>
 </div>
@@ -182,7 +186,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -197,7 +201,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -211,10 +215,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="27218c1a-c97f-450b-8104-db9d3b270e6b"></div>
+<div id="9d9feb71-6ef9-41f5-97db-731f50b05965"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#27218c1a-c97f-450b-8104-db9d3b270e6b');
+var element = $('#9d9feb71-6ef9-41f5-97db-731f50b05965');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -225,165 +229,14 @@ var element = $('#27218c1a-c97f-450b-8104-db9d3b270e6b');
 
 <div class="output_area">
 
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-AssertionError: can only join a child process
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-AssertionError: can only join a child process
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-    self._shutdown_workers()
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    self._shutdown_workers()
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    w.join()
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-AssertionError: can only join a child process
-    self._shutdown_workers()
-AssertionError: can only join a child process
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:27
 epoch  train loss  valid loss  accuracy
-0      0.154510    0.136999    0.948970  (00:05)
-1      0.106303    0.090356    0.969578  (00:05)
-2      0.076875    0.066036    0.978901  (00:05)
-3      0.059066    0.043986    0.982826  (00:05)
-4      0.051543    0.039275    0.986752  (00:05)
+0      0.137460    0.110767    0.962218  (00:05)
+1      0.105729    0.080629    0.972522  (00:05)
+2      0.081463    0.060069    0.979392  (00:05)
+3      0.062050    0.055416    0.981354  (00:05)
+4      0.050456    0.035258    0.988224  (00:05)
 
 </pre>
 </div>
@@ -395,7 +248,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Finally we will try with the concatenation of them both <code>AdaptiveConcatPool2d</code>. We will see that, in fact, it increases our accuracy and decreases our loss considerably!</p>
+<p>Finally we will try with the concatenation of them both <a href="/layers.html#AdaptiveConcatPool2d"><code>AdaptiveConcatPool2d</code></a>. We will see that, in fact, it increases our accuracy and decreases our loss considerably!</p>
 
 </div>
 </div>
@@ -417,7 +270,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -432,7 +285,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -446,10 +299,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="bff1312e-e713-4d11-82bd-4dc7762e4c1a"></div>
+<div id="a4e86c9c-2ffa-408e-9a46-5fa4767c0a96"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#bff1312e-e713-4d11-82bd-4dc7762e4c1a');
+var element = $('#a4e86c9c-2ffa-408e-9a46-5fa4767c0a96');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -460,201 +313,14 @@ var element = $('#bff1312e-e713-4d11-82bd-4dc7762e4c1a');
 
 <div class="output_area">
 
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-Traceback (most recent call last):
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    self._shutdown_workers()
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-    w.join()
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-Traceback (most recent call last):
-AssertionError: can only join a child process
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-Traceback (most recent call last):
-Traceback (most recent call last):
-AssertionError: can only join a child process
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    self._shutdown_workers()
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-AssertionError: can only join a child process
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-AssertionError: can only join a child process
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    self._shutdown_workers()
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-Traceback (most recent call last):
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-Exception ignored in: &lt;bound method _DataLoaderIter.__del__ of &lt;torch.utils.data.dataloader._DataLoaderIter object at 0x7ff3006a4e80&gt;&gt;
-    w.join()
-Traceback (most recent call last):
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 412, in __del__
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-    self._shutdown_workers()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py&#34;, line 406, in _shutdown_workers
-AssertionError: can only join a child process
-    w.join()
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    w.join()
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-  File &#34;/home/francisco/anaconda3/lib/python3.6/multiprocessing/process.py&#34;, line 122, in join
-    assert self._parent_pid == os.getpid(), &#39;can only join a child process&#39;
-AssertionError: can only join a child process
-AssertionError: can only join a child process
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:27
 epoch  train loss  valid loss  accuracy
-0      0.083039    0.062286    0.978410  (00:05)
-1      0.050831    0.043394    0.987733  (00:05)
-2      0.031640    0.027480    0.991659  (00:05)
-3      0.025538    0.025393    0.991168  (00:05)
-4      0.025177    0.017456    0.992640  (00:05)
+0      0.079376    0.060103    0.979882  (00:05)
+1      0.045153    0.045692    0.983317  (00:05)
+2      0.034682    0.030597    0.987733  (00:05)
+3      0.030254    0.026142    0.989205  (00:05)
+4      0.027349    0.020678    0.992149  (00:05)
 
 </pre>
 </div>
@@ -664,18 +330,39 @@ epoch  train loss  valid loss  accuracy
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Lambda">Lambda<a class="anchor-link" href="#Lambda">&#182;</a></h2>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-14-3fb49aacccf7&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>show_doc<span class="ansi-blue-fg">(</span>Lambda<span class="ansi-blue-fg">,</span> doc_string<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">NameError</span>: name &#39;show_doc&#39; is not defined</pre>
 </div>
 </div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Lambda allows us to define functions and use them as layers in our networks inside a <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential">Sequential</a> object.</p>
-<p>So, for example, say we want to apply a <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.log_softmax">log_softmax loss</a> and we need to change the shape of our output batches we can add a layer that applies this change by calling:</p>
+<p>So, for example, say we want to apply a <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.log_softmax">log_softmax loss</a> and we need to change the shape of our output batches to be able to use this loss. We can add a layer that applies the necessary change in shape by calling:</p>
 <p><code>Lambda(lambda x: x.view(x.size(0),-1))</code></p>
-<p>This is actually how we built the <code>Flatten</code> layer, which you can inspect by calling <code>??Flatten</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>Let's see an example of how the shape of our output can change when we add this layer.</p>
 
 </div>
@@ -701,7 +388,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">break</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -741,7 +428,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">break</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -760,9 +447,100 @@ epoch  train loss  valid loss  accuracy
 </div>
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=Flatten></a><code>Flatten</code></h4>
+<blockquote><p><code>Flatten</code>() -&gt; <code>Tensor</code></p>
+</blockquote>
+<p>Flattens <code>x</code> to a single dimension, often used at the end of a model <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L21">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can combine these two final layers (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.AdaptiveAvgPool2d">AdaptiveAvgPool2d</a> and <code>Flatten</code>) by using <code>Pool Flatten</code>.</p>
+<p>The function we build above is actually implemented in our library as <a href="/layers.html#Flatten"><code>Flatten</code></a>. We can see that it returns the same size when we run it.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span>  <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool2d</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">Flatten</span><span class="p">(),</span>
+<span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">xb</span><span class="p">,</span> <span class="n">yb</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">:</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">xb</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+    <span class="k">break</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>torch.Size([64, 10])
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-24-4eb6449c316d&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>show_doc<span class="ansi-blue-fg">(</span>PoolFlatten<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">NameError</span>: name &#39;show_doc&#39; is not defined</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can combine these two final layers (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.AdaptiveAvgPool2d">AdaptiveAvgPool2d</a> and <a href="/layers.html#Flatten"><code>Flatten</code></a>) by using <a href="/layers.html#Pool Flatten"><code>Pool Flatten</code></a>.</p>
 
 </div>
 </div>
@@ -787,7 +565,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">break</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -806,9 +584,31 @@ epoch  train loss  valid loss  accuracy
 </div>
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=ResizeBatch></a><code>ResizeBatch</code></h4>
+<blockquote><p><code>ResizeBatch</code>(<code>size</code>:<code>int</code>) -&gt; <code>Tensor</code></p>
+</blockquote>
+<p>Layer that resizes x to <code>size</code>, good for connecting mismatched layers <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L17">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Another use we give to the Lambda function is to resize batches with <code>ResizeBatch</code> when we have a layer that expects a different input than what comes from the previous one. Let's see an example:</p>
+<p>Another use we give to the Lambda function is to resize batches with <a href="/layers.html#ResizeBatch"><code>ResizeBatch</code></a> when we have a layer that expects a different input than what comes from the previous one. Let's see an example:</p>
 
 </div>
 </div>
@@ -822,7 +622,7 @@ epoch  train loss  valid loss  accuracy
 <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -851,7 +651,7 @@ epoch  train loss  valid loss  accuracy
 <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -879,10 +679,10 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2><a id=AdaptiveConcatPool2d></a><code>class</code> <code>AdaptiveConcatPool2d</code></h2>
-<blockquote><p><code>AdaptiveConcatPool2d</code>(<code>sz</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <code>Module</code></p>
+<h2><a id=StdUpsample></a><code>class</code> <code>StdUpsample</code></h2>
+<blockquote><p><code>StdUpsample</code>(<code>n_in</code>:<code>int</code>, <code>n_out</code>:<code>int</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
 </blockquote>
-<p>Layer that concats <code>AdaptiveAvgPool2d</code> and <code>AdaptiveMaxPool2d</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L60">[source]</a></p>
+<p>Increases the dimensionality of our data by applying a transposed convolution layer to the input and with batchnorm and a RELU activation <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L75">[source]</a></p>
 
 </div>
 
@@ -891,47 +691,6 @@ epoch  train loss  valid loss  accuracy
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>AdaptiveConcatPool2d</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<blockquote><p><code>forward</code>(<code>x</code>)</p>
-</blockquote>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L67">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>AdaptiveConcatPool2d.forward</code></p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -943,9 +702,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=CrossEntropyFlat></a><code>class</code> <code>CrossEntropyFlat</code></h2>
-<blockquote><p><code>CrossEntropyFlat</code>(<code>weight</code>=<code>None</code>, <code>size_average</code>=<code>None</code>, <code>ignore_index</code>=<code>-100</code>, <code>reduce</code>=<code>None</code>, <code>reduction</code>=<code>'elementwise_mean'</code>) :: <code>CrossEntropyLoss</code></p>
+<blockquote><p><code>CrossEntropyFlat</code>(<code>weight</code>=<code>None</code>, <code>size_average</code>=<code>None</code>, <code>ignore_index</code>=<code>-100</code>, <code>reduce</code>=<code>None</code>, <code>reduction</code>=<code>'elementwise_mean'</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.CrossEntropyLoss"><code>CrossEntropyLoss</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L93">[source]</a></p>
 </blockquote>
-<p>Same as <code>nn.CrossEntropyLoss</code>, but flattens input and target <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L93">[source]</a></p>
 
 </div>
 
@@ -957,7 +716,8 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>CrossEntropyFlat</code></p>
+<p>Same as <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.CrossEntropyLoss">nn.CrossEntropyLoss</a>, but flattens input and target. Is used to calculate cross entropy on arrays (which Pytorch will not let us do with their <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.CrossEntropyLoss">nn.CrossEntropyLoss</a> function). An example of a use case is image segmentation models where the output in an image (or an array of pixels).</p>
+<p>The parameters are the same as <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.CrossEntropyLoss">nn.CrossEntropyLoss</a>: <code>weight</code> to rescale each class, <code>size_average</code> whether we want to sum the losses across elements in a batch or we want to add them up, <code>ignore_index</code> what targets do we want to ignore, <code>reduce</code> on whether we want to return a loss per batch element and <code>reduction</code> specifies which type of reduction (if any) we want to apply to our input.</p>
 
 </div>
 </div>
@@ -969,20 +729,15 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_area">
 
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-34-4bb3cd8bea20&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>show_doc<span class="ansi-blue-fg">(</span>Debugger<span class="ansi-blue-fg">)</span>
 
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<blockquote><p><code>forward</code>(<code>input</code>:<code>Tensor</code>, <code>target</code>:<code>Tensor</code>) -&gt; <code>Rank0Tensor</code></p>
-</blockquote>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L95">[source]</a></p>
-
+<span class="ansi-red-fg">NameError</span>: name &#39;show_doc&#39; is not defined</pre>
 </div>
-
 </div>
 
 </div>
@@ -991,286 +746,33 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>CrossEntropyFlat.forward</code></p>
+<p>The debugger module allows us to peek inside a network while its training and see in detail what is going on. We can see inputs, ouputs and sizes at any point in the network.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
-<div class="output_wrapper">
-<div class="output">
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span>  <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">Debugger</span><span class="p">(),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+<span class="p">)</span>
 
-<div class="output_area">
+<span class="n">model</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
 
+<span class="n">learner</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
+<span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
 
-<div class="output_markdown rendered_html output_subarea ">
-<h2><a id=Debugger></a><code>class</code> <code>Debugger</code></h2>
-<blockquote><p><code>Debugger</code>() :: <code>Module</code></p>
-</blockquote>
-<p>A module to debug inside a model <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L69">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>Debugger</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<blockquote><p><code>forward</code>(<code>x</code>:<code>Tensor</code>) -&gt; <code>Tensor</code></p>
-</blockquote>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L71">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>Debugger.forward</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=Flatten></a><code>Flatten</code></h4>
-<blockquote><p><code>Flatten</code>() -&gt; <code>Tensor</code></p>
-</blockquote>
-<p>Flattens <code>x</code> to a single dimension, often used at the end of a model <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L21">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>Flatten</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2><a id=Lambda></a><code>class</code> <code>Lambda</code></h2>
-<blockquote><p><code>Lambda</code>(<code>func</code>:<code>LambdaFunc</code>) :: <code>Module</code></p>
-</blockquote>
-<p>An easy way to create a pytorch layer for a simple <code>func</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L8">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>Lambda</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<blockquote><p><code>forward</code>(<code>x</code>)</p>
-</blockquote>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L15">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>Lambda.forward</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=PoolFlatten></a><code>PoolFlatten</code></h4>
-<blockquote><p><code>PoolFlatten</code>() -&gt; <code>Sequential</code></p>
-</blockquote>
-<p>Apply <code>nn.AdaptiveAvgPool2d</code> to <code>x</code> and then flatten the result <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L25">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>PoolFlatten</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=ResizeBatch></a><code>ResizeBatch</code></h4>
-<blockquote><p><code>ResizeBatch</code>(<code>size</code>:<code>int</code>) -&gt; <code>Tensor</code></p>
-</blockquote>
-<p>Layer that resizes x to <code>size</code>, good for connecting mismatched layers <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L17">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
 </div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>ResizeBatch</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2><a id=StdUpsample></a><code>class</code> <code>StdUpsample</code></h2>
-<blockquote><p><code>StdUpsample</code>(<code>n_in</code>:<code>int</code>, <code>n_out</code>:<code>int</code>) :: <code>Module</code></p>
-</blockquote>
-<p>Standard upsample module <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L75">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>StdUpsample</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=forward></a><code>forward</code></h4>
-<blockquote><p><code>forward</code>(<code>x</code>:<code>Tensor</code>) -&gt; <code>Tensor</code></p>
-</blockquote>
-<p>Should be overridden by all subclasses.</p>
-<p>.. note::
-    Although the recipe for forward pass needs to be defined within
-    this function, one should call the :class:<code>Module</code> instance afterwards
-    instead of this since the former takes care of running the
-    registered hooks while the latter silently ignores them. <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L82">[source]</a></p>
-
 </div>
 
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>StdUpsample.forward</code></p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -1282,9 +784,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=bn_drop_lin></a><code>bn_drop_lin</code></h4>
-<blockquote><p><code>bn_drop_lin</code>(<code>n_in</code>:<code>int</code>, <code>n_out</code>:<code>int</code>, <code>bn</code>:<code>bool</code>=<code>True</code>, <code>p</code>:<code>float</code>=<code>0.0</code>, <code>actn</code>:<code>Optional</code>`Module<code>\]=</code>None`)</p>
+<blockquote><p><code>bn_drop_lin</code>(<code>n_in</code>:<code>int</code>, <code>n_out</code>:<code>int</code>, <code>bn</code>:<code>bool</code>=<code>True</code>, <code>p</code>:<code>float</code>=<code>0.0</code>, <code>actn</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]=<code>None</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L29">[source]</a></p>
 </blockquote>
-<p><code>n_in</code>-&gt;bn-&gt;dropout-&gt;linear(<code>n_in</code>,<code>n_out</code>)-&gt;<code>actn</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L29">[source]</a></p>
 
 </div>
 
@@ -1296,7 +798,15 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>bn_drop_lin</code></p>
+<p><a href="/layers.html#Debugger"><code>Debugger</code></a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <a href="/layers.html#bn_drop_lin"><code>bn_drop_lin</code></a> function returns a sequence of <a href="https://arxiv.org/abs/1502.03167">batch normalization</a>, <a href="https://www.cs.toronto.edu/~hinton/absps/JMLRdropout.pdf">dropout</a> and a linear layer. This custom layer is usually used at the end of a model.</p>
+<p><code>n_in</code> represents the number of size of the input <code>n_out</code> the size of the output, <code>bn</code> whether we want batch norm or not, <code>p</code> is how much dropout and <code>actn</code> is an optional parameter to add an activation function at the end.</p>
 
 </div>
 </div>
@@ -1311,7 +821,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=conv2d></a><code>conv2d</code></h4>
-<blockquote><p><code>conv2d</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>, <code>padding</code>:<code>int</code>=<code>None</code>, <code>bias</code>=<code>False</code>) -&gt; <code>Conv2d</code></p>
+<blockquote><p><code>conv2d</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>, <code>padding</code>:<code>int</code>=<code>None</code>, <code>bias</code>=<code>False</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Conv2d"><code>Conv2d</code></a></p>
 </blockquote>
 <p>Create <code>nn.Conv2d</code> layer: <code>ni</code> inputs, <code>nf</code> outputs, <code>ks</code> kernel size. <code>padding</code> defaults to <code>k//2</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L37">[source]</a></p>
 
@@ -1323,13 +833,6 @@ epoch  train loss  valid loss  accuracy
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>conv2d</code></p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
@@ -1340,9 +843,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=conv2d_relu></a><code>conv2d_relu</code></h4>
-<blockquote><p><code>conv2d_relu</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>, <code>padding</code>:<code>int</code>=<code>None</code>, <code>bn</code>:<code>bool</code>=<code>False</code>) -&gt; <code>Sequential</code></p>
+<blockquote><p><code>conv2d_relu</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>, <code>padding</code>:<code>int</code>=<code>None</code>, <code>bn</code>:<code>bool</code>=<code>False</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a></p>
 </blockquote>
-<p>Create a <code>conv2d</code> layer with <code>nn.ReLU</code> activation and optional(<code>bn</code>) <code>nn.BatchNorm2d</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L49">[source]</a></p>
+<p>Create a <a href="/layers.html#conv2d"><code>conv2d</code></a> layer with <code>nn.ReLU</code> activation and optional(<code>bn</code>) <code>nn.BatchNorm2d</code>: <code>ni</code> input, <code>nf</code> out filters, <code>ks</code> kernel, <code>stride</code>:stride, <code>padding</code>:padding, <code>bn</code>: batch normalization <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L49">[source]</a></p>
 
 </div>
 
@@ -1351,13 +854,6 @@ epoch  train loss  valid loss  accuracy
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>conv2d_relu</code></p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -1369,9 +865,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=conv2d_trans></a><code>conv2d_trans</code></h4>
-<blockquote><p><code>conv2d_trans</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>2</code>, <code>stride</code>:<code>int</code>=<code>2</code>, <code>padding</code>:<code>int</code>=<code>0</code>) -&gt; <code>ConvTranspose2d</code></p>
+<blockquote><p><code>conv2d_trans</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>2</code>, <code>stride</code>:<code>int</code>=<code>2</code>, <code>padding</code>:<code>int</code>=<code>0</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.ConvTranspose2d"><code>ConvTranspose2d</code></a></p>
 </blockquote>
-<p>Create <code>nn.nn.ConvTranspose2d</code> layer: <code>ni</code> inputs, <code>nf</code> outputs, <code>ks</code> kernel size. <code>padding</code> defaults to 0 <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L56">[source]</a></p>
+<p>Create <code>nn.nn.ConvTranspose2d</code> layer: <code>ni</code> inputs, <code>nf</code> outputs, <code>ks</code> kernel size, <code>stride</code>: stride. <code>padding</code> defaults to 0 <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L56">[source]</a></p>
 
 </div>
 
@@ -1380,13 +876,6 @@ epoch  train loss  valid loss  accuracy
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>conv2d_trans</code></p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -1398,9 +887,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=conv_layer></a><code>conv_layer</code></h4>
-<blockquote><p><code>conv_layer</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>) -&gt; <code>Sequential</code></p>
+<blockquote><p><code>conv_layer</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>, <code>ks</code>:<code>int</code>=<code>3</code>, <code>stride</code>:<code>int</code>=<code>1</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L42">[source]</a></p>
 </blockquote>
-<p>Create Conv2d-&gt;BatchNorm2d-&gt;LeakyReLu layer: <code>ni</code> input, <code>nf</code> out filters, <code>ks</code> kernel, <code>stride</code>:stride <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L42">[source]</a></p>
 
 </div>
 
@@ -1412,7 +901,8 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>conv_layer</code></p>
+<p>The <a href="/layers.html#bn_drop_lin"><code>bn_drop_lin</code></a> function returns a sequence of <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Conv2d">nn.Conv2D</a>, <a href="https://arxiv.org/abs/1502.03167">BatchNorm2d</a> and a <a href="https://ai.stanford.edu/~amaas/papers/relu_hybrid_icml2013_final.pdf">leaky RELU</a> activation function.</p>
+<p><code>n_in</code> represents the number of size of the input <code>n_out</code> the size of the output, <code>ks</code> kernel size, <code>stride</code> the stride with which we want to apply the convolutions.</p>
 
 </div>
 </div>
@@ -1427,9 +917,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_embedding></a><code>get_embedding</code></h4>
-<blockquote><p><code>get_embedding</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>) -&gt; <code>Module</code></p>
+<blockquote><p><code>get_embedding</code>(<code>ni</code>:<code>int</code>, <code>nf</code>:<code>int</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L115">[source]</a></p>
 </blockquote>
-<p>Creates an embedding layer <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L115">[source]</a></p>
 
 </div>
 
@@ -1441,7 +931,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>get_embedding</code></p>
+<p>Creates an <a href="https://arxiv.org/abs/1711.09160">embedding layer</a> with input size <code>ni</code> and output size <code>nf</code>.</p>
 
 </div>
 </div>
@@ -1456,9 +946,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=simple_cnn></a><code>simple_cnn</code></h4>
-<blockquote><p><code>simple_cnn</code>(<code>actns</code>:<code>Collection</code>[<code>int</code>], <code>kernel_szs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>strides</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>) -&gt; <code>Sequential</code></p>
+<blockquote><p><code>simple_cnn</code>(<code>actns</code>:<code>Collection</code>[<code>int</code>], <code>kernel_szs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>strides</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a></p>
 </blockquote>
-<p>CNN with <code>conv2d_relu</code> layers defined by <code>actns</code>, <code>kernel_szs</code> and <code>strides</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L99">[source]</a></p>
+<p>CNN with <a href="/layers.html#conv2d_relu"><code>conv2d_relu</code></a> layers defined by <code>actns</code>, <code>kernel_szs</code> and <code>strides</code></p>
 
 </div>
 
@@ -1467,13 +957,6 @@ epoch  train loss  valid loss  accuracy
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>simple_cnn</code></p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -1485,9 +968,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=std_upsample_head></a><code>std_upsample_head</code></h4>
-<blockquote><p><code>std_upsample_head</code>(<code>c</code>, <code>nfs</code>:<code>Collection</code>[<code>int</code>]) -&gt; <code>Module</code></p>
+<blockquote><p><code>std_upsample_head</code>(<code>c</code>, <code>nfs</code>:<code>Collection</code>[<code>int</code>]) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L85">[source]</a></p>
 </blockquote>
-<p>Creates a sequence of upsample layers <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L85">[source]</a></p>
 
 </div>
 
@@ -1499,39 +982,14 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>std_upsample_head</code></p>
+<p>Creates a sequence of upsample layers with a RELU at the beggining and a <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.ConvTranspose2d">nn.ConvTranspose2d</a>.</p>
+<p><code>nfs</code> is a list with the input and output sizes of each upsample layer and <code>c</code> is the output size of the final 2D Transpose Convolutional layer.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=trunc_normal_></a><code>trunc_normal_</code></h4>
-<blockquote><p><code>trunc_normal_</code>(<code>x</code>:<code>Tensor</code>, <code>mean</code>:<code>float</code>=<code>0.0</code>, <code>std</code>:<code>float</code>=<code>1.0</code>) -&gt; <code>Tensor</code></p>
-</blockquote>
-<p>Truncated normal initialization <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L110">[source]</a></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>trunc_normal_</code></p>
-
-</div>
-</div>
 </div>
 </div>
  
