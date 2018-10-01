@@ -8,6 +8,9 @@ summary: "`Learner` support for NLP"
 
 <div class="container" id="notebook-container">
     
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="NLP-Learners">NLP Learners<a class="anchor-link" href="#NLP-Learners">&#182;</a></h1>
@@ -16,7 +19,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This module contains the main class to quickly define a <code>Learner</code> (and automatically generates an appropriate model) from your NLP data.</p>
+<p>This module contains the main class to quickly define a <a href="/basic_train.html#Learner"><code>Learner</code></a> (and automatically generates an appropriate model) from your NLP data.</p>
 
 </div>
 </div>
@@ -32,7 +35,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is the class that handles the whole creation of a <code>Learner</code>, be it for a language model or an RNN classifier. It handles the conversion of weights from a pretrained model as well as saving or loading the encoder.</p>
+<p>This is the class that handles the whole creation of a <a href="/basic_train.html#Learner"><code>Learner</code></a>, be it for a language model or an RNN classifier. It handles the conversion of weights from a pretrained model as well as saving or loading the encoder.</p>
 
 </div>
 </div>
@@ -61,7 +64,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates an <code>RNNLearner</code> from <code>data</code> and a <code>model</code> with a text data using a certain <code>bptt</code>. The <code>split_func</code> is used to properly split the model in different groups for gradual unfreezing and differential learning rates. Gradient clipping of <code>clip</code> is optionnally applied. <code>adjust</code>, <code>alpha</code> and <code>beta</code> are all passed to create an instance of <code>RNNTrainer</code>.</p>
+<p>Creates an <a href="/text.learner.html#RNNLearner"><code>RNNLearner</code></a> from <a href="/text.data.html#text.data"><code>data</code></a> and a <code>model</code> with a text data using a certain <code>bptt</code>. The <code>split_func</code> is used to properly split the model in different groups for gradual unfreezing and differential learning rates. Gradient clipping of <code>clip</code> is optionnally applied. <code>adjust</code>, <code>alpha</code> and <code>beta</code> are all passed to create an instance of <a href="/callbacks.rnn.html#RNNTrainer"><code>RNNTrainer</code></a>.</p>
 
 </div>
 </div>
@@ -96,7 +99,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create an RNNLearner with a classifier model from <code>data</code>. The model used is the encoder of an <a href="https://arxiv.org/abs/1708.02182">AWD-LSTM</a> that is built with embeddings of size <code>emb_sz</code>, a hidden size of <code>nh</code>, and <code>nl</code> layers (the <code>vocab_size</code> is inferred from the <code>data</code>). All the dropouts are put to values that we found worked pretty well and you can control their strength by adjusting <code>drop_mult</code>. If <code>qrnn</code> is True, the model uses <a href="https://arxiv.org/abs/1611.01576">QRNN cells</a> instead of LSTMs.</p>
+<p>Create an RNNLearner with a classifier model from <a href="/text.data.html#text.data"><a href="/text.data.html#text.data"><code>data</code></a></a>. The model used is the encoder of an <a href="https://arxiv.org/abs/1708.02182">AWD-LSTM</a> that is built with embeddings of size <code>emb_sz</code>, a hidden size of <code>nh</code>, and <code>nl</code> layers (the <code>vocab_size</code> is inferred from the <a href="/text.data.html#text.data"><a href="/text.data.html#text.data"><code>data</code></a></a>). All the dropouts are put to values that we found worked pretty well and you can control their strength by adjusting <code>drop_mult</code>. If <code>qrnn</code> is True, the model uses <a href="https://arxiv.org/abs/1611.01576">QRNN cells</a> instead of LSTMs.</p>
 <p>The input texts are fed into that model by bunch of <code>bptt</code> and only the last <code>max_len</code> activations are considerated. This gives us the backbone of our model. The head then consists of:</p>
 <ul>
 <li>a layer that concatenates the final outputs of the RNN with the maximum and average of all the intermediate outputs (on the sequence length dimension),</li>
@@ -116,7 +119,7 @@ summary: "`Learner` support for NLP"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">RNNLearner</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -145,8 +148,8 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create an RNNLearner with a language model from <code>data</code> of a certain <code>bptt</code>. The model used is an <a href="https://arxiv.org/abs/1708.02182">AWD-LSTM</a> that is built with embeddings of size <code>emb_sz</code>, a hidden size of <code>nh</code>, and <code>nl</code> layers (the <code>vocab_size</code> is inferred from the <code>data</code>). All the dropouts are put to values that we found worked pretty well and you can control their strength by adjusting <code>drop_mult</code>. If <code>qrnn</code> is True, the model uses <a href="https://arxiv.org/abs/1611.01576">QRNN cells</a> instead of LSTMs. The flag <code>tied_weights</code> control if we should use the same weights for the encoder and the decoder, the flag <code>bias</code> controls if the last linear layer (the decoder) has bias or not.</p>
-<p>You can specify <code>pretrained_fnames</code> if you want to use the weights of a pretrained model. This should be a list of the name of the weight file and the name of the corresponding dictionary. The dictionary is needed because the function will internally convert the embeddings of the pretrained models to match the dictionary of the <code>data</code> passed (a word may have a different id for the pretrained model).</p>
+<p>Create an RNNLearner with a language model from <a href="/text.data.html#text.data"><a href="/text.data.html#text.data"><a href="/text.data.html#text.data"><code>data</code></a></a></a> of a certain <code>bptt</code>. The model used is an <a href="https://arxiv.org/abs/1708.02182">AWD-LSTM</a> that is built with embeddings of size <code>emb_sz</code>, a hidden size of <code>nh</code>, and <code>nl</code> layers (the <code>vocab_size</code> is inferred from the <a href="/text.data.html#text.data"><a href="/text.data.html#text.data"><a href="/text.data.html#text.data"><code>data</code></a></a></a>). All the dropouts are put to values that we found worked pretty well and you can control their strength by adjusting <code>drop_mult</code>. If <code>qrnn</code> is True, the model uses <a href="https://arxiv.org/abs/1611.01576">QRNN cells</a> instead of LSTMs. The flag <code>tied_weights</code> control if we should use the same weights for the encoder and the decoder, the flag <code>bias</code> controls if the last linear layer (the decoder) has bias or not.</p>
+<p>You can specify <code>pretrained_fnames</code> if you want to use the weights of a pretrained model. This should be a list of the name of the weight file and the name of the corresponding dictionary. The dictionary is needed because the function will internally convert the embeddings of the pretrained models to match the dictionary of the <a href="/text.data.html#text.data"><a href="/text.data.html#text.data"><a href="/text.data.html#text.data"><code>data</code></a></a></a> passed (a word may have a different id for the pretrained model).</p>
 
 </div>
 </div>
@@ -160,7 +163,7 @@ summary: "`Learner` support for NLP"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">RNNLearner</span><span class="o">.</span><span class="n">language_model</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pretrained_fnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lstm_wt103&#39;</span><span class="p">,</span> <span class="s1">&#39;itos_wt103&#39;</span><span class="p">],</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -239,7 +242,7 @@ summary: "`Learner` support for NLP"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Opens the weights in the <code>wgts_fname</code> of model diretory of the <code>RNNLearner</code> and the dictionary in <code>itos_fname</code> then adapts the pretrained weights to the vocabulary of the <code>data</code>.</p>
+<p>Opens the weights in the <code>wgts_fname</code> of model diretory of the <a href="/text.learner.html#RNNLearner"><code>RNNLearner</code></a> and the dictionary in <code>itos_fname</code> then adapts the pretrained weights to the vocabulary of the <a href="/text.data.html#text.data"><code>data</code></a>.</p>
 
 </div>
 </div>
