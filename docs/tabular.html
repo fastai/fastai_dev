@@ -22,12 +22,12 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/tabular.html#tabular"><code>tabular</code></a> contains all the necessary classes to deal with tabular data, across two modules:</p>
+<p><code>tabular</code> contains all the necessary classes to deal with tabular data, across two modules:</p>
 <ul>
-<li><a href="/text.transform.html#text.transform"><code>tabular.transform</code></a>: defines the <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a> class to help with preprocessing;</li>
-<li><a href="/text.data.html#text.data"><code>tabular.data</code></a>: defines the <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a> that handles that data, as well as the methods to quickly get a <a href="/data.html#DataBunch"><code>DataBunch</code></a>.</li>
+<li><code>tabular.transform</code>: defines the <code>TabularTransform</code> class to help with preprocessing;</li>
+<li><code>tabular.data</code>: defines the <code>TabularDataset</code> that handles that data, as well as the methods to quickly get a <code>DataBunch</code>.</li>
 </ul>
-<p>To create a model, you'll need to use <a href="/tabular.html#tabular"><code>models.tabular</code></a>. See below for and end-to-end example using all these modules.</p>
+<p>To create a model, you'll need to use <code>models.tabular</code>. See below for and end-to-end example using all these modules.</p>
 
 </div>
 </div>
@@ -54,7 +54,7 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 <span class="n">ADULT_PATH</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -84,7 +84,7 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -226,7 +226,7 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 <li>Categorical variables will be replaced by a category, a unique id that identifies them, before passing through an embedding layer.</li>
 <li>Continuous variables will be normalized then directly fed to the model.</li>
 </ul>
-<p>Another thing we need to handle are the missing values: our model isn't going to like receiving NaNs so we should remove them in a smart way. All of this preprocessing is done by <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a> objects and <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>.</p>
+<p>Another thing we need to handle are the missing values: our model isn't going to like receiving NaNs so we should remove them in a smart way. All of this preprocessing is done by <code>TabularTransform</code> objects and <code>TabularDataset</code>.</p>
 <p>We can define a bunch of Transforms that will be applied to our variables. Here we transform all categorical variables into categories, and we replace missing values for continuous variables by the median of the corresponding column.</p>
 
 </div>
@@ -240,7 +240,7 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">FillMissing</span><span class="p">,</span> <span class="n">Categorify</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -260,14 +260,14 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:</span><span class="o">-</span><span class="mi">2000</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">df</span><span class="p">[</span><span class="o">-</span><span class="mi">2000</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>First let's split our variables between categoricals and continuous (we can ignore the dependant variable at this stage). fastai will assume all variables that aren't dependent or categorical are continuous, unless we explicitly pass a list to the <code>cont_names</code> parameter when constructing our <a href="/data.html#DataBunch"><code>DataBunch</code></a>.</p>
+<p>First let's split our variables between categoricals and continuous (we can ignore the dependant variable at this stage). fastai will assume all variables that aren't dependent or categorical are continuous, unless we explicitly pass a list to the <code>cont_names</code> parameter when constructing our <code>DataBunch</code>.</p>
 
 </div>
 </div>
@@ -281,14 +281,14 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 <span class="n">cat_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">,</span> <span class="s1">&#39;education&#39;</span><span class="p">,</span> <span class="s1">&#39;marital-status&#39;</span><span class="p">,</span> <span class="s1">&#39;occupation&#39;</span><span class="p">,</span> <span class="s1">&#39;relationship&#39;</span><span class="p">,</span> <span class="s1">&#39;race&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;native-country&#39;</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we're ready to pass these details to <a href="/tabular.data.html#tabular_data_from_df"><code>tabular_data_from_df</code></a> to create the <a href="/data.html#DataBunch"><code>DataBunch</code></a> that we'll use for training.</p>
+<p>Now we're ready to pass these details to <code>tabular_data_from_df</code> to create the <code>DataBunch</code> that we'll use for training.</p>
 
 </div>
 </div>
@@ -302,7 +302,7 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">cont_names</span><span class="p">)</span>  <span class="c1"># `cont_names` defaults to: set(df)-set(cat_names)-{dep_var}</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -337,7 +337,7 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cat_x</span><span class="p">,</span> <span class="n">cont_x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">to_np</span><span class="p">(</span><span class="n">o</span><span class="p">[:</span><span class="mi">5</span><span class="p">]))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -368,7 +368,7 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>After being processed in <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>, the categorical variables are replaced by ids and the continuous variables are normalized. The codes corresponding to categorical variables are all put together, as are all the continuous variables.</p>
+<p>After being processed in <code>TabularDataset</code>, the categorical variables are replaced by ids and the continuous variables are normalized. The codes corresponding to categorical variables are all put together, as are all the continuous variables.</p>
 
 </div>
 </div>
@@ -381,7 +381,7 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Once we have our data ready in a <a href="/data.html#DataBunch"><code>DataBunch</code></a>, we just need to create a model to then define a <a href="/basic_train.html#Learner"><code>Learner</code></a> and start training. The fastai library has a flexible and powerful <a href="/models.tabular.html#TabularModel"><code>TabularModel</code></a> in <a href="/tabular.html#tabular"><code>models.tabular</code></a>. To use that function, we just need to specify the embedding sizes for each of our categorical variables.</p>
+<p>Once we have our data ready in a <code>DataBunch</code>, we just need to create a model to then define a <code>Learner</code> and start training. The fastai library has a flexible and powerful <code>TabularModel</code> in <code>models.tabular</code>. To use that function, we just need to specify the embedding sizes for each of our categorical variables.</p>
 
 </div>
 </div>
@@ -391,12 +391,11 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">get_tabular_learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="n">emb_szs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;native-country&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
-<span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">get_tabular_learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="n">emb_szs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;native-country&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -410,10 +409,10 @@ summary: "Data, transforms, models, and training for tabular/structured data"
 
  
  
-<div id="6082ba93-825e-42d6-843f-70aad1407c6c"></div>
+<div id="b3e57ab8-2a0d-46d7-a7b8-67346351791a"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6082ba93-825e-42d6-843f-70aad1407c6c');
+var element = $('#b3e57ab8-2a0d-46d7-a7b8-67346351791a');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}

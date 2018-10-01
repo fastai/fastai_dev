@@ -22,12 +22,12 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/vision.html#vision"><code>vision</code></a> module of the fastai library contains all the necessary functions to define a Dataset and train a model for computer vision tasks. It contains four different submodules to reach that goal:</p>
+<p>The <code>vision</code> module of the fastai library contains all the necessary functions to define a Dataset and train a model for computer vision tasks. It contains four different submodules to reach that goal:</p>
 <ul>
-<li><a href="/vision.image.html#vision.image"><code>vision.image</code></a> contains the basic definition of an <a href="/vision.image.html#Image"><code>Image</code></a> object and all the functions that are used behind the scenes to apply transformations to such an object,</li>
-<li><a href="/text.transform.html#text.transform"><code>vision.transform</code></a> contains all the transforms we can use for data augmentation,</li>
-<li><a href="/text.data.html#text.data"><code>vision.data</code></a> contains the definition of <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a> as well as the utility function to easily build a <a href="/data.html#DataBunch"><code>DataBunch</code></a> for Computer Vision problems.</li>
-<li><a href="/text.learner.html#text.learner"><code>vision.learner</code></a> lets you build and fine-tune models with a pretrained CNN backbone or train a randomly initialized model from scratch.</li>
+<li><code>vision.image</code> contains the basic definition of an <code>Image</code> object and all the functions that are used behind the scenes to apply transformations to such an object,</li>
+<li><code>vision.transform</code> contains all the transforms we can use for data augmentation,</li>
+<li><code>vision.data</code> contains the definition of <code>ImageDataset</code> as well as the utility function to easily build a <code>DataBunch</code> for Computer Vision problems.</li>
+<li><code>vision.learner</code> lets you build and fine-tune models with a pretrained CNN backbone or train a randomly initialized model from scratch.</li>
 </ul>
 <p>Each of the four module links above includes a quick overview and examples of the functionality of that module, as well as complete API documentation. Below, we'll provide a walk-thru of end to end computer vision model training with the most commonly used functionality.</p>
 
@@ -56,7 +56,7 @@ summary:
 <span class="n">MNIST_PATH</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -79,7 +79,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Since this contains standard <a href="/train.html#train"><code>train</code></a> and <code>valid</code> folders, and each contains one folder per class, you can create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> in a single line:</p>
+<p>Since this contains standard <code>train</code> and <code>valid</code> folders, and each contains one folder per class, you can create a <code>DataBunch</code> in a single line:</p>
 
 </div>
 </div>
@@ -92,14 +92,14 @@ summary:
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You load a pretrained model ready for fine tuning (<a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision.models"><code>tvm</code></a> is the namespace for <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision.models"><code>torchvision.models</code></a>):</p>
+<p>You load a pretrained model ready for fine tuning (<code>tvm</code> is the namespace for <code>torchvision.models</code>):</p>
 
 </div>
 </div>
@@ -112,7 +112,7 @@ summary:
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tvm</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -132,7 +132,7 @@ summary:
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -146,10 +146,10 @@ summary:
 
  
  
-<div id="b04600f2-6056-4e2a-87ce-ef8fd5540569"></div>
+<div id="40bc96ae-eb26-42a5-ba78-43064d641ec9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b04600f2-6056-4e2a-87ce-ef8fd5540569');
+var element = $('#40bc96ae-eb26-42a5-ba78-43064d641ec9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -175,7 +175,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's look briefly at each of the <a href="/vision.html#vision"><code>vision</code></a> submodules.</p>
+<p>Let's look briefly at each of the <code>vision</code> submodules.</p>
 
 </div>
 </div>
@@ -188,7 +188,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The most important piece of <a href="/text.data.html#text.data"><code>vision.data</code></a> is the <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a>. If you've got labels as subfolders, then you can just say:</p>
+<p>The most important piece of <code>vision.data</code> is the <code>ImageDataset</code>. If you've got labels as subfolders, then you can just say:</p>
 
 </div>
 </div>
@@ -201,7 +201,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">ImageDataset</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -214,7 +214,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>That brings us to <a href="/vision.image.html#vision.image"><code>vision.image</code></a>, which defines the <a href="/vision.image.html#Image"><a href="/vision.image.html#Image"><code>Image</code></a></a> class. Our dataset will return <a href="/vision.image.html#Image"><a href="/vision.image.html#Image"><code>Image</code></a></a> objects when we index it. Images automatically display in notebooks:</p>
+<p>That brings us to <code>vision.image</code>, which defines the <code>Image</code> class. Our dataset will return <code>Image</code> objects when we index it. Images automatically display in notebooks:</p>
 
 </div>
 </div>
@@ -228,7 +228,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">img</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -266,7 +266,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;MNIST digit&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -304,7 +304,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="mi">35</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -348,7 +348,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">get_transforms</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -386,7 +386,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">rotate</span><span class="p">(</span><span class="n">degrees</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">)),</span> <span class="n">symmetric_warp</span><span class="p">(</span><span class="n">magnitude</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.3</span><span class="p">))]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -409,7 +409,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span> <span class="n">apply_tfms</span><span class="p">(</span><span class="n">tfms</span><span class="p">,</span> <span class="n">ds</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -434,7 +434,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You can create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> with your transformed training and validation data loaders in a single step, passing in a tuple of <em>(train_tfms, valid_tfms)</em>:</p>
+<p>You can create a <code>DataBunch</code> with your transformed training and validation data loaders in a single step, passing in a tuple of <em>(train_tfms, valid_tfms)</em>:</p>
 
 </div>
 </div>
@@ -447,7 +447,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="p">(</span><span class="n">tfms</span><span class="p">,</span> <span class="p">[]))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -460,7 +460,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now you're ready to train a model. To create a model, simply pass your <a href="/data.html#DataBunch"><code>DataBunch</code></a> and a model creation function (such as one provided by <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision.models"><code>tvm</code></a>: <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision.models"><code>torchvision.models</code></a>) to <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a>, and call <a href="/basic_train.html#fit"><code>fit</code></a>:</p>
+<p>Now you're ready to train a model. To create a model, simply pass your <code>DataBunch</code> and a model creation function (such as one provided by <code>tvm</code>: <code>torchvision.models</code>) to <code>ConvLearner</code>, and call <code>fit</code>:</p>
 
 </div>
 </div>
@@ -474,7 +474,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -488,10 +488,10 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 
  
  
-<div id="a7ef4b3e-89ee-4073-a637-72ed199670f2"></div>
+<div id="367a9a80-39ab-458a-9212-78968c554f57"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#a7ef4b3e-89ee-4073-a637-72ed199670f2');
+var element = $('#367a9a80-39ab-458a-9212-78968c554f57');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -530,7 +530,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span> <span class="o">=</span> <span class="n">ClassificationInterpretation</span><span class="o">.</span><span class="n">from_learner</span><span class="p">(</span><span class="n">learn</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -544,10 +544,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="30bd0795-2d56-4d06-9f0b-8258ab5a8bdb"></div>
+<div id="f20ed592-2a88-451a-8378-0f31d7fa34f6"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#30bd0795-2d56-4d06-9f0b-8258ab5a8bdb');
+var element = $('#f20ed592-2a88-451a-8378-0f31d7fa34f6');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -563,10 +563,10 @@ var element = $('#30bd0795-2d56-4d06-9f0b-8258ab5a8bdb');
 
  
  
-<div id="f53e51ce-167c-42c0-ae21-4d986dfacf09"></div>
+<div id="5e98adcd-9aa0-454d-9c64-2c47c6aa5535"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f53e51ce-167c-42c0-ae21-4d986dfacf09');
+var element = $('#5e98adcd-9aa0-454d-9c64-2c47c6aa5535');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -587,7 +587,7 @@ var element = $('#f53e51ce-167c-42c0-ae21-4d986dfacf09');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span><span class="o">.</span><span class="n">plot_top_losses</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -618,7 +618,7 @@ var element = $('#f53e51ce-167c-42c0-ae21-4d986dfacf09');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span><span class="o">.</span><span class="n">plot_confusion_matrix</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -637,6 +637,19 @@ var element = $('#f53e51ce-167c-42c0-ae21-4d986dfacf09');
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
 </div>
 </div>
 

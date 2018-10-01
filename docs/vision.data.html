@@ -22,7 +22,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This module contains the classes that define datasets handling <a href="/vision.image.html#Image"><code>Image</code></a> objects and their tranformations. As usual, we'll start with a quick overview, before we get in to the detailed API docs.</p>
+<p>This module contains the classes that define datasets handling <code>Image</code> objects and their tranformations. As usual, we'll start with a quick overview, before we get in to the detailed API docs.</p>
 
 </div>
 </div>
@@ -35,7 +35,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To get you started as easily as possible, the fastai provides two helper functions to create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> object that you can directly use for training a classifier. To demonstrate them you'll first need to untar the file by executing the following cell. This will create a data folder containing a MNIST subset in <code>data/mnist_sample</code>.</p>
+<p>To get you started as easily as possible, the fastai provides two helper functions to create a <code>DataBunch</code> object that you can directly use for training a classifier. To demonstrate them you'll first need to untar the file by executing the following cell. This will create a data folder containing a MNIST subset in <code>data/mnist_sample</code>.</p>
 
 </div>
 </div>
@@ -48,14 +48,14 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">untar_mnist</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The first way to define a <a href="/data.html#DataBunch"><code>DataBunch</code></a> object requires you to put your data in folders this way (the <code>test</code> folder is optional):</p>
+<p>The first way to define a <code>DataBunch</code> object requires you to put your data in folders this way (the <code>test</code> folder is optional):</p>
 
 <pre><code>path\
   train\
@@ -69,7 +69,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
     ...
     clasn\
   test\</code></pre>
-<p>You can then use <a href="/vision.data.html#image_data_from_folder"><code>image_data_from_folder</code></a>:</p>
+<p>You can then use <code>image_data_from_folder</code>:</p>
 
 </div>
 </div>
@@ -82,7 +82,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">get_transforms</span><span class="p">(</span><span class="n">do_flip</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -94,7 +94,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <li>the transforms to apply to the images in <code>ds_tfms</code> (here with <code>do_flip</code>=False because we don't want to flip numbers),</li>
 <li>the target <code>size</code> of our pictures (here 28).</li>
 </ul>
-<p>As all <a href="/data.html#DataBunch"><code>DataBunch</code></a>, data then as a <code>train_dl</code> and a <code>valid_dl</code> that are <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>. If you want to have a look at a few images in a batch inside a batch, you can use <a href="/vision.data.html#show_image_batch"><code>show_image_batch</code></a>, the <code>rows</code> argument being the number of rows and columns in the array.</p>
+<p>As all <code>DataBunch</code>, data then as a <code>train_dl</code> and a <code>valid_dl</code> that are <code>DataLoader</code>. If you want to have a look at a few images in a batch inside a batch, you can use <code>show_image_batch</code>, the <code>rows</code> argument being the number of rows and columns in the array.</p>
 
 </div>
 </div>
@@ -107,7 +107,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_image_batch</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -151,7 +151,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="o">/</span><span class="s1">&#39;labels.csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -210,7 +210,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You can then use <a href="/vision.data.html#image_data_from_csv"><code>image_data_from_csv</code></a>:</p>
+<p>You can then use <code>image_data_from_csv</code>:</p>
 
 </div>
 </div>
@@ -223,7 +223,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_csv</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">get_transforms</span><span class="p">(</span><span class="n">do_flip</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">28</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -236,7 +236,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>If you quickly want to get a <a href="/data.html#DataBunch"><code>DataBunch</code></a> and train a model, you should process your data to have it in one of the formats the following functions handle.</p>
+<p>If you quickly want to get a <code>DataBunch</code> and train a model, you should process your data to have it in one of the formats the following functions handle.</p>
 
 </div>
 </div>
@@ -251,8 +251,8 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=image_data_from_folder></a><code>image_data_from_folder</code></h4>
-<p><code>image_data_from_folder</code>(<code>path</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>train</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'train'</code>, <code>valid</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'valid'</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <a href="/data.html#DataBunch"><code>DataBunch</code></a></p>
-<p>Create <a href="/data.html#DataBunch"><code>DataBunch</code></a> from imagenet style dataset in <code>path</code> with <code>train</code>,<code>valid</code>,<code>test</code> subfolders. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L200">[source]</a></p>
+<p><code>image_data_from_folder</code>(<code>path</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>train</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'train'</code>, <code>valid</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'valid'</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <code>DataBunch</code></p>
+<p>Create <code>DataBunch</code> from imagenet style dataset in <code>path</code> with <code>train</code>,<code>valid</code>,<code>test</code> subfolders. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L200">[source]</a></p>
 
 </div>
 
@@ -298,7 +298,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">get_transforms</span><span class="p">(</span><span class="n">do_flip</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -313,7 +313,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=image_data_from_csv></a><code>image_data_from_csv</code></h4>
-<p><code>image_data_from_csv</code>(<code>path</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>folder</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'.'</code>, <code>csv_labels</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'labels.csv'</code>, <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>suffix</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <a href="/data.html#DataBunch"><code>DataBunch</code></a>
+<p><code>image_data_from_csv</code>(<code>path</code>:<code>Union</code>[<code>Path</code>, <code>str</code>], <code>folder</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'.'</code>, <code>csv_labels</code>:<code>Union</code>[<code>Path</code>, <code>str</code>]=<code>'labels.csv'</code>, <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>suffix</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <code>DataBunch</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L239">[source]</a></p>
 
 </div>
@@ -326,8 +326,8 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create <a href="/data.html#DataBunch"><code>DataBunch</code></a> from <code>path</code> by splitting the data in <code>folder</code> and labelled in a file <code>csv_labels</code> between a training and valid set, putting aside <code>valid_pct</code> for the validation. An optional <code>test</code> folder contains unlabelled data and <code>suff</code> contains an optional suffix to add to the filenames in <code>csv_labels</code> (like '.jpg')</p>
-<p>The same list of kwargs as in <a href="/vision.data.html#image_data_from_folder"><code>image_data_from_folder</code></a> applies here.</p>
+<p>Create <code>DataBunch</code> from <code>path</code> by splitting the data in <code>folder</code> and labelled in a file <code>csv_labels</code> between a training and valid set, putting aside <code>valid_pct</code> for the validation. An optional <code>test</code> folder contains unlabelled data and <code>suff</code> contains an optional suffix to add to the filenames in <code>csv_labels</code> (like '.jpg')</p>
+<p>The same list of kwargs as in <code>image_data_from_folder</code> applies here.</p>
 
 </div>
 </div>
@@ -340,7 +340,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_folder</span><span class="p">(</span><span class="s1">&#39;../data/mnist_sample/&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">get_transforms</span><span class="p">(</span><span class="n">do_flip</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -362,7 +362,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=show_image_batch></a><code>show_image_batch</code></h4>
-<p><code>show_image_batch</code>(<code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>classes</code>:<code>Collection</code>[<code>str</code>], <code>rows</code>:<code>int</code>=<code>None</code>, <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(12, 15)</code>, <code>denorm</code>:<code>Callable</code>=<code>None</code>)</p>
+<p><code>show_image_batch</code>(<code>dl</code>:<code>DataLoader</code>, <code>classes</code>:<code>Collection</code>[<code>str</code>], <code>rows</code>:<code>int</code>=<code>None</code>, <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(12, 15)</code>, <code>denorm</code>:<code>Callable</code>=<code>None</code>)</p>
 <p>Show a few images from a batch.</p>
 <ul>
 <li><em>dl</em>: A dataloader from which to show a sample</li>
@@ -388,7 +388,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_image_batch</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -428,7 +428,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=show_images></a><code>show_images</code></h4>
-<p><code>show_images</code>(<code>x</code>:<code>Collection</code>[<a href="/vision.image.html#Image"><code>Image</code></a>], <code>y</code>:<code>int</code>, <code>rows</code>:<code>int</code>, <code>classes</code>:<code>Collection</code>[<code>str</code>], <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(9, 9)</code>)
+<p><code>show_images</code>(<code>x</code>:<code>Collection</code>`Image<code>\],</code>y<code>:</code>int<code>,</code>rows<code>:</code>int<code>,</code>classes<code>:</code>Collection<code>\[</code>str<code>\],</code>figsize<code>:</code>Tuple<code>\[</code>int<code>,</code>int<code>\]=</code>(9, 9)`)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L31">[source]</a></p>
 
 </div>
@@ -456,7 +456,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <span class="n">show_images</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -516,7 +516,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To show an example, we're going to create a fake batch by transforming the same <a href="/vision.image.html#Image"><code>Image</code></a> several times. See the documentation of <a href="/vision.image.html#apply_tfms"><code>apply_tfms</code></a> for more details abut what is happening in this code.</p>
+<p>To show an example, we're going to create a fake batch by transforming the same <code>Image</code> several times. See the documentation of <code>apply_tfms</code> for more details abut what is happening in this code.</p>
 
 </div>
 </div>
@@ -542,7 +542,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <span class="n">show_xy_images</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -643,7 +643,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create <a href="/vision.data.html#normalize"><code>normalize</code></a> and <a href="/vision.data.html#denormalize"><code>denormalize</code></a> functions using <code>mean</code> and <code>std</code>. <code>device</code> will store them on the device specified. <code>do_y</code> determines if the target should also be normaized or not.</p>
+<p>Create <code>normalize</code> and <code>denormalize</code> functions using <code>mean</code> and <code>std</code>. <code>device</code> will store them on the device specified. <code>do_y</code> determines if the target should also be normaized or not.</p>
 
 </div>
 </div>
@@ -651,7 +651,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>On MNIST the mean and std are 0.1307 and 0.3081 respectively (looked on Google). If you're using a pretrained model, you'll need to use the normalization that used to train the model. The imagenet norm and denorm functions are stored as constants inside the library named <code>2250]))</code> and <code>2250]))</code>. If you're training a model on CIFAR-10, you can also use <code>2610]))</code> and <code>2610]))</code>.</p>
-<p>Note that if you normalize your input, you'll need to denormalize it when using functions like <a href="/vision.data.html#show_images"><code>show_images</code></a> or <a href="/vision.data.html#show_image_batch"><code>show_image_batch</code></a>. The correct way to look at those pictures is to denormalize them first:</p>
+<p>Note that if you normalize your input, you'll need to denormalize it when using functions like <code>show_images</code> or <code>show_image_batch</code>. The correct way to look at those pictures is to denormalize them first:</p>
 
 </div>
 </div>
@@ -666,7 +666,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 <span class="n">show_image_batch</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="n">denorm</span><span class="o">=</span><span class="n">imagenet_denorm</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -712,7 +712,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ImageDataset></a>class <code>ImageDataset</code></h2>
-<p><code>ImageDataset</code>(<code>fns</code>:<code>Collection</code>[<code>Path</code>], <code>labels</code>:<code>Collection</code>[<code>str</code>], <code>classes</code>:<code>Optional</code>[<code>Collection</code>[<code>Any</code>]]=<code>None</code>) :: <a href="/data.html#LabelDataset"><code>LabelDataset</code></a>
+<p><code>ImageDataset</code>(<code>fns</code>:<code>Collection</code>[<code>Path</code>], <code>labels</code>:<code>Collection</code>[<code>str</code>], <code>classes</code>:<code>Optional</code>[<code>Collection</code>[<code>Any</code>]]=<code>None</code>) :: <code>LabelDataset</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L45">[source]</a></p>
 
 </div>
@@ -753,7 +753,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To create an <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a> automatically from a <code>folder</code>. If <code>classes</code> is None, it will be set to the names of the directories in <code>folder</code>. You can split the images in this <code>folder</code> in a train/valid dataset if <code>valid_pct</code> is non-zero. <code>check_ext</code> forces the function to only keep filenems with image extensions.</p>
+<p>To create an <code>ImageDataset</code> automatically from a <code>folder</code>. If <code>classes</code> is None, it will be set to the names of the directories in <code>folder</code>. You can split the images in this <code>folder</code> in a train/valid dataset if <code>valid_pct</code> is non-zero. <code>check_ext</code> forces the function to only keep filenems with image extensions.</p>
 
 </div>
 </div>
@@ -796,7 +796,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ImageMultiDataset></a>class <code>ImageMultiDataset</code></h2>
-<p><code>ImageMultiDataset</code>(<code>fns</code>:<code>Collection</code>[<code>Path</code>], <code>labels</code>:<code>Collection</code>[<code>str</code>], <code>classes</code>:<code>Optional</code>[<code>Collection</code>[<code>Any</code>]]=<code>None</code>) :: <a href="/data.html#LabelDataset"><code>LabelDataset</code></a>
+<p><code>ImageMultiDataset</code>(<code>fns</code>:<code>Collection</code>[<code>Path</code>], <code>labels</code>:<code>Collection</code>[<code>str</code>], <code>classes</code>:<code>Optional</code>[<code>Collection</code>[<code>Any</code>]]=<code>None</code>) :: <code>LabelDataset</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L82">[source]</a></p>
 
 </div>
@@ -837,7 +837,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To create an <a href="/vision.data.html#ImageMultiDataset"><code>ImageMultiDataset</code></a> automatically in <code>path</code> from a <code>folder</code> and <code>fns</code>. If <code>classes</code> is None, it will be set to the names of the different <code>labels</code> seen. You can split the images in this <code>folder</code> in a train/valid dataset if <code>valid_pct</code> is non-zero. <code>check_ext</code> forces the function to only keep filenems with image extensions.</p>
+<p>To create an <code>ImageMultiDataset</code> automatically in <code>path</code> from a <code>folder</code> and <code>fns</code>. If <code>classes</code> is None, it will be set to the names of the different <code>labels</code> seen. You can split the images in this <code>folder</code> in a train/valid dataset if <code>valid_pct</code> is non-zero. <code>check_ext</code> forces the function to only keep filenems with image extensions.</p>
 
 </div>
 </div>
@@ -872,7 +872,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To help scan a folder for these <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, we use the following helper function:</p>
+<p>To help scan a folder for these <code>Dataset</code>, we use the following helper function:</p>
 
 </div>
 </div>
@@ -915,7 +915,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=SegmentationDataset></a>class <code>SegmentationDataset</code></h2>
-<p><code>SegmentationDataset</code>(<code>x</code>:<code>Collection</code>[<code>Union</code>[<code>Path</code>, <code>str</code>]], <code>y</code>:<code>Collection</code>[<code>Union</code>[<code>Path</code>, <code>str</code>]]) :: <a href="/data.html#DatasetBase"><code>DatasetBase</code></a>
+<p><code>SegmentationDataset</code>(<code>x</code>:<code>Collection</code>[<code>Union</code>[<code>Path</code>, <code>str</code>]], <code>y</code>:<code>Collection</code>[<code>Union</code>[<code>Path</code>, <code>str</code>]]) :: <code>DatasetBase</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L113">[source]</a></p>
 
 </div>
@@ -943,7 +943,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ObjectDetectDataset></a>class <code>ObjectDetectDataset</code></h2>
-<p><code>ObjectDetectDataset</code>(<code>x_fns</code>:<code>Collection</code>[<code>Path</code>], <code>bbs</code>:<code>Collection</code>[<code>Collection</code>[<code>int</code>]]) :: <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>
+<p><code>ObjectDetectDataset</code>(<code>x_fns</code>:<code>Collection</code>[<code>Path</code>], <code>bbs</code>:<code>Collection</code>[<code>Collection</code>[<code>int</code>]]) :: <code>Dataset</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L123">[source]</a></p>
 
 </div>
@@ -963,7 +963,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Finally, to apply transformations to <a href="/vision.image.html#Image"><code>Image</code></a> in a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, we use this last class.</p>
+<p>Finally, to apply transformations to <code>Image</code> in a <code>Dataset</code>, we use this last class.</p>
 
 </div>
 </div>
@@ -978,7 +978,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=DatasetTfm></a>class <code>DatasetTfm</code></h2>
-<p><code>DatasetTfm</code>(<code>ds</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>tfms</code>:<code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]=<code>None</code>, <code>tfm_y</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>:<code>Any</code>) :: <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>
+<p><code>DatasetTfm</code>(<code>ds</code>:<code>Dataset</code>, <code>tfms</code>:<code>Collection</code>`Transform<code>\]=</code>None<code>,</code>tfm_y<code>:</code>bool<code>=</code>False<code>,</code>kwargs<code>:</code>Any<code>) ::</code>Dataset`
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L134">[source]</a></p>
 
 </div>
@@ -991,14 +991,14 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Dataset that applies the list of transforms <code>tfms</code> to every item drawn. If <code>tfms</code> should be applied to the targets as well, <code>tfm_y</code> should be True. <code>kwargs</code> will be passed to <a href="/vision.image.html#apply_tfms"><code>apply_tfms</code></a> internally.</p>
+<p>Dataset that applies the list of transforms <code>tfms</code> to every item drawn. If <code>tfms</code> should be applied to the targets as well, <code>tfm_y</code> should be True. <code>kwargs</code> will be passed to <code>apply_tfms</code> internally.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Then this last function automatizes the process of creating <a href="/vision.data.html#DatasetTfm"><code>DatasetTfm</code></a>:</p>
+<p>Then this last function automatizes the process of creating <code>DatasetTfm</code>:</p>
 
 </div>
 </div>
@@ -1013,7 +1013,7 @@ summary: "`vision.data` manages data input pipeline - folders -> transform -> ba
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=transform_datasets></a><code>transform_datasets</code></h4>
-<p><code>transform_datasets</code>(<code>train_ds</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>valid_ds</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>test_ds</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>]=<code>None</code>, <code>tfms</code>:<code>Optional</code>[<code>Tuple</code>[<code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>], <code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]]]=<code>None</code>, <code>kwargs</code>:<code>Any</code>)
+<p><code>transform_datasets</code>(<code>train_ds</code>:<code>Dataset</code>, <code>valid_ds</code>:<code>Dataset</code>, <code>test_ds</code>:<code>Optional</code>`Dataset<code>\]=</code>None<code>,</code>tfms<code>:</code>Optional<code>\[</code>Tuple<code>\[</code>Collection<code>\</code>Transform<code>\],</code>Collection<code>\</code>Transform<code>\]\]\]=</code>None<code>,</code>kwargs<code>:</code>Any`)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L154">[source]</a></p>
 
 </div>

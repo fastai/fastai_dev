@@ -43,7 +43,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This step is actually divided in two phases: first, we apply a certain list of <code>rules</code> to the raw texts as preprocessing, then we use the tokenizer to split them in lists of tokens. Combining together those <code>rules</code>, the <code>tok_func</code>and the <code>lang</code> to process the texts is the role of the <a href="/text.transform.html#Tokenizer"><code>Tokenizer</code></a> class.</p>
+<p>This step is actually divided in two phases: first, we apply a certain list of <code>rules</code> to the raw texts as preprocessing, then we use the tokenizer to split them in lists of tokens. Combining together those <code>rules</code>, the <code>tok_func</code>and the <code>lang</code> to process the texts is the role of the <code>Tokenizer</code> class.</p>
 
 </div>
 </div>
@@ -90,7 +90,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=process_text></a><code>process_text</code></h4>
-<blockquote><p><code>process_text</code>(<code>t</code>:<code>str</code>, <code>tok</code>:<a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>) -&gt; <code>List</code>[<code>str</code>]</p>
+<blockquote><p><code>process_text</code>(<code>t</code>:<code>str</code>, <code>tok</code>:<code>BaseTokenizer</code>) -&gt; <code>List</code>[<code>str</code>]</p>
 </blockquote>
 <p>Processe one text <code>t</code> with tokenizer <code>tok</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L91">[source]</a></p>
 
@@ -140,7 +140,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <span class="n">IMDB_PATH</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -170,7 +170,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <span class="n">example_text</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span> <span class="n">example_text</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -201,7 +201,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">process_text</span><span class="p">(</span><span class="n">example_text</span><span class="p">,</span> <span class="n">tok</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -241,7 +241,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -270,7 +270,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>tok_func</code> must return an instance of <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>:</p>
+<p>The <code>tok_func</code> must return an instance of <code>BaseTokenizer</code>:</p>
 
 </div>
 </div>
@@ -357,7 +357,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The fastai library uses <a href="https://spacy.io/">spacy</a> tokenizers as its default. The following class wraps it as <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>.</p>
+<p>The fastai library uses <a href="https://spacy.io/">spacy</a> tokenizers as its default. The following class wraps it as <code>BaseTokenizer</code>.</p>
 
 </div>
 </div>
@@ -372,9 +372,9 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=SpacyTokenizer></a><code>class</code> <code>SpacyTokenizer</code></h2>
-<blockquote><p><code>SpacyTokenizer</code>(<code>lang</code>:<code>str</code>) :: <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a></p>
+<blockquote><p><code>SpacyTokenizer</code>(<code>lang</code>:<code>str</code>) :: <code>BaseTokenizer</code></p>
 </blockquote>
-<p>Wrapper around a spacy tokenizer to make it a <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L21">[source]</a></p>
+<p>Wrapper around a spacy tokenizer to make it a <code>BaseTokenizer</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L21">[source]</a></p>
 
 </div>
 
@@ -386,7 +386,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>If you want to use your custom tokenizer, just subclass the <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a> and override its <code>tokenizer</code> and <code>add_spec_cases</code> functions.</p>
+<p>If you want to use your custom tokenizer, just subclass the <code>BaseTokenizer</code> and override its <code>tokenizer</code> and <code>add_spec_cases</code> functions.</p>
 
 </div>
 </div>
@@ -441,7 +441,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">deal_caps</span><span class="p">(</span><span class="s2">&quot;I&#39;m suddenly SHOUTING FOR NO REASON!&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -499,7 +499,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">fix_html</span><span class="p">(</span><span class="s2">&quot;Some HTML&amp;nbsp;text&lt;br /&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -557,7 +557,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">replace_rep</span><span class="p">(</span><span class="s2">&quot;I&#39;m so excited!!!!!!!!&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -615,7 +615,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">replace_wrep</span><span class="p">(</span><span class="s2">&quot;I&#39;ve never ever ever ever ever ever ever ever done this.&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -666,7 +666,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">rm_useless_spaces</span><span class="p">(</span><span class="s2">&quot;Inconsistent   use  of     spaces.&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -717,7 +717,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">spec_add_spaces</span><span class="p">(</span><span class="s1">&#39;I #like to #put #hashtags #everywhere!&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -804,7 +804,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <a href="/text.transform.html#Vocab"><code>Vocab</code></a> dictionary from a set of <code>tokens</code> in <code>path</code>. Only keeps <code>max_vocab</code> tokens, and only if they appear at least <code>min_freq</code> times, set the rest to <code>UNK</code>.</p>
+<p>Create a <code>Vocab</code> dictionary from a set of <code>tokens</code> in <code>path</code>. Only keeps <code>max_vocab</code> tokens, and only if they appear at least <code>min_freq</code> times, set the rest to <code>UNK</code>.</p>
 
 </div>
 </div>
@@ -862,7 +862,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <span class="n">vocab</span><span class="o">.</span><span class="n">numericalize</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">2</span><span class="p">])[:</span><span class="mi">10</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 

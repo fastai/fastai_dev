@@ -22,11 +22,11 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/text.html#text"><code>text</code></a> module of the fastai library contains all the necessary functions to define a Dataset suitable for the various NLP (Natural Language Processing) tasks and quickly generate models you can use for them. Specifically:</p>
+<p>The <code>text</code> module of the fastai library contains all the necessary functions to define a Dataset suitable for the various NLP (Natural Language Processing) tasks and quickly generate models you can use for them. Specifically:</p>
 <ul>
-<li><a href="/text.transform.html#text.transform"><code>text.transform</code></a> contains all the scripts to preprocess your data, from raw text to token ids,</li>
-<li><a href="/text.data.html#text.data"><code>text.data</code></a> contains the definition of <a href="/text.data.html#TextDataset"><code>TextDataset</code></a>, which the main class you'll need in NLP,</li>
-<li><a href="/text.learner.html#text.learner"><code>text.learner</code></a> contains helper functions to quickly create a language model or an RNN classifier.</li>
+<li><code>text.transform</code> contains all the scripts to preprocess your data, from raw text to token ids,</li>
+<li><code>text.data</code> contains the definition of <code>TextDataset</code>, which the main class you'll need in NLP,</li>
+<li><code>text.learner</code> contains helper functions to quickly create a language model or an RNN classifier.</li>
 </ul>
 <p>Have a look at the links above for full details of the API of each module, of read on for a quick overview.</p>
 
@@ -82,7 +82,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">IMDB_PATH</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -124,7 +124,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -197,7 +197,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">classes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">classes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -226,7 +226,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To create a dataset, we can just use the <code>TextDataset.from_csv</code> method. It will automatically do the two step of preprocessing for us. There is more information about those two steps in <a href="/text.transform.html#text.transform"><code>text.transform</code></a> where you'll also find how to customize the tokenizer from the fastai defaults. Note that to execute this line, you need to download the english model of spacy, which can be done by typing in your terminal:</p>
+<p>To create a dataset, we can just use the <code>TextDataset.from_csv</code> method. It will automatically do the two step of preprocessing for us. There is more information about those two steps in <code>text.transform</code> where you'll also find how to customize the tokenizer from the fastai defaults. Note that to execute this line, you need to download the english model of spacy, which can be done by typing in your terminal:</p>
 
 <pre><code>python -m spacy download en</code></pre>
 
@@ -241,7 +241,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_ds</span> <span class="o">=</span> <span class="n">TextDataset</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -249,7 +249,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Note that to avoid redoing this step (which can be quite time-consuming if you have a very large dataset), the fastai library has created a <code>tmp</code> directory in the folder given, to store the tokens (in <code>_tok.npy</code> files), the labels (in <code>_lbl.npy</code> files), the ids of the tokens (in <code>_id.npy</code> files) and the dictionary (<code>itos.pkl</code>). When you reexecute the line in the future, it will directly load that data.</p>
-<p>To get a <a href="/data.html#DataBunch"><code>DataBunch</code></a> quickly, there are also several factory methods depending on how our data is structured. They are all detailed in <a href="/text.data.html#text.data"><code>transform.data</code></a>, here we'll use <a href="/text.data.html#text_data_from_csv"><code>text_data_from_csv</code></a>.</p>
+<p>To get a <code>DataBunch</code> quickly, there are also several factory methods depending on how our data is structured. They are all detailed in <code>transform.data</code>, here we'll use <code>text_data_from_csv</code>.</p>
 
 </div>
 </div>
@@ -265,14 +265,14 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">data_clas</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">classifier_data</span><span class="p">,</span> <span class="n">vocab</span><span class="o">=</span><span class="n">data_lm</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> was called behind the scenes for <code>train.csv</code> and <code>valid.csv</code> but, as explained earlier, it only preprocessed the validation set, since it had stored the result for the training set. The <code>data_func</code> argument here tells the <a href="/text.data.html#text_data_from_csv"><code>text_data_from_csv</code></a> function how to organize the data. In the first one, we prepare it for a language model, and in the second one, for a classifier (see the differences in <a href="/text.data.html#text.data"><code>text.data</code></a>).</p>
+<p>Note that <code>TextDataset</code> was called behind the scenes for <code>train.csv</code> and <code>valid.csv</code> but, as explained earlier, it only preprocessed the validation set, since it had stored the result for the training set. The <code>data_func</code> argument here tells the <code>text_data_from_csv</code> function how to organize the data. In the first one, we prepare it for a language model, and in the second one, for a classifier (see the differences in <code>text.data</code>).</p>
 <p>For the classifier, we also pass the vocabulary (mapping from ids to words) that we want to use: this is to ensure that <code>data_clas</code> will use the same dictionary as <code>data_lm</code>.</p>
 
 </div>
@@ -299,7 +299,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">download_wt103_model</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -320,7 +320,7 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -334,10 +334,10 @@ summary: "Data and training classes for NLP models, including ULMFiT fine-tuning
 
  
  
-<div id="408b41ba-e95f-4f3e-b34c-bcf98527e5b9"></div>
+<div id="6b198cc9-bcad-46cb-965c-7c96423793a8"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#408b41ba-e95f-4f3e-b34c-bcf98527e5b9');
+var element = $('#6b198cc9-bcad-46cb-965c-7c96423793a8');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -377,7 +377,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -391,10 +391,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="52adad81-e403-447a-b593-f55deac68b54"></div>
+<div id="19b1ee4e-d37c-41d9-8ed1-c5c277382753"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#52adad81-e403-447a-b593-f55deac68b54');
+var element = $('#19b1ee4e-d37c-41d9-8ed1-c5c277382753');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -437,7 +437,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">save_encoder</span><span class="p">(</span><span class="s1">&#39;ft_enc&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -462,11 +462,10 @@ epoch  train loss  valid loss  accuracy
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">RNNLearner</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">data_clas</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">load_encoder</span><span class="p">(</span><span class="s1">&#39;ft_enc&#39;</span><span class="p">)</span>
-<span class="n">learn</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -480,10 +479,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="ab41b6a8-892b-43be-b8b5-dd9078102c02"></div>
+<div id="1977534c-7820-416f-950a-85c1fcdc94b5"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#ab41b6a8-892b-43be-b8b5-dd9078102c02');
+var element = $('#1977534c-7820-416f-950a-85c1fcdc94b5');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -523,7 +522,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mf">5e-3</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">5e-3</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -537,10 +536,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="ef89408b-0fed-432e-9278-17aff1ccd6a2"></div>
+<div id="cb5ac8db-9195-443a-9956-929fc4d63e94"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#ef89408b-0fed-432e-9278-17aff1ccd6a2');
+var element = $('#cb5ac8db-9195-443a-9956-929fc4d63e94');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -573,7 +572,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mf">2e-3</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="mf">2e-3</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -587,10 +586,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="fe977f42-d171-4f20-9f77-f995083ba5d2"></div>
+<div id="80f08cb8-5a3b-4474-a6eb-36657c181dcd"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#fe977f42-d171-4f20-9f77-f995083ba5d2');
+var element = $('#80f08cb8-5a3b-4474-a6eb-36657c181dcd');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}

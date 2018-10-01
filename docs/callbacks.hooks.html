@@ -20,7 +20,7 @@ summary: "Hooks provide extensibility at the model level."
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This provides both a standalone class and a callback for registering and automatically deregistering <a href="https://pytorch.org/tutorials/beginner/former_torchies/nn_tutorial.html#forward-and-backward-function-hooks">PyTorch hooks</a>, along with some pre-defined hooks. Hooks can be attached to any <code>nn.Module</code>, for either the forward or the backward pass.</p>
-<p>We'll start by looking at the pre-defined hook <a href="/callbacks.hooks.html#ActivationStats"><code>ActivationStats</code></a>, then we'll see how to create our own.</p>
+<p>We'll start by looking at the pre-defined hook <code>ActivationStats</code>, then we'll see how to create our own.</p>
 
 </div>
 </div>
@@ -38,7 +38,7 @@ summary: "Hooks provide extensibility at the model level."
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ActivationStats></a><code>class</code> <code>ActivationStats</code></h2>
-<blockquote><p><code>ActivationStats</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>modules</code>:<code>Sequence</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]=<code>None</code>, <code>do_remove</code>:<code>bool</code>=<code>True</code>) :: <a href="/callbacks.hooks.html#HookCallback"><code>HookCallback</code></a></p>
+<blockquote><p><code>ActivationStats</code>(<code>learn</code>:<code>Learner</code>, <code>modules</code>:<code>Sequence</code>`Module<code>\]=</code>None<code>,</code>do_remove<code>:</code>bool<code>=</code>True<code>) ::</code>HookCallback`</p>
 </blockquote>
 <p>Callback that record the activations <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/hooks.py#L63">[source]</a></p>
 
@@ -52,7 +52,7 @@ summary: "Hooks provide extensibility at the model level."
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/callbacks.hooks.html#ActivationStats"><code>ActivationStats</code></a> saves the layer activations in <code>self.stats</code> for all <code>modules</code> passed to it. By default it will save activations for <em>all</em> modules. For instance:</p>
+<p><code>ActivationStats</code> saves the layer activations in <code>self.stats</code> for all <code>modules</code> passed to it. By default it will save activations for <em>all</em> modules. For instance:</p>
 
 </div>
 </div>
@@ -66,7 +66,7 @@ summary: "Hooks provide extensibility at the model level."
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -80,10 +80,10 @@ summary: "Hooks provide extensibility at the model level."
 
  
  
-<div id="7e032639-9b54-4da8-8f95-c2b2c8d71e05"></div>
+<div id="8de57fab-9c39-4b81-a0af-f1067dbca22b"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#7e032639-9b54-4da8-8f95-c2b2c8d71e05');
+var element = $('#8de57fab-9c39-4b81-a0af-f1067dbca22b');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -122,7 +122,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">activation_stats</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -151,7 +151,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">activation_stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -187,7 +187,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">activation_stats</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">());</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -220,7 +220,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=Hook></a><code>class</code> <code>Hook</code></h2>
-<blockquote><p><code>Hook</code>(<code>m</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>hook_func</code>:<code>HookFunc</code>, <code>is_forward</code>:<code>bool</code>=<code>True</code>)</p>
+<blockquote><p><code>Hook</code>(<code>m</code>:<code>Module</code>, <code>hook_func</code>:<code>HookFunc</code>, <code>is_forward</code>:<code>bool</code>=<code>True</code>)</p>
 </blockquote>
 <p>Creates a hook <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/hooks.py#L10">[source]</a></p>
 
@@ -276,7 +276,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">Hooks</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -302,7 +302,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Acts as a <code>Collection</code> (i.e. <code>len(hooks)</code> and <code>hooks[i]</code>) and an <code>Iterator</code> (i.e. <code>for hook in hooks</code>) of a group of hooks, one for each module in <code>ms</code>, with the ability to remove all as a group. Use <code>stored</code> to get all hook results. <code>hook_func</code> and <code>is_forward</code> behavior is the same as <a href="/callbacks.hooks.html#Hook"><code>Hook</code></a>. See the source code for <a href="/callbacks.hooks.html#HookCallback"><code>HookCallback</code></a> for a simple example.</p>
+<p>Acts as a <code>Collection</code> (i.e. <code>len(hooks)</code> and <code>hooks[i]</code>) and an <code>Iterator</code> (i.e. <code>for hook in hooks</code>) of a group of hooks, one for each module in <code>ms</code>, with the ability to remove all as a group. Use <code>stored</code> to get all hook results. <code>hook_func</code> and <code>is_forward</code> behavior is the same as <code>Hook</code>. See the source code for <code>HookCallback</code> for a simple example.</p>
 
 </div>
 </div>
@@ -315,7 +315,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">Hooks</span><span class="o">.</span><span class="n">remove</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -360,7 +360,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">hook_output</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -372,7 +372,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=hook_output></a><code>hook_output</code></h4>
-<blockquote><p><code>hook_output</code>(<code>module</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>) -&gt; <a href="/callbacks.hooks.html#Hook"><code>Hook</code></a>
+<blockquote><p><code>hook_output</code>(<code>module</code>:<code>Module</code>) -&gt; <code>Hook</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/hooks.py#L42">[source]</a></p>
 </blockquote>
 
@@ -386,7 +386,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Function that creates a <a href="/callbacks.hooks.html#Hook"><code>Hook</code></a> for <code>module</code> that simply stores the output of the layer.</p>
+<p>Function that creates a <code>Hook</code> for <code>module</code> that simply stores the output of the layer.</p>
 
 </div>
 </div>
@@ -399,7 +399,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">hook_outputs</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -411,7 +411,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=hook_outputs></a><code>hook_outputs</code></h4>
-<blockquote><p><code>hook_outputs</code>(<code>modules</code>:<code>ModuleList</code>) -&gt; <a href="/callbacks.hooks.html#Hooks"><code>Hooks</code></a>
+<blockquote><p><code>hook_outputs</code>(<code>modules</code>:<code>ModuleList</code>) -&gt; <code>Hooks</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/hooks.py#L43">[source]</a></p>
 </blockquote>
 
@@ -425,7 +425,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Function that creates a <a href="/callbacks.hooks.html#Hook"><code>Hook</code></a> for all passed <code>modules</code> that simply stores the output of the layers. For example, the (slightly simplified) source code of <a href="/callbacks.hooks.html#model_sizes"><code>model_sizes</code></a> is:</p>
+<p>Function that creates a <code>Hook</code> for all passed <code>modules</code> that simply stores the output of the layers. For example, the (slightly simplified) source code of <code>model_sizes</code> is:</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model_sizes</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="o">*</span><span class="n">size</span><span class="p">))</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">stored</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">hook_outputs</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span>
@@ -442,7 +442,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">model_sizes</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -454,7 +454,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=model_sizes></a><code>model_sizes</code></h4>
-<blockquote><p><code>model_sizes</code>(<code>m</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>size</code>:<code>tuple</code>=<code>(256, 256)</code>, <code>full</code>:<code>bool</code>=<code>True</code>) -&gt; <code>Tuple</code>[<code>Sizes</code>, <code>Tensor</code>, <a href="/callbacks.hooks.html#Hooks"><code>Hooks</code></a>]</p>
+<blockquote><p><code>model_sizes</code>(<code>m</code>:<code>Module</code>, <code>size</code>:<code>tuple</code>=<code>(256, 256)</code>, <code>full</code>:<code>bool</code>=<code>True</code>) -&gt; <code>Tuple</code>[<code>Sizes</code>, <code>Tensor</code>, <code>Hooks</code>]</p>
 </blockquote>
 <p>Passes a dummy input through the model to get the various sizes <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/hooks.py#L74">[source]</a></p>
 
@@ -483,7 +483,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=HookCallback></a><code>class</code> <code>HookCallback</code></h2>
-<blockquote><p><code>HookCallback</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>modules</code>:<code>Sequence</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]=<code>None</code>, <code>do_remove</code>:<code>bool</code>=<code>True</code>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a></p>
+<blockquote><p><code>HookCallback</code>(<code>learn</code>:<code>Learner</code>, <code>modules</code>:<code>Sequence</code>`Module<code>\]=</code>None<code>,</code>do_remove<code>:</code>bool<code>=</code>True<code>) ::</code>LearnerCallback`</p>
 </blockquote>
 <p>Callback that registers given hooks <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/hooks.py#L45">[source]</a></p>
 
@@ -500,7 +500,7 @@ epoch  train loss  valid loss
 <p>For all <code>modules</code>, uses a callback to automatically register a method <code>self.hook</code> (that you must define in an inherited class) as a hook. This method must have the signature:</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span><span class="n">Model</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span><span class="n">Tensors</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span><span class="n">Tensors</span><span class="p">)</span>
 </pre></div>
-<p>If <code>do_remove</code> then the hook is automatically deregistered at the end of training. See <a href="/callbacks.hooks.html#ActivationStats"><code>ActivationStats</code></a> for a simple example of inheriting from this class.</p>
+<p>If <code>do_remove</code> then the hook is automatically deregistered at the end of training. See <code>ActivationStats</code> for a simple example of inheriting from this class.</p>
 
 </div>
 </div>

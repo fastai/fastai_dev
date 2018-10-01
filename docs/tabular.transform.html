@@ -28,13 +28,13 @@ summary: "Cleaning and feature engineering functions for structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This package contains the basic class to define a transformation for preprocessing dataframes of tabular data, as well as basic <a href="/tabular.transform.html#TabularTransform"><a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a></a>. Preprocessing includes things like</p>
+<p>This package contains the basic class to define a transformation for preprocessing dataframes of tabular data, as well as basic <code>TabularTransform</code>. Preprocessing includes things like</p>
 <ul>
 <li>replacing non-numerical variables by categories, then their ids,</li>
 <li>filling missing values,</li>
 <li>normalizing continuous variables.</li>
 </ul>
-<p>In all those steps we have to be careful to use the correspondance we decide on our training set (which id we give to each category, what is the value we put for missing data, or how the mean/std we use to normalize) on our validation or test set. To deal with this, we use a speciall class called <a href="/tabular.transform.html#TabularTransform"><a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a></a>.</p>
+<p>In all those steps we have to be careful to use the correspondance we decide on our training set (which id we give to each category, what is the value we put for missing data, or how the mean/std we use to normalize) on our validation or test set. To deal with this, we use a speciall class called <code>TabularTransform</code>.</p>
 <p>The data used in this document page is a subset of the <a href="https://archive.ics.uci.edu/ml/datasets/adult">adult dataset</a>. It gives a certain amount of data on individuals to train a model to predict wether their salary is greater than \$50k or not.</p>
 
 </div>
@@ -50,7 +50,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -201,7 +201,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <span class="n">cont_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;fnlwgt&#39;</span><span class="p">,</span> <span class="s1">&#39;education-num&#39;</span><span class="p">,</span> <span class="s1">&#39;capital-gain&#39;</span><span class="p">,</span> <span class="s1">&#39;capital-loss&#39;</span><span class="p">,</span> <span class="s1">&#39;hours-per-week&#39;</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -278,7 +278,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">Categorify</span><span class="o">.</span><span class="n">apply_train</span><span class="p">,</span> <span class="n">doc_string</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -317,7 +317,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">Categorify</span><span class="o">.</span><span class="n">apply_test</span><span class="p">,</span> <span class="n">doc_string</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -350,7 +350,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The following <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a> are implemented in the fastai library. Note that the replacement from categories to codes as well as the normalization of continuous variables are automatically done in a <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>.</p>
+<p>The following <code>TabularTransform</code> are implemented in the fastai library. Note that the replacement from categories to codes as well as the normalization of continuous variables are automatically done in a <code>TabularDataset</code>.</p>
 
 </div>
 </div>
@@ -365,7 +365,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=Categorify></a><code>class</code> <code>Categorify</code></h2>
-<blockquote><p><code>Categorify</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>) :: <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>
+<blockquote><p><code>Categorify</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>) :: <code>TabularTransform</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L24">[source]</a></p>
 </blockquote>
 
@@ -452,7 +452,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <span class="n">tfm</span><span class="p">(</span><span class="n">valid_df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -472,7 +472,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -510,7 +510,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">valid_df</span><span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -543,7 +543,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=FillMissing></a><code>class</code> <code>FillMissing</code></h2>
-<blockquote><p><code>FillMissing</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>, <code>fill_strategy</code>:<a href="/tabular.transform.html#FillStrategy"><code>FillStrategy</code></a>=<code>&lt;FillStrategy.MEDIAN: 1&gt;</code>, <code>add_col</code>:<code>bool</code>=<code>True</code>, <code>fill_val</code>:<code>float</code>=<code>0.0</code>) :: <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>
+<blockquote><p><code>FillMissing</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>, <code>fill_strategy</code>:<code>FillStrategy</code>=<code>&lt;FillStrategy.MEDIAN: 1&gt;</code>, <code>add_col</code>:<code>bool</code>=<code>True</code>, <code>fill_val</code>:<code>float</code>=<code>0.0</code>) :: <code>TabularTransform</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L40">[source]</a></p>
 </blockquote>
 
@@ -557,7 +557,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Transform that fills the missing values in <code>cont_names</code>. <code>cat_names</code> variables are left untouched (their missing value will be raplced by code 0 in the <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>). <code>fill_strategy</code> is adopted to replace those nans and if <code>add_col</code> is True, whenever a column <code>c</code> has missing values, a column named <code>c_nan</code> is added and flags the line where the value was missing. The <code>fill_strategy</code> can be:</p>
+<p>Transform that fills the missing values in <code>cont_names</code>. <code>cat_names</code> variables are left untouched (their missing value will be raplced by code 0 in the <code>TabularDataset</code>). <code>fill_strategy</code> is adopted to replace those nans and if <code>add_col</code> is True, whenever a column <code>c</code> has missing values, a column named <code>c_nan</code> is added and flags the line where the value was missing. The <code>fill_strategy</code> can be:</p>
 <ul>
 <li><code>FillStrategy.MEDIAN</code>: nans are replaced by the median value of the column,</li>
 <li><code>FillStrategy.COMMON</code>: nans are replaced by the most common value of the column,</li>
@@ -633,7 +633,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">[</span><span class="n">cont_names</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -725,7 +725,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <span class="n">train_df</span><span class="p">[</span><span class="n">cont_names</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -821,7 +821,7 @@ summary: "Cleaning and feature engineering functions for structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">valid_df</span><span class="p">[</span><span class="n">cont_names</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 

@@ -37,7 +37,7 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=MixedPrecision></a><code>class</code> <code>MixedPrecision</code></h2>
-<blockquote><p><code>MixedPrecision</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
+<blockquote><p><code>MixedPrecision</code>(<code>learn</code>:<code>Learner</code>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) :: <code>Callback</code></p>
 </blockquote>
 <p>Callback that handles mixed-precision training <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L56">[source]</a></p>
 
@@ -51,8 +51,8 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To ensure that accuracy is not impacted when using fp16, there are a few details that need to be handled - The <a href="/callbacks.fp16.html#MixedPrecision"><a href="/callbacks.fp16.html#MixedPrecision"><code>MixedPrecision</code></a></a> callback handles those details for you. See below for details.</p>
-<p>Instead of constructing this callback and passing it to a <a href="/basic_train.html#Learner"><code>Learner</code></a>, it's generally easier to just call <a href="/train.html#to_fp16"><code>Learner.to_fp16</code></a>, which modifies the existing object to add <a href="/callbacks.fp16.html#MixedPrecision"><a href="/callbacks.fp16.html#MixedPrecision"><code>MixedPrecision</code></a></a>.</p>
+<p>To ensure that accuracy is not impacted when using fp16, there are a few details that need to be handled - The <code>MixedPrecision</code> callback handles those details for you. See below for details.</p>
+<p>Instead of constructing this callback and passing it to a <code>Learner</code>, it's generally easier to just call <code>Learner.to_fp16</code>, which modifies the existing object to add <code>MixedPrecision</code>.</p>
 
 </div>
 </div>
@@ -67,7 +67,7 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=to_fp16></a><code>to_fp16</code></h4>
-<blockquote><p><code>to_fp16</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) -&gt; <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
+<blockquote><p><code>to_fp16</code>(<code>learn</code>:<code>Learner</code>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) -&gt; <code>Learner</code></p>
 </blockquote>
 <p>Transforms the learner in FP16 precision <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L26">[source]</a></p>
 
@@ -95,7 +95,7 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -109,10 +109,10 @@ summary: "Callback support for half precision (fp16) training. Increases trainin
 
  
  
-<div id="5682fd54-d278-4953-a26b-490e6f4b774b"></div>
+<div id="d5fc08af-2582-47a4-a1b5-7b11eba8bec4"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#5682fd54-d278-4953-a26b-490e6f4b774b');
+var element = $('#d5fc08af-2582-47a4-a1b5-7b11eba8bec4');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}

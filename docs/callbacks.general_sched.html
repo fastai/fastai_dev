@@ -19,7 +19,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a scheduler that lets you train a model with following different <a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a>.</p>
+<p>Creates a scheduler that lets you train a model with following different <code>TrainingPhase</code>.</p>
 
 </div>
 </div>
@@ -66,9 +66,9 @@ summary:
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=GeneralScheduler></a><code>class</code> <code>GeneralScheduler</code></h2>
-<blockquote><p><code>GeneralScheduler</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>phases</code>:<code>Collection</code>[<a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a>]) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
+<blockquote><p><code>GeneralScheduler</code>(<code>learn</code>:<code>Learner</code>, <code>phases</code>:<code>Collection</code>`TrainingPhase<code>\]) ::</code>Callback`</p>
 </blockquote>
-<p>Schedule multiple <a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a> for a <a href="/basic_train.html#Learner"><code>Learner</code></a>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L21">[source]</a></p>
+<p>Schedule multiple <code>TrainingPhase</code> for a <code>Learner</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L21">[source]</a></p>
 
 </div>
 
@@ -159,7 +159,7 @@ summary:
     <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">total_epochs</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -174,7 +174,7 @@ summary:
 <span class="n">fit_sgd_warm</span><span class="p">(</span><span class="n">learn</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -188,10 +188,10 @@ summary:
 
  
  
-<div id="82b4f89b-4551-4fcf-b66e-1138dd20c990"></div>
+<div id="c8a73c78-ba73-4eda-89d4-871d6bf36acb"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#82b4f89b-4551-4fcf-b66e-1138dd20c990');
+var element = $('#c8a73c78-ba73-4eda-89d4-871d6bf36acb');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -235,7 +235,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_lr</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
