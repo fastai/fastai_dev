@@ -5,9 +5,6 @@ entries:
       title: Overview
       url: overview.html
     - output: web
-      title: imports
-      url: imports.html
-    - output: web
       title: data
       url: data.html
     - output: web
