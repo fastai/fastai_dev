@@ -1,9 +1,10 @@
 ---
-title: fastai
-keywords: 
+toc: false
+
+keywords: fastai
 sidebar: home_sidebar
-tags: 
-summary: 
+
+
 ---
 
 <div class="container" id="notebook-container">
@@ -17,12 +18,90 @@ summary:
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The fastai library simplifies training fast and accurate neural nets using modern best practices. It's based on research in to deep learning best practices undertaken at <a href="http://www.fast.ai">fast.ai</a>. If you're looking for the source code, head over to the <a href="https://github.com/fastai/fastai">fastai repo</a> on GitHub.</p>
+<p>The fastai library simplifies training fast and accurate neural nets using modern best practices. It's based on research in to deep learning best practices undertaken at <a href="http://www.fast.ai">fast.ai</a>, including "out of the box" support for <a href="/vision.html#vision"><code>vision</code></a>, <a href="/text.html#text"><code>text</code></a>, <code>tabular</code>, and <code>collab</code> (collaborative filtering) models. If you're looking for the source code, head over to the <a href="https://github.com/fastai/fastai">fastai repo</a> on GitHub. For brief examples, see the <a href="https://github.com/fastai/fastai/tree/master/examples">examples</a> folder; detailed examples are provided in the full documentation (see the sidebar). For example, here's how to train an MNIST model using <a href="https://arxiv.org/abs/1512.03385">resnet18</a> (from the <a href="https://github.com/fastai/fastai/blob/master/examples/vision.html">vision example</a>):</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">untar_data</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="p">)</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tvm</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="f44d6781-e359-49e0-acd2-20e0c03a1cef"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#f44d6781-e359-49e0-acd2-20e0c03a1cef');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Total time: 00:06
+epoch  train loss  valid loss  accuracy
+0      0.079228    0.044724    0.985770  (00:06)
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<div markdown="span" class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note: </b>This documentation is all built from notebooks;
+that means that you can try any of the code you see in any notebook yourself!
+You'll find the notebooks in the <a href="https://github.com/fastai/fastai_docs/tree/master/docs_src">docs_src</a> folder of the
+<a href="https://github.com/fastai/fastai_docs">fastai_docs</a> repo. For instance,
+<a href="https://github.com/fastai/fastai_docs/blob/master/docs_src/index.ipynb">here</a>
+is the notebook source of what you're reading now.</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -35,12 +114,10 @@ summary:
 <p>To install fastai, we recommend <code>conda</code>:</p>
 
 <pre><code>conda install -c fastai fastai
-
 </code></pre>
 <p>Alternatively, you can install using pip - if you do so, you'll first need to install the latest pytorch <code>conda-nightly</code> package or source from master.</p>
 
 <pre><code>pip install fastai
-
 </code></pre>
 <p>fastai is a pure python package, so you can also simply symlink the fastai directory to wherever you're running your code, as long as you've installed the dependencies (listed in the conda and pip files).</p>
 
@@ -52,9 +129,6 @@ summary:
 <h2 id="Reading-the-docs">Reading the docs<a class="anchor-link" href="#Reading-the-docs">&#182;</a></h2>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -74,7 +148,7 @@ summary:
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=rotate></a><code>rotate</code></h4>
-<blockquote><p><code>rotate</code>(<code>degrees</code>:<code>uniform</code>) -&gt; <code>Image</code> :: <code>TfmAffine</code></p>
+<blockquote><p><code>rotate</code>(<code>degrees</code>:<a href="/vision.image.html#uniform"><code>uniform</code></a>) -&gt; <a href="/vision.image.html#Image"><code>Image</code></a> :: <a href="/vision.image.html#TfmAffine"><code>TfmAffine</code></a></p>
 </blockquote>
 <p>Rotate image by <code>degrees</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/transform.py#L22">[source]</a></p>
 
@@ -131,7 +205,7 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>That will give you all the standard external modules you'll need, in their customary namespaces (e.g. <code>pandas as pd</code>, <code>numpy as np</code>, <code>matplotlib.pyplot as plt</code>), plus the core fastai libraries. In addition, the main classes and functions for your application (<code>fastai.vision</code>, in this case), e.g. creating a <code>DataBunch</code> from an image folder and training a convolutional neural network (with <code>ConvLearner</code>), are also imported.</p>
+<p>That will give you all the standard external modules you'll need, in their customary namespaces (e.g. <code>pandas as pd</code>, <code>numpy as np</code>, <code>matplotlib.pyplot as plt</code>), plus the core fastai libraries. In addition, the main classes and functions for your application (<a href="/vision.html#vision"><code>fastai.vision</code></a>, in this case), e.g. creating a <a href="/data.html#DataBunch"><code>DataBunch</code></a> from an image folder and training a convolutional neural network (with <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a>), are also imported.</p>
 <p>If you wish to see where a symbol is imported from, either just type the symbol name (in a REPL such as Jupyter Notebook or IPython), or (in most editors) wave your mouse over the symbol to see the definition. For instance:</p>
 
 </div>
@@ -174,26 +248,26 @@ summary:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>At the base of everything are the two modules <code>core</code> and <code>torch_core</code> (we're not including the <code>fastai.</code> prefix when naming modules in these docs). They define the basic functions we use in the library; <code>core</code> only relies on general modules, whereas <code>torch_core</code> requires pytorch. Most type-hinting shortcuts are defined there too (at least the one that don't depend on fastai classes defined later). Nearly all modules below import <code>torch_core</code>.</p>
-<p>Then, there are three modules directly on top of <code>torch_core</code>:</p>
+<p>At the base of everything are the two modules <a href="/core.html#core"><code>core</code></a> and <a href="/torch_core.html#torch_core"><code>torch_core</code></a> (we're not including the <code>fastai.</code> prefix when naming modules in these docs). They define the basic functions we use in the library; <a href="/core.html#core"><code>core</code></a> only relies on general modules, whereas <a href="/torch_core.html#torch_core"><code>torch_core</code></a> requires pytorch. Most type-hinting shortcuts are defined there too (at least the one that don't depend on fastai classes defined later). Nearly all modules below import <a href="/torch_core.html#torch_core"><code>torch_core</code></a>.</p>
+<p>Then, there are three modules directly on top of <a href="/torch_core.html#torch_core"><code>torch_core</code></a>:</p>
 <ul>
-<li><code>data</code>, which contains the class that will take a <code>Dataset</code> or pytorch <code>DataLoader</code> to wrap it in a <code>DeviceDataLoader</code> (a class that sits on top of a <code>DataLoader</code> and is in charge of putting the data on the right device as well as applying transforms such as normalization) and regroup then in a <code>DataBunch</code>.</li>
-<li><code>layers</code>, which contains basic functions to define custom layers or groups of layers</li>
-<li><code>metrics</code>, which contains all the metrics</li>
+<li><a href="/text.data.html#text.data"><code>data</code></a>, which contains the class that will take a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a> or pytorch <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> to wrap it in a <a href="/data.html#DeviceDataLoader"><code>DeviceDataLoader</code></a> (a class that sits on top of a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> and is in charge of putting the data on the right device as well as applying transforms such as normalization) and regroup then in a <a href="/data.html#DataBunch"><code>DataBunch</code></a>.</li>
+<li><a href="/layers.html#layers"><code>layers</code></a>, which contains basic functions to define custom layers or groups of layers</li>
+<li><a href="/metrics.html#metrics"><code>metrics</code></a>, which contains all the metrics</li>
 </ul>
-<p>From <code>layers</code>, we have all the modules in the models folder that are defined. Then from <code>data</code> we can split on one of the four main <em>applications</em>, which each has their own module: <code>vision</code>, <code>text</code> <code>collab</code>, or <code>tabular</code>. Each of those submodules is built in the same way with:</p>
+<p>From <a href="/layers.html#layers"><code>layers</code></a>, we have all the modules in the models folder that are defined. Then from <a href="/text.data.html#text.data"><code>data</code></a> we can split on one of the four main <em>applications</em>, which each has their own module: <a href="/vision.html#vision"><code>vision</code></a>, <a href="/text.html#text"><code>text</code></a> <code>collab</code>, or <code>tabular</code>. Each of those submodules is built in the same way with:</p>
 <ul>
-<li>a submodule named <code>transform</code> that handles the transformations of our data (data augmentation for computer vision, numericalizing and tokenizing for text and preprocessing for tabular)</li>
-<li>a submodule named <code>data</code> that contains the class that will create datasets and the helper functions to create <code>DataBunch</code> objects.</li>
+<li>a submodule named <a href="/text.transform.html#text.transform"><code>transform</code></a> that handles the transformations of our data (data augmentation for computer vision, numericalizing and tokenizing for text and preprocessing for tabular)</li>
+<li>a submodule named <a href="/text.data.html#text.data"><code>data</code></a> that contains the class that will create datasets and the helper functions to create <a href="/data.html#DataBunch"><code>DataBunch</code></a> objects.</li>
 </ul>
-<p>This takes care of building your model and handling the data. We regroup those in a <code>Learner</code> object to take care of training. More specifically:</p>
+<p>This takes care of building your model and handling the data. We regroup those in a <a href="/basic_train.html#Learner"><code>Learner</code></a> object to take care of training. More specifically:</p>
 <ul>
-<li><code>callback</code> (depends on <code>data</code>) defines the basis of callbacks and the <code>CallbackHandler</code>. Those are functions that will be called every step of the way of the training loop and can allow us to customize what is happening there;</li>
-<li><code>basic_train</code> (depends on <code>callback</code>) defines <code>Learner</code> and <code>Recorder</code> (which is a callback that records training stats) and has the training loop;</li>
-<li><code>callbacks</code> (depends on <code>basic_train</code>) is a submodule defining various callbacks, such as for mixed precision training or 1cycle annealing;</li>
-<li><code>learn</code> (depends on <code>callbacks</code>) defines helper functions to invoke the callbacks more easily.</li>
+<li><a href="/callback.html#callback"><code>callback</code></a> (depends on <a href="/text.data.html#text.data"><code>data</code></a>) defines the basis of callbacks and the <a href="/callback.html#CallbackHandler"><code>CallbackHandler</code></a>. Those are functions that will be called every step of the way of the training loop and can allow us to customize what is happening there;</li>
+<li><a href="/basic_train.html#basic_train"><code>basic_train</code></a> (depends on <a href="/callback.html#callback"><code>callback</code></a>) defines <a href="/basic_train.html#Learner"><code>Learner</code></a> and <a href="/basic_train.html#Recorder"><code>Recorder</code></a> (which is a callback that records training stats) and has the training loop;</li>
+<li><a href="/callbacks.html#callbacks"><code>callbacks</code></a> (depends on <a href="/basic_train.html#basic_train"><code>basic_train</code></a>) is a submodule defining various callbacks, such as for mixed precision training or 1cycle annealing;</li>
+<li><code>learn</code> (depends on <a href="/callbacks.html#callbacks"><code>callbacks</code></a>) defines helper functions to invoke the callbacks more easily.</li>
 </ul>
-<p>The module <code>tta</code> (for Test Time Augmentation) depends on <code>basic_train</code>, the module <code>collab</code> (for collaborative filtering) depends on <code>basic_train</code> and <code>layers</code>, so does the module <code>vision.train</code> (for our models with a skeleton trained on imagenet and a custom head for classification) and the module <code>text.train</code> (to automatically get learner objects for NLP) depends on <code>callbacks</code> (specifically the <code>rnn</code> callback) and <code>models</code> (specifically the rnn models).</p>
+<p>The module <a href="/tta.html#tta"><code>tta</code></a> (for Test Time Augmentation) depends on <a href="/basic_train.html#basic_train"><code>basic_train</code></a>, the module <code>collab</code> (for collaborative filtering) depends on <a href="/basic_train.html#basic_train"><code>basic_train</code></a> and <a href="/layers.html#layers"><code>layers</code></a>, so does the module <a href="/train.html#train"><code>vision.train</code></a> (for our models with a skeleton trained on imagenet and a custom head for classification) and the module <a href="/train.html#train"><code>text.train</code></a> (to automatically get learner objects for NLP) depends on <a href="/callbacks.html#callbacks"><code>callbacks</code></a> (specifically the <a href="/callbacks.rnn.html#callbacks.rnn"><code>rnn</code></a> callback) and <a href="/text.models.html#text.models"><code>models</code></a> (specifically the rnn models).</p>
 <p>Here is a graph of the key module dependencies:</p>
 
 </div>
