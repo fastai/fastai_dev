@@ -67,18 +67,6 @@ entries:
   - folderitems:
     - output: web
       title: Overview
-      url: models.html
-    - output: web
-      title: models.rnn
-      url: models.rnn.html
-    - output: web
-      title: models.unet
-      url: models.unet.html
-    output: web
-    title: Models
-  - folderitems:
-    - output: web
-      title: Overview
       url: applications.html
       subfolders:
       - output: web
