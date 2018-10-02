@@ -127,10 +127,10 @@ summary: "Provides essential functions to building and modifying `Model` archite
 
  
  
-<div id="596c44be-34c8-4815-97dc-e7d764ec142f"></div>
+<div id="d1fad6c2-53c0-409a-9245-bb0de200e604"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#596c44be-34c8-4815-97dc-e7d764ec142f');
+var element = $('#d1fad6c2-53c0-409a-9245-bb0de200e604');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -211,10 +211,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="1a1d792b-1fac-452d-a03d-157af4d0f9bf"></div>
+<div id="6fd55111-7715-428f-a4da-2c168fdd80be"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#1a1d792b-1fac-452d-a03d-157af4d0f9bf');
+var element = $('#6fd55111-7715-428f-a4da-2c168fdd80be');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -295,10 +295,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="feaca276-9462-4a73-9629-bb8ccea1c412"></div>
+<div id="00f59d3b-b7ca-4420-9d46-20300e6943f9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#feaca276-9462-4a73-9629-bb8ccea1c412');
+var element = $('#00f59d3b-b7ca-4420-9d46-20300e6943f9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -750,16 +750,8 @@ epoch  train loss  valid loss  accuracy
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The debugger module allows us to peek inside a network while its training and see in detail what is going on. We can see inputs, ouputs and sizes at any point in the network.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+<p>For instance, if you run the following:</p>
+<div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
     <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span>  <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
     <span class="n">Debugger</span><span class="p">(),</span>
     <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
@@ -771,15 +763,16 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learner</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
 <span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
+<p>... you'll see something like this:</p>
 
-</div>
-</div>
-</div>
+<pre><code>/home/ubuntu/fastai/fastai/layers.py(74)forward()
+     72     def forward(self,x:Tensor) -&gt; Tensor:
+     73         set_trace()
+---&gt; 74         return x
+     75 
+     76 class StdUpsample(nn.Module):
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="imgs/debug.png" alt="Debugger cell"></p>
+ipdb&gt;</code></pre>
 
 </div>
 </div>
