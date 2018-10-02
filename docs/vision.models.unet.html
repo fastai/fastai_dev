@@ -1,16 +1,14 @@
 ---
+
 title: vision.models.unet
 keywords: 
 sidebar: home_sidebar
-tags: 
+
 summary: "Dynamic Unet that can use any pretrained model as a backbone."
 ---
 
 <div class="container" id="notebook-container">
     
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Dynamic-U-Net">Dynamic U-Net<a class="anchor-link" href="#Dynamic-U-Net">&#182;</a></h1>
@@ -45,7 +43,20 @@ summary: "Dynamic Unet that can use any pretrained model as a backbone."
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=DynamicUnet></a><code>class</code> <code>DynamicUnet</code></h2>
-<blockquote><p><code>DynamicUnet</code>(<code>encoder</code>:<code>Module</code>, <code>n_classes</code>:<code>int</code>) :: <code>Sequential</code>
+<blockquote><p><code>DynamicUnet</code>(<code>encoder</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>n_classes</code>:<code>int</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/models/unet.py#L34">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea output_execute_result">
+<h2><a id=DynamicUnet></a><code>class</code> <code>DynamicUnet</code></h2>
+<blockquote><p><code>DynamicUnet</code>(<code>encoder</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>n_classes</code>:<code>int</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/models/unet.py#L34">[source]</a></p>
 </blockquote>
 
@@ -74,7 +85,20 @@ summary: "Dynamic Unet that can use any pretrained model as a backbone."
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=UnetBlock></a><code>class</code> <code>UnetBlock</code></h2>
-<blockquote><p><code>UnetBlock</code>(<code>up_in_c</code>:<code>int</code>, <code>x_in_c</code>:<code>int</code>, <code>hook</code>:<code>Hook</code>) :: <code>Module</code>
+<blockquote><p><code>UnetBlock</code>(<code>up_in_c</code>:<code>int</code>, <code>x_in_c</code>:<code>int</code>, <code>hook</code>:<a href="/callbacks.hooks.html#Hook"><code>Hook</code></a>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/models/unet.py#L14">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea output_execute_result">
+<h2><a id=UnetBlock></a><code>class</code> <code>UnetBlock</code></h2>
+<blockquote><p><code>UnetBlock</code>(<code>up_in_c</code>:<code>int</code>, <code>x_in_c</code>:<code>int</code>, <code>hook</code>:<a href="/callbacks.hooks.html#Hook"><code>Hook</code></a>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/models/unet.py#L14">[source]</a></p>
 </blockquote>
 
