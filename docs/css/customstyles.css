@@ -130,7 +130,7 @@ margin-top: -40px
 
 .container #notebook-container{ 
     width: 100%;        
-    box-sizing: content-box;
+    box-sizing: border-box;
             }
 
 .post-content img {
@@ -305,7 +305,8 @@ div#toc ul {
 
 div#toc ul li ul {
     padding-left:8px;
-
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 div#toc ul li ul li::before {
@@ -324,8 +325,8 @@ div#toc >ul::before {
     margin-left:auto;
     margin-right:auto;
     width:70px;
-    padding-top:20px;
-    padding-bottom:20px;
+    padding-top:150px;
+    padding-bottom:40px;
     padding-left:10px;
 }
 

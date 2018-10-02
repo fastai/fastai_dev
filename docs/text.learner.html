@@ -3,7 +3,7 @@ title: text.learner
 keywords: 
 sidebar: home_sidebar
 tags: 
-summary: "Model training for NLP"
+summary: "Easy access of language models and ULMFiT"
 ---
 
 <div class="container" id="notebook-container">
@@ -37,8 +37,8 @@ summary: "Model training for NLP"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=RNNLearner></a><code>class</code> <code>RNNLearner</code></h2>
-<blockquote><p><code>RNNLearner</code>(<code>data</code>:<code>DataBunch</code>, <code>model</code>:<code>Module</code>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>split_func</code>:<code>OptSplitFunc</code>=<code>None</code>, <code>clip</code>:<code>float</code>=<code>None</code>, <code>adjust</code>:<code>bool</code>=<code>False</code>, <code>alpha</code>:<code>float</code>=<code>2.0</code>, <code>beta</code>:<code>float</code>=<code>1.0</code>, <code>kwargs</code>) :: <code>Learner</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L42">[source]</a></p>
+<blockquote><p><code>RNNLearner</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>split_func</code>:<code>OptSplitFunc</code>=<code>None</code>, <code>clip</code>:<code>float</code>=<code>None</code>, <code>adjust</code>:<code>bool</code>=<code>False</code>, <code>alpha</code>:<code>float</code>=<code>2.0</code>, <code>beta</code>:<code>float</code>=<code>1.0</code>, <code>kwargs</code>) :: <a href="/basic_train.html#Learner"><code>Learner</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L43">[source]</a></p>
 </blockquote>
 
 </div>
@@ -72,8 +72,8 @@ summary: "Model training for NLP"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=classifier></a><code>classifier</code></h4>
-<blockquote><p><code>classifier</code>(<code>data</code>:<code>DataBunch</code>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>max_len</code>:<code>int</code>=<code>1400</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>lin_ftrs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>ps</code>:<code>Collection</code>[<code>float</code>]=<code>None</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>) -&gt; <code>RNNLearner</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L83">[source]</a></p>
+<blockquote><p><code>classifier</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>max_len</code>:<code>int</code>=<code>1400</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>lin_ftrs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>ps</code>:<code>Collection</code>[<code>float</code>]=<code>None</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>) -&gt; <code>RNNLearner</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L85">[source]</a></p>
 </blockquote>
 
 </div>

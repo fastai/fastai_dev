@@ -3,7 +3,7 @@ title: callbacks.mixup
 keywords: 
 sidebar: home_sidebar
 tags: 
-summary: "Implements [mixup](https://arxiv.org/abs/1710.09412) training method"
+summary: "Implementation of mixup"
 ---
 
 <div class="container" id="notebook-container">
@@ -13,7 +13,7 @@ summary: "Implements [mixup](https://arxiv.org/abs/1710.09412) training method"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="callbacks.mixup">callbacks.mixup<a class="anchor-link" href="#callbacks.mixup">&#182;</a></h1>
+<h1 id="Mixup-data-augmentation">Mixup data augmentation<a class="anchor-link" href="#Mixup-data-augmentation">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -91,10 +91,10 @@ summary: "Implements [mixup](https://arxiv.org/abs/1710.09412) training method"
 
  
  
-<div id="311f2331-3fee-43ce-b79b-cf3d5f46ba98"></div>
+<div id="4322da49-d76a-41cb-8fee-d7e281db63d5"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#311f2331-3fee-43ce-b79b-cf3d5f46ba98');
+var element = $('#4322da49-d76a-41cb-8fee-d7e281db63d5');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -213,10 +213,10 @@ The last trick we have to apply with this is that there can be some duplicates w
 
  
  
-<div id="0d2a6407-20f5-4163-86cc-f7ce49e62cee"></div>
+<div id="2d68d5ac-6d9b-49e8-8d63-2b438f259a05"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#0d2a6407-20f5-4163-86cc-f7ce49e62cee');
+var element = $('#2d68d5ac-6d9b-49e8-8d63-2b438f259a05');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -303,12 +303,6 @@ epoch  train loss  valid loss  accuracy
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Create a <code>Callback</code> for mixup on <code>learn</code> with a parameter <code>alpha</code> for the beta distribution. <code>stack_x</code> and <code>stack_y</code> determines if we stack our inputs/targets with the vector lambda drawn or do the linear combination (in general, we stack the inputs or ouputs when they correspond to categories or classes and do the linear combination otherwise).</p>
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Methods">Methods<a class="anchor-link" href="#Methods">&#182;</a></h3>
 </div>
 </div>
 </div>
