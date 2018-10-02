@@ -27,32 +27,15 @@ summary: "Training in mixed precision implementation"
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2><a id=MixedPrecision></a><code>class</code> <code>MixedPrecision</code></h2>
-<blockquote><p><code>MixedPrecision</code>(<code>learn</code>:<code>Learner</code>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) :: <code>Callback</code></p>
-</blockquote>
-<p>Callback that handles mixed-precision training <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L56">[source]</a></p>
-
-</div>
-
-</div>
-
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Overview">Overview<a class="anchor-link" href="#Overview">&#182;</a></h2>
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To ensure that accuracy is not impacted when using fp16, there are a few details that need to be handled - The <code>MixedPrecision</code> callback handles those details for you. See below for details.</p>
-<p>Instead of constructing this callback and passing it to a <code>Learner</code>, it's generally easier to just call <code>Learner.to_fp16</code>, which modifies the existing object to add <code>MixedPrecision</code>.</p>
+<p>To train your model in mixed precision you just have to call <code>Learner.to_fp16</code>, which converts the model and modifies the existing <code>Learner</code> to add <code>MixedPrecision</code>.</p>
 
 </div>
 </div>
@@ -109,10 +92,10 @@ summary: "Training in mixed precision implementation"
 
  
  
-<div id="b3f5ef9d-63c8-4c98-938f-07965523ff9e"></div>
+<div id="569f18a5-3679-4724-8f39-8574b5b301e7"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b3f5ef9d-63c8-4c98-938f-07965523ff9e');
+var element = $('#569f18a5-3679-4724-8f39-8574b5b301e7');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -141,19 +124,36 @@ epoch  train loss  valid loss  accuracy
 <p>Details about mixed precision training are available in <a href="https://docs.nvidia.com/deeplearning/sdk/mixed-precision-training/index.html">NVIDIA's documentation</a>. We will just summarize the basics here.</p>
 <p>The only parameter you may want to tweak is <code>loss_scale</code>. This is used to scale the loss up, so that it doesn't underflow fp16, leading to loss of accuracy (this is reversed for the final gradient calculation after converting back to fp32). Generally the default <code>512</code> works well, however. You can also enable or disable the flattening of the master parameter tensor with <code>flat_master=True</code>, however in our testing the different is negligible.</p>
 <p>Internally, the callback ensures that all model parameters (except batchnorm layers, which require fp32) are converted to fp16, and an fp32 copy is also saved. The fp32 copy (the <code>master</code> parameters) is what is used for actually updating with the optimizer; the fp16 parameters are used for calculating gradients. This helps avoid underflow with small learning rates.</p>
+<p>All of this is implemented by the following Callback.</p>
 
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=MixedPrecision></a><code>class</code> <code>MixedPrecision</code></h2>
+<blockquote><p><code>MixedPrecision</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
+</blockquote>
+<p>Callback that handles mixed-precision training. <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L56">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Callback-implementation-methods">Callback implementation methods<a class="anchor-link" href="#Callback-implementation-methods">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>You don't have to call these yourself - they're called by the callback framework automatically. They're just documented here so you can see exactly what the callback is doing.</p>
+<p>You don't have to call the following functions yourself - they're called by the callback framework automatically. They're just documented here so you can see exactly what the callback is doing.</p>
 
 </div>
 </div>
