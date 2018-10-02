@@ -17,8 +17,8 @@ summary: "Base class to deal with tabular data and get a DataBunch"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This module defines the main class to handle tabular data in the fastai library: <code>TabularDataset</code>. As always, there is also a helper function to quickly get your data.</p>
-<p>To allow you to easily create a <code>Learner</code> for your data, it provides <code>get_tabular_learner</code>.</p>
+<p>This module defines the main class to handle tabular data in the fastai library: <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>. As always, there is also a helper function to quickly get your data.</p>
+<p>To allow you to easily create a <a href="/basic_train.html#Learner"><code>Learner</code></a> for your data, it provides <a href="/tabular.data.html#get_tabular_learner"><code>get_tabular_learner</code></a>.</p>
 
 </div>
 </div>
@@ -28,7 +28,7 @@ summary: "Base class to deal with tabular data and get a DataBunch"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Quickly-get-the-data-in-a-DataBunch">Quickly get the data in a <code>DataBunch</code><a class="anchor-link" href="#Quickly-get-the-data-in-a-DataBunch">&#182;</a></h2>
+<h2 id="Quickly-get-the-data-in-a-DataBunch">Quickly get the data in a <a href="/data.html#DataBunch"><code>DataBunch</code></a><a class="anchor-link" href="#Quickly-get-the-data-in-a-DataBunch">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -49,7 +49,7 @@ summary: "Base class to deal with tabular data and get a DataBunch"
 <span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -63,10 +63,10 @@ summary: "Base class to deal with tabular data and get a DataBunch"
 
  
  
-<div id="5b8189cb-6881-4431-aab7-7346d252f2ca"></div>
+<div id="811165e1-ff70-413d-ba5e-3c9a8af7d782"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#5b8189cb-6881-4431-aab7-7346d252f2ca');
+var element = $('#811165e1-ff70-413d-ba5e-3c9a8af7d782');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "c06d6acc2b5a4ee0ab5352af74896007", "version_major": 2, "version_minor": 0}
@@ -225,7 +225,7 @@ var element = $('#5b8189cb-6881-4431-aab7-7346d252f2ca');
 <span class="n">dep_var</span> <span class="o">=</span> <span class="s1">&#39;&gt;=50k&#39;</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -267,7 +267,7 @@ var element = $('#5b8189cb-6881-4431-aab7-7346d252f2ca');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a <code>DataBunch</code> in <code>path</code> from <code>train_df</code>, <code>valid_df</code> and optionally <code>test_df</code>. The dependent variable is <code>dep_var</code>, while the categorical and continuous variables are in the <code>cat_names</code> columns and <code>cont_names</code> columns respectively. If <code>cont_names</code> is None then we assume all variables that aren't dependent or categorical are continuous. The <code>TabularTransform</code> in <code>tfms</code> are applied to the dataframes as preprocessing, then the categories are replaced by their codes+1 (leaving 0 for <code>nan</code>) and the continuous variables are normalized. You can pass the <code>stats</code> to use for that step. If <code>log_output</code> is True, the dependant variable is replaced by its log.</p>
+<p>Creates a <a href="/data.html#DataBunch"><code>DataBunch</code></a> in <code>path</code> from <code>train_df</code>, <code>valid_df</code> and optionally <code>test_df</code>. The dependent variable is <code>dep_var</code>, while the categorical and continuous variables are in the <code>cat_names</code> columns and <code>cont_names</code> columns respectively. If <code>cont_names</code> is None then we assume all variables that aren't dependent or categorical are continuous. The <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a> in <code>tfms</code> are applied to the dataframes as preprocessing, then the categories are replaced by their codes+1 (leaving 0 for <code>nan</code>) and the continuous variables are normalized. You can pass the <code>stats</code> to use for that step. If <code>log_output</code> is True, the dependant variable is replaced by its log.</p>
 <p>Note that the transforms should be passed as <code>Callable</code>: the actual initialization with <code>cat_names</code> and <code>cont_names</code> is done inside.</p>
 
 </div>
@@ -282,14 +282,14 @@ var element = $('#5b8189cb-6881-4431-aab7-7346d252f2ca');
 <span class="n">data</span> <span class="o">=</span> <span class="n">tabular_data_from_df</span><span class="p">(</span><span class="n">ADULT_PATH</span><span class="p">,</span> <span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span><span class="p">,</span> <span class="n">dep_var</span><span class="o">=</span><span class="n">dep_var</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="n">cat_names</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You can then easily create a <code>Learner</code> for this data with <code>get_tabular_learner</code>.</p>
+<p>You can then easily create a <a href="/basic_train.html#Learner"><code>Learner</code></a> for this data with <a href="/tabular.data.html#get_tabular_learner"><code>get_tabular_learner</code></a>.</p>
 
 </div>
 </div>
@@ -421,7 +421,7 @@ var element = $('#5b8189cb-6881-4431-aab7-7346d252f2ca');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Factory method to create a <code>TabularDataset</code> from <code>df</code>. The only difference from the constructor is that it gets a list <code>tfms</code> of <code>TabularTfm</code> that it applied before passing the dataframe to the class initialization.</p>
+<p>Factory method to create a <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a> from <code>df</code>. The only difference from the constructor is that it gets a list <code>tfms</code> of <code>TabularTfm</code> that it applied before passing the dataframe to the class initialization.</p>
 
 </div>
 </div>

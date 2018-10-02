@@ -20,9 +20,9 @@ summary: "Implementation of the callback system"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>fastai provides a powerful <em>callback</em> system, which is documented on the <code>callbacks</code> page; look on that page if you're just looking for how to use existing callbacks. If you want to create your own, you'll need to use the classes discussed below.</p>
-<p>A key motivation for the callback system is that additional functionality can be entirely implemented in a single callback, so that it's easily read. By using this trick, we will have different methods categorized in different callbacks where we will find clearly stated all the interventions the method makes in training. For instance in the <code>LRFinder</code> callback, on top of running the fit function with exponentially growing LRs, it needs to handle some preparation and clean-up, and all this code can be in the same callback so we know exactly what it is doing and where to look if we need to change something.</p>
-<p>In addition, it allows our <code>fit</code> function to be very clean and simple, yet still easily extended. So far in implementing a number of recent papers, we haven't yet come across any situation where we had to modify our training loop source code - we've been able to use callbacks every time.</p>
+<p>fastai provides a powerful <em>callback</em> system, which is documented on the <a href="/callbacks.html#callbacks"><code>callbacks</code></a> page; look on that page if you're just looking for how to use existing callbacks. If you want to create your own, you'll need to use the classes discussed below.</p>
+<p>A key motivation for the callback system is that additional functionality can be entirely implemented in a single callback, so that it's easily read. By using this trick, we will have different methods categorized in different callbacks where we will find clearly stated all the interventions the method makes in training. For instance in the <a href="/callbacks.lr_finder.html#LRFinder"><code>LRFinder</code></a> callback, on top of running the fit function with exponentially growing LRs, it needs to handle some preparation and clean-up, and all this code can be in the same callback so we know exactly what it is doing and where to look if we need to change something.</p>
+<p>In addition, it allows our <a href="/basic_train.html#fit"><code>fit</code></a> function to be very clean and simple, yet still easily extended. So far in implementing a number of recent papers, we haven't yet come across any situation where we had to modify our training loop source code - we've been able to use callbacks every time.</p>
 
 </div>
 </div>
@@ -64,7 +64,7 @@ summary: "Implementation of the callback system"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To create a new type of callback, you'll need to inherit from this class, and implement one or more methods as required for your purposes. Perhaps the easiest way to get started is to look at the source code for some of the pre-defined fastai callbacks. You might be surprised at how simple they are! For instance, here is the <strong>entire</strong> source code for <code>GradientClipping</code>:</p>
+<p>To create a new type of callback, you'll need to inherit from this class, and implement one or more methods as required for your purposes. Perhaps the easiest way to get started is to look at the source code for some of the pre-defined fastai callbacks. You might be surprised at how simple they are! For instance, here is the <strong>entire</strong> source code for <a href="/train.html#GradientClipping"><code>GradientClipping</code></a>:</p>
 <div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">GradientClipping</span><span class="p">(</span><span class="n">LearnerCallback</span><span class="p">):</span>
     <span class="n">clip</span><span class="p">:</span><span class="nb">float</span>
@@ -78,15 +78,15 @@ summary: "Implementation of the callback system"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You generally want your custom callback constructor to take a <code>Learner</code> parameter, e.g.:</p>
+<p>You generally want your custom callback constructor to take a <a href="/basic_train.html#Learner"><code>Learner</code></a> parameter, e.g.:</p>
 <div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">MyCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
     <span class="n">learn</span><span class="p">:</span><span class="n">Learner</span>
 </pre></div>
-<p>Note that this allows the callback user to just pass your callback name to <code>callback_fns</code> when constructing their <code>Learner</code>, since that always passes <code>self</code> when constructing callbacks from <code>callback_fns</code>. In addition, by passing the learner, this callback will have access to everything: e.g all the inputs/outputs as they are calculated, the losses, and also the data loaders, the optimizer, etc. At any time:</p>
+<p>Note that this allows the callback user to just pass your callback name to <code>callback_fns</code> when constructing their <a href="/basic_train.html#Learner"><code>Learner</code></a>, since that always passes <code>self</code> when constructing callbacks from <code>callback_fns</code>. In addition, by passing the learner, this callback will have access to everything: e.g all the inputs/outputs as they are calculated, the losses, and also the data loaders, the optimizer, etc. At any time:</p>
 <ul>
-<li>Changing self.learn.data.train_dl or self.data.valid_dl will change them inside the fit function (we just need to pass the <code>DataBunch</code> object to the fit function and not data.train_dl/data.valid_dl)</li>
-<li>Changing self.learn.opt.opt (We have an <code>OptimWrapper</code> on top of the actual optimizer) will change it inside the fit function.</li>
+<li>Changing self.learn.data.train_dl or self.data.valid_dl will change them inside the fit function (we just need to pass the <a href="/data.html#DataBunch"><code>DataBunch</code></a> object to the fit function and not data.train_dl/data.valid_dl)</li>
+<li>Changing self.learn.opt.opt (We have an <a href="/callback.html#OptimWrapper"><code>OptimWrapper</code></a> on top of the actual optimizer) will change it inside the fit function.</li>
 <li>Changing self.learn.data or self.learn.opt directly WILL NOT change the data or the optimizer inside the fit function.</li>
 </ul>
 
@@ -815,7 +815,7 @@ Examples: save log_files, load best model found during training</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You probably won't need to use this class yourself. It's used by fastai to combine all the callbacks together and call any relevant callback functions for each training stage. The methods below simply call the equivalent method in each callback function in <code>self.callbacks</code>.</p>
+<p>You probably won't need to use this class yourself. It's used by fastai to combine all the callbacks together and call any relevant callback functions for each training stage. The methods below simply call the equivalent method in each callback function in <a href="/callbacks.html#callbacks"><code>self.callbacks</code></a>.</p>
 
 </div>
 </div>
@@ -1530,7 +1530,7 @@ Examples: save log_files, load best model found during training</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Used for smoothing loss in <code>Recorder</code>.</p>
+<p>Used for smoothing loss in <a href="/basic_train.html#Recorder"><code>Recorder</code></a>.</p>
 
 </div>
 </div>
@@ -1607,7 +1607,7 @@ Examples: save log_files, load best model found during training</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Used for creating annealing schedules, mainly for <code>OneCycleScheduler</code>.</p>
+<p>Used for creating annealing schedules, mainly for <a href="/callbacks.one_cycle.html#OneCycleScheduler"><code>OneCycleScheduler</code></a>.</p>
 
 </div>
 </div>

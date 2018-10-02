@@ -26,14 +26,14 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <span class="kn">from</span> <span class="nn">fastai</span> <span class="k">import</span> <span class="o">*</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This module contains the <code>TextDataset</code> class, which is the main dataset you should use for your NLP tasks. It automatically does the preprocessing steps described in <code>text.transform</code>. It also defines a few helper function to quickly get a <code>DataBunch</code> ready.</p>
+<p>This module contains the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> class, which is the main dataset you should use for your NLP tasks. It automatically does the preprocessing steps described in <a href="/text.transform.html#text.transform"><code>text.transform</code></a>. It also defines a few helper function to quickly get a <a href="/data.html#DataBunch"><code>DataBunch</code></a> ready.</p>
 
 </div>
 </div>
@@ -53,7 +53,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <li>tokens and labels arrays already saved,</li>
 <li>ids, vocabulary (correspondance id to word) and labels already saved.</li>
 </ul>
-<p>If you are assembling the data for a language model, you should define your labels as always 0 to respect those formats. The first time you create a <code>DataBunch</code> with one of those functions, your data will be preprocessed automatically and saved, so that the next time you call it is almost instantaneous.</p>
+<p>If you are assembling the data for a language model, you should define your labels as always 0 to respect those formats. The first time you create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> with one of those functions, your data will be preprocessed automatically and saved, so that the next time you call it is almost instantaneous.</p>
 
 </div>
 </div>
@@ -66,11 +66,11 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>All those functions will require a <code>data_func</code> argument that explains how to assemble the datasets into a <code>DataBunch</code>. It can be one of the following:</p>
+<p>All those functions will require a <code>data_func</code> argument that explains how to assemble the datasets into a <a href="/data.html#DataBunch"><code>DataBunch</code></a>. It can be one of the following:</p>
 <ul>
-<li><code>standard_data</code>: the datasets are directly used to create a <code>DataBunch</code>,</li>
-<li><code>lm_data</code>: the datasets are assembled to create a <code>DataBunch</code> suitable for a language model,</li>
-<li><code>classifier_data</code>: the datasets are assembled to create a <code>DataBunch</code> suitable for an NLP classifier.</li>
+<li><a href="/text.data.html#standard_data"><code>standard_data</code></a>: the datasets are directly used to create a <a href="/data.html#DataBunch"><code>DataBunch</code></a>,</li>
+<li><a href="/text.data.html#lm_data"><code>lm_data</code></a>: the datasets are assembled to create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> suitable for a language model,</li>
+<li><a href="/text.data.html#classifier_data"><code>classifier_data</code></a>: the datasets are assembled to create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> suitable for an NLP classifier.</li>
 </ul>
 
 </div>
@@ -100,8 +100,8 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This function will create a <code>DataBunch</code> from texts placed in <code>path</code> in a <code>train</code>, <code>valid</code> and maybe <code>test</code> folders. Text files in the <code>train</code> and <code>valid</code> folders should be places in subdirectories according to their classes (always the same for a language model) and the ones for the <code>test</code> folder should all be placed there directly. <code>tokenizer</code> will be used to parse those texts into tokens. The <code>shuffle</code> flag will optionally shuffle the texts found.</p>
-<p>You can pass a specific <code>vocab</code> for the numericalization step (if you are building a classifier from a language model you fine-tuned for instance). kwargs will be split between the <code>TextDataset</code> function and to the <code>get_data</code> function, you can precise there parameters such as <code>max_vocab</code>, <code>chunksize</code>, <code>min_freq</code>, <code>n_labels</code> (see the <code>TextDataset</code> documentation) or <code>bs</code>, <code>bptt</code> and <code>pad_idx</code> (see the sections LM data and classifier data).</p>
+<p>This function will create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> from texts placed in <code>path</code> in a <a href="/train.html#train"><code>train</code></a>, <code>valid</code> and maybe <code>test</code> folders. Text files in the <a href="/train.html#train"><code>train</code></a> and <code>valid</code> folders should be places in subdirectories according to their classes (always the same for a language model) and the ones for the <code>test</code> folder should all be placed there directly. <code>tokenizer</code> will be used to parse those texts into tokens. The <code>shuffle</code> flag will optionally shuffle the texts found.</p>
+<p>You can pass a specific <code>vocab</code> for the numericalization step (if you are building a classifier from a language model you fine-tuned for instance). kwargs will be split between the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> function and to the <code>get_data</code> function, you can precise there parameters such as <code>max_vocab</code>, <code>chunksize</code>, <code>min_freq</code>, <code>n_labels</code> (see the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> documentation) or <code>bs</code>, <code>bptt</code> and <code>pad_idx</code> (see the sections LM data and classifier data).</p>
 
 </div>
 </div>
@@ -130,8 +130,8 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This function will create a <code>DataBunch</code> from texts placed in <code>path</code> in a <code>train</code>.csv, <code>valid</code>.csv and maybe <code>test</code>.csv files. These csv files should have no header or index, and the label(s) should be the first column(s) (be sure to adjust the parameter <code>n_labels</code> if you have more than one). <code>tokenizer</code> will be used to parse those texts into tokens.</p>
-<p>You can pass a specific <code>vocab</code> for the numericalization step (if you are building a classifier from a language model you fine-tuned for instance). kwargs will be split between the <code>TextDataset</code> function and to the <code>get_data</code> function, you can precise there parameters such as <code>max_vocab</code>, <code>chunksize</code>, <code>min_freq</code>, <code>n_labels</code> (see the <code>TextDataset</code> documentation) or <code>bs</code>, <code>bptt</code> and <code>pad_idx</code> (see the sections LM data and classifier data).</p>
+<p>This function will create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> from texts placed in <code>path</code> in a <a href="/train.html#train"><code>train</code></a>.csv, <code>valid</code>.csv and maybe <code>test</code>.csv files. These csv files should have no header or index, and the label(s) should be the first column(s) (be sure to adjust the parameter <code>n_labels</code> if you have more than one). <code>tokenizer</code> will be used to parse those texts into tokens.</p>
+<p>You can pass a specific <code>vocab</code> for the numericalization step (if you are building a classifier from a language model you fine-tuned for instance). kwargs will be split between the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> function and to the <code>get_data</code> function, you can precise there parameters such as <code>max_vocab</code>, <code>chunksize</code>, <code>min_freq</code>, <code>n_labels</code> (see the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> documentation) or <code>bs</code>, <code>bptt</code> and <code>pad_idx</code> (see the sections LM data and classifier data).</p>
 
 </div>
 </div>
@@ -160,8 +160,8 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This function will create a <code>DataBunch</code> from texts already tokenized placed in <code>path</code> in files named <code>f{train}{tok_suff}</code>.npy, <code>f{train}{lbl_suff}</code>.npy, <code>f{valid}{tok_suff}</code>.npy, <code>f{valid}{lbl_suff}</code>.npy and maybe <code>f{test}{tok_suff}</code>.npy. If no label file exists, labels will default to all zeros. <code>tok_suff</code> and <code>lbl_suff</code> are '_tok' and '_lbl' respectively.</p>
-<p>You can pass a specific <code>vocab</code> for the numericalization step (if you are building a classifier from a language model you fine-tuned for instance). kwargs will be split between the <code>TextDataset</code> function and to the <code>get_data</code> function, you can precise there parameters such as <code>max_vocab</code>, <code>chunksize</code>, <code>min_freq</code>, <code>n_labels</code>, <code>tok_suff</code> and <code>lbl_suff</code> (see the <code>TextDataset</code> documentation) or <code>bs</code>, <code>bptt</code> and <code>pad_idx</code> (see the sections LM data and classifier data).</p>
+<p>This function will create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> from texts already tokenized placed in <code>path</code> in files named <code>f{train}{tok_suff}</code>.npy, <code>f{train}{lbl_suff}</code>.npy, <code>f{valid}{tok_suff}</code>.npy, <code>f{valid}{lbl_suff}</code>.npy and maybe <code>f{test}{tok_suff}</code>.npy. If no label file exists, labels will default to all zeros. <code>tok_suff</code> and <code>lbl_suff</code> are '_tok' and '_lbl' respectively.</p>
+<p>You can pass a specific <code>vocab</code> for the numericalization step (if you are building a classifier from a language model you fine-tuned for instance). kwargs will be split between the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> function and to the <code>get_data</code> function, you can precise there parameters such as <code>max_vocab</code>, <code>chunksize</code>, <code>min_freq</code>, <code>n_labels</code>, <code>tok_suff</code> and <code>lbl_suff</code> (see the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> documentation) or <code>bs</code>, <code>bptt</code> and <code>pad_idx</code> (see the sections LM data and classifier data).</p>
 
 </div>
 </div>
@@ -190,8 +190,8 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This function will create a <code>DataBunch</code> from texts already tokenized placed in <code>path</code> in files named <code>f{train}{id_suff}</code>.npy, <code>f{train}{lbl_suff}</code>.npy, <code>f{valid}{id_suff}</code>.npy, <code>f{valid}{lbl_suff}</code>.npy and maybe <code>f{test}{id_suff}</code>.npy. If no label file exists, labels will default to all zeros. <code>id_suff</code> and <code>lbl_suff</code> are '_ids' and '_lbl' respectively. The <code>itos</code> file should contain the correspondance from ids to words.</p>
-<p>kwargs will be split between the <code>TextDataset</code> function and to the <code>get_data</code> function, you can precise there parameters such as <code>max_vocab</code>, <code>chunksize</code>, <code>min_freq</code>, <code>n_labels</code>, <code>tok_suff</code> and <code>lbl_suff</code> (see the <code>TextDataset</code> documentation) or <code>bs</code>, <code>bptt</code> and <code>pad_idx</code> (see the sections LM data and classifier data).</p>
+<p>This function will create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> from texts already tokenized placed in <code>path</code> in files named <code>f{train}{id_suff}</code>.npy, <code>f{train}{lbl_suff}</code>.npy, <code>f{valid}{id_suff}</code>.npy, <code>f{valid}{lbl_suff}</code>.npy and maybe <code>f{test}{id_suff}</code>.npy. If no label file exists, labels will default to all zeros. <code>id_suff</code> and <code>lbl_suff</code> are '_ids' and '_lbl' respectively. The <code>itos</code> file should contain the correspondance from ids to words.</p>
+<p>kwargs will be split between the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> function and to the <code>get_data</code> function, you can precise there parameters such as <code>max_vocab</code>, <code>chunksize</code>, <code>min_freq</code>, <code>n_labels</code>, <code>tok_suff</code> and <code>lbl_suff</code> (see the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> documentation) or <code>bs</code>, <code>bptt</code> and <code>pad_idx</code> (see the sections LM data and classifier data).</p>
 
 </div>
 </div>
@@ -218,7 +218,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <span class="n">IMDB_PATH</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -254,7 +254,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="o">/</span><span class="s1">&#39;train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -326,7 +326,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>And here is a simple way of creating your <code>DataBunch</code>.</p>
+<p>And here is a simple way of creating your <a href="/data.html#DataBunch"><code>DataBunch</code></a>.</p>
 
 </div>
 </div>
@@ -339,7 +339,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_lm</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">lm_data</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -361,10 +361,10 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 
  
  
-<div id="0099db2e-4814-4d90-b916-b015fbe36a12"></div>
+<div id="7d647054-ee2a-4ff9-b2d3-5c36b0c7d39f"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#0099db2e-4814-4d90-b916-b015fbe36a12');
+var element = $('#7d647054-ee2a-4ff9-b2d3-5c36b0c7d39f');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -380,10 +380,10 @@ var element = $('#0099db2e-4814-4d90-b916-b015fbe36a12');
 
  
  
-<div id="10129b05-fd7e-4395-9246-7647234ba2b7"></div>
+<div id="3245d86c-6699-428f-a1ca-b5ca410385c7"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
+var element = $('#3245d86c-6699-428f-a1ca-b5ca410385c7');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -412,7 +412,7 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Behind the scenes, the previous functions will create a training, validation and maybe test <code>TextDataset</code> which is the class responsible for collecting and preprocessing the data.</p>
+<p>Behind the scenes, the previous functions will create a training, validation and maybe test <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> which is the class responsible for collecting and preprocessing the data.</p>
 
 </div>
 </div>
@@ -441,11 +441,11 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This class shouldn't be initialized directly as it will rely on internal files being put in an 'tmp' folder of <code>path</code>. <code>tokenizer</code> and <code>vocab</code> will be used to tokenize and numericalize the texts (if needed). <code>max_vocab</code> and <code>min_freq</code> are passed at the create of the vocabulary (if needed). <code>chunksize</code> is the size of chunks preprocessed when loading the data from csv or folders. <code>name</code> is the name of the set that will be used to name the temporary files. <code>n_labels</code> is the number of labels if creating the data from a csv file. <code>classes</code> is the correspondance between label and classe. <code>create_mtd</code> is an internal flag that tells the <code>TextDataset</code> how it was created. It can be:</p>
+<p>This class shouldn't be initialized directly as it will rely on internal files being put in an 'tmp' folder of <code>path</code>. <code>tokenizer</code> and <code>vocab</code> will be used to tokenize and numericalize the texts (if needed). <code>max_vocab</code> and <code>min_freq</code> are passed at the create of the vocabulary (if needed). <code>chunksize</code> is the size of chunks preprocessed when loading the data from csv or folders. <code>name</code> is the name of the set that will be used to name the temporary files. <code>n_labels</code> is the number of labels if creating the data from a csv file. <code>classes</code> is the correspondance between label and classe. <code>create_mtd</code> is an internal flag that tells the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> how it was created. It can be:</p>
 <ul>
 <li><code>CSV</code> if it was created from texts or csv</li>
-<li><code>TOK</code> if it was created from tokens (which means the <code>TextDataset</code> will always skip the tokenization)</li>
-<li><code>IDS</code> if it was created from tokens (which means the <code>TextDataset</code> will always skip the tokenization and the numericalization)</li>
+<li><code>TOK</code> if it was created from tokens (which means the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> will always skip the tokenization)</li>
+<li><code>IDS</code> if it was created from tokens (which means the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> will always skip the tokenization and the numericalization)</li>
 </ul>
 
 </div>
@@ -459,7 +459,7 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Instead of using the <code>TextDataset</code> init method, one of the following factory functions should be used instead:</p>
+<p>Instead of using the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> init method, one of the following factory functions should be used instead:</p>
 
 </div>
 </div>
@@ -488,7 +488,7 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a <code>TextDataset</code> named <code>name</code> by scanning the subfolders in <code>folder</code> and using <code>tokenizer</code>. If <code>classes</code> are passed, only the subfolders named accordingly are checked. If <code>shuffle</code> is True, the data will be shuffled. Any additional <code>kwargs</code> are passed to the init method of <code>TextDataset</code>.</p>
+<p>Creates a <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> named <code>name</code> by scanning the subfolders in <code>folder</code> and using <code>tokenizer</code>. If <code>classes</code> are passed, only the subfolders named accordingly are checked. If <code>shuffle</code> is True, the data will be shuffled. Any additional <code>kwargs</code> are passed to the init method of <a href="/text.data.html#TextDataset"><code>TextDataset</code></a>.</p>
 
 </div>
 </div>
@@ -517,7 +517,7 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a <code>TextDataset</code> named <code>name</code> by scanning the text files in <code>folder</code> and using <code>tokenizer</code>. All files are labelled <code>classes[0]</code> so this is typically used for the test set. If <code>shuffle</code> is True, the data will be shuffled. Any additional <code>kwargs</code> are passed to the init method of <code>TextDataset</code>.</p>
+<p>Creates a <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> named <code>name</code> by scanning the text files in <code>folder</code> and using <code>tokenizer</code>. All files are labelled <code>classes[0]</code> so this is typically used for the test set. If <code>shuffle</code> is True, the data will be shuffled. Any additional <code>kwargs</code> are passed to the init method of <a href="/text.data.html#TextDataset"><code>TextDataset</code></a>.</p>
 
 </div>
 </div>
@@ -546,7 +546,7 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a <code>TextDataset</code> named <code>name</code> with the texts in <code>name</code>.csv using <code>tokenizer</code>. Any additional <code>kwargs</code> are passed to the init method of <code>TextDataset</code>.</p>
+<p>Creates a <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> named <code>name</code> with the texts in <code>name</code>.csv using <code>tokenizer</code>. Any additional <code>kwargs</code> are passed to the init method of <a href="/text.data.html#TextDataset"><code>TextDataset</code></a>.</p>
 
 </div>
 </div>
@@ -575,7 +575,7 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a <code>TextDataset</code> named <code>name</code> from tokens and labels saved in <code>f{name}{tok_suff}.npy</code> and <code>f{name}{lbl_suff}.npy</code> respectively. Any additional <code>kwargs</code> are passed to the init method of <code>TextDataset</code>.</p>
+<p>Creates a <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> named <code>name</code> from tokens and labels saved in <code>f{name}{tok_suff}.npy</code> and <code>f{name}{lbl_suff}.npy</code> respectively. Any additional <code>kwargs</code> are passed to the init method of <a href="/text.data.html#TextDataset"><code>TextDataset</code></a>.</p>
 
 </div>
 </div>
@@ -604,7 +604,7 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a <code>TextDataset</code> named <code>name</code> from ids, labels and dictionary saved in <code>f{name}{id_suff}.npy</code>, <code>f{name}{lbl_suff}.npy</code> and <code>itos</code> respectively. Any additional <code>kwargs</code> are passed to the init method of <code>TextDataset</code>.</p>
+<p>Creates a <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> named <code>name</code> from ids, labels and dictionary saved in <code>f{name}{id_suff}.npy</code>, <code>f{name}{lbl_suff}.npy</code> and <code>itos</code> respectively. Any additional <code>kwargs</code> are passed to the init method of <a href="/text.data.html#TextDataset"><code>TextDataset</code></a>.</p>
 
 </div>
 </div>
@@ -668,13 +668,13 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Internally, the <code>TextDataset</code> will create a 'tmp' folder in which he will copy or save the following files:</p>
+<p>Internally, the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> will create a 'tmp' folder in which he will copy or save the following files:</p>
 <ul>
 <li><code>name</code>.csv (if created from folders or csv)</li>
 <li><code>name</code>_tok.npy and <code>name</code>_lbl.npy (created by <code>TextDataset.tokenize</code> from the last step or copied if created from tokens)</li>
 <li><code>name</code>_ids.npy, <code>name</code>_lbl.npy and <code>itos</code> (created by <code>TextDataset.numericalize</code> from the last step or copied if created from ids)</li>
 </ul>
-<p>Then, when you invoke the <code>TextDataset</code> again, it will look for those temporary files and check their consistency to use them, in order to avoid doing again the numericalization or the tokenization. If you feel those files have been corrupted in any way, the following method will clear the 'tmp' subfolder of those files:</p>
+<p>Then, when you invoke the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> again, it will look for those temporary files and check their consistency to use them, in order to avoid doing again the numericalization or the tokenization. If you feel those files have been corrupted in any way, the following method will clear the 'tmp' subfolder of those files:</p>
 
 </div>
 </div>
@@ -798,7 +798,7 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
 <span class="n">texts</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1129,7 +1129,7 @@ var element = $('#10129b05-fd7e-4395-9246-7647234ba2b7');
     <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1183,7 +1183,7 @@ torch.Size([66, 64])
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <code>DataBunch</code> from the <code>datasets</code> for language modelling. Internally calls the next class, that takes the kwargs to define the dataloaders.</p>
+<p>Create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> from the <code>datasets</code> for language modelling. Internally calls the next class, that takes the kwargs to define the dataloaders.</p>
 
 </div>
 </div>
@@ -1241,7 +1241,7 @@ torch.Size([66, 64])
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Called at the inialization to create the big array of text ids from the <code>data</code> array.</p>
+<p>Called at the inialization to create the big array of text ids from the <a href="/text.data.html#text.data"><code>data</code></a> array.</p>
 
 </div>
 </div>
@@ -1298,7 +1298,7 @@ torch.Size([66, 64])
 <span class="n">x</span><span class="p">[:</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1370,7 +1370,7 @@ torch.Size([66, 64])
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <code>DataBunch</code> in <code>path</code> from the <code>datasets</code> for language modelling. The kwargs are passed to the next classes and can contain: the batchsize <code>bs</code>, the <code>bptt</code>, the padding index <code>pad_idx</code> and wether or not to apply the <code>pad_first</code>.</p>
+<p>Create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> in <code>path</code> from the <code>datasets</code> for language modelling. The kwargs are passed to the next classes and can contain: the batchsize <code>bs</code>, the <code>bptt</code>, the padding index <code>pad_idx</code> and wether or not to apply the <code>pad_first</code>.</p>
 
 </div>
 </div>
@@ -1399,7 +1399,7 @@ torch.Size([66, 64])
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>pytorch <code>Sampler</code> to batchify the <code>data_source</code> by order of length of the texts. Used for the validation and (if applicable) the test set.</p>
+<p>pytorch <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Sampler"><code>Sampler</code></a> to batchify the <code>data_source</code> by order of length of the texts. Used for the validation and (if applicable) the test set.</p>
 
 </div>
 </div>
@@ -1428,7 +1428,7 @@ torch.Size([66, 64])
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>pytorch <code>Sampler</code> to batchify with size <code>bs</code> the <code>data_source</code> by order of length of the texts with a bit of randomness. Used for the training set.</p>
+<p>pytorch <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Sampler"><code>Sampler</code></a> to batchify with size <code>bs</code> the <code>data_source</code> by order of length of the texts with a bit of randomness. Used for the training set.</p>
 
 </div>
 </div>
@@ -1457,7 +1457,7 @@ torch.Size([66, 64])
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Function used by the pytorch <code>DataLoader</code> to collate the <code>samples</code> in batches while adding padding with <code>pad_idx</code>. If <code>pad_first</code> is True, padding is applied at the beginning (before the sentence starts) otherwise it's applied at the end.</p>
+<p>Function used by the pytorch <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> to collate the <code>samples</code> in batches while adding padding with <code>pad_idx</code>. If <code>pad_first</code> is True, padding is applied at the beginning (before the sentence starts) otherwise it's applied at the end.</p>
 
 </div>
 </div>

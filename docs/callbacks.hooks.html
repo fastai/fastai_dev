@@ -18,7 +18,7 @@ summary: "Implement callbacks using hooks"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This provides both a standalone class and a callback for registering and automatically deregistering <a href="https://pytorch.org/tutorials/beginner/former_torchies/nn_tutorial.html#forward-and-backward-function-hooks">PyTorch hooks</a>, along with some pre-defined hooks. Hooks can be attached to any <code>nn.Module</code>, for either the forward or the backward pass.</p>
-<p>We'll start by looking at the pre-defined hook <code>ActivationStats</code>, then we'll see how to create our own.</p>
+<p>We'll start by looking at the pre-defined hook <a href="/callbacks.hooks.html#ActivationStats"><code>ActivationStats</code></a>, then we'll see how to create our own.</p>
 
 </div>
 </div>
@@ -50,7 +50,7 @@ summary: "Implement callbacks using hooks"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>ActivationStats</code> saves the layer activations in <code>self.stats</code> for all <code>modules</code> passed to it. By default it will save activations for <em>all</em> modules. For instance:</p>
+<p><a href="/callbacks.hooks.html#ActivationStats"><code>ActivationStats</code></a> saves the layer activations in <code>self.stats</code> for all <code>modules</code> passed to it. By default it will save activations for <em>all</em> modules. For instance:</p>
 
 </div>
 </div>
@@ -64,7 +64,7 @@ summary: "Implement callbacks using hooks"
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -78,10 +78,10 @@ summary: "Implement callbacks using hooks"
 
  
  
-<div id="2a604a8b-036e-491e-9f8c-2fc70734df4b"></div>
+<div id="2c412975-1c5b-446b-81f1-68250fa1591c"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#2a604a8b-036e-491e-9f8c-2fc70734df4b');
+var element = $('#2c412975-1c5b-446b-81f1-68250fa1591c');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -120,7 +120,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">activation_stats</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -149,7 +149,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">activation_stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -185,7 +185,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">activation_stats</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">());</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -290,7 +290,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Acts as a <code>Collection</code> (i.e. <code>len(hooks)</code> and <code>hooks[i]</code>) and an <code>Iterator</code> (i.e. <code>for hook in hooks</code>) of a group of hooks, one for each module in <code>ms</code>, with the ability to remove all as a group. Use <code>stored</code> to get all hook results. <code>hook_func</code> and <code>is_forward</code> behavior is the same as <code>Hook</code>. See the source code for <code>HookCallback</code> for a simple example.</p>
+<p>Acts as a <code>Collection</code> (i.e. <code>len(hooks)</code> and <code>hooks[i]</code>) and an <code>Iterator</code> (i.e. <code>for hook in hooks</code>) of a group of hooks, one for each module in <code>ms</code>, with the ability to remove all as a group. Use <code>stored</code> to get all hook results. <code>hook_func</code> and <code>is_forward</code> behavior is the same as <a href="/callbacks.hooks.html#Hook"><code>Hook</code></a>. See the source code for <a href="/callbacks.hooks.html#HookCallback"><code>HookCallback</code></a> for a simple example.</p>
 
 </div>
 </div>
@@ -354,7 +354,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Function that creates a <code>Hook</code> for <code>module</code> that simply stores the output of the layer.</p>
+<p>Function that creates a <a href="/callbacks.hooks.html#Hook"><code>Hook</code></a> for <code>module</code> that simply stores the output of the layer.</p>
 
 </div>
 </div>
@@ -383,7 +383,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Function that creates a <code>Hook</code> for all passed <code>modules</code> that simply stores the output of the layers. For example, the (slightly simplified) source code of <code>model_sizes</code> is:</p>
+<p>Function that creates a <a href="/callbacks.hooks.html#Hook"><code>Hook</code></a> for all passed <code>modules</code> that simply stores the output of the layers. For example, the (slightly simplified) source code of <a href="/callbacks.hooks.html#model_sizes"><code>model_sizes</code></a> is:</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model_sizes</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="o">*</span><span class="n">size</span><span class="p">))</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">stored</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">hook_outputs</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span>
@@ -448,7 +448,7 @@ epoch  train loss  valid loss
 <p>For all <code>modules</code>, uses a callback to automatically register a method <code>self.hook</code> (that you must define in an inherited class) as a hook. This method must have the signature:</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span><span class="n">Model</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span><span class="n">Tensors</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span><span class="n">Tensors</span><span class="p">)</span>
 </pre></div>
-<p>If <code>do_remove</code> then the hook is automatically deregistered at the end of training. See <code>ActivationStats</code> for a simple example of inheriting from this class.</p>
+<p>If <code>do_remove</code> then the hook is automatically deregistered at the end of training. See <a href="/callbacks.hooks.html#ActivationStats"><code>ActivationStats</code></a> for a simple example of inheriting from this class.</p>
 
 </div>
 </div>

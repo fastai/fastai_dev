@@ -20,19 +20,32 @@ summary: "Types of problems you can apply the fastai library to"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The fastai library allows you to train a <code>Model</code> on a certain <code>DataBunch</code> very easily by binding them together inside a <code>Learner</code> object. This module regroups the tools the library provides to help you preprocess and group your data in this format.</p>
+<p>The fastai library allows you to train a <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Model</code></a> on a certain <a href="/data.html#DataBunch"><code>DataBunch</code></a> very easily by binding them together inside a <a href="/basic_train.html#Learner"><code>Learner</code></a> object. This module regroups the tools the library provides to help you preprocess and group your data in this format.</p>
 <h2 id="collab"><code>collab</code><a class="anchor-link" href="#collab">&#182;</a></h2><p>This submodule handles the collaborative filtering problems.</p>
 <h2 id="tabular"><code>tabular</code><a class="anchor-link" href="#tabular">&#182;</a></h2><p>This sub-package deals with tabular (or structured) data.</p>
 <h2 id="text"><code>text</code><a class="anchor-link" href="#text">&#182;</a></h2><p>This sub-package contains everything you need for Natural Language Processing.</p>
-<h2 id="vision"><code>vision</code><a class="anchor-link" href="#vision">&#182;</a></h2><p>This sub-package contains the classes that deal with Computer Vision.</p>
+<h2 id="vision"><a href="/vision.html#vision"><code>vision</code></a><a class="anchor-link" href="#vision">&#182;</a></h2><p>This sub-package contains the classes that deal with Computer Vision.</p>
 <h2 id="Module-structure">Module structure<a class="anchor-link" href="#Module-structure">&#182;</a></h2><p>In each case (except for <code>collab</code>), the module is organized this way:</p>
 <h3 id="transform"><code>transform</code><a class="anchor-link" href="#transform">&#182;</a></h3><p>This sub-module deals with the pre-processing (data augmentation for images, cleaning for tabular data, tokenizing and numericalizing for text).</p>
-<h3 id="data"><code>data</code><a class="anchor-link" href="#data">&#182;</a></h3><p>This sub-module defines the dataset class(es) to deal with this kind of data.</p>
+<h3 id="data"><a href="/data.html#data"><code>data</code></a><a class="anchor-link" href="#data">&#182;</a></h3><p>This sub-module defines the dataset class(es) to deal with this kind of data.</p>
 <h3 id="models"><code>models</code><a class="anchor-link" href="#models">&#182;</a></h3><p>This sub-module defines the specific models used for this kind of data.</p>
 <h3 id="learner"><code>learner</code><a class="anchor-link" href="#learner">&#182;</a></h3><p>When it exists, this sub-module contains functions will directly bind this data with a suitable model and add the necessary callbacks.</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
 </div>
  

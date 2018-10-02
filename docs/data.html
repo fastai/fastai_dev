@@ -17,7 +17,7 @@ summary: "Basic classes to contain the data for model training."
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This module defines the basic <code>DataBunch</code> object that is used inside <code>Learner</code> to train a model. This is the generic class, that can take any kind of fastai <code>Dataset</code> or <code>DataLoader</code>. You'll find helpful functions in the data module of every application to directly create this <code>DataBunch</code> for you.</p>
+<p>This module defines the basic <a href="/data.html#DataBunch"><code>DataBunch</code></a> object that is used inside <a href="/basic_train.html#Learner"><code>Learner</code></a> to train a model. This is the generic class, that can take any kind of fastai <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a> or <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>. You'll find helpful functions in the data module of every application to directly create this <a href="/data.html#DataBunch"><code>DataBunch</code></a> for you.</p>
 
 </div>
 </div>
@@ -63,7 +63,7 @@ summary: "Basic classes to contain the data for model training."
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Bind together a <code>train_dl</code>, a <code>valid_dl</code> and optionally a <code>test_dl</code>, ensures they are on <code>device</code> and apply to them <code>tfms</code> as batch are drawn. <code>path</code> is used internally to store temporary files, <code>collate_fn</code> is passed to the pytorch <code>Dataloader</code> (replacing the one there) to explain how to collate the samples picked for a batch. By default, it applies data to the object sent (see in <code>vision.image</code> why this can be important).</p>
-<p>An example of <code>tfms</code> to pass is normalization. <code>train_dl</code>, <code>valid_dl</code> and optionally <code>test_dl</code> will be wrapped in <code>DeviceDataLoader</code>.</p>
+<p>An example of <code>tfms</code> to pass is normalization. <code>train_dl</code>, <code>valid_dl</code> and optionally <code>test_dl</code> will be wrapped in <a href="/data.html#DeviceDataLoader"><code>DeviceDataLoader</code></a>.</p>
 
 </div>
 </div>
@@ -105,8 +105,8 @@ summary: "Basic classes to contain the data for model training."
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <code>DataBunch</code> from <code>train_ds</code>, <code>valid_ds</code> and optionally <code>test_ds</code>, with batch size <code>bs</code> and by using <code>num_workers</code>. <code>tfms</code> and <code>device</code> are passed to the init method.</p>
-<p><code>ds_tfms</code>, <code>size</code> and <code>kwargs</code> are added in the <code>vision</code> application. <code>ds_tfms</code> is then a tuple of transforms to be applied to the datasets (the first one for <code>train_ds</code> and the second one for <code>valid_ds</code> and maybe <code>test_ds</code>), <code>size</code> and the <code>kwargs</code> are passed along to <code>transform_datasets</code>.</p>
+<p>Create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> from <code>train_ds</code>, <code>valid_ds</code> and optionally <code>test_ds</code>, with batch size <code>bs</code> and by using <code>num_workers</code>. <code>tfms</code> and <code>device</code> are passed to the init method.</p>
+<p><code>ds_tfms</code>, <code>size</code> and <code>kwargs</code> are added in the <a href="/vision.html#vision"><code>vision</code></a> application. <code>ds_tfms</code> is then a tuple of transforms to be applied to the datasets (the first one for <code>train_ds</code> and the second one for <code>valid_ds</code> and maybe <code>test_ds</code>), <code>size</code> and the <code>kwargs</code> are passed along to <code>transform_datasets</code>.</p>
 
 </div>
 </div>
@@ -190,7 +190,7 @@ summary: "Basic classes to contain the data for model training."
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This method is only available in the <code>vision</code> application. Save <code>self.labels</code> in a csv at <code>dest</code>.</p>
+<p>This method is only available in the <a href="/vision.html#vision"><code>vision</code></a> application. Save <code>self.labels</code> in a csv at <code>dest</code>.</p>
 
 </div>
 </div>
@@ -203,7 +203,7 @@ summary: "Basic classes to contain the data for model training."
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">DeviceDataLoader</span><span class="p">,</span> <span class="n">doc_string</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -242,7 +242,7 @@ summary: "Basic classes to contain the data for model training."
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Put the batches of <code>dl</code> on <code>device</code> after applying an optional list of <code>tfms</code>. <code>collate_fn</code> will replace the one of <code>dl</code>. All dataloaders of a <code>DataBunch</code> are of this type.</p>
+<p>Put the batches of <code>dl</code> on <code>device</code> after applying an optional list of <code>tfms</code>. <code>collate_fn</code> will replace the one of <code>dl</code>. All dataloaders of a <a href="/data.html#DataBunch"><code>DataBunch</code></a> are of this type.</p>
 
 </div>
 </div>
@@ -290,7 +290,7 @@ summary: "Basic classes to contain the data for model training."
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <code>DeviceDataLoader</code> on <code>device</code> from a <code>dataset</code> with batch size <code>bs</code>, <code>num_workers</code>processes and a given <code>collate_fn</code>. The dataloader will <code>shuffle</code> the data if that flag is set to True, and <code>tfms</code> are passed to the init method. All <code>kwargs</code> are passed to the pytorch <code>DataLoader</code> class initialization.</p>
+<p>Create a <a href="/data.html#DeviceDataLoader"><code>DeviceDataLoader</code></a> on <code>device</code> from a <code>dataset</code> with batch size <code>bs</code>, <code>num_workers</code>processes and a given <code>collate_fn</code>. The dataloader will <code>shuffle</code> the data if that flag is set to True, and <code>tfms</code> are passed to the init method. All <code>kwargs</code> are passed to the pytorch <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> class initialization.</p>
 
 </div>
 </div>

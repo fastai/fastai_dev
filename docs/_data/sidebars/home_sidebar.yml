@@ -3,24 +3,6 @@ entries:
   - folderitems:
     - output: web
       title: Overview
-      url: overview.html
-    - output: web
-      title: data
-      url: data.html
-    - output: web
-      title: layers
-      url: layers.html
-    - output: web
-      title: core
-      url: core.html
-    - output: web
-      title: torch_core
-      url: torch_core.html
-    output: web
-    title: Core
-  - folderitems:
-    - output: web
-      title: Overview
       url: training.html
     - output: web
       title: basic_train
@@ -131,6 +113,24 @@ entries:
       url: collab.html
     output: web
     title: Applications
+  - folderitems:
+    - output: web
+      title: Overview
+      url: overview.html
+    - output: web
+      title: data
+      url: data.html
+    - output: web
+      title: layers
+      url: layers.html
+    - output: web
+      title: core
+      url: core.html
+    - output: web
+      title: torch_core
+      url: torch_core.html
+    output: web
+    title: Core
   - folderitems:
     - output: web
       title: Overview

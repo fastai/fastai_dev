@@ -27,7 +27,7 @@ summary: "Implementation of the 1cycle policy"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This Callback allows us to easily train a network using Leslie Smith's 1cycle policy. To learn more about the 1cycle technique for training neural networks check out <a href="https://arxiv.org/pdf/1803.09820.pdf">Leslie Smith's paper</a> and for a more graphical and intuitive explanation check out <a href="https://sgugger.github.io/the-1cycle-policy.html">Sylvain Gugger's post</a>.</p>
-<p>To use our 1cycle policy we will need an <a href="https://sgugger.github.io/how-do-you-find-a-good-learning-rate.html">optimum learning rate</a>. We can find this learning rate by using a learning rate finder which can be called by using <code>lr_finder</code>. It will do a mock training by going over a large range of learning rates, then plot them against the losses. We will pick a value a bit before the minimum, where the loss still improves. Our graph would look something like this:</p>
+<p>To use our 1cycle policy we will need an <a href="https://sgugger.github.io/how-do-you-find-a-good-learning-rate.html">optimum learning rate</a>. We can find this learning rate by using a learning rate finder which can be called by using <a href="/callbacks.lr_finder.html#callbacks.lr_finder"><code>lr_finder</code></a>. It will do a mock training by going over a large range of learning rates, then plot them against the losses. We will pick a value a bit before the minimum, where the loss still improves. Our graph would look something like this:</p>
 <p><img src="imgs/onecycle_finder.png" alt="onecycle_finder"></p>
 <p>Here anything between <code>3x10^-2</code> and <code>10^-2</code> is a good idea.</p>
 <p>Next we will apply the 1cycle policy with the chosen learning rate as the maximum learning rate. The original 1cycle policy has three steps:</p>
@@ -52,7 +52,7 @@ summary: "Implementation of the 1cycle policy"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The one cycle policy allows to train very quickly, a phenomenon termed <a href="https://arxiv.org/abs/1708.07120"><em>superconvergence</em></a>. To see this in practice, we will first train a <code>ConvLearner</code> and see how our results compare when we use the <code>OneCycleScheduler</code> with <code>fit_one_cycle</code>.</p>
+<p>The one cycle policy allows to train very quickly, a phenomenon termed <a href="https://arxiv.org/abs/1708.07120"><em>superconvergence</em></a>. To see this in practice, we will first train a <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> and see how our results compare when we use the <a href="/callbacks.one_cycle.html#OneCycleScheduler"><code>OneCycleScheduler</code></a> with <a href="/train.html#fit_one_cycle"><code>fit_one_cycle</code></a>.</p>
 
 </div>
 </div>
@@ -66,7 +66,7 @@ summary: "Implementation of the 1cycle policy"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tvm</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -86,7 +86,7 @@ summary: "Implementation of the 1cycle policy"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -100,10 +100,10 @@ summary: "Implementation of the 1cycle policy"
 
  
  
-<div id="37ed90e2-d5f4-4cf4-8d6b-945801a807b8"></div>
+<div id="f4ce13fe-06a7-4a8d-85eb-4d23cb6d40ee"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#37ed90e2-d5f4-4cf4-8d6b-945801a807b8');
+var element = $('#f4ce13fe-06a7-4a8d-85eb-4d23cb6d40ee');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "829b757554634cdf8c12ca2ccfab0f1b", "version_major": 2, "version_minor": 0}
@@ -124,7 +124,7 @@ var element = $('#37ed90e2-d5f4-4cf4-8d6b-945801a807b8');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -162,7 +162,7 @@ var element = $('#37ed90e2-d5f4-4cf4-8d6b-945801a807b8');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -176,10 +176,10 @@ var element = $('#37ed90e2-d5f4-4cf4-8d6b-945801a807b8');
 
  
  
-<div id="907877cc-6069-4131-b85c-38a3a39a3e6d"></div>
+<div id="d2779a10-6305-4a30-abda-ee2c07133834"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#907877cc-6069-4131-b85c-38a3a39a3e6d');
+var element = $('#d2779a10-6305-4a30-abda-ee2c07133834');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "167102ae58f946ac8907297b8831bcc7", "version_major": 2, "version_minor": 0}
@@ -221,7 +221,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2e-3</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -235,10 +235,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="2e27b283-f3e7-4334-bce3-9bc24d25dd66"></div>
+<div id="22cc747e-05fb-426f-afdc-c038fd99900b"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#2e27b283-f3e7-4334-bce3-9bc24d25dd66');
+var element = $('#22cc747e-05fb-426f-afdc-c038fd99900b');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "3c546df3ed3e4f0686bf16ccbb52e0ca", "version_major": 2, "version_minor": 0}
@@ -272,7 +272,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now to do the same thing with 1cycle, we use <code>fit_one_cycle</code>.</p>
+<p>Now to do the same thing with 1cycle, we use <a href="/train.html#fit_one_cycle"><code>fit_one_cycle</code></a>.</p>
 
 </div>
 </div>
@@ -286,7 +286,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -300,10 +300,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="92493880-4961-4b27-8323-d14c82c1cb4b"></div>
+<div id="2918e16c-31bc-4b82-937b-c95f39868666"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#92493880-4961-4b27-8323-d14c82c1cb4b');
+var element = $('#2918e16c-31bc-4b82-937b-c95f39868666');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "3a5d328162d34ed9a337382b66d15131", "version_major": 2, "version_minor": 0}
@@ -345,7 +345,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_lr</span><span class="p">(</span><span class="n">show_moms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -405,7 +405,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <code>Callback</code> that handles the hyperparameters settings following the 1cycle policy for <code>learn</code>. <code>lr_max</code> should be picked with the <code>lr_find</code> test. In phase 1, the learning rates goes from <code>lr_max/div_factor</code> to <code>lr_max</code> linearly while the momentum goes from <code>moms[0]</code> to <code>moms[1]</code> linearly. In phase 2, the learning rates follows a cosine annealing from <code>lr_max</code> to 0, as the momentum goes from <code>moms[1]</code> to <code>moms[0]</code> with the same annealing.</p>
+<p>Create a <a href="/callback.html#Callback"><code>Callback</code></a> that handles the hyperparameters settings following the 1cycle policy for <code>learn</code>. <code>lr_max</code> should be picked with the <a href="/train.html#lr_find"><code>lr_find</code></a> test. In phase 1, the learning rates goes from <code>lr_max/div_factor</code> to <code>lr_max</code> linearly while the momentum goes from <code>moms[0]</code> to <code>moms[1]</code> linearly. In phase 2, the learning rates follows a cosine annealing from <code>lr_max</code> to 0, as the momentum goes from <code>moms[1]</code> to <code>moms[0]</code> with the same annealing.</p>
 
 </div>
 </div>
@@ -447,7 +447,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Build the <code>Stepper</code> for the <code>Callback</code> according to <code>steps_cfg</code>.</p>
+<p>Build the <a href="/callback.html#Stepper"><code>Stepper</code></a> for the <a href="/callback.html#Callback"><code>Callback</code></a> according to <code>steps_cfg</code>.</p>
 
 </div>
 </div>

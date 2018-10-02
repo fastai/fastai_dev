@@ -41,7 +41,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This step is actually divided in two phases: first, we apply a certain list of <code>rules</code> to the raw texts as preprocessing, then we use the tokenizer to split them in lists of tokens. Combining together those <code>rules</code>, the <code>tok_func</code>and the <code>lang</code> to process the texts is the role of the <code>Tokenizer</code> class.</p>
+<p>This step is actually divided in two phases: first, we apply a certain list of <code>rules</code> to the raw texts as preprocessing, then we use the tokenizer to split them in lists of tokens. Combining together those <code>rules</code>, the <code>tok_func</code>and the <code>lang</code> to process the texts is the role of the <a href="/text.transform.html#Tokenizer"><code>Tokenizer</code></a> class.</p>
 
 </div>
 </div>
@@ -177,7 +177,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <span class="n">IMDB_PATH</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -191,10 +191,10 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 
  
  
-<div id="6de52b1d-2e6d-4287-9566-115616587467"></div>
+<div id="4296af27-2de1-4d92-b8ce-36debecdc756"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
+var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "fac09e4977ca4a00917ba2a5fdfbd2f3", "version_major": 2, "version_minor": 0}
@@ -226,7 +226,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <span class="n">example_text</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span> <span class="n">example_text</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -257,7 +257,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">process_text</span><span class="p">(</span><span class="n">example_text</span><span class="p">,</span> <span class="n">tok</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -297,7 +297,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -326,7 +326,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>tok_func</code> must return an instance of <code>BaseTokenizer</code>:</p>
+<p>The <code>tok_func</code> must return an instance of <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>:</p>
 
 </div>
 </div>
@@ -452,7 +452,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The fastai library uses <a href="https://spacy.io/">spacy</a> tokenizers as its default. The following class wraps it as <code>BaseTokenizer</code>.</p>
+<p>The fastai library uses <a href="https://spacy.io/">spacy</a> tokenizers as its default. The following class wraps it as <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>.</p>
 
 </div>
 </div>
@@ -494,7 +494,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>If you want to use your custom tokenizer, just subclass the <code>BaseTokenizer</code> and override its <code>tokenizer</code> and <code>add_spec_cases</code> functions.</p>
+<p>If you want to use your custom tokenizer, just subclass the <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a> and override its <code>tokenizer</code> and <code>add_spec_cases</code> functions.</p>
 
 </div>
 </div>
@@ -562,7 +562,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">deal_caps</span><span class="p">(</span><span class="s2">&quot;I&#39;m suddenly SHOUTING FOR NO REASON!&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -633,7 +633,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">fix_html</span><span class="p">(</span><span class="s2">&quot;Some HTML&amp;nbsp;text&lt;br /&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -704,7 +704,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">replace_rep</span><span class="p">(</span><span class="s2">&quot;I&#39;m so excited!!!!!!!!&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -775,7 +775,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">replace_wrep</span><span class="p">(</span><span class="s2">&quot;I&#39;ve never ever ever ever ever ever ever ever done this.&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -839,7 +839,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">rm_useless_spaces</span><span class="p">(</span><span class="s2">&quot;Inconsistent   use  of     spaces.&quot;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -903,7 +903,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">spec_add_spaces</span><span class="p">(</span><span class="s1">&#39;I #like to #put #hashtags #everywhere!&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1016,7 +1016,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <code>Vocab</code> dictionary from a set of <code>tokens</code> in <code>path</code>. Only keeps <code>max_vocab</code> tokens, and only if they appear at least <code>min_freq</code> times, set the rest to <code>UNK</code>.</p>
+<p>Create a <a href="/text.transform.html#Vocab"><code>Vocab</code></a> dictionary from a set of <code>tokens</code> in <code>path</code>. Only keeps <code>max_vocab</code> tokens, and only if they appear at least <code>min_freq</code> times, set the rest to <code>UNK</code>.</p>
 
 </div>
 </div>
@@ -1100,7 +1100,7 @@ var element = $('#6de52b1d-2e6d-4287-9566-115616587467');
 <span class="n">vocab</span><span class="o">.</span><span class="n">numericalize</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">2</span><span class="p">])[:</span><span class="mi">10</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 

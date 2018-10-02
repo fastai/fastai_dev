@@ -24,7 +24,7 @@ summary: "Type annotations names"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="From-core">From <code>core</code><a class="anchor-link" href="#From-core">&#182;</a></h2>
+<h2 id="From-core">From <a href="/core.html#core"><code>core</code></a><a class="anchor-link" href="#From-core">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -67,7 +67,7 @@ summary: "Type annotations names"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="From-torch_core">From <code>torch_core</code><a class="anchor-link" href="#From-torch_core">&#182;</a></h2>
+<h2 id="From-torch_core">From <a href="/torch_core.html#torch_core"><code>torch_core</code></a><a class="anchor-link" href="#From-torch_core">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -77,23 +77,23 @@ summary: "Type annotations names"
 <li><code>BoolOrTensor</code> = <code>Union</code>[<code>bool</code>,<code>Tensor</code>]</li>
 <li><code>FloatOrTensor</code> = <code>Union</code>[<code>float</code>,<code>Tensor</code>]</li>
 <li><code>IntOrTensor</code> = <code>Union</code>[<code>int</code>,<code>Tensor</code>]</li>
-<li><code>ItemsList</code> = <code>Collection</code>[<code>Union</code>[<code>Tensor</code>,<code>ItemBase</code>,'<code>ItemsList</code>',<code>float</code>,<code>int</code>]]</li>
+<li><code>ItemsList</code> = <code>Collection</code>[<code>Union</code>[<code>Tensor</code>,<a href="/core.html#ItemBase"><code>ItemBase</code></a>,'<code>ItemsList</code>',<code>float</code>,<code>int</code>]]</li>
 <li><code>LambdaFunc</code> = <code>Callable</code>[[<code>Tensor</code>],<code>Tensor</code>]</li>
-<li><code>LayerFunc</code> = <code>Callable</code>[`nn<code>.</code>Module<code>],</code>None`]</li>
-<li><code>Model</code> = <code>nn</code>.<code>Module</code></li>
-<li><code>ModuleList</code> = <code>Collection</code>`nn<code>.</code>Module`]</li>
-<li><code>OptOptimizer</code> = <code>Optional</code>`optim<code>.</code>Optimizer`]</li>
-<li><code>ParamList</code> = <code>Collection</code>`nn<code>.</code>Parameter`]</li>
+<li><code>LayerFunc</code> = <code>Callable</code>[[<code>nn</code>](<a href="https://pytorch.org/docs/stable/nn.html#torch-nn).`Module`],`None`">https://pytorch.org/docs/stable/nn.html#torch-nn).`Module`],`None`</a>]</li>
+<li><a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Model</code></a> = <a href="https://pytorch.org/docs/stable/nn.html#torch-nn"><code>nn</code></a>.<code>Module</code></li>
+<li><code>ModuleList</code> = <code>Collection</code>[<code>nn</code>](<a href="https://pytorch.org/docs/stable/nn.html#torch-nn).`Module`">https://pytorch.org/docs/stable/nn.html#torch-nn).`Module`</a>]</li>
+<li><code>OptOptimizer</code> = <code>Optional</code>[<code>optim</code>](<a href="https://pytorch.org/docs/stable/optim.html#torch.optim.torch.optim).`Optimizer`">https://pytorch.org/docs/stable/optim.html#torch.optim.torch.optim).`Optimizer`</a>]</li>
+<li><code>ParamList</code> = <code>Collection</code>[<code>nn</code>](<a href="https://pytorch.org/docs/stable/nn.html#torch-nn).`Parameter`">https://pytorch.org/docs/stable/nn.html#torch-nn).`Parameter`</a>]</li>
 <li><code>Rank0Tensor</code> = <code>NewType</code>('<code>OneEltTensor</code>', <code>Tensor</code>)</li>
-<li><code>SplitFunc</code> = <code>Callable</code>[`Model<code>],</code>List<code>\</code>Model`]]</li>
+<li><code>SplitFunc</code> = <code>Callable</code>[[<code>Model</code>](<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module">https://pytorch.org/docs/stable/nn.html#torch.nn.Module</a>)], <code>List</code>[<code>Model</code>](<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module">https://pytorch.org/docs/stable/nn.html#torch.nn.Module</a>)]]</li>
 <li><code>SplitFuncOrIdxList</code> = <code>Union</code>[<code>Callable</code>, <code>Collection</code>[<code>ModuleList</code>]]</li>
 <li><code>TensorOrNumber</code> = <code>Union</code>[<code>Tensor</code>,<code>Number</code>]</li>
 <li><code>TensorOrNumList</code> = <code>Collection</code>[<code>TensorOrNumber</code>]</li>
 <li><code>TensorImageSize</code> = <code>Tuple</code>[<code>int</code>,<code>int</code>,<code>int</code>]</li>
 <li><code>Tensors</code> = <code>Union</code>[<code>Tensor</code>, <code>Collection</code>['<code>Tensors</code>']]</li>
 <li><code>Weights</code> = <code>Dict</code>[<code>str</code>,<code>Tensor</code>]</li>
-<li><code>AffineFunc</code> = <code>Callable</code>[[<code>KWArgs</code>], <code>AffineMatrix</code>]</li>
-<li><code>HookFunc</code> = <code>Callable</code>[`Model<code>,</code>Tensors<code>,</code>Tensors<code>],</code>Any`]</li>
+<li><code>AffineFunc</code> = <code>Callable</code>[[<code>KWArgs</code>], <a href="https://pytorch.org/docs/stable/torch.html#torch.Tensor"><code>AffineMatrix</code></a>]</li>
+<li><code>HookFunc</code> = <code>Callable</code>[[<code>Model</code>](<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module">https://pytorch.org/docs/stable/nn.html#torch.nn.Module</a>), <code>Tensors</code>, <code>Tensors</code>], <code>Any</code>]</li>
 <li><code>LogitTensorImage</code> = <code>TensorImage</code></li>
 <li><code>LossFunction</code> = <code>Callable</code>[[<code>Tensor</code>, <code>Tensor</code>], <code>Rank0Tensor</code>]</li>
 <li><code>MetricFunc</code> = <code>Callable</code>[[<code>Tensor</code>,<code>Tensor</code>],<code>TensorOrNumber</code>]</li>
@@ -103,7 +103,7 @@ summary: "Type annotations names"
 <li><code>OptMetrics</code> = <code>Optional</code>[<code>MetricsList</code>]</li>
 <li><code>OptSplitFunc</code> = <code>Optional</code>[<code>SplitFunc</code>]</li>
 <li><code>PixelFunc</code> = <code>Callable</code>[[<code>TensorImage</code>, <code>ArgStar</code>, <code>KWArgs</code>], <code>TensorImage</code>]</li>
-<li><code>CoordFunc</code> = <code>Callable</code>[`FlowField<code>,</code>TensorImageSize<code>,</code>ArgStar<code>,</code>KWArgs<code>],</code>LogitTensorImage`]</li>
+<li><code>CoordFunc</code> = <code>Callable</code>[[<code>FlowField</code>](<a href="https://pytorch.org/docs/stable/torch.html#torch.Tensor">https://pytorch.org/docs/stable/torch.html#torch.Tensor</a>), <code>TensorImageSize</code>, <code>ArgStar</code>, <code>KWArgs</code>], <code>LogitTensorImage</code>]</li>
 <li><code>LightingFunc</code> = <code>Callable</code>[[<code>LogitTensorImage</code>, <code>ArgStar</code>, <code>KWArgs</code>], <code>LogitTensorImage</code>]</li>
 </ul>
 
