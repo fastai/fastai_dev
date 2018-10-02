@@ -297,8 +297,7 @@ div#toc ul li {
 }
 div#toc ul {
     background-color: whitesmoke;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 5px;
     border-radius: 5px;
     max-width: 300px;
     color: gray;
@@ -306,7 +305,8 @@ div#toc ul {
 
 div#toc ul li ul {
     padding-left:8px;
-
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 div#toc ul li ul li::before {
@@ -325,8 +325,8 @@ div#toc >ul::before {
     margin-left:auto;
     margin-right:auto;
     width:70px;
-    padding-top:20px;
-    padding-bottom:20px;
+    padding-top:150px;
+    padding-bottom:40px;
     padding-left:10px;
 }
 
@@ -914,7 +914,11 @@ span.soft {
     #mysidebar {
         position: relative;
     }
+        .col-md-9 {
+            width: 90%;
+        }
 }
+
 
 @media (min-width: 1000px) {
 
