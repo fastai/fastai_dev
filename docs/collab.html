@@ -199,10 +199,10 @@ summary: "Application to collaborative filtering"
 
  
  
-<div id="6e65a4f9-6c05-4d51-b93c-bf9634b79d5c"></div>
+<div id="68205bfa-9b57-4774-bd37-8bf761683b12"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6e65a4f9-6c05-4d51-b93c-bf9634b79d5c');
+var element = $('#68205bfa-9b57-4774-bd37-8bf761683b12');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -214,13 +214,13 @@ var element = $('#6e65a4f9-6c05-4d51-b93c-bf9634b79d5c');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:02
+<pre>Total time: 00:03
 epoch  train loss  valid loss
-0      2.347037    1.848229    (00:00)
-1      1.074374    0.703097    (00:00)
-2      0.727364    0.668684    (00:00)
-3      0.628840    0.661857    (00:00)
-4      0.572673    0.659882    (00:00)
+0      2.371715    1.861580    (00:00)
+1      1.082379    0.712514    (00:00)
+2      0.731760    0.698491    (00:00)
+3      0.606913    0.692382    (00:00)
+4      0.569178    0.690507    (00:00)
 
 </pre>
 </div>
@@ -240,7 +240,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=CollabFilteringDataset></a><code>class</code> <code>CollabFilteringDataset</code></h2>
-<blockquote><p><code>CollabFilteringDataset</code>(<code>user</code>:<code>Series</code>, <code>item</code>:<code>Series</code>, <code>ratings</code>:<code>ndarray</code>) :: <code>DatasetBase</code>
+<blockquote><p><code>CollabFilteringDataset</code>(<code>user</code>:<code>Series</code>, <code>item</code>:<code>Series</code>, <code>ratings</code>:<code>ndarray</code>) :: <a href="/data.html#DatasetBase"><code>DatasetBase</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L10">[source]</a></p>
 </blockquote>
 
@@ -333,7 +333,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h3><a id=EmbeddingDotBias></a><code>class</code> <code>EmbeddingDotBias</code></h3>
-<blockquote><p><code>EmbeddingDotBias</code>(<code>n_factors</code>:<code>int</code>, <code>n_users</code>:<code>int</code>, <code>n_items</code>:<code>int</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>) :: <code>Module</code>
+<blockquote><p><code>EmbeddingDotBias</code>(<code>n_factors</code>:<code>int</code>, <code>n_users</code>:<code>int</code>, <code>n_items</code>:<code>int</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L55">[source]</a></p>
 </blockquote>
 
@@ -362,7 +362,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_collab_learner></a><code>get_collab_learner</code></h4>
-<blockquote><p><code>get_collab_learner</code>(<code>ratings</code>:<code>DataFrame</code>, <code>n_factors</code>:<code>int</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>test</code>:<code>DataFrame</code>=<code>None</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>, <code>loss_fn</code>:<code>LossFunction</code>=<code>'mse_loss'</code>, <code>kwargs</code>) -&gt; <code>Learner</code>
+<blockquote><p><code>get_collab_learner</code>(<code>ratings</code>:<code>DataFrame</code>, <code>n_factors</code>:<code>int</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>test</code>:<code>DataFrame</code>=<code>None</code>, <code>metrics</code>=<code>None</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>, <code>loss_fn</code>:<code>LossFunction</code>=<code>'mse_loss'</code>, <code>kwargs</code>) -&gt; <a href="/basic_train.html#Learner"><code>Learner</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L70">[source]</a></p>
 </blockquote>
 

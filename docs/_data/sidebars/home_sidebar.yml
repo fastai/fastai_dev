@@ -139,9 +139,6 @@ entries:
       title: gen_doc.gen_notebooks
       url: gen_doc.gen_notebooks.html
     - output: web
-      title: gen_doc.sgen_notebooks
-      url: gen_doc.sgen_notebooks.html
-    - output: web
       title: gen_doc.nbdoc
       url: gen_doc.nbdoc.html
     - output: web

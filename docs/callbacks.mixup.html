@@ -16,6 +16,19 @@ summary: "Implementation of mixup"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.gen_doc.nbdoc</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.callbacks.mixup</span> <span class="k">import</span> <span class="o">*</span> 
+<span class="kn">from</span> <span class="nn">fastai.docs</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+
+</div>
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
@@ -72,7 +85,7 @@ summary: "Implementation of mixup"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -89,10 +102,10 @@ summary: "Implementation of mixup"
 
  
  
-<div id="77bdfeb7-d4c0-4890-8be5-5df8d203d5ca"></div>
+<div id="b6680877-30ea-48b0-a878-d347d68b33a9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#77bdfeb7-d4c0-4890-8be5-5df8d203d5ca');
+var element = $('#b6680877-30ea-48b0-a878-d347d68b33a9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -104,28 +117,18 @@ var element = $('#77bdfeb7-d4c0-4890-8be5-5df8d203d5ca');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:47
+<pre>Total time: 00:26
 epoch  train loss  valid loss  accuracy
-0      0.133583    0.102363    0.961236  (00:02)
-1      0.082058    0.082410    0.972031  (00:02)
-2      0.069833    0.055543    0.981354  (00:02)
-3      0.066950    0.053367    0.981845  (00:02)
-4      0.048239    0.040258    0.984789  (00:02)
-5      0.044019    0.032995    0.987733  (00:02)
-6      0.033873    0.028625    0.988714  (00:02)
-7      0.032364    0.039206    0.981845  (00:02)
-8      0.031153    0.027577    0.989205  (00:02)
-9      0.029979    0.023575    0.990677  (00:02)
-10     0.023657    0.022094    0.991168  (00:02)
-11     0.021728    0.023140    0.990186  (00:02)
-12     0.021997    0.023602    0.989696  (00:02)
-13     0.024850    0.027446    0.991168  (00:02)
-14     0.017646    0.018759    0.991659  (00:02)
-15     0.018809    0.018319    0.991659  (00:02)
-16     0.018132    0.025562    0.990677  (00:02)
-17     0.015993    0.017342    0.991659  (00:02)
-18     0.011576    0.017541    0.991659  (00:02)
-19     0.012041    0.015857    0.993131  (00:02)
+0      0.133347    0.105171    0.962709  (00:02)
+1      0.092242    0.095590    0.970559  (00:02)
+2      0.080206    0.065994    0.979392  (00:02)
+3      0.062501    0.052990    0.981845  (00:02)
+4      0.052910    0.047916    0.984298  (00:02)
+5      0.049038    0.063314    0.976938  (00:02)
+6      0.039721    0.044997    0.983808  (00:02)
+7      0.041155    0.034764    0.986752  (00:02)
+8      0.030892    0.035803    0.987242  (00:02)
+9      0.026575    0.028857    0.990186  (00:02)
 
 </pre>
 </div>
@@ -194,7 +197,7 @@ The last trick we have to apply with this is that there can be some duplicates w
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">learner</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span><span class="o">.</span><span class="n">mixup</span><span class="p">()</span>
-<span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -211,10 +214,10 @@ The last trick we have to apply with this is that there can be some duplicates w
 
  
  
-<div id="c506e273-f676-4234-a9ca-439f25edcac2"></div>
+<div id="fdfdab32-a6c6-4c7a-8b72-ba23abbf9512"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#c506e273-f676-4234-a9ca-439f25edcac2');
+var element = $('#fdfdab32-a6c6-4c7a-8b72-ba23abbf9512');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -226,28 +229,18 @@ var element = $('#c506e273-f676-4234-a9ca-439f25edcac2');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:49
+<pre>Total time: 00:28
 epoch  train loss  valid loss  accuracy
-0      0.380133    0.202769    0.947498  (00:02)
-1      0.357177    0.171234    0.962218  (00:02)
-2      0.329518    0.115624    0.978901  (00:02)
-3      0.322647    0.114372    0.984789  (00:02)
-4      0.317570    0.100772    0.985280  (00:02)
-5      0.309182    0.086424    0.988714  (00:02)
-6      0.306099    0.089540    0.988714  (00:02)
-7      0.315323    0.096520    0.989696  (00:02)
-8      0.306009    0.091482    0.990677  (00:02)
-9      0.302448    0.087128    0.991168  (00:02)
-10     0.307314    0.082438    0.991659  (00:02)
-11     0.307111    0.095313    0.991168  (00:02)
-12     0.304113    0.083817    0.994112  (00:02)
-13     0.308068    0.089792    0.990677  (00:02)
-14     0.300224    0.069017    0.993621  (00:02)
-15     0.302404    0.080377    0.993621  (00:02)
-16     0.301102    0.077373    0.995093  (00:02)
-17     0.302036    0.094481    0.993621  (00:02)
-18     0.291388    0.083959    0.991168  (00:02)
-19     0.298604    0.082650    0.994112  (00:02)
+0      0.375882    0.172907    0.955348  (00:03)
+1      0.352643    0.145850    0.970559  (00:02)
+2      0.325987    0.108551    0.978901  (00:02)
+3      0.313872    0.107560    0.985280  (00:02)
+4      0.314499    0.095656    0.987733  (00:02)
+5      0.317359    0.089879    0.988714  (00:02)
+6      0.312434    0.092151    0.989696  (00:02)
+7      0.307406    0.088207    0.990677  (00:02)
+8      0.301020    0.081922    0.991659  (00:02)
+9      0.308276    0.089387    0.992149  (00:02)
 
 </pre>
 </div>
@@ -259,32 +252,12 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Training the net with Mixup improves the best accuracy from 99.3% to 99.5% (which is a reduction in error rate of 29%!)</p>
-<p>Note that the validation loss is higher than without MixUp, because the model makes less confident predictions: without mixup, most precisions are very close to 0. or 1. (in terms of probability) whereas the model with MixUp will give predictions that are more nuanced. Be sure to know what is the thing you want to optimize (lower loss or better accuracy) before using it.</p>
+<p>Training the net with Mixup improves the best accuracy. Note that the validation loss is higher than without MixUp, because the model makes less confident predictions: without mixup, most precisions are very close to 0. or 1. (in terms of probability) whereas the model with MixUp will give predictions that are more nuanced. Be sure to know what is the thing you want to optimize (lower loss or better accuracy) before using it.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2><a id=MixUpCallback></a><code>class</code> <code>MixUpCallback</code></h2>
-<blockquote><p><code>MixUpCallback</code>(<code>learner</code>:<code>Learner</code>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) :: <code>Callback</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L7">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
@@ -295,25 +268,6 @@ epoch  train loss  valid loss  accuracy
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_batch_begin></a><code>on_batch_begin</code></h4>
-<blockquote><p><code>on_batch_begin</code>(<code>last_input</code>, <code>last_target</code>, <code>kwargs</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L14">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
@@ -340,25 +294,6 @@ epoch  train loss  valid loss  accuracy
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3><a id=MixUpLoss></a><code>class</code> <code>MixUpLoss</code></h3>
-<blockquote><p><code>MixUpLoss</code>(<code>crit</code>) :: <code>Module</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L30">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">

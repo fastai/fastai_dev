@@ -91,38 +91,84 @@ summary: "Generation of documentation notebook skeletons from python module"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=create_module_page></a><code>create_module_page</code></h4>
+<blockquote><p><code>create_module_page</code>(<code>mod</code>, <code>dest_path</code>, <code>force</code>=<code>False</code>)</p>
+</blockquote>
+<p>Create the documentation notebook for module <code>mod_name</code> in path <code>dest_path</code></p>
+<ul>
+<li><em>mod</em>: the module</li>
+<li><em>dest_path</em>: the folder in which to generate the notebook</li>
+<li><em>force</em>: if False, will raise an exception if the notebook is already present <a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L83">[source]</a></li>
+</ul>
+
 </div>
-<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=link_nb></a><code>link_nb</code></h4>
+<blockquote><p><code>link_nb</code>(<code>nb_path</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L274">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=update_module_page></a><code>update_module_page</code></h4>
+<blockquote><p><code>update_module_page</code>(<code>mod</code>, <code>dest_path</code>=<code>'.'</code>)</p>
+</blockquote>
+<p>Update the documentation notebook of a given module.</p>
+<ul>
+<li><em>mod</em>: the module</li>
+<li><em>dest_path</em>: the folder in which to generate the notebook <a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L246">[source]</a></li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>All the cells added by a user are conserved, only the cells of new symbols (aka that weren't documented before) will be inserted at the end. You can then move them to wherever you like in the notebook. For instance, to update this module's documentation, simply run:</p>
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">update_module_page</span><span class="p">(</span><span class="n">gen_doc</span><span class="o">.</span><span class="n">gen_notebooks</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
+<pre><code>update_module_page(gen_doc.gen_notebooks, '.')</code></pre>
 <p>You can also generate and update <em>all</em> modules in a package using <code>generate_all</code> and <code>update_all</code>.</p>
 
 </div>
@@ -130,8 +176,57 @@ summary: "Generation of documentation notebook skeletons from python module"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=generate_all></a><code>generate_all</code></h4>
+<blockquote><p><code>generate_all</code>(<code>pkg_name</code>, <code>dest_path</code>, <code>exclude</code>=<code>None</code>)</p>
+</blockquote>
+<p>Generate the documentation for all the modules in <code>pkg_name</code> at <code>dest_path</code>.</p>
+<ul>
+<li><em>pkg_name</em>: name of the package to document</li>
+<li><em>dest_path</em>: the folder in which to generate the notebooks</li>
+<li><em>exclude</em>: names of subdirectories to ignore <a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L124">[source]</a></li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=update_all></a><code>update_all</code></h4>
+<blockquote><p><code>update_all</code>(<code>pkg_name</code>, <code>dest_path</code>=<code>'.'</code>, <code>exclude</code>=<code>None</code>, <code>create_missing</code>=<code>False</code>)</p>
+</blockquote>
+<p>Update all the notebooks in <code>pkg_name</code>.</p>
+<ul>
+<li><em>pkg_name</em>: name of the package to document</li>
+<li><em>dest_path</em>: the folder in which to generate the notebooks</li>
+<li><em>exclude</em>: names of subdirectories to ignore</li>
+<li><em>create_missing</em>: create docs if they don't exist <a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L281">[source]</a></li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
@@ -205,6 +300,25 @@ summary: "Generation of documentation notebook skeletons from python module"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=update_notebooks></a><code>update_notebooks</code></h4>
+<blockquote><p><code>update_notebooks</code>(<code>source_path</code>, <code>dest_path</code>=<code>None</code>, <code>update_html</code>=<code>True</code>, <code>update_nb</code>=<code>False</code>, <code>update_nb_links</code>=<code>True</code>, <code>do_execute</code>=<code>False</code>, <code>html_path</code>=<code>None</code>)</p>
+</blockquote>
+<p><code>source_path</code> can be a directory or a file. Assume all modules reside in the fastai directory. <a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L298">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
 </div>
