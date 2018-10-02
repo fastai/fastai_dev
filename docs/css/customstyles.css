@@ -913,7 +913,11 @@ span.soft {
     #mysidebar {
         position: relative;
     }
+        .col-md-9 {
+            width: 90%;
+        }
 }
+
 
 @media (min-width: 1000px) {
 
