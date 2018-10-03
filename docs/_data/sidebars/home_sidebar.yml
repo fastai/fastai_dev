@@ -149,16 +149,22 @@ entries:
   - folderitems:
     - output: web
       title: Overview
-      url: developers.html
+      url: https://github.com/fastai/fastai/blob/master/docs-dev/develop.md
+    - output: web
+      title: Testing
+      url: https://github.com/fastai/fastai/blob/master/docs-dev/test.md
+    - output: web
+      title: Style guide
+      url: https://github.com/fastai/fastai/blob/master/docs-dev/style.md
+    - output: web
+      title: Abbreviation
+      url: https://github.com/fastai/fastai/blob/master/docs-dev/abbr.md
     - output: web
       title: Typing
       url: fastai_typing.html
     - output: web
-      title: Style guide
-      url: style.html
-    - output: web
-      title: Abbreviation
-      url: abbr.html
+      title: Packaging fastai
+      url: https://github.com/fastai/fastai/blob/master/docs-dev/release.md
     output: web
     title: Library development
   output: web
