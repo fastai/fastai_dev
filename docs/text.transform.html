@@ -64,19 +64,6 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h2><a id=Tokenizer></a><code>class</code> <code>Tokenizer</code></h2>
-<blockquote><p><code>Tokenizer</code>(<code>tok_func</code>:<code>Callable</code>=<code>'SpacyTokenizer'</code>, <code>lang</code>:<code>str</code>=<code>'en'</code>, <code>rules</code>:<code>ListRules</code>=<code>None</code>, <code>special_cases</code>:<code>StrList</code>=<code>None</code>, <code>n_cpus</code>:<code>int</code>=<code>None</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L77">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -109,19 +96,6 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=process_text></a><code>process_text</code></h4>
-<blockquote><p><code>process_text</code>(<code>t</code>:<code>str</code>, <code>tok</code>:<a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>) -&gt; <code>List</code>[<code>str</code>]</p>
-</blockquote>
-<p>Processe one text <code>t</code> with tokenizer <code>tok</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L91">[source]</a></p>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -135,19 +109,6 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=process_all></a><code>process_all</code></h4>
-<blockquote><p><code>process_all</code>(<code>texts</code>:<code>StrList</code>) -&gt; <code>List</code>[<code>List</code>[<code>str</code>]]</p>
-</blockquote>
-<p>Process a list of <code>texts</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L102">[source]</a></p>
-
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
 <h4><a id=process_all></a><code>process_all</code></h4>
 <blockquote><p><code>process_all</code>(<code>texts</code>:<code>StrList</code>) -&gt; <code>List</code>[<code>List</code>[<code>str</code>]]</p>
 </blockquote>
@@ -177,7 +138,7 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 <span class="n">IMDB_PATH</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -191,10 +152,10 @@ summary: "NLP data processing; tokenizes text and creates vocab indexes"
 
  
  
-<div id="4296af27-2de1-4d92-b8ce-36debecdc756"></div>
+<div id="31d851c2-6e81-4c68-a3f6-430a57d2d97f"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
+var element = $('#31d851c2-6e81-4c68-a3f6-430a57d2d97f');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "fac09e4977ca4a00917ba2a5fdfbd2f3", "version_major": 2, "version_minor": 0}
@@ -226,7 +187,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <span class="n">example_text</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span> <span class="n">example_text</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -257,7 +218,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">process_text</span><span class="p">(</span><span class="n">example_text</span><span class="p">,</span> <span class="n">tok</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -297,7 +258,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -349,19 +310,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h2><a id=BaseTokenizer></a><code>class</code> <code>BaseTokenizer</code></h2>
-<blockquote><p><code>BaseTokenizer</code>(<code>lang</code>:<code>str</code>)</p>
-</blockquote>
-<p>Basic class for a tokenizer function. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L12">[source]</a></p>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -375,19 +323,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=tokenizer></a><code>tokenizer</code></h4>
-<blockquote><p><code>tokenizer</code>(<code>t</code>:<code>str</code>) -&gt; <code>List</code>[<code>str</code>]
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L17">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
 <h4><a id=tokenizer></a><code>tokenizer</code></h4>
 <blockquote><p><code>tokenizer</code>(<code>t</code>:<code>str</code>) -&gt; <code>List</code>[<code>str</code>]
 <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L17">[source]</a></p>
@@ -426,19 +361,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=add_special_cases></a><code>add_special_cases</code></h4>
-<blockquote><p><code>add_special_cases</code>(<code>toks</code>:<code>StrList</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L18">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -466,19 +388,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2><a id=SpacyTokenizer></a><code>class</code> <code>SpacyTokenizer</code></h2>
-<blockquote><p><code>SpacyTokenizer</code>(<code>lang</code>:<code>str</code>) :: <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a></p>
-</blockquote>
-<p>Wrapper around a spacy tokenizer to make it a <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a>. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L21">[source]</a></p>
-
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
 <h2><a id=SpacyTokenizer></a><code>class</code> <code>SpacyTokenizer</code></h2>
 <blockquote><p><code>SpacyTokenizer</code>(<code>lang</code>:<code>str</code>) :: <a href="/text.transform.html#BaseTokenizer"><code>BaseTokenizer</code></a></p>
 </blockquote>
@@ -530,19 +439,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=deal_caps></a><code>deal_caps</code></h4>
-<blockquote><p><code>deal_caps</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L58">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -562,7 +458,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">deal_caps</span><span class="p">(</span><span class="s2">&quot;I&#39;m suddenly SHOUTING FOR NO REASON!&quot;</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -601,19 +497,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=fix_html></a><code>fix_html</code></h4>
-<blockquote><p><code>fix_html</code>(<code>x</code>:<code>str</code>) -&gt; <code>str</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L65">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -633,7 +516,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">fix_html</span><span class="p">(</span><span class="s2">&quot;Some HTML&amp;nbsp;text&lt;br /&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -672,19 +555,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=replace_rep></a><code>replace_rep</code></h4>
-<blockquote><p><code>replace_rep</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L42">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -704,7 +574,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">replace_rep</span><span class="p">(</span><span class="s2">&quot;I&#39;m so excited!!!!!!!!&quot;</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -743,19 +613,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=replace_wrep></a><code>replace_wrep</code></h4>
-<blockquote><p><code>replace_wrep</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L50">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -775,7 +632,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">replace_wrep</span><span class="p">(</span><span class="s2">&quot;I&#39;ve never ever ever ever ever ever ever ever done this.&quot;</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -814,19 +671,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=rm_useless_spaces></a><code>rm_useless_spaces</code></h4>
-<blockquote><p><code>rm_useless_spaces</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code></p>
-</blockquote>
-<p>Remove multiple spaces in <code>t</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L38">[source]</a></p>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -839,7 +683,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">rm_useless_spaces</span><span class="p">(</span><span class="s2">&quot;Inconsistent   use  of     spaces.&quot;</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -878,19 +722,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=spec_add_spaces></a><code>spec_add_spaces</code></h4>
-<blockquote><p><code>spec_add_spaces</code>(<code>t</code>:<code>str</code>) -&gt; <code>str</code></p>
-</blockquote>
-<p>Add spaces around / and # in <code>t</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L34">[source]</a></p>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -903,7 +734,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">spec_add_spaces</span><span class="p">(</span><span class="s1">&#39;I #like to #put #hashtags #everywhere!&#39;</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -955,19 +786,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h2><a id=Vocab></a><code>class</code> <code>Vocab</code></h2>
-<blockquote><p><code>Vocab</code>(<code>path</code>:<code>PathOrStr</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L108">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -988,19 +806,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=create></a><code>create</code></h4>
-<blockquote><p><code>create</code>(<code>path</code>:<code>PathOrStr</code>, <code>tokens</code>:<code>Tokens</code>, <code>max_vocab</code>:<code>int</code>, <code>min_freq</code>:<code>int</code>) -&gt; <code>Vocab</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L123">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
 <h4><a id=create></a><code>create</code></h4>
 <blockquote><p><code>create</code>(<code>path</code>:<code>PathOrStr</code>, <code>tokens</code>:<code>Tokens</code>, <code>max_vocab</code>:<code>int</code>, <code>min_freq</code>:<code>int</code>) -&gt; <code>Vocab</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L123">[source]</a></p>
@@ -1039,19 +844,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=numericalize></a><code>numericalize</code></h4>
-<blockquote><p><code>numericalize</code>(<code>t</code>:<code>StrList</code>) -&gt; <code>List</code>[<code>int</code>]</p>
-</blockquote>
-<p>Convert a list of tokens <code>t</code> to their ids. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L115">[source]</a></p>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -1074,19 +866,6 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea output_execute_result">
-<h4><a id=textify></a><code>textify</code></h4>
-<blockquote><p><code>textify</code>(<code>nums</code>:<code>Collection</code>[<code>int</code>]) -&gt; <code>List</code>[<code>str</code>]</p>
-</blockquote>
-<p>Convert a list of <code>nums</code> to their tokens. <a href="https://github.com/fastai/fastai/blob/master/fastai/text/transform.py#L119">[source]</a></p>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -1100,7 +879,7 @@ var element = $('#4296af27-2de1-4d92-b8ce-36debecdc756');
 <span class="n">vocab</span><span class="o">.</span><span class="n">numericalize</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">2</span><span class="p">])[:</span><span class="mi">10</span><span class="p">]</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
