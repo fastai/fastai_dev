@@ -24,7 +24,7 @@ summary: "Application to Computer Vision"
 <ul>
 <li><a href="/vision.image.html#vision.image"><code>vision.image</code></a> contains the basic definition of an <a href="/vision.image.html#Image"><code>Image</code></a> object and all the functions that are used behind the scenes to apply transformations to such an object,</li>
 <li><a href="/text.transform.html#text.transform"><code>vision.transform</code></a> contains all the transforms we can use for data augmentation,</li>
-<li><a href="/text.data.html#text.data"><code>vision.data</code></a> contains the definition of <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a> as well as the utility function to easily build a <a href="/data.html#DataBunch"><code>DataBunch</code></a> for Computer Vision problems.</li>
+<li><a href="/data.html#data"><code>vision.data</code></a> contains the definition of <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a> as well as the utility function to easily build a <a href="/data.html#DataBunch"><code>DataBunch</code></a> for Computer Vision problems.</li>
 <li><a href="/text.learner.html#text.learner"><code>vision.learner</code></a> lets you build and fine-tune models with a pretrained CNN backbone or train a randomly initialized model from scratch.</li>
 </ul>
 <p>Each of the four module links above includes a quick overview and examples of the functionality of that module, as well as complete API documentation. Below, we'll provide a walk-thru of end to end computer vision model training with the most commonly used functionality.</p>
@@ -54,7 +54,7 @@ summary: "Application to Computer Vision"
 <span class="n">MNIST_PATH</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -90,7 +90,7 @@ summary: "Application to Computer Vision"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -110,7 +110,7 @@ summary: "Application to Computer Vision"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tvm</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -130,7 +130,7 @@ summary: "Application to Computer Vision"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -144,10 +144,10 @@ summary: "Application to Computer Vision"
 
  
  
-<div id="e2d1ebea-179a-4ddb-95ec-15021b3b0501"></div>
+<div id="059dcdd5-0c48-4dee-9e36-a9feeda58333"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#e2d1ebea-179a-4ddb-95ec-15021b3b0501');
+var element = $('#059dcdd5-0c48-4dee-9e36-a9feeda58333');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "46a888599dc04584bb4a86c2fc427bb6", "version_major": 2, "version_minor": 0}
@@ -186,7 +186,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The most important piece of <a href="/text.data.html#text.data"><code>vision.data</code></a> is the <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a>. If you've got labels as subfolders, then you can just say:</p>
+<p>The most important piece of <a href="/data.html#data"><code>vision.data</code></a> is the <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a>. If you've got labels as subfolders, then you can just say:</p>
 
 </div>
 </div>
@@ -199,7 +199,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">ImageDataset</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -226,7 +226,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">img</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -264,7 +264,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;MNIST digit&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -302,7 +302,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="mi">35</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -346,7 +346,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">get_transforms</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -384,7 +384,7 @@ get_transforms(do_flip: bool = True, flip_vert: bool = False, max_rotate: float 
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">rotate</span><span class="p">(</span><span class="n">degrees</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">)),</span> <span class="n">symmetric_warp</span><span class="p">(</span><span class="n">magnitude</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.3</span><span class="p">))]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -407,7 +407,7 @@ get_transforms(do_flip: bool = True, flip_vert: bool = False, max_rotate: float 
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span> <span class="n">apply_tfms</span><span class="p">(</span><span class="n">tfms</span><span class="p">,</span> <span class="n">ds</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -445,7 +445,7 @@ get_transforms(do_flip: bool = True, flip_vert: bool = False, max_rotate: float 
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">image_data_from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="p">(</span><span class="n">tfms</span><span class="p">,</span> <span class="p">[]))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -472,7 +472,7 @@ get_transforms(do_flip: bool = True, flip_vert: bool = False, max_rotate: float 
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -486,10 +486,10 @@ get_transforms(do_flip: bool = True, flip_vert: bool = False, max_rotate: float 
 
  
  
-<div id="014a7791-b939-4467-afe4-51b3b16566cd"></div>
+<div id="ea3098ca-928a-47b7-ae85-2d2e843f0a96"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#014a7791-b939-4467-afe4-51b3b16566cd');
+var element = $('#ea3098ca-928a-47b7-ae85-2d2e843f0a96');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "1e5a28d07b214509900355b82598f37f", "version_major": 2, "version_minor": 0}
@@ -528,7 +528,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span> <span class="o">=</span> <span class="n">ClassificationInterpretation</span><span class="o">.</span><span class="n">from_learner</span><span class="p">(</span><span class="n">learn</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -542,10 +542,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="05b73cca-25fe-4845-a4d7-75785745bc1c"></div>
+<div id="c639343f-f029-4711-af65-dfc193a0014b"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#05b73cca-25fe-4845-a4d7-75785745bc1c');
+var element = $('#c639343f-f029-4711-af65-dfc193a0014b');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "2ed22f1d31f24f599495c4829b75440c", "version_major": 2, "version_minor": 0}
@@ -561,10 +561,10 @@ var element = $('#05b73cca-25fe-4845-a4d7-75785745bc1c');
 
  
  
-<div id="7b18e3f8-3e52-40bb-96f1-ee36ad4ae714"></div>
+<div id="222b0e9f-291a-4ac3-9acb-69f2ff67c949"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#7b18e3f8-3e52-40bb-96f1-ee36ad4ae714');
+var element = $('#222b0e9f-291a-4ac3-9acb-69f2ff67c949');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "2ed22f1d31f24f599495c4829b75440c", "version_major": 2, "version_minor": 0}
@@ -585,7 +585,7 @@ var element = $('#7b18e3f8-3e52-40bb-96f1-ee36ad4ae714');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span><span class="o">.</span><span class="n">plot_top_losses</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -616,7 +616,7 @@ var element = $('#7b18e3f8-3e52-40bb-96f1-ee36ad4ae714');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span><span class="o">.</span><span class="n">plot_confusion_matrix</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
