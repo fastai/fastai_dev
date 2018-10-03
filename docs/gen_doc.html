@@ -85,34 +85,20 @@ summary: "Documentation modules overview"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Process-for-building-docs">Process for building docs<a class="anchor-link" href="#Process-for-building-docs">&#182;</a></h2>
+<h2 id="Process-for-contributing-to-the-docs">Process for contributing to the docs<a class="anchor-link" href="#Process-for-contributing-to-the-docs">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Validate-any-notebooks-you're-contributing-to">Validate any notebooks you're contributing to<a class="anchor-link" href="#Validate-any-notebooks-you're-contributing-to">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>When you are done working on a notebook improvement, if you were using a text editor to make  changed, please, make sure to validate that notebook's format, by simply loading it in the jupyter notebook.</li>
-</ul>
-<p>Alternatively, you could use a CLI JSON validation tool, e.g. <a href="https://jsonlint.com/">jsonlint</a>:</p>
-
-<pre><code>jsonlint-php example.ipynb
-
-</code></pre>
-<p>but it's second best, since you may have a valid JSON, but invalid notebook format, as the latter has extra requirements on which fields are valid and which are not.</p>
+<p>If you want to help us and contribute to the docs, you jsut have to make modifications to the source notebooks, our scripts will then automatically convert them to HTML. There is just one script to run after cloning the fastai_docs repo, to ensure that everything works properly. The rest of this page goes more in depth about all the functionalities this module offers, but if you jsut want to add a sentence or correct a typo, make a PR with the notebook changed and we'll take care of the rest.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Things-to-Run-After-git-clone">Things to Run After git clone<a class="anchor-link" href="#Things-to-Run-After-git-clone">&#182;</a></h3>
+<h3 id="Thing-to-run-after-git-clone">Thing to run after git clone<a class="anchor-link" href="#Thing-to-run-after-git-clone">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -120,12 +106,12 @@ summary: "Documentation modules overview"
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Make sure you follow this recipe:</p>
 
-<pre><code>git clone https://github.com/fastai/fastai
-cd fastai
+<pre><code>git clone https://github.com/fastai/fastai_docs
+cd fastai_docs
 tools/run-after-git-clone
 
 </code></pre>
-<p>This will take care of everything that is explained in the following two sections. That is <code>tools/run-after-git-clone</code> will execute the scripts that are explained individually below. You still need to know what they do, but you need to execute just one script.</p>
+<p>This will take care of everything that is explained in the following two sections. We'll tell you what they do, but you need to execute just this one script.</p>
 <p>Note: windows users, not using bash emulation, will need to invoke the command as:</p>
 
 <pre><code>python tools\run-after-git-clone</code></pre>
@@ -198,13 +184,32 @@ tools/run-after-git-clone
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Validate-any-notebooks-you're-contributing-to">Validate any notebooks you're contributing to<a class="anchor-link" href="#Validate-any-notebooks-you're-contributing-to">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you were using a text editor to make changes, when you are done working on a notebook improvement, please, make sure to validate that notebook's format, by simply loading it in the jupyter notebook.</p>
+<p>Alternatively, you could use a CLI JSON validation tool, e.g. <a href="https://jsonlint.com/">jsonlint</a>:</p>
+
+<pre><code>jsonlint-php example.ipynb
+
+</code></pre>
+<p>but it's second best, since you may have a valid JSON, but invalid notebook format, as the latter has extra requirements on which fields are valid and which are not.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Update-the-doc">Update the doc<a class="anchor-link" href="#Update-the-doc">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To update the documentation notebooks, you should use <code>update_notebooks</code> or the <code>sgen_notebooks</code> script.</p>
+<p>To update the documentation notebooks to reflect changes in the library, you should use <code>update_notebooks</code> or the <code>sgen_notebooks</code> script. Only use this when you have added a new function that you want to document.</p>
 
 </div>
 </div>
