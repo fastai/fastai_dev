@@ -31,6 +31,10 @@
                 $("#mysidebar").navgoco('toggle', true);
             });
 
+            // activate menu items where href is matching to current page
+            $("#mysidebar a[href='" + location.pathname.match(/\/([^\/]+)$/)[1] + "']")
+                .parents('li').addClass('active')
+                .parents('ul').css('display', 'block');
         });
 
     </script>
