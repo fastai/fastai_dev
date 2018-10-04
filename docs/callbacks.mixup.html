@@ -89,10 +89,10 @@ summary: "Implementation of mixup"
 
  
  
-<div id="d68c8578-3aef-4308-923a-e6374326c8be"></div>
+<div id="b7d1c55d-c11d-4f9c-ace7-8eb9ec38cbb5"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#d68c8578-3aef-4308-923a-e6374326c8be');
+var element = $('#b7d1c55d-c11d-4f9c-ace7-8eb9ec38cbb5');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -201,10 +201,10 @@ The last trick we have to apply with this is that there can be some duplicates w
 
  
  
-<div id="8b877b9c-84ff-47ee-8a45-ed9038b91791"></div>
+<div id="52bead8f-db43-4e3a-883f-a4db831ed01e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#8b877b9c-84ff-47ee-8a45-ed9038b91791');
+var element = $('#52bead8f-db43-4e3a-883f-a4db831ed01e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -275,7 +275,7 @@ epoch  train loss  valid loss  accuracy
 <p>We often have to modify the loss so that it is compatible with Mixup: pytorch was very careful to avoid one-hot encoding targets when it could, so it seems a bit of a drag to undo this. Fortunately for us, if the loss is a classic <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.cross_entropy">cross-entropy</a>, we have</p>
 <p><code>loss(output, new_target) = t * loss(output, target1) + (1-t) * loss(output, target2)</code></p>
 <p>so we won’t one-hot encode anything and just compute those two losses then do the linear combination.</p>
-<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train.html#mixup"><code>mixup</code></a> function will use it to change the <code>Learner.loss_fn</code> if necessary.</p>
+<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train.html#mixup"><code>mixup</code></a> function will use it to change the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.cross_entropy"><code>Learner.loss_fn</code></a> if necessary.</p>
 
 </div>
 </div>

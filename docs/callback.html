@@ -843,7 +843,7 @@ Examples: save log_files, load best model found during training</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is a convenience class that provides a consistent API for getting and setting optimizer hyperparameters. For instance, for <code>optim.Adam</code> the momentum parameter is actually <code>betas[0]</code>, whereas for <code>optim.SGD</code> it's simply <code>momentum</code>. As another example, the details of handling weight decay depend on whether you are using <code>true_wd</code> or the traditional L2 regularization approach.</p>
+<p>This is a convenience class that provides a consistent API for getting and setting optimizer hyperparameters. For instance, for <a href="https://pytorch.org/docs/stable/optim.html#torch.optim.Adam"><code>optim.Adam</code></a> the momentum parameter is actually <code>betas[0]</code>, whereas for <a href="https://pytorch.org/docs/stable/optim.html#torch.optim.SGD"><code>optim.SGD</code></a> it's simply <code>momentum</code>. As another example, the details of handling weight decay depend on whether you are using <code>true_wd</code> or the traditional L2 regularization approach.</p>
 <p>This class also handles setting different WD and LR for each layer group, for discriminative layer training.</p>
 
 </div>

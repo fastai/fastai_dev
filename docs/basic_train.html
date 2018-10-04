@@ -56,7 +56,7 @@ summary: "Learner class and training loop"
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The main purpose of <a href="/basic_train.html#Learner"><code>Learner</code></a> is to train <code>model</code> using <a href="/basic_train.html#fit"><code>Learner.fit</code></a>. After every epoch, all <em>metrics</em> will be printed, and will also be available to callbacks.</p>
 <p>The default weight decay will be <code>wd</code>, which will be handled using the method from <a href="https://arxiv.org/abs/1711.05101">Fixing Weight Decay Regularization in Adam</a> if <code>true_wd</code> is set (otherwise it's L2 regularization). If <code>bn_wd</code> is False then weight decay will be removed from batchnorm layers, as recommended in <a href="https://arxiv.org/abs/1706.02677">Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour</a>. You can also turn off batchnorm layer training entirely (i.e. freeze all batchnorm learnable parameters) by disabling <code>train_bn</code>.</p>
-<p>To use <a href="#discriminative">discriminative layer training</a> pass an <code>nn.Module</code> for each layer group to be optimized with different settings.</p>
+<p>To use <a href="#discriminative">discriminative layer training</a> pass an <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>nn.Module</code></a> for each layer group to be optimized with different settings.</p>
 <p>Any model files created will be saved in <code>path</code>/<code>model_dir</code>.</p>
 <p>You can pass a list of <a href="/callbacks.html#callbacks"><code>callbacks</code></a> that you have already created, or (more commonly) simply pass a list of callback functions to <code>callback_fns</code> and each function will be called (passing <code>self</code>) on object initialization, with the results stored as callback objects. For a walk-through, see the <a href="/training.html">training overview</a> page. You may also want to use an <code>application</code> to fit your model, e.g. using the <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> subclass:</p>
 
@@ -87,10 +87,10 @@ summary: "Learner class and training loop"
 
  
  
-<div id="53e805d0-73a6-467d-85bc-43fa588503cb"></div>
+<div id="eafa22ec-c792-45e8-bd17-b358a198c933"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#53e805d0-73a6-467d-85bc-43fa588503cb');
+var element = $('#eafa22ec-c792-45e8-bd17-b358a198c933');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -257,8 +257,8 @@ epoch  train loss  valid loss  accuracy
 <li><code>param = slice(start,end)</code></li>
 <li><code>param = slice(end)</code></li>
 </ol>
-<p>If we chose to set it in way 1, we must specify a number of values exactly equal to the number of layer groups. If we chose to set it in way 2, the chosen value will be repeated for all layer groups. See <code>Learner.lr_range</code> for an explanation of the <code>slice</code> syntax).</p>
-<p>Here's an example of how to use discriminative learning rates (note that you don't actually need to manually call <code>Learner.split</code> in this case, since fastai uses this exact function as the default split for <code>resnet18</code>; this is just to show how to customize it):</p>
+<p>If we chose to set it in way 1, we must specify a number of values exactly equal to the number of layer groups. If we chose to set it in way 2, the chosen value will be repeated for all layer groups. See <a href="/basic_train.html#lr_range"><code>Learner.lr_range</code></a> for an explanation of the <code>slice</code> syntax).</p>
+<p>Here's an example of how to use discriminative learning rates (note that you don't actually need to manually call <a href="/basic_train.html#split"><code>Learner.split</code></a> in this case, since fastai uses this exact function as the default split for <code>resnet18</code>; this is just to show how to customize it):</p>
 
 </div>
 </div>
@@ -301,10 +301,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="add088e0-d1bd-49c8-b7a4-23fed4ff0de9"></div>
+<div id="65b09924-c59e-4a57-962d-8107cb154fdf"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#add088e0-d1bd-49c8-b7a4-23fed4ff0de9');
+var element = $('#65b09924-c59e-4a57-962d-8107cb154fdf');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -353,10 +353,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="f10c21f6-fb57-4620-b450-9d3127f72c49"></div>
+<div id="e8505f80-bc2d-4fa5-852c-c725a7ea0abf"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f10c21f6-fb57-4620-b450-9d3127f72c49');
+var element = $('#e8505f80-bc2d-4fa5-852c-c725a7ea0abf');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -404,7 +404,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Rather than manually setting an LR for every group, it's often easier to use <code>Learner.lr_range</code>. This is a convenience method that returns one learning rate for each layer group. If you pass <code>slice(start,end)</code> then the first group's learning rate is <code>start</code>, the last is <code>end</code>, and the remaining are evenly geometrically spaced.</p>
+<p>Rather than manually setting an LR for every group, it's often easier to use <a href="/basic_train.html#lr_range"><code>Learner.lr_range</code></a>. This is a convenience method that returns one learning rate for each layer group. If you pass <code>slice(start,end)</code> then the first group's learning rate is <code>start</code>, the last is <code>end</code>, and the remaining are evenly geometrically spaced.</p>
 <p>If you pass just <code>slice(end)</code> then the last group's learning rate is <code>end</code>, and all the other groups are <code>end/3</code>. For instance (for our learner that has 3 layer groups):</p>
 
 </div>
@@ -556,7 +556,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Simply call <code>Learner.save</code> and <code>Learner.load</code> to save and load models. Only the parameters are saved, not the actual architecture (so you'll need to create your model in the same way before loading weights back in). Models are saved to the <code>path</code>/<code>model_dir</code> directory.</p>
+<p>Simply call <a href="/basic_train.html#save"><code>Learner.save</code></a> and <a href="/basic_train.html#load"><code>Learner.load</code></a> to save and load models. Only the parameters are saved, not the actual architecture (so you'll need to create your model in the same way before loading weights back in). Models are saved to the <code>path</code>/<code>model_dir</code> directory.</p>
 
 </div>
 </div>
@@ -635,7 +635,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Initializes all weights (except batchnorm) using function <code>init</code>, which will often be from PyTorch's <code>nn.init</code> module.</p>
+<p>Initializes all weights (except batchnorm) using function <code>init</code>, which will often be from PyTorch's <a href="https://pytorch.org/docs/stable/nn.html#torch-nn-init"><code>nn.init</code></a> module.</p>
 
 </div>
 </div>
@@ -815,10 +815,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="2f0c2182-2006-4a68-a2ff-ad6713ec23eb"></div>
+<div id="1f4c659c-7d37-420c-9367-c2d06680dd4e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#2f0c2182-2006-4a68-a2ff-ad6713ec23eb');
+var element = $('#1f4c659c-7d37-420c-9367-c2d06680dd4e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "2359fffda808439a88ab0ab57fca6809", "version_major": 2, "version_minor": 0}
@@ -895,10 +895,10 @@ var element = $('#2f0c2182-2006-4a68-a2ff-ad6713ec23eb');
 
  
  
-<div id="a8917251-cb74-4867-8f85-283be03329aa"></div>
+<div id="e9e9e09f-a9a0-439a-9f96-288215f0f3b3"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#a8917251-cb74-4867-8f85-283be03329aa');
+var element = $('#e9e9e09f-a9a0-439a-9f96-288215f0f3b3');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}

@@ -281,7 +281,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In a Jupyter Notebook, the representation of an <a href="/vision.image.html#Image"><code>Image</code></a> is its underlying picture (shown to its full size). On top of containing the tensor of pixels of the Image (and automatically doing the conversion after decoding the image), this class contains various methods for the implementation of transforms. The <code>Image.show</code> method also allows to pass more arguments, under the hood, it just calls:</p>
+<p>In a Jupyter Notebook, the representation of an <a href="/vision.image.html#Image"><code>Image</code></a> is its underlying picture (shown to its full size). On top of containing the tensor of pixels of the Image (and automatically doing the conversion after decoding the image), this class contains various methods for the implementation of transforms. The <a href="/vision.image.html#_show"><code>Image.show</code></a> method also allows to pass more arguments, under the hood, it just calls:</p>
 
 </div>
 </div>
@@ -320,7 +320,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This allows us to completely customize the display of an <a href="/vision.image.html#Image"><code>Image</code></a>. We'll see examples of the <code>y</code> functionality below with segmentation and bounding boxes tasks, for now here is an example using the other features. Note that the beahvior of <a href="/vision.image.html#show_image"><code>show_image</code></a> and <code>Image.show</code> are the same.</p>
+<p>This allows us to completely customize the display of an <a href="/vision.image.html#Image"><code>Image</code></a>. We'll see examples of the <code>y</code> functionality below with segmentation and bounding boxes tasks, for now here is an example using the other features. Note that the beahvior of <a href="/vision.image.html#show_image"><code>show_image</code></a> and <a href="/vision.image.html#_show"><code>Image.show</code></a> are the same.</p>
 
 </div>
 </div>
@@ -391,7 +391,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>An <a href="/vision.image.html#Image"><code>Image</code></a> object also has a few attributes that can be useful:</p>
 <ul>
-<li><a href="/vision.data.html#vision.data"><code>Image.data</code></a> gives you the underlying tensor of pixel</li>
+<li><code>Image.data</code> gives you the underlying tensor of pixel</li>
 <li><code>Image.shape</code> gives you the size of that tensor (channels x height x width)</li>
 <li><code>Image.size</code> gives you the size of the image (height x width)</li>
 </ul>
@@ -655,7 +655,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We need to pass the dimensions of the input image so that <a href="/vision.image.html#ImageBBox"><code>ImageBBox</code></a> can internally create an <a href="/vision.image.html#ImageMask"><code>ImageMask</code></a> of the size of the <a href="/vision.image.html#Image"><code>Image</code></a>. Again, the <code>Image.show</code> method will display the bouding box on the same image if it's passed as a <code>y</code> argument.</p>
+<p>We need to pass the dimensions of the input image so that <a href="/vision.image.html#ImageBBox"><code>ImageBBox</code></a> can internally create an <a href="/vision.image.html#ImageMask"><code>ImageMask</code></a> of the size of the <a href="/vision.image.html#Image"><code>Image</code></a>. Again, the <a href="/vision.image.html#_show"><code>Image.show</code></a> method will display the bouding box on the same image if it's passed as a <code>y</code> argument.</p>
 
 </div>
 </div>
