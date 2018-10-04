@@ -1,170 +1,170 @@
 entries:
 - folders:
   - folderitems:
-    - output: web
+    - output: web,pdf
       title: Overview
       url: training.html
-    - output: web
+    - output: web,pdf
       title: basic_train
       url: basic_train.html
-    - output: web
+    - output: web,pdf
       title: train
       url: train.html
-    - output: web
+    - output: web,pdf
       title: metrics
       url: metrics.html
-    - output: web
+    - output: web,pdf
       title: callback
       url: callback.html
       subfolders:
       - output: web
         subfolderitems:
-        - output: web
+        - output: web,pdf
           title: Overview
           url: callbacks.html
-        - output: web
+        - output: web,pdf
           title: HookCallback
           url: callbacks.hooks.html
-        - output: web
+        - output: web,pdf
           title: MixedPrecision
           url: callbacks.fp16.html
-        - output: web
+        - output: web,pdf
           title: OneCycleScheduler
           url: callbacks.one_cycle.html
-        - output: web
+        - output: web,pdf
           title: LRFinder
           url: callbacks.lr_finder.html
-        - output: web
+        - output: web,pdf
           title: MixUpCallback
           url: callbacks.mixup.html
-        - output: web
+        - output: web,pdf
           title: RNNTrainer
           url: callbacks.rnn.html
-        - output: web
+        - output: web,pdf
           title: GeneralScheduler
           url: callbacks.general_sched.html
         title: callbacks
     output: web
     title: Training
   - folderitems:
-    - output: web
+    - output: web,pdf
       title: Overview
       url: applications.html
       subfolders:
       - output: web
         subfolderitems:
-        - output: web
+        - output: web,pdf
           title: Overview
           url: vision.html
-        - output: web
+        - output: web,pdf
           title: vision.learner
           url: vision.learner.html
-        - output: web
+        - output: web,pdf
           title: vision.transform
           url: vision.transform.html
-        - output: web
+        - output: web,pdf
           title: vision.image
           url: vision.image.html
-        - output: web
+        - output: web,pdf
           title: vision.data
           url: vision.data.html
-        - output: web
+        - output: web,pdf
           title: vision.model overview
           url: vision.models.html
-        - output: web
+        - output: web,pdf
           title: vision.models.unet
           url: vision.models.unet.html
         title: vision
       - output: web
         subfolderitems:
-        - output: web
+        - output: web,pdf
           title: Overview
           url: text.html
-        - output: web
+        - output: web,pdf
           title: text.learner
           url: text.learner.html
-        - output: web
+        - output: web,pdf
           title: text.transform
           url: text.transform.html
-        - output: web
+        - output: web,pdf
           title: text.data
           url: text.data.html
-        - output: web
+        - output: web,pdf
           title: text.models
           url: text.models.html
         title: text
       - output: web
         subfolderitems:
-        - output: web
+        - output: web,pdf
           title: Overview
           url: tabular.html
-        - output: web
+        - output: web,pdf
           title: tabular.transform
           url: tabular.transform.html
-        - output: web
+        - output: web,pdf
           title: tabular.data
           url: tabular.data.html
-        - output: web
+        - output: web,pdf
           title: tabular.models
           url: tabular.models.html
         title: tabular
-    - output: web
+    - output: web,pdf
       title: collab
       url: collab.html
     output: web
     title: Applications
   - folderitems:
-    - output: web
+    - output: web,pdf
       title: Overview
       url: overview.html
-    - output: web
+    - output: web,pdf
       title: data
       url: data.html
-    - output: web
+    - output: web,pdf
       title: layers
       url: layers.html
-    - output: web
+    - output: web,pdf
       title: core
       url: core.html
-    - output: web
+    - output: web,pdf
       title: torch_core
       url: torch_core.html
     output: web
     title: Core
   - folderitems:
-    - output: web
+    - output: web,pdf
       title: Overview
       url: gen_doc.html
-    - output: web
+    - output: web,pdf
       title: gen_doc.gen_notebooks
       url: gen_doc.gen_notebooks.html
-    - output: web
+    - output: web,pdf
       title: gen_doc.nbdoc
       url: gen_doc.nbdoc.html
-    - output: web
+    - output: web,pdf
       title: gen_doc.convert2html
       url: gen_doc.convert2html.html
     output: web
     title: Doc authoring
   - folderitems:
-    - output: web
+    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/develop.md
+      output: web,pdf
       title: Overview
-      url: https://github.com/fastai/fastai/blob/master/docs-dev/develop.md
-    - output: web
+    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/test.md
+      output: web,pdf
       title: Testing
-      url: https://github.com/fastai/fastai/blob/master/docs-dev/test.md
-    - output: web
+    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/style.md
+      output: web,pdf
       title: Style guide
-      url: https://github.com/fastai/fastai/blob/master/docs-dev/style.md
-    - output: web
+    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/abbr.md
+      output: web,pdf
       title: Abbreviation
-      url: https://github.com/fastai/fastai/blob/master/docs-dev/abbr.md
-    - output: web
+    - output: web,pdf
       title: Typing
       url: fastai_typing.html
-    - output: web
+    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/release.md
+      output: web,pdf
       title: Packaging fastai
-      url: https://github.com/fastai/fastai/blob/master/docs-dev/release.md
     output: web
     title: Library development
   output: web

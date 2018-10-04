@@ -23,9 +23,9 @@ summary: "Application to Computer Vision"
 <p>The <a href="/vision.html#vision"><code>vision</code></a> module of the fastai library contains all the necessary functions to define a Dataset and train a model for computer vision tasks. It contains four different submodules to reach that goal:</p>
 <ul>
 <li><a href="/vision.image.html#vision.image"><code>vision.image</code></a> contains the basic definition of an <a href="/vision.image.html#Image"><code>Image</code></a> object and all the functions that are used behind the scenes to apply transformations to such an object,</li>
-<li><a href="/text.transform.html#text.transform"><code>vision.transform</code></a> contains all the transforms we can use for data augmentation,</li>
-<li><a href="/data.html#data"><code>vision.data</code></a> contains the definition of <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a> as well as the utility function to easily build a <a href="/data.html#DataBunch"><code>DataBunch</code></a> for Computer Vision problems.</li>
-<li><a href="/text.learner.html#text.learner"><code>vision.learner</code></a> lets you build and fine-tune models with a pretrained CNN backbone or train a randomly initialized model from scratch.</li>
+<li><a href="/vision.transform.html#vision.transform"><code>vision.transform</code></a> contains all the transforms we can use for data augmentation,</li>
+<li><a href="/vision.data.html#vision.data"><code>vision.data</code></a> contains the definition of <a href="/vision.data.html#ImageClassificationDataset"><code>ImageClassificationDataset</code></a> as well as the utility function to easily build a <a href="/data.html#DataBunch"><code>DataBunch</code></a> for Computer Vision problems.</li>
+<li><a href="/vision.learner.html#vision.learner"><code>vision.learner</code></a> lets you build and fine-tune models with a pretrained CNN backbone or train a randomly initialized model from scratch.</li>
 </ul>
 <p>Each of the four module links above includes a quick overview and examples of the functionality of that module, as well as complete API documentation. Below, we'll provide a walk-thru of end to end computer vision model training with the most commonly used functionality.</p>
 
@@ -144,13 +144,13 @@ summary: "Application to Computer Vision"
 
  
  
-<div id="059dcdd5-0c48-4dee-9e36-a9feeda58333"></div>
+<div id="590014a2-a911-4f58-977a-0bb4fe7c08f9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#059dcdd5-0c48-4dee-9e36-a9feeda58333');
+var element = $('#590014a2-a911-4f58-977a-0bb4fe7c08f9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "46a888599dc04584bb4a86c2fc427bb6", "version_major": 2, "version_minor": 0}
+{"model_id": "", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -159,9 +159,9 @@ var element = $('#059dcdd5-0c48-4dee-9e36-a9feeda58333');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:09
+<pre>Total time: 00:05
 epoch  train loss  valid loss  accuracy
-0      0.087998    0.047409    0.985280  (00:09)
+0      0.073646    0.048234    0.987242  (00:05)
 
 </pre>
 </div>
@@ -186,7 +186,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The most important piece of <a href="/data.html#data"><code>vision.data</code></a> is the <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a>. If you've got labels as subfolders, then you can just say:</p>
+<p>The most important piece of <a href="/vision.data.html#vision.data"><code>vision.data</code></a> for classification is the <a href="/vision.data.html#ImageClassificationDataset"><code>ImageClassificationDataset</code></a>. If you've got labels as subfolders, then you can just say:</p>
 
 </div>
 </div>
@@ -196,7 +196,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">ImageDataset</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">ImageClassificationDataset</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">MNIST_PATH</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -486,10 +486,10 @@ get_transforms(do_flip: bool = True, flip_vert: bool = False, max_rotate: float 
 
  
  
-<div id="ea3098ca-928a-47b7-ae85-2d2e843f0a96"></div>
+<div id="098ac189-d0a1-4735-a36b-cc3cf0ad3bd7"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#ea3098ca-928a-47b7-ae85-2d2e843f0a96');
+var element = $('#098ac189-d0a1-4735-a36b-cc3cf0ad3bd7');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "1e5a28d07b214509900355b82598f37f", "version_major": 2, "version_minor": 0}
@@ -542,10 +542,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="c639343f-f029-4711-af65-dfc193a0014b"></div>
+<div id="9e6663b4-9606-41f6-a365-73cbf5918031"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#c639343f-f029-4711-af65-dfc193a0014b');
+var element = $('#9e6663b4-9606-41f6-a365-73cbf5918031');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "2ed22f1d31f24f599495c4829b75440c", "version_major": 2, "version_minor": 0}
@@ -561,10 +561,10 @@ var element = $('#c639343f-f029-4711-af65-dfc193a0014b');
 
  
  
-<div id="222b0e9f-291a-4ac3-9acb-69f2ff67c949"></div>
+<div id="32a14a8e-9dfd-479d-9328-1d7d88e1d294"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#222b0e9f-291a-4ac3-9acb-69f2ff67c949');
+var element = $('#32a14a8e-9dfd-479d-9328-1d7d88e1d294');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "2ed22f1d31f24f599495c4829b75440c", "version_major": 2, "version_minor": 0}
