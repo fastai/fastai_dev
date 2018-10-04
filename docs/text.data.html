@@ -348,10 +348,10 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 
  
  
-<div id="7351fbdd-7f40-492b-bf22-99257590dd82"></div>
+<div id="95daab92-17fa-45b3-88c7-7521f7c52e1c"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#7351fbdd-7f40-492b-bf22-99257590dd82');
+var element = $('#95daab92-17fa-45b3-88c7-7521f7c52e1c');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -367,10 +367,10 @@ var element = $('#7351fbdd-7f40-492b-bf22-99257590dd82');
 
  
  
-<div id="0f7be49b-796b-4d4c-81d4-bda2c1e20ab2"></div>
+<div id="9e4a2e82-51f7-424b-8111-eb851ab1d213"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#0f7be49b-796b-4d4c-81d4-bda2c1e20ab2');
+var element = $('#9e4a2e82-51f7-424b-8111-eb851ab1d213');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -658,8 +658,8 @@ var element = $('#0f7be49b-796b-4d4c-81d4-bda2c1e20ab2');
 <p>Internally, the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> will create a 'tmp' folder in which he will copy or save the following files:</p>
 <ul>
 <li><code>name</code>.csv (if created from folders or csv)</li>
-<li><code>name</code>_tok.npy and <code>name</code>_lbl.npy (created by <code>TextDataset.tokenize</code> from the last step or copied if created from tokens)</li>
-<li><code>name</code>_ids.npy, <code>name</code>_lbl.npy and <code>itos</code> (created by <code>TextDataset.numericalize</code> from the last step or copied if created from ids)</li>
+<li><code>name</code>_tok.npy and <code>name</code>_lbl.npy (created by <a href="/text.data.html#tokenize"><code>TextDataset.tokenize</code></a> from the last step or copied if created from tokens)</li>
+<li><code>name</code>_ids.npy, <code>name</code>_lbl.npy and <code>itos</code> (created by <a href="/text.data.html#numericalize"><code>TextDataset.numericalize</code></a> from the last step or copied if created from ids)</li>
 </ul>
 <p>Then, when you invoke the <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> again, it will look for those temporary files and check their consistency to use them, in order to avoid doing again the numericalization or the tokenization. If you feel those files have been corrupted in any way, the following method will clear the 'tmp' subfolder of those files:</p>
 
@@ -1228,7 +1228,7 @@ torch.Size([66, 64])
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Called at the inialization to create the big array of text ids from the <a href="/text.data.html#text.data"><code>data</code></a> array.</p>
+<p>Called at the inialization to create the big array of text ids from the <a href="/data.html#data"><code>data</code></a> array.</p>
 
 </div>
 </div>

@@ -49,7 +49,7 @@ summary: "Basic classes to contain the data for model training."
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Bind together a <code>train_dl</code>, a <code>valid_dl</code> and optionally a <code>test_dl</code>, ensures they are on <code>device</code> and apply to them <code>tfms</code> as batch are drawn. <code>path</code> is used internally to store temporary files, <code>collate_fn</code> is passed to the pytorch <code>Dataloader</code> (replacing the one there) to explain how to collate the samples picked for a batch. By default, it applies data to the object sent (see in <code>vision.image</code> why this can be important).</p>
+<p>Bind together a <code>train_dl</code>, a <code>valid_dl</code> and optionally a <code>test_dl</code>, ensures they are on <code>device</code> and apply to them <code>tfms</code> as batch are drawn. <code>path</code> is used internally to store temporary files, <code>collate_fn</code> is passed to the pytorch <code>Dataloader</code> (replacing the one there) to explain how to collate the samples picked for a batch. By default, it applies data to the object sent (see in <a href="/vision.image.html#vision.image"><code>vision.image</code></a> why this can be important).</p>
 <p>An example of <code>tfms</code> to pass is normalization. <code>train_dl</code>, <code>valid_dl</code> and optionally <code>test_dl</code> will be wrapped in <a href="/data.html#DeviceDataLoader"><code>DeviceDataLoader</code></a>.</p>
 
 </div>
@@ -80,7 +80,7 @@ summary: "Basic classes to contain the data for model training."
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Create a <a href="/data.html#DataBunch"><code>DataBunch</code></a> from <code>train_ds</code>, <code>valid_ds</code> and optionally <code>test_ds</code>, with batch size <code>bs</code> and by using <code>num_workers</code>. <code>tfms</code> and <code>device</code> are passed to the init method.</p>
-<p><code>ds_tfms</code>, <code>size</code> and <code>kwargs</code> are added in the <a href="/vision.html#vision"><code>vision</code></a> application. <code>ds_tfms</code> is then a tuple of transforms to be applied to the datasets (the first one for <code>train_ds</code> and the second one for <code>valid_ds</code> and maybe <code>test_ds</code>), <code>size</code> and the <code>kwargs</code> are passed along to <code>transform_datasets</code>.</p>
+<p><code>ds_tfms</code>, <code>size</code> and <code>kwargs</code> are added in the <a href="/vision.html#vision"><code>vision</code></a> application. <code>ds_tfms</code> is then a tuple of transforms to be applied to the datasets (the first one for <code>train_ds</code> and the second one for <code>valid_ds</code> and maybe <code>test_ds</code>), <code>size</code> and the <code>kwargs</code> are passed along to <a href="/vision.data.html#transform_datasets"><code>transform_datasets</code></a>.</p>
 
 </div>
 </div>
