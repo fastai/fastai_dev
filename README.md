@@ -1,7 +1,9 @@
 # fastai_docs
 Documentation source for fastai (see http://docs.fast.ai for final docs)
 
-If you want to help us and contribute to the docs, you just have to make modifications to the source notebooks, our scripts will then automatically convert them to HTML. Beforehand, please execute the following instructions to ensure that everything works properly.
+If you want to help us and contribute to the docs, you just have to make modifications to the corresponding source notebook(s) under `docs_src/`, our scripts will then automatically convert them to HTML.
+
+Beforehand, please execute the following instructions to ensure that everything works properly.
 ```
 git clone https://github.com/fastai/fastai_docs
 cd fastai_docs
