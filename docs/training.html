@@ -37,7 +37,7 @@ summary: "Overview of fastai training modules, including Learner, metrics, and c
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We'll do a quick overview of the key pieces of fastai's training modules. See the separate module docs for details on each. We'll use the classic MNIST dataset for the training documentation, cut down to just 3's and 7's. To minimize the boilerplate in our docs we've defined the basic imports and paths we need in <a href="/docs.html#docs"><code>fastai.docs</code></a>. It also has a <a href="/docs.html#get_mnist"><code>get_mnist</code></a> function to grab a <a href="/data.html#DataBunch"><code>DataBunch</code></a> of the data for us, which will automatically download and unzip the data if not already done.</p>
+<p>We'll do a quick overview of the key pieces of fastai's training modules. See the separate module docs for details on each. We'll use the classic MNIST dataset for the training documentation, cut down to just 3's and 7's. To minimize the boilerplate in our docs we've defined the basic imports and paths we need in <code>fastai.docs</code>. It also has a <code>get_mnist</code> function to grab a <a href="/data.html#DataBunch"><code>DataBunch</code></a> of the data for us, which will automatically download and unzip the data if not already done.</p>
 
 </div>
 </div>
@@ -48,7 +48,7 @@ summary: "Overview of fastai training modules, including Learner, metrics, and c
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.docs</span> <span class="k">import</span> <span class="o">*</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
+<span class="n">mnist_data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -94,7 +94,7 @@ summary: "Overview of fastai training modules, including Learner, metrics, and c
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">mnist_data</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -131,10 +131,10 @@ summary: "Overview of fastai training modules, including Learner, metrics, and c
 
  
  
-<div id="5119c3d0-d930-4d82-a207-29bc6d88e984"></div>
+<div id="6f540329-001c-4a17-b1b5-4641b66bd8a4"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#5119c3d0-d930-4d82-a207-29bc6d88e984');
+var element = $('#6f540329-001c-4a17-b1b5-4641b66bd8a4');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -194,10 +194,10 @@ epoch  train loss  valid loss
 
  
  
-<div id="071a70fe-0390-4287-ab19-ab4f485394ce"></div>
+<div id="806910ca-1ee0-4196-8a9a-79997adcdeb2"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#071a70fe-0390-4287-ab19-ab4f485394ce');
+var element = $('#806910ca-1ee0-4196-8a9a-79997adcdeb2');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -257,10 +257,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="fa8173b1-7332-4984-aded-e84c714880c4"></div>
+<div id="350baba0-6cf0-4915-8c1e-200fc1064f49"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#fa8173b1-7332-4984-aded-e84c714880c4');
+var element = $('#350baba0-6cf0-4915-8c1e-200fc1064f49');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -357,10 +357,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="6e5fc1f5-2b49-417c-ac65-29520ac7fba9"></div>
+<div id="88043e4a-013b-47f6-bafe-d3e55feb70ee"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6e5fc1f5-2b49-417c-ac65-29520ac7fba9');
+var element = $('#88043e4a-013b-47f6-bafe-d3e55feb70ee');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -427,10 +427,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="b8690ffb-a574-4984-86b2-fe5542446951"></div>
+<div id="8ae34196-21a6-4288-968d-68f3d7e7ba2e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b8690ffb-a574-4984-86b2-fe5542446951');
+var element = $('#8ae34196-21a6-4288-968d-68f3d7e7ba2e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}

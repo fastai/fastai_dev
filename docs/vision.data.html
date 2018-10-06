@@ -882,7 +882,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>On MNIST the mean and std are 0.1307 and 0.3081 respectively (looked on Google). If you're using a pretrained model, you'll need to use the normalization that used to train the model. The imagenet norm and denorm functions are stored as constants inside the library named <code>2250]))</code> and <code>2250]))</code>. If you're training a model on CIFAR-10, you can also use <code>2610]))</code> and <code>2610]))</code>.</p>
+<p>On MNIST the mean and std are 0.1307 and 0.3081 respectively (looked on Google). If you're using a pretrained model, you'll need to use the normalization that used to train the model. The imagenet norm and denorm functions are stored as constants inside the library named <code>imagenet_norm</code> and <code>imagenet_denorm</code>. If you're training a model on CIFAR-10, you can also use <code>cifar_norm</code> and <code>cifar_denorm</code>.</p>
 <p>Note that if you normalize your input, you'll need to denormalize it when using functions like <a href="/vision.data.html#show_images"><code>show_images</code></a> or <a href="/vision.data.html#show_image_batch"><code>show_image_batch</code></a>. The correct way to look at those pictures is to denormalize them first:</p>
 
 </div>
@@ -964,16 +964,6 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">ImageClassificationDataset</span><span class="o">.</span><span class="n">from_folder</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -1193,8 +1183,8 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=ObjectDetectDataset></a><code>class</code> <code>ObjectDetectDataset</code></h2>
-<blockquote><p><code>ObjectDetectDataset</code>(<code>x_fns</code>:<code>FilePathList</code>, <code>bbs</code>:<code>Collection</code>[<code>Collection</code>[<code>int</code>]]) :: <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L127">[source]</a></p>
+<blockquote><p><code>ObjectDetectDataset</code>(<code>x_fns</code>:<code>FilePathList</code>, <code>bbs</code>:<code>Collection</code>[<code>Collection</code>[<code>int</code>]], <code>labels</code>:<code>StrList</code>) :: <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L149">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1207,10 +1197,32 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is the basic dataset for object detection: <code>x</code> contains the filenames of the images and <code>bbs</code> the corresponding bounding boxes.</p>
+<p>This is the basic dataset for object detection: <code>x</code> contains the filenames of the images, <code>bbs</code> the corresponding bounding boxes and <code>labels</code> their corresponding labels.</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=get_annotations></a><code>get_annotations</code></h4>
+<blockquote><p><code>get_annotations</code>(<code>fname</code>, <code>prefix</code>=<code>None</code>)</p>
+</blockquote>
+<p>Open a COCO style json in <code>fname</code> and returns the lists of filenames (with <code>prefix</code>), bboxes and labels. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L22">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
