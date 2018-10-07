@@ -101,7 +101,12 @@ tools/run-after-git-clone
 <p>This will take care of everything that is explained in the following two sections. We'll tell you what they do, but you need to execute just this one script.</p>
 <p>Note: windows users, not using bash emulation, will need to invoke the command as:</p>
 
-<pre><code>python tools\run-after-git-clone</code></pre>
+<pre><code>python tools\run-after-git-clone
+
+</code></pre>
+<p>On windows as well, the simlink between the imgs folder in docs_src (where the notebooks are) and docs won't work. You will need to remove the borken link in docs_src (called imgs), execute cmd.exe as administrator, then, in the docs_src folder, execute</p>
+
+<pre><code>mklink /d imgs ..\docs\imgs</code></pre>
 
 </div>
 </div>
