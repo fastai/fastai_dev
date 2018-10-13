@@ -106,7 +106,10 @@ tools/run-after-git-clone
 </code></pre>
 <p>On windows as well, the simlink between the imgs folder in docs_src (where the notebooks are) and docs won't work. You will need to remove the borken link in docs_src (called imgs), execute cmd.exe as administrator, then, in the docs_src folder, execute</p>
 
-<pre><code>mklink /d imgs ..\docs\imgs</code></pre>
+<pre><code>mklink /d imgs ..\docs\imgs
+
+</code></pre>
+<p>Note that if you work on <code>fastai/fastai</code> repository as well, you need to run that script once too in the directory of that repository upon cloning it.</p>
 
 </div>
 </div>
