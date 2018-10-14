@@ -124,3 +124,7 @@ Thumbs.db
 
 # tools/trust-doc-nbs
 docs_src/.last_checked
+
+# symlinks to fastai
+docs_src/fastai
+tools/fastai

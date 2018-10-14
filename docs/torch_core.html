@@ -69,7 +69,7 @@ summary: "Basic functions using pytorch"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=flatten></a><code>flatten</code></h4>
 <blockquote><p><code>flatten</code>(<code>m</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L106">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L117">[source]</a></p>
 </blockquote>
 
 </div>
@@ -99,7 +99,7 @@ summary: "Basic functions using pytorch"
 <h4><a id=model2half></a><code>model2half</code></h4>
 <blockquote><p><code>model2half</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>) -&gt; <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
 </blockquote>
-<p>Convert <code>model</code> to half precision except the batchnorm layers. <a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L157">[source]</a></p>
+<p>Convert <code>model</code> to half precision except the batchnorm layers.  <a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L168">[source]</a></p>
 
 </div>
 
@@ -120,7 +120,7 @@ summary: "Basic functions using pytorch"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=requires_grad></a><code>requires_grad</code></h4>
 <blockquote><p><code>requires_grad</code>(<code>m</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>b</code>:<code>Optional</code>[<code>bool</code>]=<code>None</code>) -&gt; <code>Optional</code>[<code>bool</code>]
-<a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L82">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L93">[source]</a></p>
 </blockquote>
 
 </div>
@@ -148,9 +148,9 @@ summary: "Basic functions using pytorch"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=tensor></a><code>tensor</code></h4>
-<blockquote><p><code>tensor</code>(<code>x</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L65">[source]</a></p>
+<blockquote><p><code>tensor</code>(<code>x</code>:<code>Any</code>) -&gt; <code>Tensor</code></p>
 </blockquote>
+<p>Like <code>torch.as_tensor</code>, but handle lists too  <a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L65">[source]</a></p>
 
 </div>
 
@@ -179,7 +179,29 @@ summary: "Basic functions using pytorch"
 <h4><a id=to_data></a><code>to_data</code></h4>
 <blockquote><p><code>to_data</code>(<code>b</code>:<code>ItemsList</code>)</p>
 </blockquote>
-<p>Recursively map lists of items in <code>b</code> to their wrapped data <a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L67">[source]</a></p>
+<p>Recursively map lists of items in <code>b</code> to their wrapped data  <a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L78">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=to_detach></a><code>to_detach</code></h4>
+<blockquote><p><code>to_detach</code>(<code>b</code>:<code>Tensors</code>)</p>
+</blockquote>
+<p>Recursively detach lists of tensors in <code>b</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/torch_core.py#L73">[source]</a></p>
 
 </div>
 

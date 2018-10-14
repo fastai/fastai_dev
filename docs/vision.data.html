@@ -107,7 +107,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <p>Here the datasets will be automatically created from the structure above, and we precise:</p>
 <ul>
 <li>the transforms to apply to the images in <code>ds_tfms</code> (here with <code>do_flip</code>=False because we don't want to flip numbers),</li>
-<li>the target <code>size</code> of our pictures (here 28).</li>
+<li>the target <code>size</code> of our pictures (here 24).</li>
 </ul>
 <p>As all <a href="/data.html#DataBunch"><code>DataBunch</code></a>, data then as a <code>train_dl</code> and a <code>valid_dl</code> that are <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>. If you want to have a look at a few images in a batch inside a batch, you can use <a href="/vision.data.html#show_image_batch"><code>show_image_batch</code></a>, the <code>rows</code> argument being the number of rows and columns in the array.</p>
 

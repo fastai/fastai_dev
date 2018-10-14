@@ -55,7 +55,7 @@ summary: "Learner class and training loop"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The main purpose of <a href="/basic_train.html#Learner"><code>Learner</code></a> is to train <code>model</code> using <a href="/basic_train.html#fit"><code>Learner.fit</code></a>. After every epoch, all <em>metrics</em> will be printed, and will also be available to callbacks.</p>
-<p>The default weight decay will be <code>wd</code>, which will be handled using the method from <a href="https://arxiv.org/abs/1711.05101">Fixing Weight Decay Regularization in Adam</a> if <code>true_wd</code> is set (otherwise it's L2 regularization). If <code>bn_wd</code> is False then weight decay will be removed from batchnorm layers, as recommended in <a href="https://arxiv.org/abs/1706.02677">Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour</a>. You can also turn off batchnorm layer training entirely (i.e. freeze all batchnorm learnable parameters) by disabling <code>train_bn</code>.</p>
+<p>The default weight decay will be <code>wd</code>, which will be handled using the method from <a href="https://arxiv.org/abs/1711.05101">Fixing Weight Decay Regularization in Adam</a> if <code>true_wd</code> is set (otherwise it's L2 regularization). If <code>bn_wd</code> is False then weight decay will be removed from batchnorm layers, as recommended in <a href="https://arxiv.org/abs/1706.02677">Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour</a>. You can ensure that batchnorm layer learnable params are trained even for frozen layer groups, by enabling <code>train_bn</code>.</p>
 <p>To use <a href="#discriminative">discriminative layer training</a> pass an <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>nn.Module</code></a> for each layer group to be optimized with different settings.</p>
 <p>Any model files created will be saved in <code>path</code>/<code>model_dir</code>.</p>
 <p>You can pass a list of <a href="/callbacks.html#callbacks"><code>callbacks</code></a> that you have already created, or (more commonly) simply pass a list of callback functions to <code>callback_fns</code> and each function will be called (passing <code>self</code>) on object initialization, with the results stored as callback objects. For a walk-through, see the <a href="/training.html">training overview</a> page. You may also want to use an <code>application</code> to fit your model, e.g. using the <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> subclass:</p>
@@ -87,10 +87,10 @@ summary: "Learner class and training loop"
 
  
  
-<div id="be2fbb14-da78-4021-b8bb-3b9331d81256"></div>
+<div id="21d3183a-080d-4e0b-b848-46b50bd7e77c"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#be2fbb14-da78-4021-b8bb-3b9331d81256');
+var element = $('#21d3183a-080d-4e0b-b848-46b50bd7e77c');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -209,6 +209,34 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="See-results">See results<a class="anchor-link" href="#See-results">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=get_preds></a><code>get_preds</code></h4>
+<blockquote><p><code>get_preds</code>(<code>is_test</code>:<code>bool</code>=<code>False</code>) -&gt; <code>List</code>[<code>Tensor</code>]</p>
+</blockquote>
+<p>Return predictions and targets on the valid or test set, depending on <code>is_test</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L174">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Mixed-precision-training">Mixed precision training<a class="anchor-link" href="#Mixed-precision-training">&#182;</a></h3>
 </div>
 </div>
@@ -301,10 +329,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="e447d51b-23fd-4e77-aefe-e19b85935d26"></div>
+<div id="cea0184a-aa76-451b-be03-cfd72fd8c13a"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#e447d51b-23fd-4e77-aefe-e19b85935d26');
+var element = $('#cea0184a-aa76-451b-be03-cfd72fd8c13a');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -353,10 +381,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="ea8aa246-022a-4752-addf-ef97f602384f"></div>
+<div id="7ce25ece-123e-42bb-ada9-361a9b9d90d5"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#ea8aa246-022a-4752-addf-ef97f602384f');
+var element = $('#7ce25ece-123e-42bb-ada9-361a9b9d90d5');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -815,10 +843,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="25b4f701-7aef-491c-b00a-db9b66ffc86d"></div>
+<div id="d0b01984-b52e-4658-9780-3cfc0f1d14a4"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#25b4f701-7aef-491c-b00a-db9b66ffc86d');
+var element = $('#d0b01984-b52e-4658-9780-3cfc0f1d14a4');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "2359fffda808439a88ab0ab57fca6809", "version_major": 2, "version_minor": 0}
@@ -895,10 +923,10 @@ var element = $('#25b4f701-7aef-491c-b00a-db9b66ffc86d');
 
  
  
-<div id="59e2074c-9479-4f51-b5c0-0932ef331a19"></div>
+<div id="72d0f10a-5376-4ad2-9d0e-89429d070497"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#59e2074c-9479-4f51-b5c0-0932ef331a19');
+var element = $('#72d0f10a-5376-4ad2-9d0e-89429d070497');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -1230,9 +1258,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=validate></a><code>validate</code></h4>
-<blockquote><p><code>validate</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>loss_fn</code>:<code>OptLossFunc</code>=<code>None</code>, <code>metrics</code>:<code>OptMetrics</code>=<code>None</code>, <code>cb_handler</code>:<code>Optional</code>[<a href="/callback.html#CallbackHandler"><code>CallbackHandler</code></a>]=<code>None</code>, <code>pbar</code>:<code>Union</code>[<code>MasterBar</code>, <code>ProgressBar</code>, <code>NoneType</code>]=<code>None</code>) -&gt; <code>Iterator</code>[<code>Tuple</code>[<code>IntOrTensor</code>, <code>Ellipsis</code>]]</p>
+<blockquote><p><code>validate</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>loss_fn</code>:<code>OptLossFunc</code>=<code>None</code>, <code>metrics</code>:<code>OptMetrics</code>=<code>None</code>, <code>cb_handler</code>:<code>Optional</code>[<a href="/callback.html#CallbackHandler"><code>CallbackHandler</code></a>]=<code>None</code>, <code>pbar</code>:<code>Union</code>[<code>MasterBar</code>, <code>ProgressBar</code>, <code>NoneType</code>]=<code>None</code>, <code>average</code>=<code>True</code>) -&gt; <code>Iterator</code>[<code>Tuple</code>[<code>IntOrTensor</code>, <code>Ellipsis</code>]]</p>
 </blockquote>
-<p>Calculate loss and metrics for the validation set. <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L39">[source]</a></p>
+<p>Calculate loss and metrics for the validation set.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L39">[source]</a></p>
 
 </div>
 
