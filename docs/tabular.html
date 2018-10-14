@@ -48,11 +48,11 @@ summary: "Application to tabular/structured data"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">untar_data</span><span class="p">(</span><span class="n">ADULT_PATH</span><span class="p">)</span>
-<span class="n">ADULT_PATH</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">ADULT</span><span class="p">)</span>
+<span class="n">path</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -64,7 +64,7 @@ summary: "Application to tabular/structured data"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>PosixPath(&#39;../data/adult_sample&#39;)</pre>
+<pre>PosixPath(&#39;/data1/jhoward/git/fastai/fastai/../data/adult_sample&#39;)</pre>
 </div>
 
 </div>
@@ -78,11 +78,11 @@ summary: "Application to tabular/structured data"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ADULT_PATH</span><span class="o">/</span><span class="s1">&#39;adult.csv&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;adult.csv&#39;</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -238,7 +238,7 @@ summary: "Application to tabular/structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">FillMissing</span><span class="p">,</span> <span class="n">Categorify</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -258,7 +258,7 @@ summary: "Application to tabular/structured data"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:</span><span class="o">-</span><span class="mi">2000</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">df</span><span class="p">[</span><span class="o">-</span><span class="mi">2000</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -279,7 +279,7 @@ summary: "Application to tabular/structured data"
 <span class="n">cat_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">,</span> <span class="s1">&#39;education&#39;</span><span class="p">,</span> <span class="s1">&#39;marital-status&#39;</span><span class="p">,</span> <span class="s1">&#39;occupation&#39;</span><span class="p">,</span> <span class="s1">&#39;relationship&#39;</span><span class="p">,</span> <span class="s1">&#39;race&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;native-country&#39;</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -296,11 +296,11 @@ summary: "Application to tabular/structured data"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">tabular_data_from_df</span><span class="p">(</span><span class="n">ADULT_PATH</span><span class="p">,</span> <span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span><span class="p">,</span> <span class="n">dep_var</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="n">cat_names</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">tabular_data_from_df</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span><span class="p">,</span> <span class="n">dep_var</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="n">cat_names</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">cont_names</span><span class="p">)</span>  <span class="c1"># `cont_names` defaults to: set(df)-set(cat_names)-{dep_var}</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -310,7 +310,7 @@ summary: "Application to tabular/structured data"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[&#39;hours-per-week&#39;, &#39;education-num&#39;, &#39;capital-gain&#39;, &#39;capital-loss&#39;, &#39;age&#39;, &#39;fnlwgt&#39;]
+<pre>[&#39;age&#39;, &#39;fnlwgt&#39;, &#39;education-num&#39;, &#39;capital-loss&#39;, &#39;hours-per-week&#39;, &#39;capital-gain&#39;]
 </pre>
 </div>
 </div>
@@ -335,7 +335,7 @@ summary: "Application to tabular/structured data"
 <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cat_x</span><span class="p">,</span> <span class="n">cont_x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">to_np</span><span class="p">(</span><span class="n">o</span><span class="p">[:</span><span class="mi">5</span><span class="p">]))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -345,17 +345,17 @@ summary: "Application to tabular/structured data"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[[ 6 11  3 11  1  5  2 40  1]
- [ 2 16  3  2  1  3  2 40  1]
- [ 5 10  3  5  1  5  2 40  1]
- [ 5 12  3  4  1  5  2 40  1]
- [ 7 16  3  0  6  5  1 40  1]]
-[[ 1.5800297   2.3213685  -0.14592563 -0.21676035  0.39366853 -1.1844455 ]
- [-0.03578891 -0.02974687 -0.14592563 -0.21676035  0.1007587   1.4842733 ]
- [ 2.0647755   1.1458108   0.886681   -0.21676035  0.7598058  -1.0047827 ]
- [-0.03578891 -0.42159945 -0.14592563 -0.21676035 -0.8511982  -0.2293584 ]
- [ 0.7721204  -0.02974687 -0.14592563 -0.21676035  0.24721362  1.4690127 ]]
-[0 1 1 0 0]
+<pre>[[ 5 12  3  8  1  3  2 40  1]
+ [ 5  2  5  8  4  3  2 40  1]
+ [ 5 12  3 12  1  5  2 40  1]
+ [ 7 16  5 11  2  2  2 40  1]
+ [ 5 16  5 15  2  5  1 40  1]]
+[[ 0.9062607   0.8785528  -0.42159945 -0.21676035 -0.03578891  0.27541766]
+ [-0.33860603  1.9943877  -1.2053045  -0.21676035  0.36816576 -0.14592563]
+ [-0.63151586 -0.83763504 -0.42159945 -0.21676035 -0.03578891 -0.14592563]
+ [-1.0708805  -1.0070168  -0.02974687 -0.21676035 -0.84369826 -0.14592563]
+ [-0.9976531   0.5964676  -0.02974687 -0.21676035  0.36816576 -0.14592563]]
+[0 0 0 1 0]
 </pre>
 </div>
 </div>
@@ -393,7 +393,7 @@ summary: "Application to tabular/structured data"
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -407,10 +407,10 @@ summary: "Application to tabular/structured data"
 
  
  
-<div id="7e55d104-5627-4d24-906a-3ae65092266f"></div>
+<div id="a84066e5-6007-4e95-9341-96a67603cb06"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#7e55d104-5627-4d24-906a-3ae65092266f');
+var element = $('#a84066e5-6007-4e95-9341-96a67603cb06');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -422,9 +422,9 @@ var element = $('#7e55d104-5627-4d24-906a-3ae65092266f');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:04
+<pre>Total time: 00:05
 epoch  train loss  valid loss  accuracy
-0      0.328808    0.370992    0.836000  (00:04)
+0      0.326457    0.320942    0.845500  (00:05)
 
 </pre>
 </div>

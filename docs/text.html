@@ -76,11 +76,11 @@ summary: "Application to NLP, including ULMFiT fine-tuning"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">untar_data</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">)</span>
-<span class="n">IMDB_PATH</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">IMDB</span><span class="p">)</span>
+<span class="n">path</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -92,7 +92,7 @@ summary: "Application to NLP, including ULMFiT fine-tuning"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>PosixPath(&#39;../data/imdb_sample&#39;)</pre>
+<pre>PosixPath(&#39;/data1/jhoward/git/fastai/fastai/../data/imdb_sample&#39;)</pre>
 </div>
 
 </div>
@@ -118,11 +118,11 @@ summary: "Application to NLP, including ULMFiT fine-tuning"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="o">/</span><span class="s1">&#39;train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -191,11 +191,11 @@ summary: "Application to NLP, including ULMFiT fine-tuning"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">classes</span> <span class="o">=</span> <span class="n">read_classes</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="o">/</span><span class="s1">&#39;classes.txt&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">classes</span> <span class="o">=</span> <span class="n">read_classes</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;classes.txt&#39;</span><span class="p">)</span>
 <span class="n">classes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">classes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -239,10 +239,10 @@ summary: "Application to NLP, including ULMFiT fine-tuning"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_ds</span> <span class="o">=</span> <span class="n">TextDataset</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_ds</span> <span class="o">=</span> <span class="n">TextDataset</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -264,10 +264,10 @@ summary: "Application to NLP, including ULMFiT fine-tuning"
 
  
  
-<div id="7fdbf950-2c50-476b-9146-bbfe234efeac"></div>
+<div id="4ccd78e2-ab30-4a90-b6d3-4a160d84c6e0"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#7fdbf950-2c50-476b-9146-bbfe234efeac');
+var element = $('#4ccd78e2-ab30-4a90-b6d3-4a160d84c6e0');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -283,10 +283,10 @@ var element = $('#7fdbf950-2c50-476b-9146-bbfe234efeac');
 
  
  
-<div id="56e1a65d-184a-4af8-9e0e-4c53046c0b5f"></div>
+<div id="de68b3cd-802b-4319-97b3-5f3ef886d719"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#56e1a65d-184a-4af8-9e0e-4c53046c0b5f');
+var element = $('#de68b3cd-802b-4319-97b3-5f3ef886d719');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -321,12 +321,12 @@ var element = $('#56e1a65d-184a-4af8-9e0e-4c53046c0b5f');
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Language model data</span>
-<span class="n">data_lm</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">lm_data</span><span class="p">)</span>
+<span class="n">data_lm</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data_func</span><span class="o">=</span><span class="n">lm_data</span><span class="p">)</span>
 <span class="c1"># Classifier model data</span>
-<span class="n">data_clas</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">IMDB_PATH</span><span class="p">),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">classifier_data</span><span class="p">,</span> <span class="n">vocab</span><span class="o">=</span><span class="n">data_lm</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
+<span class="n">data_clas</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data_func</span><span class="o">=</span><span class="n">classifier_data</span><span class="p">,</span> <span class="n">vocab</span><span class="o">=</span><span class="n">data_lm</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -348,10 +348,10 @@ var element = $('#56e1a65d-184a-4af8-9e0e-4c53046c0b5f');
 
  
  
-<div id="1e614a04-d9af-4163-9963-8f26dee94222"></div>
+<div id="6118a5db-080d-4ec7-92de-f71f641c8afa"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#1e614a04-d9af-4163-9963-8f26dee94222');
+var element = $('#6118a5db-080d-4ec7-92de-f71f641c8afa');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -367,10 +367,10 @@ var element = $('#1e614a04-d9af-4163-9963-8f26dee94222');
 
  
  
-<div id="b391d7d1-3314-4051-96b8-d99bf3beb73c"></div>
+<div id="2c90c422-0e3a-4459-8354-1854e45626f4"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b391d7d1-3314-4051-96b8-d99bf3beb73c');
+var element = $('#2c90c422-0e3a-4459-8354-1854e45626f4');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -420,7 +420,7 @@ var element = $('#b391d7d1-3314-4051-96b8-d99bf3beb73c');
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">download_wt103_model</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -441,7 +441,7 @@ var element = $('#b391d7d1-3314-4051-96b8-d99bf3beb73c');
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -455,10 +455,10 @@ var element = $('#b391d7d1-3314-4051-96b8-d99bf3beb73c');
 
  
  
-<div id="3f82ed28-8a07-4f7e-b3eb-53f7190e4f3f"></div>
+<div id="ef03b3aa-ed65-460e-816f-9db65cfe20a4"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#3f82ed28-8a07-4f7e-b3eb-53f7190e4f3f');
+var element = $('#ef03b3aa-ed65-460e-816f-9db65cfe20a4');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -472,7 +472,7 @@ var element = $('#3f82ed28-8a07-4f7e-b3eb-53f7190e4f3f');
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:04
 epoch  train loss  valid loss  accuracy
-0      4.699907    4.201264    0.247246  (00:04)
+0      4.729156    4.222738    0.245504  (00:04)
 
 </pre>
 </div>
@@ -495,10 +495,10 @@ epoch  train loss  valid loss  accuracy
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">unfreeze</span><span class="p">()</span>
-<span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -512,10 +512,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="cd7c8c36-e9f9-4470-a1b5-7e63cdd1de8c"></div>
+<div id="a0cb206f-0314-479e-9972-4b56b9255ec5"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#cd7c8c36-e9f9-4470-a1b5-7e63cdd1de8c');
+var element = $('#a0cb206f-0314-479e-9972-4b56b9255ec5');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -527,13 +527,9 @@ var element = $('#cd7c8c36-e9f9-4470-a1b5-7e63cdd1de8c');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:27
+<pre>Total time: 00:05
 epoch  train loss  valid loss  accuracy
-0      4.464529    4.121362    0.255822  (00:05)
-1      4.350247    4.043319    0.261671  (00:05)
-2      4.229458    4.010417    0.264702  (00:05)
-3      4.141184    3.991524    0.266229  (00:05)
-4      4.082627    3.987816    0.265016  (00:05)
+0      4.473847    4.134293    0.251306  (00:05)
 
 </pre>
 </div>
@@ -558,7 +554,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">save_encoder</span><span class="p">(</span><span class="s1">&#39;ft_enc&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -586,7 +582,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -600,10 +596,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="9c7ab87f-f059-4d6b-ba99-50f2e600e84b"></div>
+<div id="82da9a84-b7bb-4f8e-95bd-db9faaab1ceb"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#9c7ab87f-f059-4d6b-ba99-50f2e600e84b');
+var element = $('#82da9a84-b7bb-4f8e-95bd-db9faaab1ceb');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -615,9 +611,9 @@ var element = $('#9c7ab87f-f059-4d6b-ba99-50f2e600e84b');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:05
+<pre>Total time: 00:04
 epoch  train loss  valid loss  accuracy
-0      0.591999    0.632481    0.620000  (00:05)
+0      0.623923    0.650220    0.700000  (00:04)
 
 </pre>
 </div>
@@ -643,7 +639,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mf">5e-3</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">5e-3</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -657,10 +653,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="f2259a7b-e261-4856-bbbc-4cab439dbce5"></div>
+<div id="9cf71fd0-d1d7-4881-8af4-8cf2345f54df"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f2259a7b-e261-4856-bbbc-4cab439dbce5');
+var element = $('#9cf71fd0-d1d7-4881-8af4-8cf2345f54df');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -674,7 +670,7 @@ var element = $('#f2259a7b-e261-4856-bbbc-4cab439dbce5');
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:05
 epoch  train loss  valid loss  accuracy
-0      0.537493    0.570067    0.685000  (00:05)
+0      0.554291    0.601925    0.690000  (00:05)
 
 </pre>
 </div>
@@ -693,7 +689,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mf">2e-3</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="mf">2e-3</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -707,10 +703,10 @@ epoch  train loss  valid loss  accuracy
 
  
  
-<div id="8829b5d7-6335-4fb3-a535-146ae5bda78b"></div>
+<div id="b8a5bd05-a4a5-46fb-b5df-570c8f25c062"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#8829b5d7-6335-4fb3-a535-146ae5bda78b');
+var element = $('#b8a5bd05-a4a5-46fb-b5df-570c8f25c062');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -722,14 +718,27 @@ var element = $('#8829b5d7-6335-4fb3-a535-146ae5bda78b');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:09
+<pre>Total time: 00:08
 epoch  train loss  valid loss  accuracy
-0      0.436120    0.544485    0.735000  (00:09)
+0      0.497076    0.634557    0.650000  (00:08)
 
 </pre>
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
 </div>
 </div>
 
