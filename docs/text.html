@@ -266,52 +266,7 @@ summary: "Application to NLP, including ULMFiT fine-tuning"
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Tokenizing train.
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="c0917fab-9864-4399-ba28-992c21620a2e"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#c0917fab-9864-4399-ba28-992c21620a2e');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="a67847f2-8e37-4665-8fe3-ee4252c21f59"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#a67847f2-8e37-4665-8fe3-ee4252c21f59');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Numericalizing train.
+Numericalizing train.
 </pre>
 </div>
 </div>
@@ -323,7 +278,7 @@ var element = $('#a67847f2-8e37-4665-8fe3-ee4252c21f59');
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Note that to avoid redoing this step (which can be quite time-consuming if you have a very large dataset), the fastai library has created a <code>tmp</code> directory in the folder given, to store the tokens (in <code>_tok.npy</code> files), the labels (in <code>_lbl.npy</code> files), the ids of the tokens (in <code>_id.npy</code> files) and the dictionary (<code>itos.pkl</code>). When you reexecute the line in the future, it will directly load that data.</p>
-<p>To get a <a href="/data.html#DataBunch"><code>DataBunch</code></a> quickly, there are also several factory methods depending on how our data is structured. They are all detailed in <a href="/text.data.html#text.data"><code>text.data</code></a>, here we'll use <a href="/text.data.html#text_data_from_csv"><code>text_data_from_csv</code></a>.</p>
+<p>To get a <a href="/data.html#DataBunch"><code>DataBunch</code></a> quickly, there are also several factory methods depending on how our data is structured. They are all detailed in <a href="/text.data.html#text.data"><code>text.data</code></a>, here we'll use the method <code>from_csv</code> of the <a href="/text.data.html#TextLMDataBunch"><code>TextLMDataBunch</code></a> (to get the data ready for a language model) and <a href="/text.data.html#TextClasDataBunch"><code>TextClasDataBunch</code></a> (to get the data ready for a text classifier) classes.</p>
 
 </div>
 </div>
@@ -334,9 +289,9 @@ var element = $('#a67847f2-8e37-4665-8fe3-ee4252c21f59');
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Language model data</span>
-<span class="n">data_lm</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data_func</span><span class="o">=</span><span class="n">lm_data</span><span class="p">)</span>
+<span class="n">data_lm</span> <span class="o">=</span> <span class="n">TextLMDataBunch</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 <span class="c1"># Classifier model data</span>
-<span class="n">data_clas</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data_func</span><span class="o">=</span><span class="n">classifier_data</span><span class="p">,</span> <span class="n">vocab</span><span class="o">=</span><span class="n">data_lm</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
+<span class="n">data_clas</span> <span class="o">=</span> <span class="n">TextClasDataBunch</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">vocab</span><span class="o">=</span><span class="n">data_lm</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -350,52 +305,7 @@ var element = $('#a67847f2-8e37-4665-8fe3-ee4252c21f59');
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Tokenizing valid.
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="a74da133-fe7a-4103-a22f-a5bafafdf8de"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#a74da133-fe7a-4103-a22f-a5bafafdf8de');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="21e66b30-ea2c-4dc1-b3fd-9b38ad4b5400"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#21e66b30-ea2c-4dc1-b3fd-9b38ad4b5400');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Numericalizing valid.
+Numericalizing valid.
 </pre>
 </div>
 </div>
@@ -463,29 +373,10 @@ var element = $('#21e66b30-ea2c-4dc1-b3fd-9b38ad4b5400');
 
 <div class="output_area">
 
-
-
-
- 
- 
-<div id="9394b7c4-5f0e-44a9-a5e8-fa310834c2b7"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#9394b7c4-5f0e-44a9-a5e8-fa310834c2b7');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:17
 epoch  train loss  valid loss  accuracy
-0      4.725186    4.228650    0.245089  (00:17)
+0      4.727771    4.227000    0.244786  (00:17)
 
 </pre>
 </div>
@@ -520,29 +411,10 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_area">
 
-
-
-
- 
- 
-<div id="442708e3-70bd-43ef-a1fb-63545b2d74af"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#442708e3-70bd-43ef-a1fb-63545b2d74af');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:22
 epoch  train loss  valid loss  accuracy
-0      4.471475    4.138612    0.251554  (00:22)
+0      4.464183    4.137479    0.250334  (00:22)
 
 </pre>
 </div>
@@ -604,29 +476,10 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_area">
 
-
-
-
- 
- 
-<div id="8a34d136-b0da-440e-835e-4b65279caef5"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#8a34d136-b0da-440e-835e-4b65279caef5');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:16
+<pre>Total time: 00:15
 epoch  train loss  valid loss  accuracy
-0      0.628761    0.631248    0.740000  (00:16)
+0      0.630222    0.656944    0.620000  (00:15)
 
 </pre>
 </div>
@@ -661,29 +514,10 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_area">
 
-
-
-
- 
- 
-<div id="2ce0671e-6218-4f7d-9a9b-9d12aad4a317"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#2ce0671e-6218-4f7d-9a9b-9d12aad4a317');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:18
 epoch  train loss  valid loss  accuracy
-0      0.537009    0.593068    0.675000  (00:18)
+0      0.554031    0.662303    0.665000  (00:18)
 
 </pre>
 </div>
@@ -711,29 +545,10 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_area">
 
-
-
-
- 
- 
-<div id="d4d053fb-7668-4b0b-8ab3-2b6f3e39358d"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#d4d053fb-7668-4b0b-8ab3-2b6f3e39358d');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:36
+<pre>Total time: 00:35
 epoch  train loss  valid loss  accuracy
-0      0.500538    0.497430    0.780000  (00:36)
+0      0.487606    0.704626    0.690000  (00:35)
 
 </pre>
 </div>
