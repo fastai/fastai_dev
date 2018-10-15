@@ -57,6 +57,33 @@ summary: "Application to collaborative filtering"
 
 <div class="output_area">
 
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Downloading http://files.fast.ai/data/examples/movie_lens_sample
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="e8963de2-caf2-4c95-a166-e933166eb6a6"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#e8963de2-caf2-4c95-a166-e933166eb6a6');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "13abf4164f6f490193a81d90619e1a30", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -199,10 +226,10 @@ summary: "Application to collaborative filtering"
 
  
  
-<div id="05f68185-8d9e-4b4c-99ba-53db63825f39"></div>
+<div id="b9c41edb-b13a-4712-8b65-258988153c5d"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#05f68185-8d9e-4b4c-99ba-53db63825f39');
+var element = $('#b9c41edb-b13a-4712-8b65-258988153c5d');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -214,13 +241,13 @@ var element = $('#05f68185-8d9e-4b4c-99ba-53db63825f39');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time: 00:03
+<pre>Total time: 00:02
 epoch  train loss  valid loss
-0      2.371715    1.861580    (00:00)
-1      1.082379    0.712514    (00:00)
-2      0.731760    0.698491    (00:00)
-3      0.606913    0.692382    (00:00)
-4      0.569178    0.690507    (00:00)
+0      2.360679    1.875355    (00:00)
+1      1.065259    0.724184    (00:00)
+2      0.720216    0.688261    (00:00)
+3      0.623641    0.679134    (00:00)
+4      0.571971    0.675971    (00:00)
 
 </pre>
 </div>
@@ -269,7 +296,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=from_df></a><code>from_df</code></h4>
-<blockquote><p><code>from_df</code>(<code>rating_df</code>:<code>DataFrame</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>) -&gt; <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
+<blockquote><p><code>from_df</code>(<code>rating_df</code>:<code>DataFrame</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>) → <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L33">[source]</a></p>
 </blockquote>
 
@@ -298,7 +325,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=from_csv></a><code>from_csv</code></h4>
-<blockquote><p><code>from_csv</code>(<code>csv_name</code>:<code>str</code>, <code>kwargs</code>) -&gt; <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
+<blockquote><p><code>from_csv</code>(<code>csv_name</code>:<code>str</code>, <code>kwargs</code>) → <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L49">[source]</a></p>
 </blockquote>
 
@@ -362,7 +389,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_collab_learner></a><code>get_collab_learner</code></h4>
-<blockquote><p><code>get_collab_learner</code>(<code>ratings</code>:<code>DataFrame</code>, <code>n_factors</code>:<code>int</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>test</code>:<code>DataFrame</code>=<code>None</code>, <code>metrics</code>=<code>None</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>, <code>loss_fn</code>:<code>LossFunction</code>=<code>'mse_loss'</code>, <code>kwargs</code>) -&gt; <a href="/basic_train.html#Learner"><code>Learner</code></a>
+<blockquote><p><code>get_collab_learner</code>(<code>ratings</code>:<code>DataFrame</code>, <code>n_factors</code>:<code>int</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>test</code>:<code>DataFrame</code>=<code>None</code>, <code>metrics</code>=<code>None</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>, <code>loss_fn</code>:<code>LossFunction</code>=<code>'mse_loss'</code>, <code>kwargs</code>) → <a href="/basic_train.html#Learner"><code>Learner</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L70">[source]</a></p>
 </blockquote>
 

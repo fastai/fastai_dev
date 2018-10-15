@@ -205,7 +205,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <span class="n">path</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -217,7 +217,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>PosixPath(&#39;/data1/jhoward/git/fastai/fastai/../data/imdb_sample&#39;)</pre>
+<pre>PosixPath(&#39;/home/ubuntu/fastai/fastai/../data/imdb_sample&#39;)</pre>
 </div>
 
 </div>
@@ -241,7 +241,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -253,6 +253,19 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -313,7 +326,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_lm</span> <span class="o">=</span> <span class="n">text_data_from_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">data_func</span><span class="o">=</span><span class="n">lm_data</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -712,7 +725,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <span class="n">texts</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -724,6 +737,19 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -743,263 +769,263 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
   <tbody>
     <tr>
       <th>0</th>
-      <td>\n</td>
-      <td>for</td>
+      <td>xxfld</td>
+      <td>protagonist</td>
+      <td>xxunk</td>
+      <td>into</td>
+      <td>occasionally</td>
+      <td>start</td>
+      <td>humor</td>
+      <td>his</td>
       <td>the</td>
-      <td>could</td>
-      <td>wells</td>
-      <td>are</td>
-      <td>big</td>
-      <td>.</td>
-      <td>for</td>
-      <td>my</td>
+      <td>xxunk</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>xxbos</td>
-      <td>all</td>
+      <td>1</td>
+      <td>is</td>
+      <td>for</td>
+      <td>this</td>
       <td>xxunk</td>
-      <td>have</td>
-      <td>'</td>
-      <td>:</td>
-      <td>an</td>
-      <td>after</td>
-      <td>him</td>
-      <td>xxunk</td>
+      <td>planning</td>
+      <td>is</td>
+      <td>revenge</td>
+      <td>box</td>
+      <td>in</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>xxfld</td>
-      <td>of</td>
-      <td>beer</td>
-      <td>ran</td>
-      <td>original</td>
-      <td>stop</td>
-      <td>incompetent</td>
-      <td>shooting</td>
+      <td>un</td>
+      <td>xxunk</td>
+      <td>a</td>
+      <td>film</td>
       <td>in</td>
-      <td>shot</td>
+      <td>and</td>
+      <td>the</td>
+      <td>.</td>
+      <td>office</td>
+      <td>my</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>1</td>
-      <td>five</td>
+      <td>-</td>
+      <td>her</td>
+      <td>massive</td>
+      <td>,</td>
+      <td>other</td>
+      <td>not</td>
+      <td>biggest</td>
+      <td>still</td>
+      <td>,</td>
       <td>xxunk</td>
-      <td>away</td>
-      <td>narrative</td>
-      <td>and</td>
-      <td>as</td>
-      <td>carradine</td>
-      <td>future</td>
-      <td>so</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>un</td>
-      <td>minutes</td>
-      <td>could</td>
-      <td>from</td>
-      <td></td>
       <td>xxunk</td>
-      <td>he</td>
-      <td>she</td>
+      <td>early</td>
+      <td>series</td>
+      <td>although</td>
+      <td>versions</td>
+      <td>filming</td>
+      <td>problem</td>
+      <td>alive</td>
+      <td>xxunk</td>
       <td>.</td>
-      <td>far</td>
     </tr>
     <tr>
       <th>5</th>
       <td>-</td>
-      <td>while</td>
-      <td>have</td>
-      <td>that</td>
-      <td>as</td>
-      <td>what</td>
-      <td>seemed</td>
-      <td>beats</td>
-      <td>\n</td>
-      <td>up</td>
+      <td>life</td>
+      <td>of</td>
+      <td>having</td>
+      <td>of</td>
+      <td>until</td>
+      <td>with</td>
+      <td>,</td>
+      <td>b.</td>
+      <td>first</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>xxunk</td>
+      <td>believable</td>
+      <td>as</td>
+      <td>gags</td>
       <td>the</td>
-      <td>been</td>
-      <td>thing</td>
-      <td>has</td>
-      <td>you</td>
-      <td>in</td>
-      <td>a</td>
-      <td>xxbos</td>
-      <td>my</td>
+      <td>the</td>
+      <td>everything</td>
+      <td>the</td>
+      <td>it</td>
+      <td>demille</td>
+      <td>,</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>-</td>
-      <td>protagonist</td>
+      <td>!</td>
+      <td>a</td>
+      <td>built</td>
+      <td>main</td>
+      <td>story</td>
+      <td>has</td>
+      <td>film</td>
+      <td>looks</td>
+      <td>stopped</td>
       <td>the</td>
-      <td>,</td>
-      <td>been</td>
-      <td>want</td>
-      <td>the</td>
-      <td>xxunk</td>
-      <td>xxfld</td>
-      <td>xxunk</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>believable</td>
-      <td>is</td>
-      <td>xxunk</td>
-      <td>but</td>
-      <td>noted</td>
+      <td>meg</td>
+      <td>butcher</td>
+      <td>upon</td>
+      <td>character</td>
       <td>.</td>
-      <td>dream</td>
+      <td>come</td>
+      <td>.</td>
+      <td>like</td>
+      <td>doing</td>
       <td>xxunk</td>
-      <td>1</td>
-      <td>,</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>!</td>
-      <td>xxunk</td>
-      <td>for</td>
-      <td>anyway</td>
+      <td>ryan</td>
       <td>.</td>
-      <td>use</td>
-      <td>.</td>
-      <td>before</td>
-      <td>after</td>
-      <td>i</td>
+      <td>gags</td>
+      <td>a</td>
+      <td>wells</td>
+      <td>down</td>
+      <td>sure</td>
+      <td>carradine</td>
+      <td>films</td>
+      <td>scene</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>meg</td>
-      <td>her</td>
-      <td>a</td>
-      <td>.</td>
-      <td>viewers</td>
-      <td>your</td>
-      <td>\n\n</td>
-      <td>johnny</td>
-      <td>the</td>
-      <td>thought</td>
+      <td>does</td>
+      <td>weird</td>
+      <td>,</td>
+      <td>drunk</td>
+      <td>'</td>
+      <td>on</td>
+      <td>,</td>
+      <td>tries</td>
+      <td>about</td>
+      <td>between</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>ryan</td>
-      <td>early</td>
-      <td>massive</td>
-      <td>i</td>
-      <td>may</td>
-      <td>time</td>
+      <td>n't</td>
+      <td>stuff</td>
+      <td>but</td>
+      <td>and</td>
+      <td>description</td>
       <td>a</td>
-      <td>can</td>
-      <td>failure</td>
-      <td>it</td>
+      <td>making</td>
+      <td>to</td>
+      <td>non</td>
+      <td>the</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>does</td>
-      <td>life</td>
-      <td>series</td>
-      <td>actually</td>
-      <td>find</td>
-      <td>to</td>
-      <td>lack</td>
-      <td>get</td>
+      <td>even</td>
+      <td>.</td>
+      <td>stops</td>
+      <td>a</td>
       <td>of</td>
-      <td>would</td>
+      <td>storyboard</td>
+      <td>fun</td>
+      <td>shoot</td>
+      <td>-</td>
+      <td>women</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>n't</td>
-      <td>as</td>
+      <td>look</td>
+      <td>then</td>
+      <td>short</td>
+      <td>heroine</td>
+      <td>the</td>
+      <td>.</td>
       <td>of</td>
-      <td>was</td>
-      <td>it</td>
-      <td>start</td>
-      <td>of</td>
-      <td>his</td>
-      <td>"</td>
-      <td>xxunk</td>
+      <td>her</td>
+      <td>american</td>
+      <td>at</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>even</td>
-      <td>a</td>
-      <td>gags</td>
-      <td>getting</td>
-      <td>informative</td>
-      <td>planning</td>
-      <td>humor</td>
-      <td>revenge</td>
+      <td>her</td>
+      <td>there</td>
+      <td>(</td>
+      <td>addict</td>
+      <td>martians</td>
+      <td>you</td>
+      <td>mentally</td>
+      <td>and</td>
+      <td>history</td>
       <td>the</td>
-      <td>in</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>look</td>
-      <td>butcher</td>
-      <td>built</td>
-      <td>into</td>
-      <td>to</td>
-      <td>and</td>
-      <td>is</td>
+      <td>usual</td>
+      <td>'s</td>
+      <td>for</td>
+      <td>did</td>
+      <td></td>
+      <td>certainly</td>
+      <td>ill</td>
+      <td>misses</td>
       <td>.</td>
       <td>xxunk</td>
-      <td>my</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>her</td>
-      <td>.</td>
-      <td>upon</td>
-      <td>this</td>
-      <td>note</td>
-      <td>not</td>
+      <td>xxunk</td>
       <td>the</td>
-      <td>still</td>
-      <td>"</td>
+      <td>all</td>
+      <td>n't</td>
+      <td>a</td>
+      <td>have</td>
+      <td>people</td>
+      <td>,</td>
+      <td>his</td>
       <td>xxunk</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>usual</td>
-      <td>weird</td>
-      <td>gags</td>
-      <td>film</td>
-      <td>plot</td>
-      <td>filming</td>
-      <td>biggest</td>
-      <td>alive</td>
-      <td>at</td>
-      <td>.</td>
+      <td>lovable</td>
+      <td>core</td>
+      <td>the</td>
+      <td>come</td>
+      <td>giant</td>
+      <td>the</td>
+      <td>is</td>
+      <td>but</td>
+      <td>films</td>
+      <td>--</td>
     </tr>
     <tr>
       <th>18</th>
+      <td>self</td>
+      <td>premise</td>
       <td>xxunk</td>
-      <td>stuff</td>
-      <td>,</td>
-      <td>,</td>
-      <td>details</td>
-      <td>until</td>
-      <td>problem</td>
-      <td>,</td>
-      <td>the</td>
-      <td>first</td>
+      <td>as</td>
+      <td>head</td>
+      <td>ability</td>
+      <td>pretty</td>
+      <td>it</td>
+      <td>for</td>
+      <td>undertext</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>lovable</td>
-      <td>.</td>
-      <td>but</td>
-      <td>although</td>
-      <td>that</td>
-      <td>everything</td>
-      <td>with</td>
-      <td>it</td>
-      <td>box</td>
-      <td>,</td>
+      <td>in</td>
+      <td>of</td>
+      <td>)</td>
+      <td>an</td>
+      <td>xxunk</td>
+      <td>and</td>
+      <td>low</td>
+      <td>does</td>
+      <td>the</td>
+      <td>:</td>
     </tr>
   </tbody>
 </table>
@@ -1030,7 +1056,7 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
     <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1040,11 +1066,11 @@ summary: "Basic dataset for NLP tasks and helper functions to create a DataBunch
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>torch.Size([75, 64])
-torch.Size([35, 64])
-torch.Size([73, 64])
-torch.Size([70, 64])
+<pre>torch.Size([71, 64])
+torch.Size([61, 64])
 torch.Size([71, 64])
+torch.Size([71, 64])
+torch.Size([72, 64])
 </pre>
 </div>
 </div>
@@ -1199,7 +1225,7 @@ torch.Size([71, 64])
 <span class="n">x</span><span class="p">[:</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1211,27 +1237,26 @@ torch.Size([71, 64])
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>tensor([[   1,    1,    1,    1,    1,    1,    1,    1,    1,    1],
-        [   1,    1,    1,    1,    1,    1,    1,    1,    1,    1],
-        [   1,    1,    1,    1,    1,    1,    1,    1,    1,    1],
-        [   1,    1,    1,    1,    1,    1,    1,    1,    1,    1],
-        [  42,   42,   42,   42,    1,    1,    1,    1,    1,    1],
-        [  43,   43,   43,   43,   42,   42,   42,    1,    1,    1],
-        [  44,   44,   44,   44,   43,   43,   43,   42,    1,    1],
-        [  39,   39,   39,   39,   44,   44,   44,   43,   42,   42],
-        [  14,   12,   19,  224,   39,   39,   39,   44,   43,   43],
-        [   9,  307,   15, 2118,  111,   12, 5128,   39,   44,   44],
-        [   6, 1809, 2753, 1119, 1224,  661,   53,   14,   39,   39],
-        [1818,  891, 5972,    3,    4,  792,  315,   25,  474,   14],
-        [ 413,    4,   15,   19,   24,    6,  344,    9,   21,   22],
-        [   5,   12,    9,   12,    2,  218,  303,   53,    2,   17],
-        [  90,  143,    6,  156,   25,   53,   11,    6, 3605,    2],
-        [ 976,   13, 2284,   13,  261,    2, 1838,  212, 1937,  106],
-        [1972,    0,    7,    4,  186,  129,   52,  271,  544,  722],
-        [ 434,  160, 3284,   24, 1704,   11,  153,    8,    4,   22],
-        [   3,    9,   18,  298,   48,    2,    8,  244,   14,  163],
-        [  10,  484,    0,    0,   54,  103,  657,    8,   17,  654]],
-       device=&#39;cuda:0&#39;)</pre>
+<pre>tensor([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]], device=&#39;cuda:0&#39;)</pre>
 </div>
 
 </div>
