@@ -28,7 +28,7 @@ jobs:
 ##################
 
 
-- job: 'nbstripout-config'
+- job: 'nbstripout_config'
 
   pool:
     vmImage: 'Ubuntu-16.04'
