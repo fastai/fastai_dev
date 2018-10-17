@@ -22,7 +22,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The fastai library is built such that the pictures loaded are wrapped in an <a href="/vision.image.html#Image"><code>Image</code></a>. This <a href="/vision.image.html#Image"><code>Image</code></a> contains the array of pixels associated to the picture, but also has a lot of built-in functions that will help the fastai library to process transformations applied to the corresponding image. There are also sub-classes for special types of image-like objects:</p>
 <ul>
-<li><a href="/vision.image.html#ImageMask"><code>ImageMask</code></a> for segmentation masks</li>
+<li><a href="/vision.image.html#ImageSegment"><code>ImageSegment</code></a> for segmentation masks</li>
 <li><a href="/vision.image.html#ImageBBox"><code>ImageBBox</code></a> for bounding boxes</li>
 </ul>
 <p>See the following sections for documentation of all the details of these classes. But first, let's have a quick look at the main functionality you'll need to know about.</p>
@@ -188,7 +188,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/vision.image.html#Image"><code>Image</code></a> is the class that wraps every picture in the fastai library. It is subclassed to create <a href="/vision.image.html#ImageMask"><code>ImageMask</code></a> and <a href="/vision.image.html#ImageBBox"><code>ImageBBox</code></a> when dealing with segmentation and object detection tasks.</p>
+<p><a href="/vision.image.html#Image"><code>Image</code></a> is the class that wraps every picture in the fastai library. It is subclassed to create <a href="/vision.image.html#ImageSegment"><code>ImageSegment</code></a> and <a href="/vision.image.html#ImageBBox"><code>ImageBBox</code></a> when dealing with segmentation and object detection tasks.</p>
 
 </div>
 </div>
@@ -448,7 +448,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For a segmentation task, the target is usually a mask. The fastai library represents it as an <a href="/vision.image.html#ImageMask"><code>ImageMask</code></a> object.</p>
+<p>For a segmentation task, the target is usually a mask. The fastai library represents it as an <a href="/vision.image.html#ImageSegment"><code>ImageSegment</code></a> object.</p>
 
 </div>
 </div>
@@ -462,8 +462,8 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=ImageMask></a><code>class</code> <code>ImageMask</code></h3>
-<blockquote><p><code>ImageMask</code>(<code>px</code>:<code>Tensor</code>) :: <a href="/vision.image.html#Image"><code>Image</code></a></p>
+<h3><a id=ImageSegment></a><code>class</code> <code>ImageSegment</code></h3>
+<blockquote><p><code>ImageSegment</code>(<code>px</code>:<code>Tensor</code>) :: <a href="/vision.image.html#Image"><code>Image</code></a></p>
 </blockquote>
 <p>Support applying transforms to mask data in <code>px</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L205">[source]</a></p>
 
@@ -492,9 +492,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=open_mask></a><code>open_mask</code></h4>
-<blockquote><p><code>open_mask</code>(<code>fn</code>:<code>PathOrStr</code>) → <a href="/vision.image.html#ImageMask"><code>ImageMask</code></a></p>
+<blockquote><p><code>open_mask</code>(<code>fn</code>:<code>PathOrStr</code>) → <a href="/vision.image.html#ImageSegment"><code>ImageSegment</code></a></p>
 </blockquote>
-<p>Return <a href="/vision.image.html#ImageMask"><code>ImageMask</code></a> object create from mask in file <code>fn</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L358">[source]</a></p>
+<p>Return <a href="/vision.image.html#ImageSegment"><code>ImageSegment</code></a> object create from mask in file <code>fn</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L358">[source]</a></p>
 
 </div>
 
@@ -537,7 +537,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>An <a href="/vision.image.html#ImageMask"><code>ImageMask</code></a> object has the same properties as an <a href="/vision.image.html#Image"><code>Image</code></a>. The only difference is that when applying the transformations to an <a href="/vision.image.html#ImageMask"><code>ImageMask</code></a>, it will ignore the functions that deal with lighting and keep values of 0 and 1. As explained earlier, it's easy to show the segmentation mask over the associated <a href="/vision.image.html#Image"><code>Image</code></a> by using the <code>y</code> argument of <a href="/vision.image.html#show_image"><code>show_image</code></a>.</p>
+<p>An <a href="/vision.image.html#ImageSegment"><code>ImageSegment</code></a> object has the same properties as an <a href="/vision.image.html#Image"><code>Image</code></a>. The only difference is that when applying the transformations to an <a href="/vision.image.html#ImageSegment"><code>ImageSegment</code></a>, it will ignore the functions that deal with lighting and keep values of 0 and 1. As explained earlier, it's easy to show the segmentation mask over the associated <a href="/vision.image.html#Image"><code>Image</code></a> by using the <code>y</code> argument of <a href="/vision.image.html#show_image"><code>show_image</code></a>.</p>
 
 </div>
 </div>
