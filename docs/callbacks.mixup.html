@@ -271,7 +271,7 @@ epoch  train loss  valid loss  accuracy
 <p>We often have to modify the loss so that it is compatible with Mixup: pytorch was very careful to avoid one-hot encoding targets when it could, so it seems a bit of a drag to undo this. Fortunately for us, if the loss is a classic <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.cross_entropy">cross-entropy</a>, we have</p>
 <p><code>loss(output, new_target) = t * loss(output, target1) + (1-t) * loss(output, target2)</code></p>
 <p>so we won’t one-hot encode anything and just compute those two losses then do the linear combination.</p>
-<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train.html#mixup"><code>mixup</code></a> function will use it to change the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.cross_entropy"><code>Learner.loss_fn</code></a> if necessary.</p>
+<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train.html#mixup"><code>mixup</code></a> function will use it to change the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.cross_entropy"><code>Learner.loss_func</code></a> if necessary.</p>
 
 </div>
 </div>

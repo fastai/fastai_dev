@@ -75,7 +75,7 @@ summary: "`Learner` support for computer vision"
 <p>Note that the very last block doesn't have a <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.ReLU"><code>nn.ReLU</code></a> activation, to allow you to use any final activation you want (generally included in the loss function in pytorch). Also, the backbone will be frozen if you choose <code>pretrained=True</code> (so only the head will train if you call <a href="/basic_train.html#fit"><code>fit</code></a>) so that you can immediately start phase one of training as described above.</p>
 <p>Alternatively, you can define your own <code>custom_head</code> to put on top of the backbone. If you want to specify where to split <code>arch</code> you should so in the argument <code>cut</code> which can either be the index of a specific layer (the result will not include that layer) or a function that, when passed the model, will return the backbone you want.</p>
 <p>The final model obtained by stacking the backbone and the head (custom or defined as we saw) is then separated in groups for gradual unfreezeing or differential learning rates. You can specify of to split the backbone in groups with the optional argument <code>split_on</code> (should be a function that returns those groups when given the backbone).</p>
-<p>The <code>kwargs</code> will be passed on to <a href="/basic_train.html#Learner"><code>Learner</code></a>, so you can put here anything that <a href="/basic_train.html#Learner"><code>Learner</code></a> will accept (<a href="/metrics.html#metrics"><code>metrics</code></a>, <code>loss_fn</code>, <code>opt_fn</code>...)</p>
+<p>The <code>kwargs</code> will be passed on to <a href="/basic_train.html#Learner"><code>Learner</code></a>, so you can put here anything that <a href="/basic_train.html#Learner"><code>Learner</code></a> will accept (<a href="/metrics.html#metrics"><code>metrics</code></a>, <code>loss_func</code>, <code>opt_func</code>...)</p>
 
 </div>
 </div>
@@ -108,25 +108,6 @@ summary: "`Learner` support for computer vision"
 
 <div class="output_wrapper">
 <div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="4be4cf67-705c-45af-bcc5-a2104c96de98"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#4be4cf67-705c-45af-bcc5-a2104c96de98');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
 
 <div class="output_area">
 
@@ -284,25 +265,6 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_area">
 
-
-
-
- 
- 
-<div id="92b5f1df-aa64-4137-9f72-1dec1265eabd"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#92b5f1df-aa64-4137-9f72-1dec1265eabd');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:07
 epoch  train loss  valid loss
@@ -310,44 +272,6 @@ epoch  train loss  valid loss
 
 </pre>
 </div>
-</div>
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="7da73e49-3950-445b-8fde-5880f73c5752"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#7da73e49-3950-445b-8fde-5880f73c5752');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="3b69c62d-104e-4fa7-8940-c463ada325a4"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#3b69c62d-104e-4fa7-8940-c463ada325a4');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
 </div>
 
 </div>
