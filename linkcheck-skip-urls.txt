@@ -1,0 +1,7 @@
+# #! url is deprecated and causes a false negative report
+https://groups.google.com/forum/
+
+# domains that block robots
+https://github.com/
+https://test.pypi.org/
+https://www.sciencedirect.com/

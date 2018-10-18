@@ -1,0 +1,30 @@
+# This pipeline is designed to run as a cron-job and not triggered by every build - once a day is probably enough
+
+jobs:
+
+- job: 'docs_websites_linkchecker'
+
+  pool:
+    vmImage: 'Ubuntu-16.04'
+
+  steps:
+    - script: |
+      echo "Installing dart"
+      sudo apt-get update
+      sudo apt-get install apt-transport-https
+      sudo sh -c 'curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -'
+      sudo sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+      sudo apt-get update
+      sudo apt-get install dart
+
+      echo "Installing linkchecker"
+      /usr/lib/dart/bin/pub global activate linkcheck
+    displayName: 'Install dart + linkcheck'
+    continueOnError: false
+
+    - script: |
+      echo "Testing docs"
+      curl -O https://raw.githubusercontent.com/fastai/fastai_docs/master/linkcheck-skip-urls.txt
+      ~/.pub-cache/bin/linkcheck -e --skip-file linkcheck-skip-urls.txt docs.fast.ai docs-dev.fast.ai
+    displayName: 'linkchecker for docs.fast.ai docs-dev.fast.ai'
+    continueOnError: false
