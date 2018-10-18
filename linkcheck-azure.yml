@@ -8,7 +8,7 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
-    - script: |
+  - script: |
       echo "Installing dart"
       sudo apt-get update
       sudo apt-get install apt-transport-https
@@ -22,7 +22,7 @@ jobs:
     displayName: 'Install dart + linkcheck'
     continueOnError: false
 
-    - script: |
+  - script: |
       echo "Testing docs"
       curl -O https://raw.githubusercontent.com/fastai/fastai_docs/master/linkcheck-skip-urls.txt
       ~/.pub-cache/bin/linkcheck -e --skip-file linkcheck-skip-urls.txt docs.fast.ai docs-dev.fast.ai
