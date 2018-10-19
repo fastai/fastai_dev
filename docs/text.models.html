@@ -50,7 +50,7 @@ summary: "Implementation of the AWD-LSTM and the RNN models"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_language_model></a><code>get_language_model</code></h4>
 <blockquote><p><code>get_language_model</code>(<code>vocab_sz</code>:<code>int</code>, <code>emb_sz</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>n_layers</code>:<code>int</code>, <code>pad_token</code>:<code>int</code>, <code>tie_weights</code>:<code>bool</code>=<code>True</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>bias</code>:<code>bool</code>=<code>True</code>, <code>bidir</code>:<code>bool</code>=<code>False</code>, <code>output_p</code>:<code>float</code>=<code>0.4</code>, <code>hidden_p</code>:<code>float</code>=<code>0.2</code>, <code>input_p</code>:<code>float</code>=<code>0.6</code>, <code>embed_p</code>:<code>float</code>=<code>0.1</code>, <code>weight_p</code>:<code>float</code>=<code>0.5</code>) → <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L208">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L206">[source]</a></p>
 </blockquote>
 
 </div>
@@ -81,7 +81,7 @@ summary: "Implementation of the AWD-LSTM and the RNN models"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_rnn_classifier></a><code>get_rnn_classifier</code></h4>
 <blockquote><p><code>get_rnn_classifier</code>(<code>bptt</code>:<code>int</code>, <code>max_seq</code>:<code>int</code>, <code>n_class</code>:<code>int</code>, <code>vocab_sz</code>:<code>int</code>, <code>emb_sz</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>n_layers</code>:<code>int</code>, <code>pad_token</code>:<code>int</code>, <code>layers</code>:<code>Collection</code>[<code>int</code>], <code>drops</code>:<code>Collection</code>[<code>float</code>], <code>bidir</code>:<code>bool</code>=<code>False</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>hidden_p</code>:<code>float</code>=<code>0.2</code>, <code>input_p</code>:<code>float</code>=<code>0.6</code>, <code>embed_p</code>:<code>float</code>=<code>0.1</code>, <code>weight_p</code>:<code>float</code>=<code>0.5</code>) → <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L217">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L215">[source]</a></p>
 </blockquote>
 
 </div>
@@ -389,7 +389,7 @@ tensor([[-0.6580, -0.1605],
 <div class="output_markdown rendered_html output_subarea ">
 <h3><a id=SequentialRNN></a><code>class</code> <code>SequentialRNN</code></h3>
 <blockquote><p><code>SequentialRNN</code>(<code>args</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sequential"><code>Sequential</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L154">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L152">[source]</a></p>
 </blockquote>
 
 </div>
@@ -418,7 +418,7 @@ tensor([[-0.6580, -0.1605],
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=reset></a><code>reset</code></h4>
 <blockquote><p><code>reset</code>()
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L156">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L154">[source]</a></p>
 </blockquote>
 
 </div>
@@ -551,7 +551,7 @@ tensor([[-0.6580, -0.1605],
 <h4><a id=reset></a><code>reset</code></h4>
 <blockquote><p><code>reset</code>()</p>
 </blockquote>
-<p>Reset the hidden states.  <a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L128">[source]</a></p>
+<p>Reset the hidden states.  <a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L126">[source]</a></p>
 
 </div>
 
@@ -572,7 +572,7 @@ tensor([[-0.6580, -0.1605],
 <div class="output_markdown rendered_html output_subarea ">
 <h3><a id=LinearDecoder></a><code>class</code> <code>LinearDecoder</code></h3>
 <blockquote><p><code>LinearDecoder</code>(<code>n_out</code>:<code>int</code>, <code>n_hid</code>:<code>int</code>, <code>output_p</code>:<code>float</code>, <code>tie_encoder</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>=<code>None</code>, <code>bias</code>:<code>bool</code>=<code>True</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L135">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L133">[source]</a></p>
 </blockquote>
 
 </div>
@@ -607,7 +607,7 @@ tensor([[-0.6580, -0.1605],
 <div class="output_markdown rendered_html output_subarea ">
 <h3><a id=MultiBatchRNNCore></a><code>class</code> <code>MultiBatchRNNCore</code></h3>
 <blockquote><p><code>MultiBatchRNNCore</code>(<code>bptt</code>:<code>int</code>, <code>max_seq</code>:<code>int</code>, <code>args</code>, <code>kwargs</code>) :: <a href="/text.models.html#RNNCore"><code>RNNCore</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L160">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L158">[source]</a></p>
 </blockquote>
 
 </div>
@@ -637,7 +637,7 @@ tensor([[-0.6580, -0.1605],
 <h4><a id=concat></a><code>concat</code></h4>
 <blockquote><p><code>concat</code>(<code>arrs</code>:<code>Collection</code>[<code>Tensor</code>]) → <code>Tensor</code></p>
 </blockquote>
-<p>Concatenate the <code>arrs</code> along the batch dimension.  <a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L167">[source]</a></p>
+<p>Concatenate the <code>arrs</code> along the batch dimension.  <a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L165">[source]</a></p>
 
 </div>
 
@@ -658,7 +658,7 @@ tensor([[-0.6580, -0.1605],
 <div class="output_markdown rendered_html output_subarea ">
 <h3><a id=PoolingLinearClassifier></a><code>class</code> <code>PoolingLinearClassifier</code></h3>
 <blockquote><p><code>PoolingLinearClassifier</code>(<code>layers</code>:<code>Collection</code>[<code>int</code>], <code>drops</code>:<code>Collection</code>[<code>float</code>]) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L182">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L180">[source]</a></p>
 </blockquote>
 
 </div>
@@ -687,7 +687,7 @@ tensor([[-0.6580, -0.1605],
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=pool></a><code>pool</code></h4>
 <blockquote><p><code>pool</code>(<code>x</code>:<code>Tensor</code>, <code>bs</code>:<code>int</code>, <code>is_max</code>:<code>bool</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L193">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/models.py#L191">[source]</a></p>
 </blockquote>
 
 </div>

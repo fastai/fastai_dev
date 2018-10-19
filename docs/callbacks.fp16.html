@@ -50,7 +50,7 @@ summary: "Training in mixed precision implementation"
 <h4><a id=to_fp16></a><code>to_fp16</code></h4>
 <blockquote><p><code>to_fp16</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) → <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
 </blockquote>
-<p>Transform <code>learn</code> in FP16 precision.  <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L28">[source]</a></p>
+<p>Transform <code>learn</code> in FP16 precision.  <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L29">[source]</a></p>
 
 </div>
 
@@ -72,7 +72,7 @@ summary: "Training in mixed precision implementation"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">()</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span><span class="o">.</span><span class="n">to_fp16</span><span class="p">()</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -149,7 +149,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
-<blockquote><p><code>on_backward_begin</code>(<code>last_loss</code>:<code>Rank0Tensor</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <code>Rank0Tensor</code></p>
+<blockquote><p><code>on_backward_begin</code>(<code>last_loss</code>:<code>Rank0Tensor</code>, <code>kwargs</code>:<code>Any</code>) → <code>Rank0Tensor</code></p>
 </blockquote>
 <p>Scale gradients up by <code>loss_scale</code> to prevent underflow.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L90">[source]</a></p>
 
@@ -193,7 +193,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_loss_begin></a><code>on_loss_begin</code></h4>
-<blockquote><p><code>on_loss_begin</code>(<code>last_output</code>:<code>Tensor</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <code>Tensor</code></p>
+<blockquote><p><code>on_loss_begin</code>(<code>last_output</code>:<code>Tensor</code>, <code>kwargs</code>:<code>Any</code>) → <code>Tensor</code></p>
 </blockquote>
 <p>Convert half precision output to FP32 to avoid reduction overflow.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L86">[source]</a></p>
 
