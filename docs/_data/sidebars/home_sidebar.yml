@@ -1,6 +1,15 @@
 entries:
 - folders:
   - folderitems:
+    - external_url: https://github.com/fastai/fastai/blob/master/README.html#installation
+      output: web,pdf
+      title: Installation
+    - external_url: http://docs-dev.fast.ai/troubleshoot.html
+      output: web,pdf
+      title: Troubleshooting
+    output: web
+    title: Getting started
+  - folderitems:
     - output: web,pdf
       title: Overview
       url: training.html
@@ -147,22 +156,22 @@ entries:
     output: web
     title: Doc authoring
   - folderitems:
-    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/develop.md
+    - external_url: http://docs-dev.fast.ai/develop.html
       output: web,pdf
       title: Overview
-    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/test.md
+    - external_url: http://docs-dev.fast.ai/test.html
       output: web,pdf
       title: Testing
-    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/style.md
+    - external_url: http://docs-dev.fast.ai/style.html
       output: web,pdf
       title: Style guide
-    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/abbr.md
+    - external_url: http://docs-dev.fast.ai/abbr.html
       output: web,pdf
       title: Abbreviation
     - output: web,pdf
       title: Typing
       url: fastai_typing.html
-    - external_url: https://github.com/fastai/fastai/blob/master/docs-dev/release.md
+    - external_url: http://docs-dev.fast.ai/release.html
       output: web,pdf
       title: Packaging fastai
     output: web
