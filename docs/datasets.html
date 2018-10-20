@@ -134,7 +134,21 @@ sidebar: home_sidebar
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For the rest of the datasets you will need to manually download them. This can be done with <code>untar_data</code> or <code>download_data</code>. <code>untar_data</code> will decompress the data file and download it while <code>download_data</code> will just download and save the compressed file in <code>.tgz</code> format.</p>
+<p>For the rest of the datasets you will need to manually download them. This can be done with <a href="/datasets.html#untar_data"><code>untar_data</code></a> or <a href="/datasets.html#download_data"><code>download_data</code></a>. <a href="/datasets.html#untar_data"><code>untar_data</code></a> will decompress the data file and download it while <a href="/datasets.html#download_data"><code>download_data</code></a> will just download and save the compressed file in <code>.tgz</code> format.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Downloading-Data">Downloading Data<a class="anchor-link" href="#Downloading-Data">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>By default, data will be downloaded to <code>~/.fastai/data</code> folder.<br>
+Configure the default <code>data_path</code> by editing <code>~/.fastai/config.yml</code>.</p>
 
 </div>
 </div>
@@ -151,7 +165,7 @@ sidebar: home_sidebar
 <h4><a id=untar_data></a><code>untar_data</code></h4>
 <blockquote><p><code>untar_data</code>(<code>url</code>:<code>str</code>, <code>fname</code>:<code>PathOrStr</code>=<code>None</code>, <code>dest</code>:<code>PathOrStr</code>=<code>None</code>)</p>
 </blockquote>
-<p>Download <code>url</code> if doesn't exist to <code>fname</code> and un-tgz to folder <code>dest</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L72">[source]</a></p>
+<p>Download <code>url</code> if doesn't exist to <code>fname</code> and un-tgz to folder <code>dest</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L106">[source]</a></p>
 
 </div>
 
@@ -184,16 +198,6 @@ sidebar: home_sidebar
 </div>
 </div>
 
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>PosixPath(&#39;/home/chewing/fastai/fastai/../data/planet_sample&#39;)</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -210,7 +214,7 @@ sidebar: home_sidebar
 <h4><a id=download_data></a><code>download_data</code></h4>
 <blockquote><p><code>download_data</code>(<code>url</code>:<code>str</code>, <code>fname</code>:<code>PathOrStr</code>=<code>None</code>)</p>
 </blockquote>
-<p>Download <code>url</code> to destination <code>fname</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L63">[source]</a></p>
+<p>Download <code>url</code> to destination <code>fname</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L97">[source]</a></p>
 
 </div>
 
@@ -228,6 +232,42 @@ sidebar: home_sidebar
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">download_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">PLANET_SAMPLE</span><span class="p">)</span>
 </pre></div>
 
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>PosixPath(&#39;~/.fastai/data/planet_sample.tgz&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note: If the data file already exists in a <code>data</code> directory one level up from the notebook, that data file will be used instead of <code>~/.fasta/data</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">download_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">MNIST_TINY</span><span class="p">)</span>
+</pre></div>
+
 </div>
 </div>
 </div>
@@ -240,7 +280,7 @@ sidebar: home_sidebar
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>PosixPath(&#39;/home/chewing/fastai/fastai/../data/planet_sample.tgz&#39;)</pre>
+<pre>PosixPath(&#39;~/fastai/fastai/../data/mnist_tiny.tgz&#39;)</pre>
 </div>
 
 </div>
@@ -248,6 +288,45 @@ sidebar: home_sidebar
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">Config</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=Config></a><code>class</code> <code>Config</code></h2>
+<blockquote><p><code>Config</code>()</p>
+</blockquote>
+<p>Creates a default config file at <code>~/.fastai/config.yml</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L59">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Config class creates a <code>~/.fastai</code> home directory where config files and datasets will be stored</p>
+
+</div>
+</div>
 </div>
 </div>
  
