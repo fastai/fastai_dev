@@ -12,6 +12,6 @@ First, thanks a lot for wanting to help! Make sure you have read the [doc on cod
 ## Do you want to contribute to the documentation?
 
 * Sign the [Contributor License Agreement](https://www.clahub.com/agreements/fastai/fastai_docs).
-* Please read [Contributing to the documentation](http://docs.fast.ai/gen_doc.html)
+* Please read [Contributing to the documentation](https://docs.fast.ai/gen_doc.html)
 
 
