@@ -60,8 +60,8 @@ summary: "Implement callbacks using hooks"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
-<span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tvm</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">callback_fns</span><span class="o">=</span><span class="n">ActivationStats</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">()</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">callback_fns</span><span class="o">=</span><span class="n">ActivationStats</span><span class="p">)</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
@@ -322,7 +322,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=hook_output></a><code>hook_output</code></h4>
-<blockquote><p><code>hook_output</code>(<code>module</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>) -&gt; <a href="/callbacks.hooks.html#Hook"><code>Hook</code></a>
+<blockquote><p><code>hook_output</code>(<code>module</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>) → <a href="/callbacks.hooks.html#Hook"><code>Hook</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/hooks.py#L42">[source]</a></p>
 </blockquote>
 
@@ -351,7 +351,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=hook_outputs></a><code>hook_outputs</code></h4>
-<blockquote><p><code>hook_outputs</code>(<code>modules</code>:<code>ModuleList</code>) -&gt; <a href="/callbacks.hooks.html#Hooks"><code>Hooks</code></a>
+<blockquote><p><code>hook_outputs</code>(<code>modules</code>:<code>ModuleList</code>) → <a href="/callbacks.hooks.html#Hooks"><code>Hooks</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/hooks.py#L43">[source]</a></p>
 </blockquote>
 
@@ -384,7 +384,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=model_sizes></a><code>model_sizes</code></h4>
-<blockquote><p><code>model_sizes</code>(<code>m</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>size</code>:<code>tuple</code>=<code>(256, 256)</code>, <code>full</code>:<code>bool</code>=<code>True</code>) -&gt; <code>Tuple</code>[<code>Sizes</code>, <code>Tensor</code>, <a href="/callbacks.hooks.html#Hooks"><code>Hooks</code></a>]</p>
+<blockquote><p><code>model_sizes</code>(<code>m</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>size</code>:<code>tuple</code>=<code>(256, 256)</code>, <code>full</code>:<code>bool</code>=<code>True</code>) → <code>Tuple</code>[<code>Sizes</code>, <code>Tensor</code>, <a href="/callbacks.hooks.html#Hooks"><code>Hooks</code></a>]</p>
 </blockquote>
 <p>Pass a dummy input through the model to get the various sizes.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/hooks.py#L75">[source]</a></p>
 

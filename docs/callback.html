@@ -39,7 +39,7 @@ summary: "Implementation of the callback system"
 <h2><a id=Callback></a><code>class</code> <code>Callback</code></h2>
 <blockquote><p><code>Callback</code>()</p>
 </blockquote>
-<p>Base class for callbacks that want to record values, dynamically change learner params, etc. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L117">[source]</a></p>
+<p>Base class for callbacks that want to record values, dynamically change learner params, etc.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L117">[source]</a></p>
 
 </div>
 
@@ -72,7 +72,7 @@ summary: "Implementation of the callback system"
 </pre></div>
 <p>Note that this allows the callback user to just pass your callback name to <code>callback_fns</code> when constructing their <a href="/basic_train.html#Learner"><code>Learner</code></a>, since that always passes <code>self</code> when constructing callbacks from <code>callback_fns</code>. In addition, by passing the learner, this callback will have access to everything: e.g all the inputs/outputs as they are calculated, the losses, and also the data loaders, the optimizer, etc. At any time:</p>
 <ul>
-<li>Changing self.learn.data.train_dl or self.data.valid_dl will change them inside the fit function (we just need to pass the <a href="/data.html#DataBunch"><code>DataBunch</code></a> object to the fit function and not data.train_dl/data.valid_dl)</li>
+<li>Changing self.learn.data.train_dl or self.data.valid_dl will change them inside the fit function (we just need to pass the <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> object to the fit function and not data.train_dl/data.valid_dl)</li>
 <li>Changing self.learn.opt.opt (We have an <a href="/callback.html#OptimWrapper"><code>OptimWrapper</code></a> on top of the actual optimizer) will change it inside the fit function.</li>
 <li>Changing self.learn.data or self.learn.opt directly WILL NOT change the data or the optimizer inside the fit function.</li>
 </ul>
@@ -125,7 +125,7 @@ summary: "Implementation of the callback system"
 <h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>To initialize constants in the callback. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L120">[source]</a></p>
+<p>To initialize constants in the callback.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L120">[source]</a></p>
 
 </div>
 
@@ -160,7 +160,7 @@ self.opt.beta = new_beta</code></pre>
 <h4><a id=on_epoch_begin></a><code>on_epoch_begin</code></h4>
 <blockquote><p><code>on_epoch_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>At the beginning of each epoch. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L123">[source]</a></p>
+<p>At the beginning of each epoch.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L123">[source]</a></p>
 
 </div>
 
@@ -190,7 +190,7 @@ yet it makes writing code that needs to be done at the beginning of every epoch 
 <h4><a id=on_batch_begin></a><code>on_batch_begin</code></h4>
 <blockquote><p><code>on_batch_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Set HP before the step is done. Returns xb, yb (which can allow us to modify the input at that step if needed). <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L126">[source]</a></p>
+<p>Set HP before the step is done. Returns xb, yb (which can allow us to modify the input at that step if needed).  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L126">[source]</a></p>
 
 </div>
 
@@ -221,7 +221,7 @@ Example: change the values of the hyperparameters (if we don't do it on_batch_en
 <h4><a id=on_loss_begin></a><code>on_loss_begin</code></h4>
 <blockquote><p><code>on_loss_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Called after forward pass but before loss has been computed. Returns the output (which can allow us to modify it). <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L129">[source]</a></p>
+<p>Called after forward pass but before loss has been computed. Returns the output (which can allow us to modify it).  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L129">[source]</a></p>
 
 </div>
 
@@ -253,7 +253,7 @@ Example: putting the output back in FP32 when training in mixed precision.</p>
 <h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
 <blockquote><p><code>on_backward_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Returns the loss (which can allow us to modify it, for instance for reg functions) <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L132">[source]</a></p>
+<p>Called after the forward pass and the loss has been computed, but before backprop. Returns the loss (which can allow us to modify it, for instance for reg functions) <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L132">[source]</a></p>
 
 </div>
 
@@ -285,7 +285,7 @@ it will have the raw loss.</p>
 <h4><a id=on_backward_end></a><code>on_backward_end</code></h4>
 <blockquote><p><code>on_backward_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Called after backprop but before optimizer step. Useful for true weight decay in AdamW. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L136">[source]</a></p>
+<p>Called after backprop but before optimizer step. Useful for true weight decay in AdamW.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L136">[source]</a></p>
 
 </div>
 
@@ -315,7 +315,7 @@ before the optimizer is called.</p>
 <h4><a id=on_step_end></a><code>on_step_end</code></h4>
 <blockquote><p><code>on_step_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Called after the step of the optimizer but before the gradients are zeroed. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L139">[source]</a></p>
+<p>Called after the step of the optimizer but before the gradients are zeroed.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L139">[source]</a></p>
 
 </div>
 
@@ -345,7 +345,7 @@ are zeroed</p>
 <h4><a id=on_batch_end></a><code>on_batch_end</code></h4>
 <blockquote><p><code>on_batch_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Called at the end of the batch. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L142">[source]</a></p>
+<p>Called at the end of the batch.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L142">[source]</a></p>
 
 </div>
 
@@ -374,9 +374,9 @@ Example: change the values of the hyperparameters (if we don't do it on_batch_be
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_epoch_end></a><code>on_epoch_end</code></h4>
-<blockquote><p><code>on_epoch_end</code>(<code>kwargs</code>:<code>Any</code>) -&gt; <code>bool</code></p>
+<blockquote><p><code>on_epoch_end</code>(<code>kwargs</code>:<code>Any</code>) → <code>bool</code></p>
 </blockquote>
-<p>Called at the end of an epoch. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L145">[source]</a></p>
+<p>Called at the end of an epoch.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L145">[source]</a></p>
 
 </div>
 
@@ -407,7 +407,7 @@ Example: Save the model if we have a new best validation loss/metric.</p>
 <h4><a id=on_train_end></a><code>on_train_end</code></h4>
 <blockquote><p><code>on_train_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
-<p>Useful for cleaning up things and saving files/models. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L148">[source]</a></p>
+<p>Useful for cleaning up things and saving files/models.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L148">[source]</a></p>
 
 </div>
 
@@ -470,9 +470,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=annealing_cos></a><code>annealing_cos</code></h4>
-<blockquote><p><code>annealing_cos</code>(<code>start</code>:<code>Number</code>, <code>end</code>:<code>Number</code>, <code>pct</code>:<code>float</code>) -&gt; <code>Number</code></p>
+<blockquote><p><code>annealing_cos</code>(<code>start</code>:<code>Number</code>, <code>end</code>:<code>Number</code>, <code>pct</code>:<code>float</code>) → <code>Number</code></p>
 </blockquote>
-<p>Cosine anneal from <code>start</code> to <code>end</code> as pct goes from 0.0 to 1.0. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L255">[source]</a></p>
+<p>Cosine anneal from <code>start</code> to <code>end</code> as pct goes from 0.0 to 1.0.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L281">[source]</a></p>
 
 </div>
 
@@ -492,9 +492,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=annealing_exp></a><code>annealing_exp</code></h4>
-<blockquote><p><code>annealing_exp</code>(<code>start</code>:<code>Number</code>, <code>end</code>:<code>Number</code>, <code>pct</code>:<code>float</code>) -&gt; <code>Number</code></p>
+<blockquote><p><code>annealing_exp</code>(<code>start</code>:<code>Number</code>, <code>end</code>:<code>Number</code>, <code>pct</code>:<code>float</code>) → <code>Number</code></p>
 </blockquote>
-<p>Exponentially anneal from <code>start</code> to <code>end</code> as pct goes from 0.0 to 1.0. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L252">[source]</a></p>
+<p>Exponentially anneal from <code>start</code> to <code>end</code> as pct goes from 0.0 to 1.0.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L278">[source]</a></p>
 
 </div>
 
@@ -514,9 +514,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=annealing_linear></a><code>annealing_linear</code></h4>
-<blockquote><p><code>annealing_linear</code>(<code>start</code>:<code>Number</code>, <code>end</code>:<code>Number</code>, <code>pct</code>:<code>float</code>) -&gt; <code>Number</code></p>
+<blockquote><p><code>annealing_linear</code>(<code>start</code>:<code>Number</code>, <code>end</code>:<code>Number</code>, <code>pct</code>:<code>float</code>) → <code>Number</code></p>
 </blockquote>
-<p>Linearly anneal from <code>start</code> to <code>end</code> as pct goes from 0.0 to 1.0. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L249">[source]</a></p>
+<p>Linearly anneal from <code>start</code> to <code>end</code> as pct goes from 0.0 to 1.0.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L275">[source]</a></p>
 
 </div>
 
@@ -536,9 +536,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=annealing_no></a><code>annealing_no</code></h4>
-<blockquote><p><code>annealing_no</code>(<code>start</code>:<code>Number</code>, <code>end</code>:<code>Number</code>, <code>pct</code>:<code>float</code>) -&gt; <code>Number</code></p>
+<blockquote><p><code>annealing_no</code>(<code>start</code>:<code>Number</code>, <code>end</code>:<code>Number</code>, <code>pct</code>:<code>float</code>) → <code>Number</code></p>
 </blockquote>
-<p>No annealing, always return <code>start</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L246">[source]</a></p>
+<p>No annealing, always return <code>start</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L272">[source]</a></p>
 
 </div>
 
@@ -558,9 +558,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=annealing_poly></a><code>annealing_poly</code></h4>
-<blockquote><p><code>annealing_poly</code>(<code>degree</code>:<code>Number</code>) -&gt; <code>Number</code></p>
+<blockquote><p><code>annealing_poly</code>(<code>degree</code>:<code>Number</code>) → <code>Number</code></p>
 </blockquote>
-<p>Anneal polynomically from <code>start</code> to <code>end</code> as pct goes from 0.0 to 1.0. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L263">[source]</a></p>
+<p>Anneal polynomically from <code>start</code> to <code>end</code> as pct goes from 0.0 to 1.0.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L289">[source]</a></p>
 
 </div>
 
@@ -580,9 +580,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=CallbackHandler></a><code>class</code> <code>CallbackHandler</code></h2>
-<blockquote><p><code>CallbackHandler</code>(<code>callbacks</code>:<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>], <code>beta</code>:<code>float</code>=<code>0.98</code>)</p>
+<blockquote><p><code>CallbackHandler</code>(<code>callbacks</code>:<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>], <code>metrics</code>:<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>], <code>beta</code>:<code>float</code>=<code>0.98</code>)</p>
 </blockquote>
-<p>Manage all of the registered callback objects, smoothing loss by momentum <code>beta</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L169">[source]</a></p>
+<p>Manage all of the registered callback objects, smoothing loss by momentum <code>beta</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L169">[source]</a></p>
 
 </div>
 
@@ -611,7 +611,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
 <blockquote><p><code>on_backward_begin</code>(<code>loss</code>:<code>Tensor</code>)</p>
 </blockquote>
-<p>Handle gradient calculation on <code>loss</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L211">[source]</a></p>
+<p>Handle gradient calculation on <code>loss</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L219">[source]</a></p>
 
 </div>
 
@@ -633,7 +633,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=on_backward_end></a><code>on_backward_end</code></h4>
 <blockquote><p><code>on_backward_end</code>()</p>
 </blockquote>
-<p>Handle end of gradient calculation. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L220">[source]</a></p>
+<p>Handle end of gradient calculation.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L228">[source]</a></p>
 
 </div>
 
@@ -653,9 +653,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_batch_begin></a><code>on_batch_begin</code></h4>
-<blockquote><p><code>on_batch_begin</code>(<code>xb</code>:<code>Tensor</code>, <code>yb</code>:<code>Tensor</code>)</p>
+<blockquote><p><code>on_batch_begin</code>(<code>xb</code>:<code>Tensor</code>, <code>yb</code>:<code>Tensor</code>, <code>train</code>:<code>bool</code>=<code>True</code>)</p>
 </blockquote>
-<p>Handle new batch <code>xb</code>,<code>yb</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L195">[source]</a></p>
+<p>Handle new batch <code>xb</code>,<code>yb</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L201">[source]</a></p>
 
 </div>
 
@@ -677,7 +677,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=on_batch_end></a><code>on_batch_end</code></h4>
 <blockquote><p><code>on_batch_end</code>(<code>loss</code>:<code>Tensor</code>)</p>
 </blockquote>
-<p>Handle end of processing one batch with <code>loss</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L227">[source]</a></p>
+<p>Handle end of processing one batch with <code>loss</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L235">[source]</a></p>
 
 </div>
 
@@ -699,7 +699,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=on_epoch_begin></a><code>on_epoch_begin</code></h4>
 <blockquote><p><code>on_epoch_begin</code>()</p>
 </blockquote>
-<p>Handle new epoch. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L190">[source]</a></p>
+<p>Handle new epoch.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L196">[source]</a></p>
 
 </div>
 
@@ -719,9 +719,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=on_epoch_end></a><code>on_epoch_end</code></h4>
-<blockquote><p><code>on_epoch_end</code>(<code>val_metrics</code>:<code>MetricsList</code>) -&gt; <code>bool</code></p>
+<blockquote><p><code>on_epoch_end</code>(<code>val_loss</code>:<code>Tensor</code>) → <code>bool</code></p>
 </blockquote>
-<p>Epoch is done, process <code>val_metrics</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L235">[source]</a></p>
+<p>Epoch is done, process <code>val_metrics</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L244">[source]</a></p>
 
 </div>
 
@@ -743,7 +743,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=on_loss_begin></a><code>on_loss_begin</code></h4>
 <blockquote><p><code>on_loss_begin</code>(<code>out</code>:<code>Tensor</code>)</p>
 </blockquote>
-<p>Handle start of loss calculation with model output <code>out</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L203">[source]</a></p>
+<p>Handle start of loss calculation with model output <code>out</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L211">[source]</a></p>
 
 </div>
 
@@ -765,7 +765,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=on_step_end></a><code>on_step_end</code></h4>
 <blockquote><p><code>on_step_end</code>()</p>
 </blockquote>
-<p>Handle end of optimization step. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L223">[source]</a></p>
+<p>Handle end of optimization step.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L231">[source]</a></p>
 
 </div>
 
@@ -787,7 +787,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>epochs</code>:<code>int</code>, <code>pbar</code>:<code>PBar</code>, <code>metrics</code>:<code>MetricFuncList</code>)</p>
 </blockquote>
-<p>About to start learning. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L184">[source]</a></p>
+<p>About to start learning.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L189">[source]</a></p>
 
 </div>
 
@@ -809,7 +809,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=on_train_end></a><code>on_train_end</code></h4>
 <blockquote><p><code>on_train_end</code>(<code>exception</code>:<code>Union</code>[<code>bool</code>, <code>Exception</code>])</p>
 </blockquote>
-<p>Handle end of training, <code>exception</code> is an <code>Exception</code> or False if no exceptions during training. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L242">[source]</a></p>
+<p>Handle end of training, <code>exception</code> is an <code>Exception</code> or False if no exceptions during training.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L254">[source]</a></p>
 
 </div>
 
@@ -831,7 +831,7 @@ Examples: save log_files, load best model found during training</p>
 <h2><a id=OptimWrapper></a><code>class</code> <code>OptimWrapper</code></h2>
 <blockquote><p><code>OptimWrapper</code>(<code>opt</code>:<a href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer"><code>Optimizer</code></a>, <code>wd</code>:<code>Floats</code>=<code>0.0</code>, <code>true_wd</code>:<code>bool</code>=<code>False</code>, <code>bn_wd</code>:<code>bool</code>=<code>True</code>)</p>
 </blockquote>
-<p>Basic wrapper around an optimizer to simplify HP changes. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L8">[source]</a></p>
+<p>Basic wrapper around an optimizer to simplify HP changes.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L8">[source]</a></p>
 
 </div>
 
@@ -859,9 +859,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=create></a><code>create</code></h4>
-<blockquote><p><code>create</code>(<code>opt_func</code>:<code>Callable</code>, <code>lr</code>:<code>Union</code>[<code>float</code>, <code>Tuple</code>, <code>List</code>], <code>layer_groups</code>:<code>ModuleList</code>, <code>kwargs</code>:<code>Any</code>) -&gt; <a href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer"><code>Optimizer</code></a></p>
+<blockquote><p><code>create</code>(<code>opt_func</code>:<code>Union</code>[<code>type</code>, <code>Callable</code>], <code>lr</code>:<code>Union</code>[<code>float</code>, <code>Tuple</code>, <code>List</code>[<code>T</code>]], <code>layer_groups</code>:<code>ModuleList</code>, <code>kwargs</code>:<code>Any</code>) → <a href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer"><code>Optimizer</code></a></p>
 </blockquote>
-<p>Create an optim.Optimizer from <code>opt_func</code> with <code>lr</code>. Set lr on <code>layer_groups</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L17">[source]</a></p>
+<p>Create an optim.Optimizer from <code>opt_func</code> with <code>lr</code>. Set lr on <code>layer_groups</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L17">[source]</a></p>
 
 </div>
 
@@ -883,7 +883,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=read_defaults></a><code>read_defaults</code></h4>
 <blockquote><p><code>read_defaults</code>()</p>
 </blockquote>
-<p>Read the values inside the optimizer for the hyper-parameters. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L94">[source]</a></p>
+<p>Read the values inside the optimizer for the hyper-parameters.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L94">[source]</a></p>
 
 </div>
 
@@ -903,9 +903,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=read_val></a><code>read_val</code></h4>
-<blockquote><p><code>read_val</code>(<code>key</code>:<code>str</code>) -&gt; <code>Union</code>[<code>List</code>[<code>float</code>], <code>Tuple</code>[<code>List</code>[<code>float</code>], <code>List</code>[<code>float</code>]]]</p>
+<blockquote><p><code>read_val</code>(<code>key</code>:<code>str</code>) → <code>Union</code>[<code>List</code>[<code>float</code>], <code>Tuple</code>[<code>List</code>[<code>float</code>], <code>List</code>[<code>float</code>]]]</p>
 </blockquote>
-<p>Read a hyperparameter key in the optimizer dictionary. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L111">[source]</a></p>
+<p>Read a hyperparameter key in the optimizer dictionary.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L111">[source]</a></p>
 
 </div>
 
@@ -925,9 +925,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=set_val></a><code>set_val</code></h4>
-<blockquote><p><code>set_val</code>(<code>key</code>:<code>str</code>, <code>val</code>:<code>Any</code>, <code>bn_groups</code>:<code>bool</code>=<code>True</code>) -&gt; <code>Any</code></p>
+<blockquote><p><code>set_val</code>(<code>key</code>:<code>str</code>, <code>val</code>:<code>Any</code>, <code>bn_groups</code>:<code>bool</code>=<code>True</code>) → <code>Any</code></p>
 </blockquote>
-<p>Set the values inside the optimizer dictionary at the key. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L103">[source]</a></p>
+<p>Set the values inside the optimizer dictionary at the key.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L103">[source]</a></p>
 
 </div>
 
@@ -949,7 +949,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=step></a><code>step</code></h4>
 <blockquote><p><code>step</code>()</p>
 </blockquote>
-<p>Set weight decay and step optimizer. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L31">[source]</a></p>
+<p>Set weight decay and step optimizer.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L31">[source]</a></p>
 
 </div>
 
@@ -971,7 +971,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=zero_grad></a><code>zero_grad</code></h4>
 <blockquote><p><code>zero_grad</code>()</p>
 </blockquote>
-<p>Clear optimizer gradients. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L42">[source]</a></p>
+<p>Clear optimizer gradients.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L42">[source]</a></p>
 
 </div>
 
@@ -993,7 +993,7 @@ Examples: save log_files, load best model found during training</p>
 <h2><a id=SmoothenValue></a><code>class</code> <code>SmoothenValue</code></h2>
 <blockquote><p><code>SmoothenValue</code>(<code>beta</code>:<code>float</code>)</p>
 </blockquote>
-<p>Create a smooth moving average for a value (loss, etc). <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L152">[source]</a></p>
+<p>Create a smooth moving average for a value (loss, etc).  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L152">[source]</a></p>
 
 </div>
 
@@ -1022,7 +1022,7 @@ Examples: save log_files, load best model found during training</p>
 <h4><a id=add_value></a><code>add_value</code></h4>
 <blockquote><p><code>add_value</code>(<code>val</code>:<code>float</code>)</p>
 </blockquote>
-<p>Add current value to calculate updated smoothed value. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L158">[source]</a></p>
+<p>Add current value to calculate updated smoothed value.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L158">[source]</a></p>
 
 </div>
 
@@ -1044,7 +1044,7 @@ Examples: save log_files, load best model found during training</p>
 <h2><a id=Stepper></a><code>class</code> <code>Stepper</code></h2>
 <blockquote><p><code>Stepper</code>(<code>vals</code>:<code>StartOptEnd</code>, <code>n_iter</code>:<code>int</code>, <code>func</code>:<code>Optional</code>[<code>AnnealFunc</code>]=<code>None</code>)</p>
 </blockquote>
-<p>Used to "step" from start,end (<code>vals</code>) over <code>n_iter</code> iterations on a schedule defined by <code>func</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L267">[source]</a></p>
+<p>Used to "step" from start,end (<code>vals</code>) over <code>n_iter</code> iterations on a schedule defined by <code>func</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L293">[source]</a></p>
 
 </div>
 
@@ -1071,9 +1071,9 @@ Examples: save log_files, load best model found during training</p>
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=step></a><code>step</code></h4>
-<blockquote><p><code>step</code>() -&gt; <code>Number</code></p>
+<blockquote><p><code>step</code>() → <code>Number</code></p>
 </blockquote>
-<p>Return next value along annealed schedule. <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L276">[source]</a></p>
+<p>Return next value along annealed schedule.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callback.py#L302">[source]</a></p>
 
 </div>
 

@@ -35,7 +35,7 @@ summary: "Easy access of language models and ULMFiT"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=RNNLearner></a><code>class</code> <code>RNNLearner</code></h2>
-<blockquote><p><code>RNNLearner</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>split_func</code>:<code>OptSplitFunc</code>=<code>None</code>, <code>clip</code>:<code>float</code>=<code>None</code>, <code>adjust</code>:<code>bool</code>=<code>False</code>, <code>alpha</code>:<code>float</code>=<code>2.0</code>, <code>beta</code>:<code>float</code>=<code>1.0</code>, <code>kwargs</code>) :: <a href="/basic_train.html#Learner"><code>Learner</code></a>
+<blockquote><p><code>RNNLearner</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>split_func</code>:<code>OptSplitFunc</code>=<code>None</code>, <code>clip</code>:<code>float</code>=<code>None</code>, <code>adjust</code>:<code>bool</code>=<code>False</code>, <code>alpha</code>:<code>float</code>=<code>2.0</code>, <code>beta</code>:<code>float</code>=<code>1.0</code>, <code>kwargs</code>) :: <a href="/basic_train.html#Learner"><code>Learner</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L43">[source]</a></p>
 </blockquote>
 
@@ -70,7 +70,7 @@ summary: "Easy access of language models and ULMFiT"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=classifier></a><code>classifier</code></h4>
-<blockquote><p><code>classifier</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>max_len</code>:<code>int</code>=<code>1400</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>lin_ftrs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>ps</code>:<code>Collection</code>[<code>float</code>]=<code>None</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>) → <code>RNNLearner</code>
+<blockquote><p><code>classifier</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>max_len</code>:<code>int</code>=<code>1400</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>lin_ftrs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>ps</code>:<code>Collection</code>[<code>float</code>]=<code>None</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>) → <code>RNNLearner</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L85">[source]</a></p>
 </blockquote>
 
@@ -84,7 +84,7 @@ summary: "Easy access of language models and ULMFiT"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create an RNNLearner with a classifier model from <a href="/data.html#data"><code>data</code></a>. The model used is the encoder of an <a href="https://arxiv.org/abs/1708.02182">AWD-LSTM</a> that is built with embeddings of size <code>emb_sz</code>, a hidden size of <code>nh</code>, and <code>nl</code> layers (the <code>vocab_size</code> is inferred from the <a href="/data.html#data"><code>data</code></a>). All the dropouts are put to values that we found worked pretty well and you can control their strength by adjusting <code>drop_mult</code>. If <a href="/text.qrnn.html#text.qrnn"><code>qrnn</code></a> is True, the model uses <a href="https://arxiv.org/abs/1611.01576">QRNN cells</a> instead of LSTMs.</p>
+<p>Create an RNNLearner with a classifier model from <a href="/text.data.html#text.data"><code>data</code></a>. The model used is the encoder of an <a href="https://arxiv.org/abs/1708.02182">AWD-LSTM</a> that is built with embeddings of size <code>emb_sz</code>, a hidden size of <code>nh</code>, and <code>nl</code> layers (the <code>vocab_size</code> is inferred from the <a href="/text.data.html#text.data"><code>data</code></a>). All the dropouts are put to values that we found worked pretty well and you can control their strength by adjusting <code>drop_mult</code>. If <a href="/text.qrnn.html#text.qrnn"><code>qrnn</code></a> is True, the model uses <a href="https://arxiv.org/abs/1611.01576">QRNN cells</a> instead of LSTMs.</p>
 <p>The input texts are fed into that model by bunch of <code>bptt</code> and only the last <code>max_len</code> activations are considerated. This gives us the backbone of our model. The head then consists of:</p>
 <ul>
 <li>a layer that concatenates the final outputs of the RNN with the maximum and average of all the intermediate outputs (on the sequence length dimension),</li>
@@ -100,7 +100,7 @@ summary: "Easy access of language models and ULMFiT"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">get_imdb</span><span class="p">(</span><span class="n">classifier</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_imdb</span><span class="p">(</span><span class="n">classifier</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">learn</span> <span class="o">=</span> <span class="n">RNNLearner</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 
@@ -119,7 +119,7 @@ summary: "Easy access of language models and ULMFiT"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=language_model></a><code>language_model</code></h4>
-<blockquote><p><code>language_model</code>(<code>data</code>:<a href="/data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>tie_weights</code>:<code>bool</code>=<code>True</code>, <code>bias</code>:<code>bool</code>=<code>True</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>pretrained_fnames</code>:<code>OptStrTuple</code>=<code>None</code>, <code>kwargs</code>) → <code>RNNLearner</code>
+<blockquote><p><code>language_model</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>tie_weights</code>:<code>bool</code>=<code>True</code>, <code>bias</code>:<code>bool</code>=<code>True</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>pretrained_fnames</code>:<code>OptStrTuple</code>=<code>None</code>, <code>kwargs</code>) → <code>RNNLearner</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L70">[source]</a></p>
 </blockquote>
 
@@ -133,8 +133,8 @@ summary: "Easy access of language models and ULMFiT"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create an RNNLearner with a language model from <a href="/data.html#data"><code>data</code></a> of a certain <code>bptt</code>. The model used is an <a href="https://arxiv.org/abs/1708.02182">AWD-LSTM</a> that is built with embeddings of size <code>emb_sz</code>, a hidden size of <code>nh</code>, and <code>nl</code> layers (the <code>vocab_size</code> is inferred from the <a href="/data.html#data"><code>data</code></a>). All the dropouts are put to values that we found worked pretty well and you can control their strength by adjusting <code>drop_mult</code>. If <a href="/text.qrnn.html#text.qrnn"><code>qrnn</code></a> is True, the model uses <a href="https://arxiv.org/abs/1611.01576">QRNN cells</a> instead of LSTMs. The flag <code>tied_weights</code> control if we should use the same weights for the encoder and the decoder, the flag <code>bias</code> controls if the last linear layer (the decoder) has bias or not.</p>
-<p>You can specify <code>pretrained_fnames</code> if you want to use the weights of a pretrained model. This should be a list of the name of the weight file and the name of the corresponding dictionary. The dictionary is needed because the function will internally convert the embeddings of the pretrained models to match the dictionary of the <a href="/data.html#data"><code>data</code></a> passed (a word may have a different id for the pretrained model). Those two files should be in the models directory of <code>data.path</code>.</p>
+<p>Create an RNNLearner with a language model from <a href="/text.data.html#text.data"><code>data</code></a> of a certain <code>bptt</code>. The model used is an <a href="https://arxiv.org/abs/1708.02182">AWD-LSTM</a> that is built with embeddings of size <code>emb_sz</code>, a hidden size of <code>nh</code>, and <code>nl</code> layers (the <code>vocab_size</code> is inferred from the <a href="/text.data.html#text.data"><code>data</code></a>). All the dropouts are put to values that we found worked pretty well and you can control their strength by adjusting <code>drop_mult</code>. If <a href="/text.qrnn.html#text.qrnn"><code>qrnn</code></a> is True, the model uses <a href="https://arxiv.org/abs/1611.01576">QRNN cells</a> instead of LSTMs. The flag <code>tied_weights</code> control if we should use the same weights for the encoder and the decoder, the flag <code>bias</code> controls if the last linear layer (the decoder) has bias or not.</p>
+<p>You can specify <code>pretrained_fnames</code> if you want to use the weights of a pretrained model. This should be a list of the name of the weight file and the name of the corresponding dictionary. The dictionary is needed because the function will internally convert the embeddings of the pretrained models to match the dictionary of the <a href="/text.data.html#text.data"><code>data</code></a> passed (a word may have a different id for the pretrained model). Those two files should be in the models directory of <code>data.path</code>.</p>
 
 </div>
 </div>
@@ -144,7 +144,7 @@ summary: "Easy access of language models and ULMFiT"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">get_imdb</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_imdb</span><span class="p">()</span>
 <span class="n">learn</span> <span class="o">=</span> <span class="n">RNNLearner</span><span class="o">.</span><span class="n">language_model</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pretrained_fnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lstm_wt103&#39;</span><span class="p">,</span> <span class="s1">&#39;itos_wt103&#39;</span><span class="p">],</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 

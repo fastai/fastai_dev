@@ -76,7 +76,7 @@ summary: "Application to NLP, including ULMFiT fine-tuning"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">IMDB</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">IMDB_SAMPLE</span><span class="p">)</span>
 <span class="n">path</span>
 </pre></div>
 
@@ -278,7 +278,7 @@ Numericalizing train.
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Note that to avoid redoing this step (which can be quite time-consuming if you have a very large dataset), the fastai library has created a <code>tmp</code> directory in the folder given, to store the tokens (in <code>_tok.npy</code> files), the labels (in <code>_lbl.npy</code> files), the ids of the tokens (in <code>_id.npy</code> files) and the dictionary (<code>itos.pkl</code>). When you reexecute the line in the future, it will directly load that data.</p>
-<p>To get a <a href="/data.html#DataBunch"><code>DataBunch</code></a> quickly, there are also several factory methods depending on how our data is structured. They are all detailed in <a href="/text.data.html#text.data"><code>text.data</code></a>, here we'll use the method <code>from_csv</code> of the <a href="/text.data.html#TextLMDataBunch"><code>TextLMDataBunch</code></a> (to get the data ready for a language model) and <a href="/text.data.html#TextClasDataBunch"><code>TextClasDataBunch</code></a> (to get the data ready for a text classifier) classes.</p>
+<p>To get a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> quickly, there are also several factory methods depending on how our data is structured. They are all detailed in <a href="/text.data.html#text.data"><code>text.data</code></a>, here we'll use the method <code>from_csv</code> of the <a href="/text.data.html#TextLMDataBunch"><code>TextLMDataBunch</code></a> (to get the data ready for a language model) and <a href="/text.data.html#TextClasDataBunch"><code>TextClasDataBunch</code></a> (to get the data ready for a text classifier) classes.</p>
 
 </div>
 </div>
@@ -295,6 +295,21 @@ Numericalizing train.
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Tokenizing valid.
+Numericalizing valid.
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -325,7 +340,7 @@ Numericalizing train.
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">download_wt103_model</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">URLs</span><span class="o">.</span><span class="n">download_wt103_model</span><span class="p">()</span>
 </pre></div>
 
 </div>

@@ -41,9 +41,9 @@ summary: "Useful metrics for training"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=accuracy></a><code>accuracy</code></h4>
-<blockquote><p><code>accuracy</code>(<code>input</code>:<code>Tensor</code>, <code>targs</code>:<code>Tensor</code>) -&gt; <code>Rank0Tensor</code></p>
+<blockquote><p><code>accuracy</code>(<code>input</code>:<code>Tensor</code>, <code>targs</code>:<code>Tensor</code>) → <code>Rank0Tensor</code></p>
 </blockquote>
-<p>Compute accuracy with <code>targs</code> when <code>input</code> is bs * n_classes. <a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L32">[source]</a></p>
+<p>Compute accuracy with <code>targs</code> when <code>input</code> is bs * n_classes.  <a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L59">[source]</a></p>
 
 </div>
 
@@ -63,8 +63,8 @@ summary: "Useful metrics for training"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=accuracy_thresh></a><code>accuracy_thresh</code></h4>
-<blockquote><p><code>accuracy_thresh</code>(<code>y_pred</code>:<code>Tensor</code>, <code>y_true</code>:<code>Tensor</code>, <code>thresh</code>:<code>float</code>=<code>0.5</code>, <code>sigmoid</code>:<code>bool</code>=<code>True</code>) -&gt; <code>Rank0Tensor</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L18">[source]</a></p>
+<blockquote><p><code>accuracy_thresh</code>(<code>y_pred</code>:<code>Tensor</code>, <code>y_true</code>:<code>Tensor</code>, <code>thresh</code>:<code>float</code>=<code>0.5</code>, <code>sigmoid</code>:<code>bool</code>=<code>True</code>) → <code>Rank0Tensor</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L44">[source]</a></p>
 </blockquote>
 
 </div>
@@ -92,9 +92,9 @@ summary: "Useful metrics for training"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=dice></a><code>dice</code></h4>
-<blockquote><p><code>dice</code>(<code>input</code>:<code>Tensor</code>, <code>targs</code>:<code>Tensor</code>) -&gt; <code>Rank0Tensor</code></p>
+<blockquote><p><code>dice</code>(<code>input</code>:<code>Tensor</code>, <code>targs</code>:<code>Tensor</code>, <code>iou</code>:<code>bool</code>=<code>False</code>) → <code>Rank0Tensor</code></p>
 </blockquote>
-<p>Dice coefficient metric for binary target. <a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L23">[source]</a></p>
+<p>Dice coefficient metric for binary target. If iou=True, returns iou metric, classic for segmentation problems.  <a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L49">[source]</a></p>
 
 </div>
 
@@ -113,10 +113,10 @@ summary: "Useful metrics for training"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=fbeta></a><code>fbeta</code></h4>
-<blockquote><p><code>fbeta</code>(<code>y_pred</code>:<code>Tensor</code>, <code>y_true</code>:<code>Tensor</code>, <code>thresh</code>:<code>float</code>=<code>0.5</code>, <code>beta</code>:<code>float</code>=<code>2</code>, <code>eps</code>:<code>float</code>=<code>1e-09</code>, <code>sigmoid</code>:<code>bool</code>=<code>True</code>) -&gt; <code>Rank0Tensor</code></p>
+<h4><a id=Fbeta></a><code>class</code> <code>Fbeta</code></h4>
+<blockquote><p><code>Fbeta</code>(<code>thresh</code>:<code>float</code>=<code>0.5</code>, <code>beta</code>:<code>float</code>=<code>2</code>, <code>eps</code>:<code>float</code>=<code>1e-09</code>, <code>sigmoid</code>:<code>bool</code>=<code>True</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
 </blockquote>
-<p>Compute the f_beta between preds and targets. <a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L6">[source]</a></p>
+<p>Fbeta(thresh: float = 0.5, beta: float = 2, eps: float = 1e-09, sigmoid: bool = True)  <a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L8">[source]</a></p>
 
 </div>
 
@@ -143,9 +143,9 @@ summary: "Useful metrics for training"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=exp_rmspe></a><code>exp_rmspe</code></h4>
-<blockquote><p><code>exp_rmspe</code>(<code>pred</code>:<code>Tensor</code>, <code>targ</code>:<code>Tensor</code>) -&gt; <code>Rank0Tensor</code></p>
+<blockquote><p><code>exp_rmspe</code>(<code>pred</code>:<code>Tensor</code>, <code>targ</code>:<code>Tensor</code>) → <code>Rank0Tensor</code></p>
 </blockquote>
-<p>Exp RMSE between <code>pred</code> and <code>targ</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L39">[source]</a></p>
+<p>Exp RMSE between <code>pred</code> and <code>targ</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/metrics.py#L70">[source]</a></p>
 
 </div>
 
