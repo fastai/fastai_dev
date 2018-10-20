@@ -141,6 +141,9 @@ entries:
       title: layers
       url: layers
     - output: web,pdf
+      title: datasets
+      url: datasets
+    - output: web,pdf
       title: core
       url: core
     - output: web,pdf
