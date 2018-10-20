@@ -1,7 +1,7 @@
 ---
 
-title: vision
-keywords: 
+title: vision.data
+keywords: fastai
 sidebar: home_sidebar
 
 summary: "Basic dataset for computer vision and helper function to get a DataBunch"
@@ -20,7 +20,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This module contains the classes that define datasets handling <a href="/vision.image.html#Image"><code>Image</code></a> objects and their tranformations. As usual, we'll start with a quick overview, before we get in to the detailed API docs.</p>
+<p>This module contains the classes that define datasets handling <a href="/vision.image#Image"><code>Image</code></a> objects and their tranformations. As usual, we'll start with a quick overview, before we get in to the detailed API docs.</p>
 
 </div>
 </div>
@@ -33,7 +33,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To get you started as easily as possible, the fastai provides two helper functions to create a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> object that you can directly use for training a classifier. To demonstrate them you'll first need to download and untar the file by executing the following cell. This will create a data folder containing a MNIST subset in <code>data/mnist_sample</code>.</p>
+<p>To get you started as easily as possible, the fastai provides two helper functions to create a <a href="/basic_data#DataBunch"><code>DataBunch</code></a> object that you can directly use for training a classifier. To demonstrate them you'll first need to download and untar the file by executing the following cell. This will create a data folder containing a MNIST subset in <code>data/mnist_sample</code>.</p>
 
 </div>
 </div>
@@ -46,7 +46,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">MNIST_SAMPLE</span><span class="p">);</span> <span class="n">path</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -69,7 +69,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>There are a number of ways to create an <code>ImageDataBunch</code>; one common approach is to use <em>Imagenet-style folder</em> (see below for details) with <code>ImageDataBunch.from_folder</code>:</p>
+<p>There are a number of ways to create an <a href="/vision.data#ImageDataBunch"><code>ImageDataBunch</code></a>; one common approach is to use <em>Imagenet-style folder</em> (see below for details) with <code>ImageDataBunch.from_folder</code>:</p>
 
 </div>
 </div>
@@ -83,7 +83,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -95,7 +95,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <li>the transforms to apply to the images in <code>ds_tfms</code> (here with <code>do_flip</code>=False because we don't want to flip numbers),</li>
 <li>the target <code>size</code> of our pictures (here 24).</li>
 </ul>
-<p>As all <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, data then as a <code>train_dl</code> and a <code>valid_dl</code> that are <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>. If you want to have a look at a few images in a batch inside a batch, you can use <a href="/vision.data.html#show_batch"><code>ImageDataBunch.show_batch</code></a>, the <code>rows</code> argument being the number of rows and columns in the array.</p>
+<p>As all <a href="/basic_data#DataBunch"><code>DataBunch</code></a>, data then as a <code>train_dl</code> and a <code>valid_dl</code> that are <a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>. If you want to have a look at a few images in a batch inside a batch, you can use <a href="/vision.data#show_batch"><code>ImageDataBunch.show_batch</code></a>, the <code>rows</code> argument being the number of rows and columns in the array.</p>
 
 </div>
 </div>
@@ -108,7 +108,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -152,7 +152,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;labels.csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -237,7 +237,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">28</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -250,7 +250,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -288,7 +288,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">planet</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">PLANET_SAMPLE</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -309,7 +309,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -388,7 +388,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
     <span class="n">ds_tfms</span><span class="o">=</span><span class="n">get_transforms</span><span class="p">(</span><span class="n">flip_vert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_lighting</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_zoom</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">max_warp</span><span class="o">=</span><span class="mf">0.</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -408,7 +408,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">is_train</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -469,7 +469,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=create></a><code>create</code></h4>
-<blockquote><p><code>create</code>(<code>train_ds</code>, <code>valid_ds</code>, <code>test_ds</code>=<code>None</code>, <code>path</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>bs</code>:<code>int</code>=<code>64</code>, <code>ds_tfms</code>:<code>Union</code>[<a href="/vision.image#Transform"><code>Transform</code></a>, <code>Collection</code>[<a href="/vision.image#Transform"><code>Transform</code></a>], <code>NoneType</code>]=<code>None</code>, <code>num_workers</code>:<code>int</code>=<code>16</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>]]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch#torch.device"><code>device</code></a>=<code>None</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>, <code>size</code>:<code>int</code>=<code>None</code>, <code>kwargs</code>) → <code>ImageDataBunch</code></p>
+<blockquote><p><code>create</code>(<code>train_ds</code>, <code>valid_ds</code>, <code>test_ds</code>=<code>None</code>, <code>path</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>bs</code>:<code>int</code>=<code>64</code>, <code>ds_tfms</code>:<code>Union</code>[<a href="/vision.image#Transform"><code>Transform</code></a>, <code>Collection</code>[<a href="/vision.image#Transform"><code>Transform</code></a>], <code>NoneType</code>]=<code>None</code>, <code>num_workers</code>:<code>int</code>=<code>8</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>]]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch#torch.device"><code>device</code></a>=<code>None</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>, <code>size</code>:<code>int</code>=<code>None</code>, <code>kwargs</code>) → <code>ImageDataBunch</code></p>
 </blockquote>
 <p>Factory method. <code>bs</code> batch size, <code>ds_tfms</code> for <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>tfms</code> for <a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>.</p>
 <ul>
@@ -492,7 +492,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>You don't often need to call this directly yourself; instead, you'll normally use one of the convenience wrappers below. However, these wrappers all accept a <code>kwargs</code> that is passed to this method, so you can pass any of the above parameters as well.</p>
-<p>If you quickly want to get a <a href="/vision.data.html#ImageDataBunch"><code>ImageDataBunch</code></a> and train a model, you should process your data to have it in one of the formats the following functions handle.</p>
+<p>If you quickly want to get a <a href="/vision.data#ImageDataBunch"><code>ImageDataBunch</code></a> and train a model, you should process your data to have it in one of the formats the following functions handle.</p>
 
 </div>
 </div>
@@ -546,7 +546,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -582,7 +582,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create <a href="/vision.data.html#ImageDataBunch"><code>ImageDataBunch</code></a> from <code>path</code> by splitting the data in <code>folder</code> and labelled in a file <code>csv_labels</code> between a training and valid set, putting aside <code>valid_pct</code> for the validation. An optional <code>test</code> folder contains unlabelled data and <code>suffix</code> contains an optional suffix to add to the filenames in <code>csv_labels</code> (like '.jpg'). E.g:</p>
+<p>Create <a href="/vision.data#ImageDataBunch"><code>ImageDataBunch</code></a> from <code>path</code> by splitting the data in <code>folder</code> and labelled in a file <code>csv_labels</code> between a training and valid set, putting aside <code>valid_pct</code> for the validation. An optional <code>test</code> folder contains unlabelled data and <code>suffix</code> contains an optional suffix to add to the filenames in <code>csv_labels</code> (like '.jpg'). E.g:</p>
 
 </div>
 </div>
@@ -595,7 +595,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">);</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -638,7 +638,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -716,7 +716,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_df</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -758,8 +758,8 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates an <a href="/vision.data.html#ImageDataBunch"><code>ImageDataBunch</code></a> from <code>fnames</code>, calling a regular expression (containing one <em>re group</em>) on the file names to get the labels, putting aside <code>valid_pct</code> for the validation. In the same way as <code>ImageDataBunch.from_csv</code>, an optional <code>test</code> folder contains unlabelled data.</p>
-<p>Our previously created dataframe contains the labels in the filenames so we can leverage it to test this new method. <code>ImageDataBunch.from_name_re</code> needs the exact path of each file so we will append the data path to each filename before creating our <a href="/vision.data.html#ImageDataBunch"><code>ImageDataBunch</code></a> object.</p>
+<p>Creates an <a href="/vision.data#ImageDataBunch"><code>ImageDataBunch</code></a> from <code>fnames</code>, calling a regular expression (containing one <em>re group</em>) on the file names to get the labels, putting aside <code>valid_pct</code> for the validation. In the same way as <code>ImageDataBunch.from_csv</code>, an optional <code>test</code> folder contains unlabelled data.</p>
+<p>Our previously created dataframe contains the labels in the filenames so we can leverage it to test this new method. <code>ImageDataBunch.from_name_re</code> needs the exact path of each file so we will append the data path to each filename before creating our <a href="/vision.data#ImageDataBunch"><code>ImageDataBunch</code></a> object.</p>
 
 </div>
 </div>
@@ -772,7 +772,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">fn_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]];</span> <span class="n">fn_paths</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -803,7 +803,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_name_re</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fn_paths</span><span class="p">,</span> <span class="n">pat</span><span class="o">=</span><span class="n">pat</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -816,7 +816,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">classes</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -877,7 +877,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span><span class="o">.</span><span class="n">classes</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -923,7 +923,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The most flexible factory function; pass in a list of <code>labels</code> that correspond to each of the filenames in <code>fnames</code>.</p>
-<p>To show an example we will have to build the labels list outside our <a href="/vision.data.html#ImageDataBunch"><code>ImageDataBunch</code></a> object and give it as an argument when we call <code>from_lists</code>. Let's use our previously created function to create our labels list.</p>
+<p>To show an example we will have to build the labels list outside our <a href="/vision.data#ImageDataBunch"><code>ImageDataBunch</code></a> object and give it as an argument when we call <code>from_lists</code>. Let's use our previously created function to create our labels list.</p>
 
 </div>
 </div>
@@ -938,7 +938,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span><span class="o">.</span><span class="n">classes</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -990,7 +990,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Create a <code>rows</code> by <code>rows</code> grid of images from training or validation set (depending on <code>is_train</code>).</p>
-<p>Once you have your <code>ImageDataBunch</code>, you can have a quick look at your data by using this:</p>
+<p>Once you have your <a href="/vision.data#ImageDataBunch"><code>ImageDataBunch</code></a>, you can have a quick look at your data by using this:</p>
 
 </div>
 </div>
@@ -1003,7 +1003,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1063,7 +1063,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is a functional version of <a href="/vision.data.html#show_batch"><code>ImageDataBunch.show_batch</code></a>.</p>
+<p>This is a functional version of <a href="/vision.data#show_batch"><code>ImageDataBunch.show_batch</code></a>.</p>
 
 </div>
 </div>
@@ -1113,7 +1113,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">show_images</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1151,7 +1151,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">show_xy_images</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1177,7 +1177,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To show an example, we're going to create a fake batch by transforming the same <a href="/vision.image.html#Image"><code>Image</code></a> several times. See the documentation of <a href="/vision.image.html#apply_tfms"><code>apply_tfms</code></a> for more details about what is happening in this code.</p>
+<p>To show an example, we're going to create a fake batch by transforming the same <a href="/vision.image#Image"><code>Image</code></a> several times. See the documentation of <a href="/vision.image#apply_tfms"><code>apply_tfms</code></a> for more details about what is happening in this code.</p>
 
 </div>
 </div>
@@ -1201,7 +1201,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">show_xy_images</span><span class="p">(</span><span class="o">*</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">xy</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1305,7 +1305,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create <a href="/vision.data.html#normalize"><code>normalize</code></a> and <a href="/vision.data.html#denormalize"><code>denormalize</code></a> functions using <code>mean</code> and <code>std</code>. <code>device</code> will store them on the device specified. <code>do_y</code> determines if the target should also be normaized or not.</p>
+<p>Create <a href="/vision.data#normalize"><code>normalize</code></a> and <a href="/vision.data#denormalize"><code>denormalize</code></a> functions using <code>mean</code> and <code>std</code>. <code>device</code> will store them on the device specified. <code>do_y</code> determines if the target should also be normaized or not.</p>
 
 </div>
 </div>
@@ -1329,7 +1329,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1427,7 +1427,7 @@ Clipping input data to the valid range for imshow with RGB data ([0..1] for floa
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create an <a href="/vision.data.html#ImageClassificationDataset"><code>ImageClassificationDataset</code></a> automatically from a <code>folder</code>. If <code>classes</code> is None, it will be set to the names of the directories in <code>folder</code>. <code>check_ext</code> forces the function to only keep filenames with image extensions.</p>
+<p>Create an <a href="/vision.data#ImageClassificationDataset"><code>ImageClassificationDataset</code></a> automatically from a <code>folder</code>. If <code>classes</code> is None, it will be set to the names of the directories in <code>folder</code>. <code>check_ext</code> forces the function to only keep filenames with image extensions.</p>
 
 </div>
 </div>
@@ -1514,7 +1514,7 @@ Clipping input data to the valid range for imshow with RGB data ([0..1] for floa
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To create an <a href="/vision.data.html#ImageMultiDataset"><code>ImageMultiDataset</code></a> automatically in <code>path</code> from a <code>folder</code> and <code>fns</code>. If <code>classes</code> is None, it will be set to the names of the different <code>labels</code> seen. You can split the images in this <code>folder</code> in a train/valid dataset if <code>valid_pct</code> is non-zero. <code>check_ext</code> forces the function to only keep filenems with image extensions.</p>
+<p>To create an <a href="/vision.data#ImageMultiDataset"><code>ImageMultiDataset</code></a> automatically in <code>path</code> from a <code>folder</code> and <code>fns</code>. If <code>classes</code> is None, it will be set to the names of the different <code>labels</code> seen. You can split the images in this <code>folder</code> in a train/valid dataset if <code>valid_pct</code> is non-zero. <code>check_ext</code> forces the function to only keep filenems with image extensions.</p>
 
 </div>
 </div>
@@ -1550,7 +1550,7 @@ Clipping input data to the valid range for imshow with RGB data ([0..1] for floa
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To help scan a folder for these <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, we use the following helper function:</p>
+<p>To help scan a folder for these <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, we use the following helper function:</p>
 
 </div>
 </div>
@@ -1666,7 +1666,7 @@ Clipping input data to the valid range for imshow with RGB data ([0..1] for floa
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Finally, to apply transformations to <a href="/vision.image.html#Image"><code>Image</code></a> in a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, we use this last class.</p>
+<p>Finally, to apply transformations to <a href="/vision.image#Image"><code>Image</code></a> in a <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, we use this last class.</p>
 
 </div>
 </div>
@@ -1717,14 +1717,14 @@ Clipping input data to the valid range for imshow with RGB data ([0..1] for floa
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Dataset that applies the list of transforms <code>tfms</code> to every item drawn. If <code>tfms</code> should be applied to the targets as well, <code>tfm_y</code> should be True. <code>kwargs</code> will be passed to <a href="/vision.image.html#apply_tfms"><code>apply_tfms</code></a> internally.</p>
+<p>Dataset that applies the list of transforms <code>tfms</code> to every item drawn. If <code>tfms</code> should be applied to the targets as well, <code>tfm_y</code> should be True. <code>kwargs</code> will be passed to <a href="/vision.image#apply_tfms"><code>apply_tfms</code></a> internally.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Then this last function automatizes the process of creating <a href="/vision.data.html#DatasetTfm"><code>DatasetTfm</code></a>:</p>
+<p>Then this last function automatizes the process of creating <a href="/vision.data#DatasetTfm"><code>DatasetTfm</code></a>:</p>
 
 </div>
 </div>
