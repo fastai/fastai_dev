@@ -1,0 +1,254 @@
+---
+
+title: datasets
+keywords: 
+sidebar: home_sidebar
+
+
+---
+
+<div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="datasets">datasets<a class="anchor-link" href="#datasets">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This module has the necessary functions to be able to download several useful datasets that we might be interested in using in our models.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=URLs></a><code>class</code> <code>URLs</code></h2>
+<blockquote><p><code>URLs</code>()
+<a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L9">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The datasets module has a URLs class that contains all the datasets' URLs. The supported datasets are (with their calling name): S3_NLP, S3_COCO, MNIST_SAMPLE, MNIST_TINY, IMDB_SAMPLE, ADULT_SAMPLE, ML_SAMPLE, PLANET_SAMPLE, CIFAR, PETS, MNIST. To get details on the datasets you can see the fast.ai datasets webpage. Datasets with SAMPLE in their name are subsets of the original datasets. In the case of MNIST, we also have a TINY dataset which is even smaller than MNIST_SAMPLE.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">URLs</span><span class="o">.</span><span class="n">MNIST_SAMPLE</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;http://files.fast.ai/data/examples/mnist_sample&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">URLs</span><span class="o">.</span><span class="n">MNIST_TINY</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;http://files.fast.ai/data/examples/mnist_tiny&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The fastai library also has a few functions that allow us to directly download the most popular datasets, including the <code>wikitext103</code> langugage model weights. These are: <code>get_adult</code>, <code>get_mnist</code>, <code>get_imdb</code>, <code>get_movie_lens</code>, <code>download_wt103_model</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mnist_data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For the rest of the datasets you will need to manually download them. This can be done with <code>untar_data</code> or <code>download_data</code>. <code>untar_data</code> will decompress the data file and download it while <code>download_data</code> will just download and save the compressed file in <code>.tgz</code> format.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=untar_data></a><code>untar_data</code></h4>
+<blockquote><p><code>untar_data</code>(<code>url</code>:<code>str</code>, <code>fname</code>:<code>PathOrStr</code>=<code>None</code>, <code>dest</code>:<code>PathOrStr</code>=<code>None</code>)</p>
+</blockquote>
+<p>Download <code>url</code> if doesn't exist to <code>fname</code> and un-tgz to folder <code>dest</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L72">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">PLANET_SAMPLE</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Downloading http://files.fast.ai/data/examples/planet_sample
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>PosixPath(&#39;/home/chewing/fastai/fastai/../data/planet_sample&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=download_data></a><code>download_data</code></h4>
+<blockquote><p><code>download_data</code>(<code>url</code>:<code>str</code>, <code>fname</code>:<code>PathOrStr</code>=<code>None</code>)</p>
+</blockquote>
+<p>Download <code>url</code> to destination <code>fname</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L63">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">download_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">PLANET_SAMPLE</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>PosixPath(&#39;/home/chewing/fastai/fastai/../data/planet_sample.tgz&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+ 
+
