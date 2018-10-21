@@ -276,6 +276,29 @@ python make_sidebar.py</code></pre>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Links-and-anchors">Links and anchors<a class="anchor-link" href="#Links-and-anchors">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Validate-links-and-anchors">Validate links and anchors<a class="anchor-link" href="#Validate-links-and-anchors">&#182;</a></h3><p>After you commit doc changes please validate that all the links and <code>#anchors</code> are correct.</p>
+<p>First, wait a few minutes for github pages to sync, otherwise you'll be testing an outdated live site.</p>
+<p>Then, do:</p>
+
+<pre><code>cd checklink
+./checklink-docs.sh</code></pre>
+<p>The script will be silent and only report problems as it finds them.</p>
+<p>Remember, that it's testing the live website, so if you detect problems and make any changes, remember to first commit the changes and wait a few minutes before re-testing.</p>
+<p>To test the docs-dev.fast.ai site, do:</p>
+
+<pre><code>./checklink-docs-dev.sh</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Working-with-Markdown">Working with Markdown<a class="anchor-link" href="#Working-with-Markdown">&#182;</a></h2>
 </div>
 </div>
@@ -307,19 +330,6 @@ python make_sidebar.py</code></pre>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div>
 </div>
  
