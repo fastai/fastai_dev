@@ -21,12 +21,13 @@ jobs:
       ./checklink-docs-dev.sh
       ./run-checker.sh docs-dev
     displayName: 'link checker for docs-dev.fast.ai'
-    continueOnError: true
+    continueOnError: ErrorAndContinue
 
+    # let this last script not continue on error so that the final status will be failed if it fails
   - script: |
       echo "Testing docs"
       cd checklink/
       ./checklink-docs.sh
       ./run-checker.sh docs
     displayName: 'link checker for docs.fast.ai'
-    continueOnError: true
+    continueOnError: ErrorAndContinue
