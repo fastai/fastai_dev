@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # check links and anchors of docs.fast.ai
 # throttle to 2-sec per request
