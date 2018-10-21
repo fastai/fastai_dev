@@ -22,7 +22,11 @@ cd checklink
 
 Each file logs to console and also into `checklink-docs.log` and `checklink-docs-dev.log`
 
-If you're on windows w/o bash, you can just copy-n-paste the contents of the script to your command line.
+If you're on windows w/o bash and assuming you have perl installed, you can run it directly like:
+
+```
+perl fastai-checklink --depth 50 --quiet --broken -e --sleep 2 --timeout 60 --connection-cache 3 --exclude github.com --exclude test.pypi.org --exclude ycombinator.com --exclude anaconda.org --exclude google.com --cookies cookies.txt "https://docs.fast.ai"
+```
 
 The script is set to sleep for 2 secs between each request, so not to get blocked by github, so it takes some 5-10min to complete.
 
