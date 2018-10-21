@@ -12,13 +12,12 @@ jobs:
   - script: |
       echo "Installing prerequisites"
       sudo apt install w3c-linkchecker
-      echo "Entering link checker"
-      cd checklink
     displayName: 'Installing prerequisites, prepare for checking'
     continueOnError: false
 
   - script: |
       echo "Testing docs-dev"
+      cd checklink/
       ./checklink-docs-dev.sh
       ./run-checker.sh docs-dev
     displayName: 'link checker for docs-dev.fast.ai'
@@ -26,6 +25,7 @@ jobs:
 
   - script: |
       echo "Testing docs"
+      cd checklink/
       ./checklink-docs.sh
       ./run-checker.sh docs
     displayName: 'link checker for docs.fast.ai'
