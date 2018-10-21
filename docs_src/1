@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-  File "/home/ubuntu/anaconda3/envs/fastai1/lib/python3.7/site-packages/spacy/__init__.py", line 15, in load
-    return util.load_model(name, **overrides)
-  File "/home/ubuntu/anaconda3/envs/fastai1/lib/python3.7/site-packages/spacy/util.py", line 119, in load_model
-    raise IOError(Errors.E050.format(name=name))
-OSError: [E050] Can't find model 'en'. It doesn't seem to be a shortcut link, a Python package or a valid path to a data directory.
