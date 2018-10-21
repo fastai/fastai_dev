@@ -20,11 +20,11 @@ summary: "Learner class and training loop"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/basic_train.html#basic_train"><code>basic_train</code></a> wraps together the data (in a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> object) with a pytorch model to define a <a href="/basic_train.html#Learner"><code>Learner</code></a> object. This is where the basic training loop is defined for the <a href="/basic_train.html#fit"><code>fit</code></a> function. The <a href="/basic_train.html#Learner"><code>Learner</code></a> object is the entry point of most of the <a href="/callback.html#Callback"><code>Callback</code></a> functions that will customize this training loop in different ways (and made available through the <a href="/train.html#train"><code>train</code></a> module), notably:</p>
+<p><a href="/basic_train#basic_train"><code>basic_train</code></a> wraps together the data (in a <a href="/basic_data#DataBunch"><code>DataBunch</code></a> object) with a pytorch model to define a <a href="/basic_train#Learner"><code>Learner</code></a> object. This is where the basic training loop is defined for the <a href="/basic_train#fit"><code>fit</code></a> function. The <a href="/basic_train#Learner"><code>Learner</code></a> object is the entry point of most of the <a href="/callback#Callback"><code>Callback</code></a> functions that will customize this training loop in different ways (and made available through the <a href="/train#train"><code>train</code></a> module), notably:</p>
 <ul>
-<li><a href="/train.html#lr_find"><code>Learner.lr_find</code></a> will launch an LR range test that will help you select a good learning rate</li>
-<li><a href="/train.html#fit_one_cycle"><code>Learner.fit_one_cycle</code></a> will launch a training using the 1cycle policy, to help you train your model fast.</li>
-<li><a href="/train.html#to_fp16"><code>Learner.to_fp16</code></a> will convert your model in half precision and help you launch a training in mixed precision.</li>
+<li><a href="/train#lr_find"><code>Learner.lr_find</code></a> will launch an LR range test that will help you select a good learning rate</li>
+<li><a href="/train#fit_one_cycle"><code>Learner.fit_one_cycle</code></a> will launch a training using the 1cycle policy, to help you train your model fast.</li>
+<li><a href="/train#to_fp16"><code>Learner.to_fp16</code></a> will convert your model in half precision and help you launch a training in mixed precision.</li>
 </ul>
 
 </div>
@@ -40,7 +40,7 @@ summary: "Learner class and training loop"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=Learner></a><code>class</code> <code>Learner</code></h2>
-<blockquote><p><code>Learner</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>opt_func</code>:<code>Callable</code>=<code>'Adam'</code>, <code>loss_func</code>:<code>Callable</code>=<code>None</code>, <code>metrics</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>, <code>true_wd</code>:<code>bool</code>=<code>True</code>, <code>bn_wd</code>:<code>bool</code>=<code>True</code>, <code>wd</code>:<code>Floats</code>=<code>0.01</code>, <code>train_bn</code>:<code>bool</code>=<code>True</code>, <code>path</code>:<code>str</code>=<code>None</code>, <code>model_dir</code>:<code>str</code>=<code>'models'</code>, <code>callback_fns</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>, <code>callbacks</code>:<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>]=<code>&lt;factory&gt;</code>, <code>layer_groups</code>:<code>ModuleList</code>=<code>None</code>)</p>
+<blockquote><p><code>Learner</code>(<code>data</code>:<a href="/basic_data#DataBunch"><code>DataBunch</code></a>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>, <code>opt_func</code>:<code>Callable</code>=<code>'Adam'</code>, <code>loss_func</code>:<code>Callable</code>=<code>None</code>, <code>metrics</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>, <code>true_wd</code>:<code>bool</code>=<code>True</code>, <code>bn_wd</code>:<code>bool</code>=<code>True</code>, <code>wd</code>:<code>Floats</code>=<code>0.01</code>, <code>train_bn</code>:<code>bool</code>=<code>True</code>, <code>path</code>:<code>str</code>=<code>None</code>, <code>model_dir</code>:<code>str</code>=<code>'models'</code>, <code>callback_fns</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>, <code>callbacks</code>:<code>Collection</code>[<a href="/callback#Callback"><code>Callback</code></a>]=<code>&lt;factory&gt;</code>, <code>layer_groups</code>:<code>ModuleList</code>=<code>None</code>)</p>
 </blockquote>
 <p>Train <code>model</code> using <code>data</code> to minimize <code>loss_func</code> with optimizer <code>opt_func</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L93">[source]</a></p>
 
@@ -54,11 +54,11 @@ summary: "Learner class and training loop"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The main purpose of <a href="/basic_train.html#Learner"><code>Learner</code></a> is to train <code>model</code> using <a href="/basic_train.html#fit"><code>Learner.fit</code></a>. After every epoch, all <em>metrics</em> will be printed, and will also be available to callbacks.</p>
+<p>The main purpose of <a href="/basic_train#Learner"><code>Learner</code></a> is to train <code>model</code> using <a href="/basic_train#Learner.fit"><code>Learner.fit</code></a>. After every epoch, all <em>metrics</em> will be printed, and will also be available to callbacks.</p>
 <p>The default weight decay will be <code>wd</code>, which will be handled using the method from <a href="https://arxiv.org/abs/1711.05101">Fixing Weight Decay Regularization in Adam</a> if <code>true_wd</code> is set (otherwise it's L2 regularization). If <code>bn_wd</code> is False then weight decay will be removed from batchnorm layers, as recommended in <a href="https://arxiv.org/abs/1706.02677">Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour</a>. You can ensure that batchnorm layer learnable params are trained even for frozen layer groups, by enabling <code>train_bn</code>.</p>
-<p>To use <a href="#Discriminative-layer-training">discriminative layer training</a> pass an <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>nn.Module</code></a> for each layer group to be optimized with different settings.</p>
+<p>To use <a href="#Discriminative-layer-training">discriminative layer training</a> pass an <a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>nn.Module</code></a> for each layer group to be optimized with different settings.</p>
 <p>Any model files created will be saved in <code>path</code>/<code>model_dir</code>.</p>
-<p>You can pass a list of <a href="/callbacks.html#callbacks"><code>callbacks</code></a> that you have already created, or (more commonly) simply pass a list of callback functions to <code>callback_fns</code> and each function will be called (passing <code>self</code>) on object initialization, with the results stored as callback objects. For a walk-through, see the <a href="/training.html">training overview</a> page. You may also want to use an <code>application</code> to fit your model, e.g. using the <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> subclass:</p>
+<p>You can pass a list of <a href="/callbacks#callbacks"><code>callbacks</code></a> that you have already created, or (more commonly) simply pass a list of callback functions to <code>callback_fns</code> and each function will be called (passing <code>self</code>) on object initialization, with the results stored as callback objects. For a walk-through, see the <a href="/training.html">training overview</a> page. You may also want to use an <code>application</code> to fit your model, e.g. using the <a href="/vision.learner#ConvLearner"><code>ConvLearner</code></a> subclass:</p>
 
 </div>
 </div>
@@ -73,7 +73,7 @@ summary: "Learner class and training loop"
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -110,8 +110,8 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=fit></a><code>fit</code></h4>
-<blockquote><p><code>fit</code>(<code>epochs</code>:<code>int</code>, <code>lr</code>:<code>Union</code>[<code>float</code>, <code>Collection</code>[<code>float</code>], <code>slice</code>]=<code>slice(None, 0.003, None)</code>, <code>wd</code>:<code>Floats</code>=<code>None</code>, <code>callbacks</code>:<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>]=<code>None</code>)</p>
+<h4><a id=Learner.fit></a><code>fit</code></h4>
+<blockquote><p><code>fit</code>(<code>epochs</code>:<code>int</code>, <code>lr</code>:<code>Union</code>[<code>float</code>, <code>Collection</code>[<code>float</code>], <code>slice</code>]=<code>slice(None, 0.003, None)</code>, <code>wd</code>:<code>Floats</code>=<code>None</code>, <code>callbacks</code>:<code>Collection</code>[<a href="/callback#Callback"><code>Callback</code></a>]=<code>None</code>)</p>
 </blockquote>
 <p>Fit the model on this learner with <code>lr</code> learning rate, <code>wd</code> weight decay for <code>epochs</code> with <code>callbacks</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L129">[source]</a></p>
 
@@ -125,7 +125,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Uses <a href="#Discriminative-layer-training">discriminative layer training</a> if multiple learning rates or weight decay values are passed. To control training behaviour, use the <a href="/callback.html#callback"><code>callback</code></a> system or one or more of the pre-defined <a href="/callbacks.html#callbacks"><code>callbacks</code></a>.</p>
+<p>Uses <a href="#Discriminative-layer-training">discriminative layer training</a> if multiple learning rates or weight decay values are passed. To control training behaviour, use the <a href="/callback#callback"><code>callback</code></a> system or one or more of the pre-defined <a href="/callbacks#callbacks"><code>callbacks</code></a>.</p>
 
 </div>
 </div>
@@ -140,7 +140,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=fit_one_cycle></a><code>fit_one_cycle</code></h4>
-<blockquote><p><code>fit_one_cycle</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>cyc_len</code>:<code>int</code>, <code>max_lr</code>:<code>Union</code>[<code>float</code>, <code>Collection</code>[<code>float</code>], <code>slice</code>]=<code>slice(None, 0.003, None)</code>, <code>moms</code>:<code>Point</code>=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.3</code>, <code>wd</code>:<code>float</code>=<code>None</code>, <code>callbacks</code>:<code>Optional</code>[<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>]]=<code>None</code>, <code>kwargs</code>)</p>
+<blockquote><p><code>fit_one_cycle</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>cyc_len</code>:<code>int</code>, <code>max_lr</code>:<code>Union</code>[<code>float</code>, <code>Collection</code>[<code>float</code>], <code>slice</code>]=<code>slice(None, 0.003, None)</code>, <code>moms</code>:<code>Point</code>=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.3</code>, <code>wd</code>:<code>float</code>=<code>None</code>, <code>callbacks</code>:<code>Optional</code>[<code>Collection</code>[<a href="/callback#Callback"><code>Callback</code></a>]]=<code>None</code>, <code>kwargs</code>)</p>
 </blockquote>
 <p>Fit a model following the 1cycle policy.  <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L11">[source]</a></p>
 
@@ -154,7 +154,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Uses the <a href="/callbacks.one_cycle.html#OneCycleScheduler"><code>OneCycleScheduler</code></a> callback.</p>
+<p>Uses the <a href="/callbacks.one_cycle#OneCycleScheduler"><code>OneCycleScheduler</code></a> callback.</p>
 
 </div>
 </div>
@@ -169,7 +169,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=lr_find></a><code>lr_find</code></h4>
-<blockquote><p><code>lr_find</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>Floats</code>=<code>1e-07</code>, <code>end_lr</code>:<code>Floats</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>, <code>kwargs</code>:<code>Any</code>)</p>
+<blockquote><p><code>lr_find</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>Floats</code>=<code>1e-07</code>, <code>end_lr</code>:<code>Floats</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Explore lr from <code>start_lr</code> to <code>end_lr</code> over <code>num_it</code> iterations in <code>learn</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L21">[source]</a></p>
 
@@ -183,7 +183,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Runs the learning rate finder defined in <a href="/callbacks.lr_finder.html#LRFinder"><code>LRFinder</code></a>, as discussed in <a href="https://arxiv.org/abs/1506.01186">Cyclical Learning Rates for Training Neural Networks</a>.</p>
+<p>Runs the learning rate finder defined in <a href="/callbacks.lr_finder#LRFinder"><code>LRFinder</code></a>, as discussed in <a href="https://arxiv.org/abs/1506.01186">Cyclical Learning Rates for Training Neural Networks</a>.</p>
 
 </div>
 </div>
@@ -203,7 +203,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_preds></a><code>get_preds</code></h4>
+<h4><a id=Learner.get_preds></a><code>get_preds</code></h4>
 <blockquote><p><code>get_preds</code>(<code>is_test</code>:<code>bool</code>=<code>False</code>) → <code>List</code>[<code>Tensor</code>]</p>
 </blockquote>
 <p>Return predictions and targets on the valid or test set, depending on <code>is_test</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L174">[source]</a></p>
@@ -232,7 +232,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=TTA></a><code>TTA</code></h4>
-<blockquote><p><code>TTA</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>beta</code>:<code>float</code>=<code>0.4</code>, <code>scale</code>:<code>float</code>=<code>1.35</code>, <code>is_test</code>:<code>bool</code>=<code>False</code>) → <code>Tensors</code>
+<blockquote><p><code>TTA</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>beta</code>:<code>float</code>=<code>0.4</code>, <code>scale</code>:<code>float</code>=<code>1.35</code>, <code>is_test</code>:<code>bool</code>=<code>False</code>) → <code>Tensors</code>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/tta.py#L36">[source]</a></p>
 </blockquote>
 
@@ -267,7 +267,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=to_fp16></a><code>to_fp16</code></h4>
-<blockquote><p><code>to_fp16</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) → <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
+<blockquote><p><code>to_fp16</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) → <a href="/basic_train#Learner"><code>Learner</code></a></p>
 </blockquote>
 <p>Transform <code>learn</code> in FP16 precision.  <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L29">[source]</a></p>
 
@@ -281,7 +281,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Uses the <a href="/callbacks.fp16.html#MixedPrecision"><code>MixedPrecision</code></a> callback to train in mixed precision (i.e. forward and backward passes using fp16, with weight updates using fp32), using all <a href="https://docs.nvidia.com/deeplearning/sdk/mixed-precision-training/index.html">NVIDIA recommendations</a> for ensuring speed and accuracy.</p>
+<p>Uses the <a href="/callbacks.fp16#MixedPrecision"><code>MixedPrecision</code></a> callback to train in mixed precision (i.e. forward and backward passes using fp16, with weight updates using fp32), using all <a href="https://docs.nvidia.com/deeplearning/sdk/mixed-precision-training/index.html">NVIDIA recommendations</a> for ensuring speed and accuracy.</p>
 
 </div>
 </div>
@@ -294,15 +294,15 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>When fitting a model you can pass a list of learning rates (and/or weight decay amounts), which will apply a different rate to each <em>layer group</em> (i.e. the parameters of each module in <code>self.layer_groups</code>). See the <a href="https://arxiv.org/abs/1801.06146">Universal Language Model Fine-tuning for Text Classification</a> paper for details and experimental results in NLP (we also frequently use them successfully in computer vision, but have not published a paper on this topic yet). When working with a <a href="/basic_train.html#Learner"><code>Learner</code></a> on which you've called <code>split</code>, you can set hyperparameters in four ways:</p>
+<p>When fitting a model you can pass a list of learning rates (and/or weight decay amounts), which will apply a different rate to each <em>layer group</em> (i.e. the parameters of each module in <code>self.layer_groups</code>). See the <a href="https://arxiv.org/abs/1801.06146">Universal Language Model Fine-tuning for Text Classification</a> paper for details and experimental results in NLP (we also frequently use them successfully in computer vision, but have not published a paper on this topic yet). When working with a <a href="/basic_train#Learner"><code>Learner</code></a> on which you've called <code>split</code>, you can set hyperparameters in four ways:</p>
 <ol>
 <li><code>param = [val1, val2 ..., valn]</code> (n = number of layer groups)</li>
 <li><code>param = val</code></li>
 <li><code>param = slice(start,end)</code></li>
 <li><code>param = slice(end)</code></li>
 </ol>
-<p>If we chose to set it in way 1, we must specify a number of values exactly equal to the number of layer groups. If we chose to set it in way 2, the chosen value will be repeated for all layer groups. See <a href="/basic_train.html#lr_range"><code>Learner.lr_range</code></a> for an explanation of the <code>slice</code> syntax).</p>
-<p>Here's an example of how to use discriminative learning rates (note that you don't actually need to manually call <a href="/basic_train.html#split"><code>Learner.split</code></a> in this case, since fastai uses this exact function as the default split for <code>resnet18</code>; this is just to show how to customize it):</p>
+<p>If we chose to set it in way 1, we must specify a number of values exactly equal to the number of layer groups. If we chose to set it in way 2, the chosen value will be repeated for all layer groups. See <a href="/basic_train#Learner.lr_range"><code>Learner.lr_range</code></a> for an explanation of the <code>slice</code> syntax).</p>
+<p>Here's an example of how to use discriminative learning rates (note that you don't actually need to manually call <a href="/basic_train#Learner.split"><code>Learner.split</code></a> in this case, since fastai uses this exact function as the default split for <code>resnet18</code>; this is just to show how to customize it):</p>
 
 </div>
 </div>
@@ -318,7 +318,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -331,7 +331,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -364,7 +364,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_lr</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span> <span class="n">wd</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span><span class="mf">1e-4</span><span class="p">,</span><span class="mf">1e-1</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -395,7 +395,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=lr_range></a><code>lr_range</code></h4>
+<h4><a id=Learner.lr_range></a><code>lr_range</code></h4>
 <blockquote><p><code>lr_range</code>(<code>lr</code>:<code>Union</code>[<code>float</code>, <code>slice</code>]) → <code>ndarray</code></p>
 </blockquote>
 <p>Build differential learning rates.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L122">[source]</a></p>
@@ -410,7 +410,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Rather than manually setting an LR for every group, it's often easier to use <a href="/basic_train.html#lr_range"><code>Learner.lr_range</code></a>. This is a convenience method that returns one learning rate for each layer group. If you pass <code>slice(start,end)</code> then the first group's learning rate is <code>start</code>, the last is <code>end</code>, and the remaining are evenly geometrically spaced.</p>
+<p>Rather than manually setting an LR for every group, it's often easier to use <a href="/basic_train#Learner.lr_range"><code>Learner.lr_range</code></a>. This is a convenience method that returns one learning rate for each layer group. If you pass <code>slice(start,end)</code> then the first group's learning rate is <code>start</code>, the last is <code>end</code>, and the remaining are evenly geometrically spaced.</p>
 <p>If you pass just <code>slice(end)</code> then the last group's learning rate is <code>end</code>, and all the other groups are <code>end/3</code>. For instance (for our learner that has 3 layer groups):</p>
 
 </div>
@@ -424,7 +424,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">lr_range</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">)),</span> <span class="n">learn</span><span class="o">.</span><span class="n">lr_range</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mf">3e-4</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -454,7 +454,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=unfreeze></a><code>unfreeze</code></h4>
+<h4><a id=Learner.unfreeze></a><code>unfreeze</code></h4>
 <blockquote><p><code>unfreeze</code>()</p>
 </blockquote>
 <p>Unfreeze entire model.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L160">[source]</a></p>
@@ -483,7 +483,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=freeze></a><code>freeze</code></h4>
+<h4><a id=Learner.freeze></a><code>freeze</code></h4>
 <blockquote><p><code>freeze</code>()</p>
 </blockquote>
 <p>Freeze up to last layer.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L155">[source]</a></p>
@@ -512,7 +512,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=freeze_to></a><code>freeze_to</code></h4>
+<h4><a id=Learner.freeze_to></a><code>freeze_to</code></h4>
 <blockquote><p><code>freeze_to</code>(<code>n</code>:<code>int</code>)</p>
 </blockquote>
 <p>Freeze layers up to layer <code>n</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L148">[source]</a></p>
@@ -534,7 +534,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=split></a><code>split</code></h4>
+<h4><a id=Learner.split></a><code>split</code></h4>
 <blockquote><p><code>split</code>(<code>split_on</code>:<code>SplitFuncOrIdxList</code>)</p>
 </blockquote>
 <p>Split the model at <code>split_on</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L143">[source]</a></p>
@@ -549,7 +549,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A convenience method that sets <code>layer_groups</code> based on the result of <a href="/torch_core.html#split_model"><code>split_model</code></a>. If <code>split_on</code> is a function, it calls that function and passes the result to <a href="/torch_core.html#split_model"><code>split_model</code></a> (see above for example).</p>
+<p>A convenience method that sets <code>layer_groups</code> based on the result of <a href="/torch_core#split_model"><code>split_model</code></a>. If <code>split_on</code> is a function, it calls that function and passes the result to <a href="/torch_core#split_model"><code>split_model</code></a> (see above for example).</p>
 
 </div>
 </div>
@@ -562,7 +562,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Simply call <a href="/basic_train.html#save"><code>Learner.save</code></a> and <a href="/basic_train.html#load"><code>Learner.load</code></a> to save and load models. Only the parameters are saved, not the actual architecture (so you'll need to create your model in the same way before loading weights back in). Models are saved to the <code>path</code>/<code>model_dir</code> directory.</p>
+<p>Simply call <a href="/basic_train#Learner.save"><code>Learner.save</code></a> and <a href="/basic_train#Learner.load"><code>Learner.load</code></a> to save and load models. Only the parameters are saved, not the actual architecture (so you'll need to create your model in the same way before loading weights back in). Models are saved to the <code>path</code>/<code>model_dir</code> directory.</p>
 
 </div>
 </div>
@@ -576,7 +576,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=load></a><code>load</code></h4>
+<h4><a id=Learner.load></a><code>load</code></h4>
 <blockquote><p><code>load</code>(<code>name</code>:<code>PathOrStr</code>)</p>
 </blockquote>
 <p>Load model <code>name</code> from <code>self.model_dir</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L170">[source]</a></p>
@@ -598,7 +598,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=save></a><code>save</code></h4>
+<h4><a id=Learner.save></a><code>save</code></h4>
 <blockquote><p><code>save</code>(<code>name</code>:<code>PathOrStr</code>)</p>
 </blockquote>
 <p>Save model with <code>name</code> to <code>self.model_dir</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L166">[source]</a></p>
@@ -626,7 +626,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=init></a><code>init</code></h4>
+<h4><a id=Learner.init></a><code>init</code></h4>
 <blockquote><p><code>init</code>(<code>init</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L120">[source]</a></p>
 </blockquote>
@@ -641,7 +641,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Initializes all weights (except batchnorm) using function <code>init</code>, which will often be from PyTorch's <a href="https://pytorch.org/docs/stable/nn.html#torch-nn-init"><code>nn.init</code></a> module.</p>
+<p>Initializes all weights (except batchnorm) using function <code>init</code>, which will often be from PyTorch's <a href="https://pytorch.org/docs/stable/nn#torch-nn-init"><code>nn.init</code></a> module.</p>
 
 </div>
 </div>
@@ -656,7 +656,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=mixup></a><code>mixup</code></h4>
-<blockquote><p><code>mixup</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) → <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
+<blockquote><p><code>mixup</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) → <a href="/basic_train#Learner"><code>Learner</code></a></p>
 </blockquote>
 <p>Add mixup <a href="https://arxiv.org/abs/1710.09412">https://arxiv.org/abs/1710.09412</a> to <code>learn</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L36">[source]</a></p>
 
@@ -670,7 +670,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Uses <a href="/callbacks.mixup.html#MixUpCallback"><code>MixUpCallback</code></a>.</p>
+<p>Uses <a href="/callbacks.mixup#MixUpCallback"><code>MixUpCallback</code></a>.</p>
 
 </div>
 </div>
@@ -685,7 +685,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=pred_batch></a><code>pred_batch</code></h4>
-<blockquote><p><code>pred_batch</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>is_valid</code>:<code>bool</code>=<code>True</code>) → <code>Tuple</code>[<code>Tensors</code>, <code>Tensors</code>, <code>Tensors</code>]</p>
+<blockquote><p><code>pred_batch</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>is_valid</code>:<code>bool</code>=<code>True</code>) → <code>Tuple</code>[<code>Tensors</code>, <code>Tensors</code>, <code>Tensors</code>]</p>
 </blockquote>
 <p>Returns input, target and output of the model on a batch  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/tta.py#L8">[source]</a></p>
 
@@ -713,7 +713,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=create_opt></a><code>create_opt</code></h4>
+<h4><a id=Learner.create_opt></a><code>create_opt</code></h4>
 <blockquote><p><code>create_opt</code>(<code>lr</code>:<code>Floats</code>, <code>wd</code>:<code>Floats</code>=<code>0.0</code>)</p>
 </blockquote>
 <p>Create optimizer with <code>lr</code> learning rate and <code>wd</code> weight decay.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L139">[source]</a></p>
@@ -728,7 +728,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You generally won't need to call this yourself - it's used to create the <a href="https://pytorch.org/docs/stable/optim.html#module-torch.optim"><code>optim</code></a> optimizer before fitting the model.</p>
+<p>You generally won't need to call this yourself - it's used to create the <a href="https://pytorch.org/docs/stable/optim#module-torch.optim"><code>optim</code></a> optimizer before fitting the model.</p>
 
 </div>
 </div>
@@ -743,9 +743,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=Recorder></a><code>class</code> <code>Recorder</code></h2>
-<blockquote><p><code>Recorder</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a></p>
+<blockquote><p><code>Recorder</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>) :: <a href="/basic_train#LearnerCallback"><code>LearnerCallback</code></a></p>
 </blockquote>
-<p>A <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a> that records epoch, loss, opt and metric data during training.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L197">[source]</a></p>
+<p>A <a href="/basic_train#LearnerCallback"><code>LearnerCallback</code></a> that records epoch, loss, opt and metric data during training.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L197">[source]</a></p>
 
 </div>
 
@@ -757,7 +757,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A <a href="/basic_train.html#Learner"><code>Learner</code></a> creates a <a href="/basic_train.html#Recorder"><code>Recorder</code></a> object automatically - you do not need to explicitly pass to <code>callback_fns</code> - because other callbacks rely on it being available. It stores the smoothed loss, hyperparameter values, and metrics each batch, and provides plotting methods for each. Note that <a href="/basic_train.html#Learner"><code>Learner</code></a> automatically sets an attribute with the snake-cased name of each callback, so you can access this through <code>Learner.recorder</code>, as shown below.</p>
+<p>A <a href="/basic_train#Learner"><code>Learner</code></a> creates a <a href="/basic_train#Recorder"><code>Recorder</code></a> object automatically - you do not need to explicitly pass to <code>callback_fns</code> - because other callbacks rely on it being available. It stores the smoothed loss, hyperparameter values, and metrics each batch, and provides plotting methods for each. Note that <a href="/basic_train#Learner"><code>Learner</code></a> automatically sets an attribute with the snake-cased name of each callback, so you can access this through <code>Learner.recorder</code>, as shown below.</p>
 
 </div>
 </div>
@@ -777,7 +777,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=plot></a><code>plot</code></h4>
+<h4><a id=Recorder.plot></a><code>plot</code></h4>
 <blockquote><p><code>plot</code>(<code>skip_start</code>:<code>int</code>=<code>10</code>, <code>skip_end</code>:<code>int</code>=<code>5</code>)</p>
 </blockquote>
 <p>Plot learning rate and losses, trimmed between <code>skip_start</code> and <code>skip_end</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L260">[source]</a></p>
@@ -807,7 +807,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -839,7 +839,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=plot_losses></a><code>plot_losses</code></h4>
+<h4><a id=Recorder.plot_losses></a><code>plot_losses</code></h4>
 <blockquote><p><code>plot_losses</code>()</p>
 </blockquote>
 <p>Plot training and validation losses.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L268">[source]</a></p>
@@ -868,7 +868,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_losses</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -912,7 +912,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=plot_lr></a><code>plot_lr</code></h4>
+<h4><a id=Recorder.plot_lr></a><code>plot_lr</code></h4>
 <blockquote><p><code>plot_lr</code>(<code>show_moms</code>=<code>False</code>)</p>
 </blockquote>
 <p>Plot learning rate, <code>show_moms</code> to include momentum.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L251">[source]</a></p>
@@ -933,7 +933,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_lr</span><span class="p">(</span><span class="n">show_moms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -965,7 +965,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=plot_metrics></a><code>plot_metrics</code></h4>
+<h4><a id=Recorder.plot_metrics></a><code>plot_metrics</code></h4>
 <blockquote><p><code>plot_metrics</code>()</p>
 </blockquote>
 <p>Plot metrics collected during training.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L277">[source]</a></p>
@@ -993,7 +993,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_metrics</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1024,7 +1024,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You don't call these yourself - they're called by fastai's <a href="/callback.html#callback"><code>callback</code></a> system automatically to enable the class's functionality.</p>
+<p>You don't call these yourself - they're called by fastai's <a href="/callback#callback"><code>callback</code></a> system automatically to enable the class's functionality.</p>
 
 </div>
 </div>
@@ -1038,7 +1038,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
+<h4><a id=Recorder.on_backward_begin></a><code>on_backward_begin</code></h4>
 <blockquote><p><code>on_backward_begin</code>(<code>smooth_loss</code>:<code>Tensor</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Record the loss before any other callback has a chance to modify it.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L218">[source]</a></p>
@@ -1060,7 +1060,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_batch_begin></a><code>on_batch_begin</code></h4>
+<h4><a id=Recorder.on_batch_begin></a><code>on_batch_begin</code></h4>
 <blockquote><p><code>on_batch_begin</code>(<code>train</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Record learning rate and momentum at beginning of batch.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L212">[source]</a></p>
@@ -1082,7 +1082,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_epoch_end></a><code>on_epoch_end</code></h4>
+<h4><a id=Recorder.on_epoch_end></a><code>on_epoch_end</code></h4>
 <blockquote><p><code>on_epoch_end</code>(<code>epoch</code>:<code>int</code>, <code>num_batch</code>:<code>int</code>, <code>smooth_loss</code>:<code>Tensor</code>, <code>last_metrics</code>=<code>typing.Collection[typing.Union[torch.Tensor, numbers.Number]]</code>, <code>kwargs</code>:<code>Any</code>) → <code>bool</code></p>
 </blockquote>
 <p>Save epoch info: num_batch, smooth_loss, metrics.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L224">[source]</a></p>
@@ -1104,7 +1104,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
+<h4><a id=Recorder.on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>pbar</code>:<code>PBar</code>, <code>metrics_names</code>:<code>StrList</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Initialize recording status at beginning of training.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L205">[source]</a></p>
@@ -1125,7 +1125,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Generally you'll want to use a <a href="/basic_train.html#Learner"><code>Learner</code></a> to train your model, since they provide a lot of functionality and make things easier. However, for ultimate flexibility, you can call the same underlying functions that <a href="/basic_train.html#Learner"><code>Learner</code></a> calls behind the scenes.</p>
+<p>Generally you'll want to use a <a href="/basic_train#Learner"><code>Learner</code></a> to train your model, since they provide a lot of functionality and make things easier. However, for ultimate flexibility, you can call the same underlying functions that <a href="/basic_train#Learner"><code>Learner</code></a> calls behind the scenes.</p>
 
 </div>
 </div>
@@ -1140,7 +1140,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=fit></a><code>fit</code></h4>
-<blockquote><p><code>fit</code>(<code>epochs</code>:<code>int</code>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>loss_func</code>:<code>LossFunction</code>, <code>opt</code>:<a href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer"><code>Optimizer</code></a>, <code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>callbacks</code>:<code>Optional</code>[<code>Collection</code>[<a href="/callback.html#Callback"><code>Callback</code></a>]]=<code>None</code>, <code>metrics</code>:<code>OptMetrics</code>=<code>None</code>)</p>
+<blockquote><p><code>fit</code>(<code>epochs</code>:<code>int</code>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>, <code>loss_func</code>:<code>LossFunction</code>, <code>opt</code>:<a href="https://pytorch.org/docs/stable/optim#torch.optim.Optimizer"><code>Optimizer</code></a>, <code>data</code>:<a href="/basic_data#DataBunch"><code>DataBunch</code></a>, <code>callbacks</code>:<code>Optional</code>[<code>Collection</code>[<a href="/callback#Callback"><code>Callback</code></a>]]=<code>None</code>, <code>metrics</code>:<code>OptMetrics</code>=<code>None</code>)</p>
 </blockquote>
 <p>Fit the <code>model</code> on <code>data</code> and learn using <code>loss</code> and <code>opt</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L64">[source]</a></p>
 
@@ -1169,7 +1169,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=train_epoch></a><code>train_epoch</code></h4>
-<blockquote><p><code>train_epoch</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>opt</code>:<a href="https://pytorch.org/docs/stable/optim.html#torch.optim.Optimizer"><code>Optimizer</code></a>, <code>loss_func</code>:<code>LossFunction</code>)</p>
+<blockquote><p><code>train_epoch</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>, <code>dl</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>opt</code>:<a href="https://pytorch.org/docs/stable/optim#torch.optim.Optimizer"><code>Optimizer</code></a>, <code>loss_func</code>:<code>LossFunction</code>)</p>
 </blockquote>
 <p>Simple training of <code>model</code> for 1 epoch of <code>dl</code> using optim <code>opt</code> and loss function <code>loss_func</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L55">[source]</a></p>
 
@@ -1183,7 +1183,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You won't generally need to call this yourself - it's what <a href="/basic_train.html#fit"><code>fit</code></a> calls for each epoch.</p>
+<p>You won't generally need to call this yourself - it's what <a href="/basic_train#fit"><code>fit</code></a> calls for each epoch.</p>
 
 </div>
 </div>
@@ -1198,7 +1198,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=validate></a><code>validate</code></h4>
-<blockquote><p><code>validate</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>loss_func</code>:<code>OptLossFunc</code>=<code>None</code>, <code>cb_handler</code>:<code>Optional</code>[<a href="/callback.html#CallbackHandler"><code>CallbackHandler</code></a>]=<code>None</code>, <code>pbar</code>:<code>Union</code>[<code>MasterBar</code>, <code>ProgressBar</code>, <code>NoneType</code>]=<code>None</code>, <code>average</code>=<code>True</code>) → <code>Iterator</code>[<code>Tuple</code>[<code>IntOrTensor</code>, <code>Ellipsis</code>]]</p>
+<blockquote><p><code>validate</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>, <code>dl</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>loss_func</code>:<code>OptLossFunc</code>=<code>None</code>, <code>cb_handler</code>:<code>Optional</code>[<a href="/callback#CallbackHandler"><code>CallbackHandler</code></a>]=<code>None</code>, <code>pbar</code>:<code>Union</code>[<code>MasterBar</code>, <code>ProgressBar</code>, <code>NoneType</code>]=<code>None</code>, <code>average</code>=<code>True</code>) → <code>Iterator</code>[<code>Tuple</code>[<code>IntOrTensor</code>, <code>Ellipsis</code>]]</p>
 </blockquote>
 <p>Calculate loss and metrics for the validation set.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L38">[source]</a></p>
 
@@ -1212,7 +1212,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is what <a href="/basic_train.html#fit"><code>fit</code></a> calls after each epoch. You can call it if you want to run inference on a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> manually.</p>
+<p>This is what <a href="/basic_train#fit"><code>fit</code></a> calls after each epoch. You can call it if you want to run inference on a <a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a> manually.</p>
 
 </div>
 </div>
@@ -1227,7 +1227,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=loss_batch></a><code>loss_batch</code></h4>
-<blockquote><p><code>loss_batch</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>xb</code>:<code>Tensor</code>, <code>yb</code>:<code>Tensor</code>, <code>loss_func</code>:<code>OptLossFunc</code>=<code>None</code>, <code>opt</code>:<code>OptOptimizer</code>=<code>None</code>, <code>cb_handler</code>:<code>Optional</code>[<a href="/callback.html#CallbackHandler"><code>CallbackHandler</code></a>]=<code>None</code>) → <code>Tuple</code>[<code>Union</code>[<code>Tensor</code>, <code>int</code>, <code>float</code>, <code>str</code>]]</p>
+<blockquote><p><code>loss_batch</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>, <code>xb</code>:<code>Tensor</code>, <code>yb</code>:<code>Tensor</code>, <code>loss_func</code>:<code>OptLossFunc</code>=<code>None</code>, <code>opt</code>:<code>OptOptimizer</code>=<code>None</code>, <code>cb_handler</code>:<code>Optional</code>[<a href="/callback#CallbackHandler"><code>CallbackHandler</code></a>]=<code>None</code>) → <code>Tuple</code>[<code>Union</code>[<code>Tensor</code>, <code>int</code>, <code>float</code>, <code>str</code>]]</p>
 </blockquote>
 <p>Calculate loss and metrics for a batch, call out to callbacks as necessary.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L12">[source]</a></p>
 
@@ -1241,7 +1241,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You won't generally need to call this yourself - it's what <a href="/basic_train.html#fit"><code>fit</code></a> and <a href="/basic_train.html#validate"><code>validate</code></a> call for each batch. It only does a backward pass if you set <code>opt</code>.</p>
+<p>You won't generally need to call this yourself - it's what <a href="/basic_train#fit"><code>fit</code></a> and <a href="/basic_train#validate"><code>validate</code></a> call for each batch. It only does a backward pass if you set <code>opt</code>.</p>
 
 </div>
 </div>
@@ -1262,9 +1262,9 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h3><a id=LearnerCallback></a><code>class</code> <code>LearnerCallback</code></h3>
-<blockquote><p><code>LearnerCallback</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
+<blockquote><p><code>LearnerCallback</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>) :: <a href="/callback#Callback"><code>Callback</code></a></p>
 </blockquote>
-<p>Base class for creating callbacks for a <a href="/basic_train.html#Learner"><code>Learner</code></a>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L188">[source]</a></p>
+<p>Base class for creating callbacks for a <a href="/basic_train#Learner"><code>Learner</code></a>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_train.py#L188">[source]</a></p>
 
 </div>
 

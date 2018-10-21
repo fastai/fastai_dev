@@ -20,12 +20,12 @@ summary: "Application to Computer Vision"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/vision.html#vision"><code>vision</code></a> module of the fastai library contains all the necessary functions to define a Dataset and train a model for computer vision tasks. It contains four different submodules to reach that goal:</p>
+<p>The <a href="/vision#vision"><code>vision</code></a> module of the fastai library contains all the necessary functions to define a Dataset and train a model for computer vision tasks. It contains four different submodules to reach that goal:</p>
 <ul>
-<li><a href="/vision.image.html#vision.image"><code>vision.image</code></a> contains the basic definition of an <a href="/vision.image.html#Image"><code>Image</code></a> object and all the functions that are used behind the scenes to apply transformations to such an object.</li>
-<li><a href="/vision.transform.html#vision.transform"><code>vision.transform</code></a> contains all the transforms we can use for data augmentation.</li>
-<li><a href="/vision.data.html#vision.data"><code>vision.data</code></a> contains the definition of <a href="/vision.data.html#ImageClassificationDataset"><code>ImageClassificationDataset</code></a> as well as the utility function to easily build a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> for Computer Vision problems.</li>
-<li><a href="/vision.learner.html#vision.learner"><code>vision.learner</code></a> lets you build and fine-tune models with a pretrained CNN backbone or train a randomly initialized model from scratch.</li>
+<li><a href="/vision.image#vision.image"><code>vision.image</code></a> contains the basic definition of an <a href="/vision.image#Image"><code>Image</code></a> object and all the functions that are used behind the scenes to apply transformations to such an object.</li>
+<li><a href="/vision.transform#vision.transform"><code>vision.transform</code></a> contains all the transforms we can use for data augmentation.</li>
+<li><a href="/vision.data#vision.data"><code>vision.data</code></a> contains the definition of <a href="/vision.data#ImageClassificationDataset"><code>ImageClassificationDataset</code></a> as well as the utility function to easily build a <a href="/basic_data#DataBunch"><code>DataBunch</code></a> for Computer Vision problems.</li>
+<li><a href="/vision.learner#vision.learner"><code>vision.learner</code></a> lets you build and fine-tune models with a pretrained CNN backbone or train a randomly initialized model from scratch.</li>
 </ul>
 <p>Each of the four module links above includes a quick overview and examples of the functionality of that module, as well as complete API documentation. Below, we'll provide a walk-thru of end to end computer vision model training with the most commonly used functionality.</p>
 
@@ -54,7 +54,7 @@ summary: "Application to Computer Vision"
 <span class="n">path</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -77,7 +77,7 @@ summary: "Application to Computer Vision"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Since this contains standard <a href="/train.html#train"><code>train</code></a> and <code>valid</code> folders, and each contains one folder per class, you can create a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> in a single line:</p>
+<p>Since this contains standard <a href="/train#train"><code>train</code></a> and <code>valid</code> folders, and each contains one folder per class, you can create a <a href="/basic_data#DataBunch"><code>DataBunch</code></a> in a single line:</p>
 
 </div>
 </div>
@@ -90,14 +90,14 @@ summary: "Application to Computer Vision"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You load a pretrained model (from <code>vision.models</code>) ready for fine tuning:</p>
+<p>You load a pretrained model (from <a href="/vision.models#vision.models"><code>vision.models</code></a>) ready for fine tuning:</p>
 
 </div>
 </div>
@@ -110,7 +110,7 @@ summary: "Application to Computer Vision"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -130,7 +130,7 @@ summary: "Application to Computer Vision"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -154,7 +154,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's look briefly at each of the <a href="/vision.html#vision"><code>vision</code></a> submodules.</p>
+<p>Let's look briefly at each of the <a href="/vision#vision"><code>vision</code></a> submodules.</p>
 
 </div>
 </div>
@@ -167,7 +167,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The most important piece of <a href="/vision.data.html#vision.data"><code>vision.data</code></a> for classification is the <a href="/vision.data.html#ImageClassificationDataset"><code>ImageClassificationDataset</code></a>. If you've got labels as subfolders, then you can just say:</p>
+<p>The most important piece of <a href="/vision.data#vision.data"><code>vision.data</code></a> for classification is the <a href="/vision.data#ImageClassificationDataset"><code>ImageClassificationDataset</code></a>. If you've got labels as subfolders, then you can just say:</p>
 
 </div>
 </div>
@@ -180,7 +180,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">ImageClassificationDataset</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -193,7 +193,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>That brings us to <a href="/vision.image.html#vision.image"><code>vision.image</code></a>, which defines the <a href="/vision.image.html#Image"><code>Image</code></a> class. Our dataset will return <a href="/vision.image.html#Image"><code>Image</code></a> objects when we index it. Images automatically display in notebooks:</p>
+<p>That brings us to <a href="/vision.image#vision.image"><code>vision.image</code></a>, which defines the <a href="/vision.image#Image"><code>Image</code></a> class. Our dataset will return <a href="/vision.image#Image"><code>Image</code></a> objects when we index it. Images automatically display in notebooks:</p>
 
 </div>
 </div>
@@ -207,7 +207,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">img</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -245,7 +245,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;MNIST digit&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -283,7 +283,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="mi">35</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -314,7 +314,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/vision.transform.html#vision.transform"><code>vision.transform</code></a> lets us do data augmentation. Simplest is to choose from a standard set of transforms, where the defaults are designed for photos:</p>
+<p><a href="/vision.transform#vision.transform"><code>vision.transform</code></a> lets us do data augmentation. Simplest is to choose from a standard set of transforms, where the defaults are designed for photos:</p>
 
 </div>
 </div>
@@ -327,7 +327,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">get_transforms</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -365,7 +365,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">rotate</span><span class="p">(</span><span class="n">degrees</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">)),</span> <span class="n">symmetric_warp</span><span class="p">(</span><span class="n">magnitude</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.3</span><span class="p">))]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -388,7 +388,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span> <span class="n">tds</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -413,7 +413,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You can create a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> with your transformed training and validation data loaders in a single step, passing in a tuple of <em>(train_tfms, valid_tfms)</em>:</p>
+<p>You can create a <a href="/basic_data#DataBunch"><code>DataBunch</code></a> with your transformed training and validation data loaders in a single step, passing in a tuple of <em>(train_tfms, valid_tfms)</em>:</p>
 
 </div>
 </div>
@@ -426,7 +426,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="p">(</span><span class="n">tfms</span><span class="p">,</span> <span class="p">[]))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -439,7 +439,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now you're ready to train a model. To create a model, simply pass your <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> and a model creation function (such as one provided by <code>vision.models</code> or <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision-models"><code>torchvision.models</code></a>) to <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a>, and call <a href="/basic_train.html#fit"><code>fit</code></a>:</p>
+<p>Now you're ready to train a model. To create a model, simply pass your <a href="/basic_data#DataBunch"><code>DataBunch</code></a> and a model creation function (such as one provided by <a href="/vision.models#vision.models"><code>vision.models</code></a> or <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision-models"><code>torchvision.models</code></a>) to <a href="/vision.learner#ConvLearner"><code>ConvLearner</code></a>, and call <a href="/basic_train#fit"><code>fit</code></a>:</p>
 
 </div>
 </div>
@@ -453,7 +453,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -490,7 +490,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span> <span class="o">=</span> <span class="n">ClassificationInterpretation</span><span class="o">.</span><span class="n">from_learner</span><span class="p">(</span><span class="n">learn</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -503,7 +503,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span><span class="o">.</span><span class="n">plot_top_losses</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -534,7 +534,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span><span class="o">.</span><span class="n">plot_confusion_matrix</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
