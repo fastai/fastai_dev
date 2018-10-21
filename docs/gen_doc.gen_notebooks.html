@@ -1,15 +1,15 @@
 ---
 
 title: gen_doc.gen_notebooks
-keywords:
+keywords: 
 sidebar: home_sidebar
 
 summary: "Generation of documentation notebook skeletons from python module"
 ---
 
 <div class="container" id="notebook-container">
-
-    <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Notebook-generation">Notebook generation<a class="anchor-link" href="#Notebook-generation">&#182;</a></h1>
 </div>
@@ -84,7 +84,7 @@ summary: "Generation of documentation notebook skeletons from python module"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The first (optional) step is to create a notebook "skeleton" - i.e. a notebook containing all the classes, methods, functions, and other symbols you wish to document. You can create this manually if you prefer, however using the automatic approach can save you some time and ensure you don't miss anything. For the initial skelton, use <a href="/gen_doc.gen_notebooks.html#create_module_page"><code>create_module_page</code></a>, which creates a new module from scratch. To update it later with any newly-added symbols, use <a href="/gen_doc.gen_notebooks.html#update_module_page"><code>update_module_page</code></a>.</p>
+<p>The first (optional) step is to create a notebook "skeleton" - i.e. a notebook containing all the classes, methods, functions, and other symbols you wish to document. You can create this manually if you prefer, however using the automatic approach can save you some time and ensure you don't miss anything. For the initial skelton, use <a href="/gen_doc.gen_notebooks#create_module_page"><code>create_module_page</code></a>, which creates a new module from scratch. To update it later with any newly-added symbols, use <a href="/gen_doc.gen_notebooks#update_module_page"><code>update_module_page</code></a>.</p>
 
 </div>
 </div>
@@ -169,7 +169,7 @@ summary: "Generation of documentation notebook skeletons from python module"
 <p>All the cells added by a user are conserved, only the cells of new symbols (aka that weren't documented before) will be inserted at the end. You can then move them to wherever you like in the notebook. For instance, to update this module's documentation, simply run:</p>
 
 <pre><code>update_module_page(gen_doc.gen_notebooks, '.')</code></pre>
-<p>You can also generate and update <em>all</em> modules in a package using <a href="/gen_doc.gen_notebooks.html#update_notebooks"><code>update_notebooks</code></a>.</p>
+<p>You can also generate and update <em>all</em> modules in a package using <a href="/gen_doc.gen_notebooks#update_notebooks"><code>update_notebooks</code></a>.</p>
 
 </div>
 </div>
@@ -247,7 +247,7 @@ Notebook metadata structure looks like this: <code>'metadata': { 'jekyll': {...}
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">update_notebooks</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -273,7 +273,7 @@ Notebook metadata structure looks like this: <code>'metadata': { 'jekyll': {...}
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>As a convenience method, there's <a href="/gen_doc.gen_notebooks.html#update_notebooks"><code>update_notebooks</code></a> to update all notebooks. This snippet does the whole lot for you:</p>
+<p>As a convenience method, there's <a href="/gen_doc.gen_notebooks#update_notebooks"><code>update_notebooks</code></a> to update all notebooks. This snippet does the whole lot for you:</p>
 <div class="highlight"><pre><span></span><span class="n">update_notebooks</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">update_html</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">update_nb</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">update_nb_links</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
 </pre></div>
 
@@ -332,3 +332,5 @@ Notebook metadata structure looks like this: <code>'metadata': { 'jekyll': {...}
 </div>
 </div>
 </div>
+ 
+
