@@ -20,15 +20,13 @@ jobs:
   - script: |
       echo "Testing docs-dev"
       ./checklink-docs-dev.sh
-      if [[ ! -f checklink-docs-dev.log ]]; then echo "Program didn't run"; false; fi
-      if [[   -s checklink-docs-dev.log ]]; then echo "Got broken links"; cat checklink-docs-dev.log; false; else echo "No broken links were found"; fi
+      ./run-checker.sh docs-dev
     displayName: 'link checker for docs-dev.fast.ai'
     continueOnError: true
 
   - script: |
       echo "Testing docs"
-      ls -l checklink
-      if [[ ! -f checklink-docs.log ]]; then echo "Program didn't run"; false; fi
-      if [[   -s checklink-docs.log ]]; then echo "Got broken links"; cat checklink-docs.log; false; else echo "No broken links were found"; fi
+      ./checklink-docs.sh
+      ./run-checker.sh docs
     displayName: 'link checker for docs.fast.ai'
     continueOnError: true
