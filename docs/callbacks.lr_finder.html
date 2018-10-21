@@ -20,7 +20,7 @@ summary: "Implementation of the LR Range test from Leslie Smith"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Learning rate finder plots lr vs loss relationship for a <a href="/basic_train.html#Learner"><code>Learner</code></a>. The idea is to reduce the amount of guesswork on picking a good starting learning rate.</p>
+<p>Learning rate finder plots lr vs loss relationship for a <a href="/basic_train#Learner"><code>Learner</code></a>. The idea is to reduce the amount of guesswork on picking a good starting learning rate.</p>
 <p><strong>Overview:</strong></p>
 <ol>
 <li>First run lr_find <code>learn.lr_find()</code></li>
@@ -28,7 +28,7 @@ summary: "Implementation of the LR Range test from Leslie Smith"
 <li>Pick a learning rate before it diverges then start training</li>
 </ol>
 <p><strong>Technical Details:</strong> (first <a href="&#39;https://arxiv.org/abs/1506.01186&#39;">described</a> by Leslie Smith)</p>
-<blockquote><p>Train <a href="/basic_train.html#Learner"><code>Learner</code></a> over a few iterations. Start with a very low <code>start_lr</code> and change it at each mini-batch until it reaches a very high <code>end_lr</code>. <a href="/basic_train.html#Recorder"><code>Recorder</code></a> will record the loss at each iteration. Plot those losses against the learning rate to find the optimal value before it diverges.</p>
+<blockquote><p>Train <a href="/basic_train#Learner"><code>Learner</code></a> over a few iterations. Start with a very low <code>start_lr</code> and change it at each mini-batch until it reaches a very high <code>end_lr</code>. <a href="/basic_train#Recorder"><code>Recorder</code></a> will record the loss at each iteration. Plot those losses against the learning rate to find the optimal value before it diverges.</p>
 </blockquote>
 
 </div>
@@ -57,7 +57,7 @@ summary: "Implementation of the LR Range test from Leslie Smith"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">simple_learner</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -79,7 +79,7 @@ summary: "Implementation of the LR Range test from Leslie Smith"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=lr_find></a><code>lr_find</code></h4>
-<blockquote><p><code>lr_find</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>Floats</code>=<code>1e-07</code>, <code>end_lr</code>:<code>Floats</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>, <code>kwargs</code>:<code>Any</code>)</p>
+<blockquote><p><code>lr_find</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>Floats</code>=<code>1e-07</code>, <code>end_lr</code>:<code>Floats</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Explore lr from <code>start_lr</code> to <code>end_lr</code> over <code>num_it</code> iterations in <code>learn</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L21">[source]</a></p>
 
@@ -99,7 +99,7 @@ summary: "Implementation of the LR Range test from Leslie Smith"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -119,7 +119,7 @@ summary: "Implementation of the LR Range test from Leslie Smith"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -158,7 +158,7 @@ summary: "Implementation of the LR Range test from Leslie Smith"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">simple_learner</span><span class="p">()</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -197,7 +197,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">simple_learner</span><span class="p">()</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1e-0</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -236,7 +236,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">simple_learner</span><span class="p">()</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -269,7 +269,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=LRFinder></a><code>class</code> <code>LRFinder</code></h2>
-<blockquote><p><code>LRFinder</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>float</code>=<code>1e-07</code>, <code>end_lr</code>:<code>float</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>) :: <a href="/basic_train.html#LearnerCallback"><code>LearnerCallback</code></a></p>
+<blockquote><p><code>LRFinder</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>start_lr</code>:<code>float</code>=<code>1e-07</code>, <code>end_lr</code>:<code>float</code>=<code>10</code>, <code>num_it</code>:<code>int</code>=<code>100</code>) :: <a href="/basic_train#LearnerCallback"><code>LearnerCallback</code></a></p>
 </blockquote>
 <p>Causes <code>learn</code> to go on a mock training from <code>start_lr</code> to <code>end_lr</code> for <code>num_it</code> iterations. Training is interrupted if the loss diverges. Weights changes are reverted after run complete. <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/lr_finder.py#L9">[source]</a></p>
 
@@ -290,7 +290,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_train_end></a><code>on_train_end</code></h4>
+<h4><a id=LRFinder.on_train_end></a><code>on_train_end</code></h4>
 <blockquote><p><code>on_train_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Cleanup learn model weights disturbed during LRFind exploration.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/lr_finder.py#L42">[source]</a></p>
@@ -312,7 +312,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_batch_end></a><code>on_batch_end</code></h4>
+<h4><a id=LRFinder.on_batch_end></a><code>on_batch_end</code></h4>
 <blockquote><p><code>on_batch_end</code>(<code>iteration</code>:<code>int</code>, <code>smooth_loss</code>:<code>TensorOrNumber</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Determine if loss has runaway and we should stop.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/lr_finder.py#L29">[source]</a></p>
@@ -334,7 +334,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
+<h4><a id=LRFinder.on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Initialize optimizer and learner hyperparameters.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/lr_finder.py#L22">[source]</a></p>
@@ -356,7 +356,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_epoch_end></a><code>on_epoch_end</code></h4>
+<h4><a id=LRFinder.on_epoch_end></a><code>on_epoch_end</code></h4>
 <blockquote><p><code>on_epoch_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Tell Learner if we need to stop.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/lr_finder.py#L38">[source]</a></p>

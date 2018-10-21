@@ -27,7 +27,7 @@ summary: "Implementation of the 1cycle policy"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This Callback allows us to easily train a network using Leslie Smith's 1cycle policy. To learn more about the 1cycle technique for training neural networks check out <a href="https://arxiv.org/pdf/1803.09820.pdf">Leslie Smith's paper</a> and for a more graphical and intuitive explanation check out <a href="https://sgugger.github.io/the-1cycle-policy.html">Sylvain Gugger's post</a>.</p>
-<p>To use our 1cycle policy we will need an <a href="https://sgugger.github.io/how-do-you-find-a-good-learning-rate.html">optimum learning rate</a>. We can find this learning rate by using a learning rate finder which can be called by using <a href="/callbacks.lr_finder.html#callbacks.lr_finder"><code>lr_finder</code></a>. It will do a mock training by going over a large range of learning rates, then plot them against the losses. We will pick a value a bit before the minimum, where the loss still improves. Our graph would look something like this:</p>
+<p>To use our 1cycle policy we will need an <a href="https://sgugger.github.io/how-do-you-find-a-good-learning-rate.html">optimum learning rate</a>. We can find this learning rate by using a learning rate finder which can be called by using <a href="/callbacks.lr_finder#callbacks.lr_finder"><code>lr_finder</code></a>. It will do a mock training by going over a large range of learning rates, then plot them against the losses. We will pick a value a bit before the minimum, where the loss still improves. Our graph would look something like this:</p>
 <p><img src="imgs/onecycle_finder.png" alt="onecycle_finder"></p>
 <p>Here anything between <code>3x10^-2</code> and <code>10^-2</code> is a good idea.</p>
 <p>Next we will apply the 1cycle policy with the chosen learning rate as the maximum learning rate. The original 1cycle policy has three steps:</p>
@@ -52,7 +52,7 @@ summary: "Implementation of the 1cycle policy"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The one cycle policy allows to train very quickly, a phenomenon termed <a href="https://arxiv.org/abs/1708.07120"><em>superconvergence</em></a>. To see this in practice, we will first train a <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> and see how our results compare when we use the <a href="/callbacks.one_cycle.html#OneCycleScheduler"><code>OneCycleScheduler</code></a> with <a href="/train.html#fit_one_cycle"><code>fit_one_cycle</code></a>.</p>
+<p>The one cycle policy allows to train very quickly, a phenomenon termed <a href="https://arxiv.org/abs/1708.07120"><em>superconvergence</em></a>. To see this in practice, we will first train a <a href="/vision.learner#ConvLearner"><code>ConvLearner</code></a> and see how our results compare when we use the <a href="/callbacks.one_cycle#OneCycleScheduler"><code>OneCycleScheduler</code></a> with <a href="/train#fit_one_cycle"><code>fit_one_cycle</code></a>.</p>
 
 </div>
 </div>
@@ -67,7 +67,7 @@ summary: "Implementation of the 1cycle policy"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -87,7 +87,7 @@ summary: "Implementation of the 1cycle policy"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -100,7 +100,7 @@ summary: "Implementation of the 1cycle policy"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -138,7 +138,7 @@ summary: "Implementation of the 1cycle policy"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -178,7 +178,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5e-3</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -209,7 +209,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now to do the same thing with 1cycle, we use <a href="/train.html#fit_one_cycle"><code>fit_one_cycle</code></a>.</p>
+<p>Now to do the same thing with 1cycle, we use <a href="/train#fit_one_cycle"><code>fit_one_cycle</code></a>.</p>
 
 </div>
 </div>
@@ -224,7 +224,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5e-2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -263,7 +263,7 @@ epoch  train loss  valid loss  accuracy
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_lr</span><span class="p">(</span><span class="n">show_moms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -296,7 +296,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=OneCycleScheduler></a><code>class</code> <code>OneCycleScheduler</code></h2>
-<blockquote><p><code>OneCycleScheduler</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>lr_max</code>:<code>float</code>, <code>moms</code>:<code>Floats</code>=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.3</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a>
+<blockquote><p><code>OneCycleScheduler</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>lr_max</code>:<code>float</code>, <code>moms</code>:<code>Floats</code>=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.3</code>) :: <a href="/callback#Callback"><code>Callback</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L9">[source]</a></p>
 </blockquote>
 
@@ -310,7 +310,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <a href="/callback.html#Callback"><code>Callback</code></a> that handles the hyperparameters settings following the 1cycle policy for <code>learn</code>. <code>lr_max</code> should be picked with the <a href="/train.html#lr_find"><code>lr_find</code></a> test. In phase 1, the learning rates goes from <code>lr_max/div_factor</code> to <code>lr_max</code> linearly while the momentum goes from <code>moms[0]</code> to <code>moms[1]</code> linearly. In phase 2, the learning rates follows a cosine annealing from <code>lr_max</code> to 0, as the momentum goes from <code>moms[1]</code> to <code>moms[0]</code> with the same annealing.</p>
+<p>Create a <a href="/callback#Callback"><code>Callback</code></a> that handles the hyperparameters settings following the 1cycle policy for <code>learn</code>. <code>lr_max</code> should be picked with the <a href="/train#lr_find"><code>lr_find</code></a> test. In phase 1, the learning rates goes from <code>lr_max/div_factor</code> to <code>lr_max</code> linearly while the momentum goes from <code>moms[0]</code> to <code>moms[1]</code> linearly. In phase 2, the learning rates follows a cosine annealing from <code>lr_max</code> to 0, as the momentum goes from <code>moms[1]</code> to <code>moms[0]</code> with the same annealing.</p>
 
 </div>
 </div>
@@ -324,7 +324,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=steps></a><code>steps</code></h4>
+<h4><a id=OneCycleScheduler.steps></a><code>steps</code></h4>
 <blockquote><p><code>steps</code>(<code>steps_cfg</code>:<code>StartOptEnd</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L21">[source]</a></p>
 </blockquote>
@@ -339,7 +339,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Build the <a href="/callback.html#Stepper"><code>Stepper</code></a> for the <a href="/callback.html#Callback"><code>Callback</code></a> according to <code>steps_cfg</code>.</p>
+<p>Build the <a href="/callback#Stepper"><code>Stepper</code></a> for the <a href="/callback#Callback"><code>Callback</code></a> according to <code>steps_cfg</code>.</p>
 
 </div>
 </div>
@@ -353,7 +353,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
+<h4><a id=OneCycleScheduler.on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>n_epochs</code>:<code>int</code>, <code>kwargs</code>:<code>Any</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L26">[source]</a></p>
 </blockquote>
@@ -382,7 +382,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_batch_end></a><code>on_batch_end</code></h4>
+<h4><a id=OneCycleScheduler.on_batch_end></a><code>on_batch_end</code></h4>
 <blockquote><p><code>on_batch_end</code>(<code>train</code>, <code>kwargs</code>:<code>Any</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L39">[source]</a></p>
 </blockquote>
