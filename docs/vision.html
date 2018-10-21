@@ -97,7 +97,7 @@ summary: "Application to Computer Vision"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You load a pretrained model ready for fine tuning (<a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision.models"><code>tvm</code></a> is the namespace for <code>torchvision.models</code>):</p>
+<p>You load a pretrained model (from <code>vision.models</code>) ready for fine tuning:</p>
 
 </div>
 </div>
@@ -439,7 +439,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now you're ready to train a model. To create a model, simply pass your <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> and a model creation function (such as one provided by <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision.models"><code>tvm</code></a>: <code>torchvision.models</code>) to <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a>, and call <a href="/basic_train.html#fit"><code>fit</code></a>:</p>
+<p>Now you're ready to train a model. To create a model, simply pass your <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> and a model creation function (such as one provided by <code>vision.models</code> or <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision-models"><code>torchvision.models</code></a>) to <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a>, and call <a href="/basic_train.html#fit"><code>fit</code></a>:</p>
 
 </div>
 </div>

@@ -314,7 +314,7 @@ Numericalizing valid.
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> was called behind the scenes for <code>train.csv</code> and <code>valid.csv</code> but, as explained earlier, it only preprocessed the validation set, since it had stored the result for the training set. The <code>data_func</code> argument here tells the <a href="/text.data.html#text_data_from_csv"><code>text_data_from_csv</code></a> function how to organize the data. In the first one, we prepare it for a language model, and in the second one, for a classifier (see the differences in <a href="/text.data.html#text.data"><code>text.data</code></a>).</p>
+<p>Note that <a href="/text.data.html#TextDataset"><code>TextDataset</code></a> was called behind the scenes for <code>train.csv</code> and <code>valid.csv</code> but, as explained earlier, it only preprocessed the validation set, since it had stored the result for the training set.  organize the data. <code>TextLMDataBunch.from_csv</code>, prepares the dataset for a language model, while <code>TextClasDataBunch.from_csv</code> prepares for a classifier (see the differences in <a href="/text.data.html#text.data"><code>text.data</code></a>).</p>
 <p>For the classifier, we also pass the vocabulary (mapping from ids to words) that we want to use: this is to ensure that <code>data_clas</code> will use the same dictionary as <code>data_lm</code>.</p>
 
 </div>
