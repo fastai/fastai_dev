@@ -15,11 +15,16 @@ Note, that if you have just committed changes to git, wait a few minutes for git
 Test docs*.fast.ai for broken links and anchors:
 
 ```
-checklink-docs.sh
-checklink-docs-dev.sh
+cd checklink
+./checklink-docs.sh
+./checklink-docs-dev.sh
 ```
 
 Each file logs to console and also into `checklink-docs.log` and `checklink-docs-dev.log`
+
+If you're on windows w/o bash, you can just copy-n-paste the contents of the script to your command line.
+
+The script is set to sleep for 2 secs between each request, so not to get blocked by github, so it takes some 5-10min to complete.
 
 You can add `--html` inside those scripts if you prefer to have the html output (in which case change the scripts to `|tee checklink-docs-log.html` or similar, since it dumps the output to stdout.
 
