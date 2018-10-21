@@ -1,7 +1,7 @@
 ---
 
 title: collab
-keywords: 
+keywords: fastai
 sidebar: home_sidebar
 
 summary: "Application to collaborative filtering"
@@ -48,7 +48,7 @@ summary: "Application to collaborative filtering"
 <span class="n">ratings</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -145,7 +145,7 @@ summary: "Application to collaborative filtering"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">series2cat</span><span class="p">(</span><span class="n">ratings</span><span class="p">,</span> <span class="s1">&#39;userId&#39;</span><span class="p">,</span><span class="s1">&#39;movieId&#39;</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -165,7 +165,7 @@ summary: "Application to collaborative filtering"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">get_collab_learner</span><span class="p">(</span><span class="n">ratings</span><span class="p">,</span> <span class="n">n_factors</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">pct_val</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">min_score</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_score</span><span class="o">=</span><span class="mf">5.</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -185,7 +185,7 @@ summary: "Application to collaborative filtering"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">5e-3</span><span class="p">,</span> <span class="n">wd</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 

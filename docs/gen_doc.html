@@ -260,6 +260,29 @@ tools/run-after-git-clone
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Updating-notebook-metadata">Updating notebook metadata<a class="anchor-link" href="#Updating-notebook-metadata">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In order to pass the right settings to the website version of the <code>docs</code>, each notebook has a custom entry which if you look at the source code, looks like:</p>
+
+<pre><code> "metadata": {
+  "jekyll": {
+   "keywords": "fastai",
+   "toc": "false",
+   "title": "Welcome to fastai"
+  },
+  [...]</code></pre>
+<p>Do not edit this entry manually, or your changes will be overwritten in the next metadata update.</p>
+<p>The only correct way to change any notebook's metadata is by opening <code>docs_src/jekyll_metadata.ipynb</code>, finding the notebook you want to change the metadata for, changing it, and running the notebook, then saving and committing it and the resulting changes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Updating-sidebar">Updating sidebar<a class="anchor-link" href="#Updating-sidebar">&#182;</a></h3>
 </div>
 </div>
