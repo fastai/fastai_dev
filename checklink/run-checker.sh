@@ -3,8 +3,8 @@
 # this is a helper script for the CI build
 
 # usage:
-# ./run-checker docs
-# ./run-checker docs-dev
+# ./run-checker.sh docs
+# ./run-checker.sh docs-dev
 me=`basename "$0"`
 if [[ ! $1 ]];
 then echo "usage: $me <docset> (docset: either 'docs' or 'docs-dev')"
