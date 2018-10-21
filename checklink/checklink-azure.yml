@@ -1,0 +1,38 @@
+# This pipeline is designed to run as a cron-job and not triggered by every build - once a day is probably enough
+
+jobs:
+
+- job: 'docs_websites_linkchecker'
+
+  pool:
+    vmImage: 'Ubuntu-16.04'
+
+  steps:
+
+  - script: |
+      echo "Installing prerequisites"
+      sudo apt install w3c-linkchecker
+      #sudo apt install cpanminus
+      #sudo cpanm W3C::LinkChecker
+    displayName: 'Installing prerequisites'
+    continueOnError: false
+
+  - script: |
+      echo "Testing docs-dev"
+      cd checklink
+      ./checklink-docs-dev.sh
+      ls -l checklink
+      if [[ ! -f checklink-docs-dev.log ]]; then echo "Program didn't run"; false; fi
+      if [[ -s checklink-docs-dev.log ]]; then echo "Got broken links"; cat checklink-docs-dev.log; false; else echo "Good job! No broken links were found"; fi
+    displayName: 'link checker for docs-dev.fast.ai'
+    continueOnError: true
+
+  - script: |
+      echo "Testing docs"
+      cd checklink
+      ./checklink-docs.sh
+      ls -l checklink
+      if [[ ! -f checklink-docs.log ]]; then echo "Program didn't run"; false; fi
+      if [[ -s checklink-docs.log ]]; then echo "Got broken links"; cat checklink-docs.log; false; else echo "Good job! No broken links were found"; fi
+    displayName: 'link checker for docs.fast.ai'
+    continueOnError: true
