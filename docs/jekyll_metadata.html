@@ -478,56 +478,6 @@ You need to make sure to refresh right after</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">update_nb_metadata</span><span class="p">(</span><span class="s1">&#39;tta.ipynb&#39;</span><span class="p">,</span>
-    <span class="n">summary</span><span class="o">=</span><span class="s1">&#39;Module brings TTA (Test Time Functionality) to the `Learner` class. Use `learner.TTA()` instead&#39;</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;tta&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">FileNotFoundError</span>                         Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-31-314be61a230c&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> update_nb_metadata(&#39;tta.ipynb&#39;,
-<span class="ansi-green-intense-fg ansi-bold">      2</span>     summary<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;Module brings TTA (Test Time Functionality) to the `Learner` class. Use `learner.TTA()` instead&#39;</span><span class="ansi-blue-fg">,</span>
-<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg">     title=&#39;tta&#39;)
-</span>
-<span class="ansi-green-fg">/mnt/disc1/fast.ai-1/br/fastai/fastai_docs/docs_src/fastai/gen_doc/gen_notebooks.py</span> in <span class="ansi-cyan-fg">update_nb_metadata</span><span class="ansi-blue-fg">(nb_path, title, summary, keywords, overwrite, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    208</span> <span class="ansi-green-fg">def</span> update_nb_metadata<span class="ansi-blue-fg">(</span>nb_path<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> title<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> summary<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> keywords<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;fastai&#39;</span><span class="ansi-blue-fg">,</span> overwrite<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    209</span>     <span class="ansi-blue-fg">&#34;Creates jekyll metadata for given notebook path.&#34;</span>
-<span class="ansi-green-fg">--&gt; 210</span><span class="ansi-red-fg">     </span>nb <span class="ansi-blue-fg">=</span> read_nb<span class="ansi-blue-fg">(</span>nb_path<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    211</span>     data <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span><span class="ansi-blue-fg">&#39;title&#39;</span><span class="ansi-blue-fg">:</span> title<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;summary&#39;</span><span class="ansi-blue-fg">:</span> summary<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;keywords&#39;</span><span class="ansi-blue-fg">:</span> keywords<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">}</span>
-<span class="ansi-green-intense-fg ansi-bold">    212</span>     data <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span>k<span class="ansi-blue-fg">:</span>v <span class="ansi-green-fg">for</span> <span class="ansi-blue-fg">(</span>k<span class="ansi-blue-fg">,</span>v<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">in</span> data<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">if</span> v <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">}</span> <span class="ansi-red-fg"># remove none values</span>
-
-<span class="ansi-green-fg">/mnt/disc1/fast.ai-1/br/fastai/fastai_docs/docs_src/fastai/gen_doc/gen_notebooks.py</span> in <span class="ansi-cyan-fg">read_nb</span><span class="ansi-blue-fg">(fname)</span>
-<span class="ansi-green-intense-fg ansi-bold">    138</span> <span class="ansi-green-fg">def</span> read_nb<span class="ansi-blue-fg">(</span>fname<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    139</span>     <span class="ansi-blue-fg">&#34;Read a notebook in `fname` and return its corresponding json&#34;</span>
-<span class="ansi-green-fg">--&gt; 140</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">with</span> open<span class="ansi-blue-fg">(</span>fname<span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;r&#39;</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">as</span> f<span class="ansi-blue-fg">:</span> <span class="ansi-green-fg">return</span> nbformat<span class="ansi-blue-fg">.</span>reads<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">.</span>read<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> as_version<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    141</span> 
-<span class="ansi-green-intense-fg ansi-bold">    142</span> SHOW_DOC_RE <span class="ansi-blue-fg">=</span> re<span class="ansi-blue-fg">.</span>compile<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">r&#34;show_doc\(([\w\.]*)&#34;</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-red-fg">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;tta.ipynb&#39;</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">update_nb_metadata</span><span class="p">(</span><span class="s1">&#39;vision.ipynb&#39;</span><span class="p">,</span>
     <span class="n">summary</span><span class="o">=</span><span class="s1">&#39;Application to Computer Vision&#39;</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;vision&#39;</span><span class="p">)</span>
@@ -771,7 +721,8 @@ You need to make sure to refresh right after</p>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">update_nb_metadata</span><span class="p">(</span><span class="s1">&#39;index.ipynb&#39;</span><span class="p">,</span>
     <span class="n">keywords</span><span class="o">=</span><span class="s1">&#39;fastai&#39;</span><span class="p">,</span>
-    <span class="n">toc</span><span class="o">=</span><span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Welcome to fastai&#39;</span><span class="p">)</span>
+    <span class="n">toc</span><span class="o">=</span><span class="s1">&#39;false&#39;</span><span class="p">,</span> 
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Welcome to fastai&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
