@@ -1,6 +1,7 @@
 ---
+
 title: callbacks.fp16
-keywords:
+keywords: fastai
 sidebar: home_sidebar
 
 summary: "Training in mixed precision implementation"
@@ -32,7 +33,7 @@ summary: "Training in mixed precision implementation"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To train your model in mixed precision you just have to call <a href="/train#to_fp16"><code>Learner.to_fp16</code></a>, which converts the model and modifies the existing <a href="/basic_train#Learner"><code>Learner</code></a> to add <a href="/callbacks.fp16#MixedPrecision"><code>MixedPrecision</code></a>.</p>
+<p>To train your model in mixed precision you just have to call <a href="/train.html#to_fp16"><code>Learner.to_fp16</code></a>, which converts the model and modifies the existing <a href="/basic_train.html#Learner"><code>Learner</code></a> to add <a href="/callbacks.fp16.html#MixedPrecision"><code>MixedPrecision</code></a>.</p>
 
 </div>
 </div>
@@ -47,7 +48,7 @@ summary: "Training in mixed precision implementation"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=to_fp16></a><code>to_fp16</code></h4>
-<blockquote><p><code>to_fp16</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) → <a href="/basic_train#Learner"><code>Learner</code></a></p>
+<blockquote><p><code>to_fp16</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) → <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
 </blockquote>
 <p>Transform <code>learn</code> in FP16 precision.  <a href="https://github.com/fastai/fastai/blob/master/fastai/train.py#L29">[source]</a></p>
 
@@ -77,7 +78,7 @@ summary: "Training in mixed precision implementation"
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -119,7 +120,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=MixedPrecision></a><code>class</code> <code>MixedPrecision</code></h2>
-<blockquote><p><code>MixedPrecision</code>(<code>learn</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) :: <a href="/callback#Callback"><code>Callback</code></a></p>
+<blockquote><p><code>MixedPrecision</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>loss_scale</code>:<code>float</code>=<code>512.0</code>, <code>flat_master</code>:<code>bool</code>=<code>False</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 <p>Callback that handles mixed-precision training.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L56">[source]</a></p>
 
@@ -147,7 +148,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=MixedPrecision.on_backward_begin></a><code>on_backward_begin</code></h4>
+<h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
 <blockquote><p><code>on_backward_begin</code>(<code>last_loss</code>:<code>Rank0Tensor</code>, <code>kwargs</code>:<code>Any</code>) → <code>Rank0Tensor</code></p>
 </blockquote>
 <p>Scale gradients up by <code>loss_scale</code> to prevent underflow.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L90">[source]</a></p>
@@ -169,7 +170,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=MixedPrecision.on_backward_end></a><code>on_backward_end</code></h4>
+<h4><a id=on_backward_end></a><code>on_backward_end</code></h4>
 <blockquote><p><code>on_backward_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Convert the gradients back to FP32 and divide them by the scale.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L95">[source]</a></p>
@@ -191,7 +192,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=MixedPrecision.on_loss_begin></a><code>on_loss_begin</code></h4>
+<h4><a id=on_loss_begin></a><code>on_loss_begin</code></h4>
 <blockquote><p><code>on_loss_begin</code>(<code>last_output</code>:<code>Tensor</code>, <code>kwargs</code>:<code>Any</code>) → <code>Tensor</code></p>
 </blockquote>
 <p>Convert half precision output to FP32 to avoid reduction overflow.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L86">[source]</a></p>
@@ -213,7 +214,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=MixedPrecision.on_step_end></a><code>on_step_end</code></h4>
+<h4><a id=on_step_end></a><code>on_step_end</code></h4>
 <blockquote><p><code>on_step_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Update the params from master to model and zero grad.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L101">[source]</a></p>
@@ -235,7 +236,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=MixedPrecision.on_train_begin></a><code>on_train_begin</code></h4>
+<h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Ensure everything is in half precision mode.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L63">[source]</a></p>
@@ -257,7 +258,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=MixedPrecision.on_train_end></a><code>on_train_end</code></h4>
+<h4><a id=on_train_end></a><code>on_train_end</code></h4>
 <blockquote><p><code>on_train_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Remove half precision transforms added at <code>on_train_begin</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L80">[source]</a></p>
