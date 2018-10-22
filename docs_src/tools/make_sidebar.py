@@ -89,6 +89,7 @@ sidebar_d = {
 
 def _leaf(k,v):
     url = 'external_url' if "/" in v else 'url'
+    if url=='url': v=v+'.html'
     return {'title':k, url:v, 'output':'web,pdf'}
 
 _k_names = ['folders', 'folderitems', 'subfolders', 'subfolderitems']
