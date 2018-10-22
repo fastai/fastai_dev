@@ -1,7 +1,6 @@
 ---
-
 title: vision
-keywords: 
+keywords:
 sidebar: home_sidebar
 
 summary: "Application to Computer Vision"
@@ -20,12 +19,12 @@ summary: "Application to Computer Vision"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/vision.html#vision"><code>vision</code></a> module of the fastai library contains all the necessary functions to define a Dataset and train a model for computer vision tasks. It contains four different submodules to reach that goal:</p>
+<p>The <a href="/vision#vision"><code>vision</code></a> module of the fastai library contains all the necessary functions to define a Dataset and train a model for computer vision tasks. It contains four different submodules to reach that goal:</p>
 <ul>
-<li><a href="/vision.image.html#vision.image"><code>vision.image</code></a> contains the basic definition of an <a href="/vision.image.html#Image"><code>Image</code></a> object and all the functions that are used behind the scenes to apply transformations to such an object.</li>
-<li><a href="/vision.transform.html#vision.transform"><code>vision.transform</code></a> contains all the transforms we can use for data augmentation.</li>
-<li><a href="/vision.data.html#vision.data"><code>vision.data</code></a> contains the definition of <a href="/vision.data.html#ImageClassificationDataset"><code>ImageClassificationDataset</code></a> as well as the utility function to easily build a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> for Computer Vision problems.</li>
-<li><a href="/vision.learner.html#vision.learner"><code>vision.learner</code></a> lets you build and fine-tune models with a pretrained CNN backbone or train a randomly initialized model from scratch.</li>
+<li><a href="/vision.image#vision.image"><code>vision.image</code></a> contains the basic definition of an <a href="/vision.image#Image"><code>Image</code></a> object and all the functions that are used behind the scenes to apply transformations to such an object.</li>
+<li><a href="/vision.transform#vision.transform"><code>vision.transform</code></a> contains all the transforms we can use for data augmentation.</li>
+<li><a href="/vision.data#vision.data"><code>vision.data</code></a> contains the definition of <a href="/vision.data#ImageClassificationDataset"><code>ImageClassificationDataset</code></a> as well as the utility function to easily build a <a href="/basic_data#DataBunch"><code>DataBunch</code></a> for Computer Vision problems.</li>
+<li><a href="/vision.learner#vision.learner"><code>vision.learner</code></a> lets you build and fine-tune models with a pretrained CNN backbone or train a randomly initialized model from scratch.</li>
 </ul>
 <p>Each of the four module links above includes a quick overview and examples of the functionality of that module, as well as complete API documentation. Below, we'll provide a walk-thru of end to end computer vision model training with the most commonly used functionality.</p>
 
@@ -77,7 +76,7 @@ summary: "Application to Computer Vision"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Since this contains standard <a href="/train.html#train"><code>train</code></a> and <code>valid</code> folders, and each contains one folder per class, you can create a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> in a single line:</p>
+<p>Since this contains standard <a href="/train#train"><code>train</code></a> and <code>valid</code> folders, and each contains one folder per class, you can create a <a href="/basic_data#DataBunch"><code>DataBunch</code></a> in a single line:</p>
 
 </div>
 </div>
@@ -97,7 +96,7 @@ summary: "Application to Computer Vision"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You load a pretrained model ready for fine tuning (<a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision.models"><code>tvm</code></a> is the namespace for <code>torchvision.models</code>):</p>
+<p>You load a pretrained model (from <a href="/vision.models#vision.models"><code>vision.models</code></a>) ready for fine tuning:</p>
 
 </div>
 </div>
@@ -154,7 +153,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's look briefly at each of the <a href="/vision.html#vision"><code>vision</code></a> submodules.</p>
+<p>Let's look briefly at each of the <a href="/vision#vision"><code>vision</code></a> submodules.</p>
 
 </div>
 </div>
@@ -167,7 +166,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The most important piece of <a href="/vision.data.html#vision.data"><code>vision.data</code></a> for classification is the <a href="/vision.data.html#ImageClassificationDataset"><code>ImageClassificationDataset</code></a>. If you've got labels as subfolders, then you can just say:</p>
+<p>The most important piece of <a href="/vision.data#vision.data"><code>vision.data</code></a> for classification is the <a href="/vision.data#ImageClassificationDataset"><code>ImageClassificationDataset</code></a>. If you've got labels as subfolders, then you can just say:</p>
 
 </div>
 </div>
@@ -193,7 +192,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>That brings us to <a href="/vision.image.html#vision.image"><code>vision.image</code></a>, which defines the <a href="/vision.image.html#Image"><code>Image</code></a> class. Our dataset will return <a href="/vision.image.html#Image"><code>Image</code></a> objects when we index it. Images automatically display in notebooks:</p>
+<p>That brings us to <a href="/vision.image#vision.image"><code>vision.image</code></a>, which defines the <a href="/vision.image#Image"><code>Image</code></a> class. Our dataset will return <a href="/vision.image#Image"><code>Image</code></a> objects when we index it. Images automatically display in notebooks:</p>
 
 </div>
 </div>
@@ -314,7 +313,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/vision.transform.html#vision.transform"><code>vision.transform</code></a> lets us do data augmentation. Simplest is to choose from a standard set of transforms, where the defaults are designed for photos:</p>
+<p><a href="/vision.transform#vision.transform"><code>vision.transform</code></a> lets us do data augmentation. Simplest is to choose from a standard set of transforms, where the defaults are designed for photos:</p>
 
 </div>
 </div>
@@ -413,7 +412,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You can create a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> with your transformed training and validation data loaders in a single step, passing in a tuple of <em>(train_tfms, valid_tfms)</em>:</p>
+<p>You can create a <a href="/basic_data#DataBunch"><code>DataBunch</code></a> with your transformed training and validation data loaders in a single step, passing in a tuple of <em>(train_tfms, valid_tfms)</em>:</p>
 
 </div>
 </div>
@@ -439,7 +438,7 @@ get_transforms(do_flip:bool=True, flip_vert:bool=False, max_rotate:float=10.0, m
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now you're ready to train a model. To create a model, simply pass your <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> and a model creation function (such as one provided by <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision.models"><code>tvm</code></a>: <code>torchvision.models</code>) to <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a>, and call <a href="/basic_train.html#fit"><code>fit</code></a>:</p>
+<p>Now you're ready to train a model. To create a model, simply pass your <a href="/basic_data#DataBunch"><code>DataBunch</code></a> and a model creation function (such as one provided by <a href="/vision.models#vision.models"><code>vision.models</code></a> or <a href="https://pytorch.org/docs/stable/torchvision/models.html#torchvision-models"><code>torchvision.models</code></a>) to <a href="/vision.learner#ConvLearner"><code>ConvLearner</code></a>, and call <a href="/basic_train#fit"><code>fit</code></a>:</p>
 
 </div>
 </div>

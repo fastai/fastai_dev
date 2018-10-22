@@ -1,9 +1,6 @@
 ---
-
-title: datasets
-keywords: 
+keywords:
 sidebar: home_sidebar
-
 
 ---
 
@@ -115,7 +112,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_mnist></a><code>get_mnist</code></h4>
+<h4><a id=URLs.get_mnist></a><code>get_mnist</code></h4>
 <blockquote><p><code>get_mnist</code>()
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L34">[source]</a></p>
 </blockquote>
@@ -177,7 +174,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_imdb></a><code>get_imdb</code></h4>
+<h4><a id=URLs.get_imdb></a><code>get_imdb</code></h4>
 <blockquote><p><code>get_imdb</code>(<code>classifier</code>=<code>False</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L39">[source]</a></p>
 </blockquote>
@@ -209,7 +206,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_movie_lens></a><code>get_movie_lens</code></h4>
+<h4><a id=URLs.get_movie_lens></a><code>get_movie_lens</code></h4>
 <blockquote><p><code>get_movie_lens</code>()
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L45">[source]</a></p>
 </blockquote>
@@ -241,7 +238,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_adult></a><code>get_adult</code></h4>
+<h4><a id=URLs.get_adult></a><code>get_adult</code></h4>
 <blockquote><p><code>get_adult</code>()
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L29">[source]</a></p>
 </blockquote>
@@ -269,7 +266,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=download_wt103_model></a><code>download_wt103_model</code></h4>
+<h4><a id=URLs.download_wt103_model></a><code>download_wt103_model</code></h4>
 <blockquote><p><code>download_wt103_model</code>()
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L50">[source]</a></p>
 </blockquote>
@@ -438,7 +435,7 @@ Configure the default <code>data_path</code> by editing <code>~/.fastai/config.y
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>All the downloading functions use this to decide where to put the tgz and expanded folder. If <code>filename</code> already exists in a <code>data</code> directory in the same place as the calling notebook/script, that is used as the parent directly, otherwise <code>~/.fastai/config.yml</code> is read to see what path to use, which defaults to <code>~/.fasta/data</code> is used. To override this default, simply modify the value in your <code>~/.fastai/config.yml</code>:</p>
+<p>All the downloading functions use this to decide where to put the tgz and expanded folder. If <code>filename</code> already exists in a <code>data</code> directory in the same place as the calling notebook/script, that is used as the parent directly, otherwise <code>~/.fastai/config.yml</code> is read to see what path to use, which defaults to <code>~/.fastai/data</code> is used. To override this default, simply modify the value in your <code>~/.fastai/config.yml</code>:</p>
 
 <pre><code>data_path: ~/.fastai/data</code></pre>
 

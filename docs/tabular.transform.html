@@ -1,7 +1,6 @@
 ---
-
 title: tabular.transform
-keywords: 
+keywords:
 sidebar: home_sidebar
 
 summary: "Transforms to clean and preprocess tabular data"
@@ -26,13 +25,13 @@ summary: "Transforms to clean and preprocess tabular data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This package contains the basic class to define a transformation for preprocessing dataframes of tabular data, as well as basic <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>. Preprocessing includes things like</p>
+<p>This package contains the basic class to define a transformation for preprocessing dataframes of tabular data, as well as basic <a href="/tabular.transform#TabularTransform"><code>TabularTransform</code></a>. Preprocessing includes things like</p>
 <ul>
 <li>replacing non-numerical variables by categories, then their ids,</li>
 <li>filling missing values,</li>
 <li>normalizing continuous variables.</li>
 </ul>
-<p>In all those steps we have to be careful to use the correspondance we decide on our training set (which id we give to each category, what is the value we put for missing data, or how the mean/std we use to normalize) on our validation or test set. To deal with this, we use a speciall class called <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>.</p>
+<p>In all those steps we have to be careful to use the correspondance we decide on our training set (which id we give to each category, what is the value we put for missing data, or how the mean/std we use to normalize) on our validation or test set. To deal with this, we use a speciall class called <a href="/tabular.transform#TabularTransform"><code>TabularTransform</code></a>.</p>
 <p>The data used in this document page is a subset of the <a href="https://archive.ics.uci.edu/ml/datasets/adult">adult dataset</a>. It gives a certain amount of data on individuals to train a model to predict wether their salary is greater than \$50k or not.</p>
 
 </div>
@@ -261,7 +260,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=__call__></a><code>__call__</code></h4>
+<h4><a id=TabularTransform.__call__></a><code>__call__</code></h4>
 <blockquote><p><code>__call__</code>(<code>df</code>:<code>DataFrame</code>, <code>test</code>:<code>bool</code>=<code>False</code>)</p>
 </blockquote>
 <p>Apply the correct function to <code>df</code> depending on <code>test</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L12">[source]</a></p>
@@ -290,7 +289,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_train></a><code>apply_train</code></h4>
+<h4><a id=Categorify.apply_train></a><code>apply_train</code></h4>
 <blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L27">[source]</a></p>
 </blockquote>
@@ -319,7 +318,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_test></a><code>apply_test</code></h4>
+<h4><a id=Categorify.apply_test></a><code>apply_test</code></h4>
 <blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L33">[source]</a></p>
 </blockquote>
@@ -341,7 +340,7 @@ summary: "Transforms to clean and preprocess tabular data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The following <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a> are implemented in the fastai library. Note that the replacement from categories to codes as well as the normalization of continuous variables are automatically done in a <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>.</p>
+<p>The following <a href="/tabular.transform#TabularTransform"><code>TabularTransform</code></a> are implemented in the fastai library. Note that the replacement from categories to codes as well as the normalization of continuous variables are automatically done in a <a href="/tabular.data#TabularDataset"><code>TabularDataset</code></a>.</p>
 
 </div>
 </div>
@@ -356,7 +355,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=Categorify></a><code>class</code> <code>Categorify</code></h2>
-<blockquote><p><code>Categorify</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>) :: <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>
+<blockquote><p><code>Categorify</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>) :: <a href="/tabular.transform#TabularTransform"><code>TabularTransform</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L24">[source]</a></p>
 </blockquote>
 
@@ -384,7 +383,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_train></a><code>apply_train</code></h4>
+<h4><a id=Categorify.apply_train></a><code>apply_train</code></h4>
 <blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L27">[source]</a></p>
 </blockquote>
@@ -413,7 +412,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_test></a><code>apply_test</code></h4>
+<h4><a id=Categorify.apply_test></a><code>apply_test</code></h4>
 <blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L33">[source]</a></p>
 </blockquote>
@@ -534,7 +533,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=FillMissing></a><code>class</code> <code>FillMissing</code></h2>
-<blockquote><p><code>FillMissing</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>, <code>fill_strategy</code>:<a href="/tabular.transform.html#FillStrategy"><code>FillStrategy</code></a>=<code>&lt;FillStrategy.MEDIAN: 1&gt;</code>, <code>add_col</code>:<code>bool</code>=<code>True</code>, <code>fill_val</code>:<code>float</code>=<code>0.0</code>) :: <a href="/tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>
+<blockquote><p><code>FillMissing</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>, <code>fill_strategy</code>:<a href="/tabular.transform#FillStrategy"><code>FillStrategy</code></a>=<code>&lt;FillStrategy.MEDIAN: 1&gt;</code>, <code>add_col</code>:<code>bool</code>=<code>True</code>, <code>fill_val</code>:<code>float</code>=<code>0.0</code>) :: <a href="/tabular.transform#TabularTransform"><code>TabularTransform</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L40">[source]</a></p>
 </blockquote>
 
@@ -548,11 +547,11 @@ summary: "Transforms to clean and preprocess tabular data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Transform that fills the missing values in <code>cont_names</code>. <code>cat_names</code> variables are left untouched (their missing value will be raplced by code 0 in the <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>). <code>fill_strategy</code> is adopted to replace those nans and if <code>add_col</code> is True, whenever a column <code>c</code> has missing values, a column named <code>c_nan</code> is added and flags the line where the value was missing. The <code>fill_strategy</code> can be:</p>
+<p>Transform that fills the missing values in <code>cont_names</code>. <code>cat_names</code> variables are left untouched (their missing value will be raplced by code 0 in the <a href="/tabular.data#TabularDataset"><code>TabularDataset</code></a>). <code>fill_strategy</code> is adopted to replace those nans and if <code>add_col</code> is True, whenever a column <code>c</code> has missing values, a column named <code>c_nan</code> is added and flags the line where the value was missing. The <code>fill_strategy</code> can be:</p>
 <ul>
-<li><a href="/tabular.transform.html#MEDIAN"><code>FillStrategy.MEDIAN</code></a>: nans are replaced by the median value of the column,</li>
-<li><a href="/tabular.transform.html#COMMON"><code>FillStrategy.COMMON</code></a>: nans are replaced by the most common value of the column,</li>
-<li><a href="/tabular.transform.html#CONSTANT"><code>FillStrategy.CONSTANT</code></a>: nans are replaced by <code>fill_val</code>.</li>
+<li><a href="/tabular.transform#MEDIAN"><code>FillStrategy.MEDIAN</code></a>: nans are replaced by the median value of the column,</li>
+<li><a href="/tabular.transform#COMMON"><code>FillStrategy.COMMON</code></a>: nans are replaced by the most common value of the column,</li>
+<li><a href="/tabular.transform#CONSTANT"><code>FillStrategy.CONSTANT</code></a>: nans are replaced by <code>fill_val</code>.</li>
 </ul>
 
 </div>
@@ -567,7 +566,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_train></a><code>apply_train</code></h4>
+<h4><a id=FillMissing.apply_train></a><code>apply_train</code></h4>
 <blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L46">[source]</a></p>
 </blockquote>
@@ -596,7 +595,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_test></a><code>apply_test</code></h4>
+<h4><a id=FillMissing.apply_test></a><code>apply_test</code></h4>
 <blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L59">[source]</a></p>
 </blockquote>
