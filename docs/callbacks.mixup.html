@@ -1,7 +1,7 @@
 ---
 
 title: callbacks.mixup
-keywords: 
+keywords: fastai
 sidebar: home_sidebar
 
 summary: "Implementation of mixup"
@@ -47,7 +47,7 @@ summary: "Implementation of mixup"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To test this method, we will first build a <a href="/layers#simple_cnn"><code>simple_cnn</code></a> and train it like we did with <a href="/basic_train#basic_train"><code>basic_train</code></a> so we can compare its results with a network trained with Mixup.</p>
+<p>To test this method, we will first build a <a href="/layers.html#simple_cnn"><code>simple_cnn</code></a> and train it like we did with <a href="/basic_train.html#basic_train"><code>basic_train</code></a> so we can compare its results with a network trained with Mixup.</p>
 
 </div>
 </div>
@@ -151,7 +151,7 @@ The last trick we have to apply with this is that there can be some duplicates w
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we will add <a href="/callbacks.mixup#MixUpCallback"><code>MixUpCallback</code></a> to our Learner so that it modifies our input and target accordingly. The <a href="/train#mixup"><code>mixup</code></a> function does that for us behind the scene, with a few other tweaks detailed below.</p>
+<p>Now we will add <a href="/callbacks.mixup.html#MixUpCallback"><code>MixUpCallback</code></a> to our Learner so that it modifies our input and target accordingly. The <a href="/train.html#mixup"><code>mixup</code></a> function does that for us behind the scene, with a few other tweaks detailed below.</p>
 
 </div>
 </div>
@@ -212,7 +212,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=MixUpCallback></a><code>class</code> <code>MixUpCallback</code></h2>
-<blockquote><p><code>MixUpCallback</code>(<code>learner</code>:<a href="/basic_train#Learner"><code>Learner</code></a>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) :: <a href="/callback#Callback"><code>Callback</code></a>
+<blockquote><p><code>MixUpCallback</code>(<code>learner</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L7">[source]</a></p>
 </blockquote>
 
@@ -226,7 +226,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <a href="/callback#Callback"><code>Callback</code></a> for mixup on <code>learn</code> with a parameter <code>alpha</code> for the beta distribution. <code>stack_x</code> and <code>stack_y</code> determines if we stack our inputs/targets with the vector lambda drawn or do the linear combination (in general, we stack the inputs or ouputs when they correspond to categories or classes and do the linear combination otherwise).</p>
+<p>Create a <a href="/callback.html#Callback"><code>Callback</code></a> for mixup on <code>learn</code> with a parameter <code>alpha</code> for the beta distribution. <code>stack_x</code> and <code>stack_y</code> determines if we stack our inputs/targets with the vector lambda drawn or do the linear combination (in general, we stack the inputs or ouputs when they correspond to categories or classes and do the linear combination otherwise).</p>
 
 </div>
 </div>
@@ -240,7 +240,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=MixUpCallback.on_batch_begin></a><code>on_batch_begin</code></h4>
+<h4><a id=on_batch_begin></a><code>on_batch_begin</code></h4>
 <blockquote><p><code>on_batch_begin</code>(<code>last_input</code>, <code>last_target</code>, <code>train</code>, <code>kwargs</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L14">[source]</a></p>
 </blockquote>
@@ -271,7 +271,7 @@ epoch  train loss  valid loss  accuracy
 <p>We often have to modify the loss so that it is compatible with Mixup: pytorch was very careful to avoid one-hot encoding targets when it could, so it seems a bit of a drag to undo this. Fortunately for us, if the loss is a classic <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.cross_entropy">cross-entropy</a>, we have</p>
 <p><code>loss(output, new_target) = t * loss(output, target1) + (1-t) * loss(output, target2)</code></p>
 <p>so we won’t one-hot encode anything and just compute those two losses then do the linear combination.</p>
-<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train#mixup"><code>mixup</code></a> function will use it to change the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.cross_entropy"><code>Learner.loss_func</code></a> if necessary.</p>
+<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train.html#mixup"><code>mixup</code></a> function will use it to change the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.cross_entropy"><code>Learner.loss_func</code></a> if necessary.</p>
 
 </div>
 </div>

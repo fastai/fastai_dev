@@ -20,150 +20,150 @@ entries:
   - folderitems:
     - output: web,pdf
       title: Overview
-      url: training
+      url: training.html
     - output: web,pdf
       title: basic_train
-      url: basic_train
+      url: basic_train.html
     - output: web,pdf
       title: train
-      url: train
+      url: train.html
     - output: web,pdf
       title: metrics
-      url: metrics
+      url: metrics.html
     - output: web,pdf
       title: callback
-      url: callback
+      url: callback.html
       subfolders:
       - output: web
         subfolderitems:
         - output: web,pdf
           title: Overview
-          url: callbacks
+          url: callbacks.html
         - output: web,pdf
           title: HookCallback
-          url: callbacks.hooks
+          url: callbacks.hooks.html
         - output: web,pdf
           title: MixedPrecision
-          url: callbacks.fp16
+          url: callbacks.fp16.html
         - output: web,pdf
           title: OneCycleScheduler
-          url: callbacks.one_cycle
+          url: callbacks.one_cycle.html
         - output: web,pdf
           title: LRFinder
-          url: callbacks.lr_finder
+          url: callbacks.lr_finder.html
         - output: web,pdf
           title: MixUpCallback
-          url: callbacks.mixup
+          url: callbacks.mixup.html
         - output: web,pdf
           title: RNNTrainer
-          url: callbacks.rnn
+          url: callbacks.rnn.html
         - output: web,pdf
           title: GeneralScheduler
-          url: callbacks.general_sched
+          url: callbacks.general_sched.html
         title: callbacks
     output: web
     title: Training
   - folderitems:
     - output: web,pdf
       title: Overview
-      url: applications
+      url: applications.html
       subfolders:
       - output: web
         subfolderitems:
         - output: web,pdf
           title: Overview
-          url: vision
+          url: vision.html
         - output: web,pdf
           title: vision.learner
-          url: vision.learner
+          url: vision.learner.html
         - output: web,pdf
           title: vision.transform
-          url: vision.transform
+          url: vision.transform.html
         - output: web,pdf
           title: vision.image
-          url: vision.image
+          url: vision.image.html
         - output: web,pdf
           title: vision.data
-          url: vision.data
+          url: vision.data.html
         - output: web,pdf
           title: vision.model overview
-          url: vision.models
+          url: vision.models.html
         - output: web,pdf
           title: vision.models.unet
-          url: vision.models.unet
+          url: vision.models.unet.html
         title: vision
       - output: web
         subfolderitems:
         - output: web,pdf
           title: Overview
-          url: text
+          url: text.html
         - output: web,pdf
           title: text.learner
-          url: text.learner
+          url: text.learner.html
         - output: web,pdf
           title: text.transform
-          url: text.transform
+          url: text.transform.html
         - output: web,pdf
           title: text.data
-          url: text.data
+          url: text.data.html
         - output: web,pdf
           title: text.models
-          url: text.models
+          url: text.models.html
         title: text
       - output: web
         subfolderitems:
         - output: web,pdf
           title: Overview
-          url: tabular
+          url: tabular.html
         - output: web,pdf
           title: tabular.transform
-          url: tabular.transform
+          url: tabular.transform.html
         - output: web,pdf
           title: tabular.data
-          url: tabular.data
+          url: tabular.data.html
         - output: web,pdf
           title: tabular.models
-          url: tabular.models
+          url: tabular.models.html
         title: tabular
     - output: web,pdf
       title: collab
-      url: collab
+      url: collab.html
     output: web
     title: Applications
   - folderitems:
     - output: web,pdf
       title: Overview
-      url: overview
+      url: overview.html
     - output: web,pdf
       title: basic_data
-      url: basic_data
+      url: basic_data.html
     - output: web,pdf
       title: layers
-      url: layers
+      url: layers.html
     - output: web,pdf
       title: datasets
-      url: datasets
+      url: datasets.html
     - output: web,pdf
       title: core
-      url: core
+      url: core.html
     - output: web,pdf
       title: torch_core
-      url: torch_core
+      url: torch_core.html
     output: web
     title: Core
   - folderitems:
     - output: web,pdf
       title: Overview
-      url: gen_doc
+      url: gen_doc.html
     - output: web,pdf
       title: gen_doc.gen_notebooks
-      url: gen_doc.gen_notebooks
+      url: gen_doc.gen_notebooks.html
     - output: web,pdf
       title: gen_doc.nbdoc
-      url: gen_doc.nbdoc
+      url: gen_doc.nbdoc.html
     - output: web,pdf
       title: gen_doc.convert2html
-      url: gen_doc.convert2html
+      url: gen_doc.convert2html.html
     output: web
     title: Doc authoring
   - folderitems:
@@ -181,7 +181,7 @@ entries:
       title: Abbreviation
     - output: web,pdf
       title: Typing
-      url: fastai_typing
+      url: fastai_typing.html
     - external_url: https://docs-dev.fast.ai/release
       output: web,pdf
       title: Packaging fastai

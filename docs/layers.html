@@ -1,7 +1,7 @@
 ---
 
 title: layers
-keywords: 
+keywords: fastai
 sidebar: home_sidebar
 
 summary: "Provides essential functions to building and modifying `Model` architectures."
@@ -59,9 +59,9 @@ summary: "Provides essential functions to building and modifying `Model` archite
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/layers#AdaptiveConcatPool2d"><code>AdaptiveConcatPool2d</code></a> object uses adaptive average pooling and adaptive max pooling and concatenates them both. We use this because it provides the model with the information of both methods and improves performance. This technique is called <code>adaptive</code> because it allows us to decide on what output dimensions we want, instead of choosing the input's dimensions to fit a desired output size.</p>
+<p>The <a href="/layers.html#AdaptiveConcatPool2d"><code>AdaptiveConcatPool2d</code></a> object uses adaptive average pooling and adaptive max pooling and concatenates them both. We use this because it provides the model with the information of both methods and improves performance. This technique is called <code>adaptive</code> because it allows us to decide on what output dimensions we want, instead of choosing the input's dimensions to fit a desired output size.</p>
 <p>Let's try training with Adaptive Average Pooling first, then with Adaptive Max Pooling and finally with the concatenation of them both to see how they fare in performance.</p>
-<p>We will first define a <a href="/layers#simple_cnn"><code>simple_cnn</code></a> using <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.AdaptiveMaxPool2d">Adapative Max Pooling</a> by changing the source code a bit.</p>
+<p>We will first define a <a href="/layers.html#simple_cnn"><code>simple_cnn</code></a> using <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.AdaptiveMaxPool2d">Adapative Max Pooling</a> by changing the source code a bit.</p>
 
 </div>
 </div>
@@ -74,7 +74,7 @@ summary: "Provides essential functions to building and modifying `Model` archite
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -96,7 +96,7 @@ summary: "Provides essential functions to building and modifying `Model` archite
     <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -111,7 +111,7 @@ summary: "Provides essential functions to building and modifying `Model` archite
 <span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -157,7 +157,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -172,7 +172,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -196,7 +196,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Finally we will try with the concatenation of them both <a href="/layers#AdaptiveConcatPool2d"><code>AdaptiveConcatPool2d</code></a>. We will see that, in fact, it increases our accuracy and decreases our loss considerably!</p>
+<p>Finally we will try with the concatenation of them both <a href="/layers.html#AdaptiveConcatPool2d"><code>AdaptiveConcatPool2d</code></a>. We will see that, in fact, it increases our accuracy and decreases our loss considerably!</p>
 
 </div>
 </div>
@@ -218,7 +218,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -233,7 +233,7 @@ epoch  train loss  valid loss  accuracy
 <span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -313,7 +313,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">break</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -353,7 +353,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">break</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -396,7 +396,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The function we build above is actually implemented in our library as <a href="/layers#Flatten"><code>Flatten</code></a>. We can see that it returns the same size when we run it.</p>
+<p>The function we build above is actually implemented in our library as <a href="/layers.html#Flatten"><code>Flatten</code></a>. We can see that it returns the same size when we run it.</p>
 
 </div>
 </div>
@@ -422,7 +422,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">break</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -465,7 +465,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can combine these two final layers (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.AdaptiveAvgPool2d">AdaptiveAvgPool2d</a> and <a href="/layers#Flatten"><code>Flatten</code></a>) by using <a href="/layers.html#poolflatten"><code>PoolFlatten</code></a>.</p>
+<p>We can combine these two final layers (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.AdaptiveAvgPool2d">AdaptiveAvgPool2d</a> and <a href="/layers.html#Flatten"><code>Flatten</code></a>) by using <a href="/layers.html#PoolFlatten"><code>PoolFlatten</code></a>.</p>
 
 </div>
 </div>
@@ -490,7 +490,7 @@ epoch  train loss  valid loss  accuracy
     <span class="k">break</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -533,7 +533,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Another use we give to the Lambda function is to resize batches with <a href="/layers#ResizeBatch"><code>ResizeBatch</code></a> when we have a layer that expects a different input than what comes from the previous one. Let's see an example:</p>
+<p>Another use we give to the Lambda function is to resize batches with <a href="/layers.html#ResizeBatch"><code>ResizeBatch</code></a> when we have a layer that expects a different input than what comes from the previous one. Let's see an example:</p>
 
 </div>
 </div>
@@ -547,7 +547,7 @@ epoch  train loss  valid loss  accuracy
 <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -576,7 +576,7 @@ epoch  train loss  valid loss  accuracy
 <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -730,7 +730,7 @@ ipdb&gt;</code></pre>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/layers#bn_drop_lin"><code>bn_drop_lin</code></a> function returns a sequence of <a href="https://arxiv.org/abs/1502.03167">batch normalization</a>, <a href="https://www.cs.toronto.edu/~hinton/absps/JMLRdropout.pdf">dropout</a> and a linear layer. This custom layer is usually used at the end of a model.</p>
+<p>The <a href="/layers.html#bn_drop_lin"><code>bn_drop_lin</code></a> function returns a sequence of <a href="https://arxiv.org/abs/1502.03167">batch normalization</a>, <a href="https://www.cs.toronto.edu/~hinton/absps/JMLRdropout.pdf">dropout</a> and a linear layer. This custom layer is usually used at the end of a model.</p>
 <p><code>n_in</code> represents the number of size of the input <code>n_out</code> the size of the output, <code>bn</code> whether we want batch norm or not, <code>p</code> is how much dropout and <code>actn</code> is an optional parameter to add an activation function at the end.</p>
 
 </div>
@@ -782,7 +782,7 @@ ipdb&gt;</code></pre>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create a <a href="/layers#conv2d"><code>conv2d</code></a> layer with <a href="https://pytorch.org/docs/stable/nn#torch.nn.ReLU"><code>nn.ReLU</code></a> activation and optional(<code>bn</code>) <a href="https://pytorch.org/docs/stable/nn#torch.nn.BatchNorm2d"><code>nn.BatchNorm2d</code></a>: <code>ni</code> input, <code>nf</code> out filters, <code>ks</code> kernel, <code>stride</code>:stride, <code>padding</code>:padding, <code>bn</code>: batch normalization.</p>
+<p>Create a <a href="/layers.html#conv2d"><code>conv2d</code></a> layer with <a href="https://pytorch.org/docs/stable/nn#torch.nn.ReLU"><code>nn.ReLU</code></a> activation and optional(<code>bn</code>) <a href="https://pytorch.org/docs/stable/nn#torch.nn.BatchNorm2d"><code>nn.BatchNorm2d</code></a>: <code>ni</code> input, <code>nf</code> out filters, <code>ks</code> kernel, <code>stride</code>:stride, <code>padding</code>:padding, <code>bn</code>: batch normalization.</p>
 
 </div>
 </div>
@@ -833,7 +833,7 @@ ipdb&gt;</code></pre>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/layers#conv_layer"><code>conv_layer</code></a> function returns a sequence of <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Conv2d">nn.Conv2D</a>, <a href="https://arxiv.org/abs/1502.03167">BatchNorm2d</a> and a <a href="https://ai.stanford.edu/~amaas/papers/relu_hybrid_icml2013_final.pdf">leaky RELU</a> activation function.</p>
+<p>The <a href="/layers.html#conv_layer"><code>conv_layer</code></a> function returns a sequence of <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Conv2d">nn.Conv2D</a>, <a href="https://arxiv.org/abs/1502.03167">BatchNorm2d</a> and a <a href="https://ai.stanford.edu/~amaas/papers/relu_hybrid_icml2013_final.pdf">leaky RELU</a> activation function.</p>
 <p><code>n_in</code> represents the number of size of the input <code>n_out</code> the size of the output, <code>ks</code> kernel size, <code>stride</code> the stride with which we want to apply the convolutions.</p>
 
 </div>
@@ -880,7 +880,7 @@ ipdb&gt;</code></pre>
 <h4><a id=simple_cnn></a><code>simple_cnn</code></h4>
 <blockquote><p><code>simple_cnn</code>(<code>actns</code>:<code>Collection</code>[<code>int</code>], <code>kernel_szs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>strides</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>bn</code>=<code>False</code>) → <a href="https://pytorch.org/docs/stable/nn#torch.nn.Sequential"><code>Sequential</code></a></p>
 </blockquote>
-<p>CNN with <a href="/layers#conv2d_relu"><code>conv2d_relu</code></a> layers defined by <code>actns</code>, <code>kernel_szs</code> and <code>strides</code>, plus batchnorm if <code>bn</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L105">[source]</a></p>
+<p>CNN with <a href="/layers.html#conv2d_relu"><code>conv2d_relu</code></a> layers defined by <code>actns</code>, <code>kernel_szs</code> and <code>strides</code>, plus batchnorm if <code>bn</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/layers.py#L105">[source]</a></p>
 
 </div>
 

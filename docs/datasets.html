@@ -1,7 +1,7 @@
 ---
 
-title: datasets
-keywords: 
+
+keywords: fastai
 sidebar: home_sidebar
 
 
@@ -115,7 +115,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=URLs.get_mnist></a><code>get_mnist</code></h4>
+<h4><a id=get_mnist></a><code>get_mnist</code></h4>
 <blockquote><p><code>get_mnist</code>()
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L34">[source]</a></p>
 </blockquote>
@@ -177,7 +177,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=URLs.get_imdb></a><code>get_imdb</code></h4>
+<h4><a id=get_imdb></a><code>get_imdb</code></h4>
 <blockquote><p><code>get_imdb</code>(<code>classifier</code>=<code>False</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L39">[source]</a></p>
 </blockquote>
@@ -209,7 +209,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=URLs.get_movie_lens></a><code>get_movie_lens</code></h4>
+<h4><a id=get_movie_lens></a><code>get_movie_lens</code></h4>
 <blockquote><p><code>get_movie_lens</code>()
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L45">[source]</a></p>
 </blockquote>
@@ -241,7 +241,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=URLs.get_adult></a><code>get_adult</code></h4>
+<h4><a id=get_adult></a><code>get_adult</code></h4>
 <blockquote><p><code>get_adult</code>()
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L29">[source]</a></p>
 </blockquote>
@@ -269,7 +269,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=URLs.download_wt103_model></a><code>download_wt103_model</code></h4>
+<h4><a id=download_wt103_model></a><code>download_wt103_model</code></h4>
 <blockquote><p><code>download_wt103_model</code>()
 <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L50">[source]</a></p>
 </blockquote>
@@ -297,7 +297,7 @@ sidebar: home_sidebar
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For the rest of the datasets you will need to download them with <a href="/datasets#untar_data"><code>untar_data</code></a> or <a href="/datasets#download_data"><code>download_data</code></a>. <a href="/datasets#untar_data"><code>untar_data</code></a> will decompress the data file and download it while <a href="/datasets#download_data"><code>download_data</code></a> will just download and save the compressed file in <code>.tgz</code> format.</p>
+<p>For the rest of the datasets you will need to download them with <a href="/datasets.html#untar_data"><code>untar_data</code></a> or <a href="/datasets.html#download_data"><code>download_data</code></a>. <a href="/datasets.html#untar_data"><code>untar_data</code></a> will decompress the data file and download it while <a href="/datasets.html#download_data"><code>download_data</code></a> will just download and save the compressed file in <code>.tgz</code> format.</p>
 <p>By default, data will be downloaded to <code>~/.fastai/data</code> folder.<br>
 Configure the default <code>data_path</code> by editing <code>~/.fastai/config.yml</code>.</p>
 
@@ -379,7 +379,7 @@ Configure the default <code>data_path</code> by editing <code>~/.fastai/config.y
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note: If the data file already exists in a <code>data</code> directory inside the notebook, that data file will be used instead of <code>~/.fasta/data</code>. Paths are resolved by calling the function <a href="/datasets#datapath4file"><code>datapath4file</code></a> - which checks if data exists locally (<code>data/</code>) first, before downloading to <code>~/.fastai/data</code> home directory.</p>
+<p>Note: If the data file already exists in a <code>data</code> directory inside the notebook, that data file will be used instead of <code>~/.fasta/data</code>. Paths are resolved by calling the function <a href="/datasets.html#datapath4file"><code>datapath4file</code></a> - which checks if data exists locally (<code>data/</code>) first, before downloading to <code>~/.fastai/data</code> home directory.</p>
 <p>Example:</p>
 
 </div>
@@ -438,7 +438,7 @@ Configure the default <code>data_path</code> by editing <code>~/.fastai/config.y
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>All the downloading functions use this to decide where to put the tgz and expanded folder. If <code>filename</code> already exists in a <code>data</code> directory in the same place as the calling notebook/script, that is used as the parent directly, otherwise <code>~/.fastai/config.yml</code> is read to see what path to use, which defaults to <code>~/.fasta/data</code> is used. To override this default, simply modify the value in your <code>~/.fastai/config.yml</code>:</p>
+<p>All the downloading functions use this to decide where to put the tgz and expanded folder. If <code>filename</code> already exists in a <code>data</code> directory in the same place as the calling notebook/script, that is used as the parent directly, otherwise <code>~/.fastai/config.yml</code> is read to see what path to use, which defaults to <code>~/.fastai/data</code> is used. To override this default, simply modify the value in your <code>~/.fastai/config.yml</code>:</p>
 
 <pre><code>data_path: ~/.fastai/data</code></pre>
 

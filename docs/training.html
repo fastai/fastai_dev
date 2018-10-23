@@ -20,11 +20,11 @@ summary: "Overview of fastai training modules, including Learner, metrics, and c
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The fastai library is structured training around a <a href="/basic_train#Learner"><code>Learner</code></a> object that binds together a pytorch model, some data with an optimizer and a loss function, which then will allow us to launch training.</p>
-<p><a href="/basic_train#basic_train"><code>basic_train</code></a> contains the definition of this <a href="/basic_train#Learner"><code>Learner</code></a> class along with the wrapper around pytorch optimizer that the library uses. It defines the basic training loop that is used each time you call the <a href="/basic_train#fit"><code>fit</code></a> function in fastai (or one of its variants). This training loop is kept to the minimum number of instructions, and most of its customization happens in <a href="/callback#Callback"><code>Callback</code></a> objects.</p>
-<p><a href="/callback#callback"><code>callback</code></a> contains the definition of those, as well as the <a href="/callback#CallbackHandler"><code>CallbackHandler</code></a> that is responsible for the communication between the training loop and the <a href="/callback#Callback"><code>Callback</code></a> functions. It maintains a state dictionary to be able to provide to each <a href="/callback#Callback"><code>Callback</code></a> all the informations of the training loop, easily allowing any tweaks you could think of.</p>
-<p>In <a href="/callbacks#callbacks"><code>callbacks</code></a>, each <a href="/callback#Callback"><code>Callback</code></a> is then implemented in separate modules. Some deal with scheduling the hyperparameters, like <a href="/callbacks.one_cycle#callbacks.one_cycle"><code>callbacks.one_cycle</code></a>, <a href="/callbacks.lr_finder#callbacks.lr_finder"><code>callbacks.lr_finder</code></a> or <a href="/callbacks.general_sched.html#callbacks.general_sched"><code>callback.general_sched</code></a>. Others allow special kind of trainings like <a href="/callbacks.fp16#callbacks.fp16"><code>callbacks.fp16</code></a> (mixed precision) or <a href="/callbacks.rnn#callbacks.rnn"><code>callbacks.rnn</code></a>. The <a href="/basic_train#Recorder"><code>Recorder</code></a> or <a href="/callbacks.hooks#callbacks.hooks"><code>callbacks.hooks</code></a> are useful to save some internal data.</p>
-<p><a href="/train#train"><code>train</code></a> then implements those callbacks with useful helper functions. Lastly <a href="/metrics#metrics"><code>metrics</code></a> contains all the functions you might want to call to evaluate your results.</p>
+<p>The fastai library is structured training around a <a href="/basic_train.html#Learner"><code>Learner</code></a> object that binds together a pytorch model, some data with an optimizer and a loss function, which then will allow us to launch training.</p>
+<p><a href="/basic_train.html#basic_train"><code>basic_train</code></a> contains the definition of this <a href="/basic_train.html#Learner"><code>Learner</code></a> class along with the wrapper around pytorch optimizer that the library uses. It defines the basic training loop that is used each time you call the <a href="/basic_train.html#fit"><code>fit</code></a> function in fastai (or one of its variants). This training loop is kept to the minimum number of instructions, and most of its customization happens in <a href="/callback.html#Callback"><code>Callback</code></a> objects.</p>
+<p><a href="/callback.html#callback"><code>callback</code></a> contains the definition of those, as well as the <a href="/callback.html#CallbackHandler"><code>CallbackHandler</code></a> that is responsible for the communication between the training loop and the <a href="/callback.html#Callback"><code>Callback</code></a> functions. It maintains a state dictionary to be able to provide to each <a href="/callback.html#Callback"><code>Callback</code></a> all the informations of the training loop, easily allowing any tweaks you could think of.</p>
+<p>In <a href="/callbacks.html#callbacks"><code>callbacks</code></a>, each <a href="/callback.html#Callback"><code>Callback</code></a> is then implemented in separate modules. Some deal with scheduling the hyperparameters, like <a href="/callbacks.one_cycle.html#callbacks.one_cycle"><code>callbacks.one_cycle</code></a>, <a href="/callbacks.lr_finder.html#callbacks.lr_finder"><code>callbacks.lr_finder</code></a> or <a href="/callbacks.general_sched.html#callbacks.general_sched"><code>callback.general_sched</code></a>. Others allow special kind of trainings like <a href="/callbacks.fp16.html#callbacks.fp16"><code>callbacks.fp16</code></a> (mixed precision) or <a href="/callbacks.rnn.html#callbacks.rnn"><code>callbacks.rnn</code></a>. The <a href="/basic_train.html#Recorder"><code>Recorder</code></a> or <a href="/callbacks.hooks.html#callbacks.hooks"><code>callbacks.hooks</code></a> are useful to save some internal data.</p>
+<p><a href="/train.html#train"><code>train</code></a> then implements those callbacks with useful helper functions. Lastly <a href="/metrics.html#metrics"><code>metrics</code></a> contains all the functions you might want to call to evaluate your results.</p>
 
 </div>
 </div>
@@ -37,7 +37,7 @@ summary: "Overview of fastai training modules, including Learner, metrics, and c
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We'll do a quick overview of the key pieces of fastai's training modules. See the separate module docs for details on each. We'll use the classic MNIST dataset for the training documentation, cut down to just 3's and 7's. To minimize the boilerplate in our docs we've defined a <code>URLs.get_mnist</code> function to grab a <a href="/basic_data#DataBunch"><code>DataBunch</code></a> of the data for us, which will automatically download and unzip the data if not already done.</p>
+<p>We'll do a quick overview of the key pieces of fastai's training modules. See the separate module docs for details on each. We'll use the classic MNIST dataset for the training documentation, cut down to just 3's and 7's. To minimize the boilerplate in our docs we've defined a <code>URLs.get_mnist</code> function to grab a <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a> of the data for us, which will automatically download and unzip the data if not already done.</p>
 
 </div>
 </div>
@@ -57,13 +57,13 @@ summary: "Overview of fastai training modules, including Learner, metrics, and c
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Basic-training-with-Learner">Basic training with <a href="/basic_train#Learner"><code>Learner</code></a><a class="anchor-link" href="#Basic-training-with-Learner">&#182;</a></h3>
+<h3 id="Basic-training-with-Learner">Basic training with <a href="/basic_train.html#Learner"><code>Learner</code></a><a class="anchor-link" href="#Basic-training-with-Learner">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can create minimal simple CNNs using <a href="/layers#simple_cnn"><code>simple_cnn</code></a> (see <a href="/vision.models#vision.models"><code>models</code></a> for details on creating models):</p>
+<p>We can create minimal simple CNNs using <a href="/layers.html#simple_cnn"><code>simple_cnn</code></a> (see <a href="/vision.models.html#vision.models"><code>models</code></a> for details on creating models):</p>
 
 </div>
 </div>
@@ -83,7 +83,7 @@ summary: "Overview of fastai training modules, including Learner, metrics, and c
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The most important object for training models is <a href="/basic_train#Learner"><code>Learner</code></a>, which needs to know, at minimum, what data to train with and what model to train.</p>
+<p>The most important object for training models is <a href="/basic_train.html#Learner"><code>Learner</code></a>, which needs to know, at minimum, what data to train with and what model to train.</p>
 
 </div>
 </div>
@@ -103,7 +103,7 @@ summary: "Overview of fastai training modules, including Learner, metrics, and c
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>That's enough to train a model, which is done using <a href="/basic_train#fit"><code>fit</code></a>. If you have a CUDA-capable GPU it will be used automatically. You have to say how many epochs to train for.</p>
+<p>That's enough to train a model, which is done using <a href="/basic_train.html#fit"><code>fit</code></a>. If you have a CUDA-capable GPU it will be used automatically. You have to say how many epochs to train for.</p>
 
 </div>
 </div>
@@ -146,7 +146,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To see how our training is going, we can request that it reports various <a href="/metrics#metrics"><code>metrics</code></a> after each epoch. You can pass it to the constructor, or set it later. Note that metrics are always calculated on the validation set.</p>
+<p>To see how our training is going, we can request that it reports various <a href="/metrics.html#metrics"><code>metrics</code></a> after each epoch. You can pass it to the constructor, or set it later. Note that metrics are always calculated on the validation set.</p>
 
 </div>
 </div>
@@ -190,7 +190,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You can use <a href="/callback#callback"><code>callback</code></a>s to modify training in almost any way you can imagine. For instance, we've provided a callback to implement Leslie Smith's 1cycle training method.</p>
+<p>You can use <a href="/callback.html#callback"><code>callback</code></a>s to modify training in almost any way you can imagine. For instance, we've provided a callback to implement Leslie Smith's 1cycle training method.</p>
 
 </div>
 </div>
@@ -228,7 +228,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <a href="/basic_train#Recorder"><code>Recorder</code></a> callback is automatically added for you, and you can use it to see what happened in your training, e.g.:</p>
+<p>The <a href="/basic_train.html#Recorder"><code>Recorder</code></a> callback is automatically added for you, and you can use it to see what happened in your training, e.g.:</p>
 
 </div>
 </div>
@@ -266,13 +266,13 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Extending-Learner-with-train">Extending <a href="/basic_train#Learner"><code>Learner</code></a> with <a href="/train#train"><code>train</code></a><a class="anchor-link" href="#Extending-Learner-with-train">&#182;</a></h3>
+<h3 id="Extending-Learner-with-train">Extending <a href="/basic_train.html#Learner"><code>Learner</code></a> with <a href="/train.html#train"><code>train</code></a><a class="anchor-link" href="#Extending-Learner-with-train">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Many of the callbacks can be used more easily by taking advantage of the <a href="/basic_train#Learner"><code>Learner</code></a> extensions in <a href="/train#train"><code>train</code></a>. For instance, instead of creating OneCycleScheduler manually as above, you can simply call <a href="/train#fit_one_cycle"><code>Learner.fit_one_cycle</code></a>:</p>
+<p>Many of the callbacks can be used more easily by taking advantage of the <a href="/basic_train.html#Learner"><code>Learner</code></a> extensions in <a href="/train.html#train"><code>train</code></a>. For instance, instead of creating OneCycleScheduler manually as above, you can simply call <a href="/train.html#fit_one_cycle"><code>Learner.fit_one_cycle</code></a>:</p>
 
 </div>
 </div>
@@ -317,12 +317,12 @@ epoch  train loss  valid loss  accuracy
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Note that if you're training a model for one of our supported <em>applications</em>, there's a lot of help available to you in the application modules:</p>
 <ul>
-<li><a href="/vision#vision"><code>vision</code></a></li>
-<li><a href="/text#text"><code>text</code></a></li>
-<li><a href="/tabular#tabular"><code>tabular</code></a></li>
-<li><a href="/collab#collab"><code>collab</code></a></li>
+<li><a href="/vision.html#vision"><code>vision</code></a></li>
+<li><a href="/text.html#text"><code>text</code></a></li>
+<li><a href="/tabular.html#tabular"><code>tabular</code></a></li>
+<li><a href="/collab.html#collab"><code>collab</code></a></li>
 </ul>
-<p>For instance, let's use <a href="/vision.learner#ConvLearner"><code>ConvLearner</code></a> (from <a href="/vision#vision"><code>vision</code></a>) to quickly fine-tune a pre-trained Imagenet model for MNIST (not a very practical approach, of course, since MNIST is handwriting and our model is pre-trained on photos!).</p>
+<p>For instance, let's use <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> (from <a href="/vision.html#vision"><code>vision</code></a>) to quickly fine-tune a pre-trained Imagenet model for MNIST (not a very practical approach, of course, since MNIST is handwriting and our model is pre-trained on photos!).</p>
 
 </div>
 </div>

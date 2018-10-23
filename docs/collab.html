@@ -1,7 +1,7 @@
 ---
 
 title: collab
-keywords: 
+keywords: fastai
 sidebar: home_sidebar
 
 summary: "Application to collaborative filtering"
@@ -33,7 +33,7 @@ summary: "Application to collaborative filtering"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Collaborative filtering is when you're tasked to predict how much a user is going to like a certain item. The fastai library contains a <a href="/collab#CollabFilteringDataset"><code>CollabFilteringDataset</code></a> class that will help you create datasets suitable for training, and a function <code>get_colab_learner</code> to build a simple model directly from a ratings table. Let's first see how we can get started before devling in the documentation.</p>
+<p>Collaborative filtering is when you're tasked to predict how much a user is going to like a certain item. The fastai library contains a <a href="/collab.html#CollabFilteringDataset"><code>CollabFilteringDataset</code></a> class that will help you create datasets suitable for training, and a function <code>get_colab_learner</code> to build a simple model directly from a ratings table. Let's first see how we can get started before devling in the documentation.</p>
 <p>For our example, we'll use a small subset of the <a href="https://grouplens.org/datasets/movielens/">MovieLens</a> dataset. In there, we have to predict the rating a user gave a given movie (from 0 to 5). It comes in the form of a csv file where each line is the rating of a movie by a given person.</p>
 
 </div>
@@ -152,7 +152,7 @@ summary: "Application to collaborative filtering"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now that this step is done, we can directly create a <a href="/basic_train#Learner"><code>Learner</code></a> object:</p>
+<p>Now that this step is done, we can directly create a <a href="/basic_train.html#Learner"><code>Learner</code></a> object:</p>
 
 </div>
 </div>
@@ -221,7 +221,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=CollabFilteringDataset></a><code>class</code> <code>CollabFilteringDataset</code></h2>
-<blockquote><p><code>CollabFilteringDataset</code>(<code>user</code>:<code>Series</code>, <code>item</code>:<code>Series</code>, <code>ratings</code>:<code>ndarray</code>) :: <a href="/basic_data#DatasetBase"><code>DatasetBase</code></a>
+<blockquote><p><code>CollabFilteringDataset</code>(<code>user</code>:<code>Series</code>, <code>item</code>:<code>Series</code>, <code>ratings</code>:<code>ndarray</code>) :: <a href="/basic_data.html#DatasetBase"><code>DatasetBase</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L10">[source]</a></p>
 </blockquote>
 
@@ -249,7 +249,7 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=CollabFilteringDataset.from_df></a><code>from_df</code></h4>
+<h4><a id=from_df></a><code>from_df</code></h4>
 <blockquote><p><code>from_df</code>(<code>rating_df</code>:<code>DataFrame</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>) → <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L34">[source]</a></p>
 </blockquote>
@@ -278,7 +278,7 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=CollabFilteringDataset.from_csv></a><code>from_csv</code></h4>
+<h4><a id=from_csv></a><code>from_csv</code></h4>
 <blockquote><p><code>from_csv</code>(<code>csv_name</code>:<code>str</code>, <code>kwargs</code>) → <code>Tuple</code>[<code>ColabFilteringDataset</code>, <code>ColabFilteringDataset</code>]
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L50">[source]</a></p>
 </blockquote>
@@ -300,7 +300,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Model-and-Learner">Model and <a href="/basic_train#Learner"><code>Learner</code></a><a class="anchor-link" href="#Model-and-Learner">&#182;</a></h2>
+<h2 id="Model-and-Learner">Model and <a href="/basic_train.html#Learner"><code>Learner</code></a><a class="anchor-link" href="#Model-and-Learner">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -343,7 +343,7 @@ epoch  train loss  valid loss
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_collab_learner></a><code>get_collab_learner</code></h4>
-<blockquote><p><code>get_collab_learner</code>(<code>ratings</code>:<code>DataFrame</code>, <code>n_factors</code>:<code>int</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>test</code>:<code>DataFrame</code>=<code>None</code>, <code>metrics</code>=<code>None</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>, <code>kwargs</code>) → <a href="/basic_train#Learner"><code>Learner</code></a>
+<blockquote><p><code>get_collab_learner</code>(<code>ratings</code>:<code>DataFrame</code>, <code>n_factors</code>:<code>int</code>, <code>pct_val</code>:<code>float</code>=<code>0.2</code>, <code>user_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>item_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>rating_name</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>test</code>:<code>DataFrame</code>=<code>None</code>, <code>metrics</code>=<code>None</code>, <code>min_score</code>:<code>float</code>=<code>None</code>, <code>max_score</code>:<code>float</code>=<code>None</code>, <code>kwargs</code>) → <a href="/basic_train.html#Learner"><code>Learner</code></a>
 <a href="https://github.com/fastai/fastai/blob/master/fastai/collab.py#L71">[source]</a></p>
 </blockquote>
 
@@ -357,7 +357,7 @@ epoch  train loss  valid loss
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Creates a <a href="/basic_train#Learner"><code>Learner</code></a> object built from the data in <code>ratings</code>, <code>pct_val</code>, <code>user_name</code>, <code>item_name</code>, <code>rating_name</code> to <a href="/collab#CollabFilteringDataset"><code>CollabFilteringDataset</code></a>. Optionally, creates another <a href="/collab#CollabFilteringDataset"><code>CollabFilteringDataset</code></a> for <code>test</code>. <code>kwargs</code> are fed to <a href="/basic_data#DataBunch.create"><code>DataBunch.create</code></a> with these datasets. The model is given by <a href="/collab#EmbeddingDotBias"><code>EmbeddingDotBias</code></a> with <code>n_factors</code>, <code>min_score</code> and <code>max_score</code> (the numbers of users and items will be inferred from the data).</p>
+<p>Creates a <a href="/basic_train.html#Learner"><code>Learner</code></a> object built from the data in <code>ratings</code>, <code>pct_val</code>, <code>user_name</code>, <code>item_name</code>, <code>rating_name</code> to <a href="/collab.html#CollabFilteringDataset"><code>CollabFilteringDataset</code></a>. Optionally, creates another <a href="/collab.html#CollabFilteringDataset"><code>CollabFilteringDataset</code></a> for <code>test</code>. <code>kwargs</code> are fed to <code>DataBunch.create</code> with these datasets. The model is given by <a href="/collab.html#EmbeddingDotBias"><code>EmbeddingDotBias</code></a> with <code>n_factors</code>, <code>min_score</code> and <code>max_score</code> (the numbers of users and items will be inferred from the data).</p>
 
 </div>
 </div>
