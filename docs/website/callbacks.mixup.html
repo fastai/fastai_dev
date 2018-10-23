@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Implementation of mixup">
+<meta name="keywords" content=" fastai">
+<title>callbacks.mixup | fastai</title>
+<link rel="stylesheet" href="css/syntax.css">
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+<link rel="stylesheet" href="css/modern-business.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<!-- most color styles are extracted out to here -->
+<link rel="stylesheet" href="css/theme-blue.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="js/jquery.navgoco.min.js"></script>
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<!-- Anchor.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<link rel="shortcut icon" href="images/favicon.ico?">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="documentation-theme-jekyll" href="http://localhost:4000/feed.xml">
+
+    <script>
+        $(document).ready(function() {
+            // Initialize navgoco with default options
+            $("#mysidebar").navgoco({
+                caretHtml: '',
+                accordion: true,
+                openClass: 'active', // open
+                save: false, // leave false or nav highlighting doesn't work right
+                cookie: {
+                    name: 'navgoco',
+                    expires: false,
+                    path: '/'
+                },
+                slide: {
+                    duration: 400,
+                    easing: 'swing'
+                }
+            });
+
+            $("#collapseAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', false);
+            });
+
+            $("#expandAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', true);
+            });
+
+            // activate menu items where href is matching to current page
+            $("#mysidebar a[href='" + location.pathname.match(/\/([^\/]*)$/)[1] + "']")
+                .parents('li').addClass('active')
+                .parents('ul').css('display', 'block');
+        });
+
+    </script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+    
+
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="fa fa-home fa-lg navbar-brand" href="index.html">&nbsp;<span class="projectTitle"> fastai</span></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <li><a id="tg-sb-link" href="callbacks.mixup.html#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="https://github.com/fastai/fastai" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="http://www.fast.ai" target="_blank">News</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="js/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="http://127.0.0.1:4000/{url}" title="callbacks.mixup">{title}</a></li>',
+                    noResultsText: 'No results found.',
+                            limit: 10,
+                            fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+        </div>
+        <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle"> </li>
+  
+  
+  
+  <li>
+      <a href="callbacks.mixup.html#">Getting started</a>
+      <ul>
+          
+          
+          
+          <li><a href="https://github.com/fastai/fastai/blob/master/README.md#installation" target="_blank">Installation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/troubleshoot" target="_blank">Troubleshooting</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="callbacks.mixup.html#">Training</a>
+      <ul>
+          
+          
+          
+          <li><a href="training.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="basic_train.html">basic_train</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="train.html">train</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="metrics.html">metrics</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="callback.html">callback</a></li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="callbacks.mixup.html#">callbacks</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="callbacks.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.hooks.html">HookCallback</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.fp16.html">MixedPrecision</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.one_cycle.html">OneCycleScheduler</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.lr_finder.html">LRFinder</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.mixup.html">MixUpCallback</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.rnn.html">RNNTrainer</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.general_sched.html">GeneralScheduler</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="callbacks.mixup.html#">Applications</a>
+      <ul>
+          
+          
+          
+          <li><a href="applications.html">Overview</a></li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="callbacks.mixup.html#">vision</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="vision.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.learner.html">vision.learner</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.transform.html">vision.transform</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.image.html">vision.image</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.data.html">vision.data</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.models.html">vision.model overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.models.unet.html">vision.models.unet</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="callbacks.mixup.html#">text</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="text.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.learner.html">text.learner</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.transform.html">text.transform</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.data.html">text.data</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.models.html">text.models</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="callbacks.mixup.html#">tabular</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="tabular.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="tabular.transform.html">tabular.transform</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="tabular.data.html">tabular.data</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="tabular.models.html">tabular.models</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          
+          
+          
+          <li><a href="collab.html">collab</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="callbacks.mixup.html#">Core</a>
+      <ul>
+          
+          
+          
+          <li><a href="overview.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="basic_data.html">basic_data</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="layers.html">layers</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="datasets.html">datasets</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="core.html">core</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="torch_core.html">torch_core</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="callbacks.mixup.html#">Doc authoring</a>
+      <ul>
+          
+          
+          
+          <li><a href="gen_doc.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="gen_doc.gen_notebooks.html">gen_doc.gen_notebooks</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="gen_doc.nbdoc.html">gen_doc.nbdoc</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="gen_doc.convert2html.html">gen_doc.convert2html</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="callbacks.mixup.html#">Library development</a>
+      <ul>
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/develop" target="_blank">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/test" target="_blank">Testing</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/style" target="_blank">Style guide</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/abbr" target="_blank">Abbreviation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="fastai_typing.html">Typing</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/release" target="_blank">Packaging fastai</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+      
+      <!-- if you aren't using the accordion, uncomment this block:
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+         -->
+</ul>
+
+<!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");</script>
+
+            </div>
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content">
+            <div class="post-header">
+    <a id="callbacks.mixup"></a>
+    <h1 class="post-title-main">callbacks.mixup</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+    <div class="summary">Implementation of mixup</div>
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    
+
+   <div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Mixup-data-augmentation">Mixup data augmentation<a class="anchor-link" href="callbacks.mixup.html#Mixup-data-augmentation">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-is-Mixup?">What is Mixup?<a class="anchor-link" href="callbacks.mixup.html#What-is-Mixup?">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This module contains the implementation of a data augmentation technique called <a href="https://arxiv.org/abs/1710.09412">Mixup</a>. It is extremely efficient at regularizing models in computer vision (we used it to get our time to train CIFAR10 to 94% on one GPU to 6 minutes).</p>
+<p>As the name kind of suggests, the authors of the mixup article propose to train the model on a mix of the pictures of the training set. Let’s say we’re on CIFAR10 for instance, then instead of feeding the model the raw images, we take two (which could be in the same class or not) and do a linear combination of them: in terms of tensor it’s</p>
+<p><code>new_image = t * image1 + (1-t) * image2</code></p>
+<p>where t is a float between 0 and 1. Then the target we assign to that image is the same combination of the original targets:</p>
+<p><code>new_target = t * target1 + (1-t) * target2</code></p>
+<p>assuming your targets are one-hot encoded (which isn’t the case in pytorch usually). And that’s as simple as this.</p>
+<p><img src="imgs/mixup.png" alt="mixup"></p>
+<p>Dog or cat? The right answer here is 70% dog and 30% cat!</p>
+<p>As the picture above shows, it’s a bit hard for a human eye to comprehend the pictures obtained (although we do see the shapes of a dog and a cat) but somehow, it makes a lot of sense to the model which trains more efficiently. The final loss (training or validation) will be higher than when training without mixup even if the accuracy is far better, which means that a model trained like this will make predictions that are a bit less confident.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Basic-Training">Basic Training<a class="anchor-link" href="callbacks.mixup.html#Basic-Training">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To test this method, we will first build a <a href="layers.html#simple_cnn"><code>simple_cnn</code></a> and train it like we did with <a href="basic_train.html#basic_train"><code>basic_train</code></a> so we can compare its results with a network trained with Mixup.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Total time: 00:18
+epoch  train loss  valid loss  accuracy
+0      0.154147    0.132811    0.953876  (00:02)
+1      0.114623    0.088874    0.970069  (00:02)
+2      0.087302    0.082290    0.975466  (00:02)
+3      0.055337    0.041746    0.986261  (00:02)
+4      0.046112    0.053610    0.980864  (00:02)
+5      0.036025    0.032832    0.989205  (00:02)
+6      0.034067    0.038534    0.985770  (00:02)
+7      0.029102    0.024582    0.992149  (00:02)
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Mixup-implementation-in-the-library">Mixup implementation in the library<a class="anchor-link" href="callbacks.mixup.html#Mixup-implementation-in-the-library">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the original article, the authors suggested four things:</p>
+
+<pre><code>1. Create two separate dataloaders and draw a batch from each at every iteration to mix them up
+2. Draw a t value following a beta distribution with a parameter alpha (0.4 is suggested in their article)
+3. Mix up the two batches with the same value t.
+4. Use one-hot encoded targets
+
+</code></pre>
+<p>The implementation of this module is based on these suggestions but was modified when experiments suggested modifications with positive impact in performance.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The authors suggest to use the beta distribution with the same parameters alpha. Why do they suggest this? Well it looks like this:</p>
+<p><img src="imgs/betadist-mixup.png" alt="betadist"></p>
+<p>so it means there is a very high probability of picking values close to 0 or 1 (in which case the image is almost from 1 category) and then a somewhat constant probability of picking something in the middle (0.33 as likely as 0.5 for instance).</p>
+<p>While this works very well, it’s not the fastest way we can do this and this is the first suggestion we will adjust. The main point that slows down this process is wanting two different batches at every iteration (which means loading twice the amount of images and applying to them the other data augmentation function). To avoid this slow down, ou be a little smarter and mixup a batch with a shuffled version of itself (this way the images mixed up are still different).</p>
+<p>Using the same parameter t for the whole batch is another suggestion we will modify. In our experiments, we noticed that the model can train faster if we draw a different <code>t</code> for every image in the batch (both options get to the same result in terms of accuracy, it’s just that one arrives there more slowly).
+The last trick we have to apply with this is that there can be some duplicates with this strategy: let’s say we decide to mix <code>image0</code> with <code>image1</code> then <code>image1</code> with <code>image0</code>, and that we draw <code>t=0.1</code> for the first, and <code>t=0.9</code> for the second. Then</p>
+<p><code>image0 * 0.1 + shuffle0 * (1-0.1) = image0 * 0.1 + image1 * 0.9</code></p>
+<p>and</p>
+<p><code>image1 * 0.9 + shuffle1 * (1-0.9) = image1 * 0.9 + image0 * 0.1</code></p>
+<p>will be the sames. Of course we have to be a bit unlucky but in practice, we saw there was a drop in accuracy by using this without removing those duplicates. To avoid them, the tricks is to replace the vector of parameters <code>t</code> we drew by:</p>
+<p><code>t = max(t, 1-t)</code></p>
+<p>The beta distribution with the two parameters equal is symmetric in any case, and this way we insure that the biggest coefficient is always near the first image (the non-shuffled batch).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Adding-Mixup-to-the-Mix">Adding Mixup to the Mix<a class="anchor-link" href="callbacks.mixup.html#Adding-Mixup-to-the-Mix">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we will add <a href="callbacks.mixup.html#MixUpCallback"><code>MixUpCallback</code></a> to our Learner so that it modifies our input and target accordingly. The <a href="train.html#mixup"><code>mixup</code></a> function does that for us behind the scene, with a few other tweaks detailed below.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">learner</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span><span class="o">.</span><span class="n">mixup</span><span class="p">()</span>
+<span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Total time: 00:22
+epoch  train loss  valid loss  accuracy
+0      0.372338    0.166498    0.951423  (00:02)
+1      0.349636    0.145830    0.965653  (00:02)
+2      0.333157    0.112585    0.977920  (00:02)
+3      0.318903    0.104405    0.982336  (00:02)
+4      0.317793    0.111996    0.988224  (00:02)
+5      0.315467    0.095693    0.986261  (00:02)
+6      0.312827    0.091224    0.990186  (00:02)
+7      0.309499    0.088683    0.991168  (00:02)
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Training the net with Mixup improves the best accuracy. Note that the validation loss is higher than without MixUp, because the model makes less confident predictions: without mixup, most precisions are very close to 0. or 1. (in terms of probability) whereas the model with MixUp will give predictions that are more nuanced. Be sure to know what is the thing you want to optimize (lower loss or better accuracy) before using it.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=MixUpCallback></a><code>class</code> <code>MixUpCallback</code></h2>
+<blockquote><p><code>MixUpCallback</code>(<code>learner</code>:<a href="basic_train.html#Learner"><code>Learner</code></a>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) :: <a href="callback.html#Callback"><code>Callback</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L7">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a <a href="callback.html#Callback"><code>Callback</code></a> for mixup on <code>learn</code> with a parameter <code>alpha</code> for the beta distribution. <code>stack_x</code> and <code>stack_y</code> determines if we stack our inputs/targets with the vector lambda drawn or do the linear combination (in general, we stack the inputs or ouputs when they correspond to categories or classes and do the linear combination otherwise).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=on_batch_begin></a><code>on_batch_begin</code></h4>
+<blockquote><p><code>on_batch_begin</code>(<code>last_input</code>, <code>last_target</code>, <code>train</code>, <code>kwargs</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L14">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Draws a vector of lambda following a beta distribution with <code>self.alpha</code> and operates the mixup on <code>last_input</code> and <code>last_target</code> according to <code>self.stack_x</code> and <code>self.stack_y</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Dealing-with-the-loss">Dealing with the loss<a class="anchor-link" href="callbacks.mixup.html#Dealing-with-the-loss">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We often have to modify the loss so that it is compatible with Mixup: pytorch was very careful to avoid one-hot encoding targets when it could, so it seems a bit of a drag to undo this. Fortunately for us, if the loss is a classic <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.cross_entropy">cross-entropy</a>, we have</p>
+<p><code>loss(output, new_target) = t * loss(output, target1) + (1-t) * loss(output, target2)</code></p>
+<p>so we won’t one-hot encode anything and just compute those two losses then do the linear combination.</p>
+<p>The following class is used to adapt the loss to mixup. Note that the <a href="train.html#mixup"><code>mixup</code></a> function will use it to change the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.cross_entropy"><code>Learner.loss_func</code></a> if necessary.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=MixUpLoss></a><code>class</code> <code>MixUpLoss</code></h3>
+<blockquote><p><code>MixUpLoss</code>(<code>crit</code>) :: <a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L33">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a loss function from <code>crit</code> that is compatible with MixUp.</p>
+
+</div>
+</div>
+</div>
+</div>
+ 
+
+
+
+    <div class="tags">
+        
+    </div>
+
+
+
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+               <p><img src="images/company_logo.png" alt="Company logo"/></p>
+               &copy;2018 fast.ai. All rights reserved. <br />
+ Site last generated: Oct 22, 2018 <br />
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+
+<!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-89522379-3','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+
+</html>

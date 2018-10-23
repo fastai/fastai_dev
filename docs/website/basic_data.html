@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Basic classes to contain the data for model training.">
+<meta name="keywords" content=" fastai">
+<title>data | fastai</title>
+<link rel="stylesheet" href="css/syntax.css">
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+<link rel="stylesheet" href="css/modern-business.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<!-- most color styles are extracted out to here -->
+<link rel="stylesheet" href="css/theme-blue.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="js/jquery.navgoco.min.js"></script>
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<!-- Anchor.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<link rel="shortcut icon" href="images/favicon.ico?">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="documentation-theme-jekyll" href="http://localhost:4000/feed.xml">
+
+    <script>
+        $(document).ready(function() {
+            // Initialize navgoco with default options
+            $("#mysidebar").navgoco({
+                caretHtml: '',
+                accordion: true,
+                openClass: 'active', // open
+                save: false, // leave false or nav highlighting doesn't work right
+                cookie: {
+                    name: 'navgoco',
+                    expires: false,
+                    path: '/'
+                },
+                slide: {
+                    duration: 400,
+                    easing: 'swing'
+                }
+            });
+
+            $("#collapseAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', false);
+            });
+
+            $("#expandAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', true);
+            });
+
+            // activate menu items where href is matching to current page
+            $("#mysidebar a[href='" + location.pathname.match(/\/([^\/]*)$/)[1] + "']")
+                .parents('li').addClass('active')
+                .parents('ul').css('display', 'block');
+        });
+
+    </script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+    
+
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="fa fa-home fa-lg navbar-brand" href="index.html">&nbsp;<span class="projectTitle"> fastai</span></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <li><a id="tg-sb-link" href="basic_data.html#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="https://github.com/fastai/fastai" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="http://www.fast.ai" target="_blank">News</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="js/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="http://127.0.0.1:4000/{url}" title="data">{title}</a></li>',
+                    noResultsText: 'No results found.',
+                            limit: 10,
+                            fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+        </div>
+        <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle"> </li>
+  
+  
+  
+  <li>
+      <a href="basic_data.html#">Getting started</a>
+      <ul>
+          
+          
+          
+          <li><a href="https://github.com/fastai/fastai/blob/master/README.md#installation" target="_blank">Installation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/troubleshoot" target="_blank">Troubleshooting</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="basic_data.html#">Training</a>
+      <ul>
+          
+          
+          
+          <li><a href="training.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="basic_train.html">basic_train</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="train.html">train</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="metrics.html">metrics</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="callback.html">callback</a></li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="basic_data.html#">callbacks</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="callbacks.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.hooks.html">HookCallback</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.fp16.html">MixedPrecision</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.one_cycle.html">OneCycleScheduler</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.lr_finder.html">LRFinder</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.mixup.html">MixUpCallback</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.rnn.html">RNNTrainer</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.general_sched.html">GeneralScheduler</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="basic_data.html#">Applications</a>
+      <ul>
+          
+          
+          
+          <li><a href="applications.html">Overview</a></li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="basic_data.html#">vision</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="vision.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.learner.html">vision.learner</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.transform.html">vision.transform</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.image.html">vision.image</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.data.html">vision.data</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.models.html">vision.model overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.models.unet.html">vision.models.unet</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="basic_data.html#">text</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="text.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.learner.html">text.learner</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.transform.html">text.transform</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.data.html">text.data</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.models.html">text.models</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="basic_data.html#">tabular</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="tabular.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="tabular.transform.html">tabular.transform</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="tabular.data.html">tabular.data</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="tabular.models.html">tabular.models</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          
+          
+          
+          <li><a href="collab.html">collab</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="basic_data.html#">Core</a>
+      <ul>
+          
+          
+          
+          <li><a href="overview.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="basic_data.html">basic_data</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="layers.html">layers</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="datasets.html">datasets</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="core.html">core</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="torch_core.html">torch_core</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="basic_data.html#">Doc authoring</a>
+      <ul>
+          
+          
+          
+          <li><a href="gen_doc.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="gen_doc.gen_notebooks.html">gen_doc.gen_notebooks</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="gen_doc.nbdoc.html">gen_doc.nbdoc</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="gen_doc.convert2html.html">gen_doc.convert2html</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="basic_data.html#">Library development</a>
+      <ul>
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/develop" target="_blank">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/test" target="_blank">Testing</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/style" target="_blank">Style guide</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/abbr" target="_blank">Abbreviation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="fastai_typing.html">Typing</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/release" target="_blank">Packaging fastai</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+      
+      <!-- if you aren't using the accordion, uncomment this block:
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+         -->
+</ul>
+
+<!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");</script>
+
+            </div>
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content">
+            <div class="post-header">
+    <a id="data"></a>
+    <h1 class="post-title-main">data</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+    <div class="summary">Basic classes to contain the data for model training.</div>
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    
+
+   <div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Get-your-data-ready-for-training">Get your data ready for training<a class="anchor-link" href="basic_data.html#Get-your-data-ready-for-training">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This module defines the basic <a href="basic_data.html#DataBunch"><code>DataBunch</code></a> object that is used inside <a href="basic_train.html#Learner"><code>Learner</code></a> to train a model. This is the generic class, that can take any kind of fastai <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a> or <a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>. You'll find helpful functions in the data module of every application to directly create this <a href="basic_data.html#DataBunch"><code>DataBunch</code></a> for you.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=DataBunch></a><code>class</code> <code>DataBunch</code></h2>
+<blockquote><p><code>DataBunch</code>(<code>train_dl</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>valid_dl</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>test_dl</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch#torch.device"><code>device</code></a>=<code>None</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>]]=<code>None</code>, <code>path</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L69">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Bind together a <code>train_dl</code>, a <code>valid_dl</code> and optionally a <code>test_dl</code>, ensures they are on <code>device</code> and apply to them <code>tfms</code> as batch are drawn. <code>path</code> is used internally to store temporary files, <code>collate_fn</code> is passed to the pytorch <code>Dataloader</code> (replacing the one there) to explain how to collate the samples picked for a batch. By default, it applies data to the object sent (see in <a href="vision.image.html#vision.image"><code>vision.image</code></a> why this can be important).</p>
+<p>An example of <code>tfms</code> to pass is normalization. <code>train_dl</code>, <code>valid_dl</code> and optionally <code>test_dl</code> will be wrapped in <a href="basic_data.html#DeviceDataLoader"><code>DeviceDataLoader</code></a>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=create></a><code>create</code></h4>
+<blockquote><p><code>create</code>(<code>train_ds</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>valid_ds</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>test_ds</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>=<code>None</code>, <code>path</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>bs</code>:<code>int</code>=<code>64</code>, <code>num_workers</code>:<code>int</code>=<code>16</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>]]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch#torch.device"><code>device</code></a>=<code>None</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>) → <code>DataBunch</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L82">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a <a href="basic_data.html#DataBunch"><code>DataBunch</code></a> from <code>train_ds</code>, <code>valid_ds</code> and optionally <code>test_ds</code>, with batch size <code>bs</code> and by using <code>num_workers</code>. <code>tfms</code> and <code>device</code> are passed to the init method.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=holdout></a><code>holdout</code></h4>
+<blockquote><p><code>holdout</code>(<code>is_test</code>:<code>bool</code>=<code>False</code>) → <a href="basic_data.html#DeviceDataLoader"><code>DeviceDataLoader</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L94">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Return the <code>self.test_dl</code> if <code>is_test</code> is True, else <code>self.valid_dl</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=DeviceDataLoader></a><code>class</code> <code>DeviceDataLoader</code></h2>
+<blockquote><p><code>DeviceDataLoader</code>(<code>dl</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch#torch.device"><code>device</code></a>, <code>tfms</code>:<code>List</code>[<code>Callable</code>]=<code>None</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L23">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Put the batches of <code>dl</code> on <code>device</code> after applying an optional list of <code>tfms</code>. <code>collate_fn</code> will replace the one of <code>dl</code>. All dataloaders of a <a href="basic_data.html#DataBunch"><code>DataBunch</code></a> are of this type.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Factory-method">Factory method<a class="anchor-link" href="basic_data.html#Factory-method">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=create></a><code>create</code></h4>
+<blockquote><p><code>create</code>(<code>dataset</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>bs</code>:<code>int</code>=<code>64</code>, <code>shuffle</code>:<code>bool</code>=<code>False</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/torch#torch.device"><code>device</code></a>=<code>device(type='cuda')</code>, <code>tfms</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>, <code>num_workers</code>:<code>int</code>=<code>16</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>, <code>kwargs</code>:<code>Any</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L62">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create a <a href="basic_data.html#DeviceDataLoader"><code>DeviceDataLoader</code></a> on <code>device</code> from a <code>dataset</code> with batch size <code>bs</code>, <code>num_workers</code>processes and a given <code>collate_fn</code>. The dataloader will <code>shuffle</code> the data if that flag is set to True, and <code>tfms</code> are passed to the init method. All <code>kwargs</code> are passed to the pytorch <a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a> class initialization.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Internal-methods">Internal methods<a class="anchor-link" href="basic_data.html#Internal-methods">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=proc_batch></a><code>proc_batch</code></h4>
+<blockquote><p><code>proc_batch</code>(<code>b</code>:<code>Tensor</code>) → <code>Tensor</code></p>
+</blockquote>
+<p>Proces batch <code>b</code> of <code>TensorImage</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L44">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=add_tfm></a><code>add_tfm</code></h4>
+<blockquote><p><code>add_tfm</code>(<code>tfm</code>:<code>Callable</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L41">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Add <code>tfm</code> to <code>self.tfms</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=remove_tfm></a><code>remove_tfm</code></h4>
+<blockquote><p><code>remove_tfm</code>(<code>tfm</code>:<code>Callable</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L42">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Remove <code>tfm</code> from <code>self.tfms</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Generic-classes">Generic classes<a class="anchor-link" href="basic_data.html#Generic-classes">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Those two last classes are just empty shell to be subclassed by one of the applications.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=DatasetBase></a><code>class</code> <code>DatasetBase</code></h3>
+<blockquote><p><code>DatasetBase</code>() :: <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a></p>
+</blockquote>
+<p>Base class for all fastai datasets.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L6">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3><a id=LabelDataset></a><code>class</code> <code>LabelDataset</code></h3>
+<blockquote><p><code>LabelDataset</code>() :: <a href="basic_data.html#DatasetBase"><code>DatasetBase</code></a></p>
+</blockquote>
+<p>Base class for fastai datasets that do classification.  <a href="https://github.com/fastai/fastai/blob/master/fastai/basic_data.py#L15">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+ 
+
+
+
+    <div class="tags">
+        
+    </div>
+
+
+
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+               <p><img src="images/company_logo.png" alt="Company logo"/></p>
+               &copy;2018 fast.ai. All rights reserved. <br />
+ Site last generated: Oct 22, 2018 <br />
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+
+<!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-89522379-3','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+
+</html>

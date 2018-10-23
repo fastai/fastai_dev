@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Transforms to clean and preprocess tabular data">
+<meta name="keywords" content=" fastai">
+<title>tabular.transform | fastai</title>
+<link rel="stylesheet" href="css/syntax.css">
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+<link rel="stylesheet" href="css/modern-business.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<!-- most color styles are extracted out to here -->
+<link rel="stylesheet" href="css/theme-blue.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="js/jquery.navgoco.min.js"></script>
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<!-- Anchor.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<link rel="shortcut icon" href="images/favicon.ico?">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="documentation-theme-jekyll" href="http://localhost:4000/feed.xml">
+
+    <script>
+        $(document).ready(function() {
+            // Initialize navgoco with default options
+            $("#mysidebar").navgoco({
+                caretHtml: '',
+                accordion: true,
+                openClass: 'active', // open
+                save: false, // leave false or nav highlighting doesn't work right
+                cookie: {
+                    name: 'navgoco',
+                    expires: false,
+                    path: '/'
+                },
+                slide: {
+                    duration: 400,
+                    easing: 'swing'
+                }
+            });
+
+            $("#collapseAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', false);
+            });
+
+            $("#expandAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', true);
+            });
+
+            // activate menu items where href is matching to current page
+            $("#mysidebar a[href='" + location.pathname.match(/\/([^\/]*)$/)[1] + "']")
+                .parents('li').addClass('active')
+                .parents('ul').css('display', 'block');
+        });
+
+    </script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+    
+
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="fa fa-home fa-lg navbar-brand" href="index.html">&nbsp;<span class="projectTitle"> fastai</span></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <li><a id="tg-sb-link" href="tabular.transform.html#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="https://github.com/fastai/fastai" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="http://www.fast.ai" target="_blank">News</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="js/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="http://127.0.0.1:4000/{url}" title="tabular.transform">{title}</a></li>',
+                    noResultsText: 'No results found.',
+                            limit: 10,
+                            fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+        </div>
+        <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle"> </li>
+  
+  
+  
+  <li>
+      <a href="tabular.transform.html#">Getting started</a>
+      <ul>
+          
+          
+          
+          <li><a href="https://github.com/fastai/fastai/blob/master/README.md#installation" target="_blank">Installation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/troubleshoot" target="_blank">Troubleshooting</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="tabular.transform.html#">Training</a>
+      <ul>
+          
+          
+          
+          <li><a href="training.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="basic_train.html">basic_train</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="train.html">train</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="metrics.html">metrics</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="callback.html">callback</a></li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="tabular.transform.html#">callbacks</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="callbacks.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.hooks.html">HookCallback</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.fp16.html">MixedPrecision</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.one_cycle.html">OneCycleScheduler</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.lr_finder.html">LRFinder</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.mixup.html">MixUpCallback</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.rnn.html">RNNTrainer</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="callbacks.general_sched.html">GeneralScheduler</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="tabular.transform.html#">Applications</a>
+      <ul>
+          
+          
+          
+          <li><a href="applications.html">Overview</a></li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="tabular.transform.html#">vision</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="vision.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.learner.html">vision.learner</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.transform.html">vision.transform</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.image.html">vision.image</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.data.html">vision.data</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.models.html">vision.model overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="vision.models.unet.html">vision.models.unet</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="tabular.transform.html#">text</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="text.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.learner.html">text.learner</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.transform.html">text.transform</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.data.html">text.data</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="text.models.html">text.models</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          <li class="subfolders">
+              <a href="tabular.transform.html#">tabular</a>
+              <ul>
+                  
+                  
+                  
+                  <li><a href="tabular.html">Overview</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="tabular.transform.html">tabular.transform</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="tabular.data.html">tabular.data</a></li>
+                  
+                  
+                  
+                  
+                  
+                  <li><a href="tabular.models.html">tabular.models</a></li>
+                  
+                  
+                  
+              </ul>
+          </li>
+          
+          
+          
+          
+          
+          
+          <li><a href="collab.html">collab</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="tabular.transform.html#">Core</a>
+      <ul>
+          
+          
+          
+          <li><a href="overview.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="basic_data.html">basic_data</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="layers.html">layers</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="datasets.html">datasets</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="core.html">core</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="torch_core.html">torch_core</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="tabular.transform.html#">Doc authoring</a>
+      <ul>
+          
+          
+          
+          <li><a href="gen_doc.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="gen_doc.gen_notebooks.html">gen_doc.gen_notebooks</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="gen_doc.nbdoc.html">gen_doc.nbdoc</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="gen_doc.convert2html.html">gen_doc.convert2html</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="tabular.transform.html#">Library development</a>
+      <ul>
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/develop" target="_blank">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/test" target="_blank">Testing</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/style" target="_blank">Style guide</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/abbr" target="_blank">Abbreviation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="fastai_typing.html">Typing</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="https://docs-dev.fast.ai/release" target="_blank">Packaging fastai</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+      
+      <!-- if you aren't using the accordion, uncomment this block:
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+         -->
+</ul>
+
+<!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");</script>
+
+            </div>
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content">
+            <div class="post-header">
+    <a id="tabular.transform"></a>
+    <h1 class="post-title-main">tabular.transform</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+    <div class="summary">Transforms to clean and preprocess tabular data</div>
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    
+
+   <div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Tabular-data-preprocessing">Tabular data preprocessing<a class="anchor-link" href="tabular.transform.html#Tabular-data-preprocessing">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Overview">Overview<a class="anchor-link" href="tabular.transform.html#Overview">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This package contains the basic class to define a transformation for preprocessing dataframes of tabular data, as well as basic <a href="tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>. Preprocessing includes things like</p>
+<ul>
+<li>replacing non-numerical variables by categories, then their ids,</li>
+<li>filling missing values,</li>
+<li>normalizing continuous variables.</li>
+</ul>
+<p>In all those steps we have to be careful to use the correspondance we decide on our training set (which id we give to each category, what is the value we put for missing data, or how the mean/std we use to normalize) on our validation or test set. To deal with this, we use a speciall class called <a href="tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>.</p>
+<p>The data used in this document page is a subset of the <a href="https://archive.ics.uci.edu/ml/datasets/adult">adult dataset</a>. It gives a certain amount of data on individuals to train a model to predict wether their salary is greater than \$50k or not.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_adult</span><span class="p">()</span>
+<span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:</span><span class="mi">800</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">df</span><span class="p">[</span><span class="mi">800</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>workclass</th>
+      <th>fnlwgt</th>
+      <th>education</th>
+      <th>education-num</th>
+      <th>marital-status</th>
+      <th>occupation</th>
+      <th>relationship</th>
+      <th>race</th>
+      <th>sex</th>
+      <th>capital-gain</th>
+      <th>capital-loss</th>
+      <th>hours-per-week</th>
+      <th>native-country</th>
+      <th>&gt;=50k</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>49</td>
+      <td>Private</td>
+      <td>101320</td>
+      <td>Assoc-acdm</td>
+      <td>12.0</td>
+      <td>Married-civ-spouse</td>
+      <td>NaN</td>
+      <td>Wife</td>
+      <td>White</td>
+      <td>Female</td>
+      <td>0</td>
+      <td>1902</td>
+      <td>40</td>
+      <td>United-States</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>44</td>
+      <td>Private</td>
+      <td>236746</td>
+      <td>Masters</td>
+      <td>14.0</td>
+      <td>Divorced</td>
+      <td>Exec-managerial</td>
+      <td>Not-in-family</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>10520</td>
+      <td>0</td>
+      <td>45</td>
+      <td>United-States</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>38</td>
+      <td>Private</td>
+      <td>96185</td>
+      <td>HS-grad</td>
+      <td>NaN</td>
+      <td>Divorced</td>
+      <td>NaN</td>
+      <td>Unmarried</td>
+      <td>Black</td>
+      <td>Female</td>
+      <td>0</td>
+      <td>0</td>
+      <td>32</td>
+      <td>United-States</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>38</td>
+      <td>Self-emp-inc</td>
+      <td>112847</td>
+      <td>Prof-school</td>
+      <td>15.0</td>
+      <td>Married-civ-spouse</td>
+      <td>Prof-specialty</td>
+      <td>Husband</td>
+      <td>Asian-Pac-Islander</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>United-States</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>42</td>
+      <td>Self-emp-not-inc</td>
+      <td>82297</td>
+      <td>7th-8th</td>
+      <td>NaN</td>
+      <td>Married-civ-spouse</td>
+      <td>Other-service</td>
+      <td>Wife</td>
+      <td>Black</td>
+      <td>Female</td>
+      <td>0</td>
+      <td>0</td>
+      <td>50</td>
+      <td>United-States</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We see it contains numerical variables (like <code>age</code> or <code>education-num</code>) as well as categorical ones (like <code>workclass</code> or <code>relationship</code>). The original dataset is clean, but we removed a few values to give examples of dealing with missing variables.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cat_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">,</span> <span class="s1">&#39;education&#39;</span><span class="p">,</span> <span class="s1">&#39;marital-status&#39;</span><span class="p">,</span> <span class="s1">&#39;occupation&#39;</span><span class="p">,</span> <span class="s1">&#39;relationship&#39;</span><span class="p">,</span> <span class="s1">&#39;race&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;native-country&#39;</span><span class="p">]</span>
+<span class="n">cont_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;fnlwgt&#39;</span><span class="p">,</span> <span class="s1">&#39;education-num&#39;</span><span class="p">,</span> <span class="s1">&#39;capital-gain&#39;</span><span class="p">,</span> <span class="s1">&#39;capital-loss&#39;</span><span class="p">,</span> <span class="s1">&#39;hours-per-week&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Transforms-for-tabular-data">Transforms for tabular data<a class="anchor-link" href="tabular.transform.html#Transforms-for-tabular-data">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=TabularTransform></a><code>class</code> <code>TabularTransform</code></h2>
+<blockquote><p><code>TabularTransform</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L7">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Base class for creating transforms for dataframes with categorical variables <code>cat_names</code> and continuous variables <code>cont_names</code>. Note that any column not in one of those lists won't be touched.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=__call__></a><code>__call__</code></h4>
+<blockquote><p><code>__call__</code>(<code>df</code>:<code>DataFrame</code>, <code>test</code>:<code>bool</code>=<code>False</code>)</p>
+</blockquote>
+<p>Apply the correct function to <code>df</code> depending on <code>test</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L12">[source]</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This simply calls <code>apply_test</code> if <code>test</code> or <code>apply_train</code> otherwise. Those functions apply the changes in place.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=apply_train></a><code>apply_train</code></h4>
+<blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L27">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Must be implemented by an inherited class with the desired transformation logic.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=apply_test></a><code>apply_test</code></h4>
+<blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L33">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If not implemented by an inherited class, defaults to calling <code>apply_train</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The following <a href="tabular.transform.html#TabularTransform"><code>TabularTransform</code></a> are implemented in the fastai library. Note that the replacement from categories to codes as well as the normalization of continuous variables are automatically done in a <a href="tabular.data.html#TabularDataset"><code>TabularDataset</code></a>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=Categorify></a><code>class</code> <code>Categorify</code></h2>
+<blockquote><p><code>Categorify</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>) :: <a href="tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L24">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Changes the categorical variables in <code>cat_names</code> in categories. Variables in <code>cont_names</code> aren't affected.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=apply_train></a><code>apply_train</code></h4>
+<blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L27">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Transforms the variable in the <code>cat_names</code> columns in categories. The category codes are the unique values in these columns.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=apply_test></a><code>apply_test</code></h4>
+<blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L33">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Transforms the variable in the <code>cat_names</code> columns in categories. The category codes are the ones used for the training set, new categories are replaced by NaN.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfm</span> <span class="o">=</span> <span class="n">Categorify</span><span class="p">(</span><span class="n">cat_names</span><span class="p">,</span> <span class="n">cont_names</span><span class="p">)</span>
+<span class="n">tfm</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+<span class="n">tfm</span><span class="p">(</span><span class="n">valid_df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Since we haven't changed the categories by their codes, nothing visible has changed in the dataframe yet, but we can check that the variables are now categorical and view their corresponding codes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Index([&#39; ?&#39;, &#39; Federal-gov&#39;, &#39; Local-gov&#39;, &#39; Private&#39;, &#39; Self-emp-inc&#39;,
+       &#39; Self-emp-not-inc&#39;, &#39; State-gov&#39;, &#39; Without-pay&#39;],
+      dtype=&#39;object&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The test set will be given the same category codes as the training set.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">valid_df</span><span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Index([&#39; ?&#39;, &#39; Federal-gov&#39;, &#39; Local-gov&#39;, &#39; Private&#39;, &#39; Self-emp-inc&#39;,
+       &#39; Self-emp-not-inc&#39;, &#39; State-gov&#39;, &#39; Without-pay&#39;],
+      dtype=&#39;object&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2><a id=FillMissing></a><code>class</code> <code>FillMissing</code></h2>
+<blockquote><p><code>FillMissing</code>(<code>cat_names</code>:<code>StrList</code>, <code>cont_names</code>:<code>StrList</code>, <code>fill_strategy</code>:<a href="tabular.transform.html#FillStrategy"><code>FillStrategy</code></a>=<code>&lt;FillStrategy.MEDIAN: 1&gt;</code>, <code>add_col</code>:<code>bool</code>=<code>True</code>, <code>fill_val</code>:<code>float</code>=<code>0.0</code>) :: <a href="tabular.transform.html#TabularTransform"><code>TabularTransform</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L40">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Transform that fills the missing values in <code>cont_names</code>. <code>cat_names</code> variables are left untouched (their missing value will be raplced by code 0 in the <a href="tabular.data.html#TabularDataset"><code>TabularDataset</code></a>). <code>fill_strategy</code> is adopted to replace those nans and if <code>add_col</code> is True, whenever a column <code>c</code> has missing values, a column named <code>c_nan</code> is added and flags the line where the value was missing. The <code>fill_strategy</code> can be:</p>
+<ul>
+<li><a href="tabular.transform.html#MEDIAN"><code>FillStrategy.MEDIAN</code></a>: nans are replaced by the median value of the column,</li>
+<li><a href="tabular.transform.html#COMMON"><code>FillStrategy.COMMON</code></a>: nans are replaced by the most common value of the column,</li>
+<li><a href="tabular.transform.html#CONSTANT"><code>FillStrategy.CONSTANT</code></a>: nans are replaced by <code>fill_val</code>.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=apply_train></a><code>apply_train</code></h4>
+<blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L46">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Fills the missing values in the <code>cont_names</code> columns.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4><a id=apply_test></a><code>apply_test</code></h4>
+<blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L59">[source]</a></p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Fills the missing values in the <code>cont_names</code> columns with the ones picked during train.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">[</span><span class="n">cont_names</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education-num</th>
+      <th>capital-gain</th>
+      <th>capital-loss</th>
+      <th>hours-per-week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>49</td>
+      <td>101320</td>
+      <td>12.0</td>
+      <td>0</td>
+      <td>1902</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>44</td>
+      <td>236746</td>
+      <td>14.0</td>
+      <td>10520</td>
+      <td>0</td>
+      <td>45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>38</td>
+      <td>96185</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>38</td>
+      <td>112847</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>42</td>
+      <td>82297</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfm</span> <span class="o">=</span> <span class="n">FillMissing</span><span class="p">(</span><span class="n">cat_names</span><span class="p">,</span> <span class="n">cont_names</span><span class="p">)</span>
+<span class="n">tfm</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+<span class="n">tfm</span><span class="p">(</span><span class="n">valid_df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">train_df</span><span class="p">[</span><span class="n">cont_names</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education-num</th>
+      <th>capital-gain</th>
+      <th>capital-loss</th>
+      <th>hours-per-week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>49</td>
+      <td>101320</td>
+      <td>12.0</td>
+      <td>0</td>
+      <td>1902</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>44</td>
+      <td>236746</td>
+      <td>14.0</td>
+      <td>10520</td>
+      <td>0</td>
+      <td>45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>38</td>
+      <td>96185</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>38</td>
+      <td>112847</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>42</td>
+      <td>82297</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Values issing in the <code>education-num</code> column are replaced by 10, which is the median of the column in <code>train_df</code>. Categorical variables are not changed, since <code>nan</code> is simply used as another category.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">valid_df</span><span class="p">[</span><span class="n">cont_names</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education-num</th>
+      <th>capital-gain</th>
+      <th>capital-loss</th>
+      <th>hours-per-week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>800</th>
+      <td>45</td>
+      <td>96975</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>801</th>
+      <td>46</td>
+      <td>192779</td>
+      <td>10.0</td>
+      <td>15024</td>
+      <td>0</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>802</th>
+      <td>36</td>
+      <td>376455</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>803</th>
+      <td>25</td>
+      <td>50053</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>45</td>
+    </tr>
+    <tr>
+      <th>804</th>
+      <td>37</td>
+      <td>164526</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+ 
+
+
+
+    <div class="tags">
+        
+    </div>
+
+
+
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+               <p><img src="images/company_logo.png" alt="Company logo"/></p>
+               &copy;2018 fast.ai. All rights reserved. <br />
+ Site last generated: Oct 22, 2018 <br />
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+
+<!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-89522379-3','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+
+</html>
