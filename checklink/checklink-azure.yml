@@ -24,6 +24,15 @@ jobs:
     displayName: 'link checker for docs-dev.fast.ai'
     continueOnError: true
 
+    # let this script continue on error since we want to run them all
+  - script: |
+      echo "Testing course-v3"
+      cd checklink/
+      ./checklink-course-v3.sh
+      ./run-checker.sh course-v3
+    displayName: 'link checker for course-v3.fast.ai'
+    continueOnError: true
+
     # let this last script not continue on error so that the final status will be failed if it fails
   - script: |
       echo "Testing docs"
