@@ -20,7 +20,7 @@ sleep_secs=2
 echo "Checking ${set}.fast.ai"
 echo "Logging into $log"
 echo "This will take a few minutes. The process will be silent unless problems are encountered"
-./fastai-checklink --depth 50 --quiet --broken -e --sleep "$sleep_secs" --timeout 60 --connection-cache 3 --exclude github.com --exclude test.pypi.org --exclude ycombinator.com --exclude anaconda.org --exclude google.com --cookies cookies.txt "https://$set.fast.ai" | tee "$log"
+./fastai-checklink --depth 50 --quiet --broken -e --sleep "$sleep_secs" --timeout 60 --connection-cache 3 --exclude github.com --exclude test.pypi.org --exclude ycombinator.com --exclude anaconda.org --exclude google.com --cookies cookies.txt "http://$set.fast.ai" | tee "$log"
 
 # the script will give no output if all is good, so let's give a clear indication of success
 if [[ ! -s $log ]]; then echo "No broken links were found"; fi
