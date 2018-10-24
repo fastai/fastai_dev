@@ -24,6 +24,9 @@
 use strict;
 use 5.008;
 
+# debug
+# use Devel::Confess;
+
 # Get rid of potentially unsafe and unneeded environment variables.
 delete(@ENV{qw(IFS CDPATH ENV BASH_ENV)});
 $ENV{PATH} = undef;
@@ -124,7 +127,7 @@ sub simple_request
     $response ||= do {
         local $SIG{__WARN__} =
             sub {    # Suppress some warnings, rt.cpan.org #18902
-            warn($_[0]) if ($_[0] && $_[0] !~ /^RobotRules/);
+            #warn($_[0]) if ($_[0] && $_[0] !~ /^RobotRules/);
             };
 
         # @@@ Why not just $self->SUPER::simple_request?
@@ -2746,6 +2749,7 @@ on how to solve this</a>.';
                 # What to do
                 # fastai: remove noise
                 # wrap(' To do: ', '        ', $whattodo)
+                ''
             );
             if ($#fragments >= 0) {
                 if ($currloc->{code} == 200) {
