@@ -37,6 +37,7 @@ You can add `--html` inside those scripts if you prefer to have the html output 
 Only for `docs.fast.ai` we can do a much faster local system check, since we already have them in the final html form under `./docs` (other sites are based on `.md` files)
 
 ```
+cd checklink
 ./checklink-docs-local.sh
 ```
 
