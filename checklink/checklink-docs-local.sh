@@ -10,13 +10,14 @@
 cur=`pwd`
 base=`dirname "$cur"`
 log="checklink-docs-local.log"
+site="docs/_site/"
 
-echo "Checking fastai_docs/docs/ against $base"
+echo "Checking fastai_docs/$site against $base"
 echo "Logging into $log"
 echo "This will take a few minutes. The process will be silent unless problems are encountered"
 
 # have to hack the urls using a modified masquerade feature to support full regex in the argument.
-./fastai-checklink --depth 50 --quiet --broken -e --timeout 60 --connection-cache 3 --exclude "github.com|test.pypi.org|ycombinator.com|anaconda.org|google.com|microsoft.com" --masquerade "file:///(?=[^/]+.html) file://$base/docs/" ../docs/ | tee "$log"
+./fastai-checklink --depth 50 --quiet --broken -e --timeout 60 --connection-cache 3 --exclude "github.com|test.pypi.org|ycombinator.com|anaconda.org|google.com|microsoft.com" --masquerade "file:///(?=[^/]+.html) file://$base/$site" ../$site | tee "$log"
 
 # the script will give no output if all is good, so let's give a clear indication of success
 if [[ ! -s $log ]]; then echo "No broken links were found"; fi

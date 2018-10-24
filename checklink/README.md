@@ -35,7 +35,8 @@ You can add `--html` inside those scripts if you prefer to have the html output 
 ## Checking the site locally:
 
 
-XXX: for faster local check need to test against local jekyll-powered site. Checking directly against the filesystem misses a lot of issues.
+XXX: for faster local check need to test against local jekyll-powered site. Checking directly against the filesystem misses a lot of issues.  
+To run jekyll locally: http://docs.fast.ai/gen_doc.html#Testing-site-locally  
 
 Only for `docs.fast.ai` we can do a much faster local system check, since we already have them in the final html form under `./docs` (other sites are based on `.md` files)
 
@@ -63,6 +64,13 @@ or via CPAN shell:
 apt install cpanplus
 perl -MCPAN -e shell
 install install W3C::LinkChecker
+```
+
+OSX Install:
+```
+sudo cpan install CPAN  
+sudo cpan Mozilla::CA  
+sudo perl -MCPAN -e 'install W3C::LinkChecker'
 ```
 
 and now you can invoke `./checklink`.
