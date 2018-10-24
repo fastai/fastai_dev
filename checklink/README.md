@@ -34,6 +34,9 @@ You can add `--html` inside those scripts if you prefer to have the html output 
 
 ## Checking the site locally:
 
+
+XXX: for faster local check need to test against local jekyll-powered site. Checking directly against the filesystem misses a lot of issues.
+
 Only for `docs.fast.ai` we can do a much faster local system check, since we already have them in the final html form under `./docs` (other sites are based on `.md` files)
 
 ```
