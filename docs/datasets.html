@@ -36,7 +36,7 @@ sidebar: home_sidebar
 <div class="output_markdown rendered_html output_subarea ">
 <h2><a id=URLs></a><code>class</code> <code>URLs</code></h2>
 <blockquote><p><code>URLs</code>()
-<a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L9">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L7">[source]</a></p>
 </blockquote>
 
 </div>
@@ -49,7 +49,8 @@ sidebar: home_sidebar
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This contains all the datasets' URLs, and some classmethods to help use them - you don't create objects of this class. The supported datasets are (with their calling name): <code>S3_NLP</code>, <code>S3_COCO</code>, <code>MNIST_SAMPLE</code>, <code>MNIST_TINY</code>, <code>IMDB_SAMPLE</code>, <code>ADULT_SAMPLE</code>, <code>ML_SAMPLE</code>, <code>PLANET_SAMPLE</code>, <code>CIFAR</code>, <code>PETS</code>, <code>MNIST</code>. To get details on the datasets you can see the <a href="http://course.fast.ai/datasets">fast.ai datasets webpage</a>. Datasets with SAMPLE in their name are subsets of the original datasets. In the case of MNIST, we also have a TINY dataset which is even smaller than MNIST_SAMPLE.</p>
+<p>This contains all the datasets' and models' URLs, and some classmethods to help use them - you don't create objects of this class. The supported datasets are (with their calling name): <code>S3_NLP</code>, <code>S3_COCO</code>, <code>MNIST_SAMPLE</code>, <code>MNIST_TINY</code>, <code>IMDB_SAMPLE</code>, <code>ADULT_SAMPLE</code>, <code>ML_SAMPLE</code>, <code>PLANET_SAMPLE</code>, <code>CIFAR</code>, <code>PETS</code>, <code>MNIST</code>. To get details on the datasets you can see the <a href="http://course.fast.ai/datasets">fast.ai datasets webpage</a>. Datasets with SAMPLE in their name are subsets of the original datasets. In the case of MNIST, we also have a TINY dataset which is even smaller than MNIST_SAMPLE.</p>
+<p>Models is now limited to <code>WT103</code> but you can expect more in the future!</p>
 
 </div>
 </div>
@@ -85,212 +86,6 @@ sidebar: home_sidebar
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Convenience-functions">Convenience functions<a class="anchor-link" href="#Convenience-functions">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The fastai library also has a few functions that allow us to directly download the most popular datasets, and return an object to access them:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_mnist></a><code>get_mnist</code></h4>
-<blockquote><p><code>get_mnist</code>()
-<a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L34">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mnist_data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">()</span>
-<span class="n">mnist_data</span><span class="o">.</span><span class="n">train_ds</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>ImageClassificationDataset of len 12396</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">get_imdb</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_imdb></a><code>get_imdb</code></h4>
-<blockquote><p><code>get_imdb</code>(<code>classifier</code>=<code>False</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L39">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">get_movie_lens</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_movie_lens></a><code>get_movie_lens</code></h4>
-<blockquote><p><code>get_movie_lens</code>()
-<a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L45">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">get_adult</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=get_adult></a><code>get_adult</code></h4>
-<blockquote><p><code>get_adult</code>()
-<a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L29">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Other-functions">Other functions<a class="anchor-link" href="#Other-functions">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4><a id=download_wt103_model></a><code>download_wt103_model</code></h4>
-<blockquote><p><code>download_wt103_model</code>()
-<a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L50">[source]</a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Downloads a pre-trained ULMFiT model.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Downloading-Data">Downloading Data<a class="anchor-link" href="#Downloading-Data">&#182;</a></h2>
 </div>
 </div>
@@ -314,9 +109,9 @@ Configure the default <code>data_path</code> by editing <code>~/.fastai/config.y
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=untar_data></a><code>untar_data</code></h4>
-<blockquote><p><code>untar_data</code>(<code>url</code>:<code>str</code>, <code>fname</code>:<code>PathOrStr</code>=<code>None</code>, <code>dest</code>:<code>PathOrStr</code>=<code>None</code>)</p>
+<blockquote><p><code>untar_data</code>(<code>url</code>:<code>str</code>, <code>fname</code>:<code>PathOrStr</code>=<code>None</code>, <code>dest</code>:<code>PathOrStr</code>=<code>None</code>, <code>data</code>=<code>True</code>)</p>
 </blockquote>
-<p>Download <code>url</code> if doesn't exist to <code>fname</code> and un-tgz to folder <code>dest</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L106">[source]</a></p>
+<p>Download <code>url</code> if doesn't exist to <code>fname</code> and un-tgz to folder <code>dest</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L83">[source]</a></p>
 
 </div>
 
@@ -367,7 +162,7 @@ Configure the default <code>data_path</code> by editing <code>~/.fastai/config.y
 <h4><a id=download_data></a><code>download_data</code></h4>
 <blockquote><p><code>download_data</code>(<code>url</code>:<code>str</code>, <code>fname</code>:<code>PathOrStr</code>=<code>None</code>)</p>
 </blockquote>
-<p>Download <code>url</code> to destination <code>fname</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L97">[source]</a></p>
+<p>Download <code>url</code> to destination <code>fname</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L74">[source]</a></p>
 
 </div>
 
@@ -426,7 +221,7 @@ Configure the default <code>data_path</code> by editing <code>~/.fastai/config.y
 <h4><a id=datapath4file></a><code>datapath4file</code></h4>
 <blockquote><p><code>datapath4file</code>(<code>filename</code>)</p>
 </blockquote>
-<p>Returns URLs.DATA path if file exists. Otherwise returns config path  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L91">[source]</a></p>
+<p>Returns URLs.DATA path if file exists. Otherwise returns config path  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L68">[source]</a></p>
 
 </div>
 
@@ -457,7 +252,7 @@ Configure the default <code>data_path</code> by editing <code>~/.fastai/config.y
 <h2><a id=Config></a><code>class</code> <code>Config</code></h2>
 <blockquote><p><code>Config</code>()</p>
 </blockquote>
-<p>Creates a default config file at <code>~/.fastai/config.yml</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L59">[source]</a></p>
+<p>Creates a default config file at <code>~/.fastai/config.yml</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/datasets.py#L29">[source]</a></p>
 
 </div>
 

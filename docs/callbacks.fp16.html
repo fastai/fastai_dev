@@ -72,7 +72,8 @@ summary: "Training in mixed precision implementation"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">MNIST_SAMPLE</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span><span class="o">.</span><span class="n">to_fp16</span><span class="p">()</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -90,7 +91,7 @@ summary: "Training in mixed precision implementation"
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:02
 epoch  train loss  valid loss  accuracy
-0      0.163455    0.139621    0.949460  (00:02)
+1      0.172265    0.146274    0.947498  (00:02)
 
 </pre>
 </div>
@@ -148,7 +149,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_backward_begin></a><code>on_backward_begin</code></h4>
+<h4><a id=MixedPrecision.on_backward_begin></a><code>on_backward_begin</code></h4>
 <blockquote><p><code>on_backward_begin</code>(<code>last_loss</code>:<code>Rank0Tensor</code>, <code>kwargs</code>:<code>Any</code>) → <code>Rank0Tensor</code></p>
 </blockquote>
 <p>Scale gradients up by <code>loss_scale</code> to prevent underflow.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L90">[source]</a></p>
@@ -170,7 +171,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_backward_end></a><code>on_backward_end</code></h4>
+<h4><a id=MixedPrecision.on_backward_end></a><code>on_backward_end</code></h4>
 <blockquote><p><code>on_backward_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Convert the gradients back to FP32 and divide them by the scale.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L95">[source]</a></p>
@@ -192,7 +193,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_loss_begin></a><code>on_loss_begin</code></h4>
+<h4><a id=MixedPrecision.on_loss_begin></a><code>on_loss_begin</code></h4>
 <blockquote><p><code>on_loss_begin</code>(<code>last_output</code>:<code>Tensor</code>, <code>kwargs</code>:<code>Any</code>) → <code>Tensor</code></p>
 </blockquote>
 <p>Convert half precision output to FP32 to avoid reduction overflow.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L86">[source]</a></p>
@@ -214,7 +215,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_step_end></a><code>on_step_end</code></h4>
+<h4><a id=MixedPrecision.on_step_end></a><code>on_step_end</code></h4>
 <blockquote><p><code>on_step_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Update the params from master to model and zero grad.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L101">[source]</a></p>
@@ -236,7 +237,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
+<h4><a id=MixedPrecision.on_train_begin></a><code>on_train_begin</code></h4>
 <blockquote><p><code>on_train_begin</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Ensure everything is in half precision mode.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L63">[source]</a></p>
@@ -258,7 +259,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_train_end></a><code>on_train_end</code></h4>
+<h4><a id=MixedPrecision.on_train_end></a><code>on_train_end</code></h4>
 <blockquote><p><code>on_train_end</code>(<code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 <p>Remove half precision transforms added at <code>on_train_begin</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/fp16.py#L80">[source]</a></p>

@@ -43,7 +43,8 @@ summary: "Transforms to clean and preprocess tabular data"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_adult</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">ADULT_SAMPLE</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;adult.csv&#39;</span><span class="p">)</span>
 <span class="n">train_df</span><span class="p">,</span> <span class="n">valid_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:</span><span class="mi">800</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">df</span><span class="p">[</span><span class="mi">800</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
@@ -261,7 +262,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=__call__></a><code>__call__</code></h4>
+<h4><a id=TabularTransform.__call__></a><code>__call__</code></h4>
 <blockquote><p><code>__call__</code>(<code>df</code>:<code>DataFrame</code>, <code>test</code>:<code>bool</code>=<code>False</code>)</p>
 </blockquote>
 <p>Apply the correct function to <code>df</code> depending on <code>test</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L12">[source]</a></p>
@@ -290,7 +291,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_train></a><code>apply_train</code></h4>
+<h4><a id=Categorify.apply_train></a><code>apply_train</code></h4>
 <blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L27">[source]</a></p>
 </blockquote>
@@ -319,7 +320,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_test></a><code>apply_test</code></h4>
+<h4><a id=Categorify.apply_test></a><code>apply_test</code></h4>
 <blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L33">[source]</a></p>
 </blockquote>
@@ -384,7 +385,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_train></a><code>apply_train</code></h4>
+<h4><a id=Categorify.apply_train></a><code>apply_train</code></h4>
 <blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L27">[source]</a></p>
 </blockquote>
@@ -413,7 +414,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_test></a><code>apply_test</code></h4>
+<h4><a id=Categorify.apply_test></a><code>apply_test</code></h4>
 <blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L33">[source]</a></p>
 </blockquote>
@@ -567,7 +568,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_train></a><code>apply_train</code></h4>
+<h4><a id=FillMissing.apply_train></a><code>apply_train</code></h4>
 <blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L46">[source]</a></p>
 </blockquote>
@@ -596,7 +597,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_test></a><code>apply_test</code></h4>
+<h4><a id=FillMissing.apply_test></a><code>apply_test</code></h4>
 <blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)
 <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L59">[source]</a></p>
 </blockquote>

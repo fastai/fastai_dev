@@ -56,7 +56,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=ifnone></a><code>ifnone</code></h4>
 <blockquote><p><code>ifnone</code>(<code>a</code>:<code>Any</code>, <code>b</code>:<code>Any</code>) → <code>Any</code></p>
 </blockquote>
-<p><code>a</code> if <code>a</code> is not None, otherwise <code>b</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L54">[source]</a></p>
+<p><code>a</code> if <code>a</code> is not None, otherwise <code>b</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L55">[source]</a></p>
 
 </div>
 
@@ -142,7 +142,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=arrays_split></a><code>arrays_split</code></h4>
 <blockquote><p><code>arrays_split</code>(<code>mask</code>:<code>ndarray</code>, <code>arrs</code>:<code>NPArrayableList</code>) → <code>SplitArrayList</code></p>
 </blockquote>
-<p>Given <code>arrs</code> is [a,b,...] and <code>mask</code>index - return[(a[mask],a[~mask]),(b[mask],b[~mask]),...].  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L68">[source]</a></p>
+<p>Given <code>arrs</code> is [a,b,...] and <code>mask</code>index - return[(a[mask],a[~mask]),(b[mask],b[~mask]),...].  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L69">[source]</a></p>
 
 </div>
 
@@ -164,7 +164,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=extract_kwargs></a><code>extract_kwargs</code></h4>
 <blockquote><p><code>extract_kwargs</code>(<code>names</code>:<code>StrList</code>, <code>kwargs</code>:<code>KWArgs</code>)</p>
 </blockquote>
-<p>Extracs the keys in <code>names</code> from the <code>kwargs</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L99">[source]</a></p>
+<p>Extracs the keys in <code>names</code> from the <code>kwargs</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L100">[source]</a></p>
 
 </div>
 
@@ -185,7 +185,7 @@ summary: "Basic helper functions for the fastai library"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_chunk_length></a><code>get_chunk_length</code></h4>
 <blockquote><p><code>get_chunk_length</code>(<code>data</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>DataFrame</code>, <code>TextFileReader</code>], <code>chunksize</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) → <code>int</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L116">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L117">[source]</a></p>
 </blockquote>
 
 </div>
@@ -214,7 +214,7 @@ summary: "Basic helper functions for the fastai library"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=get_total_length></a><code>get_total_length</code></h4>
 <blockquote><p><code>get_total_length</code>(<code>csv_name</code>:<code>PathOrStr</code>, <code>chunksize</code>:<code>int</code>) → <code>int</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L126">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L127">[source]</a></p>
 </blockquote>
 
 </div>
@@ -243,7 +243,7 @@ summary: "Basic helper functions for the fastai library"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=idx_dict></a><code>idx_dict</code></h4>
 <blockquote><p><code>idx_dict</code>(<code>a</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L59">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L60">[source]</a></p>
 </blockquote>
 
 </div>
@@ -302,7 +302,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=listify></a><code>listify</code></h4>
 <blockquote><p><code>listify</code>(<code>p</code>:<code>OptListOrItem</code>=<code>None</code>, <code>q</code>:<code>OptListOrItem</code>=<code>None</code>)</p>
 </blockquote>
-<p>Make <code>p</code> same length as <code>q</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L78">[source]</a></p>
+<p>Make <code>p</code> same length as <code>q</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L79">[source]</a></p>
 
 </div>
 
@@ -324,7 +324,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=random_split></a><code>random_split</code></h4>
 <blockquote><p><code>random_split</code>(<code>valid_pct</code>:<code>float</code>, <code>arrs</code>:<code>NPArrayableList</code>) → <code>SplitArrayList</code></p>
 </blockquote>
-<p>Randomly split <code>arrs</code> with <code>valid_pct</code> ratio. good for creating validation set.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L73">[source]</a></p>
+<p>Randomly split <code>arrs</code> with <code>valid_pct</code> ratio. good for creating validation set.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L74">[source]</a></p>
 
 </div>
 
@@ -346,7 +346,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=series2cat></a><code>series2cat</code></h4>
 <blockquote><p><code>series2cat</code>(<code>df</code>:<code>DataFrame</code>, <code>col_names</code>)</p>
 </blockquote>
-<p>Categorifies the columns <code>col_names</code> in <code>df</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L140">[source]</a></p>
+<p>Categorifies the columns <code>col_names</code> in <code>df</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L141">[source]</a></p>
 
 </div>
 
@@ -367,7 +367,7 @@ summary: "Basic helper functions for the fastai library"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=uniqueify></a><code>uniqueify</code></h4>
 <blockquote><p><code>uniqueify</code>(<code>x</code>:<code>Series</code>) → <code>List</code>[<code>Any</code>]
-<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L58">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L59">[source]</a></p>
 </blockquote>
 
 </div>
@@ -403,7 +403,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=download_url></a><code>download_url</code></h4>
 <blockquote><p><code>download_url</code>(<code>url</code>:<code>str</code>, <code>dest</code>:<code>str</code>, <code>overwrite</code>:<code>bool</code>=<code>False</code>)</p>
 </blockquote>
-<p>Download <code>url</code> to <code>dest</code> unless is exists and not <code>overwrite</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L153">[source]</a></p>
+<p>Download <code>url</code> to <code>dest</code> unless is exists and not <code>overwrite</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L154">[source]</a></p>
 
 </div>
 
@@ -425,7 +425,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=find_classes></a><code>find_classes</code></h4>
 <blockquote><p><code>find_classes</code>(<code>folder</code>:<code>Path</code>) → <code>FilePathList</code></p>
 </blockquote>
-<p>List of label subdirectories in imagenet-style <code>folder</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L61">[source]</a></p>
+<p>List of label subdirectories in imagenet-style <code>folder</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L62">[source]</a></p>
 
 </div>
 
@@ -447,7 +447,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=maybe_copy></a><code>maybe_copy</code></h4>
 <blockquote><p><code>maybe_copy</code>(<code>old_fnames</code>:<code>Collection</code>[<code>PathOrStr</code>], <code>new_fnames</code>:<code>Collection</code>[<code>PathOrStr</code>])</p>
 </blockquote>
-<p>Copy the <code>old_fnames</code> to <code>new_fnames</code> location if <code>new_fnames</code> don't exist or are less recent.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L133">[source]</a></p>
+<p>Copy the <code>old_fnames</code> to <code>new_fnames</code> location if <code>new_fnames</code> don't exist or are less recent.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L134">[source]</a></p>
 
 </div>
 
@@ -475,7 +475,7 @@ summary: "Basic helper functions for the fastai library"
 <h3><a id=ItemBase></a><code>class</code> <code>ItemBase</code></h3>
 <blockquote><p><code>ItemBase</code>()</p>
 </blockquote>
-<p>All transformable dataset items use this type.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L144">[source]</a></p>
+<p>All transformable dataset items use this type.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L145">[source]</a></p>
 
 </div>
 
@@ -496,7 +496,7 @@ summary: "Basic helper functions for the fastai library"
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=camel2snake></a><code>camel2snake</code></h4>
 <blockquote><p><code>camel2snake</code>(<code>name</code>:<code>str</code>) → <code>str</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L89">[source]</a></p>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L90">[source]</a></p>
 </blockquote>
 
 </div>
@@ -555,7 +555,7 @@ summary: "Basic helper functions for the fastai library"
 <h4><a id=even_mults></a><code>even_mults</code></h4>
 <blockquote><p><code>even_mults</code>(<code>start</code>:<code>float</code>, <code>stop</code>:<code>float</code>, <code>n</code>:<code>int</code>) → <code>ndarray</code></p>
 </blockquote>
-<p>Build evenly stepped schedule from <code>start</code> to <code>stop</code> in <code>n</code> steps.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L93">[source]</a></p>
+<p>Build evenly stepped schedule from <code>start</code> to <code>stop</code> in <code>n</code> steps.  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L94">[source]</a></p>
 
 </div>
 
@@ -626,9 +626,9 @@ summary: "Basic helper functions for the fastai library"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=partition></a><code>partition</code></h4>
-<blockquote><p><code>partition</code>(<code>a</code>:<code>Collection</code>, <code>sz</code>:<code>int</code>) → <code>List</code>[<code>Collection</code>]</p>
+<blockquote><p><code>partition</code>(<code>a</code>:<code>Collection</code>[<code>T_co</code>], <code>sz</code>:<code>int</code>) → <code>List</code>[<code>Collection</code>[<code>T_co</code>]]</p>
 </blockquote>
-<p>Split iterables <code>a</code> in equal parts of size <code>sz</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L108">[source]</a></p>
+<p>Split iterables <code>a</code> in equal parts of size <code>sz</code>  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L109">[source]</a></p>
 
 </div>
 
@@ -648,9 +648,9 @@ summary: "Basic helper functions for the fastai library"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4><a id=partition_by_cores></a><code>partition_by_cores</code></h4>
-<blockquote><p><code>partition_by_cores</code>(<code>a</code>:<code>Collection</code>, <code>n_cpus</code>:<code>int</code>) → <code>List</code>[<code>Collection</code>]</p>
+<blockquote><p><code>partition_by_cores</code>(<code>a</code>:<code>Collection</code>[<code>T_co</code>], <code>n_cpus</code>:<code>int</code>) → <code>List</code>[<code>Collection</code>[<code>T_co</code>]]</p>
 </blockquote>
-<p>Split data in <code>a</code> equally among <code>n_cpus</code> cores  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L112">[source]</a></p>
+<p>Split data in <code>a</code> equally among <code>n_cpus</code> cores  <a href="https://github.com/fastai/fastai/blob/master/fastai/core.py#L113">[source]</a></p>
 
 </div>
 

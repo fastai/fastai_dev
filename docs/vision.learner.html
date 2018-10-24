@@ -85,7 +85,8 @@ summary: "`Learner` support for computer vision"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">MNIST_SAMPLE</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -250,7 +251,7 @@ epoch  train loss  valid loss  accuracy
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">get_mnist</span><span class="p">(),</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">)</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">preds</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">get_preds</span><span class="p">()</span>
 <span class="n">interp</span> <span class="o">=</span> <span class="n">ClassificationInterpretation</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">loss_class</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">)</span>
@@ -287,7 +288,7 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=plot_top_losses></a><code>plot_top_losses</code></h4>
+<h4><a id=ClassificationInterpretation.plot_top_losses></a><code>plot_top_losses</code></h4>
 <blockquote><p><code>plot_top_losses</code>(<code>k</code>, <code>largest</code>=<code>True</code>, <code>figsize</code>=<code>(12, 12)</code>)</p>
 </blockquote>
 <p>Show images in <code>top_losses</code> along with their loss, label, and prediction.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L82">[source]</a></p>
@@ -347,7 +348,7 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=top_losses></a><code>top_losses</code></h4>
+<h4><a id=ClassificationInterpretation.top_losses></a><code>top_losses</code></h4>
 <blockquote><p><code>top_losses</code>(<code>k</code>, <code>largest</code>=<code>True</code>)</p>
 </blockquote>
 <p><code>k</code> largest(/smallest) losses.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L78">[source]</a></p>
@@ -396,7 +397,7 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=plot_confusion_matrix></a><code>plot_confusion_matrix</code></h4>
+<h4><a id=ClassificationInterpretation.plot_confusion_matrix></a><code>plot_confusion_matrix</code></h4>
 <blockquote><p><code>plot_confusion_matrix</code>(<code>normalize</code>:<code>bool</code>=<code>False</code>, <code>title</code>:<code>str</code>=<code>'Confusion matrix'</code>, <code>cmap</code>:<code>Any</code>=<code>'Blues'</code>, <code>kwargs</code>)</p>
 </blockquote>
 <p>Plot the confusion matrix, passing <code>kawrgs</code> to <code>plt.figure</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L99">[source]</a></p>
@@ -449,7 +450,7 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=confusion_matrix></a><code>confusion_matrix</code></h4>
+<h4><a id=ClassificationInterpretation.confusion_matrix></a><code>confusion_matrix</code></h4>
 <blockquote><p><code>confusion_matrix</code>()</p>
 </blockquote>
 <p>Confusion matrix as an <code>np.ndarray</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L93">[source]</a></p>
