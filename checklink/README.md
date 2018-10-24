@@ -34,11 +34,15 @@ You can add `--html` inside those scripts if you prefer to have the html output 
 
 ## Checking the site locally:
 
-XXX: After we make the real filenames and the links consistent (i.e. either both using .html or both not) we can then do a much faster test on the local system:
+Only for `docs.fast.ai` we can do a much faster local system check, since we already have them in the final html form under `./docs` (other sites are based on `.md` files)
 
 ```
-fastai-checklink --masquerade "/ https://docs.fast.ai/" docs
+./checklink-docs-local.sh
 ```
+
+It will not check js menus and other js-generated things, so you should still do online checking.
+
+
 
 ## More on Prerequisites
 

@@ -1227,16 +1227,30 @@ EOF
         my $link_uri = URI->new($link);
         my $abs_link_uri = URI->new_abs($link_uri, $base);
 
+        # fastai: had to hack this to support user given regex,
+        # otherwise it's impossible to get the local files with
+        # href="/foo.html" working - so regex is not escaped. this
+        # would be unsafe for unsanitized input - so don't use this
+        # version for anything else.
+        # now I can do:
+        # --masquerade "file:///(?=[^/]+.html) file://$base/docs/" ../docs/
+        # and it works.
+        #
+        #print "[$Opts{Masquerade_From}] [$Opts{Masquerade_To}]\n";
+        #print("bef: $abs_link_uri\n") unless $abs_link_uri =~ /^data:image/;
         if ($Opts{Masquerade}) {
-            if ($abs_link_uri =~ m|^\Q$Opts{Masquerade_From}\E|) {
-                print_doc_header();
-                printf("processing %s in base %s\n",
-                    $abs_link_uri, $Opts{Masquerade_To});
+            #if ($abs_link_uri =~ m|^\Q$Opts{Masquerade_From}\E|) {
+            if ($abs_link_uri =~ m|^$Opts{Masquerade_From}|) {
+                #print_doc_header();
+                #printf("processing %s in base %s\n",
+                #    $abs_link_uri, $Opts{Masquerade_To});
                 my $nlink = $abs_link_uri;
-                $nlink =~ s|^\Q$Opts{Masquerade_From}\E|$Opts{Masquerade_To}|;
+                #$nlink =~ s|^\Q$Opts{Masquerade_From}\E|$Opts{Masquerade_To}|;
+                $nlink =~ s|^$Opts{Masquerade_From}|$Opts{Masquerade_To}|;
                 $abs_link_uri = URI->new($nlink);
             }
         }
+        #print("aft: $abs_link_uri\n\n") unless $abs_link_uri =~ /^data:image/;
 
         my $canon_uri = URI->new($abs_link_uri->canonical());
         my $fragment  = $canon_uri->fragment(undef);
