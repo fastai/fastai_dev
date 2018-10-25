@@ -116,6 +116,4 @@ res_s = """
 #
 """+res_s
 
-open('../../docs/_data/sidebars/home_sidebar.yml', 'w').write(res_s)
-
-
+open('docs/_data/sidebars/home_sidebar.yml', 'w').write(res_s)

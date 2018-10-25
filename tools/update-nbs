@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+# update all notebooks
+# tools/update-nbs
+#
+# update specific notebooks
+# tools/update-nbs docs_src/one.ipynb docs_src/one.ipynb
+
+import argparse, os
+from pathlib import Path
+from fastai.gen_doc.gen_notebooks import *
+
+parser = argparse.ArgumentParser(description="update notebooks")
+parser.add_argument('files', nargs='*', help='nbs to update')
+args = parser.parse_args()
+
+# make sure we are under the root of the project
+cur_dir = Path(".").resolve().name
+if (cur_dir == "tools"): os.chdir("..")
+
+if not args.files:
+    update_notebooks('docs_src')
+
+for filename in args.files:
+    update_notebooks(filename)
