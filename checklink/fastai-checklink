@@ -456,8 +456,16 @@ my $doc_header;
 my $ua = W3C::UserAgent->new($AGENT);    # @@@ TODO: admin address
 
 $ua->conn_cache({total_capacity => $Opts{Connection_Cache_Size}});
+
 if ($ua->can('delay')) {
-    $ua->delay($Opts{Sleep_Time} / 60);
+    # fastai: local filesystem - no need to throttle
+    if ($Opts{Masquerade_From} && $Opts{Masquerade_From} =~ /^file/) {
+        #print "Local fs detected - Hammering at full speed";
+        $ua->delay(0);
+    }
+    else {
+        $ua->delay($Opts{Sleep_Time} / 60);
+    }
 }
 $ua->timeout($Opts{Timeout});
 
