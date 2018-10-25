@@ -12,7 +12,12 @@ base=`dirname "$cur"`
 log="checklink-docs-local.log"
 site="docs/_site/"
 
-echo "Checking fastai_docs/$site against $base"
+echo -e "\n\n*** Updating docs/_site/"
+cd ../docs
+bundle exec jekyll build
+cd -
+
+echo -e "\n\n\n*** Checking docs.fast.ai against local fs at $base/$site"
 echo "Logging into $log"
 echo "This will take a few minutes. The process will be silent unless problems are encountered"
 

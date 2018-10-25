@@ -4,23 +4,56 @@ This is https://github.com/w3c/link-checker with some custom tweaks.
 
 ## Prerequisites
 
+Install:
+
 ```
 sudo apt install w3c-linkchecker
 ```
 
-## Usage
+See "More on Prerequisites" below for other ways to install this prerequisite if the above doesn't work.
+
+To run this link checker again a local checkout, you also need to install `jekyll`:
+
+1. Install `ruby-bundler`
+
+   ```
+   sudo apt install ruby-bundler
+   ```
+2. Install jekyll
+
+   When running this one it will ask for your user's password (basically running a sudo operation).
+
+   ```
+   bundle install jekyll
+   ```
+
+## Checking the site locally
+
+This currently only works for `docs.fast.ai`. For the other `fast.ai` sites use the slower online checking tool.
+
+This is an order of magnitude faster check, since the tool doesn't need to throttle itself not to get blocked by the webserver. The script creates the complete website under `docs/_site/` and the linkchecker checks against that.
+
+Usage:
+```
+cd checklink
+./checklink-docs-local.sh
+```
+
+## Checking the online sites
 
 Note, that if you have just committed changes to git, wait a few minutes for github pages to sync, otherwise you'll be testing an outdated live site.
 
-Test docs*.fast.ai for broken links and anchors:
+Check `(docs*|course-v3).fast.ai` for broken links and anchors:
 
 ```
 cd checklink
 ./checklink-docs.sh
 ./checklink-docs-dev.sh
+./checklink-course-v3.sh
 ```
 
-Each file logs to console and also into `checklink-docs.log` and `checklink-docs-dev.log`
+Each file logs to console and also into `checklink-docs.log`,
+`checklink-docs-dev.log` and `checklink-course-v3.log`
 
 If you're on windows w/o bash and assuming you have [perl installed](https://learn.perl.org/installing/windows.html), you can run it directly like:
 
@@ -32,20 +65,6 @@ The script is set to sleep for 2 secs between each request, so not to get blocke
 
 You can add `--html` inside those scripts if you prefer to have the html output (in which case change the scripts to `|tee checklink-docs-log.html` or similar, since it dumps the output to stdout.
 
-## Checking the site locally:
-
-
-XXX: for faster local check need to test against local jekyll-powered site. Checking directly against the filesystem misses a lot of issues.  
-To run jekyll locally: http://docs.fast.ai/gen_doc.html#Testing-site-locally  
-
-Only for `docs.fast.ai` we can do a much faster local system check, since we already have them in the final html form under `./docs` (other sites are based on `.md` files)
-
-```
-cd checklink
-./checklink-docs-local.sh
-```
-
-It will not check js menus and other js-generated things, so you should still do online checking.
 
 
 
@@ -61,19 +80,18 @@ sudo cpanm W3C::LinkChecker
 or via CPAN shell:
 
 ```
-apt install cpanplus
+sudo apt install cpanplus
 perl -MCPAN -e shell
 install install W3C::LinkChecker
 ```
 
 OSX Install:
 ```
-sudo cpan install CPAN  
-sudo cpan Mozilla::CA  
+sudo cpan install CPAN
+sudo cpan Mozilla::CA
 sudo perl -MCPAN -e 'install W3C::LinkChecker'
 ```
 
-and now you can invoke `./checklink`.
 
 
 ## Portable sript
