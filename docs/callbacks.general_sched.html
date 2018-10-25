@@ -34,9 +34,7 @@ summary: "Implementation of a flexible training API"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2><a id=TrainingPhase></a><code>class</code> <code>TrainingPhase</code></h2>
-<blockquote><p><code>TrainingPhase</code>(<code>length</code>:<code>int</code>, <code>lrs</code>:<code>Floats</code>, <code>moms</code>:<code>Floats</code>, <code>lr_anneal</code>:<code>AnnealFunc</code>=<code>None</code>, <code>mom_anneal</code>:<code>AnnealFunc</code>=<code>None</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L8">[source]</a></p>
+<h2 id="TrainingPhase"><code>class</code> <code>TrainingPhase</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L8" class="source_link">[source]</a></h2><blockquote><p><code>TrainingPhase</code>(<code>length</code>:<code>int</code>, <code>lrs</code>:<code>Floats</code>, <code>moms</code>:<code>Floats</code>, <code>lr_anneal</code>:<code>AnnealFunc</code>=<code>None</code>, <code>mom_anneal</code>:<code>AnnealFunc</code>=<code>None</code>)</p>
 </blockquote>
 
 </div>
@@ -63,10 +61,9 @@ summary: "Implementation of a flexible training API"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2><a id=GeneralScheduler></a><code>class</code> <code>GeneralScheduler</code></h2>
-<blockquote><p><code>GeneralScheduler</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>phases</code>:<code>Collection</code>[<a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a>]) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
+<h2 id="GeneralScheduler"><code>class</code> <code>GeneralScheduler</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L21" class="source_link">[source]</a></h2><blockquote><p><code>GeneralScheduler</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>phases</code>:<code>Collection</code>[<a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a>]) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
 </blockquote>
-<p>Schedule multiple <a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a> for a <a href="/basic_train.html#Learner"><code>Learner</code></a>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L21">[source]</a></p>
+<p>Schedule multiple <a href="/callbacks.general_sched.html#TrainingPhase"><code>TrainingPhase</code></a> for a <a href="/basic_train.html#Learner"><code>Learner</code></a>.</p>
 
 </div>
 
@@ -85,9 +82,7 @@ summary: "Implementation of a flexible training API"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=GeneralScheduler.on_batch_end></a><code>on_batch_end</code></h4>
-<blockquote><p><code>on_batch_end</code>(<code>train</code>, <code>kwargs</code>:<code>Any</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L34">[source]</a></p>
+<h4 id="GeneralScheduler.on_batch_end"><code>on_batch_end</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L34" class="source_link">[source]</a></h4><blockquote><p><code>on_batch_end</code>(<code>train</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 
 </div>
@@ -114,9 +109,7 @@ summary: "Implementation of a flexible training API"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=GeneralScheduler.on_train_begin></a><code>on_train_begin</code></h4>
-<blockquote><p><code>on_train_begin</code>(<code>n_epochs</code>:<code>int</code>, <code>kwargs</code>:<code>Any</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L26">[source]</a></p>
+<h4 id="GeneralScheduler.on_train_begin"><code>on_train_begin</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/general_sched.py#L26" class="source_link">[source]</a></h4><blockquote><p><code>on_train_begin</code>(<code>n_epochs</code>:<code>int</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 
 </div>
@@ -157,7 +150,7 @@ summary: "Implementation of a flexible training API"
     <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">total_epochs</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -173,7 +166,7 @@ summary: "Implementation of a flexible training API"
 <span class="n">fit_sgd_warm</span><span class="p">(</span><span class="n">learn</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -209,7 +202,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">plot_lr</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 

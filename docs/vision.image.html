@@ -40,7 +40,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <span class="n">img</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -78,7 +78,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -121,7 +121,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axs</span><span class="p">):</span> <span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">f</span><span class="s1">&#39;Copy {i+1}&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -159,7 +159,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -202,10 +202,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=Image></a><code>class</code> <code>Image</code></h3>
-<blockquote><p><code>Image</code>(<code>px</code>:<code>Tensor</code>) :: <a href="/core.html#ItemBase"><code>ItemBase</code></a></p>
+<h3 id="Image"><code>class</code> <code>Image</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L80" class="source_link">[source]</a></h3><blockquote><p><code>Image</code>(<code>px</code>:<code>Tensor</code>) :: <a href="/core.html#ItemBase"><code>ItemBase</code></a></p>
 </blockquote>
-<p>Support applying transforms to image data in <code>px</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L80">[source]</a></p>
+<p>Support applying transforms to image data in <code>px</code>.</p>
 
 </div>
 
@@ -231,10 +230,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=open_image></a><code>open_image</code></h4>
-<blockquote><p><code>open_image</code>(<code>fn</code>:<code>PathOrStr</code>) → <a href="/vision.image.html#Image"><code>Image</code></a></p>
+<h4 id="open_image"><code>open_image</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L353" class="source_link">[source]</a></h4><blockquote><p><code>open_image</code>(<code>fn</code>:<code>PathOrStr</code>) → <a href="/vision.image.html#Image"><code>Image</code></a></p>
 </blockquote>
-<p>Return <a href="/vision.image.html#Image"><code>Image</code></a> object created from image in file <code>fn</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L353">[source]</a></p>
+<p>Return <a href="/vision.image.html#Image"><code>Image</code></a> object created from image in file <code>fn</code>.</p>
 
 </div>
 
@@ -253,7 +251,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <span class="n">img</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -292,8 +290,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=Image.show></a><code>Image.show</code></h4>
-<blockquote><p><code>Image.show</code>(<code>ax</code>:<code>Axes</code>=<code>None</code>, <code>figsize</code>:<code>tuple</code>=<code>(3, 3)</code>, <code>title</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>hide_axis</code>:<code>bool</code>=<code>True</code>, <code>cmap</code>:<code>str</code>=<code>'viridis'</code>, <code>y</code>:<code>Image</code>=<code>None</code>, <code>kwargs</code>)</p>
+<h4 id="Image.show"><code>Image.show</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L199" class="source_link">[source]</a></h4><blockquote><p><code>Image.show</code>(<code>ax</code>:<code>Axes</code>=<code>None</code>, <code>figsize</code>:<code>tuple</code>=<code>(3, 3)</code>, <code>title</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>hide_axis</code>:<code>bool</code>=<code>True</code>, <code>cmap</code>:<code>str</code>=<code>'viridis'</code>, <code>y</code>:<code>Image</code>=<code>None</code>, <code>kwargs</code>)</p>
 </blockquote>
 <ul>
 <li><em>ax</em>: matplotlib.pyplot axes on which show the image</li>
@@ -301,7 +298,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <li><em>title</em>: Title to display on top of the graph</li>
 <li><em>hide_axis</em>: If True, the axis of the graph are hidden</li>
 <li><em>cmap</em>: Color map to use</li>
-<li><em>y</em>: Potential target to be superposed on the same graph (mask, bounding box, points) <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L199">[source]</a></li>
+<li><em>y</em>: Potential target to be superposed on the same graph (mask, bounding box, points) </li>
 </ul>
 
 </div>
@@ -327,7 +324,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Little kitten&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -358,7 +355,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Big kitten&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -401,7 +398,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -462,10 +459,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=ImageSegment></a><code>class</code> <code>ImageSegment</code></h3>
-<blockquote><p><code>ImageSegment</code>(<code>px</code>:<code>Tensor</code>) :: <a href="/vision.image.html#Image"><code>Image</code></a></p>
+<h3 id="ImageSegment"><code>class</code> <code>ImageSegment</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L205" class="source_link">[source]</a></h3><blockquote><p><code>ImageSegment</code>(<code>px</code>:<code>Tensor</code>) :: <a href="/vision.image.html#Image"><code>Image</code></a></p>
 </blockquote>
-<p>Support applying transforms to segmentation masks data in <code>px</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L205">[source]</a></p>
+<p>Support applying transforms to segmentation masks data in <code>px</code>.</p>
 
 </div>
 
@@ -491,10 +487,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=open_mask></a><code>open_mask</code></h4>
-<blockquote><p><code>open_mask</code>(<code>fn</code>:<code>PathOrStr</code>, <code>div</code>=<code>False</code>, <code>convert_mode</code>=<code>'L'</code>) → <a href="/vision.image.html#ImageSegment"><code>ImageSegment</code></a></p>
+<h4 id="open_mask"><code>open_mask</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L358" class="source_link">[source]</a></h4><blockquote><p><code>open_mask</code>(<code>fn</code>:<code>PathOrStr</code>, <code>div</code>=<code>False</code>, <code>convert_mode</code>=<code>'L'</code>) → <a href="/vision.image.html#ImageSegment"><code>ImageSegment</code></a></p>
 </blockquote>
-<p>Return <code>ImageMask</code> object create from mask in file <code>fn</code>. If <code>div</code>, divides pixel values by 255.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L358">[source]</a></p>
+<p>Return <code>ImageMask</code> object create from mask in file <code>fn</code>. If <code>div</code>, divides pixel values by 255.</p>
 
 </div>
 
@@ -512,7 +507,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">open_mask</span><span class="p">(</span><span class="s1">&#39;imgs/mask_example.png&#39;</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -555,7 +550,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <span class="n">mask</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;mask only&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -594,9 +589,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=ImagePoints></a><code>class</code> <code>ImagePoints</code></h3>
-<blockquote><p><code>ImagePoints</code>(<code>flow</code>:<a href="/vision.image.html#FlowField"><code>FlowField</code></a>, <code>scale</code>:<code>bool</code>=<code>True</code>, <code>y_first</code>:<code>bool</code>=<code>True</code>) :: <a href="/vision.image.html#Image"><code>Image</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L223">[source]</a></p>
+<h3 id="ImagePoints"><code>class</code> <code>ImagePoints</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L223" class="source_link">[source]</a></h3><blockquote><p><code>ImagePoints</code>(<code>flow</code>:<a href="/vision.image.html#FlowField"><code>FlowField</code></a>, <code>scale</code>:<code>bool</code>=<code>True</code>, <code>y_first</code>:<code>bool</code>=<code>True</code>) :: <a href="/vision.image.html#Image"><code>Image</code></a></p>
 </blockquote>
 
 </div>
@@ -625,7 +618,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">pnts</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -663,7 +656,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pnts</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -709,9 +702,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=ImageBBox></a><code>class</code> <code>ImageBBox</code></h3>
-<blockquote><p><code>ImageBBox</code>(<code>flow</code>:<a href="/vision.image.html#FlowField"><code>FlowField</code></a>, <code>scale</code>:<code>bool</code>=<code>True</code>, <code>y_first</code>:<code>bool</code>=<code>True</code>, <code>labels</code>:<code>LongTensor</code>=<code>None</code>, <code>pad_idx</code>:<code>int</code>=<code>0</code>) :: <a href="/vision.image.html#ImagePoints"><code>ImagePoints</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L307">[source]</a></p>
+<h3 id="ImageBBox"><code>class</code> <code>ImageBBox</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L307" class="source_link">[source]</a></h3><blockquote><p><code>ImageBBox</code>(<code>flow</code>:<a href="/vision.image.html#FlowField"><code>FlowField</code></a>, <code>scale</code>:<code>bool</code>=<code>True</code>, <code>y_first</code>:<code>bool</code>=<code>True</code>, <code>labels</code>:<code>LongTensor</code>=<code>None</code>, <code>pad_idx</code>:<code>int</code>=<code>0</code>) :: <a href="/vision.image.html#ImagePoints"><code>ImagePoints</code></a></p>
 </blockquote>
 
 </div>
@@ -745,8 +736,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=ImageBBox.create></a><code>create</code></h4>
-<blockquote><p><code>create</code>(<code>bboxes</code>:<code>Collection</code>[<code>Collection</code>[<code>int</code>]], <code>h</code>:<code>int</code>, <code>w</code>:<code>int</code>, <code>labels</code>:<code>LongTensor</code>=<code>None</code>, <code>pad_idx</code>:<code>int</code>=<code>0</code>) → <code>ImageBBox</code></p>
+<h4 id="ImageBBox.create"><code>create</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L319" class="source_link">[source]</a></h4><blockquote><p><code>create</code>(<code>bboxes</code>:<code>Collection</code>[<code>Collection</code>[<code>int</code>]], <code>h</code>:<code>int</code>, <code>w</code>:<code>int</code>, <code>labels</code>:<code>LongTensor</code>=<code>None</code>, <code>pad_idx</code>:<code>int</code>=<code>0</code>) → <code>ImageBBox</code></p>
 </blockquote>
 <p>Create an ImageBBox object from <code>bboxes</code>.</p>
 <ul>
@@ -754,7 +744,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <li><em>h</em>: height of the input image</li>
 <li><em>w</em>: width of the input image</li>
 <li><em>labels</em>: labels of the images</li>
-<li><em>pad_idx</em>: padding index that will be used to group the ImageBBox in a batch <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L319">[source]</a></li>
+<li><em>pad_idx</em>: padding index that will be used to group the ImageBBox in a batch </li>
 </ul>
 
 </div>
@@ -782,7 +772,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bbox</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -822,7 +812,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;car&#39;</span><span class="p">],</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -861,10 +851,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=show_image></a><code>show_image</code></h4>
-<blockquote><p><code>show_image</code>(<code>img</code>:<a href="/vision.image.html#Image"><code>Image</code></a>, <code>ax</code>:<code>Axes</code>=<code>None</code>, <code>figsize</code>:<code>tuple</code>=<code>(3, 3)</code>, <code>hide_axis</code>:<code>bool</code>=<code>True</code>, <code>cmap</code>:<code>str</code>=<code>'binary'</code>, <code>alpha</code>:<code>float</code>=<code>None</code>) → <code>Axes</code></p>
+<h4 id="show_image"><code>show_image</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L365" class="source_link">[source]</a></h4><blockquote><p><code>show_image</code>(<code>img</code>:<a href="/vision.image.html#Image"><code>Image</code></a>, <code>ax</code>:<code>Axes</code>=<code>None</code>, <code>figsize</code>:<code>tuple</code>=<code>(3, 3)</code>, <code>hide_axis</code>:<code>bool</code>=<code>True</code>, <code>cmap</code>:<code>str</code>=<code>'binary'</code>, <code>alpha</code>:<code>float</code>=<code>None</code>) → <code>Axes</code></p>
 </blockquote>
-<p>Display <a href="/vision.image.html#Image"><code>Image</code></a> in notebook  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L365">[source]</a></p>
+<p>Display <a href="/vision.image.html#Image"><code>Image</code></a> in notebook</p>
 
 </div>
 
@@ -883,10 +872,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=pil2tensor></a><code>pil2tensor</code></h4>
-<blockquote><p><code>pil2tensor</code>(<code>image</code>:<code>ndarray</code>) → <code>Tensor</code></p>
+<h4 id="pil2tensor"><code>pil2tensor</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L39" class="source_link">[source]</a></h4><blockquote><p><code>pil2tensor</code>(<code>image</code>:<code>ndarray</code>) → <code>Tensor</code></p>
 </blockquote>
-<p>Convert PIL style <code>image</code> array to torch style image tensor.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L39">[source]</a></p>
+<p>Convert PIL style <code>image</code> array to torch style image tensor.</p>
 
 </div>
 
@@ -905,10 +893,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=image2np></a><code>image2np</code></h4>
-<blockquote><p><code>image2np</code>(<code>image</code>:<code>Tensor</code>) → <code>ndarray</code></p>
+<h4 id="image2np"><code>image2np</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L45" class="source_link">[source]</a></h4><blockquote><p><code>image2np</code>(<code>image</code>:<code>Tensor</code>) → <code>ndarray</code></p>
 </blockquote>
-<p>Convert from torch style <code>image</code> to numpy/matplotlib style.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L45">[source]</a></p>
+<p>Convert from torch style <code>image</code> to numpy/matplotlib style.</p>
 
 </div>
 
@@ -927,10 +914,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=scale_flow></a><code>scale_flow</code></h4>
-<blockquote><p><code>scale_flow</code>(<code>flow</code>, <code>to_unit</code>=<code>True</code>)</p>
+<h4 id="scale_flow"><code>scale_flow</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L373" class="source_link">[source]</a></h4><blockquote><p><code>scale_flow</code>(<code>flow</code>, <code>to_unit</code>=<code>True</code>)</p>
 </blockquote>
-<p>Scale the coords in <code>flow</code> to -1/1 or the image size depending on <code>to_unit</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L373">[source]</a></p>
+<p>Scale the coords in <code>flow</code> to -1/1 or the image size depending on <code>to_unit</code>.</p>
 
 </div>
 
@@ -949,10 +935,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=bb2hw></a><code>bb2hw</code></h4>
-<blockquote><p><code>bb2hw</code>(<code>a</code>:<code>Collection</code>[<code>int</code>]) → <code>ndarray</code></p>
+<h4 id="bb2hw"><code>bb2hw</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L50" class="source_link">[source]</a></h4><blockquote><p><code>bb2hw</code>(<code>a</code>:<code>Collection</code>[<code>int</code>]) → <code>ndarray</code></p>
 </blockquote>
-<p>Convert bounding box points from (width,height,center) to (height,width,top,left).  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L50">[source]</a></p>
+<p>Convert bounding box points from (width,height,center) to (height,width,top,left).</p>
 
 </div>
 
@@ -984,8 +969,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=apply_tfms></a><code>apply_tfms</code></h4>
-<blockquote><p><code>apply_tfms</code>(<code>tfms</code>:<code>Union</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>, <code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]], <code>x</code>:<code>Tensor</code>, <code>do_resolve</code>:<code>bool</code>=<code>True</code>, <code>xtra</code>:<code>Optional</code>[<code>Dict</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>, <code>dict</code>]]=<code>None</code>, <code>size</code>:<code>Union</code>[<code>int</code>, <code>TensorImageSize</code>, <code>NoneType</code>]=<code>None</code>, <code>mult</code>:<code>int</code>=<code>32</code>, <code>do_crop</code>:<code>bool</code>=<code>True</code>, <code>padding_mode</code>:<code>str</code>=<code>'reflection'</code>, <code>kwargs</code>:<code>Any</code>) → <code>Tensor</code></p>
+<h4 id="apply_tfms"><code>apply_tfms</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L534" class="source_link">[source]</a></h4><blockquote><p><code>apply_tfms</code>(<code>tfms</code>:<code>Union</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>, <code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]], <code>x</code>:<code>Tensor</code>, <code>do_resolve</code>:<code>bool</code>=<code>True</code>, <code>xtra</code>:<code>Optional</code>[<code>Dict</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>, <code>dict</code>]]=<code>None</code>, <code>size</code>:<code>Union</code>[<code>int</code>, <code>TensorImageSize</code>, <code>NoneType</code>]=<code>None</code>, <code>mult</code>:<code>int</code>=<code>32</code>, <code>do_crop</code>:<code>bool</code>=<code>True</code>, <code>padding_mode</code>:<code>str</code>=<code>'reflection'</code>, <code>kwargs</code>:<code>Any</code>) → <code>Tensor</code></p>
 </blockquote>
 <p>Apply all <code>tfms</code> to <code>x</code> - <code>do_resolve</code>: bind random args - <code>size</code>, <code>mult</code> used to crop/pad.</p>
 <ul>
@@ -996,7 +980,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <li><em>size</em>: desired target size</li>
 <li><em>mult</em>: makes sure the final size is a multiple of mult</li>
 <li><em>do_crop</em>: if True, crops the image to the final size, otherwise pads it using <code>padding_mode</code></li>
-<li><em>padding_mode</em>: how to pad the image ('zeros', 'border', 'reflection') <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L534">[source]</a></li>
+<li><em>padding_mode</em>: how to pad the image ('zeros', 'border', 'reflection') </li>
 </ul>
 
 </div>
@@ -1041,7 +1025,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
     <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">ImageBBox</span><span class="o">.</span><span class="n">create</span><span class="p">([[</span><span class="mi">96</span><span class="p">,</span> <span class="mi">155</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="mi">351</span><span class="p">]],</span> <span class="o">*</span><span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1065,7 +1049,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
     <span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1109,7 +1093,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
     <span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1147,7 +1131,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1189,7 +1173,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
     <span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">pnts</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1233,7 +1217,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
     <span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">bbox</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1278,10 +1262,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=rand_bool></a><code>rand_bool</code></h4>
-<blockquote><p><code>rand_bool</code>(<code>p</code>:<code>float</code>, <code>size</code>:<code>Optional</code>[<code>List</code>[<code>int</code>]]=<code>None</code>) → <code>BoolOrTensor</code></p>
+<h4 id="rand_bool"><code>rand_bool</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L31" class="source_link">[source]</a></h4><blockquote><p><code>rand_bool</code>(<code>p</code>:<code>float</code>, <code>size</code>:<code>Optional</code>[<code>List</code>[<code>int</code>]]=<code>None</code>) → <code>BoolOrTensor</code></p>
 </blockquote>
-<p>Draw 1 or shape=<code>size</code> random booleans (True occuring probability <code>p</code>).  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L31">[source]</a></p>
+<p>Draw 1 or shape=<code>size</code> random booleans (True occuring probability <code>p</code>).</p>
 
 </div>
 
@@ -1299,7 +1282,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">rand_bool</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1329,10 +1312,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=uniform></a><code>uniform</code></h4>
-<blockquote><p><code>uniform</code>(<code>low</code>:<code>Number</code>, <code>high</code>:<code>Number</code>=<code>None</code>, <code>size</code>:<code>Optional</code>[<code>List</code>[<code>int</code>]]=<code>None</code>) → <code>FloatOrTensor</code></p>
+<h4 id="uniform"><code>uniform</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L21" class="source_link">[source]</a></h4><blockquote><p><code>uniform</code>(<code>low</code>:<code>Number</code>, <code>high</code>:<code>Number</code>=<code>None</code>, <code>size</code>:<code>Optional</code>[<code>List</code>[<code>int</code>]]=<code>None</code>) → <code>FloatOrTensor</code></p>
 </blockquote>
-<p>Draw 1 or shape=<code>size</code> random floats from uniform dist: min=<code>low</code>, max=<code>high</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L21">[source]</a></p>
+<p>Draw 1 or shape=<code>size</code> random floats from uniform dist: min=<code>low</code>, max=<code>high</code>.</p>
 
 </div>
 
@@ -1350,7 +1332,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,(</span><span class="mi">8</span><span class="p">,))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1380,10 +1362,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=uniform_int></a><code>uniform_int</code></h4>
-<blockquote><p><code>uniform_int</code>(<code>low</code>:<code>int</code>, <code>high</code>:<code>int</code>, <code>size</code>:<code>Optional</code>[<code>List</code>[<code>int</code>]]=<code>None</code>) → <code>IntOrTensor</code></p>
+<h4 id="uniform_int"><code>uniform_int</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L35" class="source_link">[source]</a></h4><blockquote><p><code>uniform_int</code>(<code>low</code>:<code>int</code>, <code>high</code>:<code>int</code>, <code>size</code>:<code>Optional</code>[<code>List</code>[<code>int</code>]]=<code>None</code>) → <code>IntOrTensor</code></p>
 </blockquote>
-<p>Generate int or tensor <code>size</code> of ints between <code>low</code> and <code>high</code> (included).  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L35">[source]</a></p>
+<p>Generate int or tensor <code>size</code> of ints between <code>low</code> and <code>high</code> (included).</p>
 
 </div>
 
@@ -1401,7 +1382,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">uniform_int</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,(</span><span class="mi">8</span><span class="p">,))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1431,9 +1412,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=log_uniform></a><code>log_uniform</code></h4>
-<blockquote><p><code>log_uniform</code>(<code>low</code>, <code>high</code>, <code>size</code>:<code>Optional</code>[<code>List</code>[<code>int</code>]]=<code>None</code>) → <code>FloatOrTensor</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L26">[source]</a></p>
+<h4 id="log_uniform"><code>log_uniform</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L26" class="source_link">[source]</a></h4><blockquote><p><code>log_uniform</code>(<code>low</code>, <code>high</code>, <code>size</code>:<code>Optional</code>[<code>List</code>[<code>int</code>]]=<code>None</code>) → <code>FloatOrTensor</code></p>
 </blockquote>
 
 </div>
@@ -1459,7 +1438,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">log_uniform</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">2</span><span class="p">,(</span><span class="mi">8</span><span class="p">,))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -1584,10 +1563,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=Transform></a><code>class</code> <code>Transform</code></h3>
-<blockquote><p><code>Transform</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>)</p>
+<h3 id="Transform"><code>class</code> <code>Transform</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L385" class="source_link">[source]</a></h3><blockquote><p><code>Transform</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>)</p>
 </blockquote>
-<p>Create a <a href="/vision.image.html#Transform"><code>Transform</code></a> for <code>func</code> and assign it a priority <code>order</code>. <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L385">[source]</a></p>
+<p>Create a <a href="/vision.image.html#Transform"><code>Transform</code></a> for <code>func</code> and assign it a priority <code>order</code>.</p>
 
 </div>
 
@@ -1606,9 +1584,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=RandTransform></a><code>class</code> <code>RandTransform</code></h3>
-<blockquote><p><code>RandTransform</code>(<code>tfm</code>:<a href="/vision.image.html#Transform"><code>Transform</code></a>, <code>kwargs</code>:<code>dict</code>, <code>p</code>:<code>int</code>=<code>1.0</code>, <code>resolved</code>:<code>dict</code>=<code>&lt;factory&gt;</code>, <code>do_run</code>:<code>bool</code>=<code>True</code>, <code>is_random</code>:<code>bool</code>=<code>True</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L419">[source]</a></p>
+<h3 id="RandTransform"><code>class</code> <code>RandTransform</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L419" class="source_link">[source]</a></h3><blockquote><p><code>RandTransform</code>(<code>tfm</code>:<a href="/vision.image.html#Transform"><code>Transform</code></a>, <code>kwargs</code>:<code>dict</code>, <code>p</code>:<code>int</code>=<code>1.0</code>, <code>resolved</code>:<code>dict</code>=<code>&lt;factory&gt;</code>, <code>do_run</code>:<code>bool</code>=<code>True</code>, <code>is_random</code>:<code>bool</code>=<code>True</code>)</p>
 </blockquote>
 
 </div>
@@ -1635,10 +1611,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=RandTransform.resolve></a><code>resolve</code></h4>
-<blockquote><p><code>resolve</code>()</p>
+<h4 id="RandTransform.resolve"><code>resolve</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L429" class="source_link">[source]</a></h4><blockquote><p><code>resolve</code>()</p>
 </blockquote>
-<p>Binds any random variables in the transform.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L429">[source]</a></p>
+<p>Binds any random variables in the transform.</p>
 
 </div>
 
@@ -1664,9 +1639,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=TfmAffine></a><code>class</code> <code>TfmAffine</code></h3>
-<blockquote><p><code>TfmAffine</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#Transform"><code>Transform</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L501">[source]</a></p>
+<h3 id="TfmAffine"><code>class</code> <code>TfmAffine</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L501" class="source_link">[source]</a></h3><blockquote><p><code>TfmAffine</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 
 </div>
@@ -1693,9 +1666,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=TfmCoord></a><code>class</code> <code>TfmCoord</code></h3>
-<blockquote><p><code>TfmCoord</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#Transform"><code>Transform</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L507">[source]</a></p>
+<h3 id="TfmCoord"><code>class</code> <code>TfmCoord</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L507" class="source_link">[source]</a></h3><blockquote><p><code>TfmCoord</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 
 </div>
@@ -1722,9 +1693,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=TfmLighting></a><code>class</code> <code>TfmLighting</code></h3>
-<blockquote><p><code>TfmLighting</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#Transform"><code>Transform</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L513">[source]</a></p>
+<h3 id="TfmLighting"><code>class</code> <code>TfmLighting</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L513" class="source_link">[source]</a></h3><blockquote><p><code>TfmLighting</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 
 </div>
@@ -1751,9 +1720,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=TfmPixel></a><code>class</code> <code>TfmPixel</code></h3>
-<blockquote><p><code>TfmPixel</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#Transform"><code>Transform</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L504">[source]</a></p>
+<h3 id="TfmPixel"><code>class</code> <code>TfmPixel</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L504" class="source_link">[source]</a></h3><blockquote><p><code>TfmPixel</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 
 </div>
@@ -1780,9 +1747,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=TfmCrop></a><code>class</code> <code>TfmCrop</code></h3>
-<blockquote><p><code>TfmCrop</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#TfmPixel"><code>TfmPixel</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L510">[source]</a></p>
+<h3 id="TfmCrop"><code>class</code> <code>TfmCrop</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L510" class="source_link">[source]</a></h3><blockquote><p><code>TfmCrop</code>(<code>func</code>:<code>Callable</code>, <code>order</code>:<code>Optional</code>[<code>int</code>]=<code>None</code>) :: <a href="/vision.image.html#TfmPixel"><code>TfmPixel</code></a></p>
 </blockquote>
 
 </div>
@@ -1816,10 +1781,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=logit></a><code>logit</code></h4>
-<blockquote><p><code>logit</code>(<code>x</code>:<code>Tensor</code>) → <code>Tensor</code></p>
+<h4 id="logit"><code>logit</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L11" class="source_link">[source]</a></h4><blockquote><p><code>logit</code>(<code>x</code>:<code>Tensor</code>) → <code>Tensor</code></p>
 </blockquote>
-<p>Logit of <code>x</code>, clamped to avoid inf  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L11">[source]</a></p>
+<p>Logit of <code>x</code>, clamped to avoid inf</p>
 
 </div>
 
@@ -1845,10 +1809,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=logit_></a><code>logit_</code></h4>
-<blockquote><p><code>logit_</code>(<code>x</code>:<code>Tensor</code>) → <code>Tensor</code></p>
+<h4 id="logit_"><code>logit_</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L16" class="source_link">[source]</a></h4><blockquote><p><code>logit_</code>(<code>x</code>:<code>Tensor</code>) → <code>Tensor</code></p>
 </blockquote>
-<p>Inplace logit of <code>x</code>, clamped to avoid inf  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L16">[source]</a></p>
+<p>Inplace logit of <code>x</code>, clamped to avoid inf</p>
 
 </div>
 
@@ -1887,9 +1850,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=Image.affine></a><code>affine</code></h4>
-<blockquote><p><code>affine</code>(<code>func</code>:<code>AffineFunc</code>, <code>args</code>, <code>kwargs</code>) → <code>Image</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L164">[source]</a></p>
+<h4 id="Image.affine"><code>affine</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L164" class="source_link">[source]</a></h4><blockquote><p><code>affine</code>(<code>func</code>:<code>AffineFunc</code>, <code>args</code>, <code>kwargs</code>) → <code>Image</code></p>
 </blockquote>
 
 </div>
@@ -1916,10 +1877,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=Image.clone></a><code>clone</code></h4>
-<blockquote><p><code>clone</code>()</p>
+<h4 id="Image.clone"><code>clone</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L95" class="source_link">[source]</a></h4><blockquote><p><code>clone</code>()</p>
 </blockquote>
-<p>Mimic the behavior of torch.clone for <a href="/vision.image.html#Image"><code>Image</code></a> objects.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L95">[source]</a></p>
+<p>Mimic the behavior of torch.clone for <a href="/vision.image.html#Image"><code>Image</code></a> objects.</p>
 
 </div>
 
@@ -1938,9 +1898,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=Image.coord></a><code>coord</code></h4>
-<blockquote><p><code>coord</code>(<code>func</code>:<code>Callable</code>[<a href="/vision.image.html#FlowField"><code>FlowField</code></a>, <code>Classes</code>, <code>KWArgs</code>, <code>Tensor</code>], <code>args</code>, <code>kwargs</code>) → <code>Image</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L159">[source]</a></p>
+<h4 id="Image.coord"><code>coord</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L159" class="source_link">[source]</a></h4><blockquote><p><code>coord</code>(<code>func</code>:<code>Callable</code>[<a href="/vision.image.html#FlowField"><code>FlowField</code></a>, <code>Classes</code>, <code>KWArgs</code>, <code>Tensor</code>], <code>args</code>, <code>kwargs</code>) → <code>Image</code></p>
 </blockquote>
 
 </div>
@@ -1967,9 +1925,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=Image.lighting></a><code>lighting</code></h4>
-<blockquote><p><code>lighting</code>(<code>func</code>:<code>LightingFunc</code>, <code>args</code>:<code>Any</code>, <code>kwargs</code>:<code>Any</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L149">[source]</a></p>
+<h4 id="Image.lighting"><code>lighting</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L149" class="source_link">[source]</a></h4><blockquote><p><code>lighting</code>(<code>func</code>:<code>LightingFunc</code>, <code>args</code>:<code>Any</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 
 </div>
@@ -1996,9 +1952,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=Image.pixel></a><code>pixel</code></h4>
-<blockquote><p><code>pixel</code>(<code>func</code>:<code>LightingFunc</code>, <code>args</code>, <code>kwargs</code>) → <code>Image</code>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L154">[source]</a></p>
+<h4 id="Image.pixel"><code>pixel</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L154" class="source_link">[source]</a></h4><blockquote><p><code>pixel</code>(<code>func</code>:<code>LightingFunc</code>, <code>args</code>, <code>kwargs</code>) → <code>Image</code></p>
 </blockquote>
 
 </div>
@@ -2025,10 +1979,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=Image.refresh></a><code>refresh</code></h4>
-<blockquote><p><code>refresh</code>()</p>
+<h4 id="Image.refresh"><code>refresh</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L115" class="source_link">[source]</a></h4><blockquote><p><code>refresh</code>()</p>
 </blockquote>
-<p>Apply any logit, flow, or affine transfers that have been sent to the <a href="/vision.image.html#Image"><code>Image</code></a>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L115">[source]</a></p>
+<p>Apply any logit, flow, or affine transfers that have been sent to the <a href="/vision.image.html#Image"><code>Image</code></a>.</p>
 
 </div>
 
@@ -2047,10 +2000,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=Image.resize></a><code>resize</code></h4>
-<blockquote><p><code>resize</code>(<code>size</code>:<code>Union</code>[<code>int</code>, <code>TensorImageSize</code>]) → <code>Image</code></p>
+<h4 id="Image.resize"><code>resize</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L170" class="source_link">[source]</a></h4><blockquote><p><code>resize</code>(<code>size</code>:<code>Union</code>[<code>int</code>, <code>TensorImageSize</code>]) → <code>Image</code></p>
 </blockquote>
-<p>Resize the image to <code>size</code>, size can be a single int.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L170">[source]</a></p>
+<p>Resize the image to <code>size</code>, size can be a single int.</p>
 
 </div>
 
@@ -2069,9 +2021,7 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=show></a><code>show</code></h4>
-<blockquote><p><code>show</code>(<code>ax</code>:<code>Axes</code>=<code>None</code>, <code>figsize</code>:<code>tuple</code>=<code>(3, 3)</code>, <code>title</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>hide_axis</code>:<code>bool</code>=<code>True</code>, <code>cmap</code>:<code>str</code>=<code>'viridis'</code>, <code>y</code>:<code>Image</code>=<code>None</code>, <code>kwargs</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L199">[source]</a></p>
+<h4 id="show"><code>show</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L199" class="source_link">[source]</a></h4><blockquote><p><code>show</code>(<code>ax</code>:<code>Axes</code>=<code>None</code>, <code>figsize</code>:<code>tuple</code>=<code>(3, 3)</code>, <code>title</code>:<code>Optional</code>[<code>str</code>]=<code>None</code>, <code>hide_axis</code>:<code>bool</code>=<code>True</code>, <code>cmap</code>:<code>str</code>=<code>'viridis'</code>, <code>y</code>:<code>Image</code>=<code>None</code>, <code>kwargs</code>)</p>
 </blockquote>
 
 </div>
@@ -2098,10 +2048,9 @@ summary: "Image class, variants and internal data augmentation pipeline"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=FlowField></a><code>class</code> <code>FlowField</code></h3>
-<blockquote><p><code>FlowField</code>(<code>size</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>], <code>flow</code>:<code>Tensor</code>)</p>
+<h3 id="FlowField"><code>class</code> <code>FlowField</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L73" class="source_link">[source]</a></h3><blockquote><p><code>FlowField</code>(<code>size</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>], <code>flow</code>:<code>Tensor</code>)</p>
 </blockquote>
-<p>Wrap together some coords <code>flow</code> with a <code>size</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/image.py#L73">[source]</a></p>
+<p>Wrap together some coords <code>flow</code> with a <code>size</code>.</p>
 
 </div>
 
