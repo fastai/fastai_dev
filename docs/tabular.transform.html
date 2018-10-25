@@ -288,7 +288,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Categorify.apply_train"><code>apply_train</code><a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L27" class="source_link">[source]</a></h4><blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)</p>
+<h4 id="TabularTransform.apply_train"><code>apply_train</code><a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L17" class="source_link">[source]</a></h4><blockquote><p><code>apply_train</code>(<code>df</code>:<code>DataFrame</code>)</p>
 </blockquote>
 
 </div>
@@ -315,7 +315,7 @@ summary: "Transforms to clean and preprocess tabular data"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Categorify.apply_test"><code>apply_test</code><a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L33" class="source_link">[source]</a></h4><blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)</p>
+<h4 id="TabularTransform.apply_test"><code>apply_test</code><a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/transform.py#L20" class="source_link">[source]</a></h4><blockquote><p><code>apply_test</code>(<code>df</code>:<code>DataFrame</code>)</p>
 </blockquote>
 
 </div>
@@ -534,12 +534,7 @@ summary: "Transforms to clean and preprocess tabular data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Transform that fills the missing values in <code>cont_names</code>. <code>cat_names</code> variables are left untouched (their missing value will be raplced by code 0 in the <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>). <code>fill_strategy</code> is adopted to replace those nans and if <code>add_col</code> is True, whenever a column <code>c</code> has missing values, a column named <code>c_nan</code> is added and flags the line where the value was missing. The <code>fill_strategy</code> can be:</p>
-<ul>
-<li><a href="/tabular.transform.html#MEDIAN"><code>FillStrategy.MEDIAN</code></a>: nans are replaced by the median value of the column,</li>
-<li><a href="/tabular.transform.html#COMMON"><code>FillStrategy.COMMON</code></a>: nans are replaced by the most common value of the column,</li>
-<li><a href="/tabular.transform.html#CONSTANT"><code>FillStrategy.CONSTANT</code></a>: nans are replaced by <code>fill_val</code>.</li>
-</ul>
+<p>Transform that fills the missing values in <code>cont_names</code>. <code>cat_names</code> variables are left untouched (their missing value will be raplced by code 0 in the <a href="/tabular.data.html#TabularDataset"><code>TabularDataset</code></a>). <a href="#FillStrategy"><code>fill_strategy</code></a> is adopted to replace those nans and if <code>add_col</code> is True, whenever a column <code>c</code> has missing values, a column named <code>c_nan</code> is added and flags the line where the value was missing.</p>
 
 </div>
 </div>
@@ -906,6 +901,47 @@ summary: "Transforms to clean and preprocess tabular data"
   </tbody>
 </table>
 </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">reload_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="FillStrategy">FillStrategy</h2><blockquote><p><code>Enum</code> = [MEDIAN, COMMON, CONSTANT]</p>
+</blockquote>
+<p>Enum flag represents determines how <a href="/tabular.transform.html#FillMissing"><code>FillMissing</code></a> should handle missing/nan values</p>
+<ul>
+<li><em>MEDIAN</em>: nans are replaced by the median value of the column</li>
+<li><em>COMMON</em>: nans are replaced by the most common value of the column</li>
+<li><em>CONSTANT</em>: nans are replaced by <code>fill_val</code> </li>
+</ul>
+
 </div>
 
 </div>
