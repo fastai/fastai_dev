@@ -46,7 +46,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">MNIST_SAMPLE</span><span class="p">);</span> <span class="n">path</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -83,7 +83,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -95,7 +95,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <li>the transforms to apply to the images in <code>ds_tfms</code> (here with <code>do_flip</code>=False because we don't want to flip numbers),</li>
 <li>the target <code>size</code> of our pictures (here 24).</li>
 </ul>
-<p>As all <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, data then as a <code>train_dl</code> and a <code>valid_dl</code> that are <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>. If you want to have a look at a few images in a batch inside a batch, you can use <a href="/vision.data.html#ImageDataBunch.show_batch"><code>ImageDataBunch.show_batch</code></a>, the <code>rows</code> argument being the number of rows and columns in the array.</p>
+<p>As all <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, data then as a <code>train_dl</code> and a <code>valid_dl</code> that are <a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>. If you want to have a look at a few images in a batch inside a batch, you can use <a href="/vision.data.html#ImageDataBunch.show_batch"><code>ImageDataBunch.show_batch</code></a>, the <code>rows</code> argument being the number of rows and columns in the array.</p>
 
 </div>
 </div>
@@ -108,7 +108,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -152,7 +152,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;labels.csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -237,7 +237,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">28</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -250,7 +250,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -288,7 +288,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">planet</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">PLANET_SAMPLE</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -309,7 +309,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -388,7 +388,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
     <span class="n">ds_tfms</span><span class="o">=</span><span class="n">get_transforms</span><span class="p">(</span><span class="n">flip_vert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_lighting</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_zoom</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">max_warp</span><span class="o">=</span><span class="mf">0.</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -408,7 +408,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">is_train</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -440,7 +440,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ImageDataBunch"><code>class</code> <code>ImageDataBunch</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L261" class="source_link">[source]</a></h2><blockquote><p><code>ImageDataBunch</code>(<code>train_dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>valid_dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>test_dl</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a>=<code>None</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>]]=<code>None</code>, <code>path</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>) :: <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a></p>
+<h2><a id=ImageDataBunch></a><code>class</code> <code>ImageDataBunch</code></h2>
+<blockquote><p><code>ImageDataBunch</code>(<code>train_dl</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>valid_dl</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>test_dl</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a>=<code>None</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>]]=<code>None</code>, <code>path</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>) :: <a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L261">[source]</a></p>
 </blockquote>
 
 </div>
@@ -466,16 +468,17 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.create"><code>create</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L262" class="source_link">[source]</a></h4><blockquote><p><code>create</code>(<code>train_ds</code>, <code>valid_ds</code>, <code>test_ds</code>=<code>None</code>, <code>path</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>bs</code>:<code>int</code>=<code>64</code>, <code>ds_tfms</code>:<code>Union</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>, <code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>], <code>NoneType</code>]=<code>None</code>, <code>num_workers</code>:<code>int</code>=<code>8</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>]]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a>=<code>None</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>, <code>size</code>:<code>int</code>=<code>None</code>, <code>kwargs</code>) → <code>ImageDataBunch</code></p>
+<h4><a id=ImageDataBunch.create></a><code>create</code></h4>
+<blockquote><p><code>create</code>(<code>train_ds</code>, <code>valid_ds</code>, <code>test_ds</code>=<code>None</code>, <code>path</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>bs</code>:<code>int</code>=<code>64</code>, <code>ds_tfms</code>:<code>Union</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>, <code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>], <code>NoneType</code>]=<code>None</code>, <code>num_workers</code>:<code>int</code>=<code>4</code>, <code>tfms</code>:<code>Optional</code>[<code>Collection</code>[<code>Callable</code>]]=<code>None</code>, <code>device</code>:<a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a>=<code>None</code>, <code>collate_fn</code>:<code>Callable</code>=<code>'data_collate'</code>, <code>size</code>:<code>int</code>=<code>None</code>, <code>kwargs</code>) → <code>ImageDataBunch</code></p>
 </blockquote>
-<p>Factory method. <code>bs</code> batch size, <code>ds_tfms</code> for <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>tfms</code> for <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>.</p>
+<p>Factory method. <code>bs</code> batch size, <code>ds_tfms</code> for <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>tfms</code> for <a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>.</p>
 <ul>
 <li><em>bs</em>: Desired batchsize for the dataloaders</li>
 <li><em>num_workers</em>: The number of process to launch for data collection</li>
 <li><em>ds_tfms</em>: Tuple of two lists of transforms (first for training and second for validation and test set)</li>
 <li><em>size</em>: Target size for those transforms</li>
 <li><em>tfms</em>: List of transforms to be applied at a batch level (like normalization)</li>
-<li><em>device</em>: The device on which to put the batches </li>
+<li><em>device</em>: The device on which to put the batches <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L262">[source]</a></li>
 </ul>
 
 </div>
@@ -503,9 +506,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.from_folder"><code>from_folder</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L274" class="source_link">[source]</a></h4><blockquote><p><code>from_folder</code>(<code>path</code>:<code>PathOrStr</code>, <code>train</code>:<code>PathOrStr</code>=<code>'train'</code>, <code>valid</code>:<code>PathOrStr</code>=<code>'valid'</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>kwargs</code>:<code>Any</code>) → <code>ImageDataBunch</code></p>
+<h4><a id=ImageDataBunch.from_folder></a><code>from_folder</code></h4>
+<blockquote><p><code>from_folder</code>(<code>path</code>:<code>PathOrStr</code>, <code>train</code>:<code>PathOrStr</code>=<code>'train'</code>, <code>valid</code>:<code>PathOrStr</code>=<code>'valid'</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>kwargs</code>:<code>Any</code>) → <code>ImageDataBunch</code></p>
 </blockquote>
-<p>Create from imagenet style dataset in <code>path</code> with <code>train</code>,<code>valid</code>,<code>test</code> subfolders.</p>
+<p>Create from imagenet style dataset in <code>path</code> with <code>train</code>,<code>valid</code>,<code>test</code> subfolders.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L274">[source]</a></p>
 
 </div>
 
@@ -542,7 +546,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -563,9 +567,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.from_csv"><code>from_csv</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L304" class="source_link">[source]</a></h4><blockquote><p><code>from_csv</code>(<code>path</code>:<code>PathOrStr</code>, <code>folder</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>sep</code>=<code>None</code>, <code>csv_labels</code>:<code>PathOrStr</code>=<code>'labels.csv'</code>, <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>fn_col</code>:<code>int</code>=<code>0</code>, <code>label_col</code>:<code>int</code>=<code>1</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>suffix</code>:<code>str</code>=<code>None</code>, <code>header</code>:<code>Union</code>[<code>int</code>, <code>str</code>, <code>NoneType</code>]=<code>'infer'</code>, <code>kwargs</code>:<code>Any</code>) → <code>ImageDataBunch</code></p>
+<h4><a id=ImageDataBunch.from_csv></a><code>from_csv</code></h4>
+<blockquote><p><code>from_csv</code>(<code>path</code>:<code>PathOrStr</code>, <code>folder</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>sep</code>=<code>None</code>, <code>csv_labels</code>:<code>PathOrStr</code>=<code>'labels.csv'</code>, <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>fn_col</code>:<code>int</code>=<code>0</code>, <code>label_col</code>:<code>int</code>=<code>1</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>suffix</code>:<code>str</code>=<code>None</code>, <code>header</code>:<code>Union</code>[<code>int</code>, <code>str</code>, <code>NoneType</code>]=<code>'infer'</code>, <code>kwargs</code>:<code>Any</code>) → <code>ImageDataBunch</code></p>
 </blockquote>
-<p>Create from a csv file.</p>
+<p>Create from a csv file.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L304">[source]</a></p>
 
 </div>
 
@@ -590,7 +595,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">);</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -604,9 +609,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.from_df"><code>from_df</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L285" class="source_link">[source]</a></h4><blockquote><p><code>from_df</code>(<code>path</code>:<code>PathOrStr</code>, <code>df</code>:<code>DataFrame</code>, <code>folder</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>sep</code>=<code>None</code>, <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>fn_col</code>:<code>int</code>=<code>0</code>, <code>label_col</code>:<code>int</code>=<code>1</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>suffix</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>:<code>Any</code>) → <code>ImageDataBunch</code></p>
+<h4><a id=ImageDataBunch.from_df></a><code>from_df</code></h4>
+<blockquote><p><code>from_df</code>(<code>path</code>:<code>PathOrStr</code>, <code>df</code>:<code>DataFrame</code>, <code>folder</code>:<code>PathOrStr</code>=<code>'.'</code>, <code>sep</code>=<code>None</code>, <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>fn_col</code>:<code>int</code>=<code>0</code>, <code>label_col</code>:<code>int</code>=<code>1</code>, <code>test</code>:<code>Union</code>[<code>Path</code>, <code>str</code>, <code>NoneType</code>]=<code>None</code>, <code>suffix</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>:<code>Any</code>) → <code>ImageDataBunch</code></p>
 </blockquote>
-<p>Create from a DataFrame.</p>
+<p>Create from a DataFrame.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L285">[source]</a></p>
 
 </div>
 
@@ -632,7 +638,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -710,7 +716,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_df</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -737,7 +743,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.from_name_re"><code>from_name_re</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L328" class="source_link">[source]</a></h4><blockquote><p><code>from_name_re</code>(<code>path</code>:<code>PathOrStr</code>, <code>fnames</code>:<code>FilePathList</code>, <code>pat</code>:<code>str</code>, <code>valid_pct</code>:<code>int</code>=<code>0.2</code>, <code>test</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>)</p>
+<h4><a id=ImageDataBunch.from_name_re></a><code>from_name_re</code></h4>
+<blockquote><p><code>from_name_re</code>(<code>path</code>:<code>PathOrStr</code>, <code>fnames</code>:<code>FilePathList</code>, <code>pat</code>:<code>str</code>, <code>valid_pct</code>:<code>int</code>=<code>0.2</code>, <code>test</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L328">[source]</a></p>
 </blockquote>
 
 </div>
@@ -764,7 +772,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">fn_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]];</span> <span class="n">fn_paths</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -795,7 +803,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_name_re</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fn_paths</span><span class="p">,</span> <span class="n">pat</span><span class="o">=</span><span class="n">pat</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -808,7 +816,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">classes</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -838,7 +846,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.from_name_func"><code>from_name_func</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L323" class="source_link">[source]</a></h4><blockquote><p><code>from_name_func</code>(<code>path</code>:<code>PathOrStr</code>, <code>fnames</code>:<code>FilePathList</code>, <code>label_func</code>:<code>Callable</code>, <code>valid_pct</code>:<code>int</code>=<code>0.2</code>, <code>test</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>)</p>
+<h4><a id=ImageDataBunch.from_name_func></a><code>from_name_func</code></h4>
+<blockquote><p><code>from_name_func</code>(<code>path</code>:<code>PathOrStr</code>, <code>fnames</code>:<code>FilePathList</code>, <code>label_func</code>:<code>Callable</code>, <code>valid_pct</code>:<code>int</code>=<code>0.2</code>, <code>test</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L323">[source]</a></p>
 </blockquote>
 
 </div>
@@ -867,7 +877,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span><span class="o">.</span><span class="n">classes</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -897,7 +907,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.from_lists"><code>from_lists</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L314" class="source_link">[source]</a></h4><blockquote><p><code>from_lists</code>(<code>path</code>:<code>PathOrStr</code>, <code>fnames</code>:<code>FilePathList</code>, <code>labels</code>:<code>StrList</code>, <code>valid_pct</code>:<code>int</code>=<code>0.2</code>, <code>test</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>)</p>
+<h4><a id=ImageDataBunch.from_lists></a><code>from_lists</code></h4>
+<blockquote><p><code>from_lists</code>(<code>path</code>:<code>PathOrStr</code>, <code>fnames</code>:<code>FilePathList</code>, <code>labels</code>:<code>StrList</code>, <code>valid_pct</code>:<code>int</code>=<code>0.2</code>, <code>test</code>:<code>str</code>=<code>None</code>, <code>kwargs</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L314">[source]</a></p>
 </blockquote>
 
 </div>
@@ -926,7 +938,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span><span class="o">.</span><span class="n">classes</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -962,7 +974,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.show_batch"><code>show_batch</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L347" class="source_link">[source]</a></h4><blockquote><p><code>show_batch</code>(<code>rows</code>:<code>int</code>=<code>None</code>, <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(12, 15)</code>, <code>is_train</code>:<code>bool</code>=<code>True</code>)</p>
+<h4><a id=ImageDataBunch.show_batch></a><code>show_batch</code></h4>
+<blockquote><p><code>show_batch</code>(<code>rows</code>:<code>int</code>=<code>None</code>, <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(12, 15)</code>, <code>is_train</code>:<code>bool</code>=<code>True</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L347">[source]</a></p>
 </blockquote>
 
 </div>
@@ -989,7 +1003,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1021,9 +1035,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.labels_to_csv"><code>labels_to_csv</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L351" class="source_link">[source]</a></h4><blockquote><p><code>labels_to_csv</code>(<code>dest</code>:<code>str</code>)</p>
+<h4><a id=ImageDataBunch.labels_to_csv></a><code>labels_to_csv</code></h4>
+<blockquote><p><code>labels_to_csv</code>(<code>dest</code>:<code>str</code>)</p>
 </blockquote>
-<p>Save file names and labels in <code>data</code> as CSV to file name <code>dest</code>.</p>
+<p>Save file names and labels in <code>data</code> as CSV to file name <code>dest</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L351">[source]</a></p>
 
 </div>
 
@@ -1055,7 +1070,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">CIFAR</span><span class="p">);</span> <span class="n">path</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1085,9 +1100,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="channel_view"><code>channel_view</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L243" class="source_link">[source]</a></h4><blockquote><p><code>channel_view</code>(<code>x</code>:<code>Tensor</code>) → <code>Tensor</code></p>
+<h4><a id=channel_view></a><code>channel_view</code></h4>
+<blockquote><p><code>channel_view</code>(<code>x</code>:<code>Tensor</code>) → <code>Tensor</code></p>
 </blockquote>
-<p>Make channel the first axis of <code>x</code> and flatten remaining axes</p>
+<p>Make channel the first axis of <code>x</code> and flatten remaining axes  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L243">[source]</a></p>
 
 </div>
 
@@ -1105,7 +1121,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ds_tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">,</span> <span class="n">valid</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1120,7 +1136,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
     <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> 
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1141,7 +1157,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1154,7 +1170,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1183,7 +1199,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tensor</span> <span class="o">=</span> <span class="n">channel_view</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1196,7 +1212,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tensor</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1226,9 +1242,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.batch_stats"><code>batch_stats</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L334" class="source_link">[source]</a></h4><blockquote><p><code>batch_stats</code>(<code>funcs</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>) → <code>Tensor</code></p>
+<h4><a id=ImageDataBunch.batch_stats></a><code>batch_stats</code></h4>
+<blockquote><p><code>batch_stats</code>(<code>funcs</code>:<code>Collection</code>[<code>Callable</code>]=<code>None</code>) → <code>Tensor</code></p>
 </blockquote>
-<p>Grab a batch of data and call reduction function <code>func</code> per channel</p>
+<p>Grab a batch of data and call reduction function <code>func</code> per channel  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L334">[source]</a></p>
 
 </div>
 
@@ -1253,7 +1270,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">batch_stats</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1283,9 +1300,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageDataBunch.normalize"><code>normalize</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L340" class="source_link">[source]</a></h4><blockquote><p><code>normalize</code>(<code>stats</code>:<code>Collection</code>[<code>Tensor</code>]=<code>None</code>)</p>
+<h4><a id=ImageDataBunch.normalize></a><code>normalize</code></h4>
+<blockquote><p><code>normalize</code>(<code>stats</code>:<code>Collection</code>[<code>Tensor</code>]=<code>None</code>)</p>
 </blockquote>
-<p>Add normalize transform using <code>stats</code> (defaults to <code>DataBunch.batch_stats</code>)</p>
+<p>Add normalize transform using <code>stats</code> (defaults to <code>DataBunch.batch_stats</code>)  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L340">[source]</a></p>
 
 </div>
 
@@ -1310,7 +1328,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">cifar_stats</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1323,7 +1341,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">batch_stats</span><span class="p">()</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1359,7 +1377,8 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_image_batch"><code>show_image_batch</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L41" class="source_link">[source]</a></h4><blockquote><p><code>show_image_batch</code>(<code>dl</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>classes</code>:<code>StrList</code>, <code>rows</code>:<code>int</code>=<code>None</code>, <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(12, 15)</code>, <code>denorm</code>:<code>Callable</code>=<code>None</code>)</p>
+<h4><a id=show_image_batch></a><code>show_image_batch</code></h4>
+<blockquote><p><code>show_image_batch</code>(<code>dl</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.DataLoader"><code>DataLoader</code></a>, <code>classes</code>:<code>StrList</code>, <code>rows</code>:<code>int</code>=<code>None</code>, <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(12, 15)</code>, <code>denorm</code>:<code>Callable</code>=<code>None</code>)</p>
 </blockquote>
 <p>Show a few images from a batch.</p>
 <ul>
@@ -1367,7 +1386,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <li><em>classes</em>: List of classes (for the labels)</li>
 <li><em>rows</em>: Will make a square of <code>rows</code> by <code>rows</code> images</li>
 <li><em>figsize</em>: Size of the graph shown</li>
-<li><em>denorm</em>: Optional function to denormalize the data if it was normalized </li>
+<li><em>denorm</em>: Optional function to denormalize the data if it was normalized <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L41">[source]</a></li>
 </ul>
 
 </div>
@@ -1401,7 +1420,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_images"><code>show_images</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L56" class="source_link">[source]</a></h4><blockquote><p><code>show_images</code>(<code>x</code>:<code>Collection</code>[<a href="/vision.image.html#Image"><code>Image</code></a>], <code>y</code>:<code>int</code>, <code>rows</code>:<code>int</code>, <code>classes</code>:<code>StrList</code>=<code>None</code>, <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(9, 9)</code>)</p>
+<h4><a id=show_images></a><code>show_images</code></h4>
+<blockquote><p><code>show_images</code>(<code>x</code>:<code>Collection</code>[<a href="/vision.image.html#Image"><code>Image</code></a>], <code>y</code>:<code>int</code>, <code>rows</code>:<code>int</code>, <code>classes</code>:<code>StrList</code>=<code>None</code>, <code>figsize</code>:<code>Tuple</code>[<code>int</code>, <code>int</code>]=<code>(9, 9)</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L56">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1429,7 +1450,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">show_images</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1460,7 +1481,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_image</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">cpu</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1509,9 +1530,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_xy_images"><code>show_xy_images</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L50" class="source_link">[source]</a></h4><blockquote><p><code>show_xy_images</code>(<code>x</code>:<code>Tensor</code>, <code>y</code>:<code>Tensor</code>, <code>rows</code>:<code>int</code>, <code>figsize</code>:<code>tuple</code>=<code>(9, 9)</code>)</p>
+<h4><a id=show_xy_images></a><code>show_xy_images</code></h4>
+<blockquote><p><code>show_xy_images</code>(<code>x</code>:<code>Tensor</code>, <code>y</code>:<code>Tensor</code>, <code>rows</code>:<code>int</code>, <code>figsize</code>:<code>tuple</code>=<code>(9, 9)</code>)</p>
 </blockquote>
-<p>Show a selection of images and targets from a given batch.</p>
+<p>Show a selection of images and targets from a given batch.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L50">[source]</a></p>
 
 </div>
 
@@ -1547,7 +1569,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">show_xy_images</span><span class="p">(</span><span class="o">*</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">xy</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1592,9 +1614,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="normalize"><code>normalize</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L214" class="source_link">[source]</a></h4><blockquote><p><code>normalize</code>(<code>x</code>:<code>Tensor</code>, <code>mean</code>:<code>FloatTensor</code>, <code>std</code>:<code>FloatTensor</code>) → <code>Tensor</code></p>
+<h4><a id=normalize></a><code>normalize</code></h4>
+<blockquote><p><code>normalize</code>(<code>x</code>:<code>Tensor</code>, <code>mean</code>:<code>FloatTensor</code>, <code>std</code>:<code>FloatTensor</code>) → <code>Tensor</code></p>
 </blockquote>
-<p>Normalize <code>x</code> with <code>mean</code> and <code>std</code>.</p>
+<p>Normalize <code>x</code> with <code>mean</code> and <code>std</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L214">[source]</a></p>
 
 </div>
 
@@ -1613,9 +1636,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="denormalize"><code>denormalize</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L218" class="source_link">[source]</a></h4><blockquote><p><code>denormalize</code>(<code>x</code>:<code>Tensor</code>, <code>mean</code>:<code>FloatTensor</code>, <code>std</code>:<code>FloatTensor</code>) → <code>Tensor</code></p>
+<h4><a id=denormalize></a><code>denormalize</code></h4>
+<blockquote><p><code>denormalize</code>(<code>x</code>:<code>Tensor</code>, <code>mean</code>:<code>FloatTensor</code>, <code>std</code>:<code>FloatTensor</code>) → <code>Tensor</code></p>
 </blockquote>
-<p>Denormalize <code>x</code> with <code>mean</code> and <code>std</code>.</p>
+<p>Denormalize <code>x</code> with <code>mean</code> and <code>std</code>.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L218">[source]</a></p>
 
 </div>
 
@@ -1634,7 +1658,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="normalize_funcs"><code>normalize_funcs</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L230" class="source_link">[source]</a></h4><blockquote><p><code>normalize_funcs</code>(<code>mean</code>:<code>FloatTensor</code>, <code>std</code>:<code>FloatTensor</code>) → <code>Tuple</code>[<code>Callable</code>, <code>Callable</code>]</p>
+<h4><a id=normalize_funcs></a><code>normalize_funcs</code></h4>
+<blockquote><p><code>normalize_funcs</code>(<code>mean</code>:<code>FloatTensor</code>, <code>std</code>:<code>FloatTensor</code>) → <code>Tuple</code>[<code>Callable</code>, <code>Callable</code>]
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L230">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1671,7 +1697,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 <span class="n">data</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -1716,9 +1742,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="ImageClassificationDataset"><code>class</code> <code>ImageClassificationDataset</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L75" class="source_link">[source]</a></h3><blockquote><p><code>ImageClassificationDataset</code>(<code>fns</code>:<code>FilePathList</code>, <code>labels</code>:<code>StrList</code>, <code>classes</code>:<code>Optional</code>[<code>Classes</code>]=<code>None</code>) :: <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a></p>
+<h3><a id=ImageClassificationDataset></a><code>class</code> <code>ImageClassificationDataset</code></h3>
+<blockquote><p><code>ImageClassificationDataset</code>(<code>fns</code>:<code>FilePathList</code>, <code>labels</code>:<code>StrList</code>, <code>classes</code>:<code>Optional</code>[<code>Classes</code>]=<code>None</code>) :: <a href="/vision.data.html#ImageDataset"><code>ImageDataset</code></a></p>
 </blockquote>
-<p><a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a> for folders of images in style {folder}/{class}/{images}.</p>
+<p><a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a> for folders of images in style {folder}/{class}/{images}.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L75">[source]</a></p>
 
 </div>
 
@@ -1744,9 +1771,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageClassificationDataset.from_folder"><code>from_folder</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L96" class="source_link">[source]</a></h4><blockquote><p><code>from_folder</code>(<code>folder</code>:<code>Path</code>, <code>classes</code>:<code>Optional</code>[<code>Classes</code>]=<code>None</code>, <code>valid_pct</code>:<code>float</code>=<code>0.0</code>, <code>check_ext</code>:<code>bool</code>=<code>True</code>) → <code>Union</code>[<code>ImageClassificationDataset</code>, <code>List</code>[<code>ImageClassificationDataset</code>]]</p>
+<h4><a id=ImageClassificationDataset.from_folder></a><code>from_folder</code></h4>
+<blockquote><p><code>from_folder</code>(<code>folder</code>:<code>Path</code>, <code>classes</code>:<code>Optional</code>[<code>Classes</code>]=<code>None</code>, <code>valid_pct</code>:<code>float</code>=<code>0.0</code>, <code>check_ext</code>:<code>bool</code>=<code>True</code>) → <code>Union</code>[<code>ImageClassificationDataset</code>, <code>List</code>[<code>ImageClassificationDataset</code>]]</p>
 </blockquote>
-<p>Dataset of <code>classes</code> labeled images in <code>folder</code>. Optional <code>valid_pct</code> split validation set.</p>
+<p>Dataset of <code>classes</code> labeled images in <code>folder</code>. Optional <code>valid_pct</code> split validation set.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L96">[source]</a></p>
 
 </div>
 
@@ -1772,7 +1800,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageClassificationDataset.from_single_folder"><code>from_single_folder</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L90" class="source_link">[source]</a></h4><blockquote><p><code>from_single_folder</code>(<code>folder</code>:<code>PathOrStr</code>, <code>classes</code>:<code>Classes</code>, <code>check_ext</code>=<code>True</code>)</p>
+<h4><a id=ImageClassificationDataset.from_single_folder></a><code>from_single_folder</code></h4>
+<blockquote><p><code>from_single_folder</code>(<code>folder</code>:<code>PathOrStr</code>, <code>classes</code>:<code>Classes</code>, <code>check_ext</code>=<code>True</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L90">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1799,7 +1829,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="ImageMultiDataset"><code>class</code> <code>ImageMultiDataset</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L111" class="source_link">[source]</a></h3><blockquote><p><code>ImageMultiDataset</code>(<code>fns</code>:<code>FilePathList</code>, <code>labels</code>:<code>StrList</code>, <code>classes</code>:<code>Optional</code>[<code>Classes</code>]=<code>None</code>) :: <a href="/basic_data.html#LabelDataset"><code>LabelDataset</code></a></p>
+<h3><a id=ImageMultiDataset></a><code>class</code> <code>ImageMultiDataset</code></h3>
+<blockquote><p><code>ImageMultiDataset</code>(<code>fns</code>:<code>FilePathList</code>, <code>labels</code>:<code>StrList</code>, <code>classes</code>:<code>Optional</code>[<code>Classes</code>]=<code>None</code>) :: <a href="/basic_data.html#LabelDataset"><code>LabelDataset</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L111">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1826,7 +1858,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageMultiDataset.from_folder"><code>from_folder</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L137" class="source_link">[source]</a></h4><blockquote><p><code>from_folder</code>(<code>path</code>:<code>PathOrStr</code>, <code>folder</code>:<code>PathOrStr</code>, <code>fns</code>:<code>Series</code>, <code>labels</code>:<code>StrList</code>, <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>classes</code>:<code>Optional</code>[<code>Classes</code>]=<code>None</code>)</p>
+<h4><a id=ImageMultiDataset.from_folder></a><code>from_folder</code></h4>
+<blockquote><p><code>from_folder</code>(<code>path</code>:<code>PathOrStr</code>, <code>folder</code>:<code>PathOrStr</code>, <code>fns</code>:<code>Series</code>, <code>labels</code>:<code>StrList</code>, <code>valid_pct</code>:<code>float</code>=<code>0.2</code>, <code>classes</code>:<code>Optional</code>[<code>Classes</code>]=<code>None</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L137">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1853,7 +1887,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageMultiDataset.from_single_folder"><code>from_single_folder</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L130" class="source_link">[source]</a></h4><blockquote><p><code>from_single_folder</code>(<code>folder</code>:<code>PathOrStr</code>, <code>classes</code>:<code>Classes</code>, <code>check_ext</code>=<code>True</code>)</p>
+<h4><a id=ImageMultiDataset.from_single_folder></a><code>from_single_folder</code></h4>
+<blockquote><p><code>from_single_folder</code>(<code>folder</code>:<code>PathOrStr</code>, <code>classes</code>:<code>Classes</code>, <code>check_ext</code>=<code>True</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L130">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1873,7 +1909,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To help scan a folder for these <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, we use the following helper function:</p>
+<p>To help scan a folder for these <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, we use the following helper function:</p>
 
 </div>
 </div>
@@ -1887,7 +1923,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_image_files"><code>get_image_files</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L18" class="source_link">[source]</a></h4><blockquote><p><code>get_image_files</code>(<code>c</code>:<code>Path</code>, <code>check_ext</code>:<code>bool</code>=<code>True</code>) → <code>FilePathList</code></p>
+<h4><a id=get_image_files></a><code>get_image_files</code></h4>
+<blockquote><p><code>get_image_files</code>(<code>c</code>:<code>Path</code>, <code>check_ext</code>:<code>bool</code>=<code>True</code>) → <code>FilePathList</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L18">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1914,7 +1952,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageMultiDataset.get_labels"><code>get_labels</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L127" class="source_link">[source]</a></h4><blockquote><p><code>get_labels</code>(<code>idx</code>:<code>int</code>) → <code>StrList</code></p>
+<h4><a id=ImageMultiDataset.get_labels></a><code>get_labels</code></h4>
+<blockquote><p><code>get_labels</code>(<code>idx</code>:<code>int</code>) → <code>StrList</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L127">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1941,9 +1981,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageMultiDataset.encode"><code>encode</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L121" class="source_link">[source]</a></h4><blockquote><p><code>encode</code>(<code>x</code>:<code>Collection</code>[<code>int</code>])</p>
+<h4><a id=ImageMultiDataset.encode></a><code>encode</code></h4>
+<blockquote><p><code>encode</code>(<code>x</code>:<code>Collection</code>[<code>int</code>])</p>
 </blockquote>
-<p>One-hot encode the target.</p>
+<p>One-hot encode the target.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L121">[source]</a></p>
 
 </div>
 
@@ -1962,7 +2003,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="SegmentationDataset"><code>class</code> <code>SegmentationDataset</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L146" class="source_link">[source]</a></h3><blockquote><p><code>SegmentationDataset</code>(<code>x</code>:<code>Collection</code>[<code>PathOrStr</code>], <code>y</code>:<code>Collection</code>[<code>PathOrStr</code>], <code>div</code>=<code>False</code>, <code>convert_mode</code>=<code>'L'</code>) :: <a href="/basic_data.html#DatasetBase"><code>DatasetBase</code></a></p>
+<h3><a id=SegmentationDataset></a><code>class</code> <code>SegmentationDataset</code></h3>
+<blockquote><p><code>SegmentationDataset</code>(<code>x</code>:<code>Collection</code>[<code>PathOrStr</code>], <code>y</code>:<code>Collection</code>[<code>PathOrStr</code>], <code>div</code>=<code>False</code>, <code>convert_mode</code>=<code>'L'</code>) :: <a href="/basic_data.html#DatasetBase"><code>DatasetBase</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L146">[source]</a></p>
 </blockquote>
 
 </div>
@@ -1989,7 +2032,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="ObjectDetectDataset"><code>class</code> <code>ObjectDetectDataset</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L158" class="source_link">[source]</a></h3><blockquote><p><code>ObjectDetectDataset</code>(<code>x_fns</code>:<code>FilePathList</code>, <code>bbs</code>:<code>Collection</code>[<code>Collection</code>[<code>int</code>]], <code>labels</code>:<code>StrList</code>) :: <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a></p>
+<h3><a id=ObjectDetectDataset></a><code>class</code> <code>ObjectDetectDataset</code></h3>
+<blockquote><p><code>ObjectDetectDataset</code>(<code>x_fns</code>:<code>FilePathList</code>, <code>bbs</code>:<code>Collection</code>[<code>Collection</code>[<code>int</code>]], <code>labels</code>:<code>StrList</code>) :: <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L158">[source]</a></p>
 </blockquote>
 
 </div>
@@ -2016,9 +2061,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_annotations"><code>get_annotations</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L24" class="source_link">[source]</a></h4><blockquote><p><code>get_annotations</code>(<code>fname</code>, <code>prefix</code>=<code>None</code>)</p>
+<h4><a id=get_annotations></a><code>get_annotations</code></h4>
+<blockquote><p><code>get_annotations</code>(<code>fname</code>, <code>prefix</code>=<code>None</code>)</p>
 </blockquote>
-<p>Open a COCO style json in <code>fname</code> and returns the lists of filenames (with <code>prefix</code>), bboxes and labels.</p>
+<p>Open a COCO style json in <code>fname</code> and returns the lists of filenames (with <code>prefix</code>), bboxes and labels.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L24">[source]</a></p>
 
 </div>
 
@@ -2030,7 +2076,7 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Finally, to apply transformations to <a href="/vision.image.html#Image"><code>Image</code></a> in a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, we use this last class.</p>
+<p>Finally, to apply transformations to <a href="/vision.image.html#Image"><code>Image</code></a> in a <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, we use this last class.</p>
 
 </div>
 </div>
@@ -2044,9 +2090,10 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="ImageDataset"><code>class</code> <code>ImageDataset</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L67" class="source_link">[source]</a></h3><blockquote><p><code>ImageDataset</code>(<code>fns</code>:<code>FilePathList</code>, <code>y</code>:<code>ndarray</code>) :: <a href="/basic_data.html#LabelDataset"><code>LabelDataset</code></a></p>
+<h3><a id=ImageDataset></a><code>class</code> <code>ImageDataset</code></h3>
+<blockquote><p><code>ImageDataset</code>(<code>fns</code>:<code>FilePathList</code>, <code>y</code>:<code>ndarray</code>) :: <a href="/basic_data.html#LabelDataset"><code>LabelDataset</code></a></p>
 </blockquote>
-<p>Abstract <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a> containing images.</p>
+<p>Abstract <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a> containing images.  <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L67">[source]</a></p>
 
 </div>
 
@@ -2065,7 +2112,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="DatasetTfm"><code>class</code> <code>DatasetTfm</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L186" class="source_link">[source]</a></h3><blockquote><p><code>DatasetTfm</code>(<code>ds</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>tfms</code>:<code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]=<code>None</code>, <code>tfm_y</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>:<code>Any</code>) :: <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a></p>
+<h3><a id=DatasetTfm></a><code>class</code> <code>DatasetTfm</code></h3>
+<blockquote><p><code>DatasetTfm</code>(<code>ds</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>tfms</code>:<code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]=<code>None</code>, <code>tfm_y</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>:<code>Any</code>) :: <a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L186">[source]</a></p>
 </blockquote>
 
 </div>
@@ -2099,7 +2148,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="transform_datasets"><code>transform_datasets</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L206" class="source_link">[source]</a></h4><blockquote><p><code>transform_datasets</code>(<code>train_ds</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>valid_ds</code>:<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>test_ds</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>]=<code>None</code>, <code>tfms</code>:<code>Optional</code>[<code>Tuple</code>[<code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>], <code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]]]=<code>None</code>, <code>kwargs</code>:<code>Any</code>)</p>
+<h4><a id=transform_datasets></a><code>transform_datasets</code></h4>
+<blockquote><p><code>transform_datasets</code>(<code>train_ds</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>valid_ds</code>:<a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>, <code>test_ds</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/data#torch.utils.data.Dataset"><code>Dataset</code></a>]=<code>None</code>, <code>tfms</code>:<code>Optional</code>[<code>Tuple</code>[<code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>], <code>Collection</code>[<a href="/vision.image.html#Transform"><code>Transform</code></a>]]]=<code>None</code>, <code>kwargs</code>:<code>Any</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L206">[source]</a></p>
 </blockquote>
 
 </div>
@@ -2126,7 +2177,9 @@ summary: "Basic dataset for computer vision and helper function to get a DataBun
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ObjectDetectDataset.from_json"><code>from_json</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L178" class="source_link">[source]</a></h4><blockquote><p><code>from_json</code>(<code>folder</code>, <code>fname</code>, <code>valid_pct</code>=<code>None</code>)</p>
+<h4><a id=ObjectDetectDataset.from_json></a><code>from_json</code></h4>
+<blockquote><p><code>from_json</code>(<code>folder</code>, <code>fname</code>, <code>valid_pct</code>=<code>None</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/vision/data.py#L178">[source]</a></p>
 </blockquote>
 
 </div>

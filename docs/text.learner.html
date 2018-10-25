@@ -34,7 +34,9 @@ summary: "Easy access of language models and ULMFiT"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNNLearner"><code>class</code> <code>RNNLearner</code><a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L42" class="source_link">[source]</a></h2><blockquote><p><code>RNNLearner</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>split_func</code>:<code>OptSplitFunc</code>=<code>None</code>, <code>clip</code>:<code>float</code>=<code>None</code>, <code>adjust</code>:<code>bool</code>=<code>False</code>, <code>alpha</code>:<code>float</code>=<code>2.0</code>, <code>beta</code>:<code>float</code>=<code>1.0</code>, <code>kwargs</code>) :: <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
+<h2><a id=RNNLearner></a><code>class</code> <code>RNNLearner</code></h2>
+<blockquote><p><code>RNNLearner</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>model</code>:<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>split_func</code>:<code>OptSplitFunc</code>=<code>None</code>, <code>clip</code>:<code>float</code>=<code>None</code>, <code>adjust</code>:<code>bool</code>=<code>False</code>, <code>alpha</code>:<code>float</code>=<code>2.0</code>, <code>beta</code>:<code>float</code>=<code>1.0</code>, <code>kwargs</code>) :: <a href="/basic_train.html#Learner"><code>Learner</code></a>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L42">[source]</a></p>
 </blockquote>
 
 </div>
@@ -67,7 +69,9 @@ summary: "Easy access of language models and ULMFiT"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="RNNLearner.classifier"><code>classifier</code><a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L90" class="source_link">[source]</a></h4><blockquote><p><code>classifier</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>max_len</code>:<code>int</code>=<code>1400</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>lin_ftrs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>ps</code>:<code>Collection</code>[<code>float</code>]=<code>None</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>) → <code>RNNLearner</code></p>
+<h4><a id=RNNLearner.classifier></a><code>classifier</code></h4>
+<blockquote><p><code>classifier</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>max_len</code>:<code>int</code>=<code>1400</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>lin_ftrs</code>:<code>Collection</code>[<code>int</code>]=<code>None</code>, <code>ps</code>:<code>Collection</code>[<code>float</code>]=<code>None</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>kwargs</code>) → <code>RNNLearner</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L90">[source]</a></p>
 </blockquote>
 
 </div>
@@ -84,7 +88,7 @@ summary: "Easy access of language models and ULMFiT"
 <p>The input texts are fed into that model by bunch of <code>bptt</code> and only the last <code>max_len</code> activations are considerated. This gives us the backbone of our model. The head then consists of:</p>
 <ul>
 <li>a layer that concatenates the final outputs of the RNN with the maximum and average of all the intermediate outputs (on the sequence length dimension),</li>
-<li>blocks of (<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.BatchNorm1d"><code>nn.BatchNorm1d</code></a>, <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Dropout"><code>nn.Dropout</code></a>, <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Linear"><code>nn.Linear</code></a>, <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.ReLU"><code>nn.ReLU</code></a>) layers.</li>
+<li>blocks of (<a href="https://pytorch.org/docs/stable/nn#torch.nn.BatchNorm1d"><code>nn.BatchNorm1d</code></a>, <a href="https://pytorch.org/docs/stable/nn#torch.nn.Dropout"><code>nn.Dropout</code></a>, <a href="https://pytorch.org/docs/stable/nn#torch.nn.Linear"><code>nn.Linear</code></a>, <a href="https://pytorch.org/docs/stable/nn#torch.nn.ReLU"><code>nn.ReLU</code></a>) layers.</li>
 </ul>
 <p>The blocks are defined by the <code>lin_ftrs</code> and <code>drops</code> arguments. Specifically, the first block will have a number of inputs inferred from the backbone arch and the last one will have a number of outputs equal to data.c (which contains the number of classes of the data) and the intermediate blocks have a number of inputs/outputs determined by <code>lin_ftrs</code> (of course a block has a number of inputs equal to the number of outputs of the previous block). The dropouts all have a the same value ps if you pass a float, or the corresponding values if you pass a list. Default is to have an intermediate hidden size of 50 (which makes two blocks model_activation -&gt; 50 -&gt; n_classes) with a dropout of 0.1.</p>
 
@@ -101,7 +105,7 @@ summary: "Easy access of language models and ULMFiT"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">RNNLearner</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -115,7 +119,9 @@ summary: "Easy access of language models and ULMFiT"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="RNNLearner.language_model"><code>language_model</code><a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L69" class="source_link">[source]</a></h4><blockquote><p><code>language_model</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>tie_weights</code>:<code>bool</code>=<code>True</code>, <code>bias</code>:<code>bool</code>=<code>True</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>pretrained_model</code>=<code>None</code>, <code>pretrained_fnames</code>:<code>OptStrTuple</code>=<code>None</code>, <code>kwargs</code>) → <code>RNNLearner</code></p>
+<h4><a id=RNNLearner.language_model></a><code>language_model</code></h4>
+<blockquote><p><code>language_model</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>bptt</code>:<code>int</code>=<code>70</code>, <code>emb_sz</code>:<code>int</code>=<code>400</code>, <code>nh</code>:<code>int</code>=<code>1150</code>, <code>nl</code>:<code>int</code>=<code>3</code>, <code>pad_token</code>:<code>int</code>=<code>1</code>, <code>drop_mult</code>:<code>float</code>=<code>1.0</code>, <code>tie_weights</code>:<code>bool</code>=<code>True</code>, <code>bias</code>:<code>bool</code>=<code>True</code>, <code>qrnn</code>:<code>bool</code>=<code>False</code>, <code>pretrained_model</code>=<code>None</code>, <code>pretrained_fnames</code>:<code>OptStrTuple</code>=<code>None</code>, <code>kwargs</code>) → <code>RNNLearner</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L69">[source]</a></p>
 </blockquote>
 
 </div>
@@ -144,7 +150,7 @@ summary: "Easy access of language models and ULMFiT"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">RNNLearner</span><span class="o">.</span><span class="n">language_model</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pretrained_model</span><span class="o">=</span><span class="n">URLs</span><span class="o">.</span><span class="n">WT103</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -164,9 +170,10 @@ summary: "Easy access of language models and ULMFiT"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="RNNLearner.load_encoder"><code>load_encoder</code><a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L56" class="source_link">[source]</a></h4><blockquote><p><code>load_encoder</code>(<code>name</code>:<code>str</code>)</p>
+<h4><a id=RNNLearner.load_encoder></a><code>load_encoder</code></h4>
+<blockquote><p><code>load_encoder</code>(<code>name</code>:<code>str</code>)</p>
 </blockquote>
-<p>Load the encoder <code>name</code> from the model directory.</p>
+<p>Load the encoder <code>name</code> from the model directory.  <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L56">[source]</a></p>
 
 </div>
 
@@ -185,9 +192,10 @@ summary: "Easy access of language models and ULMFiT"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="RNNLearner.save_encoder"><code>save_encoder</code><a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L52" class="source_link">[source]</a></h4><blockquote><p><code>save_encoder</code>(<code>name</code>:<code>str</code>)</p>
+<h4><a id=RNNLearner.save_encoder></a><code>save_encoder</code></h4>
+<blockquote><p><code>save_encoder</code>(<code>name</code>:<code>str</code>)</p>
 </blockquote>
-<p>Save the encoder to <code>name</code> inside the model directory.</p>
+<p>Save the encoder to <code>name</code> inside the model directory.  <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L52">[source]</a></p>
 
 </div>
 
@@ -206,7 +214,9 @@ summary: "Easy access of language models and ULMFiT"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="RNNLearner.load_pretrained"><code>load_pretrained</code><a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L61" class="source_link">[source]</a></h4><blockquote><p><code>load_pretrained</code>(<code>wgts_fname</code>:<code>str</code>, <code>itos_fname</code>:<code>str</code>)</p>
+<h4><a id=RNNLearner.load_pretrained></a><code>load_pretrained</code></h4>
+<blockquote><p><code>load_pretrained</code>(<code>wgts_fname</code>:<code>str</code>, <code>itos_fname</code>:<code>str</code>)
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L61">[source]</a></p>
 </blockquote>
 
 </div>
@@ -239,9 +249,10 @@ summary: "Easy access of language models and ULMFiT"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="lm_split"><code>lm_split</code><a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L29" class="source_link">[source]</a></h4><blockquote><p><code>lm_split</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>) → <code>List</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]</p>
+<h4><a id=lm_split></a><code>lm_split</code></h4>
+<blockquote><p><code>lm_split</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>) → <code>List</code>[<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>]</p>
 </blockquote>
-<p>Split a RNN <code>model</code> in groups for differential learning rates.</p>
+<p>Split a RNN <code>model</code> in groups for differential learning rates.  <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L29">[source]</a></p>
 
 </div>
 
@@ -260,9 +271,10 @@ summary: "Easy access of language models and ULMFiT"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="rnn_classifier_split"><code>rnn_classifier_split</code><a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L35" class="source_link">[source]</a></h4><blockquote><p><code>rnn_classifier_split</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>) → <code>List</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]</p>
+<h4><a id=rnn_classifier_split></a><code>rnn_classifier_split</code></h4>
+<blockquote><p><code>rnn_classifier_split</code>(<code>model</code>:<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>) → <code>List</code>[<a href="https://pytorch.org/docs/stable/nn#torch.nn.Module"><code>Module</code></a>]</p>
 </blockquote>
-<p>Split a RNN <code>model</code> in groups for differential learning rates.</p>
+<p>Split a RNN <code>model</code> in groups for differential learning rates.  <a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L35">[source]</a></p>
 
 </div>
 
@@ -281,7 +293,9 @@ summary: "Easy access of language models and ULMFiT"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="convert_weights"><code>convert_weights</code><a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L13" class="source_link">[source]</a></h4><blockquote><p><code>convert_weights</code>(<code>wgts</code>:<code>Weights</code>, <code>stoi_wgts</code>:<code>Dict</code>[<code>str</code>, <code>int</code>], <code>itos_new</code>:<code>StrList</code>) → <code>Weights</code></p>
+<h4><a id=convert_weights></a><code>convert_weights</code></h4>
+<blockquote><p><code>convert_weights</code>(<code>wgts</code>:<code>Weights</code>, <code>stoi_wgts</code>:<code>Dict</code>[<code>str</code>, <code>int</code>], <code>itos_new</code>:<code>StrList</code>) → <code>Weights</code>
+<a href="https://github.com/fastai/fastai/blob/master/fastai/text/learner.py#L13">[source]</a></p>
 </blockquote>
 
 </div>
