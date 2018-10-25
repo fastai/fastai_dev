@@ -17,8 +17,7 @@ from fastai.gen_doc.gen_notebooks import *
 # poor man's argparse to quickly pass through the arguments to the function
 files = []
 args = {}
-sys.argv.pop(0)
-for arg in sys.argv:
+for arg in sys.argv[1:]:
     if arg.startswith('--'): args.update({arg.replace('--', ''): True})
     else: files.append(arg)
 
