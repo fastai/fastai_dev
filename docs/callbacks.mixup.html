@@ -63,7 +63,7 @@ summary: "Implementation of mixup"
 <span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -76,7 +76,7 @@ summary: "Implementation of mixup"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -167,7 +167,7 @@ The last trick we have to apply with this is that there can be some duplicates w
 <span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -272,7 +272,7 @@ epoch  train loss  valid loss  accuracy
 <p>We often have to modify the loss so that it is compatible with Mixup: pytorch was very careful to avoid one-hot encoding targets when it could, so it seems a bit of a drag to undo this. Fortunately for us, if the loss is a classic <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.cross_entropy">cross-entropy</a>, we have</p>
 <p><code>loss(output, new_target) = t * loss(output, target1) + (1-t) * loss(output, target2)</code></p>
 <p>so we won’t one-hot encode anything and just compute those two losses then do the linear combination.</p>
-<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train.html#mixup"><code>mixup</code></a> function will use it to change the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.cross_entropy"><code>Learner.loss_func</code></a> if necessary.</p>
+<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train.html#mixup"><code>mixup</code></a> function will use it to change the <code>Learner.loss_func</code> if necessary.</p>
 
 </div>
 </div>
