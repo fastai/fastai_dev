@@ -221,7 +221,8 @@ tools/run-after-git-clone
 <p>Default updates all notebooks in the fastai folder:</p>
 <div class="highlight"><pre><span></span><span class="n">update_notebooks</span><span class="p">()</span>
 </pre></div>
-<p>To update specific python file only + html also:</p>
+<p>XXX: is this still relevant/correct?
+To update specific python file only + html also:</p>
 <div class="highlight"><pre><span></span><span class="n">update_notebooks</span><span class="p">(</span><span class="s1">&#39;../fastai/gen_doc/nbdoc.py&#39;</span><span class="p">,</span> <span class="n">update_html</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">create_missing</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
@@ -236,23 +237,19 @@ tools/run-after-git-clone
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Run:</p>
-<div class="highlight"><pre><span></span>tools/build-docs
+<p>To convert <code>docs_src/*ipynb</code> to <code>docs/*html</code>:</p>
+<div class="highlight"><pre><span></span>python tools/build-docs
 </pre></div>
-<p>and commit the changes.</p>
-<p>XXX: the following is partly outdated, needs to be revised.</p>
 <p><a href="/gen_doc.gen_notebooks.html#update_notebooks"><code>update_notebooks</code></a> can be run as a script for convenience.</p>
-<p>Default updates all notebooks in the fastai folder:</p>
-<div class="highlight"><pre><span></span>python fastai/gen_doc/sgen_notebooks.py
-</pre></div>
-<p>Or from the tools folder</p>
-<div class="highlight"><pre><span></span>python tools/sgen_notebooks.py
-</pre></div>
-<p>To update specific python file only and html:</p>
-<div class="highlight"><pre><span></span>python fastai/gen_doc/sgen_notebooks.py fastai/vision/transform.py --update_html<span class="o">=</span>True --create-missing<span class="o">=</span>True
+<p>To update all notebooks under <code>docs_src</code>:</p>
+<div class="highlight"><pre><span></span>python tools/update-nbs
 </pre></div>
 <p>To link docs with no accompanying modules:</p>
-<div class="highlight"><pre><span></span>python tools/sgen_notebooks.py docs_src/index.ipynb --update_html<span class="o">=</span>True --update_nb_links<span class="o">=</span>True
+<div class="highlight"><pre><span></span>python tools/update-nbs docs_src/index.ipynb --update_html --update_nb_links
+</pre></div>
+<p>XXX: is this still relevant?
+To update specific python file only and html:</p>
+<div class="highlight"><pre><span></span>python tools/update-nbs fastai/vision/transform.py --update_html --create-missing
 </pre></div>
 
 </div>
@@ -289,10 +286,12 @@ tools/run-after-git-clone
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-
-<pre><code>cd docs_src/tools
-edit `sidebar_d` in make_sidebar.py 
-python make_sidebar.py</code></pre>
+<ol>
+<li>edit <code>docs_src/sidebar/sidebar_data.py</code></li>
+<li><code>python tools/make_sidebar.py</code></li>
+<li>check <code>docs/_data/sidebars/home_sidebar.yml</code></li>
+<li><code>git commit docs_src/sidebar/sidebar_data.py docs/_data/sidebars/home_sidebar.yml</code></li>
+</ol>
 
 </div>
 </div>
