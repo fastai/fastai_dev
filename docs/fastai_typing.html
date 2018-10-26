@@ -93,7 +93,7 @@ summary: "Type annotations names"
 <li><code>TensorImageSize</code> = <code>Tuple</code>[<code>int</code>,<code>int</code>,<code>int</code>]</li>
 <li><code>Tensors</code> = <code>Union</code>[<code>Tensor</code>, <code>Collection</code>['<code>Tensors</code>']]</li>
 <li><code>Weights</code> = <code>Dict</code>[<code>str</code>,<code>Tensor</code>]</li>
-<li><code>AffineFunc</code> = <code>Callable</code>[[<code>KWArgs</code>], <a href="https://pytorch.org/docs/stable/torch.html#torch.Tensor"><code>AffineMatrix</code></a>]</li>
+<li><code>AffineFunc</code> = <code>Callable</code>[[<code>KWArgs</code>], <a href="https://pytorch.org/docs/stable/tensors.html#torch-tensor"><code>AffineMatrix</code></a>]</li>
 <li><code>HookFunc</code> = <code>Callable</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Model</code></a>, <code>Tensors</code>, <code>Tensors</code>], <code>Any</code>]</li>
 <li><code>LogitTensorImage</code> = <code>TensorImage</code></li>
 <li><code>LossFunction</code> = <code>Callable</code>[[<code>Tensor</code>, <code>Tensor</code>], <code>Rank0Tensor</code>]</li>
@@ -104,7 +104,7 @@ summary: "Type annotations names"
 <li><code>OptMetrics</code> = <code>Optional</code>[<code>MetricsList</code>]</li>
 <li><code>OptSplitFunc</code> = <code>Optional</code>[<code>SplitFunc</code>]</li>
 <li><code>PixelFunc</code> = <code>Callable</code>[[<code>TensorImage</code>, <code>ArgStar</code>, <code>KWArgs</code>], <code>TensorImage</code>]</li>
-<li><code>CoordFunc</code> = <code>Callable</code>[<a href="https://pytorch.org/docs/stable/torch.html#torch.Tensor"><code>FlowField</code></a>, <code>TensorImageSize</code>, <code>ArgStar</code>, <code>KWArgs</code>], <code>LogitTensorImage</code>]</li>
+<li><code>CoordFunc</code> = <code>Callable</code>[<a href="/vision.image.html#FlowField"><code>FlowField</code></a>, <code>TensorImageSize</code>, <code>ArgStar</code>, <code>KWArgs</code>], <code>LogitTensorImage</code>]</li>
 <li><code>LightingFunc</code> = <code>Callable</code>[[<code>LogitTensorImage</code>, <code>ArgStar</code>, <code>KWArgs</code>], <code>LogitTensorImage</code>]</li>
 </ul>
 
