@@ -11,8 +11,14 @@ class ItemList():
     "A collection of items with `__len__` and `__getitem__` with `ndarray` indexing semantics"
     def __init__(self, items:Iterator): self.items = np.array(list(items))
     def __len__(self)->int: return len(self.items)
-    def __getitem__(self,i:int)->Any: return self.items[i]
+    def __getitem__(self,i:int)->Any: self.items[i]
     def __repr__(self)->str: return f'{self.__class__.__name__} ({len(self)} items)\n{self.items}'
+
+class PathItemList(ItemList):
+    def __init__(self, items:Iterator, path:PathOrStr='.'):
+        super().__init__(items)
+        self.path = Path(path)
+    def __repr__(self)->str: return f'{super().__repr__()}\nPath: {self.path}'
 
 def join_path(fname:PathOrStr, path:PathOrStr='.')->Path:
     "`Path(path)/Path(fname)`, `path` defaults to current dir"
@@ -26,44 +32,72 @@ def loadtxt_str(path:PathOrStr)->np.ndarray:
     "Return `ndarray` of `str` of lines of text from `path`"
     return np.loadtxt(str(path), str)
 
-class ImageFileList(ItemList):
+def _df_to_fns_labels(df:pd.DataFrame, fn_col:int=0, label_col:int=1,
+                      label_delim:str=None, suffix:Optional[str]=None):
+    """Get image file names in `fn_col` by adding `suffix` and labels in `label_col` from `df`.
+    If `label_delim` is specified, splits the values in `label_col` accordingly.
+    """
+    if label_delim:
+        df.iloc[:,label_col] = list(csv.reader(df.iloc[:,label_col], delimiter=label_delim))
+    labels = df.iloc[:,label_col].values
+    fnames = df.iloc[:,fn_col].str.lstrip()
+    if suffix: fnames = fnames + suffix
+    return fnames.values, labels
+
+class ImageFileList(PathItemList):
     @classmethod
-    def from_folder(cls, path:PathOrStr, check_ext:bool=True, recurse=False)->'ImageFileList':
-        return cls(get_image_files(path, check_ext=check_ext, recurse=recurse))
+    def from_folder(cls, path:PathOrStr='.', check_ext:bool=True, recurse=False)->'ImageFileList':
+        return cls(get_image_files(path, check_ext=check_ext, recurse=recurse), path)
 
     def label_from_func(self, func:Callable)->Collection:
-        return LabelList((o,func(o)) for o in self.items)
+        return LabelList([(o,func(o)) for o in self.items], self.path)
 
     def label_from_re(self, pat:str)->Collection:
         re = re.compile(pat)
-        return LabelList((o,re.search(str(o)).group(1)) for o in self.items)
+        return self.label_from_func(lambda o: re.search(str(o)).group(1))
 
-    def label_from_df(self, df, fn_col:int=0, label_col:int=1, sep:str=None, suffix:str=None)->Collection:
-        fnames, labels = _df_to_fns_labels(df, suffix=suffix, label_delim=sep, fn_col=fn_col, label_col=label_col)
-        return LabelList(zip(fnames, labels))
+    def label_from_df(self, df, fn_col:int=0, label_col:int=1, sep:str=None, folder:PathOrStr='.',
+                      suffix:str=None)->Collection:
+        fnames, labels = _df_to_fns_labels(df, fn_col, label_col, sep, suffix)
+        fnames = join_paths(fnames, self.path/Path(folder))
+        return LabelList([(fn, np.array(lbl, dtype=np.object)) for fn, lbl in zip(fnames, labels) if fn in self.items],
+                         self.path)
 
     def label_from_csv(self, csv_fname, header:Optional[Union[int,str]]='infer', fn_col:int=0, label_col:int=1,
-                       sep:str=None,suffix:str=None)->Collection:
-        df = pd.read_csv(csv_fname, header=header)
-        return self.label_from_df(df)
+                       sep:str=None, folder:PathOrStr='.', suffix:str=None)->Collection:
+        df = pd.read_csv(self.path/csv_fname, header=header)
+        return self.label_from_df(df, fn_col, label_col, sep, folder, suffix)
 
-class LabelList(ItemList):
+    def label_from_folder(self, classes:Collection[str]=None)->Collection:
+        labels = [fn.parent.parts[-1] for fn in self.items]
+        if classes is None: classes = uniqueify(labels)
+        return LabelList([(o,lbl) for o, lbl in zip(self.items, labels) if lbl in classes], self.path)
+
+class LabelList(PathItemList):
     @property
     def files(self): return self.items[:,0]
 
     def split_by_files(self, valid_fnames:FilePathList)->'SplitData':
         valid = [o for o in self.items if o[0] in valid_fnames]
         train = [o for o in self.items if o[0] not in valid_fnames]
-        return SplitData(LabelList(train), LabelList(valid))
+        return SplitData(self.path, LabelList(train), LabelList(valid))
 
-    def split_by_fname_file(self, fname:PathOrStr, path:PathOrStr='.')->'SplitData':
-        fnames = join_paths(loadtxt_str(fname), path)
+    def split_by_fname_file(self, fname:PathOrStr, path:PathOrStr=None)->'SplitData':
+        path = Path(ifnone(path, self.path))
+        fnames = join_paths(loadtxt_str(self.path/fname), path)
         return self.split_by_files(fnames)
 
     def split_by_idx(self, valid_idx:Collection[int])->'SplitData':
         valid = [o for i,o in enumerate(self.items) if i in valid_idx]
         train = [o for i,o in enumerate(self.items) if i not in valid_idx]
-        return SplitData(LabelList(train), LabelList(valid))
+        return SplitData(self.path, LabelList(train), LabelList(valid))
+
+    def split_by_folder(self, train:str='train', valid:str='valid')->'SplitData':
+        n = len(self.path.parts)
+        folder_name = [o[0].parent.parts[n] for o in self.items]
+        valid = [o for o in self.items if o[0].parent.parts[n] == valid]
+        train = [o for o in self.items if o[0].parent.parts[n] == train]
+        return SplitData(self.path, LabelList(train), LabelList(valid))
 
     def random_split_by_pct(self, valid_pct:float=0.2)->'SplitData':
         rand_idx = np.random.permutation(range(len(self.items)))
@@ -72,18 +106,22 @@ class LabelList(ItemList):
 
 @dataclass
 class SplitData():
+    path:PathOrStr
     train:LabelList
     valid:LabelList
+
+    def __post_init__(self): self.path = Path(self.path)
 
     @property
     def lists(self): return [self.train,self.valid]
 
     def datasets(self, dataset_cls:type, tfms:TfmList, **kwargs):
         dss = [dataset_cls(*o.items.T) for o in self.lists]
-        return SplitDatasets(*transform_datasets(*dss, tfms=tfms, **kwargs))
+        return SplitDatasets(self.path, *transform_datasets(*dss, tfms=tfms, **kwargs))
 
 @dataclass
 class SplitDatasets():
+    path:PathOrStr
     train_ds:Dataset
     valid_ds:Dataset
 
@@ -93,4 +131,6 @@ class SplitDatasets():
     def dataloaders(self, **kwargs):
         return [DataLoader(o, **kwargs) for o in self.datasets]
 
-    def databunch(self, **kwargs): return ImageDataBunch.create(*self.datasets, **kwargs)
+    def databunch(self, path=None, **kwargs):
+        path = Path(ifnone(path, self.path))
+        return ImageDataBunch.create(*self.datasets, path=path, **kwargs)
