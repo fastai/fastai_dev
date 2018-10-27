@@ -46,15 +46,15 @@ def _df_to_fns_labels(df:pd.DataFrame, fn_col:int=0, label_col:int=1,
 
 class ImageFileList(PathItemList):
     @classmethod
-    def from_folder(cls, path:PathOrStr='.', check_ext:bool=True, recurse=False)->'ImageFileList':
+    def from_folder(cls, path:PathOrStr='.', check_ext:bool=True, recurse=True)->'ImageFileList':
         return cls(get_image_files(path, check_ext=check_ext, recurse=recurse), path)
 
     def label_from_func(self, func:Callable)->Collection:
         return LabelList([(o,func(o)) for o in self.items], self.path)
 
     def label_from_re(self, pat:str)->Collection:
-        re = re.compile(pat)
-        return self.label_from_func(lambda o: re.search(str(o)).group(1))
+        pat = re.compile(pat)
+        return self.label_from_func(lambda o: pat.search(str(o)).group(1))
 
     def label_from_df(self, df, fn_col:int=0, label_col:int=1, sep:str=None, folder:PathOrStr='.',
                       suffix:str=None)->Collection:
