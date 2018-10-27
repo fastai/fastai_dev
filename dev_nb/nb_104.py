@@ -34,6 +34,19 @@ class ImageFileList(ItemList):
     def label_from_func(self, func:Callable)->Collection:
         return LabelList((o,func(o)) for o in self.items)
 
+    def label_from_re(self, pat:str)->Collection:
+        re = re.compile(pat)
+        return LabelList((o,re.search(str(o)).group(1)) for o in self.items)
+
+    def label_from_df(self, df, fn_col:int=0, label_col:int=1, sep:str=None, suffix:str=None)->Collection:
+        fnames, labels = _df_to_fns_labels(df, suffix=suffix, label_delim=sep, fn_col=fn_col, label_col=label_col)
+        return LabelList(zip(fnames, labels))
+
+    def label_from_csv(self, csv_fname, header:Optional[Union[int,str]]='infer', fn_col:int=0, label_col:int=1,
+                       sep:str=None,suffix:str=None)->Collection:
+        df = pd.read_csv(csv_fname, header=header)
+        return self.label_from_df(df)
+
 class LabelList(ItemList):
     @property
     def files(self): return self.items[:,0]
