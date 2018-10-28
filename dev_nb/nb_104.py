@@ -52,9 +52,14 @@ class ImageFileList(PathItemList):
     def label_from_func(self, func:Callable)->Collection:
         return LabelList([(o,func(o)) for o in self.items], self.path)
 
-    def label_from_re(self, pat:str)->Collection:
+    def label_from_re(self, pat:str, full_path:bool=False)->Collection:
         pat = re.compile(pat)
-        return self.label_from_func(lambda o: pat.search(str(o)).group(1))
+        def _inner(o):
+            s = str(o if full_path else o.name)
+            res = pat.search(s)
+            assert res,f'Failed to find "{pat}" in "{s}"'
+            return res.group(1)
+        return self.label_from_func(_inner)
 
     def label_from_df(self, df, fn_col:int=0, label_col:int=1, sep:str=None, folder:PathOrStr='.',
                       suffix:str=None)->Collection:
@@ -115,18 +120,27 @@ class SplitData():
     @property
     def lists(self): return [self.train,self.valid]
 
-    def datasets(self, dataset_cls:type, tfms:TfmList, **kwargs):
-        dss = [dataset_cls(*o.items.T) for o in self.lists]
-        return SplitDatasets(self.path, *transform_datasets(*dss, tfms=tfms, **kwargs))
+    def datasets(self, dataset_cls:type, **kwargs):
+        dss = [dataset_cls(*o.items.T, **kwargs) for o in self.lists]
+        return SplitDatasets(self.path, *dss)
 
 @dataclass
 class SplitDatasets():
     path:PathOrStr
     train_ds:Dataset
     valid_ds:Dataset
+    test_ds:Optional[Dataset] = None
 
     @property
     def datasets(self): return [self.train_ds,self.valid_ds]
+
+    def transform(self, tfms:TfmList, **kwargs)->'SplitDatasets':
+        assert not isinstance(self.train_ds, DatasetTfm)
+        self.train_ds = DatasetTfm(self.train_ds, tfms[0],  **kwargs)
+        self.valid_ds = DatasetTfm(self.valid_ds, tfms[1],  **kwargs)
+        if self.test_ds is not None:
+            self.test_ds = DatasetTfm(self.test_ds, tfms[1],  **kwargs)
+        return self
 
     def dataloaders(self, **kwargs):
         return [DataLoader(o, **kwargs) for o in self.datasets]
