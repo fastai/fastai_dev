@@ -17,7 +17,7 @@ summary: "`Learner` support for computer vision"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/vision.learner.html#vision.learner"><code>vision.learner</code></a> is the module that defines the <code>Conv_Learner</code> class, to easily get a model suitable for transfer learning.</p>
+<p><a href="/vision.learner.html#vision.learner"><code>vision.learner</code></a> is the module that defines the <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L47"><code>Learner.create_cnn</code></a> method, to easily get a model suitable for transfer learning.</p>
 
 </div>
 </div>
@@ -36,34 +36,22 @@ summary: "`Learner` support for computer vision"
 <p>Transfer learning is a technique where you use a model trained on a very large dataset (usually <a href="http://image-net.org/">ImageNet</a> in computer vision) and then adapt it to your own dataset. The idea is that it has learned to recognize many features on all of this data, and that you will benefit from this knowledge, especially if your dataset is small, compared to starting from a randomly initiliazed model. It has been proved in <a href="https://arxiv.org/abs/1805.08974">this article</a> on a wide range of tasks that transfer learning nearly always give better results.</p>
 <p>In practice, you need to change the last part of your model to be adapted to your own number of classes. Most convolutional models end with a few linear layers (a part will call head). The last convolutional layer will have analyzed features in the image that went through the model, and the job of the head is to convert those in predictions for each of our classes. In transfer learning we will keep all the convolutional layers (called the body or the backbone of the model) with their weights pretrained on ImageNet but will define a new head initiliazed randomly.</p>
 <p>Then we will train the model we obtain in two phases: first we freeze the body weights and only train the head (to convert those analyzed features into predictions for our own data), then we unfreeze the layers of the backbone (gradually if necessary) and fine-tune the whole model (possily using differential learning rates).</p>
-<p>The <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> class helps you to automatically get a pretrained model from a given architecture with a custom head that is suitable for your data.</p>
+<p>The <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L47"><code>Learner.create_cnn</code></a> factory method helps you to automatically get a pretrained model from a given architecture with a custom head that is suitable for your data.</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="ConvLearner"><code>class</code> <code>ConvLearner</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L47" class="source_link">[source]</a></h2><blockquote><p><code>ConvLearner</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>arch</code>:<code>Callable</code>, <code>cut</code>:<code>Union</code>[<code>int</code>, <code>Callable</code>]=<code>None</code>, <code>pretrained</code>:<code>bool</code>=<code>True</code>, <code>lin_ftrs</code>:<code>Optional</code>[<code>Collection</code>[<code>int</code>]]=<code>None</code>, <code>ps</code>:<code>Floats</code>=<code>0.5</code>, <code>custom_head</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]=<code>None</code>, <code>split_on</code>:<code>Union</code>[<code>Callable</code>, <code>Collection</code>[<code>ModuleList</code>], <code>NoneType</code>]=<code>None</code>, <code>kwargs</code>:<code>Any</code>) :: <a href="/basic_train.html#Learner"><code>Learner</code></a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This class creates a <a href="/basic_train.html#Learner"><code>Learner</code></a> object from the <a href="/vision.data.html#vision.data"><code>data</code></a> object and model inferred from it with the backbone given in <code>arch</code>. Specifically, it will cut the model defined by <code>arch</code> (randomly initialized if <code>pretrained</code> is False) at the last convolutional layer by default (or as defined in <code>cut</code>, see below) and add:</p>
+<h4 id="Learner.create_cnn"><code>Learner.create_cnn</code> <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L47" class="source_link">[source]</a></h4><blockquote><p><code>Learner.create_cnn</code>(<a href="/vision.data.html#vision.data"><code>data</code></a>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>arch</code>:<code>Callable</code>, <code>cut</code>:<code>Union</code>[<code>int</code>, <code>Callable</code>]=<code>None</code>, <code>pretrained</code>:<code>bool</code>=<code>True</code>, <code>lin_ftrs</code>:<code>Optional</code>[<code>Collection</code>[<code>int</code>]]=<code>None</code>, <code>ps</code>:<code>Floats</code>=<code>0.5</code>, <code>custom_head</code>:<code>Optional</code>[<a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>]=<code>None</code>, <code>split_on</code>:<code>Union</code>[<code>Callable</code>, <code>Collection</code>[<code>ModuleList</code>], <code>NoneType</code>]=<code>None</code>, <code>kwargs</code>:<code>Any</code>)</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This method creates a <a href="/basic_train.html#Learner"><code>Learner</code></a> object from the <a href="/vision.data.html#vision.data"><code>data</code></a> object and model inferred from it with the backbone given in <code>arch</code>. Specifically, it will cut the model defined by <code>arch</code> (randomly initialized if <code>pretrained</code> is False) at the last convolutional layer by default (or as defined in <code>cut</code>, see below) and add:</p>
 <ul>
 <li>an <a href="/layers.html#AdaptiveConcatPool2d"><code>AdaptiveConcatPool2d</code></a> layer,</li>
 <li>a <a href="/layers.html#Flatten"><code>Flatten</code></a> layer,</li>
@@ -87,7 +75,7 @@ summary: "`Learner` support for computer vision"
 <span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -97,11 +85,11 @@ summary: "`Learner` support for computer vision"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learner</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learner</span> <span class="o">=</span> <span class="n">Learner</span><span class="o">.</span><span class="n">create_cnn</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
 <span class="n">learner</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -131,7 +119,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You can customize <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> for your own models default <code>cut</code> and <code>split_on</code> functions by adding it them the dictionary <code>model_meta</code>. The key should be your model and the value should be a dictionary with the keys <code>cut</code> and <code>split_on</code> (see the source code for examples). The constructor will call <a href="/vision.learner.html#create_body"><code>create_body</code></a> and <a href="/vision.learner.html#create_head"><code>create_head</code></a> for you based on <code>cut</code>; you can also call them yourself, which is particularly useful for testing.</p>
+<p>You can customize <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L47"><code>Learner.create_cnn</code></a> for your own model's default <code>cut</code> and <code>split_on</code> functions by adding it them the dictionary <code>model_meta</code>. The key should be your model and the value should be a dictionary with the keys <code>cut</code> and <code>split_on</code> (see the source code for examples). The constructor will call <a href="/vision.learner.html#create_body"><code>create_body</code></a> and <a href="/vision.learner.html#create_head"><code>create_head</code></a> for you based on <code>cut</code>; you can also call them yourself, which is particularly useful for testing.</p>
 
 </div>
 </div>
@@ -179,7 +167,7 @@ epoch  train loss  valid loss  accuracy
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Model head that takes <code>nf</code> features, runs through <code>lin_ftrs</code>, and ends with <code>nc</code> classes. <code>ps</code> is the probability of the dropouts, as documented above in <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a>.</p>
+<p>Model head that takes <code>nf</code> features, runs through <code>lin_ftrs</code>, and ends with <code>nc</code> classes. <code>ps</code> is the probability of the dropouts, as documented above in <a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L47"><code>Learner.create_cnn</code></a>.</p>
 
 </div>
 </div>
@@ -220,7 +208,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ClassificationInterpretation"><code>class</code> <code>ClassificationInterpretation</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L63" class="source_link">[source]</a></h2><blockquote><p><code>ClassificationInterpretation</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>y_pred</code>:<code>Tensor</code>, <code>y_true</code>:<code>Tensor</code>, <code>loss_class</code>:<code>type</code>=<code>'CrossEntropyLoss'</code>, <code>sigmoid</code>:<code>bool</code>=<code>True</code>)</p>
+<h2 id="ClassificationInterpretation"><code>class</code> <code>ClassificationInterpretation</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L66" class="source_link">[source]</a></h2><blockquote><p><code>ClassificationInterpretation</code>(<code>data</code>:<a href="/basic_data.html#DataBunch"><code>DataBunch</code></a>, <code>probs</code>:<code>Tensor</code>, <code>y_true</code>:<code>Tensor</code>, <code>losses</code>:<code>Tensor</code>, <code>sigmoid</code>:<code>bool</code>=<code>None</code>)</p>
 </blockquote>
 <p>Interpretation methods for classification models.</p>
 
@@ -244,13 +232,13 @@ epoch  train loss  valid loss  accuracy
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="o">.</span><span class="n">create_cnn</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">)</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">preds</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">get_preds</span><span class="p">()</span>
 <span class="n">interp</span> <span class="o">=</span> <span class="n">ClassificationInterpretation</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">loss_class</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">)</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -281,9 +269,9 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ClassificationInterpretation.plot_top_losses"><code>plot_top_losses</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L82" class="source_link">[source]</a></h4><blockquote><p><code>plot_top_losses</code>(<code>k</code>, <code>largest</code>=<code>True</code>, <code>figsize</code>=<code>(12, 12)</code>)</p>
+<h4 id="ClassificationInterpretation.plot_top_losses"><code>plot_top_losses</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L83" class="source_link">[source]</a></h4><blockquote><p><code>plot_top_losses</code>(<code>k</code>, <code>largest</code>=<code>True</code>, <code>figsize</code>=<code>(12, 12)</code>)</p>
 </blockquote>
-<p>Show images in <code>top_losses</code> along with their loss, label, and prediction.</p>
+<p>Show images in <code>top_losses</code> along with their prediction, actual, loss, and probability of actual class.</p>
 
 </div>
 
@@ -308,7 +296,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span><span class="o">.</span><span class="n">plot_top_losses</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -340,7 +328,7 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ClassificationInterpretation.top_losses"><code>top_losses</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L78" class="source_link">[source]</a></h4><blockquote><p><code>top_losses</code>(<code>k</code>, <code>largest</code>=<code>True</code>)</p>
+<h4 id="ClassificationInterpretation.top_losses"><code>top_losses</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L79" class="source_link">[source]</a></h4><blockquote><p><code>top_losses</code>(<code>k</code>, <code>largest</code>=<code>True</code>)</p>
 </blockquote>
 <p><code>k</code> largest(/smallest) losses.</p>
 
@@ -388,7 +376,7 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ClassificationInterpretation.plot_confusion_matrix"><code>plot_confusion_matrix</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L99" class="source_link">[source]</a></h4><blockquote><p><code>plot_confusion_matrix</code>(<code>normalize</code>:<code>bool</code>=<code>False</code>, <code>title</code>:<code>str</code>=<code>'Confusion matrix'</code>, <code>cmap</code>:<code>Any</code>=<code>'Blues'</code>, <code>kwargs</code>)</p>
+<h4 id="ClassificationInterpretation.plot_confusion_matrix"><code>plot_confusion_matrix</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L100" class="source_link">[source]</a></h4><blockquote><p><code>plot_confusion_matrix</code>(<code>normalize</code>:<code>bool</code>=<code>False</code>, <code>title</code>:<code>str</code>=<code>'Confusion matrix'</code>, <code>cmap</code>:<code>Any</code>=<code>'Blues'</code>, <code>kwargs</code>)</p>
 </blockquote>
 <p>Plot the confusion matrix, passing <code>kawrgs</code> to <code>plt.figure</code>.</p>
 
@@ -408,7 +396,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span><span class="o">.</span><span class="n">plot_confusion_matrix</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
@@ -440,7 +428,7 @@ epoch  train loss  valid loss
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ClassificationInterpretation.confusion_matrix"><code>confusion_matrix</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L93" class="source_link">[source]</a></h4><blockquote><p><code>confusion_matrix</code>()</p>
+<h4 id="ClassificationInterpretation.confusion_matrix"><code>confusion_matrix</code><a href="https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py#L94" class="source_link">[source]</a></h4><blockquote><p><code>confusion_matrix</code>()</p>
 </blockquote>
 <p>Confusion matrix as an <code>np.ndarray</code>.</p>
 
@@ -460,7 +448,7 @@ epoch  train loss  valid loss
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">interp</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">()</span>
 </pre></div>
 
-</div>
+    </div>
 </div>
 </div>
 
