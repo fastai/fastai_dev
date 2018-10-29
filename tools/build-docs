@@ -3,10 +3,10 @@
 # convert ./docs_src nbs into html under ./docs
 
 # build/rebuild modified nbs:
-# tools/build-docs -v
+# tools/build-docs
 #
 # force rebuild all nbs:
-# tools/build-docs -v
+# tools/build-docs -f
 
 from fastai.gen_doc.nbdoc import *
 from fastai.gen_doc.convert2html import *
