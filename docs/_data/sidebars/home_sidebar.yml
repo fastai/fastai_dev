@@ -135,6 +135,9 @@ entries:
       title: Overview
       url: overview.html
     - output: web,pdf
+      title: data_block
+      url: data_block.html
+    - output: web,pdf
       title: basic_data
       url: basic_data.html
     - output: web,pdf
