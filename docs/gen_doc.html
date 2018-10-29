@@ -198,7 +198,7 @@ tools/run-after-git-clone
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Update-the-doc">Update the doc<a class="anchor-link" href="#Update-the-doc">&#182;</a></h2>
+<h2 id="Update-the-documentation-notebooks">Update the documentation notebooks<a class="anchor-link" href="#Update-the-documentation-notebooks">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -240,9 +240,6 @@ tools/run-after-git-clone
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To convert <code>docs_src/*ipynb</code> to <code>docs/*html</code>:</p>
-<div class="highlight"><pre><span></span>python tools/build-docs
-</pre></div>
 <p><a href="/gen_doc.gen_notebooks.html#update_notebooks"><code>update_notebooks</code></a> can be run as a script for convenience.</p>
 <p>To update all notebooks under <code>docs_src</code>:</p>
 <div class="highlight"><pre><span></span>python tools/update-nbs
@@ -250,6 +247,19 @@ tools/run-after-git-clone
 <p>To automatically append new fastai methods to their corresponding documentation notebook:</p>
 <div class="highlight"><pre><span></span>python tools/update-nbs --update_nb_links
 </pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Update-the-documentation-website">Update the documentation website<a class="anchor-link" href="#Update-the-documentation-website">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Once notebooks have been updated, update the website html files (under <code>docs</code>)</p>
 
 </div>
 </div>
@@ -291,6 +301,29 @@ tools/run-after-git-clone
 <li>check <code>docs/_data/sidebars/home_sidebar.yml</code></li>
 <li><code>git commit docs_src/sidebar/sidebar_data.py docs/_data/sidebars/home_sidebar.yml</code></li>
 </ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Generating-html">Generating html<a class="anchor-link" href="#Generating-html">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To convert <code>docs_src/*ipynb</code> to <code>docs/*html</code>:</p>
+<ul>
+<li>only the modified <code>*ipynb</code>:</li>
+</ul>
+<div class="highlight"><pre><span></span>python tools/build-docs
+</pre></div>
+<ul>
+<li>force to rebuild all <code>*ipynb</code>s:</li>
+</ul>
+<div class="highlight"><pre><span></span>python tools/build-docs -f
+</pre></div>
 
 </div>
 </div>
