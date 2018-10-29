@@ -28,4 +28,8 @@ if (cur_dir == "tools"): os.chdir("..")
 # if no files were specified pass the dir instead for all files
 if not files: files.append('docs_src')
 
-for file in files: update_notebooks(file, None, **args)
+for file in files: 
+    try:
+        update_notebooks(file, None, **args)
+    except:
+        print(f"failed $file")

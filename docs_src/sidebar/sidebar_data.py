@@ -60,6 +60,7 @@ sidebar_d = {
     },
     'Core': {
         'Overview': 'overview',
+        'data_block': 'data_block',
         'basic_data': 'basic_data',
         'layers': 'layers',
         'datasets': 'datasets',
