@@ -170,7 +170,8 @@ summary: "The data block API"
 <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">ImageFileList</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">planet</span><span class="p">)</span>            
         <span class="c1">#Where to find the data? -&gt; in planet and its subfolders</span>
         <span class="o">.</span><span class="n">label_from_csv</span><span class="p">(</span><span class="s1">&#39;labels.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.jpg&#39;</span><span class="p">)</span>  
-        <span class="c1">#How to label? -&gt; use the csv file labels.csv in path, adds .jpg to the names and take them in the folder train</span>
+        <span class="c1">#How to label? -&gt; use the csv file labels.csv in path, </span>
+        <span class="c1">#add .jpg to the names and take them in the folder train</span>
         <span class="o">.</span><span class="n">random_split_by_pct</span><span class="p">()</span>                     
         <span class="c1">#How to split in train/valid? -&gt; randomly with the defulat 20% in valid</span>
         <span class="o">.</span><span class="n">datasets</span><span class="p">(</span><span class="n">ImageMultiDataset</span><span class="p">)</span>  
@@ -314,7 +315,7 @@ summary: "The data block API"
         <span class="o">.</span><span class="n">label_from_func</span><span class="p">(</span><span class="n">get_y_fn</span><span class="p">)</span>                         <span class="c1">#How to label? -&gt; use get_y_fn</span>
         <span class="o">.</span><span class="n">random_split_by_pct</span><span class="p">()</span>                             <span class="c1">#How to split between train and valid? -&gt; randomly</span>
         <span class="o">.</span><span class="n">datasets</span><span class="p">(</span><span class="n">SegmentationDataset</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">codes</span><span class="p">)</span>      <span class="c1">#How to create a dataset? -&gt; use SegmentationDataset</span>
-        <span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">get_transforms</span><span class="p">(),</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">tfm_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#Data augmentation? -&gt; Use standard tfms with tfm_y=True</span>
+        <span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">get_transforms</span><span class="p">(),</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">tfm_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#Data aug? -&gt; Use standard tfms with tfm_y=True</span>
         <span class="o">.</span><span class="n">databunch</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">64</span><span class="p">))</span>                                 <span class="c1">#Lastly convert in a databunch.</span>
 </pre></div>
 
@@ -389,12 +390,18 @@ summary: "The data block API"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">ImageFileList</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">coco</span><span class="p">)</span>                 <span class="c1">#Where are the images? -&gt; in coco</span>
-        <span class="o">.</span><span class="n">label_from_func</span><span class="p">(</span><span class="n">get_y_func</span><span class="p">)</span>                    <span class="c1">#How to find the labels? -&gt; use get_y_func</span>
-        <span class="o">.</span><span class="n">random_split_by_pct</span><span class="p">()</span>                          <span class="c1">#How to split in train/valid? -&gt; randomly with the default 20% in valid</span>
-        <span class="o">.</span><span class="n">datasets</span><span class="p">(</span><span class="n">ObjectDetectDataset</span><span class="p">)</span>                  <span class="c1">#How to create datasets? -&gt; with ObjectDetectDataset</span>
-        <span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">tfm_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>          <span class="c1">#Data augmentation? -&gt; Standard transforms with tfm_y=True</span>
-        <span class="o">.</span><span class="n">databunch</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">bb_pad_collate</span><span class="p">))</span>   <span class="c1">#Finally we convert to a DataBunch and we use bb_pad_collate</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">ImageFileList</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">coco</span><span class="p">)</span>                 
+        <span class="c1">#Where are the images? -&gt; in coco</span>
+        <span class="o">.</span><span class="n">label_from_func</span><span class="p">(</span><span class="n">get_y_func</span><span class="p">)</span>                    
+        <span class="c1">#How to find the labels? -&gt; use get_y_func</span>
+        <span class="o">.</span><span class="n">random_split_by_pct</span><span class="p">()</span>                          
+        <span class="c1">#How to split in train/valid? -&gt; randomly with the default 20% in valid</span>
+        <span class="o">.</span><span class="n">datasets</span><span class="p">(</span><span class="n">ObjectDetectDataset</span><span class="p">)</span>                  
+        <span class="c1">#How to create datasets? -&gt; with ObjectDetectDataset</span>
+        <span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">tfms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">tfm_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>          
+        <span class="c1">#Data augmentation? -&gt; Standard transforms with tfm_y=True</span>
+        <span class="o">.</span><span class="n">databunch</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">bb_pad_collate</span><span class="p">))</span>   
+        <span class="c1">#Finally we convert to a DataBunch and we use bb_pad_collate</span>
 </pre></div>
 
 </div>
