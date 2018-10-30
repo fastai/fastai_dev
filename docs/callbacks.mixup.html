@@ -1,7 +1,7 @@
 ---
 
 title: callbacks.mixup
-keywords: 
+keywords: fastai
 sidebar: home_sidebar
 
 summary: "Implementation of mixup"
@@ -57,7 +57,8 @@ summary: "Implementation of mixup"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">MNIST_SAMPLE</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
 </pre></div>
@@ -211,9 +212,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2><a id=MixUpCallback></a><code>class</code> <code>MixUpCallback</code></h2>
-<blockquote><p><code>MixUpCallback</code>(<code>learner</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L7">[source]</a></p>
+<h2 id="MixUpCallback"><code>class</code> <code>MixUpCallback</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L7" class="source_link">[source]</a></h2><blockquote><p><code>MixUpCallback</code>(<code>learner</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>alpha</code>:<code>float</code>=<code>0.4</code>, <code>stack_x</code>:<code>bool</code>=<code>False</code>, <code>stack_y</code>:<code>bool</code>=<code>True</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 
 </div>
@@ -240,9 +239,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_batch_begin></a><code>on_batch_begin</code></h4>
-<blockquote><p><code>on_batch_begin</code>(<code>last_input</code>, <code>last_target</code>, <code>train</code>, <code>kwargs</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L14">[source]</a></p>
+<h4 id="MixUpCallback.on_batch_begin"><code>on_batch_begin</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L14" class="source_link">[source]</a></h4><blockquote><p><code>on_batch_begin</code>(<code>last_input</code>, <code>last_target</code>, <code>train</code>, <code>kwargs</code>)</p>
 </blockquote>
 
 </div>
@@ -271,7 +268,7 @@ epoch  train loss  valid loss  accuracy
 <p>We often have to modify the loss so that it is compatible with Mixup: pytorch was very careful to avoid one-hot encoding targets when it could, so it seems a bit of a drag to undo this. Fortunately for us, if the loss is a classic <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.functional.cross_entropy">cross-entropy</a>, we have</p>
 <p><code>loss(output, new_target) = t * loss(output, target1) + (1-t) * loss(output, target2)</code></p>
 <p>so we won’t one-hot encode anything and just compute those two losses then do the linear combination.</p>
-<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train.html#mixup"><code>mixup</code></a> function will use it to change the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.cross_entropy"><code>Learner.loss_fn</code></a> if necessary.</p>
+<p>The following class is used to adapt the loss to mixup. Note that the <a href="/train.html#mixup"><code>mixup</code></a> function will use it to change the <code>Learner.loss_func</code> if necessary.</p>
 
 </div>
 </div>
@@ -285,9 +282,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3><a id=MixUpLoss></a><code>class</code> <code>MixUpLoss</code></h3>
-<blockquote><p><code>MixUpLoss</code>(<code>crit</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L31">[source]</a></p>
+<h3 id="MixUpLoss"><code>class</code> <code>MixUpLoss</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/mixup.py#L33" class="source_link">[source]</a></h3><blockquote><p><code>MixUpLoss</code>(<code>crit</code>) :: <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module"><code>Module</code></a></p>
 </blockquote>
 
 </div>

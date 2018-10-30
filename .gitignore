@@ -128,3 +128,6 @@ docs_src/.last_checked
 # symlinks to fastai
 docs_src/fastai
 tools/fastai
+
+# link checker
+checklink/cookies.txt

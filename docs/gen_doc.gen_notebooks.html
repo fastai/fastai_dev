@@ -1,7 +1,7 @@
 ---
 
 title: gen_doc.gen_notebooks
-keywords: 
+keywords: fastai
 sidebar: home_sidebar
 
 summary: "Generation of documentation notebook skeletons from python module"
@@ -18,7 +18,7 @@ summary: "Generation of documentation notebook skeletons from python module"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This module contains the scripts and API to auto-generate or update a documentation notebook skeleton from a given .py file or a full package. It is not expected you'd use this skeleton as your final docs - you should add markdown, examples, etc to it. The skeleton just has a minimal list of exported symbols.</p>
-<p><a href="http://docs.fast.ai/gen_doc.sgen_notebooks.html#fastai.gen_doc.sgen_notebooks"><code>fastai.gen_doc.sgen_notebooks</code></a> is a script that transforms a given module into a notebook skeleton. The usage is</p>
+<p><a href="https://github.com/fastai/fastai_docs/blob/master/docs_src/tools/sgen_notebooks.py"><code>fastai_docs/tools/sgen_notebooks</code></a> contains a command line tool that transforms a given module into a notebook skeleton. It's essentially a wrapper around <a href="/gen_doc.gen_notebooks.html#update_notebooks"><code>gen_notebooks.update_notebooks</code></a> The usage is</p>
 
 <pre><code>python -m sgen_notebooks package path_to_result [--update]</code></pre>
 <ul>
@@ -98,14 +98,13 @@ summary: "Generation of documentation notebook skeletons from python module"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=create_module_page></a><code>create_module_page</code></h4>
-<blockquote><p><code>create_module_page</code>(<code>mod</code>, <code>dest_path</code>, <code>force</code>=<code>False</code>)</p>
+<h4 id="create_module_page"><code>create_module_page</code><a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L97" class="source_link">[source]</a></h4><blockquote><p><code>create_module_page</code>(<code>mod</code>, <code>dest_path</code>, <code>force</code>=<code>False</code>)</p>
 </blockquote>
 <p>Create the documentation notebook for module <code>mod_name</code> in path <code>dest_path</code></p>
 <ul>
 <li><em>mod</em>: the module</li>
 <li><em>dest_path</em>: the folder in which to generate the notebook</li>
-<li><em>force</em>: if False, will raise an exception if the notebook is already present <a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L83">[source]</a></li>
+<li><em>force</em>: if False, will raise an exception if the notebook is already present </li>
 </ul>
 
 </div>
@@ -125,9 +124,7 @@ summary: "Generation of documentation notebook skeletons from python module"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=link_nb></a><code>link_nb</code></h4>
-<blockquote><p><code>link_nb</code>(<code>nb_path</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L271">[source]</a></p>
+<h4 id="link_nb"><code>link_nb</code><a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L294" class="source_link">[source]</a></h4><blockquote><p><code>link_nb</code>(<code>nb_path</code>)</p>
 </blockquote>
 
 </div>
@@ -147,13 +144,12 @@ summary: "Generation of documentation notebook skeletons from python module"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=update_module_page></a><code>update_module_page</code></h4>
-<blockquote><p><code>update_module_page</code>(<code>mod</code>, <code>dest_path</code>=<code>'.'</code>)</p>
+<h4 id="update_module_page"><code>update_module_page</code><a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L266" class="source_link">[source]</a></h4><blockquote><p><code>update_module_page</code>(<code>mod</code>, <code>dest_path</code>=<code>'.'</code>)</p>
 </blockquote>
 <p>Update the documentation notebook of a given module.</p>
 <ul>
 <li><em>mod</em>: the module</li>
-<li><em>dest_path</em>: the folder in which to generate the notebook <a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L243">[source]</a></li>
+<li><em>dest_path</em>: the folder in which to generate the notebook </li>
 </ul>
 
 </div>
@@ -198,9 +194,7 @@ Notebook metadata structure looks like this: <code>'metadata': { 'jekyll': {...}
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=generate_missing_metadata></a><code>generate_missing_metadata</code></h4>
-<blockquote><p><code>generate_missing_metadata</code>(<code>dest_file</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L178">[source]</a></p>
+<h4 id="generate_missing_metadata"><code>generate_missing_metadata</code><a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L193" class="source_link">[source]</a></h4><blockquote><p><code>generate_missing_metadata</code>(<code>dest_file</code>)</p>
 </blockquote>
 
 </div>
@@ -220,10 +214,9 @@ Notebook metadata structure looks like this: <code>'metadata': { 'jekyll': {...}
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=update_nb_metadata></a><code>update_nb_metadata</code></h4>
-<blockquote><p><code>update_nb_metadata</code>(<code>nb_path</code>=<code>None</code>, <code>title</code>=<code>None</code>, <code>summary</code>=<code>None</code>, <code>keywords</code>=<code>'fastai'</code>, <code>overwrite</code>=<code>True</code>, <code>kwargs</code>)</p>
+<h4 id="update_nb_metadata"><code>update_nb_metadata</code><a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L208" class="source_link">[source]</a></h4><blockquote><p><code>update_nb_metadata</code>(<code>nb_path</code>=<code>None</code>, <code>title</code>=<code>None</code>, <code>summary</code>=<code>None</code>, <code>keywords</code>=<code>'fastai'</code>, <code>overwrite</code>=<code>True</code>, <code>kwargs</code>)</p>
 </blockquote>
-<p>Creates jekyll metadata for given notebook path. <a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L193">[source]</a></p>
+<p>Creates jekyll metadata for given notebook path.</p>
 
 </div>
 
@@ -258,10 +251,9 @@ Notebook metadata structure looks like this: <code>'metadata': { 'jekyll': {...}
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=update_notebooks></a><code>update_notebooks</code></h4>
-<blockquote><p><code>update_notebooks</code>(<code>source_path</code>, <code>dest_path</code>=<code>None</code>, <code>update_html</code>=<code>True</code>, <code>update_nb</code>=<code>False</code>, <code>update_nb_links</code>=<code>True</code>, <code>do_execute</code>=<code>False</code>, <code>html_path</code>=<code>None</code>)</p>
+<h4 id="update_notebooks"><code>update_notebooks</code><a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L305" class="source_link">[source]</a></h4><blockquote><p><code>update_notebooks</code>(<code>source_path</code>, <code>dest_path</code>=<code>None</code>, <code>update_html</code>=<code>True</code>, <code>update_nb</code>=<code>False</code>, <code>update_nb_links</code>=<code>True</code>, <code>do_execute</code>=<code>False</code>, <code>update_line_num</code>=<code>True</code>, <code>html_path</code>=<code>None</code>)</p>
 </blockquote>
-<p><code>source_path</code> can be a directory or a file. Assume all modules reside in the fastai directory. <a href="https://github.com/fastai/fastai/blob/master/fastai/gen_doc/gen_notebooks.py#L282">[source]</a></p>
+<p><code>source_path</code> can be a directory or a file. Assume all modules reside in the fastai directory.</p>
 
 </div>
 
@@ -274,8 +266,9 @@ Notebook metadata structure looks like this: <code>'metadata': { 'jekyll': {...}
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>As a convenience method, there's <a href="/gen_doc.gen_notebooks.html#update_notebooks"><code>update_notebooks</code></a> to update all notebooks. This snippet does the whole lot for you:</p>
-<div class="highlight"><pre><span></span><span class="n">update_notebooks</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">update_html</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">update_nb</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">update_nb_links</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="n">update_notebooks</span><span class="p">(</span><span class="s1">&#39;fastai_docs/docs_src&#39;</span><span class="p">,</span> <span class="n">update_html</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">update_nb</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
 </pre></div>
+<p>This will update all ipynb documentation notebooks specified under source_path</p>
 
 </div>
 </div>

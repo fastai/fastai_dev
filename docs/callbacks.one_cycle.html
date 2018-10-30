@@ -1,7 +1,7 @@
 ---
 
 title: callbacks.one_cycle
-keywords: 
+keywords: fastai
 sidebar: home_sidebar
 
 summary: "Implementation of the 1cycle policy"
@@ -52,7 +52,7 @@ summary: "Implementation of the 1cycle policy"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The one cycle policy allows to train very quickly, a phenomenon termed <a href="https://arxiv.org/abs/1708.07120"><em>superconvergence</em></a>. To see this in practice, we will first train a <a href="/vision.learner.html#ConvLearner"><code>ConvLearner</code></a> and see how our results compare when we use the <a href="/callbacks.one_cycle.html#OneCycleScheduler"><code>OneCycleScheduler</code></a> with <a href="/train.html#fit_one_cycle"><code>fit_one_cycle</code></a>.</p>
+<p>The one cycle policy allows to train very quickly, a phenomenon termed <a href="https://arxiv.org/abs/1708.07120"><em>superconvergence</em></a>. To see this in practice, we will first train a CNN and see how our results compare when we use the <a href="/callbacks.one_cycle.html#OneCycleScheduler"><code>OneCycleScheduler</code></a> with <a href="/train.html#fit_one_cycle"><code>fit_one_cycle</code></a>.</p>
 
 </div>
 </div>
@@ -62,7 +62,8 @@ summary: "Implementation of the 1cycle policy"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">get_mnist</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">MNIST_SAMPLE</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">ImageDataBunch</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">simple_cnn</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
 </pre></div>
@@ -88,31 +89,6 @@ summary: "Implementation of the 1cycle policy"
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="a7c29174-3a8b-4eb8-8301-93f09c7a6e8a"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#a7c29174-3a8b-4eb8-8301-93f09c7a6e8a');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "1b2f715e3281416499fe0340fa9426ab", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -172,25 +148,6 @@ var element = $('#a7c29174-3a8b-4eb8-8301-93f09c7a6e8a');
 
 <div class="output_area">
 
-
-
-
- 
- 
-<div id="dba204d9-0306-4fd4-9ff5-b8d8963d7800"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#dba204d9-0306-4fd4-9ff5-b8d8963d7800');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total time: 00:05
 epoch  train loss  valid loss  accuracy
@@ -228,25 +185,6 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_wrapper">
 <div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="b3f07087-7adc-47b3-8502-12780915aee0"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#b3f07087-7adc-47b3-8502-12780915aee0');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
 
 <div class="output_area">
 
@@ -293,25 +231,6 @@ epoch  train loss  valid loss  accuracy
 
 <div class="output_wrapper">
 <div class="output">
-
-<div class="output_area">
-
-
-
-
- 
- 
-<div id="c03e218b-7188-44d8-92ca-2d3a78d80109"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#c03e218b-7188-44d8-92ca-2d3a78d80109');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
 
 <div class="output_area">
 
@@ -377,9 +296,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2><a id=OneCycleScheduler></a><code>class</code> <code>OneCycleScheduler</code></h2>
-<blockquote><p><code>OneCycleScheduler</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>lr_max</code>:<code>float</code>, <code>moms</code>:<code>Floats</code>=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.3</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a>
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L9">[source]</a></p>
+<h2 id="OneCycleScheduler"><code>class</code> <code>OneCycleScheduler</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L9" class="source_link">[source]</a></h2><blockquote><p><code>OneCycleScheduler</code>(<code>learn</code>:<a href="/basic_train.html#Learner"><code>Learner</code></a>, <code>lr_max</code>:<code>float</code>, <code>moms</code>:<code>Floats</code>=<code>(0.95, 0.85)</code>, <code>div_factor</code>:<code>float</code>=<code>25.0</code>, <code>pct_start</code>:<code>float</code>=<code>0.3</code>) :: <a href="/callback.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 
 </div>
@@ -406,9 +323,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=steps></a><code>steps</code></h4>
-<blockquote><p><code>steps</code>(<code>steps_cfg</code>:<code>StartOptEnd</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L21">[source]</a></p>
+<h4 id="OneCycleScheduler.steps"><code>steps</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L21" class="source_link">[source]</a></h4><blockquote><p><code>steps</code>(<code>steps_cfg</code>:<code>StartOptEnd</code>)</p>
 </blockquote>
 
 </div>
@@ -435,9 +350,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_train_begin></a><code>on_train_begin</code></h4>
-<blockquote><p><code>on_train_begin</code>(<code>n_epochs</code>:<code>int</code>, <code>kwargs</code>:<code>Any</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L26">[source]</a></p>
+<h4 id="OneCycleScheduler.on_train_begin"><code>on_train_begin</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L26" class="source_link">[source]</a></h4><blockquote><p><code>on_train_begin</code>(<code>n_epochs</code>:<code>int</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 
 </div>
@@ -464,9 +377,7 @@ epoch  train loss  valid loss  accuracy
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4><a id=on_batch_end></a><code>on_batch_end</code></h4>
-<blockquote><p><code>on_batch_end</code>(<code>train</code>, <code>kwargs</code>:<code>Any</code>)
-<a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L39">[source]</a></p>
+<h4 id="OneCycleScheduler.on_batch_end"><code>on_batch_end</code><a href="https://github.com/fastai/fastai/blob/master/fastai/callbacks/one_cycle.py#L39" class="source_link">[source]</a></h4><blockquote><p><code>on_batch_end</code>(<code>train</code>, <code>kwargs</code>:<code>Any</code>)</p>
 </blockquote>
 
 </div>

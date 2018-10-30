@@ -9,7 +9,8 @@ digraph G {
     core -> torch_core
     torch_core -> metrics 
     torch_core -> layers 
-    torch_core -> data
+    torch_core -> data_block
+    data_block -> basic_data
   }
   subgraph cluster_train {
     label = training
