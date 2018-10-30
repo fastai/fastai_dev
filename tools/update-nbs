@@ -28,8 +28,22 @@ if (cur_dir == "tools"): os.chdir("..")
 # if no files were specified pass the dir instead for all files
 if not files: files.append('docs_src')
 
+succeeded = []
+failed = []
 for file in files:
     try:
         update_notebooks(file, None, **args)
-    except:
-        print(f"failed {file}")
+    except Exception as e:
+        print(f"failed to update {file}")
+        print(e)
+        failed.append(file)
+    else:
+        succeeded.append(file)
+
+print("\n*** Summary:")
+if not failed: print("All succeeded")
+else:
+    print("- Succeeded:")
+    print("\n".join(succeeded))
+    print("- Failed:")
+    print("\n".join(failed))
