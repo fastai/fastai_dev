@@ -43,7 +43,8 @@ for file in files:
 print("\n*** Summary:")
 if not failed: print("All succeeded")
 else:
-    print("- Succeeded:")
-    print("\n".join(succeeded))
+    if succeeded:
+        print("- Succeeded:")
+        print("\n".join(succeeded))
     print("- Failed:")
     print("\n".join(failed))
