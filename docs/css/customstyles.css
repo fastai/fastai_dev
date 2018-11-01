@@ -1290,7 +1290,7 @@ h4 code {
 /* Google Custom Search styling */
 
 #gcs-search-container {
-    width: 440px !important; /* ToDo: define width without using absolute px value */
+    width: 340px !important; /* ToDo: define width without using absolute px value */
     display: inline-block !important;
 }
 
@@ -1302,4 +1302,7 @@ h4 code {
 }
 .gsc-control-cse {
     padding: 6px !important;
+}
+input.gsc-input {
+    font-size: 12px !important;
 }
