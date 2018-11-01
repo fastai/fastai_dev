@@ -55,7 +55,10 @@
 		{% endif %}
                 <!--comment out this block if you want to hide search-->
                 <li>
-                    <!--start search-->
+                    <!-- uncomment this to add google custom search, once the setup is completed
+                    {% include search_google_custom.html %} -->
+
+                    <!-- remove this when adding google custom search -->
                     <div id="search-demo-container">
                         <input type="text" id="search-input" placeholder="{{site.data.strings.search_placeholder_text}}">
                         <ul id="results-container"></ul>
@@ -72,7 +75,7 @@
                             fuzzy: true,
                     })
                     </script>
-                    <!--end search-->
+                    <!-- end remove this when adding google custom search -->
                 </li>
             </ul>
         </div>
