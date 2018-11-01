@@ -1297,3 +1297,9 @@ h4 code {
 .gsc-search-box.gsc-search-box-tools table {
   margin-bottom: 0px !important;
 }
+.gsc-input, .gsc-search-button {
+    padding: 0;
+}
+.gsc-control-cse {
+    padding: 6px !important;
+}
