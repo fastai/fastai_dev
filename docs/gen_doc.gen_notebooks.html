@@ -22,7 +22,7 @@ summary: "Generation of documentation notebook skeletons from python module"
 
 <pre><code>python -m sgen_notebooks package path_to_result [--update]</code></pre>
 <ul>
-<li><strong>package</strong> is the package you want to write the documentation of. Note that if the package isn't installed in your environment, you need to execute to execute the script in a place where package is a directory (or make a simlink to it). The script will search thourgh all the subdirectories to create all the relevant notebooks.</li>
+<li><strong>package</strong> is the package you want to write the documentation for. Note that if the package isn't installed in your environment, you need to execute the script in a place where package is a directory (or make a simlink to it). The script will search thourgh all the subdirectories to create all the relevant notebooks.</li>
 <li><strong>path_to_result</strong> is a directory where you want those notebooks. The script will auto-execute them, so this directory should contain the file nbdoc.py from this package. If the module you are documenting isn't installed, you will also need to have a simlink to it in your path_to_result folder.</li>
 <li>if the flag <strong>--update</strong> is added, the script will update the notebooks (to reflect the addition of new functions or new arguments).</li>
 </ul>
