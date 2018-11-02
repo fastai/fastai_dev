@@ -60,6 +60,9 @@ entries:
         - output: web,pdf
           title: GeneralScheduler
           url: callbacks.general_sched.html
+        - output: web,pdf
+          title: Tracking callbacks
+          url: callbacks.tracking.html
         title: callbacks
     output: web
     title: Training
