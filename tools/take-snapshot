@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Copy specified notebooks to dev_nb/snapshot if they have been executed completely:
 # tools/take-snapshot -v dev_nb/001b_fit.ipynb
