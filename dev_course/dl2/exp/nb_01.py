@@ -4,6 +4,8 @@
 #################################################
 # file to edit: dev_nb/01_matmul.ipynb
 
+from exp.nb_00 import *
+
 from pathlib import Path
 from IPython.core.debugger import set_trace
 from fastai import datasets
