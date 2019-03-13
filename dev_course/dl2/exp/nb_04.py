@@ -47,10 +47,15 @@ class TrainEvalCallback(Callback):
         run.model.eval()
         run.in_train=False
 
+def listify(o):
+    if o is None: return []
+    if isinstance(o, list): return o
+    if isinstance(o, tuple): return list(o)
+    return [o]
+
 class Runner():
     def __init__(self, cbs=None):
-        if cbs is None: cbs = []
-        self.stop,self.cbs = False,[TrainEvalCallback()]+cbs
+        self.stop,self.cbs = False,[TrainEvalCallback()]+listify(cbs)
 
     @property
     def opt(self):       return self.learn.opt
@@ -64,9 +69,9 @@ class Runner():
     def one_batch(self, xb, yb):
         self.xb,self.yb = xb,yb
         if self('begin_batch'): return
-        self.pred = self.model(xb)
+        self.pred = self.model(self.xb)
         if self('after_pred'): return
-        self.loss = self.loss_func(self.pred, yb)
+        self.loss = self.loss_func(self.pred, self.yb)
         if self('after_loss') or not self.in_train: return
         self.loss.backward()
         if self('after_backward'): return
@@ -106,7 +111,7 @@ class Runner():
         return False
 
 class AvgStats():
-    def __init__(self, metrics, in_train): self.metrics,self.in_train = metrics,in_train
+    def __init__(self, metrics, in_train): self.metrics,self.in_train = listify(metrics),in_train
 
     def reset(self):
         self.tot_loss,self.count = 0.,0
