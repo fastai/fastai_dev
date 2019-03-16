@@ -3,7 +3,7 @@
 nb_dirs = dev_nb dev_course
 
 git-clean-nb_dirs-check:
-	@echo "\n\n*** Checking that everything under nb_dirs is committed"
+	@echo "\n\n*** Checking that everything under '$(nb_dirs)' is committed"
 	@if [ -n "$(shell git status -s $(nb_dirs))" ]; then\
 		echo "git status $(nb_dirs) is not clean. You have uncommitted git files";\
 		exit 1;\
