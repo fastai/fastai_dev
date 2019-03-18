@@ -14,4 +14,8 @@ def get_data():
 
 def normalize(x, m, s): return (x-m)/s
 
+def test_near_zero(a,tol=1e-3): assert a.abs()<tol, f"Near zero: {a}"
+
+from torch.nn import init
+
 from torch import nn
