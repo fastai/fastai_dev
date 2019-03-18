@@ -21,7 +21,7 @@ end = "\r" if stealth else "\n"
 
 print("Attention! Signing notebooks under docs_src as *trusted*", end=end)
 
-path = Path('docs_src')
+path = Path('dev_nb')
 fname_last_checked = path/".last_checked"
 last_checked = os.path.getmtime(fname_last_checked) if fname_last_checked.exists() else None
 
