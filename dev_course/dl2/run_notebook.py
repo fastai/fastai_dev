@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+"""
+Run the tests outside of the jupyter notebook.
+
+Example:
+    $ python run_notebook.py 01_matmul.ipynb
+"""
 
 import nbformat,fire
 from nbconvert.preprocessors import ExecutePreprocessor
