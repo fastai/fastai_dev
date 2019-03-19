@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+"""Goes through the program and find cells with the special comment `#export` 
+and put them into a python module.
+
+Example:
+    $ python notebook2script.py 00_exports.ipynb
+    $ converted 00_exports.ipynb to nb_00.py
+
+"""
+
 import json,fire,re
 from pathlib import Path
 
