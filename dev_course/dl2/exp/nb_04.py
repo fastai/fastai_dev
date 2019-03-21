@@ -7,9 +7,8 @@
 from exp.nb_03 import *
 
 class DataBunch():
-    def __init__(self, train_dl, valid_dl):
-        self.train_dl,self.valid_dl = train_dl,valid_dl
-        self.c = self.train_ds.y.max().item()+1
+    def __init__(self, train_dl, valid_dl, c):
+        self.train_dl,self.valid_dl,self.c = train_dl,valid_dl,c
 
     @property
     def train_ds(self): return self.train_dl.dataset
@@ -26,36 +25,58 @@ class Learner():
     def __init__(self, model, opt, loss_func, data):
         self.model,self.opt,self.loss_func,self.data = model,opt,loss_func,data
 
-class Callback(): _order=0
+import re
+
+_camel_re1 = re.compile('(.)([A-Z][a-z]+)')
+_camel_re2 = re.compile('([a-z0-9])([A-Z])')
+def camel2snake(name):
+    s1 = re.sub(_camel_re1, r'\1_\2', name)
+    return re.sub(_camel_re2, r'\1_\2', s1).lower()
+
+class Callback():
+    _order=0
+    def set_runner(self, run): self.run=run
+    def __getattr__(self, k): return getattr(self.run, k)
+    @property
+    def name(self):
+        name = re.sub(r'Callback$', '', self.__class__.__name__)
+        return camel2snake(name or 'callback')
 
 class TrainEvalCallback(Callback):
-    def begin_fit(self, run):
-        run.n_epochs=0.
-        run.n_iter=0
+    def begin_fit(self):
+        self.run.n_epochs=0.
+        self.run.n_iter=0
 
-    def after_batch(self, run):
-        if run.in_train:
-            run.n_epochs += 1./run.iters
-            run.n_iter   += 1
+    def after_batch(self):
+        if not self.in_train: return
+        self.run.n_epochs += 1./self.iters
+        self.run.n_iter   += 1
 
-    def begin_epoch(self, run):
-        run.n_epochs=run.epoch
-        run.model.train()
-        run.in_train=True
+    def begin_epoch(self):
+        self.run.n_epochs=self.epoch
+        self.model.train()
+        self.run.in_train=True
 
-    def begin_validate(self, run):
-        run.model.eval()
-        run.in_train=False
+    def begin_validate(self):
+        self.model.eval()
+        self.run.in_train=False
+
+from typing import *
 
 def listify(o):
     if o is None: return []
     if isinstance(o, list): return o
-    if isinstance(o, tuple): return list(o)
+    if isinstance(o, Iterable): return list(o)
     return [o]
 
 class Runner():
-    def __init__(self, cbs=None):
-        self.stop,self.cbs = False,[TrainEvalCallback()]+listify(cbs)
+    def __init__(self, cbs=None, cb_funcs=None):
+        cbs = listify(cbs)
+        for cbf in listify(cb_funcs):
+            cb = cbf()
+            setattr(self, cb.name, cb)
+            cbs.append(cb)
+        self.stop,self.cbs = False,[TrainEvalCallback()]+cbs
 
     @property
     def opt(self):       return self.learn.opt
@@ -91,6 +112,7 @@ class Runner():
         self.epochs,self.learn = epochs,learn
 
         try:
+            for cb in self.cbs: cb.set_runner(self)
             if self('begin_fit'): return
             for epoch in range(epochs):
                 self.epoch = epoch
@@ -107,7 +129,7 @@ class Runner():
     def __call__(self, cb_name):
         for cb in sorted(self.cbs, key=lambda x: x._order):
             f = getattr(cb, cb_name, None)
-            if f and f(self): return True
+            if f and f(): return True
         return False
 
 class AvgStats():
@@ -119,10 +141,12 @@ class AvgStats():
 
     @property
     def all_stats(self): return [self.tot_loss.item()] + self.tot_mets
+    @property
+    def avg_stats(self): return [o/self.count for o in self.all_stats]
 
     def __repr__(self):
         if not self.count: return ""
-        return f"{'train' if self.in_train else 'valid'}: {[o/self.count for o in self.all_stats]}"
+        return f"{'train' if self.in_train else 'valid'}: {self.avg_stats}"
 
     def accumulate(self, run):
         bn = run.xb.shape[0]
@@ -135,15 +159,16 @@ class AvgStatsCallback(Callback):
     def __init__(self, metrics):
         self.train_stats,self.valid_stats = AvgStats(metrics,True),AvgStats(metrics,False)
 
-    def stats(self, run): return self.train_stats if run.in_train else self.valid_stats
-
-    def begin_epoch(self, run):
+    def begin_epoch(self):
         self.train_stats.reset()
         self.valid_stats.reset()
 
-    def after_loss(self, run):
-        with torch.no_grad(): self.stats(run).accumulate(run)
+    def after_loss(self):
+        stats = self.train_stats if self.in_train else self.valid_stats
+        with torch.no_grad(): stats.accumulate(self.run)
 
-    def after_epoch(self, run):
+    def after_epoch(self):
         print(self.train_stats)
         print(self.valid_stats)
+
+from functools import partial
