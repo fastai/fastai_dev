@@ -1,0 +1,180 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "shell_cmd"
+provides-nominal:
+provides-member:
+depends-top-level:
+- "AssignmentPrecedence"
+- !private "Pipe"
+- !private "Process"
+- "String"
+- "shell_cmd"
+depends-member:
+- !private ["SK", "Encoding"]
+- !private ["SK", "init"]
+- !private ["Sl", "Encoding"]
+- !private ["Sl", "init"]
+- !private ["SL", "Encoding"]
+- !private ["SL", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "Encoding"]
+- !private ["s28CustomDebugStringConvertibleP", "arguments"]
+- !private ["s28CustomDebugStringConvertibleP", "fileHandleForReading"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "launch"]
+- !private ["s28CustomDebugStringConvertibleP", "launchPath"]
+- !private ["s28CustomDebugStringConvertibleP", "readDataToEndOfFile"]
+- !private ["s28CustomDebugStringConvertibleP", "standardOutput"]
+- !private ["s17CustomReflectableP", "Encoding"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s23CustomStringConvertibleP", "Encoding"]
+- !private ["s23CustomStringConvertibleP", "arguments"]
+- !private ["s23CustomStringConvertibleP", "fileHandleForReading"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "launch"]
+- !private ["s23CustomStringConvertibleP", "launchPath"]
+- !private ["s23CustomStringConvertibleP", "readDataToEndOfFile"]
+- !private ["s23CustomStringConvertibleP", "standardOutput"]
+- !private ["s23CustomStringConvertibleP", "utf8"]
+- !private ["Se", "Encoding"]
+- !private ["Se", "init"]
+- !private ["SE", "Encoding"]
+- !private ["SE", "init"]
+- !private ["SS10FoundationE8EncodingV", "utf8"]
+- !private ["SQ", "Encoding"]
+- !private ["SQ", "arguments"]
+- !private ["SQ", "fileHandleForReading"]
+- !private ["SQ", "init"]
+- !private ["SQ", "launch"]
+- !private ["SQ", "launchPath"]
+- !private ["SQ", "readDataToEndOfFile"]
+- !private ["SQ", "standardOutput"]
+- !private ["SQ", "utf8"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "Encoding"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s32ExpressibleByStringInterpolationP", "Encoding"]
+- !private ["s32ExpressibleByStringInterpolationP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "Encoding"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "Encoding"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["10Foundation10FileHandleC", "readDataToEndOfFile"]
+- !private ["SH", "Encoding"]
+- !private ["SH", "arguments"]
+- !private ["SH", "fileHandleForReading"]
+- !private ["SH", "init"]
+- !private ["SH", "launch"]
+- !private ["SH", "launchPath"]
+- !private ["SH", "readDataToEndOfFile"]
+- !private ["SH", "standardOutput"]
+- !private ["SH", "utf8"]
+- !private ["s25LosslessStringConvertibleP", "Encoding"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s10MirrorPathP", "Encoding"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["10Foundation8NSCodingP", "readDataToEndOfFile"]
+- !private ["10Foundation8NSObjectC", "arguments"]
+- !private ["10Foundation8NSObjectC", "fileHandleForReading"]
+- !private ["10Foundation8NSObjectC", "init"]
+- !private ["10Foundation8NSObjectC", "launch"]
+- !private ["10Foundation8NSObjectC", "launchPath"]
+- !private ["10Foundation8NSObjectC", "readDataToEndOfFile"]
+- !private ["10Foundation8NSObjectC", "standardOutput"]
+- !private ["10Foundation16NSObjectProtocolP", "arguments"]
+- !private ["10Foundation16NSObjectProtocolP", "fileHandleForReading"]
+- !private ["10Foundation16NSObjectProtocolP", "init"]
+- !private ["10Foundation16NSObjectProtocolP", "launch"]
+- !private ["10Foundation16NSObjectProtocolP", "launchPath"]
+- !private ["10Foundation16NSObjectProtocolP", "readDataToEndOfFile"]
+- !private ["10Foundation16NSObjectProtocolP", "standardOutput"]
+- !private ["10Foundation14NSSecureCodingP", "readDataToEndOfFile"]
+- !private ["10Foundation4PipeC", "fileHandleForReading"]
+- !private ["10Foundation4PipeC", "init"]
+- !private ["10Foundation7ProcessC", "arguments"]
+- !private ["10Foundation7ProcessC", "init"]
+- !private ["10Foundation7ProcessC", "launch"]
+- !private ["10Foundation7ProcessC", "launchPath"]
+- !private ["10Foundation7ProcessC", "standardOutput"]
+- !private ["Sm", "Encoding"]
+- !private ["Sm", "init"]
+- !private ["SY", "utf8"]
+- !private ["ST", "Encoding"]
+- !private ["ST", "init"]
+- !private ["SS", "Encoding"]
+- !private ["SS", "init"]
+- !private ["Sy", "Encoding"]
+- !private ["Sy", "init"]
+- !private ["s16TextOutputStreamP", "Encoding"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "Encoding"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["4Just24URLComponentsConvertibleP", "Encoding"]
+- !private ["4Just24URLComponentsConvertibleP", "init"]
+- !private ["10Foundation13_CFBridgeableP", "Encoding"]
+- !private ["10Foundation13_CFBridgeableP", "init"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "Encoding"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "Encoding"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "Encoding"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "Encoding"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s19_HasContiguousBytesP", "Encoding"]
+- !private ["s19_HasContiguousBytesP", "init"]
+- !private ["10Foundation13_NSBridgeableP", "Encoding"]
+- !private ["10Foundation13_NSBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "Encoding"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+depends-nominal:
+- !private "SK"
+- !private "Sl"
+- !private "SL"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "Se"
+- !private "SE"
+- !private "SS10FoundationE8EncodingV"
+- !private "SQ"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s32ExpressibleByStringInterpolationP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "10Foundation10FileHandleC"
+- !private "SH"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "10Foundation8NSCodingP"
+- !private "10Foundation8NSObjectC"
+- !private "10Foundation16NSObjectProtocolP"
+- !private "10Foundation14NSSecureCodingP"
+- !private "10Foundation4PipeC"
+- !private "10Foundation7ProcessC"
+- !private "Sm"
+- !private "SY"
+- !private "ST"
+- !private "SS"
+- !private "Sy"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- !private "4Just24URLComponentsConvertibleP"
+- !private "10Foundation13_CFBridgeableP"
+- !private "s30_CustomPlaygroundQuickLookableP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s19_HasContiguousBytesP"
+- !private "10Foundation13_NSBridgeableP"
+- !private "s21_ObjectiveCBridgeableP"
+depends-dynamic-lookup:
+depends-external:
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Dispatch.swiftmodule"
+- "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Foundation.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Just.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/modulemaps/CTensorFlow/module.modulemap"
+interface-hash: "0fe15950a5d6e8bd3ecf4c195635e798"

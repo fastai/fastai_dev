@@ -1,0 +1,5 @@
+version: "Swift version 5.0-dev (LLVM dcb9eb74a7, Clang 95cdf7c9af, Swift 434442b530)"
+options: "2f263628749a5b1d5f22728c29acb151"
+build_time: [1553199912, 506576006]
+inputs:
+  "/home/ubuntu/notebooks/swift/Notebook2Script/Sources/Notebook2Script/main.swift": [1553199910, 0]

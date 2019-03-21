@@ -1,0 +1,74 @@
+client:
+  name: basic
+tools: {}
+targets:
+  "main": ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/FastaiNotebooks.swiftmodule","<FastaiNotebooks-debug.module>"]
+  "test": ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/FastaiNotebooks.swiftmodule","<FastaiNotebooks-debug.module>"]
+  "FastaiNotebooks-debug.module": ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/FastaiNotebooks.swiftmodule","<FastaiNotebooks-debug.module>"]
+  "Just-debug.module": ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Just.swiftmodule","<Just-debug.module>"]
+  "Path-debug.module": ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.swiftmodule","<Path-debug.module>"]
+default: "main"
+commands: 
+  "<C.FastaiNotebooks-debug.module>":
+    tool: phony
+    inputs: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/FastaiNotebooks.swiftmodule"]
+    outputs: ["<FastaiNotebooks-debug.module>"]
+
+  "<C.Just-debug.module>":
+    tool: phony
+    inputs: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Just.swiftmodule"]
+    outputs: ["<Just-debug.module>"]
+
+  "<C.Path-debug.module>":
+    tool: phony
+    inputs: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.swiftmodule"]
+    outputs: ["<Path-debug.module>"]
+
+  "C.FastaiNotebooks-debug.module":
+    tool: swift-compiler
+    executable: "/home/ubuntu/swift/usr/bin/swiftc"
+    module-name: "FastaiNotebooks"
+    module-output-path: "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/FastaiNotebooks.swiftmodule"
+    inputs: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Just.swiftmodule","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.swiftmodule","/home/ubuntu/notebooks/swift/FastaiNotebooks/Sources/FastaiNotebooks/00_load_data.swift"]
+    outputs: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/FastaiNotebooks.build/00_load_data.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/FastaiNotebooks.swiftmodule"]
+    import-paths: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug"]
+    temps-path: "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/FastaiNotebooks.build"
+    objects: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/FastaiNotebooks.build/00_load_data.swift.o"]
+    other-args: ["-target","x86_64-unknown-linux","-swift-version","4","-enable-batch-mode","-index-store-path","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/index/store","-sdk","/","-Onone","-g","-enable-testing","-j4","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/ModuleCache","-Xfrontend","-color-diagnostics"]
+    sources: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/Sources/FastaiNotebooks/00_load_data.swift"]
+    is-library: true
+    enable-whole-module-optimization: false
+    num-threads: "4"
+
+  "C.Just-debug.module":
+    tool: swift-compiler
+    executable: "/home/ubuntu/swift/usr/bin/swiftc"
+    module-name: "Just"
+    module-output-path: "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Just.swiftmodule"
+    inputs: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Just-86503c64/Sources/Just/Just.swift"]
+    outputs: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Just.build/Just.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Just.swiftmodule"]
+    import-paths: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug"]
+    temps-path: "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Just.build"
+    objects: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Just.build/Just.swift.o"]
+    other-args: ["-target","x86_64-unknown-linux","-swift-version","4.2","-enable-batch-mode","-index-store-path","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/index/store","-sdk","/","-Onone","-g","-enable-testing","-j4","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/ModuleCache","-Xfrontend","-color-diagnostics"]
+    sources: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Just-86503c64/Sources/Just/Just.swift"]
+    is-library: true
+    enable-whole-module-optimization: false
+    num-threads: "4"
+
+  "C.Path-debug.module":
+    tool: swift-compiler
+    executable: "/home/ubuntu/swift/usr/bin/swiftc"
+    module-name: "Path"
+    module-output-path: "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.swiftmodule"
+    inputs: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Extensions.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+Attributes.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+Codable.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+CommonDirectories.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+FileManager.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+StringConvertibles.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+ls.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path->Bool.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path.swift"]
+    outputs: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Extensions.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Attributes.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Codable.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+CommonDirectories.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+FileManager.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+StringConvertibles.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+ls.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path->Bool.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.swiftmodule"]
+    import-paths: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug"]
+    temps-path: "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build"
+    objects: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Extensions.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Attributes.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Codable.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+CommonDirectories.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+FileManager.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+StringConvertibles.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+ls.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path->Bool.swift.o","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path.swift.o"]
+    other-args: ["-target","x86_64-unknown-linux","-swift-version","5","-enable-batch-mode","-index-store-path","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/index/store","-sdk","/","-Onone","-g","-enable-testing","-j4","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/ModuleCache","-Xfrontend","-color-diagnostics"]
+    sources: ["/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Extensions.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+Attributes.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+Codable.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+CommonDirectories.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+FileManager.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+StringConvertibles.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+ls.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path->Bool.swift","/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path.swift"]
+    is-library: true
+    enable-whole-module-optimization: false
+    num-threads: "4"
+

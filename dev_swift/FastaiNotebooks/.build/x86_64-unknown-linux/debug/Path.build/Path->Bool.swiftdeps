@@ -1,0 +1,218 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+provides-nominal:
+provides-member:
+- ["4PathAAV", ""]
+- ["4PathAAV", "exists"]
+- ["4PathAAV", "isFile"]
+- ["4PathAAV", "isDirectory"]
+- ["4PathAAV", "isReadable"]
+- ["4PathAAV", "isWritable"]
+- ["4PathAAV", "isDeletable"]
+- ["4PathAAV", "isExecutable"]
+- ["4PathAAV", "isSymlink"]
+depends-top-level:
+- !private "!"
+- !private "&"
+- !private "&&"
+- !private "=="
+- "Bool"
+- !private "BooleanLiteralType"
+- !private "FileManager"
+- !private "FloatLiteralType"
+- !private "IntegerLiteralType"
+- !private "ObjCBool"
+- "Path"
+- !private "S_IFLNK"
+- !private "S_IFMT"
+- !private "W_OK"
+- !private "X_OK"
+- !private "access"
+- !private "lstat"
+- !private "stat"
+depends-member:
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["s7CVarArgP", "_getBuiltinLogicValue"]
+- !private ["SL", "FileManager"]
+- !private ["SL", "S_IFLNK"]
+- !private ["SL", "S_IFMT"]
+- !private ["SL", "W_OK"]
+- !private ["SL", "X_OK"]
+- !private ["SL", "access"]
+- !private ["SL", "exists"]
+- !private ["SL", "lstat"]
+- !private ["SL", "parent"]
+- !private ["SL", "stat"]
+- !private ["SL", "string"]
+- !private ["s28CustomDebugStringConvertibleP", "FileManager"]
+- !private ["s28CustomDebugStringConvertibleP", "S_IFLNK"]
+- !private ["s28CustomDebugStringConvertibleP", "S_IFMT"]
+- !private ["s28CustomDebugStringConvertibleP", "W_OK"]
+- !private ["s28CustomDebugStringConvertibleP", "X_OK"]
+- !private ["s28CustomDebugStringConvertibleP", "access"]
+- !private ["s28CustomDebugStringConvertibleP", "default"]
+- !private ["s28CustomDebugStringConvertibleP", "exists"]
+- !private ["s28CustomDebugStringConvertibleP", "fileExists"]
+- !private ["s28CustomDebugStringConvertibleP", "isExecutableFile"]
+- !private ["s28CustomDebugStringConvertibleP", "isReadableFile"]
+- !private ["s28CustomDebugStringConvertibleP", "isWritableFile"]
+- !private ["s28CustomDebugStringConvertibleP", "lstat"]
+- !private ["s28CustomDebugStringConvertibleP", "parent"]
+- !private ["s28CustomDebugStringConvertibleP", "stat"]
+- !private ["s28CustomDebugStringConvertibleP", "string"]
+- !private ["s17CustomReflectableP", "_getBuiltinLogicValue"]
+- !private ["s17CustomReflectableP", "boolValue"]
+- !private ["s23CustomStringConvertibleP", "FileManager"]
+- !private ["s23CustomStringConvertibleP", "S_IFLNK"]
+- !private ["s23CustomStringConvertibleP", "S_IFMT"]
+- !private ["s23CustomStringConvertibleP", "W_OK"]
+- !private ["s23CustomStringConvertibleP", "X_OK"]
+- !private ["s23CustomStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s23CustomStringConvertibleP", "access"]
+- !private ["s23CustomStringConvertibleP", "boolValue"]
+- !private ["s23CustomStringConvertibleP", "default"]
+- !private ["s23CustomStringConvertibleP", "exists"]
+- !private ["s23CustomStringConvertibleP", "fileExists"]
+- !private ["s23CustomStringConvertibleP", "isExecutableFile"]
+- !private ["s23CustomStringConvertibleP", "isReadableFile"]
+- !private ["s23CustomStringConvertibleP", "isWritableFile"]
+- !private ["s23CustomStringConvertibleP", "lstat"]
+- !private ["s23CustomStringConvertibleP", "parent"]
+- !private ["s23CustomStringConvertibleP", "stat"]
+- !private ["s23CustomStringConvertibleP", "string"]
+- !private ["Se", "FileManager"]
+- !private ["Se", "S_IFLNK"]
+- !private ["Se", "S_IFMT"]
+- !private ["Se", "W_OK"]
+- !private ["Se", "X_OK"]
+- !private ["Se", "_getBuiltinLogicValue"]
+- !private ["Se", "access"]
+- !private ["Se", "exists"]
+- !private ["Se", "lstat"]
+- !private ["Se", "parent"]
+- !private ["Se", "stat"]
+- !private ["Se", "string"]
+- !private ["SE", "FileManager"]
+- !private ["SE", "S_IFLNK"]
+- !private ["SE", "S_IFMT"]
+- !private ["SE", "W_OK"]
+- !private ["SE", "X_OK"]
+- !private ["SE", "_getBuiltinLogicValue"]
+- !private ["SE", "access"]
+- !private ["SE", "exists"]
+- !private ["SE", "lstat"]
+- !private ["SE", "parent"]
+- !private ["SE", "stat"]
+- !private ["SE", "string"]
+- !private ["SQ", "FileManager"]
+- !private ["SQ", "S_IFLNK"]
+- !private ["SQ", "S_IFMT"]
+- !private ["SQ", "W_OK"]
+- !private ["SQ", "X_OK"]
+- !private ["SQ", "_getBuiltinLogicValue"]
+- !private ["SQ", "access"]
+- !private ["SQ", "default"]
+- !private ["SQ", "exists"]
+- !private ["SQ", "fileExists"]
+- !private ["SQ", "isExecutableFile"]
+- !private ["SQ", "isReadableFile"]
+- !private ["SQ", "isWritableFile"]
+- !private ["SQ", "lstat"]
+- !private ["SQ", "parent"]
+- !private ["SQ", "stat"]
+- !private ["SQ", "string"]
+- !private ["s27ExpressibleByBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s27ExpressibleByBooleanLiteralP", "boolValue"]
+- !private ["10Foundation11FileManagerC", "default"]
+- !private ["10Foundation11FileManagerC", "fileExists"]
+- !private ["10Foundation11FileManagerC", "isExecutableFile"]
+- !private ["10Foundation11FileManagerC", "isReadableFile"]
+- !private ["10Foundation11FileManagerC", "isWritableFile"]
+- !private ["SH", "FileManager"]
+- !private ["SH", "S_IFLNK"]
+- !private ["SH", "S_IFMT"]
+- !private ["SH", "W_OK"]
+- !private ["SH", "X_OK"]
+- !private ["SH", "_getBuiltinLogicValue"]
+- !private ["SH", "access"]
+- !private ["SH", "default"]
+- !private ["SH", "exists"]
+- !private ["SH", "fileExists"]
+- !private ["SH", "isExecutableFile"]
+- !private ["SH", "isReadableFile"]
+- !private ["SH", "isWritableFile"]
+- !private ["SH", "lstat"]
+- !private ["SH", "parent"]
+- !private ["SH", "stat"]
+- !private ["SH", "string"]
+- !private ["s25LosslessStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["10Foundation8NSObjectC", "default"]
+- !private ["10Foundation8NSObjectC", "fileExists"]
+- !private ["10Foundation8NSObjectC", "isExecutableFile"]
+- !private ["10Foundation8NSObjectC", "isReadableFile"]
+- !private ["10Foundation8NSObjectC", "isWritableFile"]
+- !private ["10Foundation16NSObjectProtocolP", "default"]
+- !private ["10Foundation16NSObjectProtocolP", "fileExists"]
+- !private ["10Foundation16NSObjectProtocolP", "isExecutableFile"]
+- !private ["10Foundation16NSObjectProtocolP", "isReadableFile"]
+- !private ["10Foundation16NSObjectProtocolP", "isWritableFile"]
+- !private ["10Foundation8ObjCBoolV", "boolValue"]
+- ["4PathAAV", "Bool"]
+- !private ["4PathAAV", "FileManager"]
+- !private ["4PathAAV", "ObjCBool"]
+- !private ["4PathAAV", "S_IFLNK"]
+- !private ["4PathAAV", "S_IFMT"]
+- !private ["4PathAAV", "W_OK"]
+- !private ["4PathAAV", "X_OK"]
+- !private ["4PathAAV", "access"]
+- ["4PathAAV", "exists"]
+- ["4PathAAV", "isDeletable"]
+- ["4PathAAV", "isDirectory"]
+- ["4PathAAV", "isExecutable"]
+- ["4PathAAV", "isFile"]
+- ["4PathAAV", "isReadable"]
+- ["4PathAAV", "isSymlink"]
+- ["4PathAAV", "isWritable"]
+- !private ["4PathAAV", "lstat"]
+- !private ["4PathAAV", "parent"]
+- !private ["4PathAAV", "stat"]
+- !private ["4PathAAV", "string"]
+- !private ["10Foundation13_CFBridgeableP", "_getBuiltinLogicValue"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "_getBuiltinLogicValue"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s21_ObjectiveCBridgeableP", "_getBuiltinLogicValue"]
+- !private ["So4statV", "init"]
+- !private ["So4statV", "st_mode"]
+depends-nominal:
+- !private "Sb"
+- !private "s7CVarArgP"
+- !private "SL"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "Se"
+- !private "SE"
+- !private "SQ"
+- !private "s27ExpressibleByBooleanLiteralP"
+- !private "10Foundation11FileManagerC"
+- !private "SH"
+- !private "s25LosslessStringConvertibleP"
+- !private "10Foundation8NSObjectC"
+- !private "10Foundation16NSObjectProtocolP"
+- !private "10Foundation8ObjCBoolV"
+- "4PathAAV"
+- !private "10Foundation13_CFBridgeableP"
+- !private "s30_CustomPlaygroundQuickLookableP"
+- !private "s35_ExpressibleByBuiltinBooleanLiteralP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "So4statV"
+depends-dynamic-lookup:
+depends-external:
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Dispatch.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Foundation.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/modulemaps/CTensorFlow/module.modulemap"
+interface-hash: "da51db450ab338c271af5e275d2dd107"

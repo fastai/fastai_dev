@@ -1,0 +1,13 @@
+version: "Swift version 5.0-dev (LLVM dcb9eb74a7, Clang 95cdf7c9af, Swift 434442b530)"
+options: "a14e2501bd3cd1ae4e87f05fe1dc2b58"
+build_time: [1553189520, 116984938]
+inputs:
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Extensions.swift": [1553189431, 0]
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+Attributes.swift": [1553189431, 0]
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+Codable.swift": [1553189431, 0]
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+CommonDirectories.swift": [1553189431, 0]
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+FileManager.swift": [1553189431, 0]
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+StringConvertibles.swift": [1553189431, 0]
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+ls.swift": [1553189431, 0]
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path->Bool.swift": [1553189431, 0]
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path.swift": [1553189431, 0]

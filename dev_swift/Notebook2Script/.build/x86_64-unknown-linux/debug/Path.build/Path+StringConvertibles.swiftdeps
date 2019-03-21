@@ -1,0 +1,74 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+provides-nominal:
+- "4PathAAV"
+provides-member:
+- ["4PathAAV", ""]
+depends-top-level:
+- "CustomDebugStringConvertible"
+- "CustomStringConvertible"
+- !private "FloatLiteralType"
+- !private "IntegerLiteralType"
+- "Path"
+- "String"
+- !private "StringLiteralType"
+- !private "UnicodeScalarType"
+depends-member:
+- ["SL", "debugDescription"]
+- ["SL", "description"]
+- !private ["SL", "string"]
+- ["s28CustomDebugStringConvertibleP", ""]
+- ["s28CustomDebugStringConvertibleP", "debugDescription"]
+- ["s28CustomDebugStringConvertibleP", "description"]
+- !private ["s28CustomDebugStringConvertibleP", "string"]
+- ["s23CustomStringConvertibleP", ""]
+- !private ["s23CustomStringConvertibleP", "appendInterpolation"]
+- !private ["s23CustomStringConvertibleP", "appendLiteral"]
+- ["s23CustomStringConvertibleP", "debugDescription"]
+- ["s23CustomStringConvertibleP", "description"]
+- !private ["s23CustomStringConvertibleP", "string"]
+- ["Se", "debugDescription"]
+- ["Se", "description"]
+- !private ["Se", "string"]
+- !private ["s26DefaultStringInterpolationV", "appendInterpolation"]
+- !private ["s26DefaultStringInterpolationV", "appendLiteral"]
+- ["SE", "debugDescription"]
+- ["SE", "description"]
+- !private ["SE", "string"]
+- ["SQ", "debugDescription"]
+- ["SQ", "description"]
+- !private ["SQ", "string"]
+- ["SH", "debugDescription"]
+- ["SH", "description"]
+- !private ["SH", "string"]
+- ["4PathAAV", "String"]
+- ["4PathAAV", "debugDescription"]
+- ["4PathAAV", "deinit"]
+- ["4PathAAV", "description"]
+- !private ["4PathAAV", "string"]
+- !private ["s27StringInterpolationProtocolP", "appendInterpolation"]
+- !private ["s27StringInterpolationProtocolP", "appendLiteral"]
+- !private ["s16TextOutputStreamP", "appendInterpolation"]
+- !private ["s16TextOutputStreamP", "appendLiteral"]
+depends-nominal:
+- "SL"
+- "s28CustomDebugStringConvertibleP"
+- "s23CustomStringConvertibleP"
+- "Se"
+- !private "s26DefaultStringInterpolationV"
+- "SE"
+- "SQ"
+- "SH"
+- "4PathAAV"
+- !private "s27StringInterpolationProtocolP"
+- !private "s16TextOutputStreamP"
+depends-dynamic-lookup:
+depends-external:
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Dispatch.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Foundation.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/ubuntu/swift/usr/lib/swift/linux/x86_64/modulemaps/CTensorFlow/module.modulemap"
+interface-hash: "976ddb51d4b33b8d998262e4667beb42"

@@ -1,0 +1,59 @@
+{
+  "": {
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/master.swiftdeps"
+  },
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Extensions.swift": {
+    "dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Extensions.d",
+    "object": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Extensions.swift.o",
+    "swiftmodule": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Extensions~partial.swiftmodule",
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Extensions.swiftdeps"
+  },
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+Attributes.swift": {
+    "dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Attributes.d",
+    "object": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Attributes.swift.o",
+    "swiftmodule": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Attributes~partial.swiftmodule",
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Attributes.swiftdeps"
+  },
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+Codable.swift": {
+    "dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Codable.d",
+    "object": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Codable.swift.o",
+    "swiftmodule": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Codable~partial.swiftmodule",
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+Codable.swiftdeps"
+  },
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+CommonDirectories.swift": {
+    "dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+CommonDirectories.d",
+    "object": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+CommonDirectories.swift.o",
+    "swiftmodule": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+CommonDirectories~partial.swiftmodule",
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+CommonDirectories.swiftdeps"
+  },
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+FileManager.swift": {
+    "dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+FileManager.d",
+    "object": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+FileManager.swift.o",
+    "swiftmodule": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+FileManager~partial.swiftmodule",
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+FileManager.swiftdeps"
+  },
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+StringConvertibles.swift": {
+    "dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+StringConvertibles.d",
+    "object": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+StringConvertibles.swift.o",
+    "swiftmodule": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+StringConvertibles~partial.swiftmodule",
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+StringConvertibles.swiftdeps"
+  },
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path+ls.swift": {
+    "dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+ls.d",
+    "object": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+ls.swift.o",
+    "swiftmodule": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+ls~partial.swiftmodule",
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path+ls.swiftdeps"
+  },
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path->Bool.swift": {
+    "dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path->Bool.d",
+    "object": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path->Bool.swift.o",
+    "swiftmodule": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path->Bool~partial.swiftmodule",
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path->Bool.swiftdeps"
+  },
+  "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/checkouts/Path.swift-5907397b/Sources/Path.swift": {
+    "dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path.d",
+    "object": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path.swift.o",
+    "swiftmodule": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path~partial.swiftmodule",
+    "swift-dependencies": "/home/ubuntu/notebooks/swift/FastaiNotebooks/.build/x86_64-unknown-linux/debug/Path.build/Path.swiftdeps"
+  }
+}
