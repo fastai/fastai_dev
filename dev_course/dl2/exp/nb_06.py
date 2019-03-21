@@ -21,45 +21,61 @@ class Lambda(nn.Module):
 def flatten(x):      return x.view(x.shape[0], -1)
 
 class CudaCallback(Callback):
-    def begin_fit(self, run): run.model.cuda()
-    def begin_batch(self, run): run.xb,run.yb = run.xb.cuda(),run.yb.cuda()
+    def begin_fit(self): self.model.cuda()
+    def begin_batch(self): self.run.xb,self.run.yb = self.xb.cuda(),self.yb.cuda()
 
 class BatchTransformXCallback(Callback):
     _order=2
     def __init__(self, tfm): self.tfm = tfm
-    def begin_batch(self, run): run.xb = self.tfm(run.xb)
+    def begin_batch(self): self.run.xb = self.tfm(self.xb)
 
-def resize_tfm(*size):
+def view_tfm(*size):
     def _inner(x): return x.view(*((-1,)+size))
     return _inner
+
+def get_runner(model, data, lr=0.6, cbs=None, loss_func = F.cross_entropy):
+    opt = optim.SGD(model.parameters(), lr=lr)
+    learn = Learner(model, opt, loss_func, data)
+    return learn, Runner(cb_funcs=cbfs + listify(cbs))
 
 def children(m): return list(m.children())
 
 class Hook():
-    def __init__(self, m, f):
-        self.means = []
-        self.stds  = []
-        self.hook = m.register_forward_hook(partial(f, self))
-
+    def __init__(self, m, f): self.hook = m.register_forward_hook(partial(f, self))
     def remove(self): self.hook.remove()
     def __del__(self): self.remove()
 
+def append_stats(hook, mod, inp, outp):
+    if not hasattr(hook,'stats'): hook.stats = ([],[])
+    means,stds = hook.stats
+    means.append(outp.data.mean())
+    stds .append(outp.data.std())
+
+class ListContainer():
+    def __init__(self, items): self.items = items
+    def __getitem__(self,i): return self.items[i]
+    def __len__(self): return len(self.items)
+    def __iter__(self): return iter(self.items)
+    def __setitem__(self, i, o): self.items[i] = o
+    def __delitem__(self, i): del(self.items[i])
+    def __repr__(self): return f"{self.__class__.__name__} ({len(self)} items)"
+
 from torch.nn import init
 
-class Hooks():
-    def __init__(self, ms, f): self.hooks = [Hook(m, f) for m in ms]
-    def __getitem__(self,i): return self.hooks[i]
-    def __len__(self): return len(self.hooks)
-    def __iter__(self): return iter(self.hooks)
+class Hooks(ListContainer):
+    def __init__(self, ms, f): super().__init__([Hook(m, f) for m in ms])
+    def __delitem__(self, i):
+        self[i].remove()
+        super().__delitem__(i)
     def __enter__(self, *args): return self
     def __exit__ (self, *args): self.remove()
 
     def remove(self):
-        for h in self.hooks: h.remove()
+        for h in self: h.remove()
 
 def get_cnn_layers(data, nfs, **kwargs):
     nfs = [1] + nfs
-    return [conv2d(nfs[i], nfs[i+1], **kwargs)
+    return [conv2d(nfs[i], nfs[i+1], 5 if i==0 else 3, **kwargs)
             for i in range(len(nfs)-1)] + [
         nn.AdaptiveAvgPool2d(1), Lambda(flatten), nn.Linear(nfs[-1], data.c)]
 
@@ -79,3 +95,14 @@ class GeneralRelu(nn.Module):
         if self.sub is not None: x.sub_(self.sub)
         if self.maxv is not None: x.clamp_max_(self.maxv)
         return x
+
+def init_cnn(m):
+    for l in m:
+        if isinstance(l, nn.Sequential):
+            init.kaiming_normal_(l[0].weight, a=0.1)
+            l[0].weight.data
+
+def get_learn_run(nfs, data, lr, cbs=None):
+    model = nn.Sequential(*get_cnn_layers(data, nfs, leak=0.1, sub=0.4, maxv=6.))
+    init_cnn(model)
+    return get_runner(model, data, lr=lr, cbs=cbs)
