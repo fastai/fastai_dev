@@ -1,5 +1,0 @@
-version: "Swift version 5.0-dev (LLVM dcb9eb74a7, Clang 95cdf7c9af, Swift 434442b530)"
-options: "8813f7a36ada2ac19a98796e27435849"
-build_time: [1553189525, 935663319]
-inputs:
-  "/home/ubuntu/notebooks/swift/FastaiNotebooks/Sources/FastaiNotebooks/00_load_data.swift": [1553188935, 0]

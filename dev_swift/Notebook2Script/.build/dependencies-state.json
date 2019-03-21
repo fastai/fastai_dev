@@ -1,1 +1,0 @@
-{"object": {"dependencies": [{"basedOn": null, "packageRef": {"identity": "path.swift", "isLocal": false, "name": "Path.swift", "path": "https://github.com/mxcl/Path.swift"}, "state": {"checkoutState": {"branch": null, "revision": "f324b4a562ca421fd2905414a10fb0fc91d58b67", "version": "0.16.2"}, "name": "checkout"}, "subpath": "Path.swift-5907397b"}]}, "version": 2}
