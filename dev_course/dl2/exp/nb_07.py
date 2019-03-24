@@ -6,19 +6,11 @@
 
 from exp.nb_06 import *
 
-def get_cnn_layers(data, nfs, **kwargs):
-    nfs = [1] + nfs
-    return [conv2d(nfs[i], nfs[i+1], **kwargs)
-            for i in range(len(nfs)-1)] + [
-        nn.AdaptiveAvgPool2d(1), Lambda(flatten), nn.Linear(nfs[-1], data.c)]
-
-def get_cnn_model(data, nfs, **kwargs): return nn.Sequential(*get_cnn_layers(data, nfs, **kwargs))
-
 from torch.jit import ScriptModule, script_method, script
 from typing import *
 
-def conv2d(ni, nf, ks=3, stride=2, bn=True, **kwargs):
+def conv_layer(ni, nf, ks=3, stride=2, bn=True, **kwargs):
     layers = [nn.Conv2d(ni, nf, ks, padding=ks//2, stride=stride, bias=not bn),
               GeneralRelu(**kwargs)]
-    if bn: layers.append(nn.BatchNorm2d(nf))
+    if bn: layers.append(nn.BatchNorm2d(nf, eps=1e-5))
     return nn.Sequential(*layers)

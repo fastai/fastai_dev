@@ -33,10 +33,11 @@ def view_tfm(*size):
     def _inner(x): return x.view(*((-1,)+size))
     return _inner
 
-def get_runner(model, data, lr=0.6, cbs=None, loss_func = F.cross_entropy):
-    opt = optim.SGD(model.parameters(), lr=lr)
+def get_runner(model, data, lr=0.6, cbs=None, opt_func=None, loss_func = F.cross_entropy):
+    if opt_func is None: opt_func = optim.SGD
+    opt = opt_func(model.parameters(), lr=lr)
     learn = Learner(model, opt, loss_func, data)
-    return learn, Runner(cb_funcs=cbfs + listify(cbs))
+    return learn, Runner(cb_funcs=listify(cbs))
 
 def children(m): return list(m.children())
 
@@ -53,12 +54,20 @@ def append_stats(hook, mod, inp, outp):
 
 class ListContainer():
     def __init__(self, items): self.items = items
-    def __getitem__(self,i): return self.items[i]
+    def __getitem__(self, idx):
+        if isinstance(idx, (int,slice)): return self.items[idx]
+        if isinstance(idx[0],bool):
+            assert len(idx)==len(self) # bool mask
+            return [o for m,o in zip(idx,self.items) if m]
+        return [self.items[i] for i in idx]
     def __len__(self): return len(self.items)
     def __iter__(self): return iter(self.items)
     def __setitem__(self, i, o): self.items[i] = o
     def __delitem__(self, i): del(self.items[i])
-    def __repr__(self): return f"{self.__class__.__name__} ({len(self)} items)"
+    def __repr__(self):
+        res = f'{self.__class__.__name__} ({len(self)} items)\n{self.items[:10]}'
+        if len(self)>10: res += '...'
+        return res
 
 from torch.nn import init
 
@@ -73,15 +82,13 @@ class Hooks(ListContainer):
     def remove(self):
         for h in self: h.remove()
 
-def get_cnn_layers(data, nfs, **kwargs):
+def get_cnn_layers(data, nfs, layer, **kwargs):
     nfs = [1] + nfs
-    return [conv2d(nfs[i], nfs[i+1], 5 if i==0 else 3, **kwargs)
+    return [layer(nfs[i], nfs[i+1], 5 if i==0 else 3, **kwargs)
             for i in range(len(nfs)-1)] + [
         nn.AdaptiveAvgPool2d(1), Lambda(flatten), nn.Linear(nfs[-1], data.c)]
 
-def get_cnn_model(data, nfs, **kwargs): return nn.Sequential(*get_cnn_layers(data, nfs, **kwargs))
-
-def conv2d(ni, nf, ks=3, stride=2, **kwargs):
+def conv_layer(ni, nf, ks=3, stride=2, **kwargs):
     return nn.Sequential(
         nn.Conv2d(ni, nf, ks, padding=ks//2, stride=stride), GeneralRelu(**kwargs))
 
@@ -102,7 +109,10 @@ def init_cnn(m):
             init.kaiming_normal_(l[0].weight, a=0.1)
             l[0].weight.data
 
-def get_learn_run(nfs, data, lr, cbs=None):
-    model = nn.Sequential(*get_cnn_layers(data, nfs, leak=0.1, sub=0.4, maxv=6.))
+def get_cnn_model(data, nfs, layer, **kwargs):
+    return nn.Sequential(*get_cnn_layers(data, nfs, layer, **kwargs))
+
+def get_learn_run(nfs, data, lr, layer, cbs=None, opt_func=None, **kwargs):
+    model = get_cnn_model(data, nfs, layer, **kwargs)
     init_cnn(model)
-    return get_runner(model, data, lr=lr, cbs=cbs)
+    return get_runner(model, data, lr=lr, cbs=cbs, opt_func=opt_func)

@@ -7,9 +7,7 @@
 from exp.nb_02 import *
 import torch.nn.functional as F
 
-def accuracy(out, yb):
-    preds = torch.argmax(out, dim=1)
-    return (preds==yb).float().mean()
+def accuracy(out, yb): return (torch.argmax(out, dim=1)==yb).float().mean()
 
 from torch import optim
 
@@ -20,6 +18,6 @@ class Dataset():
 
 from torch.utils.data import DataLoader, SequentialSampler, RandomSampler
 
-def get_dls(train_ds, valid_ds, bs):
-    return (DataLoader(train_ds, batch_size=bs, shuffle=True),
-            DataLoader(valid_ds, batch_size=bs*2))
+def get_dls(train_ds, valid_ds, bs, **kwargs):
+    return (DataLoader(train_ds, batch_size=bs, shuffle=True, **kwargs),
+            DataLoader(valid_ds, batch_size=bs*2, **kwargs))
