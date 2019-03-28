@@ -11,6 +11,7 @@ def is_export(cell):
     return re.match(r'^\s*#\s*export\s*$', src[0], re.IGNORECASE) is not None
 
 def notebook2script(fname):
+    "Finds cells starting with `#export` and puts them into a new module"
     fname = Path(fname)
     fname_out = f'nb_{fname.stem.split("_")[0]}.py'
     main_dic = json.load(open(fname,'r'))
