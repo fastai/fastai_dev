@@ -4,7 +4,7 @@
 #################################################
 # file to edit: dev_nb/06_cuda_cnn_hooks_init.ipynb
 
-from exp.nb_05 import *
+from exp.nb_05b import *
 torch.set_num_threads(2)
 
 def normalize_to(train, valid):
@@ -73,11 +73,12 @@ from torch.nn import init
 
 class Hooks(ListContainer):
     def __init__(self, ms, f): super().__init__([Hook(m, f) for m in ms])
+    def __enter__(self, *args): return self
+    def __exit__ (self, *args): self.remove()
+
     def __delitem__(self, i):
         self[i].remove()
         super().__delitem__(i)
-    def __enter__(self, *args): return self
-    def __exit__ (self, *args): self.remove()
 
     def remove(self):
         for h in self: h.remove()
@@ -120,4 +121,15 @@ def get_learn_run(nfs, data, lr, layer, cbs=None, opt_func=None, uniform=False, 
 
 from IPython.display import display, Javascript
 def nb_auto_export():
-    display(Javascript("IPython.notebook.kernel.execute('!./notebook2script.py  ' + IPython.notebook.notebook_name )"))
+    display(Javascript("""{
+const ip = IPython.notebook
+if (ip) {
+    ip.save_notebook()
+    console.log('a')
+    const s = `!python notebook2script.py ${ip.notebook_name}`
+    if (ip.kernel) {
+        console.log(s)
+        ip.kernel.execute()
+    }
+}
+}"""))
