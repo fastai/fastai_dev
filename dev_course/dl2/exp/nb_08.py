@@ -37,7 +37,7 @@ def get_files(path, extensions=None, recurse=False, include=None):
 
 def compose(x, funcs, *args, order_key='_order', **kwargs):
     key = lambda o: getattr(o, order_key, 0)
-    for f in sorted(listify(funcs), key=key): x = f(x)
+    for f in sorted(listify(funcs), key=key): x = f(x, **kwargs)
     return x
 
 class ItemList(ListContainer):
