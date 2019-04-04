@@ -22,44 +22,46 @@ class Learner():
         self.stop,self.cbs = False,[TrainEvalCallback()]+cbs
 
     def one_batch(self, xb, yb):
-        self.xb,self.yb = xb,yb
-        if self('begin_batch'): return
-        self.pred = self.model(self.xb)
-        if self('after_pred'): return
-        self.loss = self.loss_func(self.pred, self.yb)
-        if self('after_loss') or not self.in_train: return
-        self.loss.backward()
-        if self('after_backward'): return
-        self.opt.step()
-        if self('after_step'): return
-        self.opt.zero_grad()
+        try:
+            self.xb,self.yb = xb,yb
+            self('begin_batch')
+            self.pred = self.model(self.xb)
+            self('after_pred')
+            self.loss = self.loss_func(self.pred, self.yb)
+            self('after_loss')
+            if not self.in_train: return
+            self.loss.backward()
+            self('after_backward')
+            self.opt.step()
+            self('after_step')
+            self.opt.zero_grad()
+        except CancelBatchException: self('after_cancel_batch')
+        finally: self('after_batch')
 
     def all_batches(self, dl):
         self.iters = len(dl)
-        for xb,yb in dl:
-            if self.stop: break
-            self.one_batch(xb, yb)
-            self('after_batch')
-        self.stop=False
+        try:
+            for xb,yb in dl: self.one_batch(xb, yb)
+        except CancelEpochException: self('after_cancel_epoch')
 
     def fit(self, epochs):
-        self.epochs = epochs
+        self.epochs,self.loss = epochs,tensor(0.)
 
         try:
             for cb in self.cbs: cb.set_runner(self)
-            if self('begin_fit'): return
+            self('begin_fit')
             for epoch in range(epochs):
                 self.epoch = epoch
                 if not self('begin_epoch'): self.all_batches(self.data.train_dl)
 
                 with torch.no_grad():
                     if not self('begin_validate'): self.all_batches(self.data.valid_dl)
-                if self('after_epoch'): break
+                self('after_epoch')
 
+        except CancelTrainException: self('after_cancel_train')
         finally: self('after_fit')
 
     def __call__(self, cb_name):
-        for cb in sorted(self.cbs, key=lambda x: x._order):
-            f = getattr(cb, cb_name, None)
-            if f and f(): return True
-        return False
+        res = False
+        for cb in sorted(self.cbs, key=lambda x: x._order): res = cb(cb_name) and res
+        return res
