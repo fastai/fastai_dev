@@ -101,7 +101,7 @@ def find_coeffs(orig_pts, targ_pts):
     A = FloatTensor(matrix)
     B = FloatTensor(orig_pts).view(8, 1)
     #The 8 scalars we seek are solution of AX = B
-    return list(torch.gesv(B,A)[0][:,0])
+    return list(torch.solve(B,A)[0][:,0])
 
 def warp(img, size, src_coords, resample=PIL.Image.BILINEAR):
     w,h = size
