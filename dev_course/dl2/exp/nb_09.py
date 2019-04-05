@@ -105,5 +105,5 @@ class AdamStep():
     def __call__(self, p, pg, state):
         debias1 = debias(pg['mom'],     pg['mom_damp'], state['step'])
         debias2 = debias(pg['sqr_mom'], pg['sqr_damp'], state['step'])
-        p.data.addcdiv_(-pg['lr'] / debias1, state['grad_avg'], (state['sqr_avg']/debias2 + pg['eps']).sqrt())
+        p.data.addcdiv_(-pg['lr'] / debias1, state['grad_avg'], (state['sqr_avg']/debias2).sqrt() + pg['eps'])
         return p
