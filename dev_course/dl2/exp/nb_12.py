@@ -58,7 +58,7 @@ class MixedPrecision(Callback):
         #Changes the optimizer so that the optimization step is done in FP32.
         param_groups = self.opt.param_groups #Load the old param groups to get the HP values
         for (pg,mp) in zip(param_groups,self.master_pgs): pg['params'] = mp #Replace the parameters by the new ones
-        self.run.opt = self.opt.__class__(param_groups) #Put those param groups inside our runner.
+        self.run.opt.param_groups = param_groups #Put those param groups inside our runner.
         if self.dynamic: self.count = 0
 
     def begin_batch(self): self.run.xb = self.run.xb.half() #Put the inputs to half precision
