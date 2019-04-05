@@ -45,43 +45,37 @@ protocol ConvertableFromByte {
 extension Float : ConvertableFromByte{}
 extension Int32 : ConvertableFromByte{}
 
-public struct MnistDataset{
-    let base_url = "http://yann.lecun.com/exdb/mnist/"
-    let trn_imgs = "train-images-idx3-ubyte"
-    let trn_lbls = "train-labels-idx1-ubyte"
-    let val_imgs = "t10k-images-idx3-ubyte"
-    let val_lbls = "t10k-labels-idx1-ubyte" 
-    
-    var path = Path.cwd
-    
-    public init(path: Path){
-        self.path = path
-        if !path.exists {try! path.mkdir(.p)}
-        let data_files = [path/trn_imgs, path/trn_lbls, path/val_imgs, path/val_lbls]
-        for file in data_files{
-            if !file.exists {
-                let fname = file.basename()
-                downloadFile("\(base_url)\(fname).gz", dest:(path/"\(fname).gz").string)
-                _ = shellCommand("/bin/gunzip", ["-fq", (path/"\(fname).gz").string])
-            }
-        }
+func loadMNIST<T:ConvertableFromByte & TensorFlowScalar>(training: Bool, labels: Bool, path: Path) -> Tensor<T> {
+    let split = training ? "train" : "t10k"
+    let kind = labels ? "labels" : "images"
+    let batch = training ? Int32(60000) : Int32(10000)
+    let shape: TensorShape = labels ? [batch] : [batch, 28, 28]
+    let rank = shape.rank
+    let dropK = labels ? 8 : 16
+    let baseUrl = "http://yann.lecun.com/exdb/mnist/"
+    let fname = split + "-" + kind + "-idx\(rank)-ubyte"
+    let file = path/fname
+    if !file.exists {
+        downloadFile("\(baseUrl)\(fname).gz", dest:(path/"\(fname).gz").string)
+        _ = shellCommand("/bin/gunzip", ["-fq", (path/"\(fname).gz").string])
     }
-    
-    func readData<T:ConvertableFromByte & TensorFlowScalar>(_ fn:String, _ skip:Int) -> Tensor<T> {
-        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: fn)).dropFirst(skip)
-        return Tensor(data.map(T.init))
-    }
-    
-    public var xTrain: Tensor<Float> {
-        let data: Tensor<Float> = readData((path/trn_imgs).string, 16)/255.0
-        return data.reshaped(toShape: [60_000, 784])
-    }
-    public var yTrain: Tensor<Int32> {return readData((path/trn_lbls).string, 8)}
-    public var xValid: Tensor<Float> {
-        let data: Tensor<Float> = readData((path/val_imgs).string, 16)/255.0
-        return data.reshaped(toShape: [10_000, 784])
-    }
-    public var yValid: Tensor<Int32> {return readData((path/val_lbls).string, 8)}
+    let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: file.string)).dropFirst(dropK)
+    if labels { return Tensor(data.map(T.init)) }
+    else      { return Tensor(data.map(T.init)).reshaped(to: shape)}
+}
+
+public func loadMNIST(path:Path) -> (
+    Tensor<Float>,
+    Tensor<Int32>,
+    Tensor<Float>,
+    Tensor<Int32>
+) {
+    return (
+        loadMNIST(training: true, labels: false, path: path) / 255.0,
+        loadMNIST(training: true, labels: true, path: path),
+        loadMNIST(training: false, labels: false, path: path) / 255.0,
+        loadMNIST(training: false, labels: true, path: path)
+    )
 }
 
 import Dispatch
