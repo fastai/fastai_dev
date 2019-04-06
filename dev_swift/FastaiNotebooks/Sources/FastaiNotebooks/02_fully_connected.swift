@@ -11,14 +11,15 @@ public func normalize(_ x:Tensor<Float>, mean:Tensor<Float>, std:Tensor<Float>) 
     return (x-mean)/std
 }
 
-public extension Tensor where Scalar:FloatingPoint {
+public extension Tensor where Scalar:TensorFlowFloatingPoint {
     func std() -> Tensor<Scalar> {
         return sqrt(self.variance(alongAxes: Array(self.shape.indices)).flattened()[0])
     }
 }
 
 public func testNearZero(_ a:Tensor<Float>, tolerance:Float=1e-3) {
-    assert(Raw.abs(a)<tolerance, "Near zero: \(a)")
+    print(a.shape)
+    assert(abs(a)<tolerance, "Near zero: \(a)")
 }
 
 func mse(_ out:Tensor<Float>, _ targ:Tensor<Float>) -> Tensor<Float> {
