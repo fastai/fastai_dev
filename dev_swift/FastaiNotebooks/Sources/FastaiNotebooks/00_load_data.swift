@@ -45,15 +45,14 @@ protocol ConvertableFromByte {
 extension Float : ConvertableFromByte{}
 extension Int32 : ConvertableFromByte{}
 
-func loadMNIST<T:ConvertableFromByte & TensorFlowScalar>(training: Bool, labels: Bool, path: Path) -> Tensor<T> {
+func loadMNIST<T:ConvertableFromByte & TensorFlowScalar>(training: Bool, labels: Bool, path: Path, flat: Bool) -> Tensor<T> {
     let split = training ? "train" : "t10k"
     let kind = labels ? "labels" : "images"
     let batch = training ? Int32(60000) : Int32(10000)
-    let shape: TensorShape = labels ? [batch] : [batch, 28, 28]
-    let rank = shape.rank
+    let shape: TensorShape = labels ? [batch] : (flat ? [batch, 784] : [batch, 28, 28])
     let dropK = labels ? 8 : 16
     let baseUrl = "http://yann.lecun.com/exdb/mnist/"
-    let fname = split + "-" + kind + "-idx\(rank)-ubyte"
+    let fname = split + "-" + kind + "-idx\(labels ? 1 : 3)-ubyte"
     let file = path/fname
     if !file.exists {
         downloadFile("\(baseUrl)\(fname).gz", dest:(path/"\(fname).gz").string)
@@ -64,19 +63,16 @@ func loadMNIST<T:ConvertableFromByte & TensorFlowScalar>(training: Bool, labels:
     else      { return Tensor(data.map(T.init)).reshaped(to: shape)}
 }
 
-public func loadMNIST(path:Path) -> (
-    Tensor<Float>,
-    Tensor<Int32>,
-    Tensor<Float>,
-    Tensor<Int32>
-) {
+public func loadMNIST(path:Path, flat:Bool = false) -> (Tensor<Float>, Tensor<Int32>, Tensor<Float>, Tensor<Int32>) {
     return (
-        loadMNIST(training: true, labels: false, path: path) / 255.0,
-        loadMNIST(training: true, labels: true, path: path),
-        loadMNIST(training: false, labels: false, path: path) / 255.0,
-        loadMNIST(training: false, labels: true, path: path)
+        loadMNIST(training: true,  labels: false, path: path, flat: flat) / 255.0,
+        loadMNIST(training: true,  labels: true,  path: path, flat: flat),
+        loadMNIST(training: false, labels: false, path: path, flat: flat) / 255.0,
+        loadMNIST(training: false, labels: true,  path: path, flat: flat)
     )
 }
+
+public let mnistPath = Path.home/".fastai"/"data"/"mnist_tst"
 
 import Dispatch
 public func time(_ function: () -> ()) {
