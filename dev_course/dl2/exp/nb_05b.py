@@ -46,6 +46,7 @@ class CancelBatchException(Exception): pass
 
 class Runner():
     def __init__(self, cbs=None, cb_funcs=None):
+        self.in_train = False
         cbs = listify(cbs)
         for cbf in listify(cb_funcs):
             cb = cbf()
@@ -84,7 +85,6 @@ class Runner():
         try:
             for xb,yb in dl: self.one_batch(xb, yb)
         except CancelEpochException: self('after_cancel_epoch')
-        finally: self('after_batch')
 
     def fit(self, epochs, learn):
         self.epochs,self.learn,self.loss = epochs,learn,tensor(0.)
@@ -137,7 +137,14 @@ class Recorder(Callback):
         self.losses.append(self.loss.detach().cpu())
 
     def plot_lr  (self, pgid=-1): plt.plot(self.lrs[pgid])
-    def plot_loss(self): plt.plot(self.losses)
+    def plot_loss(self, skip_last=0): plt.plot(self.losses[:len(self.losses)-skip_last])
+
+    def plot(self, skip_last=0, pgid=-1):
+        losses = [o.item() for o in self.losses]
+        lrs    = self.lrs[pgid]
+        n = len(losses)-skip_last
+        plt.xscale('log')
+        plt.plot(lrs[:n], losses[:n])
 
 class ParamScheduler(Callback):
     _order=1
