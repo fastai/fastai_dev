@@ -18,10 +18,9 @@ public extension Tensor where Scalar:TensorFlowFloatingPoint {
 }
 
 public func testNearZero(_ a:Tensor<Float>, tolerance:Float=1e-3) {
-    print(a.shape)
     assert(abs(a)<tolerance, "Near zero: \(a)")
 }
 
-func mse(_ out:Tensor<Float>, _ targ:Tensor<Float>) -> Tensor<Float> {
+public func mse(_ out:Tensor<Float>, _ targ:Tensor<Float>) -> Tensor<Float> {
     return (out.squeezingShape(at: -1) - targ).squared().mean()
 }

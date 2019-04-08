@@ -12,7 +12,12 @@ public func accuracy(_ output: Tensor<Float>, _ target: Tensor<Int32>) -> Tensor
     return corrects.mean()
 }
 
-struct DataBatch<Inputs: Differentiable & TensorGroup, Labels: TensorGroup>: TensorGroup {
-    var xb: Inputs
-    var yb: Labels    
+public struct DataBatch<Inputs: Differentiable & TensorGroup, Labels: TensorGroup>: TensorGroup {
+    public var xb: Inputs
+    public var yb: Labels    
+    
+    public init(xb: Inputs, yb: Labels){
+        self.xb = xb
+        self.yb = yb
+    }
 }
