@@ -198,7 +198,7 @@ extension Learner {
         }
 
         public override func epochWillStart(learner: Learner) throws {
-            print("Beginning epoch \(learner.currentEpoch)")
+            //print("Beginning epoch \(learner.currentEpoch)")
             learner.pctEpochs = Float(learner.currentEpoch)
             learner.context = Context(learningPhase: .training)
             learner.inTrain = true
@@ -246,7 +246,7 @@ extension Learner {
         
         public override func epochDidFinish(learner: Learner) throws {
             for i in 0...metrics.count {partials[i] = partials[i] / Float(total)}
-            print(partials)
+            print("Epoch \(learner.currentEpoch): \(partials)")
         }
     }
 }
