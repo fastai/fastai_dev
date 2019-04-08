@@ -6,6 +6,8 @@
 
 from exp.nb_09c import *
 
+make_rgb._order=0
+
 import random
 
 def show_aug(gen, r=1, c=4, figsize=None):
@@ -129,4 +131,5 @@ class PilTiltRandomCrop(PilTransform):
 
 import numpy as np
 
-def np_to_float(x): return torch.from_numpy(np.array(x, dtype=np.float32, copy=False))/255.
+def np_to_float(x): return torch.from_numpy(np.array(x, dtype=np.float32, copy=False)).permute(2,0,1).contiguous()/255.
+np_to_float._order = 30
