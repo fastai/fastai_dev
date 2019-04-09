@@ -108,6 +108,7 @@ public final class Learner<Label: Differentiable & TensorGroup,
     public private(set) var iterCount: Int = 0
     
     open class Delegate {
+        public var order: Int {return 0}
         public init () {}
         
         open func trainingWillStart(learner: Learner) throws {}
@@ -189,6 +190,7 @@ extension Learner{
     /// - Parameter epochCount: The number of epochs that will be run.
     public func fit(_ epochCount: Int) throws {
         self.epochCount = epochCount
+        self.delegates.sort(by: {$0.order < $1.order})
         do {
             try delegates.forEach { try $0.trainingWillStart(learner: self) }
             for i in 0..<epochCount {
