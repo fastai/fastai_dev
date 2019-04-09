@@ -108,7 +108,7 @@ public final class Learner<Label: Differentiable & TensorGroup,
     public private(set) var iterCount: Int = 0
     
     open class Delegate {
-        public var order: Int { return 0 }
+        open var order: Int { return 0 }
         public init () {}
         
         open func trainingWillStart(learner: Learner) throws {}
