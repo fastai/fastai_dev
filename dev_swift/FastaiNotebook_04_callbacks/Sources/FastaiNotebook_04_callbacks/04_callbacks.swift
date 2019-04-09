@@ -32,11 +32,14 @@ public struct DataBunch<Element> where Element: TensorGroup{
     }
 }
 
+// TODO: When TF-421 is fixed, switch this back to Int32 labels.
 public func mnistDataBunch(path: Path = mnistPath, flat: Bool = false, bs: Int = 64
-                          ) -> DataBunch<DataBatch<Tensor<Float>, Tensor<Int32>>>{
+                          ) -> DataBunch<DataBatch<Tensor<Float>, Tensor<Float>>>{
     let (xTrain,yTrain,xValid,yValid) = loadMNIST(path: path, flat: flat)
-    return DataBunch(train: Dataset(elements:DataBatch(xb:xTrain, yb:yTrain)).batched(Int64(bs)), 
-                     valid: Dataset(elements:DataBatch(xb:xValid, yb:yValid)).batched(Int64(bs)))
+    let yTrain1: Tensor<Float> = Raw.oneHot(indices: yTrain, depth: Tensor(10), onValue: Tensor(1.0), offValue: Tensor(0.0))
+    let yValid1: Tensor<Float> = Raw.oneHot(indices: yValid, depth: Tensor(10), onValue: Tensor(1.0), offValue: Tensor(0.0))
+    return DataBunch(train: Dataset(elements:DataBatch(xb:xTrain, yb:yTrain1)).batched(Int64(bs)), 
+                     valid: Dataset(elements:DataBatch(xb:xValid, yb:yValid1)).batched(Int64(bs)))
 }
 
 public enum LearnerAction: Error {
@@ -47,10 +50,12 @@ public enum LearnerAction: Error {
 
 /// A model learner, responsible for initializing and training a model on a given dataset.
 // NOTE: When TF-421 is fixed, make `Label` not constrained to `Differentiable`.
-public final class Learner<Label: TensorGroup,
+public final class Learner<Label: Differentiable & TensorGroup,
                            O: TensorFlow.Optimizer & AnyObject>
     where O.Scalar: Differentiable,
-          O.Model.Input: TensorGroup
+          // Constrain model input to Tensor<Float>, to work around
+          // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
+          O.Model.Input == Tensor<Float>
 {
     // Common type aliases.
     public typealias Input = Model.Input
@@ -59,18 +64,24 @@ public final class Learner<Label: TensorGroup,
     public typealias Optimizer = O
     public typealias Model = Optimizer.Model
     public typealias Variables = Model.AllDifferentiableVariables
-    // NOTE: When TF-421 is fixed, replace with:
-    //   public typealias LossFunction = @differentiable (Model.Output, @nondiff Label) -> Loss
-    public typealias LossOutputWithGradient = (Model, Context, Input, Label
-                                 ) -> (Loss, Model.Output?, Model.CotangentVector)
     public typealias EventHandler = (Learner) throws -> Void
+    
+    /// A wrapper class to hold the loss function, to work around
+    // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
+    public final class LossFunction {
+        // NOTE: When TF-421 is fixed, replace with:
+        //   public typealias F = @differentiable (Model.Output, @nondiff Label) -> Loss
+        public typealias F = @differentiable (Model.Output, Label) -> Loss
+        public var f: F
+        init(_ f: @escaping F) { self.f = f }
+    }
     
     /// The dataset on which the model will be trained.
     public var data: Data
     /// The optimizer used for updating model parameters along gradient vectors.
     public var optimizer: Optimizer
     /// The function that computes a loss value when given a prediction and a label.
-    public var lossOutputWithGradient: LossOutputWithGradient
+    public var lossFunction: LossFunction
     /// The model being trained.
     public var model: Model
     
@@ -135,12 +146,12 @@ public final class Learner<Label: TensorGroup,
     ///   - modelInitializer: The closure that produces an model to be trained.
     ///
     public init(data: Data,
-                lossOutputWithGradient: @escaping LossOutputWithGradient,
+                lossFunction: @escaping LossFunction.F,
                 optimizer: Optimizer,
                 initializingWith modelInitializer: () -> Model) {
         self.data = data
         self.optimizer = optimizer
-        self.lossOutputWithGradient = lossOutputWithGradient
+        self.lossFunction = LossFunction(lossFunction)
         self.model = modelInitializer()
     }
 }
@@ -151,7 +162,11 @@ extension Learner {
     /// - Parameter batch: The batch of input data and labels to be trained on.
     ///
     private func train(onBatch batch: DataBatch<Input, Label>) throws {
-        (currentLoss, currentOutput, currentGradient) = lossOutputWithGradient(model, context, batch.xb, batch.yb)
+        (currentLoss, (currentGradient, _)) = model.valueWithGradient(at: batch.yb) { (model, yb) -> Loss in 
+            let y = model.applied(to: batch.xb, in: context)
+            currentOutput = y
+            return lossFunction.f(y, yb)
+        }
         try delegates.forEach { try $0.learnerDidProduceNewGradient(learner: self) }
         optimizer.update(&model.allDifferentiableVariables, along: self.currentGradient)
     }
@@ -240,6 +255,13 @@ extension Learner {
                     for i in 1...metrics.count{
                         partials[i] += Float(bs) * metrics[i-1]((learner.currentOutput as! Tensor<Float>), target)
                     }
+                }
+                
+                // TODO: When TF-421 is fixed, remove this.
+                if let target = learner.currentTarget as? Tensor<Float>{
+                    let bs = target.shape[0]
+                    total += Int(bs)
+                    partials[0] += Float(bs) * learner.currentLoss
                 }
             }
         }
