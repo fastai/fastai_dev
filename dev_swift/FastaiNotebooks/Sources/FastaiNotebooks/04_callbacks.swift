@@ -108,7 +108,7 @@ public final class Learner<Label: Differentiable & TensorGroup,
     public private(set) var iterCount: Int = 0
     
     open class Delegate {
-        public var order: Int {return 0}
+        public var order: Int { return 0 }
         public init () {}
         
         open func trainingWillStart(learner: Learner) throws {}
@@ -132,7 +132,10 @@ public final class Learner<Label: Differentiable & TensorGroup,
         /// TODO: learnerDidProduceNewOutput and learnerDidProduceNewLoss need to
         /// be differentiable once we can have the loss function inside the Learner
     }
-    public var delegates: [Delegate] = []
+    
+    public var delegates: [Delegate] = [] {
+        didSet { delegates.sort { $0.order < $1.order } }
+    }
     
     /// The context used for layer applications.
     public private(set) var context = Context(learningPhase: .training)
@@ -179,18 +182,17 @@ extension Learner {
             (currentInput, currentTarget) = (batch.xb, batch.yb)
             try delegates.forEach { try $0.batchWillStart(learner: self) }
             do { try train(onBatch: batch) }
-            catch LearnerAction.skipBatch { }
+            catch LearnerAction.skipBatch {}
             try delegates.forEach { try $0.batchDidFinish(learner: self) }
         }
     }
 }
 
-extension Learner{
+extension Learner {
     /// Starts fitting.
     /// - Parameter epochCount: The number of epochs that will be run.
     public func fit(_ epochCount: Int) throws {
         self.epochCount = epochCount
-        self.delegates.sort(by: {$0.order < $1.order})
         do {
             try delegates.forEach { try $0.trainingWillStart(learner: self) }
             for i in 0..<epochCount {
@@ -201,10 +203,10 @@ extension Learner{
                     try delegates.forEach { try $0.validationWillStart(learner: self) }
                     do { try train(onDataset: data.valid) }
                     
-                } catch LearnerAction.skipEpoch { }
+                } catch LearnerAction.skipEpoch {}
                 try delegates.forEach { try $0.epochDidFinish(learner: self) }
             }
-        } catch LearnerAction.stop { }
+        } catch LearnerAction.stop {}
         try delegates.forEach { try $0.trainingDidFinish(learner: self) }
     }
 }
