@@ -4,8 +4,7 @@ import shutil
 src = Path('FastaiNotebooks/Sources/FastaiNotebooks')
 mods = sorted(list(src.iterdir()))
 
-pkg_tmpl = """
-// swift-tools-version:4.2
+pkg_tmpl = """// swift-tools-version:4.2
 import PackageDescription
 
 let package = Package(
@@ -26,13 +25,16 @@ let package = Package(
 )
 """
 
-dep_tmpl = '        .package(path: "./{name}",'
+def mod_name(notebook_name):
+  return 'FastaiNotebook_%s' % notebook_name
+
+dep_tmpl = '        .package(path: "../{name}"),'
 
 for i,fn in enumerate(mods):
-    name = fn.stem
+    name = mod_name(fn.stem)
     dst = Path(name)
     dst.mkdir(exist_ok=True)
-    deps = '\n'.join(dep_tmpl.format(name=o.stem) for o in mods[:i])
+    deps = '\n'.join(dep_tmpl.format(name=mod_name(o.stem)) for o in mods[:i])
     with (dst/'Package.swift').open('w') as pkg_f:
         pkg_f.write(pkg_tmpl.format(name=name, deps=deps))
     dst_p = dst/'Sources'/name
