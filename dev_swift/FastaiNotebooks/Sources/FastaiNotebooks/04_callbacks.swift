@@ -178,7 +178,7 @@ extension Learner {
             (currentInput, currentTarget) = (batch.xb, batch.yb)
             try delegates.forEach { try $0.batchWillStart(learner: self) }
             do { try train(onBatch: batch) }
-            catch LearnerAction.skipBatch { break }
+            catch LearnerAction.skipBatch { }
             try delegates.forEach { try $0.batchDidFinish(learner: self) }
         }
     }
@@ -193,14 +193,16 @@ extension Learner{
             try delegates.forEach { try $0.trainingWillStart(learner: self) }
             for i in 0..<epochCount {
                 self.currentEpoch = i
-                try delegates.forEach { try $0.epochWillStart(learner: self) }
-                do { try train(onDataset: data.train) }
-                try delegates.forEach { try $0.validationWillStart(learner: self) }
-                do { try train(onDataset: data.valid) }
-                catch LearnerAction.skipEpoch { break }
+                do {
+                    try delegates.forEach { try $0.epochWillStart(learner: self) }
+                    do { try train(onDataset: data.train) }
+                    try delegates.forEach { try $0.validationWillStart(learner: self) }
+                    do { try train(onDataset: data.valid) }
+                    
+                } catch LearnerAction.skipEpoch { }
                 try delegates.forEach { try $0.epochDidFinish(learner: self) }
             }
-        } catch LearnerAction.stop { return }
+        } catch LearnerAction.stop { }
         try delegates.forEach { try $0.trainingDidFinish(learner: self) }
     }
 }
