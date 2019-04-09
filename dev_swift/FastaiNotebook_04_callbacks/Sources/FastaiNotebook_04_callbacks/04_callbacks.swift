@@ -85,7 +85,7 @@ public final class Learner<Label: Differentiable & TensorGroup,
     /// The model being trained.
     public var model: Model
     
-    //Is there a better way tonitiliaze those to not make them Optionals?
+    //Is there a better way to initialize those to not make them Optionals?
     public var currentInput: Input? = nil
     public var currentTarget: Label? = nil
     public var currentOutput: Model.Output? = nil
@@ -213,7 +213,6 @@ extension Learner {
         }
 
         public override func epochWillStart(learner: Learner) throws {
-            //print("Beginning epoch \(learner.currentEpoch)")
             learner.pctEpochs = Float(learner.currentEpoch)
             learner.context = Context(learningPhase: .training)
             learner.inTrain = true
@@ -233,6 +232,7 @@ extension Learner {
     }
 }
 
+// TODO: make metrics more generic (probably for after the course)
 extension Learner {
     public class AvgMetric: Delegate {
         public let metrics: [(Tensor<Float>, Tensor<Int32>) -> Tensor<Float>]
@@ -262,6 +262,10 @@ extension Learner {
                     let bs = target.shape[0]
                     total += Int(bs)
                     partials[0] += Float(bs) * learner.currentLoss
+                    let idxTarg = target.argmax(squeezingAxis: 1)
+                    for i in 1...metrics.count{
+                        partials[i] += Float(bs) * metrics[i-1]((learner.currentOutput as! Tensor<Float>), idxTarg)
+                    }
                 }
             }
         }
