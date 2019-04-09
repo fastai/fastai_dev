@@ -200,32 +200,32 @@ extension Learner{
                 catch LearnerAction.skipEpoch { break }
                 try delegates.forEach { try $0.epochDidFinish(learner: self) }
             }
-            try delegates.forEach { try $0.trainingDidFinish(learner: self) }
         } catch LearnerAction.stop { return }
+        try delegates.forEach { try $0.trainingDidFinish(learner: self) }
     }
 }
 
 extension Learner {
     public class TrainEvalDelegate: Delegate {
-        public override func trainingWillStart(learner: Learner) throws {
+        public override func trainingWillStart(learner: Learner) {
             learner.pctEpochs = 0.0
             learner.currentIter = 0
         }
 
-        public override func epochWillStart(learner: Learner) throws {
+        public override func epochWillStart(learner: Learner) {
             learner.pctEpochs = Float(learner.currentEpoch)
             learner.context = Context(learningPhase: .training)
             learner.inTrain = true
         }
         
-        public override func batchDidFinish(learner: Learner) throws{
+        public override func batchDidFinish(learner: Learner) {
             if learner.inTrain{
                 learner.pctEpochs   += 1.0 / Float(learner.iterCount)
                 learner.currentIter += 1
             }
         }
         
-        public override func validationWillStart(learner: Learner) throws {
+        public override func validationWillStart(learner: Learner) {
             learner.context = Context(learningPhase: .inference)
             learner.inTrain = false
         }
@@ -241,12 +241,12 @@ extension Learner {
         
         public init(metrics: [(Tensor<Float>, Tensor<Int32>) -> Tensor<Float>]){ self.metrics = metrics}
         
-        public override func epochWillStart(learner: Learner) throws {
+        public override func epochWillStart(learner: Learner) {
             total = 0
             partials = Array(repeating: Tensor(0), count: metrics.count + 1)
         }
         
-        public override func batchDidFinish(learner: Learner) throws{
+        public override func batchDidFinish(learner: Learner) {
             if !learner.inTrain{
                 if let target = learner.currentTarget as? Tensor<Int32>{
                     let bs = target.shape[0]
@@ -270,7 +270,7 @@ extension Learner {
             }
         }
         
-        public override func epochDidFinish(learner: Learner) throws {
+        public override func epochDidFinish(learner: Learner) {
             for i in 0...metrics.count {partials[i] = partials[i] / Float(total)}
             print("Epoch \(learner.currentEpoch): \(partials)")
         }
