@@ -166,8 +166,9 @@ extension Learner {
     /// - Parameter batch: The batch of input data and labels to be trained on.
     ///
     private func train(onBatch batch: DataBatch<Input, Label>) throws {
-        (currentLoss, (currentGradient, _)) = model.valueWithGradient(at: batch.yb) { (model, yb) -> Loss in 
-            let y = model.applied(to: batch.xb, in: context)
+        let (xb,yb) = (currentInput!,currentTarget!)
+        (currentLoss, (currentGradient, _)) = model.valueWithGradient(at: yb) { (model, yb) -> Loss in 
+            let y = model.applied(to: xb, in: context)
             currentOutput = y
             return lossFunction.f(y, yb)
         }
