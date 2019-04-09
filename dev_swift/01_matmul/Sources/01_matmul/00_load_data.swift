@@ -64,6 +64,7 @@ func loadMNIST<T:ConvertableFromByte & TensorFlowScalar>(training: Bool, labels:
 }
 
 public func loadMNIST(path:Path, flat:Bool = false) -> (Tensor<Float>, Tensor<Int32>, Tensor<Float>, Tensor<Int32>) {
+    try! path.mkdir(.p)
     return (
         loadMNIST(training: true,  labels: false, path: path, flat: flat) / 255.0,
         loadMNIST(training: true,  labels: true,  path: path, flat: flat),
