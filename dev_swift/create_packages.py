@@ -24,7 +24,6 @@ let package = Package(
     ]
 )
 """
-
 def mod_name(notebook_name):
   return 'FastaiNotebook_%s' % notebook_name
 
