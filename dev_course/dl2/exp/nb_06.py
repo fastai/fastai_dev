@@ -49,8 +49,9 @@ class Hook():
 def append_stats(hook, mod, inp, outp):
     if not hasattr(hook,'stats'): hook.stats = ([],[])
     means,stds = hook.stats
-    means.append(outp.data.mean())
-    stds .append(outp.data.std())
+    if mod.training:
+        means.append(outp.data.mean())
+        stds .append(outp.data.std())
 
 class ListContainer():
     def __init__(self, items): self.items = listify(items)
@@ -75,6 +76,7 @@ class Hooks(ListContainer):
     def __init__(self, ms, f): super().__init__([Hook(m, f) for m in ms])
     def __enter__(self, *args): return self
     def __exit__ (self, *args): self.remove()
+    def __del__(self): self.remove()
 
     def __delitem__(self, i):
         self[i].remove()
@@ -127,9 +129,6 @@ if (ip) {
     ip.save_notebook()
     console.log('a')
     const s = `!python notebook2script.py ${ip.notebook_name}`
-    if (ip.kernel) {
-        console.log(s)
-        ip.kernel.execute()
-    }
+    if (ip.kernel) { ip.kernel.execute(s) }
 }
 }"""))
