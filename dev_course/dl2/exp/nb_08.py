@@ -108,6 +108,7 @@ class CategoryProcessor(Processor):
     def __init__(self): self.vocab=None
 
     def process(self, items):
+        #The vocab is defined on the first use.
         if self.vocab is None:
             self.vocab = uniqueify(items)
             self.otoi  = {v:k for k,v in enumerate(self.vocab)}
@@ -185,6 +186,12 @@ class DataBunch():
     @property
     def valid_ds(self): return self.valid_dl.dataset
 
+def databunchify(sd, bs, c_in=None, c_out=None, **kwargs):
+    dls = get_dls(sd.train, sd.valid, bs, **kwargs)
+    return DataBunch(*dls, c_in=c_in, c_out=c_out)
+
+SplitData.to_databunch = databunchify
+
 def normalize_chan(x, mean, std):
     return (x-mean[...,None,None]) / std[...,None,None]
 
@@ -218,6 +225,8 @@ def get_learn_run(nfs, data, lr, layer, cbs=None, opt_func=None, **kwargs):
 
 def model_summary(run, learn, find_all=False):
     xb,yb = get_batch(data.valid_dl, run)
+    device = next(learn.model.parameters()).device#Model may not be on the GPU yet
+    xb,yb = xb.to(device),yb.to(device)
     mods = find_modules(learn.model, is_lin_layer) if find_all else learn.model.children()
     f = lambda hook,mod,inp,out: print(f"{mod}\n{out.shape}\n")
     with Hooks(mods, f) as hooks: learn.model(xb)
