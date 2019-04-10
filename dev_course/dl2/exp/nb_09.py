@@ -29,6 +29,10 @@ class ParamScheduler(Callback):
     def begin_batch(self):
         if self.in_train: self.set_param()
 
+def sgd_step(p, lr, **kwargs):
+    p.data.add_(-lr, p.grad.data)
+    return p
+
 def maybe_update(os, dest, f):
     for o in os:
         for k,v in f(o).items():
@@ -57,6 +61,18 @@ class Optimizer():
 
     def step(self):
         for p,hyper in self.grad_params(): compose(p, self.steppers, **hyper)
+
+def weight_decay(p, lr, wd, **kwargs):
+    p.data.mul_(1 - lr*wd)
+    return p
+weight_decay._defaults = dict(wd=0.)
+
+def l2_reg(p, lr, wd, **kwargs):
+    p.grad.data.add_(wd, p.data)
+    return p
+l2_reg._defaults = dict(wd=0.)
+
+sgd_opt = partial(Optimizer, steppers=[weight_decay, sgd_step])
 
 class StatefulOptimizer(Optimizer):
     def __init__(self, params, steppers, stats=None, **defaults):
@@ -119,3 +135,8 @@ def adam_step(p, lr, mom, mom_damp, step, sqr_mom, sqr_damp, grad_avg, sqr_avg, 
     p.data.addcdiv_(-lr / debias1, grad_avg, (sqr_avg/debias2).sqrt() + eps)
     return p
 adam_step._defaults = dict(eps=1e-5)
+
+adam_opt = partial(StatefulOptimizer, steppers=adam_step, stats=[AverageGrad(dampening=True), AverageSqrGrad(), StepCount()])
+
+sgd_mom_opt = partial(StatefulOptimizer, steppers=[momentum_step,weight_decay],
+                  stats=AverageGrad(), wd=0.01)

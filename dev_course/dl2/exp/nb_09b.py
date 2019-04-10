@@ -7,13 +7,13 @@
 from exp.nb_09 import *
 
 class Learner():
-    def __init__(self, model, data, loss_func, opt=None, opt_func=optim.SGD, lr=None,
+    def __init__(self, model, data, loss_func, opt=None, opt_func=sgd_opt, lr=None,
                  cbs=None, cb_funcs=None):
         assert opt or lr
         if not opt: opt = opt_func(model.parameters(), lr=lr)
         self.opt = opt
         self.model,self.data,self.loss_func,self.opt = model,data,loss_func,opt
-        self.in_train,self.log = False,print
+        self.in_train,self.logger = False,print
 
         cbs = listify(cbs)
         for cbf in listify(cb_funcs):
@@ -70,8 +70,14 @@ class Learner():
         except CancelTrainException: self('after_cancel_train')
         finally: self('after_fit')
 
+    ALL_CBS = {'begin_batch', 'after_pred', 'after_loss', 'after_backward', 'after_step',
+        'after_cancel_batch', 'after_batch', 'after_cancel_epoch', 'begin_fit',
+        'begin_epoch', 'begin_epoch', 'begin_validate', 'after_epoch',
+        'after_cancel_train', 'after_fit'}
+
     def __call__(self, cb_name):
         res = False
+        assert cb_name in self.ALL_CBS
         for cb in sorted(self.cbs, key=lambda x: x._order): res = cb(cb_name) and res
         return res
 
@@ -87,10 +93,13 @@ class AvgStatsCallback(Callback):
         stats = self.train_stats if self.in_train else self.valid_stats
         with torch.no_grad(): stats.accumulate(self.run)
 
-    def after_epoch(self): self.log(self.train_stats,self.valid_stats)
+    def after_epoch(self):
+        #We use the logger function of the `Learner` here, it can be customized to write in a file or in a progress bar
+        self.logger(self.train_stats)
+        self.logger(self.valid_stats)
 
 def get_learner(nfs, data, lr, layer, loss_func=F.cross_entropy,
-                cb_funcs=None, opt_func=optim.SGD, **kwargs):
+                cb_funcs=None, opt_func=sgd_opt, **kwargs):
     model = get_cnn_model(data, nfs, layer, **kwargs)
     init_cnn(model)
     return Learner(model, data, loss_func, lr=lr, cb_funcs=cb_funcs, opt_func=opt_func)
