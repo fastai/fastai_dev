@@ -32,11 +32,14 @@ public struct DataBunch<Element> where Element: TensorGroup{
     }
 }
 
+// TODO: When TF-421 is fixed, switch this back to Int32 labels.
 public func mnistDataBunch(path: Path = mnistPath, flat: Bool = false, bs: Int = 64
-                          ) -> DataBunch<DataBatch<Tensor<Float>, Tensor<Int32>>>{
+                          ) -> DataBunch<DataBatch<Tensor<Float>, Tensor<Float>>>{
     let (xTrain,yTrain,xValid,yValid) = loadMNIST(path: path, flat: flat)
-    return DataBunch(train: Dataset(elements:DataBatch(xb:xTrain, yb:yTrain)).batched(Int64(bs)), 
-                     valid: Dataset(elements:DataBatch(xb:xValid, yb:yValid)).batched(Int64(bs)))
+    let yTrain1: Tensor<Float> = Raw.oneHot(indices: yTrain, depth: Tensor(10), onValue: Tensor(1.0), offValue: Tensor(0.0))
+    let yValid1: Tensor<Float> = Raw.oneHot(indices: yValid, depth: Tensor(10), onValue: Tensor(1.0), offValue: Tensor(0.0))
+    return DataBunch(train: Dataset(elements:DataBatch(xb:xTrain, yb:yTrain1)).batched(Int64(bs)), 
+                     valid: Dataset(elements:DataBatch(xb:xValid, yb:yValid1)).batched(Int64(bs)))
 }
 
 public enum LearnerAction: Error {
@@ -47,10 +50,12 @@ public enum LearnerAction: Error {
 
 /// A model learner, responsible for initializing and training a model on a given dataset.
 // NOTE: When TF-421 is fixed, make `Label` not constrained to `Differentiable`.
-public final class Learner<Label: TensorGroup,
+public final class Learner<Label: Differentiable & TensorGroup,
                            O: TensorFlow.Optimizer & AnyObject>
     where O.Scalar: Differentiable,
-          O.Model.Input: TensorGroup
+          // Constrain model input to Tensor<Float>, to work around
+          // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
+          O.Model.Input == Tensor<Float>
 {
     // Common type aliases.
     public typealias Input = Model.Input
@@ -59,22 +64,28 @@ public final class Learner<Label: TensorGroup,
     public typealias Optimizer = O
     public typealias Model = Optimizer.Model
     public typealias Variables = Model.AllDifferentiableVariables
-    // NOTE: When TF-421 is fixed, replace with:
-    //   public typealias LossFunction = @differentiable (Model.Output, @nondiff Label) -> Loss
-    public typealias LossOutputWithGradient = (Model, Context, Input, Label
-                                 ) -> (Loss, Model.Output?, Model.CotangentVector)
     public typealias EventHandler = (Learner) throws -> Void
+    
+    /// A wrapper class to hold the loss function, to work around
+    // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
+    public final class LossFunction {
+        // NOTE: When TF-421 is fixed, replace with:
+        //   public typealias F = @differentiable (Model.Output, @nondiff Label) -> Loss
+        public typealias F = @differentiable (Model.Output, Label) -> Loss
+        public var f: F
+        init(_ f: @escaping F) { self.f = f }
+    }
     
     /// The dataset on which the model will be trained.
     public var data: Data
     /// The optimizer used for updating model parameters along gradient vectors.
     public var optimizer: Optimizer
     /// The function that computes a loss value when given a prediction and a label.
-    public var lossOutputWithGradient: LossOutputWithGradient
+    public var lossFunction: LossFunction
     /// The model being trained.
     public var model: Model
     
-    //Is there a better way tonitiliaze those to not make them Optionals?
+    //Is there a better way to initialize those to not make them Optionals?
     public var currentInput: Input? = nil
     public var currentTarget: Label? = nil
     public var currentOutput: Model.Output? = nil
@@ -97,6 +108,7 @@ public final class Learner<Label: TensorGroup,
     public private(set) var iterCount: Int = 0
     
     open class Delegate {
+        open var order: Int { return 0 }
         public init () {}
         
         open func trainingWillStart(learner: Learner) throws {}
@@ -120,7 +132,10 @@ public final class Learner<Label: TensorGroup,
         /// TODO: learnerDidProduceNewOutput and learnerDidProduceNewLoss need to
         /// be differentiable once we can have the loss function inside the Learner
     }
-    public var delegates: [Delegate] = []
+    
+    public var delegates: [Delegate] = [] {
+        didSet { delegates.sort { $0.order < $1.order } }
+    }
     
     /// The context used for layer applications.
     public private(set) var context = Context(learningPhase: .training)
@@ -135,12 +150,12 @@ public final class Learner<Label: TensorGroup,
     ///   - modelInitializer: The closure that produces an model to be trained.
     ///
     public init(data: Data,
-                lossOutputWithGradient: @escaping LossOutputWithGradient,
+                lossFunction: @escaping LossFunction.F,
                 optimizer: Optimizer,
                 initializingWith modelInitializer: () -> Model) {
         self.data = data
         self.optimizer = optimizer
-        self.lossOutputWithGradient = lossOutputWithGradient
+        self.lossFunction = LossFunction(lossFunction)
         self.model = modelInitializer()
     }
 }
@@ -151,7 +166,12 @@ extension Learner {
     /// - Parameter batch: The batch of input data and labels to be trained on.
     ///
     private func train(onBatch batch: DataBatch<Input, Label>) throws {
-        (currentLoss, currentOutput, currentGradient) = lossOutputWithGradient(model, context, batch.xb, batch.yb)
+        let (xb,yb) = (currentInput!,currentTarget!)
+        (currentLoss, (currentGradient, _)) = model.valueWithGradient(at: yb) { (model, yb) -> Loss in 
+            let y = model.applied(to: xb, in: context)
+            currentOutput = y
+            return lossFunction.f(y, yb)
+        }
         try delegates.forEach { try $0.learnerDidProduceNewGradient(learner: self) }
         optimizer.update(&model.allDifferentiableVariables, along: self.currentGradient)
     }
@@ -163,13 +183,13 @@ extension Learner {
             (currentInput, currentTarget) = (batch.xb, batch.yb)
             try delegates.forEach { try $0.batchWillStart(learner: self) }
             do { try train(onBatch: batch) }
-            catch LearnerAction.skipBatch { break }
+            catch LearnerAction.skipBatch {}
             try delegates.forEach { try $0.batchDidFinish(learner: self) }
         }
     }
 }
 
-extension Learner{
+extension Learner {
     /// Starts fitting.
     /// - Parameter epochCount: The number of epochs that will be run.
     public func fit(_ epochCount: Int) throws {
@@ -178,46 +198,48 @@ extension Learner{
             try delegates.forEach { try $0.trainingWillStart(learner: self) }
             for i in 0..<epochCount {
                 self.currentEpoch = i
-                try delegates.forEach { try $0.epochWillStart(learner: self) }
-                do { try train(onDataset: data.train) }
-                try delegates.forEach { try $0.validationWillStart(learner: self) }
-                do { try train(onDataset: data.valid) }
-                catch LearnerAction.skipEpoch { break }
+                do {
+                    try delegates.forEach { try $0.epochWillStart(learner: self) }
+                    do { try train(onDataset: data.train) }
+                    try delegates.forEach { try $0.validationWillStart(learner: self) }
+                    do { try train(onDataset: data.valid) }
+                    
+                } catch LearnerAction.skipEpoch {}
                 try delegates.forEach { try $0.epochDidFinish(learner: self) }
             }
-            try delegates.forEach { try $0.trainingDidFinish(learner: self) }
-        } catch LearnerAction.stop { return }
+        } catch LearnerAction.stop {}
+        try delegates.forEach { try $0.trainingDidFinish(learner: self) }
     }
 }
 
 extension Learner {
     public class TrainEvalDelegate: Delegate {
-        public override func trainingWillStart(learner: Learner) throws {
+        public override func trainingWillStart(learner: Learner) {
             learner.pctEpochs = 0.0
             learner.currentIter = 0
         }
 
-        public override func epochWillStart(learner: Learner) throws {
-            //print("Beginning epoch \(learner.currentEpoch)")
+        public override func epochWillStart(learner: Learner) {
             learner.pctEpochs = Float(learner.currentEpoch)
             learner.context = Context(learningPhase: .training)
             learner.inTrain = true
         }
         
-        public override func batchDidFinish(learner: Learner) throws{
+        public override func batchDidFinish(learner: Learner) {
             if learner.inTrain{
                 learner.pctEpochs   += 1.0 / Float(learner.iterCount)
                 learner.currentIter += 1
             }
         }
         
-        public override func validationWillStart(learner: Learner) throws {
+        public override func validationWillStart(learner: Learner) {
             learner.context = Context(learningPhase: .inference)
             learner.inTrain = false
         }
     }
 }
 
+// TODO: make metrics more generic (probably for after the course)
 extension Learner {
     public class AvgMetric: Delegate {
         public let metrics: [(Tensor<Float>, Tensor<Int32>) -> Tensor<Float>]
@@ -226,12 +248,12 @@ extension Learner {
         
         public init(metrics: [(Tensor<Float>, Tensor<Int32>) -> Tensor<Float>]){ self.metrics = metrics}
         
-        public override func epochWillStart(learner: Learner) throws {
+        public override func epochWillStart(learner: Learner) {
             total = 0
             partials = Array(repeating: Tensor(0), count: metrics.count + 1)
         }
         
-        public override func batchDidFinish(learner: Learner) throws{
+        public override func batchDidFinish(learner: Learner) {
             if !learner.inTrain{
                 if let target = learner.currentTarget as? Tensor<Int32>{
                     let bs = target.shape[0]
@@ -241,10 +263,21 @@ extension Learner {
                         partials[i] += Float(bs) * metrics[i-1]((learner.currentOutput as! Tensor<Float>), target)
                     }
                 }
+                
+                // TODO: When TF-421 is fixed, remove this.
+                if let target = learner.currentTarget as? Tensor<Float>{
+                    let bs = target.shape[0]
+                    total += Int(bs)
+                    partials[0] += Float(bs) * learner.currentLoss
+                    let idxTarg = target.argmax(squeezingAxis: 1)
+                    for i in 1...metrics.count{
+                        partials[i] += Float(bs) * metrics[i-1]((learner.currentOutput as! Tensor<Float>), idxTarg)
+                    }
+                }
             }
         }
         
-        public override func epochDidFinish(learner: Learner) throws {
+        public override func epochDidFinish(learner: Learner) {
             for i in 0...metrics.count {partials[i] = partials[i] / Float(total)}
             print("Epoch \(learner.currentEpoch): \(partials)")
         }
