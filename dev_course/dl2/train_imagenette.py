@@ -15,7 +15,7 @@ url = URLs.IMAGENETTE_160 if size<140 else URLs.IMAGENETTE_320 if size<240 else 
 
 path = untar_data(url)
 tfms = [make_rgb, PilTiltRandomCrop(size, 160, magnitude=0.2), PilRandomFlip(), np_to_float]
-il = ImageItemList.from_files(path, tfms=tfms)
+il = ImageList.from_files(path, tfms=tfms)
 sd = SplitData.split_by_func(il, partial(grandparent_splitter, valid_name='val'))
 ll = label_by_func(sd, parent_labeler)
 ll.valid.x.tfms = [make_rgb, CenterCrop(size), to_byte_tensor, to_float_tensor]

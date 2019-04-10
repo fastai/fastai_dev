@@ -55,7 +55,7 @@ class ItemList(ListContainer):
         if isinstance(res,list): return [self._get(o) for o in res]
         return self._get(res)
 
-class ImageItemList(ItemList):
+class ImageList(ItemList):
     @classmethod
     def from_files(cls, path, extensions=None, recurse=True, include=None, **kwargs):
         if extensions is None: extensions = image_extensions
