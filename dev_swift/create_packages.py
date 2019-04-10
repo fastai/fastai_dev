@@ -24,10 +24,10 @@ let package = Package(
     ]
 )
 """
-def mod_name(notebook_name):
-  return 'FastaiNotebook_%s' % notebook_name
 
 dep_tmpl = '        .package(path: "../{name}"),'
+
+def mod_name(notebook_name): return f'FastaiNotebook_{notebook_name}'
 
 for i,fn in enumerate(mods):
     name = mod_name(fn.stem)
