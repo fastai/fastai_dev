@@ -10,13 +10,6 @@ make_rgb._order=0
 
 import random
 
-def show_aug(gen, r=1, c=4, figsize=None):
-    if figsize is None: figsize=(c*3,r*3)
-    fig,axes = plt.subplots(r,c, figsize=figsize)
-    for ax in axes.flat:
-        ax.imshow(gen())
-        ax.axis('off')
-
 def show_image(im, ax=None, figsize=(3,3)):
     if ax is None: _,ax = plt.subplots(1, 1, figsize=figsize)
     ax.axis('off')
@@ -37,7 +30,7 @@ class PilRandomFlip(PilTransform):
         return x.transpose(PIL.Image.FLIP_LEFT_RIGHT) if random.random()<self.p else x
 
 class PilRandomDihedral(PilTransform):
-    def __init__(self, p=7/8): self.p=p
+    def __init__(self, p=0.75): self.p=p*7/8 #Little hack to get the 1/8 identity dihedral transform taken into account.
     def __call__(self, x):
         if random.random()>self.p: return x
         return x.transpose(random.randint(0,6))
@@ -48,32 +41,34 @@ def process_sz(sz):
     sz = listify(sz)
     return tuple(sz if len(sz)==2 else [sz[0],sz[0]])
 
+def default_crop_size(w,h): return [w,w] if w < h else [h,h]
+
 class GeneralCrop(PilTransform):
     def __init__(self, size, crop_size=None, resample=PIL.Image.BILINEAR):
         self.resample,self.size = resample,process_sz(size)
-        self.crop_size = self.size if crop_size is None else process_sz(crop_size)
+        self.crop_size = None if crop_size is None else process_sz(crop_size)
 
     def __call__(self, x):
-        return x.transform(self.size, PIL.Image.EXTENT, self.get_corners(*x.size), resample=self.resample)
+        csize = default_crop_size(*x.size) if self.crop_size is None else self.crop_size
+        return x.transform(self.size, PIL.Image.EXTENT, self.get_corners(*x.size, *csize), resample=self.resample)
 
     def get_corners(self, w, h): return (0,0,w,h)
 
 class CenterCrop(GeneralCrop):
-    def get_corners(self, w, h):
-        left,top = (w-self.crop_size[0])//2,(h-self.crop_size[1])//2
-        return (left, top, left+self.crop_size[0], top+self.crop_size[1])
+    def get_corners(self, w, h, wc, hc):
+        return ((w-wc)//2, (h-hc)//2, (w-wc)//2+wc, (h-hc)//2+hc)
 
 class RandomCrop(GeneralCrop):
-    def get_corners(self, w, h):
-        left,top = randint(0,w-self.crop_size[0]),randint(0,h-self.crop_size[1])
-        return (left, top, left+self.crop_size[0], top+self.crop_size[1])
+    def get_corners(self, w, h,wc, hc):
+        left,top = randint(0,w-wc),randint(0,h-hc)
+        return (left, top, left+wc, top+hc)
 
 class RandomResizedCrop(GeneralCrop):
     def __init__(self, size, scale=(0.08,1.0), ratio=(3./4., 4./3.), resample=PIL.Image.BILINEAR):
         super().__init__(size, resample=resample)
         self.scale,self.ratio = scale,ratio
 
-    def get_corners(self, w, h):
+    def get_corners(self, w, h, wc, hc):
         area = w*h
         #Tries 10 times to get a proper crop inside the image.
         for attempt in range(10):
@@ -117,15 +112,16 @@ def uniform(a,b): return a + (b-a) * random.random()
 class PilTiltRandomCrop(PilTransform):
     def __init__(self, size, crop_size=None, magnitude=0., resample=PIL.Image.BILINEAR):
         self.resample,self.size,self.magnitude = resample,process_sz(size),magnitude
-        self.crop_size = self.size if crop_size is None else process_sz(crop_size)
+        self.crop_size = None if crop_size is None else process_sz(crop_size)
 
     def __call__(self, x):
-        left,top = randint(0,x.size[0]-self.crop_size[0]),randint(0,x.size[1]-self.crop_size[1])
-        top_magn = min(self.magnitude, left/self.crop_size[0], (x.size[0]-left)/self.crop_size[0]-1)
-        lr_magn  = min(self.magnitude, top /self.crop_size[1], (x.size[1]-top) /self.crop_size[1]-1)
+        csize = default_crop_size(*x.size) if self.crop_size is None else self.crop_size
+        left,top = randint(0,x.size[0]-csize[0]),randint(0,x.size[1]-csize[1])
+        top_magn = min(self.magnitude, left/csize[0], (x.size[0]-left)/csize[0]-1)
+        lr_magn  = min(self.magnitude, top /csize[1], (x.size[1]-top) /csize[1]-1)
         up_t,lr_t = uniform(-top_magn, top_magn),uniform(-lr_magn, lr_magn)
         src_corners = tensor([[-up_t, -lr_t], [up_t, 1+lr_t], [1-up_t, 1-lr_t], [1+up_t, lr_t]])
-        src_corners = src_corners * tensor(self.crop_size).float() + tensor([left,top]).float()
+        src_corners = src_corners * tensor(csize).float() + tensor([left,top]).float()
         src_corners = tuple([(int(o[0].item()), int(o[1].item())) for o in src_corners])
         return warp(x, self.size, src_corners, resample=self.resample)
 
