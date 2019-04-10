@@ -85,8 +85,7 @@ def split_by_func(ds, f):
 class SplitData():
     def __init__(self, train, valid): self.train,self.valid = train,valid
 
-    @property
-    def path(self): return self.train.path
+    def __getattr__(self,k): return getattr(self.train,k)
 
     @classmethod
     def split_by_func(cls, il, f):
@@ -107,18 +106,18 @@ class Processor():
 
 class CategoryProcessor(Processor):
     def __init__(self): self.vocab=None
-    def proc1(self, item):  return self.otoi[item]
-    def deproc1(self, idx): return self.vocab[idx]
 
     def process(self, items):
         if self.vocab is None:
             self.vocab = uniqueify(items)
             self.otoi  = {v:k for k,v in enumerate(self.vocab)}
         return [self.proc1(o) for o in items]
+    def proc1(self, item):  return self.otoi[item]
 
     def deprocess(self, idxs):
         assert self.vocab is not None
         return [self.deproc1(idx) for idx in idxs]
+    def deproc1(self, idx): return self.vocab[idx]
 
 class ProcessedItemList(ListContainer):
     def __init__(self, inputs, processor):
@@ -143,10 +142,10 @@ class LabeledData():
     def __len__(self): return len(self.x)
 
     @classmethod
-    def label_by_func(cls, sd, f, proc=None):
-        labels = _label_by_func(sd, f)
+    def label_by_func(cls, il, f, proc=None):
+        labels = _label_by_func(il, f)
         proc_labels = ProcessedItemList(labels, proc)
-        return cls(sd, proc_labels)
+        return cls(il, proc_labels)
 
 def label_by_func(sd, f):
     proc = CategoryProcessor()
@@ -194,20 +193,19 @@ _s = tensor([0.29, 0.28, 0.30])
 norm_imagenette = partial(normalize_chan, mean=_m.cuda(), std=_s.cuda())
 
 import math
-def next_pow_2(x): return 2**math.ceil(math.log2(x))
+def prev_pow_2(x): return 2**math.floor(math.log2(x))
 
 def get_cnn_layers(data, nfs, layer, **kwargs):
     def f(ni, nf, stride=2): return layer(ni, nf, 3, stride=stride, **kwargs)
     l1 = data.c_in
-    l2 = next_pow_2(l1*2)
+    l2 = prev_pow_2(l1*3*3)
     layers =  [f(l1  , l2  , stride=1),
-               f(l2  , l2*2, stride=1),
-               f(l2*2, l2*4, stride=1)]
+               f(l2  , l2*2, stride=2),
+               f(l2*2, l2*4, stride=2)]
     nfs = [l2*4] + nfs
     layers += [f(nfs[i], nfs[i+1]) for i in range(len(nfs)-1)]
     layers += [nn.AdaptiveAvgPool2d(1), Lambda(flatten),
-               nn.Linear(nfs[-1], data.c_out),
-               nn.BatchNorm1d(data.c_out)]
+               nn.Linear(nfs[-1], data.c_out)]
     return layers
 
 def get_cnn_model(data, nfs, layer, **kwargs):
@@ -217,3 +215,9 @@ def get_learn_run(nfs, data, lr, layer, cbs=None, opt_func=None, **kwargs):
     model = get_cnn_model(data, nfs, layer, **kwargs)
     init_cnn(model)
     return get_runner(model, data, lr=lr, cbs=cbs, opt_func=opt_func)
+
+def model_summary(run, learn, find_all=False):
+    xb,yb = get_batch(data.valid_dl, run)
+    mods = find_modules(learn.model, is_lin_layer) if find_all else learn.model.children()
+    f = lambda hook,mod,inp,out: print(f"{mod}\n{out.shape}\n")
+    with Hooks(mods, f) as hooks: learn.model(xb)
