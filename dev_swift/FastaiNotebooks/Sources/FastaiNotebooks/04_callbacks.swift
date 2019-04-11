@@ -51,17 +51,17 @@ public enum LearnerAction: Error {
 /// A model learner, responsible for initializing and training a model on a given dataset.
 // NOTE: When TF-421 is fixed, make `Label` not constrained to `Differentiable`.
 public final class Learner<Label: Differentiable & TensorGroup,
-                           O: TensorFlow.Optimizer & AnyObject>
-    where O.Scalar: Differentiable,
+                           Opt: TensorFlow.Optimizer & AnyObject>
+    where Opt.Scalar: Differentiable,
           // Constrain model input to Tensor<Float>, to work around
           // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
-          O.Model.Input == Tensor<Float>
+          Opt.Model.Input == Tensor<Float>
 {
     // Common type aliases.
     public typealias Input = Model.Input
     public typealias Data = DataBunch<DataBatch<Input, Label>>
     public typealias Loss = Tensor<Float>
-    public typealias Optimizer = O
+    public typealias Optimizer = Opt
     public typealias Model = Optimizer.Model
     public typealias Variables = Model.AllDifferentiableVariables
     public typealias EventHandler = (Learner) throws -> Void
@@ -70,7 +70,7 @@ public final class Learner<Label: Differentiable & TensorGroup,
     // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
     public final class LossFunction {
         // NOTE: When TF-421 is fixed, replace with:
-        //   public typealias F = @differentiable (Model.Output, @nondiff Label) -> Loss
+        //public typealias F = @differentiable (Model.Output, @nondiff Label) -> Loss
         public typealias F = @differentiable (Model.Output, Label) -> Loss
         public var f: F
         init(_ f: @escaping F) { self.f = f }
@@ -237,6 +237,8 @@ extension Learner {
             learner.inTrain = false
         }
     }
+    
+    public func makeTrainEvalDelegate() -> TrainEvalDelegate { return TrainEvalDelegate() }
 }
 
 // TODO: make metrics more generic (probably for after the course)
@@ -281,5 +283,9 @@ extension Learner {
             for i in 0...metrics.count {partials[i] = partials[i] / Float(total)}
             print("Epoch \(learner.currentEpoch): \(partials)")
         }
+    }
+    
+    public func makeAvgMetric(metrics: [(Tensor<Float>, Tensor<Int32>) -> Tensor<Float>]) -> AvgMetric{
+        return AvgMetric(metrics: metrics)
     }
 }
