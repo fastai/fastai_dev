@@ -62,7 +62,7 @@ extension Learner where Opt.Scalar: PythonConvertible & BinaryFloatingPoint {
         let epochCount = data.train.count(where: {_ in true}) / numIter + 1
         let recorder = makeDefaultDelegates()
         delegates.append(makeLRFinder(start: start, end: end, numIter: numIter))
-        do { try self.fit(epochCount) } catch {}
+        try! self.fit(epochCount)
         return recorder
     }
 }
