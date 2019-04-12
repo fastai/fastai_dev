@@ -52,7 +52,7 @@ protocol Norm: Layer {
     init(featureCount: Int, epsilon: Scalar)
 }
 
-struct BatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm {
+struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm {
     // Configuration hyperparameters
     @noDerivative let momentum: Scalar
     @noDerivative let epsilon: Scalar
@@ -100,7 +100,7 @@ struct BatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm 
 
 struct ConvBN<Scalar: TensorFlowFloatingPoint>: Layer {
     var conv: Conv2D<Scalar>
-    var norm: BatchNorm<Scalar>
+    var norm: FABatchNorm<Scalar>
     init(
         filterShape: (Int, Int, Int, Int),
         strides: (Int, Int) = (1, 1),
@@ -113,7 +113,7 @@ struct ConvBN<Scalar: TensorFlowFloatingPoint>: Layer {
             strides: strides,
             padding: padding,
             activation: activation)
-        self.norm = BatchNorm(featureCount: filterShape.3, epsilon: 1e-5)
+        self.norm = FABatchNorm(featureCount: filterShape.3, epsilon: 1e-5)
     }
 
     @differentiable

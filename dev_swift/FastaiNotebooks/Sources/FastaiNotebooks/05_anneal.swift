@@ -94,6 +94,7 @@ public struct ProgressBar{
     
     public mutating func update_bar(_ val: Int){
         lastVal = val
+        let prevLength = bar.count
         bar = String(repeating: fillChar, count: (val * length) / total)
         bar += String(repeating: "-", count: length - (val * length) / total)
         let pct = String(format: "%.2f", 100.0 * Float(val)/Float(total))
@@ -101,6 +102,7 @@ public struct ProgressBar{
         let remaingTime = estimatedTotal - elapsedTime
         bar += " \(pct)% [\(val)/\(total) \(formatTime(elapsedTime))<\(formatTime(remaingTime))"
         bar += comment.isEmpty ? "]" : " \(comment)]"
+        if bar.count < prevLength { bar += String(repeating: " ", count: prevLength-bar.count) }
         print(bar, terminator:"\r")
         fflush(stdout)
     }
@@ -118,24 +120,23 @@ extension Learner {
         
         public override func epochWillStart(learner: Learner) {
             pbar = ProgressBar(learner.data.train.count(where: {_ in true}))
-            iter = 0
-            pbar!.update(iter)
         }
         
         public override func validationWillStart(learner: Learner) {
             if pbar != nil { pbar!.remove() }
             pbar = ProgressBar(learner.data.valid.count(where: {_ in true}))
-            iter = 0
-            pbar!.update(iter)
         }
         
         public override func epochDidFinish(learner: Learner) {
             if pbar != nil { pbar!.remove() }
         }
         
+        public override func batchWillStart(learner: Learner) {
+            if learner.currentIter == 0 {pbar!.update(0)}
+        }
+        
         public override func batchDidFinish(learner: Learner) {
-            iter += 1
-            pbar!.update(iter)
+            pbar!.update(learner.currentIter)
         }
         
         public override func trainingDidFinish(learner: Learner) {

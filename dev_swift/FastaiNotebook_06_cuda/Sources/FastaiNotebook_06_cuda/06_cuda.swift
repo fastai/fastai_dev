@@ -10,37 +10,37 @@ import Python
 
 public struct CnnModel: Layer {
     public var reshapeToSquare: Reshape<Float>
-    public var conv1: Conv2D<Float>
-    public var conv2: Conv2D<Float>
-    public var conv3: Conv2D<Float>
-    public var conv4: Conv2D<Float>
-    public var pool = AvgPool2D<Float>(poolSize: (2, 2), strides: (1, 1))
+    public var conv1: FAConv2D<Float>
+    public var conv2: FAConv2D<Float>
+    public var conv3: FAConv2D<Float>
+    public var conv4: FAConv2D<Float>
+    public var pool = FAAvgPool2D<Float>(poolSize: (2, 2), strides: (1, 1)) //TODO: replace by AvgPool
     public var flatten = Flatten<Float>()
-    public var linear: Dense<Float>
+    public var linear: FADense<Float>
     
     public init(sizeIn: Int, channelIn:Int, channelOut:Int, nFilters:[Int]) {
         reshapeToSquare = Reshape<Float>([-1, Int32(sizeIn), Int32(sizeIn), Int32(channelIn)])
-        conv1 = Conv2D<Float>(
+        conv1 = FAConv2D<Float>(
             filterShape: (5, 5, 1, nFilters[0]), 
             strides: (2, 2), 
             padding: .same, 
             activation: relu)
-        conv2 = Conv2D<Float>(
+        conv2 = FAConv2D<Float>(
             filterShape: (3, 3, nFilters[0], nFilters[1]),
             strides: (2, 2),
             padding: .same,
             activation: relu)
-        conv3 = Conv2D<Float>(
+        conv3 = FAConv2D<Float>(
             filterShape: (3, 3, nFilters[1], nFilters[2]),
             strides: (2, 2),
             padding: .same,
             activation: relu)
-        conv4 = Conv2D<Float>(
+        conv4 = FAConv2D<Float>(
             filterShape: (3, 3, nFilters[2], nFilters[3]),
             strides: (2, 2),
             padding: .same,
             activation: relu)
-        linear = Dense<Float>(inputSize: nFilters[3], outputSize: channelOut)
+        linear = FADense<Float>(inputSize: nFilters[3], outputSize: channelOut)
     }
     
     @differentiable
