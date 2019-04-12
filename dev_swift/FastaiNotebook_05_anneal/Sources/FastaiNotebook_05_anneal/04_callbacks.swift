@@ -131,10 +131,10 @@ public final class Learner<Label: TensorGroup,
         /// A closure which will be called upon the completion of training on a batch.
         open func batchDidFinish(learner: Learner) throws {}
         /// A closure which will be called when a new gradient has been computed.
-        open func learnerDidProduceNewGradient(learner: Learner) throws {}
+        open func didProduceNewGradient(learner: Learner) throws {}
         /// A closure which will be called upon the completion of an optimizer update.
         open func optimizerDidUpdate(learner: Learner) throws {}
-        
+        ///
         /// TODO: learnerDidProduceNewOutput and learnerDidProduceNewLoss need to
         /// be differentiable once we can have the loss function inside the Learner
     }
@@ -171,29 +171,29 @@ extension Learner {
     ///
     /// - Parameter batch: The batch of input data and labels to be trained on.
     ///
+    private func evaluate(onBatch batch: DataBatch<Input, Label>) throws {
+        currentOutput = model.applied(to: currentInput!, in: context)
+        currentLoss = lossFunction.f(currentOutput!, currentTarget!)
+    }
+    
     private func train(onBatch batch: DataBatch<Input, Label>) throws {
         let (xb,yb) = (currentInput!,currentTarget!)
-        if !inTrain { 
-            currentOutput = model.applied(to: xb, in: context)
-            currentLoss = lossFunction.f(currentOutput!, yb)
-        } else {
-            (currentLoss, currentGradient) = model.valueWithGradient { model -> Loss in 
-                let y = model.applied(to: xb, in: context)
-                currentOutput = y
-                return lossFunction.f(y, yb)
-            }
-            try delegates.forEach { try $0.learnerDidProduceNewGradient(learner: self) }
-            optimizer.update(&model.allDifferentiableVariables, along: self.currentGradient)
+        (currentLoss, currentGradient) = model.valueWithGradient { model -> Loss in 
+            let y = model.applied(to: xb, in: context)                                      
+            currentOutput = y
+            return lossFunction.f(y, yb)
         }
+        try delegates.forEach { try $0.didProduceNewGradient(learner: self) }
+        optimizer.update(&model.allDifferentiableVariables, along: self.currentGradient)
     }
     
     /// Performs a training epoch on a Dataset.
     private func train(onDataset ds: Dataset<DataBatch<Input, Label>>) throws {
-        (currentIter, iterCount) = (0, ds.count(where: {_ in true}))
+        iterCount = ds.count(where: {_ in true})
         for batch in ds {
             (currentInput, currentTarget) = (batch.xb, batch.yb)
             try delegates.forEach { try $0.batchWillStart(learner: self) }
-            do { try train(onBatch: batch) }
+            do { if inTrain { try train(onBatch: batch) } else { try evaluate(onBatch: batch) }}
             catch LearnerAction.skipBatch {}
             try delegates.forEach { try $0.batchDidFinish(learner: self) }
         }
@@ -227,13 +227,13 @@ extension Learner {
     public class TrainEvalDelegate: Delegate {
         public override func trainingWillStart(learner: Learner) {
             learner.pctEpochs = 0.0
-            learner.currentIter = 0
         }
 
         public override func epochWillStart(learner: Learner) {
             learner.pctEpochs = Float(learner.currentEpoch)
             learner.context = Context(learningPhase: .training)
             learner.inTrain = true
+            learner.currentIter = 0
         }
         
         public override func batchDidFinish(learner: Learner) {
@@ -246,6 +246,7 @@ extension Learner {
         public override func validationWillStart(learner: Learner) {
             learner.context = Context(learningPhase: .inference)
             learner.inTrain = false
+            learner.currentIter = 0
         }
     }
     
