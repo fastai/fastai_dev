@@ -9,7 +9,7 @@ import TensorFlow
 
 /// `Layer` with some experimental extra features.
 ///
-/// This refines `Layer` so that it can be used with the deep learning library's `Optimizer`. If this becomes
+/// This refines `Layer` so that it can be used with deep learning library utilities. If this becomes
 /// too restrictive, we can remove the refinement and re-implement `Optimizer`.
 public protocol FALayer: Layer {
     var delegate: LayerDelegate<Output> { get set }
@@ -296,85 +296,6 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @differentiable
     public func forward(_ input: Tensor<Scalar>, in _: Context) -> Tensor<Scalar> {
         return input.averagePooled(kernelSize: poolSize, strides: strides, padding: padding)
-    }
-    
-    @differentiable
-    public func applied(to input: Tensor<Scalar>, in context: Context) -> Tensor<Scalar> {
-        let activation = forward(input, in: context)
-        delegate.didProduceActivation(activation, in: context)
-        return activation
-    }
-}
-
-
-/// A flatten layer.
-///
-/// A flatten layer flattens the input when applied without affecting the batch size.
-@_fixed_layout
-public struct FAFlatten<Scalar: TensorFlowFloatingPoint>: FALayer {
-    /// Creates a flatten layer.
-    public init() {}
-    
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
-
-    /// Returns the output obtained from applying the layer to the given input.
-    ///
-    /// - Parameters:
-    ///   - input: The input to the layer.
-    ///   - context: The contextual information for the layer application, e.g. the current learning
-    ///     phase.
-    /// - Returns: The output.
-    @differentiable
-    public func forward(_ input: Tensor<Scalar>, in _: Context) -> Tensor<Scalar> {
-        let batchSize = input.shape[0]
-        let remaining = input.shape[1..<input.rank].contiguousSize
-        return input.reshaped(to: [batchSize, remaining])
-    }
-    
-    @differentiable
-    public func applied(to input: Tensor<Scalar>, in context: Context) -> Tensor<Scalar> {
-        let activation = forward(input, in: context)
-        delegate.didProduceActivation(activation, in: context)
-        return activation
-    }
-}
-
-/// A reshape layer.
-@_fixed_layout
-public struct FAReshape<Scalar: TensorFlowFloatingPoint>: FALayer {
-    /// The target shape.
-    @noDerivative public let shape: Tensor<Int32>
-
-    // TF-331 workaround:
-    @usableFromInline
-    internal var _nontrivial = Tensor<Float>(0)
-    
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
-
-    /// Creates a reshape layer.
-    ///
-    /// - Parameter shape: The target shape, represented by a tensor.
-    public init(shape: Tensor<Int32>) {
-        self.shape = shape
-    }
-
-    /// Creates a reshape layer.
-    ///
-    /// - Parameter shape: The target shape.
-    public init(_ shape: TensorShape) {
-        self.init(shape: Tensor(shape.dimensions))
-    }
-
-    /// Returns the output obtained from applying the layer to the given input.
-    ///
-    /// - Parameters:
-    ///   - input: The input to the layer.
-    ///   - context: The contextual information for the layer application, e.g. the current learning
-    ///     phase.
-    /// - Returns: The output.
-    @differentiable
-    public func forward(_ input: Tensor<Scalar>, in _: Context) -> Tensor<Scalar> {
-        return input.reshaped(toShape: shape)
     }
     
     @differentiable
