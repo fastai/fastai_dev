@@ -25,9 +25,9 @@ def get_files(path, extensions=None, recurse=False, include=None):
     extensions = {e.lower() for e in extensions}
     if recurse:
         res = []
-        for p,d,f in os.walk(path): # returns (dirpath, dirnames, filenames)
-            if include is not None: d[:] = [o for o in d if o in include]
-            else:                   d[:] = [o for o in d if not o.startswith('.')]
+        for i,(p,d,f) in enumerate(os.walk(path)): # returns (dirpath, dirnames, filenames)
+            if include is not None and i==0: d[:] = [o for o in d if o in include]
+            else:                            d[:] = [o for o in d if not o.startswith('.')]
             res += _get_files(p, f, extensions)
         return res
     else:
