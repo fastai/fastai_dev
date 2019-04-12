@@ -8,12 +8,12 @@ import Path
 import TensorFlow
 
 public struct BasicModel: Layer {
-    public var layer1: Dense<Float>
-    public var layer2: Dense<Float>
+    public var layer1: FADense<Float>
+    public var layer2: FADense<Float>
     
     public init(nIn: Int, nHid: Int, nOut: Int){
-        layer1 = Dense(inputSize: nIn, outputSize: nHid, activation: relu)
-        layer2 = Dense(inputSize: nHid, outputSize: nOut)
+        layer1 = FADense(inputSize: nIn, outputSize: nHid, activation: relu)
+        layer2 = FADense(inputSize: nHid, outputSize: nOut)
     }
     
     @differentiable

@@ -8,6 +8,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../FastaiNotebook_00_load_data"),
+        .package(path: "../FastaiNotebook_01_fastai_layers"),
         .package(url: "https://github.com/mxcl/Path.swift", from: "0.16.1"),
         .package(url: "https://github.com/JustHTTP/Just", from: "0.7.1")
     ],
