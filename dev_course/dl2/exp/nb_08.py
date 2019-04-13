@@ -25,9 +25,9 @@ def get_files(path, extensions=None, recurse=False, include=None):
     extensions = {e.lower() for e in extensions}
     if recurse:
         res = []
-        for p,d,f in os.walk(path): # returns (dirpath, dirnames, filenames)
-            if include is not None: d[:] = [o for o in d if o in include]
-            else:                   d[:] = [o for o in d if not o.startswith('.')]
+        for i,(p,d,f) in enumerate(os.walk(path)): # returns (dirpath, dirnames, filenames)
+            if include is not None and i==0: d[:] = [o for o in d if o in include]
+            else:                            d[:] = [o for o in d if not o.startswith('.')]
             res += _get_files(p, f, extensions)
         return res
     else:
@@ -120,21 +120,26 @@ class CategoryProcessor(Processor):
         return [self.deproc1(idx) for idx in idxs]
     def deproc1(self, idx): return self.vocab[idx]
 
-class ProcessedItemList(ListContainer):
-    def __init__(self, inputs, processor):
-        self.processor = processor
-        items = processor.process(inputs)
-        super().__init__(items)
+#This is a bit different from what was seen during the lesson but it's necessary for NLP
+def _process(self, processors):
+    self.processors = listify(processors)
+    for proc in self.processors: self.items = proc.process(self.items)
+    return self
 
-    def obj(self, idx):
-        res = self[idx]
-        if isinstance(res,(tuple,list,Generator)): return self.processor.deprocess(res)
-        return self.processor.deproc1(idx)
+def _obj(self, idx):
+    res = self[idx]
+    for proc in self.processors:
+        res = proc.deprocess(res) if isinstance(res,(tuple,list,Generator)) else proc.deproc1(res)
+    return res
+
+ItemList.process = _process
+ItemList.obj = _obj
 
 def parent_labeler(fn): return fn.parent.name
 
 def _label_by_func(ds, f): return [f(o) for o in ds.items]
 
+#This is a bit different from what was seen during the lesson but it's necessary for NLP
 class LabeledData():
     def __init__(self, x, y): self.x,self.y = x,y
 
@@ -143,15 +148,15 @@ class LabeledData():
     def __len__(self): return len(self.x)
 
     @classmethod
-    def label_by_func(cls, il, f, proc=None):
+    def label_by_func(cls, il, f, proc_x=None, proc_y=None):
         labels = _label_by_func(il, f)
-        proc_labels = ProcessedItemList(labels, proc)
+        proc_inputs = il.process(proc_x)
+        proc_labels = ItemList(labels, path=il.path).process(proc_y)
         return cls(il, proc_labels)
 
-def label_by_func(sd, f):
-    proc = CategoryProcessor()
-    train = LabeledData.label_by_func(sd.train, f, proc)
-    valid = LabeledData.label_by_func(sd.valid, f, proc)
+def label_by_func(sd, f, proc_x=None, proc_y=None):
+    train = LabeledData.label_by_func(sd.train, f, proc_x=proc_x, proc_y=proc_y)
+    valid = LabeledData.label_by_func(sd.valid, f, proc_x=proc_x, proc_y=proc_y)
     return SplitData(train,valid)
 
 class ResizeFixed(Transform):
