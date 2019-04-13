@@ -86,6 +86,8 @@ class SplitData():
     def __init__(self, train, valid): self.train,self.valid = train,valid
 
     def __getattr__(self,k): return getattr(self.train,k)
+    #This is needed if we want to pickle SplitData and be able to load it back without recursion errors
+    def __setstate__(self,data:Any): self.__dict__.update(data)
 
     @classmethod
     def split_by_func(cls, il, f):
