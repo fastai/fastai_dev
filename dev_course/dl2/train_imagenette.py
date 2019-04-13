@@ -1,4 +1,4 @@
-from exp.nb_13 import *
+from exp.nb_11 import *
 from fastai.datasets import *
 
 bs = 64
@@ -11,10 +11,10 @@ lr *= bs/256
 pcts = [pct_start,1-pct_start]
 sched_lr  = combine_scheds(pcts, cos_1cycle_anneal(lr/10., lr, 0))
 sched_mom = combine_scheds(pcts, cos_1cycle_anneal(0.95, 0.85, 0.95))
-url = URLs.IMAGENETTE_160 if size<140 else URLs.IMAGENETTE_320 if size<240 else URLs.IMAGENETTE
-
-path = untar_data(url)
 tfms = [make_rgb, PilTiltRandomCrop(size, 160, magnitude=0.2), PilRandomFlip(), np_to_float]
+
+url = URLs.IMAGENETTE_160 if size<140 else URLs.IMAGENETTE_320 if size<240 else URLs.IMAGENETTE
+path = untar_data(url)
 il = ImageList.from_files(path, tfms=tfms)
 sd = SplitData.split_by_func(il, partial(grandparent_splitter, valid_name='val'))
 ll = label_by_func(sd, parent_labeler)
