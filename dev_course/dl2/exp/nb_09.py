@@ -6,6 +6,10 @@
 
 from exp.nb_08 import *
 
+def sgd_step(p, lr, **kwargs):
+    p.data.add_(-lr, p.grad.data)
+    return p
+
 class Recorder(Callback):
     def begin_fit(self): self.lrs,self.losses = [],[]
 
@@ -19,19 +23,29 @@ class Recorder(Callback):
 
 class ParamScheduler(Callback):
     _order=1
-    def __init__(self, pname, sched_func):
-        self.pname,self.sched_func = pname,sched_func
+    def __init__(self, pname, sched_funcs):
+        self.pname,self.sched_funcs = pname,sched_funcs
+
+    def begin_fit(self):
+        if not isinstance(self.sched_funcs, (list,tuple)):
+            self.sched_funcs = [self.sched_funcs] * len(self.opt.param_groups)
 
     def set_param(self):
-        for h in self.opt.hypers:
-            h[self.pname] = self.sched_func(self.n_epochs/self.epochs)
+        for f,h in zip(self.sched_funcs,self.opt.hypers):
+            h[self.pname] = f(self.n_epochs/self.epochs)
 
     def begin_batch(self):
         if self.in_train: self.set_param()
 
-def sgd_step(p, lr, **kwargs):
-    p.data.add_(-lr, p.grad.data)
+def weight_decay(p, lr, wd, **kwargs):
+    p.data.mul_(1 - lr*wd)
     return p
+weight_decay._defaults = dict(wd=0.)
+
+def l2_reg(p, lr, wd, **kwargs):
+    p.grad.data.add_(wd, p.data)
+    return p
+l2_reg._defaults = dict(wd=0.)
 
 def maybe_update(os, dest, f):
     for o in os:
@@ -61,16 +75,6 @@ class Optimizer():
 
     def step(self):
         for p,hyper in self.grad_params(): compose(p, self.steppers, **hyper)
-
-def weight_decay(p, lr, wd, **kwargs):
-    p.data.mul_(1 - lr*wd)
-    return p
-weight_decay._defaults = dict(wd=0.)
-
-def l2_reg(p, lr, wd, **kwargs):
-    p.grad.data.add_(wd, p.data)
-    return p
-l2_reg._defaults = dict(wd=0.)
 
 sgd_opt = partial(Optimizer, steppers=[weight_decay, sgd_step])
 
@@ -117,7 +121,7 @@ class AverageSqrGrad(Stat):
     def __init__(self, dampening:bool=True): self.dampening=dampening
     def init_state(self, p): return {'sqr_avg': torch.zeros_like(p.grad.data)}
     def update(self, p, state, sqr_mom, **kwargs):
-        state['sqr_damp'] = 1 - sqr_mom if self.dampening else 1.
+        state['sqr_damp'] = 1-sqr_mom if self.dampening else 1.
         state['sqr_avg'].mul_(sqr_mom).addcmul_(state['sqr_damp'], p.grad.data, p.grad.data)
         return state
 
