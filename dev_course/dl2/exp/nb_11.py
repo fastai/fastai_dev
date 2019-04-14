@@ -40,40 +40,51 @@ class ResBlock(nn.Module):
             conv_layer(nh, nf, 1, zero_bn=True, act=False)
         ]
         self.convs = nn.Sequential(*layers)
-        # TODO: check whether act=True works better
         self.idconv = noop if ni==nf else conv_layer(ni, nf, 1, act=False)
         self.pool = noop if stride==1 else nn.AvgPool2d(2)
 
     def forward(self, x): return act_fn(self.convs(x) + self.idconv(self.pool(x)))
 
-def filt_sz(recep): return min(64, 2**math.floor(math.log2(recep*0.75)))
+def filt_sz(recep, stride): return min(64, 8*(math.ceil(recep*0.75/math.sqrt(stride)/8)))
 
 class XResNet(nn.Sequential):
-    def __init__(self, expansion, layers, c_in=3, c_out=1000):
+    @classmethod
+    def create(cls, expansion, layers, c_in=3, c_out=1000):
         stem = []
-        sizes = [c_in,32,32,64]
-        for i in range(3):
-            stem.append(conv_layer(sizes[i], sizes[i+1], stride=2 if i==0 else 1))
-            #nf = filt_sz(c_in*9)
-            #stem.append(conv_layer(c_in, nf, stride=2 if i==1 else 1))
-            #c_in = nf
+        strides = [2,1,1]
+        for stride in strides:
+            nf = filt_sz(c_in*9, stride)
+            stem.append(conv_layer(c_in, nf, stride=stride))
+            c_in = nf
 
         block_szs = [64//expansion,64,128,256,512]
-        blocks = [self._make_layer(expansion, block_szs[i], block_szs[i+1], l, 1 if i==0 else 2)
+        blocks = [cls._make_layer(expansion, block_szs[i], block_szs[i+1], l, 1 if i==0 else 2)
                   for i,l in enumerate(layers)]
-        super().__init__(
+        res = cls(
             *stem,
             nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
             *blocks,
             nn.AdaptiveAvgPool2d(1), Flatten(),
             nn.Linear(block_szs[-1]*expansion, c_out),
         )
-        init_cnn(self)
+        init_cnn(res)
+        return res
 
-    def _make_layer(self, expansion, ni, nf, blocks, stride):
+    @staticmethod
+    def _make_layer(expansion, ni, nf, blocks, stride):
         return nn.Sequential(
             *[ResBlock(expansion, ni if i==0 else nf, nf, stride if i==0 else 1)
               for i in range(blocks)])
+
+def xresnet18 (**kwargs): return XResNet.create(1, [2, 2, 2, 2], **kwargs)
+def xresnet34 (**kwargs): return XResNet.create(1, [3, 4, 6, 3], **kwargs)
+def xresnet50 (**kwargs): return XResNet.create(4, [3, 4, 6, 3], **kwargs)
+def xresnet101(**kwargs): return XResNet.create(4, [3, 4, 23, 3], **kwargs)
+def xresnet152(**kwargs): return XResNet.create(4, [3, 8, 36, 3], **kwargs)
+
+def create_phases(phases):
+    phases = listify(phases)
+    return phases + [1-sum(phases)]
 
 def get_batch(dl, learn):
     learn.xb,learn.yb = next(iter(dl))
@@ -82,8 +93,22 @@ def get_batch(dl, learn):
     learn('after_fit')
     return learn.xb,learn.yb
 
-def model_summary(model, find_all=False):
+def model_summary(model, find_all=False, print_mod=False):
     xb,yb = get_batch(data.valid_dl, learn)
     mods = find_modules(model, is_lin_layer) if find_all else model.children()
-    f = lambda hook,mod,inp,out: print(out.shape)
+    f = lambda hook,mod,inp,out: print(f"{mod}\n" if print_mod else "", out.shape)
     with Hooks(mods, f) as hooks: learn.model(xb)
+
+def cnn_learner(arch, data, loss_func, opt_func, c_in=None, c_out=None,
+                lr=1e-2, cuda=True, norm=None, progress=True, mixup=0, xtra_cb=None, **kwargs):
+    cbfs = [partial(AvgStatsCallback,accuracy)]+listify(xtra_cb)
+    if progress: cbfs.append(ProgressCallback)
+    if cuda:     cbfs.append(CudaCallback)
+    if norm:     cbfs.append(partial(BatchTransformXCallback, norm))
+    if mixup:    cbfs.append(partial(MixUp, mixup))
+    arch_args = {}
+    if not c_in : c_in  = data.c_in
+    if not c_out: c_out = data.c_out
+    if c_in:  arch_args['c_in' ]=c_in
+    if c_out: arch_args['c_out']=c_out
+    return Learner(arch(**arch_args), data, loss_func, opt_func=opt_func, lr=lr, cb_funcs=cbfs, **kwargs)

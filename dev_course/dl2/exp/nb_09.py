@@ -6,6 +6,10 @@
 
 from exp.nb_08 import *
 
+def sgd_step(p, lr, **kwargs):
+    p.data.add_(-lr, p.grad.data)
+    return p
+
 class Recorder(Callback):
     def begin_fit(self): self.lrs,self.losses = [],[]
 
@@ -16,6 +20,12 @@ class Recorder(Callback):
 
     def plot_lr  (self): plt.plot(self.lrs)
     def plot_loss(self): plt.plot(self.losses)
+
+    def plot(self, skip_last=0):
+        losses = [o.item() for o in self.losses]
+        n = len(losses)-skip_last
+        plt.xscale('log')
+        plt.plot(self.lrs[:n], losses[:n])
 
 class ParamScheduler(Callback):
     _order=1
@@ -29,9 +39,32 @@ class ParamScheduler(Callback):
     def begin_batch(self):
         if self.in_train: self.set_param()
 
-def sgd_step(p, lr, **kwargs):
-    p.data.add_(-lr, p.grad.data)
+class LR_Find(Callback):
+    _order=1
+    def __init__(self, max_iter=100, min_lr=1e-6, max_lr=10):
+        self.max_iter,self.min_lr,self.max_lr = max_iter,min_lr,max_lr
+        self.best_loss = 1e9
+
+    def begin_batch(self):
+        if not self.in_train: return
+        pos = self.n_iter/self.max_iter
+        lr = self.min_lr * (self.max_lr/self.min_lr) ** pos
+        for pg in self.opt.hypers: pg['lr'] = lr
+
+    def after_step(self):
+        if self.n_iter>=self.max_iter or self.loss>self.best_loss*10:
+            raise CancelTrainException()
+        if self.loss < self.best_loss: self.best_loss = self.loss
+
+def weight_decay(p, lr, wd, **kwargs):
+    p.data.mul_(1 - lr*wd)
     return p
+weight_decay._defaults = dict(wd=0.)
+
+def l2_reg(p, lr, wd, **kwargs):
+    p.grad.data.add_(wd, p.data)
+    return p
+l2_reg._defaults = dict(wd=0.)
 
 def maybe_update(os, dest, f):
     for o in os:
@@ -61,16 +94,6 @@ class Optimizer():
 
     def step(self):
         for p,hyper in self.grad_params(): compose(p, self.steppers, **hyper)
-
-def weight_decay(p, lr, wd, **kwargs):
-    p.data.mul_(1 - lr*wd)
-    return p
-weight_decay._defaults = dict(wd=0.)
-
-def l2_reg(p, lr, wd, **kwargs):
-    p.grad.data.add_(wd, p.data)
-    return p
-l2_reg._defaults = dict(wd=0.)
 
 sgd_opt = partial(Optimizer, steppers=[weight_decay, sgd_step])
 
@@ -117,7 +140,7 @@ class AverageSqrGrad(Stat):
     def __init__(self, dampening:bool=True): self.dampening=dampening
     def init_state(self, p): return {'sqr_avg': torch.zeros_like(p.grad.data)}
     def update(self, p, state, sqr_mom, **kwargs):
-        state['sqr_damp'] = 1 - sqr_mom if self.dampening else 1.
+        state['sqr_damp'] = 1-sqr_mom if self.dampening else 1.
         state['sqr_avg'].mul_(sqr_mom).addcmul_(state['sqr_damp'], p.grad.data, p.grad.data)
         return state
 
@@ -136,7 +159,6 @@ def adam_step(p, lr, mom, mom_damp, step, sqr_mom, sqr_damp, grad_avg, sqr_avg, 
     return p
 adam_step._defaults = dict(eps=1e-5)
 
-adam_opt = partial(StatefulOptimizer, steppers=adam_step, stats=[AverageGrad(dampening=True), AverageSqrGrad(), StepCount()])
-
-sgd_mom_opt = partial(StatefulOptimizer, steppers=[momentum_step,weight_decay],
-                  stats=AverageGrad(), wd=0.01)
+def adam_opt(xtra_step=None, **kwargs):
+    return partial(StatefulOptimizer, steppers=[adam_step,weight_decay]+listify(xtra_step),
+                   stats=[AverageGrad(dampening=True), AverageSqrGrad(), StepCount()], **kwargs)
