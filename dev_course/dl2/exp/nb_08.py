@@ -74,13 +74,12 @@ def grandparent_splitter(fn, valid_name='valid', train_name='train'):
     gp = fn.parent.parent.name
     return True if gp==valid_name else False if gp==train_name else None
 
-def split_by_func(ds, f):
-    items = ds.items
+def split_by_func(items, f):
     mask = [f(o) for o in items]
     # `None` values will be filtered out
-    train = [o for o,m in zip(items,mask) if m==False]
-    valid = [o for o,m in zip(items,mask) if m==True ]
-    return train,valid
+    f = [o for o,m in zip(items,mask) if m==False]
+    t = [o for o,m in zip(items,mask) if m==True ]
+    return f,t
 
 class SplitData():
     def __init__(self, train, valid): self.train,self.valid = train,valid
@@ -91,7 +90,7 @@ class SplitData():
 
     @classmethod
     def split_by_func(cls, il, f):
-        lists = map(il.new, split_by_func(il, f))
+        lists = map(il.new, split_by_func(il.items, f))
         return cls(*lists)
 
     def __repr__(self): return f'{self.__class__.__name__}\nTrain: {self.train}\nValid: {self.valid}\n'
@@ -122,7 +121,8 @@ class CategoryProcessor(Processor):
         return [self.deproc1(idx) for idx in idxs]
     def deproc1(self, idx): return self.vocab[idx]
 
-#This is a bit different from what was seen during the lesson but it's necessary for NLP
+#This is a slightly different from what was seen during the lesson,
+#   we'll discuss the changes in lesson 11
 def _process(self, processors):
     self.processors = listify(processors)
     for proc in self.processors: self.items = proc.process(self.items)
