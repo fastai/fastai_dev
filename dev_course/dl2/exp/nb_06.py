@@ -53,10 +53,12 @@ def append_stats(hook, mod, inp, outp):
         means.append(outp.data.mean())
         stds .append(outp.data.std())
 
+def is_rank0_longtensor(t): return (isinstance(t, torch.LongTensor) and len(t.shape) == 0)
+
 class ListContainer():
     def __init__(self, items): self.items = listify(items)
     def __getitem__(self, idx):
-        if isinstance(idx, (int,slice)): return self.items[idx]
+        if isinstance(idx, (int,slice)) or is_rank0_longtensor(idx): return self.items[idx]
         if isinstance(idx[0],bool):
             assert len(idx)==len(self) # bool mask
             return [o for m,o in zip(idx,self.items) if m]
