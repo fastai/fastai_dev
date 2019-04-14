@@ -6,10 +6,12 @@
 
 from exp.nb_09 import *
 
+def param_getter(m): return m.parameters()
+
 class Learner():
-    def __init__(self, model, data, loss_func, opt_func=sgd_opt, lr=1e-2,
+    def __init__(self, model, data, loss_func, opt_func=sgd_opt, lr=1e-2, splitter=param_getter,
                  cbs=None, cb_funcs=None):
-        self.model,self.data,self.loss_func,self.opt_func,self.lr = model,data,loss_func,opt_func,lr
+        self.model,self.data,self.loss_func,self.opt_func,self.lr,self.splitter = model,data,loss_func,opt_func,lr,splitter
         self.in_train,self.logger,self.opt = False,print,None
 
         # NB: Things marked "NEW" are covered in lesson 12
@@ -33,7 +35,6 @@ class Learner():
     def one_batch(self, i, xb, yb):
         try:
             self.iter = i
-            # NEW: format to see similarities and differences
             self.xb,self.yb = xb,yb;                        self('begin_batch')
             self.pred = self.model(self.xb);                self('after_pred')
             self.loss = self.loss_func(self.pred, self.yb); self('after_loss')
@@ -41,8 +42,8 @@ class Learner():
             self.loss.backward();                           self('after_backward')
             self.opt.step();                                self('after_step')
             self.opt.zero_grad()
-        except CancelBatchException: self('after_cancel_batch')
-        finally: self('after_batch')
+        except CancelBatchException:                        self('after_cancel_batch')
+        finally:                                            self('after_batch')
 
     def all_batches(self):
         self.iters = len(self.dl)
@@ -62,7 +63,7 @@ class Learner():
         # NEW: pass callbacks to fit() and have them removed when done
         self.add_cbs(cbs)
         # NEW: create optimizer on fit(), optionally replacing existing
-        if reset_opt or not self.opt: self.opt = self.opt_func(self.model.parameters(), lr=self.lr)
+        if reset_opt or not self.opt: self.opt = self.opt_func(self.splitter(self.model), lr=self.lr)
 
         try:
             self.do_begin_fit(epochs)
