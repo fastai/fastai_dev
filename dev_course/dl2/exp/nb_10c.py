@@ -9,7 +9,7 @@ from exp.nb_10b import *
 import apex.fp16_utils as fp16
 
 def get_master(opt, flat_master=False):
-    model_pgs = [[param for param in pg['params'] if param.requires_grad] for pg in opt.param_groups]
+    model_pgs = [[param for param in pg if param.requires_grad] for pg in opt.param_groups]
     if flat_master:
         master_pgs = []
         for pg in model_pgs:
@@ -56,14 +56,13 @@ class MixedPrecision(Callback):
         self.run.model = fp16.convert_network(self.model, dtype=torch.float16)
         self.model_pgs, self.master_pgs = get_master(self.opt, self.flat_master)
         #Changes the optimizer so that the optimization step is done in FP32.
-        param_groups = self.opt.param_groups #Load the old param groups to get the HP values
-        for (pg,mp) in zip(param_groups,self.master_pgs): pg['params'] = mp #Replace the parameters by the new ones
-        self.run.opt.param_groups = param_groups #Put those param groups inside our runner.
+        self.run.opt.param_groups = self.master_pgs #Put those param groups inside our runner.
         if self.dynamic: self.count = 0
 
     def begin_batch(self): self.run.xb = self.run.xb.half() #Put the inputs to half precision
     def after_pred(self):  self.run.pred = self.run.pred.float() #Compute the loss in FP32
-    def after_loss(self):  self.run.loss *= self.loss_scale #Loss scaling to avoid gradient underflow
+    def after_loss(self):
+        if self.in_train: self.run.loss *= self.loss_scale #Loss scaling to avoid gradient underflow
 
     def after_backward(self):
         #First, check for an overflow
