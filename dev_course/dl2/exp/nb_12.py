@@ -199,12 +199,12 @@ def pad_collate(samples, pad_idx=1, pad_first=True):
         else:         res[i,:len(s[0]):] = LongTensor(s[0])
     return res, tensor([s[1] for s in samples])
 
-def get_clas_dls(train_ds, valid_ds, bs, bptt, **kwargs):
+def get_clas_dls(train_ds, valid_ds, bs, **kwargs):
     train_sampler = SortishSampler(train_ds.x, key=lambda t: len(train_ds[int(t)][0]), bs=bs)
     valid_sampler = SortSampler(valid_ds.x, key=lambda t: len(valid_ds[int(t)][0]))
     return (DataLoader(train_ds, batch_size=bs, sampler=train_sampler, collate_fn=pad_collate, **kwargs),
             DataLoader(valid_ds, batch_size=bs*2, sampler=valid_sampler, collate_fn=pad_collate, **kwargs))
 
-def clas_databunchify(sd, bs, bptt, **kwargs):
-    dls = get_lm_dls(sd.train, sd.valid, bs, bptt, **kwargs)
+def clas_databunchify(sd, bs, **kwargs):
+    dls = get_clas_dls(sd.train, sd.valid, bs, **kwargs)
     return DataBunch(*dls)
