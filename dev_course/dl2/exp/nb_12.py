@@ -4,33 +4,23 @@
 #################################################
 # file to edit: dev_nb/12_text.ipynb
 
-from exp.nb_11 import *
+from exp.nb_11a import *
 
 def read_file(fn):
     with open(fn, 'r', encoding = 'utf8') as f: return f.read()
 
 class TextList(ItemList):
     @classmethod
-    def from_files(cls, path, extensions=None, recurse=True, include=None, **kwargs):
-        if extensions is None: extensions = {'.txt'}
+    def from_files(cls, path, extensions='.txt', recurse=True, include=None, **kwargs):
         return cls(get_files(path, extensions, recurse=recurse, include=include), path, **kwargs)
 
     def get(self, i):
         if isinstance(i, Path): return read_file(i)
         return i
 
-@classmethod
-def _split_by_rand_pct(cls, il, pct=0.2):
-    rand_idx = np.random.permutation(range(len(il.items)))
-    cut = int(pct * len(il.items))
-    train, valid = il.new(il[rand_idx[cut:]]),il.new(il[rand_idx[:cut]])
-    return cls(train, valid)
-
-SplitData.split_by_rand_pct = _split_by_rand_pct
-
 import spacy,html
 
-BOS, EOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxbox", "xxeos", "xxunk", "xxpad", "xxrep", "xxwrep", "xxup", "xxmaj"
+BOS, EOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxbox xxeos xxunk xxpad xxrep xxwrep xxup xxmaj".split()
 
 def sub_br(t):
     "Replaces the <br /> by \n"
@@ -61,8 +51,8 @@ def replace_wrep(t):
     re_wrep = re.compile(r'(\b\w+\W+)(\1{3,})')
     return re_wrep.sub(_replace_wrep, t)
 
-def fixup(x):
-    "List of replacements from html strings"
+def fixup_text(x):
+    "Various messy things we've seen in documents"
     re1 = re.compile(r'  +')
     x = x.replace('#39;', "'").replace('amp;', '&').replace('#146;', "'").replace(
         'nbsp;', ' ').replace('#36;', '$').replace('\\n', "\n").replace('quot;', "'").replace(
@@ -70,11 +60,11 @@ def fixup(x):
         ' @-@ ','-').replace('\\', ' \\ ')
     return re1.sub(' ', html.unescape(x))
 
-default_pre_rules = [fixup, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces, sub_br]
+default_pre_rules = [fixup_text, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces, sub_br]
 default_spec_tok = [BOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ]
 
 def replace_all_caps(x):
-    "Replace tokens in ALL CAPS in `x` by their lower version and add `TK_UP` before."
+    "Replace tokens in ALL CAPS by their lower version and add `TK_UP` before."
     res = []
     for t in x:
         if t.isupper() and len(t) > 1: res.append(TK_UP); res.append(t.lower())
@@ -82,7 +72,7 @@ def replace_all_caps(x):
     return res
 
 def deal_caps(x):
-    "Replace all Capitalized tokens in `x` by their lower version and add `TK_MAJ` before."
+    "Replace all Capitalized tokens in by their lower version and add `TK_MAJ` before."
     res = []
     for t in x:
         if t == '': continue
@@ -99,9 +89,9 @@ from spacy.symbols import ORTH
 class TokenizeProcessor(Processor):
     def __init__(self, lang="en", chunksize=5000, pre_rules=None, post_rules=None):
         self.chunksize = chunksize
-        self.tokenizer = spacy.blank(lang)
+        self.tokenizer = spacy.blank(lang).tokenizer
         for w in default_spec_tok:
-            self.tokenizer.tokenizer.add_special_case(w, [{ORTH: w}])
+            self.tokenizer.add_special_case(w, [{ORTH: w}])
         self.pre_rules  = default_pre_rules  if pre_rules  is None else pre_rules
         self.post_rules = default_post_rules if post_rules is None else post_rules
 
@@ -111,14 +101,14 @@ class TokenizeProcessor(Processor):
         for i in progress_bar(range(0, len(items), self.chunksize)):
             chunk = items[i: i+self.chunksize]
             chunk = [compose(t, self.pre_rules) for t in chunk]
-            docs = [[d.text for d in doc] for doc in self.tokenizer.tokenizer.pipe(chunk)]
+            docs = [[d.text for d in doc] for doc in self.tokenizer.pipe(chunk)]
             docs = [compose(t, self.post_rules) for t in docs]
             toks += docs
         return toks
 
     def proc1(self, item):
         text = compose(item, self.pre_rules)
-        toks = list(self.tokenizer.tokenizer(text))
+        toks = list(self.tokenizer(text))
         return compose(toks, self.post_rules)
 
     def deprocess(self, toks): return [self.deproc1(tok) for tok in toks]
@@ -138,7 +128,7 @@ class NumericalizeProcessor(Processor):
             for o in reversed(default_spec_tok):
                 if o in self.vocab: self.vocab.remove(o)
                 self.vocab.insert(0, o)
-            self.otoi = collections.defaultdict(int,{v:k for k,v in enumerate(self.vocab)})
+        self.otoi = collections.defaultdict(int,{v:k for k,v in enumerate(self.vocab)})
         return [self.proc1(o) for o in items]
     def proc1(self, item):  return [self.otoi[o] for o in item]
 
