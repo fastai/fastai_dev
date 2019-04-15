@@ -26,3 +26,11 @@ class DebugCallback(Callback):
         if cb_name==self.cb_name:
             if self.f: self.f(self.run)
             else:      set_trace()
+
+def sched_1cycle(lrs, pct_start=0.3, mom_start=0.95, mom_mid=0.85, mom_end=0.95):
+    phases = create_phases(pct_start)
+    sched_lr  = [combine_scheds(phases, cos_1cycle_anneal(lr/10., lr, lr/1e5))
+                 for lr in lrs]
+    sched_mom = combine_scheds(phases, cos_1cycle_anneal(mom_start, mom_mid, mom_end))
+    return [ParamScheduler('lr', sched_lr),
+            ParamScheduler('mom', sched_mom)]
