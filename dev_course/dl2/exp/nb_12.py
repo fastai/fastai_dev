@@ -171,7 +171,7 @@ class SortSampler(Sampler):
     def __init__(self, data_source, key): self.data_source,self.key = data_source,key
     def __len__(self): return len(self.data_source)
     def __iter__(self):
-        return iter(sorted(list(range(self.data_source)), key=self.key, reverse=True))
+        return iter(sorted(list(range(len(self.data_source))), key=self.key, reverse=True))
 
 class SortishSampler(Sampler):
     def __init__(self, data_source, key, bs):
@@ -191,7 +191,7 @@ class SortishSampler(Sampler):
         sorted_idx = torch.cat([batches[0], sorted_idx])
         return iter(sorted_idx)
 
-def pad_collate(samples, pad_idx=1, pad_first=True):
+def pad_collate(samples, pad_idx=1, pad_first=False):
     max_len = max([len(s[0]) for s in samples])
     res = torch.zeros(len(samples), max_len).long() + pad_idx
     for i,s in enumerate(samples):
@@ -200,8 +200,8 @@ def pad_collate(samples, pad_idx=1, pad_first=True):
     return res, tensor([s[1] for s in samples])
 
 def get_clas_dls(train_ds, valid_ds, bs, **kwargs):
-    train_sampler = SortishSampler(train_ds.x, key=lambda t: len(train_ds[int(t)][0]), bs=bs)
-    valid_sampler = SortSampler(valid_ds.x, key=lambda t: len(valid_ds[int(t)][0]))
+    train_sampler = SortishSampler(train_ds.x, key=lambda t: len(train_ds.x[t]), bs=bs)
+    valid_sampler = SortSampler(valid_ds.x, key=lambda t: len(valid_ds.x[t]))
     return (DataLoader(train_ds, batch_size=bs, sampler=train_sampler, collate_fn=pad_collate, **kwargs),
             DataLoader(valid_ds, batch_size=bs*2, sampler=valid_sampler, collate_fn=pad_collate, **kwargs))
 
