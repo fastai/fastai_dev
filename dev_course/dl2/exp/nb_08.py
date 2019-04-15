@@ -45,7 +45,10 @@ class ItemList(ListContainer):
         self.path,self.tfms = Path(path),tfms
 
     def __repr__(self): return f'{super().__repr__()}\nPath: {self.path}'
-    def new(self, items): return self.__class__(items, self.path, tfms=self.tfms)
+
+    def new(self, items, cls=None):
+        if cls is None: cls=self.__class__
+        return cls(items, self.path, tfms=self.tfms)
 
     def  get(self, i): return i
     def _get(self, i): return compose(self.get(i), self.tfms)
@@ -108,7 +111,7 @@ class Processor():
 class CategoryProcessor(Processor):
     def __init__(self): self.vocab=None
 
-    def process(self, items):
+    def __call__(self, items):
         #The vocab is defined on the first use.
         if self.vocab is None:
             self.vocab = uniqueify(items)
@@ -121,40 +124,36 @@ class CategoryProcessor(Processor):
         return [self.deproc1(idx) for idx in idxs]
     def deproc1(self, idx): return self.vocab[idx]
 
-#This is a slightly different from what was seen during the lesson,
-#   we'll discuss the changes in lesson 11
-def _process(self, processors):
-    self.processors = listify(processors)
-    for proc in self.processors: self.items = proc.process(self.items)
-    return self
-
-def _obj(self, idx):
-    res = self[idx]
-    for proc in self.processors:
-        res = proc.deprocess(res) if isinstance(res,(tuple,list,Generator)) else proc.deproc1(res)
-    return res
-
-ItemList.process = _process
-ItemList.obj = _obj
-
 def parent_labeler(fn): return fn.parent.name
 
-def _label_by_func(ds, f): return [f(o) for o in ds.items]
+def _label_by_func(ds, f, cls=ItemList): return cls([f(o) for o in ds.items], path=ds.path)
 
-#This is a bit different from what was seen during the lesson but it's necessary for NLP
+#This is a slightly different from what was seen during the lesson,
+#   we'll discuss the changes in lesson 11
 class LabeledData():
-    def __init__(self, x, y): self.x,self.y = x,y
+    def process(self, il, proc): return il.new(compose(il.items, proc))
+
+    def __init__(self, x, y, proc_x=None, proc_y=None):
+        self.x,self.y = self.process(x, proc_x),self.process(y, proc_y)
+        self.proc_x,self.proc_y = proc_x,proc_y
 
     def __repr__(self): return f'{self.__class__.__name__}\nx: {self.x}\ny: {self.y}\n'
     def __getitem__(self,idx): return self.x[idx],self.y[idx]
     def __len__(self): return len(self.x)
 
+    def x_obj(self, idx): return self.obj(self.x, idx, self.proc_x)
+    def y_obj(self, idx): return self.obj(self.y, idx, self.proc_y)
+
+    def obj(self, items, idx, procs):
+        isint = isinstance(idx, int) or (isinstance(idx,torch.LongTensor) and not idx.ndim)
+        item = items[idx]
+        for proc in reversed(listify(procs)):
+            item = proc.deproc1(item) if isint else proc.deprocess(item)
+        return item
+
     @classmethod
     def label_by_func(cls, il, f, proc_x=None, proc_y=None):
-        labels = _label_by_func(il, f)
-        proc_inputs = il.process(proc_x)
-        proc_labels = ItemList(labels, path=il.path).process(proc_y)
-        return cls(il, proc_labels)
+        return cls(il, _label_by_func(il, f), proc_x=proc_x, proc_y=proc_y)
 
 def label_by_func(sd, f, proc_x=None, proc_y=None):
     train = LabeledData.label_by_func(sd.train, f, proc_x=proc_x, proc_y=proc_y)
