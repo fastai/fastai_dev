@@ -147,6 +147,29 @@ extension Learner {
     public func makeShowProgress() -> ShowProgress { return ShowProgress() }
 }
 
+/// A non-generalized learning rate scheduler
+extension Learner where Opt.Scalar: BinaryFloatingPoint {
+    public class ParamScheduler: Delegate {
+        public override var order: Int { return 1 }
+        public typealias ScheduleFunc = (Float) -> Float
+
+        // A learning rate schedule from step to float.
+        public var scheduler: ScheduleFunc
+        
+        public init(scheduler: @escaping (Float) -> Float) {
+            self.scheduler = scheduler
+        }
+        
+        override public func batchWillStart(learner: Learner) {
+            learner.optimizer.learningRate = Opt.Scalar(scheduler(learner.pctEpochs/Float(learner.epochCount)))
+        }
+    }
+    
+    public func makeParamScheduler(scheduler: @escaping (Float) -> Float) -> ParamScheduler {
+        return ParamScheduler(scheduler: scheduler)
+    }
+}
+
 public func linearSchedule(start: Float, end: Float, pct: Float) -> Float {
     return start + pct * (end - start)
 }
