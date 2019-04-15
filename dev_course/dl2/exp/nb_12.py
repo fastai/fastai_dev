@@ -186,9 +186,9 @@ class SortishSampler(Sampler):
         batches = [sorted_idx[i:i+self.bs] for i in range(0, len(sorted_idx), self.bs)]
         max_idx = torch.argmax(tensor([self.key(ck[0]) for ck in batches]))  # find the chunk with the largest key,
         batches[0],batches[max_idx] = batches[max_idx],batches[0]            # then make sure it goes first.
-        batch_idxs = torch.randperm(len(batches)-1)
+        batch_idxs = torch.randperm(len(batches)-2)
         sorted_idx = torch.cat([batches[i+1] for i in batch_idxs]) if len(batches) > 1 else LongTensor([])
-        sorted_idx = torch.cat([batches[0], sorted_idx])
+        sorted_idx = torch.cat([batches[0], sorted_idx, batches[-1]])
         return iter(sorted_idx)
 
 def pad_collate(samples, pad_idx=1, pad_first=False):
