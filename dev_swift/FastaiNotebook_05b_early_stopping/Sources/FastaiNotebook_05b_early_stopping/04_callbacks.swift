@@ -57,7 +57,6 @@ public enum LearnerAction: Error {
 }
 
 /// A model learner, responsible for initializing and training a model on a given dataset.
-// NOTE: When TF-421 is fixed, make `Label` not constrained to `Differentiable`.
 public final class Learner<Label: TensorGroup,
                            Opt: TensorFlow.Optimizer & AnyObject>
     where Opt.Scalar: Differentiable,
@@ -290,3 +289,23 @@ extension Learner {
         return AvgMetric(metrics: metrics)
     }
 }
+
+// TODO: make metrics more generic (probably for after the course)
+extension Learner {
+    public class Normalize: Delegate {
+        public let mean, std: Tensor<Float>
+        public init(mean: Tensor<Float>, std: Tensor<Float>){ 
+            (self.mean,self.std) = (mean,std)
+        }
+        
+        public override func batchWillStart(learner: Learner) {
+            learner.currentInput = (learner.currentInput! - mean) / std
+        }
+    }
+    
+    public func makeNormalize(mean: Tensor<Float>, std: Tensor<Float>) -> Normalize{
+        return Normalize(mean: mean, std: std)
+    }
+}
+
+public let mnistStats = (mean: Tensor<Float>(0.13066047), std: Tensor<Float>(0.3081079))

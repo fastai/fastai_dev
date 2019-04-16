@@ -4,33 +4,23 @@
 #################################################
 # file to edit: dev_nb/12_text.ipynb
 
-from exp.nb_11 import *
+from exp.nb_11a import *
 
 def read_file(fn):
     with open(fn, 'r', encoding = 'utf8') as f: return f.read()
 
 class TextList(ItemList):
     @classmethod
-    def from_files(cls, path, extensions=None, recurse=True, include=None, **kwargs):
-        if extensions is None: extensions = {'.txt'}
+    def from_files(cls, path, extensions='.txt', recurse=True, include=None, **kwargs):
         return cls(get_files(path, extensions, recurse=recurse, include=include), path, **kwargs)
 
     def get(self, i):
         if isinstance(i, Path): return read_file(i)
         return i
 
-@classmethod
-def _split_by_rand_pct(cls, il, pct=0.2):
-    rand_idx = np.random.permutation(range(len(il.items)))
-    cut = int(pct * len(il.items))
-    train, valid = il.new(il[rand_idx[cut:]]),il.new(il[rand_idx[:cut]])
-    return cls(train, valid)
-
-SplitData.split_by_rand_pct = _split_by_rand_pct
-
 import spacy,html
 
-BOS, EOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxbox", "xxeos", "xxunk", "xxpad", "xxrep", "xxwrep", "xxup", "xxmaj"
+BOS, EOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxbos xxeos xxunk xxpad xxrep xxwrep xxup xxmaj".split()
 
 def sub_br(t):
     "Replaces the <br /> by \n"
@@ -61,8 +51,8 @@ def replace_wrep(t):
     re_wrep = re.compile(r'(\b\w+\W+)(\1{3,})')
     return re_wrep.sub(_replace_wrep, t)
 
-def fixup(x):
-    "List of replacements from html strings"
+def fixup_text(x):
+    "Various messy things we've seen in documents"
     re1 = re.compile(r'  +')
     x = x.replace('#39;', "'").replace('amp;', '&').replace('#146;', "'").replace(
         'nbsp;', ' ').replace('#36;', '$').replace('\\n', "\n").replace('quot;', "'").replace(
@@ -70,11 +60,11 @@ def fixup(x):
         ' @-@ ','-').replace('\\', ' \\ ')
     return re1.sub(' ', html.unescape(x))
 
-default_pre_rules = [fixup, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces, sub_br]
+default_pre_rules = [fixup_text, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces, sub_br]
 default_spec_tok = [BOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ]
 
 def replace_all_caps(x):
-    "Replace tokens in ALL CAPS in `x` by their lower version and add `TK_UP` before."
+    "Replace tokens in ALL CAPS by their lower version and add `TK_UP` before."
     res = []
     for t in x:
         if t.isupper() and len(t) > 1: res.append(TK_UP); res.append(t.lower())
@@ -82,7 +72,7 @@ def replace_all_caps(x):
     return res
 
 def deal_caps(x):
-    "Replace all Capitalized tokens in `x` by their lower version and add `TK_MAJ` before."
+    "Replace all Capitalized tokens in by their lower version and add `TK_MAJ` before."
     res = []
     for t in x:
         if t == '': continue
@@ -95,31 +85,31 @@ def add_eos_bos(x): return [BOS] + x + [EOS]
 default_post_rules = [deal_caps, replace_all_caps, add_eos_bos]
 
 from spacy.symbols import ORTH
+from fastai.core import parallel
 
 class TokenizeProcessor(Processor):
     def __init__(self, lang="en", chunksize=5000, pre_rules=None, post_rules=None):
         self.chunksize = chunksize
-        self.tokenizer = spacy.blank(lang)
+        self.tokenizer = spacy.blank(lang).tokenizer
         for w in default_spec_tok:
-            self.tokenizer.tokenizer.add_special_case(w, [{ORTH: w}])
+            self.tokenizer.add_special_case(w, [{ORTH: w}])
         self.pre_rules  = default_pre_rules  if pre_rules  is None else pre_rules
         self.post_rules = default_post_rules if post_rules is None else post_rules
 
-    def process(self, items):
+    def proc_chunk(self, chunk, *args):
+        chunk = [compose(t, self.pre_rules) for t in chunk]
+        docs = [[d.text for d in doc] for doc in self.tokenizer.pipe(chunk)]
+        docs = [compose(t, self.post_rules) for t in docs]
+        return docs
+
+    def __call__(self, items):
         toks = []
         if isinstance(items[0], Path): items = [read_file(i) for i in items]
-        for i in progress_bar(range(0, len(items), self.chunksize)):
-            chunk = items[i: i+self.chunksize]
-            chunk = [compose(t, self.pre_rules) for t in chunk]
-            docs = [[d.text for d in doc] for doc in self.tokenizer.tokenizer.pipe(chunk)]
-            docs = [compose(t, self.post_rules) for t in docs]
-            toks += docs
-        return toks
+        chunks = [items[i: i+self.chunksize] for i in (range(0, len(items), self.chunksize))]
+        toks = parallel(self.proc_chunk, chunks, max_workers=8)
+        return sum(toks, [])
 
-    def proc1(self, item):
-        text = compose(item, self.pre_rules)
-        toks = list(self.tokenizer.tokenizer(text))
-        return compose(toks, self.post_rules)
+    def proc1(self, item): return self.proc_chunk([toks])[0]
 
     def deprocess(self, toks): return [self.deproc1(tok) for tok in toks]
     def deproc1(self, tok):    return " ".join(tok)
@@ -130,7 +120,7 @@ class NumericalizeProcessor(Processor):
     def __init__(self, vocab=None, max_vocab=60000, min_freq=2):
         self.vocab,self.max_vocab,self.min_freq = vocab,max_vocab,min_freq
 
-    def process(self, items):
+    def __call__(self, items):
         #The vocab is defined on the first use.
         if self.vocab is None:
             freq = Counter(p for o in items for p in o)
@@ -138,7 +128,7 @@ class NumericalizeProcessor(Processor):
             for o in reversed(default_spec_tok):
                 if o in self.vocab: self.vocab.remove(o)
                 self.vocab.insert(0, o)
-            self.otoi = collections.defaultdict(int,{v:k for k,v in enumerate(self.vocab)})
+        self.otoi = collections.defaultdict(int,{v:k for k,v in enumerate(self.vocab)})
         return [self.proc1(o) for o in items]
     def proc1(self, item):  return [self.otoi[o] for o in item]
 
@@ -181,7 +171,7 @@ class SortSampler(Sampler):
     def __init__(self, data_source, key): self.data_source,self.key = data_source,key
     def __len__(self): return len(self.data_source)
     def __iter__(self):
-        return iter(sorted(list(range(self.data_source)), key=self.key, reverse=True))
+        return iter(sorted(list(range(len(self.data_source))), key=self.key, reverse=True))
 
 class SortishSampler(Sampler):
     def __init__(self, data_source, key, bs):
@@ -196,12 +186,12 @@ class SortishSampler(Sampler):
         batches = [sorted_idx[i:i+self.bs] for i in range(0, len(sorted_idx), self.bs)]
         max_idx = torch.argmax(tensor([self.key(ck[0]) for ck in batches]))  # find the chunk with the largest key,
         batches[0],batches[max_idx] = batches[max_idx],batches[0]            # then make sure it goes first.
-        batch_idxs = torch.randperm(len(batches)-1)
+        batch_idxs = torch.randperm(len(batches)-2)
         sorted_idx = torch.cat([batches[i+1] for i in batch_idxs]) if len(batches) > 1 else LongTensor([])
-        sorted_idx = torch.cat([batches[0], sorted_idx])
+        sorted_idx = torch.cat([batches[0], sorted_idx, batches[-1]])
         return iter(sorted_idx)
 
-def pad_collate(samples, pad_idx=1, pad_first=True):
+def pad_collate(samples, pad_idx=1, pad_first=False):
     max_len = max([len(s[0]) for s in samples])
     res = torch.zeros(len(samples), max_len).long() + pad_idx
     for i,s in enumerate(samples):
@@ -209,12 +199,12 @@ def pad_collate(samples, pad_idx=1, pad_first=True):
         else:         res[i,:len(s[0]):] = LongTensor(s[0])
     return res, tensor([s[1] for s in samples])
 
-def get_clas_dls(train_ds, valid_ds, bs, bptt, **kwargs):
-    train_sampler = SortishSampler(train_ds.x, key=lambda t: len(train_ds[int(t)][0]), bs=bs)
-    valid_sampler = SortSampler(valid_ds.x, key=lambda t: len(valid_ds[int(t)][0]))
+def get_clas_dls(train_ds, valid_ds, bs, **kwargs):
+    train_sampler = SortishSampler(train_ds.x, key=lambda t: len(train_ds.x[t]), bs=bs)
+    valid_sampler = SortSampler(valid_ds.x, key=lambda t: len(valid_ds.x[t]))
     return (DataLoader(train_ds, batch_size=bs, sampler=train_sampler, collate_fn=pad_collate, **kwargs),
             DataLoader(valid_ds, batch_size=bs*2, sampler=valid_sampler, collate_fn=pad_collate, **kwargs))
 
-def clas_databunchify(sd, bs, bptt, **kwargs):
-    dls = get_lm_dls(sd.train, sd.valid, bs, bptt, **kwargs)
+def clas_databunchify(sd, bs, **kwargs):
+    dls = get_clas_dls(sd.train, sd.valid, bs, **kwargs)
     return DataBunch(*dls)
