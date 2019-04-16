@@ -2,52 +2,47 @@
 
 public protocol HetDictKey: Hashable {
     associatedtype ValueType
-    static var key: AnyHashable { get }
+    static var defaultValue: ValueType { get }
 }
-
 
 public struct HeterogeneousDictionary {
     private var underlying: [AnyHashable : Any] = [:]
     
     public init() {}
-    public init(_ items: [AnyHashable : Any]) {
-        self.underlying = items
+    public init<T: HetDictKey>(_ key: T, _ value: T.ValueType) {
+        self.underlying = [key: value]
+    }
+    public init<T1: HetDictKey, T2: HetDictKey>(_ key1: T1, _ value1: T1.ValueType, _ key2: T2, _ value2: T2.ValueType) {
+        self.underlying = [key1: value1, key2: value2]
     }
 
-    public subscript<T: HetDictKey>(key: T) -> T.ValueType? {
+    public subscript<T: HetDictKey>(key: T) -> T.ValueType {
         get {
-            return underlying[T.key] as! T.ValueType?
+            return underlying[key] as! T.ValueType? ?? T.defaultValue
         }
         set(newValue) {
-            if let v = newValue {
-                underlying[T.key] = v as Any
-            } else {
-                underlying.removeValue(forKey: T.key)
-            }
+            underlying[key] = newValue as Any
         }
     }
     
-    public mutating func merge(
-        _ other: HeterogeneousDictionary,
+    public mutating func merge(_ other: HeterogeneousDictionary,
         uniquingKeysWith combine: (Any, Any) throws -> Any) rethrows {
         try self.underlying.merge(other.underlying, uniquingKeysWith: combine)
     }
 }
 
+
 public struct Accuracy: HetDictKey, Equatable {
     public init() {}
-    public static var key = Accuracy() as AnyHashable
-    public typealias ValueType = Float32
+    public static var defaultValue: Float = 0
 }
 
 public struct LearningRate: HetDictKey, Equatable {
     public init() {}
-    public static var key = LearningRate() as AnyHashable
-    public typealias ValueType = Float
+    public static var defaultValue: Float = 0.4
 }
 
 public struct StepCount: HetDictKey, Equatable {
     public init() {}
-    public static var key = StepCount() as AnyHashable
-    public typealias ValueType = Int
+    public static var defaultValue = 0
 }
