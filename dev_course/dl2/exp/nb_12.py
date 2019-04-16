@@ -20,7 +20,7 @@ class TextList(ItemList):
 
 import spacy,html
 
-BOS, EOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxbox xxeos xxunk xxpad xxrep xxwrep xxup xxmaj".split()
+BOS, EOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxbos xxeos xxunk xxpad xxrep xxwrep xxup xxmaj".split()
 
 def sub_br(t):
     "Replaces the <br /> by \n"
@@ -85,6 +85,7 @@ def add_eos_bos(x): return [BOS] + x + [EOS]
 default_post_rules = [deal_caps, replace_all_caps, add_eos_bos]
 
 from spacy.symbols import ORTH
+from fastai.core import parallel
 
 class TokenizeProcessor(Processor):
     def __init__(self, lang="en", chunksize=5000, pre_rules=None, post_rules=None):
@@ -95,21 +96,20 @@ class TokenizeProcessor(Processor):
         self.pre_rules  = default_pre_rules  if pre_rules  is None else pre_rules
         self.post_rules = default_post_rules if post_rules is None else post_rules
 
-    def process(self, items):
+    def proc_chunk(self, chunk, *args):
+        chunk = [compose(t, self.pre_rules) for t in chunk]
+        docs = [[d.text for d in doc] for doc in self.tokenizer.pipe(chunk)]
+        docs = [compose(t, self.post_rules) for t in docs]
+        return docs
+
+    def __call__(self, items):
         toks = []
         if isinstance(items[0], Path): items = [read_file(i) for i in items]
-        for i in progress_bar(range(0, len(items), self.chunksize)):
-            chunk = items[i: i+self.chunksize]
-            chunk = [compose(t, self.pre_rules) for t in chunk]
-            docs = [[d.text for d in doc] for doc in self.tokenizer.pipe(chunk)]
-            docs = [compose(t, self.post_rules) for t in docs]
-            toks += docs
-        return toks
+        chunks = [items[i: i+self.chunksize] for i in (range(0, len(items), self.chunksize))]
+        toks = parallel(self.proc_chunk, chunks, max_workers=8)
+        return sum(toks, [])
 
-    def proc1(self, item):
-        text = compose(item, self.pre_rules)
-        toks = list(self.tokenizer(text))
-        return compose(toks, self.post_rules)
+    def proc1(self, item): return self.proc_chunk([toks])[0]
 
     def deprocess(self, toks): return [self.deproc1(tok) for tok in toks]
     def deproc1(self, tok):    return " ".join(tok)
@@ -120,7 +120,7 @@ class NumericalizeProcessor(Processor):
     def __init__(self, vocab=None, max_vocab=60000, min_freq=2):
         self.vocab,self.max_vocab,self.min_freq = vocab,max_vocab,min_freq
 
-    def process(self, items):
+    def __call__(self, items):
         #The vocab is defined on the first use.
         if self.vocab is None:
             freq = Counter(p for o in items for p in o)
