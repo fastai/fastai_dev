@@ -23,8 +23,8 @@ public struct BasicModel: Layer {
 }
 
 public struct DataBunch<Element> where Element: TensorGroup{
-    private var _train: Dataset<Element>
-    private var _valid: Dataset<Element>
+    public var _train: Dataset<Element>
+    public var _valid: Dataset<Element>
     public var shuffleTrain: Bool = true
     public var shuffleValid: Bool = false
     public var batchSize: Int = 64 
