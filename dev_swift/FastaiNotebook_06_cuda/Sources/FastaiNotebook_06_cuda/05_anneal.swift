@@ -8,8 +8,6 @@ import Path
 import TensorFlow
 
 import Python
-let plt = Python.import("matplotlib.pyplot")
-let np = Python.import("numpy")
 
 public func plot<S1, S2>(_ arr1: [S1], _ arr2: [S2], logScale:Bool = false, xLabel: String="", yLabel: String = "") 
     where S1:PythonConvertible, S2:PythonConvertible{

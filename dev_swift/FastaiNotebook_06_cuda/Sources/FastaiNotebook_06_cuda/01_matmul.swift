@@ -4,5 +4,7 @@ file to edit: 01_matmul.ipynb
 
 */
         
-let np = Python.import("numpy")
-let plt = Python.import("matplotlib.pyplot")
+import Python
+
+public let np = Python.import("numpy")
+public let plt = Python.import("matplotlib.pyplot")
