@@ -20,7 +20,7 @@ class TextList(ItemList):
 
 import spacy,html
 
-BOS, EOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxbos xxeos xxunk xxpad xxrep xxwrep xxup xxmaj".split()
+UNK, PAD, BOS, EOS, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxunk xxpad xxbos xxeos xxrep xxwrep xxup xxmaj".split()
 
 def sub_br(t):
     "Replaces the <br /> by \n"
@@ -61,7 +61,7 @@ def fixup_text(x):
     return re1.sub(' ', html.unescape(x))
 
 default_pre_rules = [fixup_text, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces, sub_br]
-default_spec_tok = [BOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ]
+default_spec_tok = [UNK, PAD, BOS, EOS, TK_REP, TK_WREP, TK_UP, TK_MAJ]
 
 def replace_all_caps(x):
     "Replace tokens in ALL CAPS by their lower version and add `TK_UP` before."
@@ -137,7 +137,7 @@ class NumericalizeProcessor(Processor):
         return [self.deproc1(idx) for idx in idxs]
     def deproc1(self, idx): return [self.vocab[i] for i in idx]
 
-class LanguageModelPreLoader():
+class LM_PreLoader():
     def __init__(self, data, bs=64, bptt=70, shuffle=False):
         self.data,self.bs,self.bptt,self.shuffle = data,bs,bptt,shuffle
         total_len = sum([len(t) for t in data.x])
@@ -158,12 +158,11 @@ class LanguageModelPreLoader():
         self.batched_data = stream[:self.n_batch * self.bs].view(self.bs, self.n_batch)
 
 def get_lm_dls(train_ds, valid_ds, bs, bptt, **kwargs):
-    return (DataLoader(LanguageModelPreLoader(train_ds, bs, bptt, shuffle=True), batch_size=bs, **kwargs),
-            DataLoader(LanguageModelPreLoader(valid_ds, bs, bptt, shuffle=False), batch_size=2*bs, **kwargs))
+    return (DataLoader(LM_PreLoader(train_ds, bs, bptt, shuffle=True), batch_size=bs, **kwargs),
+            DataLoader(LM_PreLoader(valid_ds, bs, bptt, shuffle=False), batch_size=2*bs, **kwargs))
 
 def lm_databunchify(sd, bs, bptt, **kwargs):
-    dls = get_lm_dls(sd.train, sd.valid, bs, bptt, **kwargs)
-    return DataBunch(*dls)
+    return DataBunch(*get_lm_dls(sd.train, sd.valid, bs, bptt, **kwargs))
 
 from torch.utils.data import Sampler
 
