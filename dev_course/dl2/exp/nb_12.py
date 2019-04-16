@@ -61,7 +61,7 @@ def fixup_text(x):
     return re1.sub(' ', html.unescape(x))
 
 default_pre_rules = [fixup_text, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces, sub_br]
-default_spec_tok = [BOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ]
+default_spec_tok = [UNK, PAD, BOS, EOS, TK_REP, TK_WREP, TK_UP, TK_MAJ]
 
 def replace_all_caps(x):
     "Replace tokens in ALL CAPS by their lower version and add `TK_UP` before."
