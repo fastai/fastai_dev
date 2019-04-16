@@ -205,5 +205,4 @@ def get_clas_dls(train_ds, valid_ds, bs, **kwargs):
             DataLoader(valid_ds, batch_size=bs*2, sampler=valid_sampler, collate_fn=pad_collate, **kwargs))
 
 def clas_databunchify(sd, bs, **kwargs):
-    dls = get_clas_dls(sd.train, sd.valid, bs, **kwargs)
-    return DataBunch(*dls)
+    return DataBunch(*get_clas_dls(sd.train, sd.valid, bs, **kwargs))
