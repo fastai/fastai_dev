@@ -22,7 +22,7 @@ protocol LearningPhaseDependent: Layer {
 
 extension LearningPhaseDependent {
     func applied(to input: Input) -> Output {
-        switch Context().learningPhase {
+        switch Context.local.learningPhase {
         case .training: return applyingTraining(to: input)
         case .inference: return applyingInference(to: input)
         }
@@ -32,7 +32,7 @@ extension LearningPhaseDependent {
     func gradApplied(to input: Input) ->
         (value: Output, pullback: (Output.CotangentVector) ->
             (Self.CotangentVector, Input.CotangentVector)) {
-        switch Context().learningPhase {
+        switch Context.local.learningPhase {
         case .training:
             return valueWithPullback(at: input) {
                 $0.applyingTraining(to: $1)

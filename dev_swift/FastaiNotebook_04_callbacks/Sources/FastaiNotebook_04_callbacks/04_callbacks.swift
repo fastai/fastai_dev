@@ -226,6 +226,7 @@ extension Learner {
         }
 
         public override func epochWillStart(learner: Learner) {
+            Context.local.learningPhase = .training
             learner.pctEpochs = Float(learner.currentEpoch)
             learner.inTrain = true
             learner.currentIter = 0
@@ -237,6 +238,7 @@ extension Learner {
         }
         
         public override func validationWillStart(learner: Learner) {
+            Context.local.learningPhase = .inference
             learner.inTrain = false
             learner.currentIter = 0
         }
