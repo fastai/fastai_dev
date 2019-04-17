@@ -43,15 +43,15 @@ protocol ConvertableFromByte {
 }
 
 extension Float : ConvertableFromByte{}
-extension Int32 : ConvertableFromByte{}
+extension Int : ConvertableFromByte{}
 
 func loadMNIST<T:ConvertableFromByte & TensorFlowScalar>(training: Bool, labels: Bool, path: Path, flat: Bool) -> Tensor<T> {
     let split = training ? "train" : "t10k"
     let kind = labels ? "labels" : "images"
-    let batch = training ? Int32(60000) : Int32(10000)
+    let batch = training ? 60000 : 10000
     let shape: TensorShape = labels ? [batch] : (flat ? [batch, 784] : [batch, 28, 28])
     let dropK = labels ? 8 : 16
-    let baseUrl = "http://yann.lecun.com/exdb/mnist/"
+    let baseUrl = "https://storage.googleapis.com/cvdf-datasets/mnist/"
     let fname = split + "-" + kind + "-idx\(labels ? 1 : 3)-ubyte"
     let file = path/fname
     if !file.exists {
