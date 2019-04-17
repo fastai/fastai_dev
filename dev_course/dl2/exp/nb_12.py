@@ -61,7 +61,7 @@ def fixup_text(x):
     return re1.sub(' ', html.unescape(x))
 
 default_pre_rules = [fixup_text, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces, sub_br]
-default_spec_tok = [UNK, PAD, BOS, EOS, TK_REP, TK_WREP, TK_UP, TK_MAJ]
+default_spec_tok = [BOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ]
 
 def replace_all_caps(x):
     "Replace tokens in ALL CAPS by their lower version and add `TK_UP` before."
@@ -186,8 +186,8 @@ class SortishSampler(Sampler):
         max_idx = torch.argmax(tensor([self.key(ck[0]) for ck in batches]))  # find the chunk with the largest key,
         batches[0],batches[max_idx] = batches[max_idx],batches[0]            # then make sure it goes first.
         batch_idxs = torch.randperm(len(batches)-2)
-        sorted_idx = torch.cat([batches[i+1] for i in batch_idxs]) if len(batches) > 2 else LongTensor([])
-        sorted_idx = torch.cat([batches[0], sorted_idx])
+        sorted_idx = torch.cat([batches[i+1] for i in batch_idxs]) if len(batches) > 1 else LongTensor([])
+        sorted_idx = torch.cat([batches[0], sorted_idx, batches[-1]])
         return iter(sorted_idx)
 
 def pad_collate(samples, pad_idx=1, pad_first=False):
@@ -195,7 +195,7 @@ def pad_collate(samples, pad_idx=1, pad_first=False):
     res = torch.zeros(len(samples), max_len).long() + pad_idx
     for i,s in enumerate(samples):
         if pad_first: res[i,-len(s[0]):] = LongTensor(s[0])
-        else:         res[i,:len(s[0]):] = LongTensor(s[0])
+        else:         res[i,:len(s[0])] = LongTensor(s[0])
     return res, tensor([s[1] for s in samples])
 
 def get_clas_dls(train_ds, valid_ds, bs, **kwargs):
