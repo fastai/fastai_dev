@@ -62,7 +62,7 @@ def fixup_text(x):
     return re1.sub(' ', html.unescape(x))
 
 default_pre_rules = [fixup_text, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces, sub_br]
-default_spec_tok = [BOS, UNK, PAD, TK_REP, TK_WREP, TK_UP, TK_MAJ]
+default_spec_tok = [UNK, PAD, BOS, EOS, TK_REP, TK_WREP, TK_UP, TK_MAJ]
 
 def replace_all_caps(x):
     "Replace tokens in ALL CAPS by their lower version and add `TK_UP` before."
@@ -137,7 +137,7 @@ class NumericalizeProcessor(Processor):
             for o in reversed(default_spec_tok):
                 if o in self.vocab: self.vocab.remove(o)
                 self.vocab.insert(0, o)
-        self.otoi = collections.defaultdict(int,{v:k for k,v in enumerate(self.vocab)})
+            self.otoi = collections.defaultdict(int,{v:k for k,v in enumerate(self.vocab)})
         return [self.proc1(o) for o in items]
     def proc1(self, item):  return [self.otoi[o] for o in item]
 
@@ -203,8 +203,8 @@ def pad_collate(samples, pad_idx=1, pad_first=False):
     max_len = max([len(s[0]) for s in samples])
     res = torch.zeros(len(samples), max_len).long() + pad_idx
     for i,s in enumerate(samples):
-        if pad_first: res[i,-len(s[0]):] = LongTensor(s[0])
-        else:         res[i,:len(s[0])] = LongTensor(s[0])
+        if pad_first: res[i, -len(s[0]):] = LongTensor(s[0])
+        else:         res[i, :len(s[0]) ] = LongTensor(s[0])
     return res, tensor([s[1] for s in samples])
 
 def get_clas_dls(train_ds, valid_ds, bs, **kwargs):
