@@ -17,8 +17,8 @@ public struct BasicModel: Layer {
     }
     
     @differentiable
-    public func applied(to input: Tensor<Float>, in context: Context) -> Tensor<Float> {
-        return input.sequenced(in: context, through: layer1, layer2)
+    public func applied(to input: Tensor<Float>) -> Tensor<Float> {
+        return input.sequenced(through: layer1, layer2)
     }
 }
 
@@ -33,8 +33,8 @@ public struct DataBunch<Element> where Element: TensorGroup{
     
     private func processDs(_ ds: Dataset<Element>, _ shuffle: Bool) -> Dataset<Element>{
         if !shuffle { return ds.batched(Int64(batchSize))}
-        let count = Int64(ds.count(where: {_ in true}))
-        return ds.batched(Int64(batchSize)).shuffled(sampleCount: count, randomSeed: Int64(random()))
+        let count = Int64(500000)  // A very large number
+        return ds.shuffled(sampleCount: count, randomSeed: Int64.random(in: Int64.min..<Int64.max)).batched(Int64(batchSize))
     }
     
     public init(train: Dataset<Element>, valid: Dataset<Element>, batchSize: Int = 64) {
@@ -43,7 +43,7 @@ public struct DataBunch<Element> where Element: TensorGroup{
 }
 
 public func mnistDataBunch(path: Path = mnistPath, flat: Bool = false, bs: Int = 64
-                          ) -> DataBunch<DataBatch<Tensor<Float>, Tensor<Int32>>>{
+                          ) -> DataBunch<DataBatch<TF, TI>>{
     let (xTrain,yTrain,xValid,yValid) = loadMNIST(path: path, flat: flat)
     return DataBunch(train: Dataset(elements:DataBatch(xb:xTrain, yb:yTrain)), 
                      valid: Dataset(elements:DataBatch(xb:xValid, yb:yValid)),
@@ -142,9 +142,6 @@ public final class Learner<Label: TensorGroup,
         didSet { delegates.sort { $0.order < $1.order } }
     }
     
-    /// The context used for layer applications.
-    public private(set) var context = Context(learningPhase: .training)
-
     /// Creates a learner.
     ///
     /// - Parameters:
@@ -171,14 +168,14 @@ extension Learner {
     /// - Parameter batch: The batch of input data and labels to be trained on.
     ///
     private func evaluate(onBatch batch: DataBatch<Input, Label>) throws {
-        currentOutput = model.applied(to: currentInput!, in: context)
+        currentOutput = model.applied(to: currentInput!)
         currentLoss = lossFunction.f(currentOutput!, currentTarget!)
     }
     
     private func train(onBatch batch: DataBatch<Input, Label>) throws {
         let (xb,yb) = (currentInput!,currentTarget!)
         (currentLoss, currentGradient) = model.valueWithGradient { model -> Loss in 
-            let y = model.applied(to: xb, in: context)                                      
+            let y = model.applied(to: xb)                                      
             currentOutput = y
             return lossFunction.f(y, yb)
         }
@@ -230,20 +227,16 @@ extension Learner {
 
         public override func epochWillStart(learner: Learner) {
             learner.pctEpochs = Float(learner.currentEpoch)
-            learner.context = Context(learningPhase: .training)
             learner.inTrain = true
             learner.currentIter = 0
         }
         
         public override func batchDidFinish(learner: Learner) {
             learner.currentIter += 1
-            if learner.inTrain{
-                learner.pctEpochs   += 1.0 / Float(learner.iterCount)
-            }
+            if learner.inTrain{ learner.pctEpochs += 1.0 / Float(learner.iterCount) }
         }
         
         public override func validationWillStart(learner: Learner) {
-            learner.context = Context(learningPhase: .inference)
             learner.inTrain = false
             learner.currentIter = 0
         }
@@ -255,11 +248,11 @@ extension Learner {
 // TODO: make metrics more generic (probably for after the course)
 extension Learner {
     public class AvgMetric: Delegate {
-        public let metrics: [(Tensor<Float>, Tensor<Int32>) -> Tensor<Float>]
+        public let metrics: [(TF,TI) -> TF]
         var total: Int = 0
-        var partials: [Tensor<Float>] = []
+        var partials: [TF] = []
         
-        public init(metrics: [(Tensor<Float>, Tensor<Int32>) -> Tensor<Float>]){ self.metrics = metrics}
+        public init(metrics: [(TF, TI) -> TF]){ self.metrics = metrics}
         
         public override func epochWillStart(learner: Learner) {
             total = 0
@@ -268,12 +261,12 @@ extension Learner {
         
         public override func batchDidFinish(learner: Learner) {
             if !learner.inTrain{
-                if let target = learner.currentTarget as? Tensor<Int32>{
+                if let target = learner.currentTarget as? TI{
                     let bs = target.shape[0]
-                    total += Int(bs)
+                    total += bs
                     partials[0] += Float(bs) * learner.currentLoss
                     for i in 1...metrics.count{
-                        partials[i] += Float(bs) * metrics[i-1]((learner.currentOutput as! Tensor<Float>), target)
+                        partials[i] += Float(bs) * metrics[i-1]((learner.currentOutput as! TF), target)
                     }
                 }
             }
@@ -285,7 +278,7 @@ extension Learner {
         }
     }
     
-    public func makeAvgMetric(metrics: [(Tensor<Float>, Tensor<Int32>) -> Tensor<Float>]) -> AvgMetric{
+    public func makeAvgMetric(metrics: [(TF,TI) -> TF]) -> AvgMetric{
         return AvgMetric(metrics: metrics)
     }
 }
@@ -293,8 +286,8 @@ extension Learner {
 // TODO: make metrics more generic (probably for after the course)
 extension Learner {
     public class Normalize: Delegate {
-        public let mean, std: Tensor<Float>
-        public init(mean: Tensor<Float>, std: Tensor<Float>){ 
+        public let mean, std: TF
+        public init(mean: TF, std: TF){ 
             (self.mean,self.std) = (mean,std)
         }
         
@@ -303,9 +296,9 @@ extension Learner {
         }
     }
     
-    public func makeNormalize(mean: Tensor<Float>, std: Tensor<Float>) -> Normalize{
+    public func makeNormalize(mean: TF, std: TF) -> Normalize{
         return Normalize(mean: mean, std: std)
     }
 }
 
-public let mnistStats = (mean: Tensor<Float>(0.13066047), std: Tensor<Float>(0.3081079))
+public let mnistStats = (mean: TF(0.13066047), std: TF(0.3081079))
