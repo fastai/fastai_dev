@@ -19,7 +19,7 @@ public struct CnnModel: Layer {
     public var linear: FADense<Float>
     
     public init(sizeIn: Int, channelIn:Int, channelOut:Int, nFilters:[Int]) {
-        reshapeToSquare = Reshape<Float>([-1, Int32(sizeIn), Int32(sizeIn), Int32(channelIn)])
+        reshapeToSquare = Reshape<Float>([-1, sizeIn, sizeIn, channelIn])
         conv1 = FAConv2D<Float>(
             filterShape: (5, 5, 1, nFilters[0]), 
             strides: (2, 2), 
@@ -44,11 +44,9 @@ public struct CnnModel: Layer {
     }
     
     @differentiable
-    public func applied(to input: Tensor<Float>, in context: Context) -> Tensor<Float> {
+    public func applied(to input: TF) -> TF {
         // There isn't a "sequenced" defined with enough layers.
-        let intermediate =  input.sequenced(
-            in: context,
-            through: reshapeToSquare, conv1, conv2, conv3, conv4)
-        return intermediate.sequenced(in: context, through: pool, flatten, linear)
+        let intermediate =  input.sequenced(through: reshapeToSquare, conv1, conv2, conv3, conv4)
+        return intermediate.sequenced(through: pool, flatten, linear)
     }
 }
