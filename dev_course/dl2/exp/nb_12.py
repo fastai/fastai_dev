@@ -20,6 +20,7 @@ class TextList(ItemList):
 
 import spacy,html
 
+#special tokens
 UNK, PAD, BOS, EOS, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxunk xxpad xxbos xxeos xxrep xxwrep xxup xxmaj".split()
 
 def sub_br(t):
@@ -28,7 +29,7 @@ def sub_br(t):
     return re_br.sub("\n", t)
 
 def spec_add_spaces(t):
-    "Add spaces between special characters"
+    "Add spaces around / and #"
     return re.sub(r'([/#])', r' \1 ', t)
 
 def rm_useless_spaces(t):
@@ -36,7 +37,7 @@ def rm_useless_spaces(t):
     return re.sub(' {2,}', ' ', t)
 
 def replace_rep(t):
-    "Replace repetitions at the character level"
+    "Replace repetitions at the character level: cccc -> TK_REP 4 c"
     def _replace_rep(m:Collection[str]) -> str:
         c,cc = m.groups()
         return f' {TK_REP} {len(cc)+1} {c} '
@@ -44,7 +45,7 @@ def replace_rep(t):
     return re_rep.sub(_replace_rep, t)
 
 def replace_wrep(t):
-    "Replace word repetitions"
+    "Replace word repetitions: word word word -> TK_WREP 3 word"
     def _replace_wrep(m:Collection[str]) -> str:
         c,cc = m.groups()
         return f' {TK_WREP} {len(cc.split())+1} {c} '
