@@ -124,6 +124,8 @@ def momentum_step(p, lr, grad_avg, **kwargs):
     p.data.add_(-lr, grad_avg)
     return p
 
+def lin_comb(v1, v2, beta): return beta*v1 + (1-beta)*v2
+
 class AverageGrad(Stat):
     _defaults = dict(mom=0.9)
 
