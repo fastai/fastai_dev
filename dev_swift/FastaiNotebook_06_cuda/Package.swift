@@ -10,6 +10,7 @@ let package = Package(
         .package(path: "../FastaiNotebook_00_load_data"),
         .package(path: "../FastaiNotebook_01_matmul"),
         .package(path: "../FastaiNotebook_01a_fastai_layers"),
+        .package(path: "../FastaiNotebook_01c_array_differentiable"),
         .package(path: "../FastaiNotebook_02_fully_connected"),
         .package(path: "../FastaiNotebook_02a_why_sqrt5"),
         .package(path: "../FastaiNotebook_03_minibatch_training"),

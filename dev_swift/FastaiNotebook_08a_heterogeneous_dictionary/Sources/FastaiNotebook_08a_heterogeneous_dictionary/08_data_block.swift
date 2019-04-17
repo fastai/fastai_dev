@@ -84,7 +84,6 @@ public protocol Processor {
 }
 
 public extension Processor {
-    init() { self.init() } //Can't instantiate a processor in anoter notebook otherwise
     
     func process(items: [Input]) -> [Output]{
         return items.map(){process1(item: $0)}
@@ -96,6 +95,7 @@ public extension Processor {
 }
 
 public struct NoopProcessor<Item>: Processor {
+    public init() {}
     public typealias Input = Item
     public typealias Output = Item
     
@@ -106,6 +106,7 @@ public struct NoopProcessor<Item>: Processor {
 }
 
 public struct CategoryProcessor: Processor {
+    public init() {}
     public typealias Input = String
     public typealias Output = Int32
     public var vocab: [Input]? = nil
@@ -201,11 +202,11 @@ where I: TensorGroup, TI: TensorGroup & Differentiable, L: TensorGroup{
                      batchSize: data.batchSize)
 }
 
-public func openAndResize(fname: StringTensor, size: Int) -> Tensor<Float>{
+public func openAndResize(fname: StringTensor, size: Int) -> TF{
     let imgBytes = Raw.readFile(filename: fname)
     let decodedImg = Raw.decodeJpeg(contents: imgBytes, channels: 3, dctMethod: "")
     let resizedImg = Tensor<Float>(Raw.resizeNearestNeighbor(
         images: Tensor<UInt8>([decodedImg]), 
         size: Tensor<Int32>([Int32(size), Int32(size)])))
-    return resizedImg.reshaped(to: TensorShape(Int32(size), Int32(size), 3))
+    return resizedImg.reshaped(to: TensorShape(size, size, 3))
 }

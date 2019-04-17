@@ -51,7 +51,6 @@ extension Learner where Opt.Scalar: PythonConvertible{
     }
 }
 
-import Glibc
 import Foundation
 
 func formatTime(_ t: Float) -> String {

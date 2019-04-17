@@ -21,18 +21,18 @@ protocol LearningPhaseDependent: Layer {
 }
 
 extension LearningPhaseDependent {
-    func applied(to input: Input, in context: Context) -> Output {
-        switch context.learningPhase {
+    func applied(to input: Input) -> Output {
+        switch Context.local.learningPhase {
         case .training: return applyingTraining(to: input)
         case .inference: return applyingInference(to: input)
         }
     }
 
     @differentiating(applied)
-    func gradApplied(to input: Input, in context: Context) ->
+    func gradApplied(to input: Input) ->
         (value: Output, pullback: (Output.CotangentVector) ->
             (Self.CotangentVector, Input.CotangentVector)) {
-        switch context.learningPhase {
+        switch Context.local.learningPhase {
         case .training:
             return valueWithPullback(at: input) {
                 $0.applyingTraining(to: $1)
@@ -69,8 +69,8 @@ struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Nor
     init(featureCount: Int, momentum: Scalar, epsilon: Scalar = 1e-5) {
         self.momentum = momentum
         self.epsilon = epsilon
-        self.scale = Tensor(ones: [Int32(featureCount)])
-        self.offset = Tensor(zeros: [Int32(featureCount)])
+        self.scale = Tensor(ones: [featureCount])
+        self.offset = Tensor(zeros: [featureCount])
         self.runningMean = Reference(Tensor(0))
         self.runningVariance = Reference(Tensor(1))
     }
@@ -117,8 +117,8 @@ struct ConvBN<Scalar: TensorFlowFloatingPoint>: Layer {
     }
 
     @differentiable
-    func applied(to input: Tensor<Scalar>, in context: Context) -> Tensor<Scalar> {
-        return norm.applied(to: conv.applied(to: input, in: context), in: context)
+    func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+        return norm.applied(to: conv.applied(to: input))
     }
 }
 
@@ -151,11 +151,9 @@ struct CnnModelBN: Layer {
     var linear = Dense<Float>(inputSize: 32, outputSize: 10)
     
     @differentiable
-    func applied(to input: Tensor<Float>, in context: Context) -> Tensor<Float> {
+    func applied(to input: TF) -> TF {
         // There isn't a "sequenced" defined with enough layers.
-        let intermediate =  input.sequenced(
-            in: context,
-            through: reshapeToSquare, conv1, conv2, conv3, conv4)
-        return intermediate.sequenced(in: context, through: pool, flatten, linear)
+        let intermediate =  input.sequenced(through: reshapeToSquare, conv1, conv2, conv3, conv4)
+        return intermediate.sequenced(through: pool, flatten, linear)
     }
 }
