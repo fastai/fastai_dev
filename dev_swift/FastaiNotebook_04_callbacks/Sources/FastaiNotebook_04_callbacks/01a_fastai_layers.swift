@@ -11,7 +11,7 @@ public protocol FALayer: Layer {
     var delegate: LayerDelegate<Output> { get set }
     
     @differentiable
-    func forward(_ input: Input, in context: Context) -> Output
+    func forward(_ input: Input) -> Output
 }
 
 // TODO: This doesn't actually work. So we'll just paste it into every layer definition for now.
@@ -27,7 +27,7 @@ public protocol FALayer: Layer {
 open class LayerDelegate<Output> {
     public init() {}
     
-    open func didProduceActivation(_ activation: Output, in context: Context) {}
+    open func didProduceActivation(_ activation: Output) {}
 }
 
 
@@ -51,14 +51,14 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
     }
 
     @differentiable
-    public func forward(_ input: Tensor<Scalar>, in _: Context) -> Tensor<Scalar> {
+    public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         return activation(matmul(input, weight) + bias)
     }
     
     @differentiable
-    public func applied(to input: Tensor<Scalar>, in context: Context) -> Tensor<Scalar> {
-        let activation = forward(input, in: context)
-        delegate.didProduceActivation(activation, in: context)
+    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+        let activation = forward(input)
+        delegate.didProduceActivation(activation)
         return activation
     }
 }
@@ -71,9 +71,9 @@ public extension FADense {
         seed: (Int64, Int64) = (Int64.random(in: Int64.min..<Int64.max),
                                 Int64.random(in: Int64.min..<Int64.max))
     ) {
-        self.init(weight: Tensor(glorotUniform: [Int32(inputSize), Int32(outputSize)],
+        self.init(weight: Tensor(glorotUniform: [inputSize, outputSize],
                                  seed: seed),
-                  bias: Tensor(zeros: [Int32(outputSize)]),
+                  bias: Tensor(zeros: [outputSize]),
                   activation: activation)
     }
 }
@@ -85,7 +85,7 @@ public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     public var bias: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
     @noDerivative public let activation: Activation
-    @noDerivative public let strides: (Int32, Int32)
+    @noDerivative public let strides: (Int, Int)
     @noDerivative public let padding: Padding
     
     @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
@@ -100,21 +100,21 @@ public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
         self.filter = filter
         self.bias = bias
         self.activation = activation
-        (self.strides.0, self.strides.1) = (Int32(strides.0), Int32(strides.1))
+        self.strides = strides
         self.padding = padding
     }
 
     @differentiable
-    public func forward(_ input: Tensor<Scalar>, in _: Context) -> Tensor<Scalar> {
+    public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         return activation(input.convolved2D(withFilter: filter,
                                             strides: (1, strides.0, strides.1, 1),
                                             padding: padding) + bias)
     }
     
     @differentiable
-    public func applied(to input: Tensor<Scalar>, in context: Context) -> Tensor<Scalar> {
-        let activation = forward(input, in: context)
-        delegate.didProduceActivation(activation, in: context)
+    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+        let activation = forward(input)
+        delegate.didProduceActivation(activation)
         return activation
     }
 }
@@ -128,11 +128,11 @@ public extension FAConv2D {
         generator: inout G
     ) {
         let filterTensorShape = TensorShape([
-            Int32(filterShape.0), Int32(filterShape.1),
-            Int32(filterShape.2), Int32(filterShape.3)])
+            filterShape.0, filterShape.1,
+            filterShape.2, filterShape.3])
         self.init(
             filter: Tensor(glorotUniform: filterTensorShape, generator: &generator),
-            bias: Tensor(zeros: TensorShape([Int32(filterShape.3)])),
+            bias: Tensor(zeros: TensorShape([filterShape.3])),
             activation: activation,
             strides: strides,
             padding: padding)
@@ -149,11 +149,11 @@ public extension FAConv2D {
                                 Int64.random(in: Int64.min..<Int64.max))
     ) {
         let filterTensorShape = TensorShape([
-            Int32(filterShape.0), Int32(filterShape.1),
-            Int32(filterShape.2), Int32(filterShape.3)])
+            filterShape.0, filterShape.1,
+            filterShape.2, filterShape.3])
         self.init(
             filter: Tensor(glorotUniform: filterTensorShape, seed: seed),
-            bias: Tensor(zeros: TensorShape([Int32(filterShape.3)])),
+            bias: Tensor(zeros: TensorShape([filterShape.3])),
             activation: activation,
             strides: (strides.0, strides.1),
             padding: padding)
@@ -163,8 +163,8 @@ public extension FAConv2D {
 
 @_fixed_layout
 public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
-    @noDerivative let poolSize: (Int32, Int32, Int32, Int32)
-    @noDerivative let strides: (Int32, Int32, Int32, Int32)
+    @noDerivative let poolSize: (Int, Int, Int, Int)
+    @noDerivative let strides: (Int, Int, Int, Int)
     @noDerivative let padding: Padding
     
     @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
@@ -174,28 +174,26 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
         strides: (Int, Int, Int, Int),
         padding: Padding
     ) {
-        (self.poolSize.0, self.poolSize.1, self.poolSize.2, self.poolSize.3)
-            = (Int32(poolSize.0), Int32(poolSize.1), Int32(poolSize.2), Int32(poolSize.3))
-        (self.strides.0, self.strides.1, self.strides.2, self.strides.3)
-            = (Int32(strides.0), Int32(strides.1), Int32(strides.2), Int32(strides.3))
+        self.poolSize = poolSize
+        self.strides = strides
         self.padding = padding
     }
 
     public init(poolSize: (Int, Int), strides: (Int, Int), padding: Padding = .valid) {
-        self.poolSize = (1, Int32(poolSize.0), Int32(poolSize.1), 1)
-        self.strides = (1, Int32(strides.0), Int32(strides.1), 1)
+        self.poolSize = (1, poolSize.0, poolSize.1, 1)
+        self.strides = (1, strides.0, strides.1, 1)
         self.padding = padding
     }
 
     @differentiable
-    public func forward(_ input: Tensor<Scalar>, in _: Context) -> Tensor<Scalar> {
+    public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         return input.averagePooled(kernelSize: poolSize, strides: strides, padding: padding)
     }
     
     @differentiable
-    public func applied(to input: Tensor<Scalar>, in context: Context) -> Tensor<Scalar> {
-        let activation = forward(input, in: context)
-        delegate.didProduceActivation(activation, in: context)
+    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+        let activation = forward(input)
+        delegate.didProduceActivation(activation)
         return activation
     }
 }

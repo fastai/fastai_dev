@@ -7,7 +7,9 @@ file to edit: 03_minibatch_training.ipynb
 import Path
 import TensorFlow
 
-public func accuracy(_ output: Tensor<Float>, _ target: Tensor<Int32>) -> Tensor<Float>{
+public typealias TI = Tensor<Int32>
+
+public func accuracy(_ output: TF, _ target: TI) -> TF{
     let corrects = Tensor<Float>(output.argmax(squeezingAxis: 1) .== target)
     return corrects.mean()
 }
@@ -16,8 +18,5 @@ public struct DataBatch<Inputs: Differentiable & TensorGroup, Labels: TensorGrou
     public var xb: Inputs
     public var yb: Labels    
     
-    public init(xb: Inputs, yb: Labels){
-        self.xb = xb
-        self.yb = yb
-    }
+    public init(xb: Inputs, yb: Labels){ (self.xb,self.yb) = (xb,yb) }
 }

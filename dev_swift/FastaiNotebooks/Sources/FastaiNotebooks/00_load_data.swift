@@ -44,6 +44,7 @@ protocol ConvertableFromByte {
 
 extension Float : ConvertableFromByte{}
 extension Int : ConvertableFromByte{}
+extension Int32 : ConvertableFromByte{}
 
 func loadMNIST<T:ConvertableFromByte & TensorFlowScalar>(training: Bool, labels: Bool, path: Path, flat: Bool) -> Tensor<T> {
     let split = training ? "train" : "t10k"

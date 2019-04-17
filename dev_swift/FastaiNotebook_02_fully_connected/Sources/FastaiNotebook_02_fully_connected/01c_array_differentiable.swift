@@ -117,22 +117,22 @@ extension Array: Layer where Element: Layer, Element.Input == Element.Output {
     public typealias Output = Element.Output
     
     @differentiable(vjp: _vjpApplied)
-    public func applied(to input: Input, in context: Context) -> Output {
+    public func applied(to input: Input) -> Output {
         var activation = input
         for layer in self {
-            activation = layer.applied(to: activation, in: context)
+            activation = layer.applied(to: activation)
         }
         return activation
     }
     
-    public func _vjpApplied(_ input: Input, in context: Context)
+    public func _vjpApplied(_ input: Input)
         -> (Output, (Output.CotangentVector) -> (Array.CotangentVector, Input.CotangentVector))
     {
         var activation = input
         var pullbacks: [(Input.CotangentVector) -> (Element.CotangentVector, Input.CotangentVector)] = []
         for layer in self {
             let (newActivation, newPullback) = layer.valueWithPullback(at: activation) {
-                $0.applied(to: $1, in: context)
+                $0.applied(to: $1)
             }
             activation = newActivation
             pullbacks.append(newPullback)

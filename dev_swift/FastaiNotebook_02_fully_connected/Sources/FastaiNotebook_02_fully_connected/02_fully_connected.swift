@@ -7,14 +7,16 @@ file to edit: 02_fully_connected.ipynb
 import Path
 import TensorFlow
 
-public func normalize(_ x:Tensor<Float>, mean:Tensor<Float>, std:Tensor<Float>) -> Tensor<Float> {
+public typealias TF=Tensor<Float>
+
+public func normalize(_ x:TF, mean:TF, std:TF) -> TF {
     return (x-mean)/std
 }
 
-public func testNearZero(_ a:Tensor<Float>, tolerance:Float=1e-3) {
+public func testNearZero(_ a:TF, tolerance:Float=1e-3) {
     assert(abs(a)<tolerance, "Near zero: \(a)")
 }
 
-public func mse(_ out:Tensor<Float>, _ targ:Tensor<Float>) -> Tensor<Float> {
+public func mse(_ out:TF, _ targ:TF) -> TF {
     return (out.squeezingShape(at: -1) - targ).squared().mean()
 }
