@@ -137,6 +137,7 @@ class NumericalizeProcessor(Processor):
             for o in reversed(default_spec_tok):
                 if o in self.vocab: self.vocab.remove(o)
                 self.vocab.insert(0, o)
+        if getattr(self, 'otoi', None) is None:
             self.otoi = collections.defaultdict(int,{v:k for k,v in enumerate(self.vocab)})
         return [self.proc1(o) for o in items]
     def proc1(self, item):  return [self.otoi[o] for o in item]
