@@ -85,18 +85,26 @@ def add_eos_bos(x): return [BOS] + x + [EOS]
 default_post_rules = [deal_caps, replace_all_caps, add_eos_bos]
 
 from spacy.symbols import ORTH
-from fastai.core import parallel
+from concurrent.futures import ProcessPoolExecutor
+
+def parallel(func, arr, max_workers=4):
+    if max_workers<2: results = list(progress_bar(map(func, enumerate(arr)), total=len(arr)))
+    else:
+        with ProcessPoolExecutor(max_workers=max_workers) as ex:
+            return list(progress_bar(ex.map(func, enumerate(arr)), total=len(arr)))
+    if any([o is not None for o in results]): return results
 
 class TokenizeProcessor(Processor):
-    def __init__(self, lang="en", chunksize=5000, pre_rules=None, post_rules=None):
-        self.chunksize = chunksize
+    def __init__(self, lang="en", chunksize=2000, pre_rules=None, post_rules=None, max_workers=4):
+        self.chunksize,self.max_workers = chunksize,max_workers
         self.tokenizer = spacy.blank(lang).tokenizer
         for w in default_spec_tok:
             self.tokenizer.add_special_case(w, [{ORTH: w}])
         self.pre_rules  = default_pre_rules  if pre_rules  is None else pre_rules
         self.post_rules = default_post_rules if post_rules is None else post_rules
 
-    def proc_chunk(self, chunk, *args):
+    def proc_chunk(self, args):
+        i,chunk = args
         chunk = [compose(t, self.pre_rules) for t in chunk]
         docs = [[d.text for d in doc] for doc in self.tokenizer.pipe(chunk)]
         docs = [compose(t, self.post_rules) for t in docs]
@@ -106,7 +114,7 @@ class TokenizeProcessor(Processor):
         toks = []
         if isinstance(items[0], Path): items = [read_file(i) for i in items]
         chunks = [items[i: i+self.chunksize] for i in (range(0, len(items), self.chunksize))]
-        toks = parallel(self.proc_chunk, chunks, max_workers=8)
+        toks = parallel(self.proc_chunk, chunks, max_workers=self.max_workers)
         return sum(toks, [])
 
     def proc1(self, item): return self.proc_chunk([toks])[0]
