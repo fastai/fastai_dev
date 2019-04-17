@@ -16,13 +16,15 @@ class RNNDropout(nn.Module):
 
     def forward(self, x):
         if not self.training or self.p == 0.: return x
-        m = dropout_mask(x.data, (1, x.size(1), x.size(2)), self.p)
+        m = dropout_mask(x.data, (x.size(0), 1, x.size(2)), self.p)
         return x * m
 
 import warnings
 
+WEIGHT_HH = 'weight_hh_l0'
+
 class WeightDropout(nn.Module):
-    def __init__(self, module, weight_p=[0.], layer_names=['weight_hh_l0']):
+    def __init__(self, module, weight_p=[0.], layer_names=[WEIGHT_HH]):
         super().__init__()
         self.module,self.weight_p,self.layer_names = module,weight_p,layer_names
         for layer in self.layer_names:
@@ -45,7 +47,6 @@ class WeightDropout(nn.Module):
 
 class EmbeddingDropout(nn.Module):
     "Applies dropout in the embedding layer by zeroing out some elements of the embedding vector."
-
     def __init__(self, emb, embed_p):
         super().__init__()
         self.emb,self.embed_p = emb,embed_p
@@ -109,16 +110,13 @@ class AWD_LSTM(nn.Module):
         self.hidden = [(self._one_hidden(l), self._one_hidden(l)) for l in range(self.n_layers)]
 
 class LinearDecoder(nn.Module):
-    "To go on top of an AWD-LSTM module"
-    initrange=0.1
-
     def __init__(self, n_out, n_hid, output_p, tie_encoder=None, bias=True):
         super().__init__()
         self.decoder = nn.Linear(n_hid, n_out, bias=bias)
-        self.decoder.weight.data.uniform_(-self.initrange, self.initrange)
         self.output_dp = RNNDropout(output_p)
         if bias: self.decoder.bias.data.zero_()
         if tie_encoder: self.decoder.weight = tie_encoder.weight
+        else: init.kaiming_uniform_(self.decoder.weight)
 
     def forward(self, input):
         raw_outputs, outputs = input
@@ -132,9 +130,8 @@ class SequentialRNN(nn.Sequential):
         for c in self.children():
             if hasattr(c, 'reset'): c.reset()
 
-def get_language_model(vocab_sz, emb_sz, n_hid, n_layers, pad_token, tie_weights=True, bias=True,
-                       output_p=0.4, hidden_p=0.2, input_p=0.6, embed_p=0.1, weight_p=0.5):
-    "To create a full AWD-LSTM"
+def get_language_model(vocab_sz, emb_sz, n_hid, n_layers, pad_token, output_p=0.4, hidden_p=0.2, input_p=0.6,
+                       embed_p=0.1, weight_p=0.5, tie_weights=True, bias=True):
     rnn_enc = AWD_LSTM(vocab_sz, emb_sz, n_hid=n_hid, n_layers=n_layers, pad_token=pad_token,
                        hidden_p=hidden_p, input_p=input_p, embed_p=embed_p, weight_p=weight_p)
     enc = rnn_enc.encoder if tie_weights else None
