@@ -45,10 +45,8 @@ extension LearningPhaseDependent {
     }
 }
 
-protocol Norm: Layer {
+protocol Norm: Layer where Input == Tensor<Scalar>, Output == Tensor<Scalar>{
     associatedtype Scalar
-    typealias Input = Tensor<Scalar>
-    typealias Output = Tensor<Scalar>
     init(featureCount: Int, epsilon: Scalar)
 }
 
