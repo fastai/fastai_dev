@@ -93,8 +93,11 @@ public func time(repeating: Int=1, _ function: () -> ()) {
 }
 
 public extension String {
-    func findFirst(_ pat:String) -> Range<String.Index>? {
+    func findFirst(pat:String) -> Range<String.Index>? {
         return range(of: pat, options: .regularExpression)
+    }
+    func matches(pat: String) -> Bool {
+        return findFirst(pat:pat) != nil
     }
 }
 
@@ -118,10 +121,10 @@ file to edit: \(fname.lastPathComponent)
         
 """
         for cell in cells{
-             if let source = cell["source"] as? [String], !source.isEmpty,
-                 source[0].findFirst(#"^\s*//\s*export\s*$"#) != nil {
-                 module.append("\n" + source[1...].joined() + "\n")
-             }
+            if let source = cell["source"] as? [String], !source.isEmpty, 
+            source[0].matches(pat: #"^\s*//\s*export\s*$"#) {
+                module.append("\n" + source[1...].joined() + "\n")
+            }
         }
         try? module.write(to: out_fname, atomically: false, encoding: .utf8)
     } catch {print("Can't read the content of \(fname)")}
@@ -129,7 +132,7 @@ file to edit: \(fname.lastPathComponent)
 
 public func exportNotebooks(_ path: Path){
     for entry in try! path.ls() where entry.kind == Entry.Kind.file && 
-        entry.path.basename().findFirst(#"^\d*_.*ipynb$"#) != nil {
+        entry.path.basename().matches(#"^\d*_.*ipynb$"#) {
         print("Converting \(entry.path.basename())")
         notebookToScript(fname: entry.path.basename())
     }
