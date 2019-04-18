@@ -197,3 +197,23 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
         return activation
     }
 }
+
+
+@_fixed_layout
+public struct FAAdaptiveAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
+    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
+
+    public init() {}
+
+    @differentiable
+    public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
+        return input.mean(alongAxes: [1,2])
+    }
+    
+    @differentiable
+    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+        let activation = forward(input)
+        delegate.didProduceActivation(activation)
+        return activation
+    }
+}

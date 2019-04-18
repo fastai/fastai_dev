@@ -8,45 +8,30 @@ import Path
 import TensorFlow
 import Python
 
+public func conv<Scalar>(_ cIn: Int, _ cOut: Int, ks: Int = 3, stride: Int = 2) -> FAConv2D<Scalar> {
+    return FAConv2D<Scalar>(filterShape: (ks, ks, cIn, cOut), 
+                           strides: (stride,stride), 
+                           padding: .same, 
+                           activation: relu)
+}
+
 public struct CnnModel: Layer {
-    public var reshapeToSquare: Reshape<Float>
-    public var conv1: FAConv2D<Float>
-    public var conv2: FAConv2D<Float>
-    public var conv3: FAConv2D<Float>
-    public var conv4: FAConv2D<Float>
-    public var pool = FAAvgPool2D<Float>(poolSize: (2, 2), strides: (1, 1)) //TODO: replace by AvgPool
+    public var reshape: Reshape<Float>
+    public var convs: [FAConv2D<Float>]
+    public var pool = FAAdaptiveAvgPool2D<Float>()
     public var flatten = Flatten<Float>()
     public var linear: FADense<Float>
     
-    public init(sizeIn: Int, channelIn:Int, channelOut:Int, nFilters:[Int]) {
-        reshapeToSquare = Reshape<Float>([-1, sizeIn, sizeIn, channelIn])
-        conv1 = FAConv2D<Float>(
-            filterShape: (5, 5, 1, nFilters[0]), 
-            strides: (2, 2), 
-            padding: .same, 
-            activation: relu)
-        conv2 = FAConv2D<Float>(
-            filterShape: (3, 3, nFilters[0], nFilters[1]),
-            strides: (2, 2),
-            padding: .same,
-            activation: relu)
-        conv3 = FAConv2D<Float>(
-            filterShape: (3, 3, nFilters[1], nFilters[2]),
-            strides: (2, 2),
-            padding: .same,
-            activation: relu)
-        conv4 = FAConv2D<Float>(
-            filterShape: (3, 3, nFilters[2], nFilters[3]),
-            strides: (2, 2),
-            padding: .same,
-            activation: relu)
-        linear = FADense<Float>(inputSize: nFilters[3], outputSize: channelOut)
+    public init(sizeIn: Int, channelIn: Int, nOut: Int, filters: [Int]){
+        reshape = Reshape<Float>([-1, sizeIn, sizeIn, channelIn])
+        convs = []
+        let allFilters = [channelIn] + filters
+        for i in 0..<filters.count { convs.append(conv(allFilters[i], allFilters[i+1])) }
+        linear = FADense<Float>(inputSize: filters.last!, outputSize: nOut)
     }
     
     @differentiable
     public func applied(to input: TF) -> TF {
-        // There isn't a "sequenced" defined with enough layers.
-        let intermediate =  input.sequenced(through: reshapeToSquare, conv1, conv2, conv3, conv4)
-        return intermediate.sequenced(through: pool, flatten, linear)
+        return input.sequenced(through: reshape, convs, pool, flatten, linear)
     }
 }
