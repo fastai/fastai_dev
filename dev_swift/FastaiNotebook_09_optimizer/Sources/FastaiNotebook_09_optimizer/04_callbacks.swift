@@ -145,12 +145,10 @@ public final class Learner<Label: TensorGroup,
     /// Creates a learner.
     ///
     /// - Parameters:
-    ///   - dataset: The dataset which will be trained on.
+    ///   - data: The databunch used for training and validation.
     ///   - lossFunction: The loss function.
-    ///   - optimizer: The optimizer used for updating model parameters along
-    ///     gradient vectors.
-    ///   - modelInitializer: The closure that produces an model to be trained.
-    ///
+    ///   - optimizer: The optimizer used for updating model parameters.
+    ///   - modelInitializer: The closure that produces the model to be trained.
     public init(data: Data,
                 lossFunction: @escaping LossFunction.F,
                 optimizer: Optimizer,
@@ -216,6 +214,16 @@ extension Learner {
             }
         } catch LearnerAction.stop {}
         try delegates.forEach { try $0.trainingDidFinish(learner: self) }
+    }
+}
+
+public extension Learner {
+    func addDelegate(_ delegate: Learner.Delegate) {
+        delegates.append(delegate)
+    }
+    
+    func addDelegates(_ delegates: [Learner.Delegate]) {
+        self.delegates += delegates
     }
 }
 
@@ -285,7 +293,6 @@ extension Learner {
     }
 }
 
-// TODO: make metrics more generic (probably for after the course)
 extension Learner {
     public class Normalize: Delegate {
         public let mean, std: TF

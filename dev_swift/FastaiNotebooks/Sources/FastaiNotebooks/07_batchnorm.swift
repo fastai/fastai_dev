@@ -10,38 +10,40 @@ import Python
 
 class Reference<T> {
     var value: T
-    init(_ value: T) {
-        self.value = value
-    }
+    init(_ value: T) { self.value = value }
 }
 
 protocol LearningPhaseDependent: Layer {
-    @differentiable func applyingTraining(to input: Input) -> Output
-    @differentiable func applyingInference(to input: Input) -> Output
+    var delegate: LayerDelegate<Output> { get set }
+    @differentiable func forwardTraining(to input: Input) -> Output
+    @differentiable func forwardInference(to input: Input) -> Output
 }
 
 extension LearningPhaseDependent {
-    func applied(to input: Input) -> Output {
+    func forward(_ input: Input) -> Output {
         switch Context.local.learningPhase {
-        case .training: return applyingTraining(to: input)
-        case .inference: return applyingInference(to: input)
+        case .training: return forwardTraining(to: input)
+        case .inference: return forwardInference(to: input)
         }
     }
 
     @differentiating(applied)
-    func gradApplied(to input: Input) ->
+    func gradForward(_ input: Input) ->
         (value: Output, pullback: (Output.CotangentVector) ->
             (Self.CotangentVector, Input.CotangentVector)) {
         switch Context.local.learningPhase {
         case .training:
-            return valueWithPullback(at: input) {
-                $0.applyingTraining(to: $1)
-            }
+            return valueWithPullback(at: input) { $0.forwardTraining(to: $1) }
         case .inference:
-            return valueWithPullback(at: input) {
-                $0.applyingInference(to: $1)
-            }
+            return valueWithPullback(at: input) { $0.forwardInference(to: $1) }
         }
+    }
+    
+    @differentiable
+    public func applied(to input: Input) -> Output {
+        let activation = forward(input)
+        delegate.didProduceActivation(activation)
+        return activation
     }
 }
 
@@ -52,11 +54,12 @@ protocol Norm: Layer where Input == Tensor<Scalar>, Output == Tensor<Scalar>{
 
 struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm {
     // Configuration hyperparameters
-    @noDerivative let momentum: Scalar
-    @noDerivative let epsilon: Scalar
+    @noDerivative var momentum: Scalar
+    @noDerivative var epsilon: Scalar
     // Running statistics
     @noDerivative let runningMean: Reference<Tensor<Scalar>>
     @noDerivative let runningVariance: Reference<Tensor<Scalar>>
+    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
     // Trainable parameters
     var scale: Tensor<Scalar>
     var offset: Tensor<Scalar>
@@ -78,7 +81,7 @@ struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Nor
     }
 
     @differentiable
-    func applyingTraining(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    func forwardTraining(to input: Tensor<Scalar>) -> Tensor<Scalar> {
         let mean = input.mean(alongAxes: [0, 1, 2])
         let variance = input.variance(alongAxes: [0, 1, 2])
         runningMean.value += (mean - runningMean.value) * (1 - momentum)
@@ -88,7 +91,7 @@ struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Nor
     }
     
     @differentiable
-    func applyingInference(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    func forwardInference(to input: Tensor<Scalar>) -> Tensor<Scalar> {
         let mean = runningMean.value
         let variance = runningVariance.value
         let normalizer = rsqrt(variance + epsilon) * scale
@@ -96,62 +99,48 @@ struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Nor
     }
 }
 
-struct ConvBN<Scalar: TensorFlowFloatingPoint>: Layer {
-    var conv: Conv2D<Scalar>
+struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
+    var conv: FAConv2D<Scalar>
     var norm: FABatchNorm<Scalar>
-    init(
-        filterShape: (Int, Int, Int, Int),
-        strides: (Int, Int) = (1, 1),
-        padding: Padding = .valid,
-        activation: @escaping Conv2D<Scalar>.Activation = identity
-    ) {
+    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
+    
+    init(_ cIn: Int, _ cOut: Int, ks: Int = 3, stride: Int = 2){
         // TODO (when control flow AD works): use Conv2D without bias
-        self.conv = Conv2D(
-            filterShape: filterShape,
-            strides: strides,
-            padding: padding,
-            activation: activation)
-        self.norm = FABatchNorm(featureCount: filterShape.3, epsilon: 1e-5)
+        self.conv = FAConv2D(filterShape: (ks, ks, cIn, cOut), 
+                           strides: (stride,stride), 
+                           padding: .same, 
+                           activation: relu)
+        self.norm = FABatchNorm(featureCount: cOut, epsilon: 1e-5)
     }
 
     @differentiable
-    func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         return norm.applied(to: conv.applied(to: input))
+    }
+    
+    @differentiable
+    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+        let activation = forward(input)
+        delegate.didProduceActivation(activation)
+        return activation
     }
 }
 
-struct CnnModelBN: Layer {
-    var reshapeToSquare = Reshape<Float>([-1, 28, 28, 1])
-    var conv1 = ConvBN<Float>(
-        filterShape: (5, 5, 1, 8),
-        strides: (2, 2),
-        padding: .same,
-        activation: relu)
-    var conv2 = ConvBN<Float>(
-        filterShape: (3, 3, 8, 16),
-        strides: (2, 2),
-        padding: .same,
-        activation: relu)
-    var conv3 = ConvBN<Float>(
-        filterShape: (3, 3, 16, 32),
-        strides: (2, 2),
-        padding: .same,
-        activation: relu)
-    var conv4 = ConvBN<Float>(
-        filterShape: (3, 3, 32, 32),
-        strides: (2, 2),
-        padding: .same,
-        activation: relu)
+public struct CnnModelBN: Layer {
+    public var convs: [ConvBN<Float>]
+    public var pool = FAAdaptiveAvgPool2D<Float>()
+    public var flatten = Flatten<Float>()
+    public var linear: FADense<Float>
     
-    var pool = AvgPool2D<Float>(poolSize: (2, 2), strides: (1, 1))
-    
-    var flatten = Flatten<Float>()
-    var linear = Dense<Float>(inputSize: 32, outputSize: 10)
+    public init(channelIn: Int, nOut: Int, filters: [Int]){
+        convs = []
+        let allFilters = [channelIn] + filters
+        for i in 0..<filters.count { convs.append(ConvBN(allFilters[i], allFilters[i+1])) }
+        linear = FADense<Float>(inputSize: filters.last!, outputSize: nOut)
+    }
     
     @differentiable
-    func applied(to input: TF) -> TF {
-        // There isn't a "sequenced" defined with enough layers.
-        let intermediate =  input.sequenced(through: reshapeToSquare, conv1, conv2, conv3, conv4)
-        return intermediate.sequenced(through: pool, flatten, linear)
+    public func applied(to input: TF) -> TF {
+        return input.sequenced(through: convs, pool, flatten, linear)
     }
 }

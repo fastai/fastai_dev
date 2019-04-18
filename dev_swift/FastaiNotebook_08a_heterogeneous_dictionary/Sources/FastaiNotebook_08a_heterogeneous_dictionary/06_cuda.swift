@@ -8,22 +8,30 @@ import Path
 import TensorFlow
 import Python
 
+extension Learner {
+    public class AddChannel: Delegate {
+        public override func batchWillStart(learner: Learner) {
+            learner.currentInput = learner.currentInput!.expandingShape(at: -1)
+        }
+    }
+    
+    public func makeAddChannel() -> AddChannel { return AddChannel() }
+}
+
 public func conv<Scalar>(_ cIn: Int, _ cOut: Int, ks: Int = 3, stride: Int = 2) -> FAConv2D<Scalar> {
     return FAConv2D<Scalar>(filterShape: (ks, ks, cIn, cOut), 
-                           strides: (stride,stride), 
-                           padding: .same, 
-                           activation: relu)
+                            strides: (stride,stride), 
+                            padding: .same, 
+                            activation: relu)
 }
 
 public struct CnnModel: Layer {
-    public var reshape: Reshape<Float>
     public var convs: [FAConv2D<Float>]
     public var pool = FAAdaptiveAvgPool2D<Float>()
     public var flatten = Flatten<Float>()
     public var linear: FADense<Float>
     
-    public init(sizeIn: Int, channelIn: Int, nOut: Int, filters: [Int]){
-        reshape = Reshape<Float>([-1, sizeIn, sizeIn, channelIn])
+    public init(channelIn: Int, nOut: Int, filters: [Int]){
         convs = []
         let allFilters = [channelIn] + filters
         for i in 0..<filters.count { convs.append(conv(allFilters[i], allFilters[i+1])) }
@@ -32,6 +40,6 @@ public struct CnnModel: Layer {
     
     @differentiable
     public func applied(to input: TF) -> TF {
-        return input.sequenced(through: reshape, convs, pool, flatten, linear)
+        return input.sequenced(through: convs, pool, flatten, linear)
     }
 }
