@@ -100,13 +100,13 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
 }
 
 public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
-    public var conv: FAConv2D<Scalar>
+    public var conv: FANoBiasConv2D<Scalar>
     public var norm: FABatchNorm<Scalar>
     @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
     
     public init(_ cIn: Int, _ cOut: Int, ks: Int = 3, stride: Int = 2){
         // TODO (when control flow AD works): use Conv2D without bias
-        self.conv = FAConv2D(filterShape: (ks, ks, cIn, cOut), 
+        self.conv = FANoBiasConv2D(filterShape: (ks, ks, cIn, cOut), 
                            strides: (stride,stride), 
                            padding: .same, 
                            activation: relu)
