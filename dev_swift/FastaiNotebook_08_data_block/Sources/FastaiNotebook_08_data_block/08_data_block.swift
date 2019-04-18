@@ -179,13 +179,17 @@ public struct LabeledElement<I: TensorGroup, L: TensorGroup>: TensorGroup {
 
 public extension SplitLabeledData {
     func toDataBunch<XB, YB> (
-        itemToTensor: ([PI.Output]) -> XB, labelToTensor: ([PL.Output]) -> YB, batchSize: Int = 64
+        itemToTensor: ([PI.Output]) -> XB, labelToTensor: ([PL.Output]) -> YB, bs: Int = 64
     ) -> DataBunch<LabeledElement<XB, YB>> where XB: TensorGroup, YB: TensorGroup {
         let trainDs = Dataset<LabeledElement<XB, YB>>(
             elements: LabeledElement(xb: itemToTensor(train.items), yb: labelToTensor(train.labels)))
         let validDs = Dataset<LabeledElement<XB, YB>>(
             elements: LabeledElement(xb: itemToTensor(valid.items), yb: labelToTensor(valid.labels)))
-        return DataBunch(train: trainDs, valid: validDs, batchSize: batchSize)
+        return DataBunch(train: trainDs, 
+                         valid: validDs, 
+                         trainLen: train.items.count, 
+                         validLen: valid.items.count,
+                         bs: bs)
     }
 }
 
@@ -197,9 +201,11 @@ public func transformData<I,TI,L>(
     tfmItem: (I) -> TI
 ) -> DataBunch<DataBatch<TI,L>> 
 where I: TensorGroup, TI: TensorGroup & Differentiable, L: TensorGroup{
-    return DataBunch(train: data._train.map{ DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
-                     valid: data._valid.map{ DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
-                     batchSize: data.batchSize)
+    return DataBunch(train: data.train.innerDs.map{ DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
+                     valid: data.valid.innerDs.map{ DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
+                     trainLen: data.train.dsCount, 
+                     validLen: data.valid.dsCount,
+                     bs: data.train.bs)
 }
 
 public func openAndResize(fname: StringTensor, size: Int) -> TF{
@@ -210,3 +216,5 @@ public func openAndResize(fname: StringTensor, size: Int) -> TF{
         size: Tensor<Int32>([Int32(size), Int32(size)])))
     return resizedImg.reshaped(to: TensorShape(size, size, 3))
 }
+
+public let imagenetStats = (mean: TF([0.485, 0.456, 0.406]), std: TF([0.229, 0.224, 0.225]))

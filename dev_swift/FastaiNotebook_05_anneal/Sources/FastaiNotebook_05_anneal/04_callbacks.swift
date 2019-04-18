@@ -22,23 +22,34 @@ public struct BasicModel: Layer {
     }
 }
 
-public struct DataBunch<Element> where Element: TensorGroup{
-    public var _train: Dataset<Element>
-    public var _valid: Dataset<Element>
-    public var shuffleTrain: Bool = true
-    public var shuffleValid: Bool = false
-    public var batchSize: Int = 64 
-    public var train: Dataset<Element> { return processDs(_train, shuffleTrain) }
-    public var valid: Dataset<Element> { return processDs(_valid, shuffleValid) }
+public struct FADataset<Element> where Element: TensorGroup{
+    public var innerDs: Dataset<Element>
+    public var shuffle: Bool = false
+    public var bs: Int = 64 
+    public var dsCount: Int
     
-    private func processDs(_ ds: Dataset<Element>, _ shuffle: Bool) -> Dataset<Element>{
-        if !shuffle { return ds.batched(Int64(batchSize))}
-        let count = Int64(500000)  // A very large number
-        return ds.shuffled(sampleCount: count, randomSeed: Int64.random(in: Int64.min..<Int64.max)).batched(Int64(batchSize))
+    public var count: Int {
+        return dsCount%bs == 0 ? dsCount/bs : dsCount/bs+1
     }
     
-    public init(train: Dataset<Element>, valid: Dataset<Element>, batchSize: Int = 64) {
-        (self._train, self._valid, self.batchSize)  = (train, valid, batchSize)
+    public var ds: Dataset<Element> { 
+        if !shuffle { return innerDs.batched(Int64(bs))}
+        let seed = Int64.random(in: Int64.min..<Int64.max)
+        return innerDs.shuffled(sampleCount: Int64(dsCount), randomSeed: seed).batched(Int64(bs))
+    }
+    
+    public init(_ ds: Dataset<Element>, len: Int, shuffle: Bool = false, bs: Int = 64){
+        (self.innerDs,self.dsCount,self.shuffle,self.bs) = (ds, len, shuffle, bs)
+    }
+}
+
+public struct DataBunch<Element> where Element: TensorGroup{
+    public var train: FADataset<Element>
+    public var valid: FADataset<Element> 
+    
+    public init(train: Dataset<Element>, valid: Dataset<Element>, trainLen: Int, validLen: Int,  bs: Int = 64) {
+        self.train = FADataset(train, len: trainLen, shuffle: true,  bs: bs)
+        self.valid = FADataset(valid, len: validLen, shuffle: false, bs: 2*bs)
     }
 }
 
@@ -47,7 +58,9 @@ public func mnistDataBunch(path: Path = mnistPath, flat: Bool = false, bs: Int =
     let (xTrain,yTrain,xValid,yValid) = loadMNIST(path: path, flat: flat)
     return DataBunch(train: Dataset(elements:DataBatch(xb:xTrain, yb:yTrain)), 
                      valid: Dataset(elements:DataBatch(xb:xValid, yb:yValid)),
-                     batchSize: bs)
+                     trainLen: xTrain.shape[0],
+                     validLen: xValid.shape[0],
+                     bs: bs)
 }
 
 public enum LearnerAction: Error {
@@ -182,9 +195,9 @@ extension Learner {
     }
     
     /// Performs a training epoch on a Dataset.
-    private func train(onDataset ds: Dataset<DataBatch<Input, Label>>) throws {
-        iterCount = ds.count(where: {_ in true})
-        for batch in ds {
+    private func train(onDataset ds: FADataset<DataBatch<Input, Label>>) throws {
+        iterCount = ds.count
+        for batch in ds.ds {
             (currentInput, currentTarget) = (batch.xb, batch.yb)
             try delegates.forEach { try $0.batchWillStart(learner: self) }
             do { if inTrain { try train(onBatch: batch) } else { try evaluate(onBatch: batch) }}

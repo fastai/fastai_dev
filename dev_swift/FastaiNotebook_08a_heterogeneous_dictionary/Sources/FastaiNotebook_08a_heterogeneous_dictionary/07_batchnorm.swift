@@ -52,7 +52,7 @@ protocol Norm: Layer where Input == Tensor<Scalar>, Output == Tensor<Scalar>{
     init(featureCount: Int, epsilon: Scalar)
 }
 
-struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm {
+public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm {
     // Configuration hyperparameters
     @noDerivative var momentum: Scalar
     @noDerivative var epsilon: Scalar
@@ -61,13 +61,13 @@ struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Nor
     @noDerivative let runningVariance: Reference<Tensor<Scalar>>
     @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
     // Trainable parameters
-    var scale: Tensor<Scalar>
-    var offset: Tensor<Scalar>
+    public var scale: Tensor<Scalar>
+    public var offset: Tensor<Scalar>
     // TODO: check why these aren't being synthesized
-    typealias Input = Tensor<Scalar>
-    typealias Output = Tensor<Scalar>
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
     
-    init(featureCount: Int, momentum: Scalar, epsilon: Scalar = 1e-5) {
+    public init(featureCount: Int, momentum: Scalar, epsilon: Scalar = 1e-5) {
         self.momentum = momentum
         self.epsilon = epsilon
         self.scale = Tensor(ones: [featureCount])
@@ -76,12 +76,12 @@ struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Nor
         self.runningVariance = Reference(Tensor(1))
     }
     
-    init(featureCount: Int, epsilon: Scalar = 1e-5) {
+    public init(featureCount: Int, epsilon: Scalar = 1e-5) {
         self.init(featureCount: featureCount, momentum: 0.9, epsilon: epsilon)
     }
 
     @differentiable
-    func forwardTraining(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func forwardTraining(to input: Tensor<Scalar>) -> Tensor<Scalar> {
         let mean = input.mean(alongAxes: [0, 1, 2])
         let variance = input.variance(alongAxes: [0, 1, 2])
         runningMean.value += (mean - runningMean.value) * (1 - momentum)
@@ -91,7 +91,7 @@ struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Nor
     }
     
     @differentiable
-    func forwardInference(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func forwardInference(to input: Tensor<Scalar>) -> Tensor<Scalar> {
         let mean = runningMean.value
         let variance = runningVariance.value
         let normalizer = rsqrt(variance + epsilon) * scale
@@ -99,12 +99,12 @@ struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Nor
     }
 }
 
-struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
-    var conv: FAConv2D<Scalar>
-    var norm: FABatchNorm<Scalar>
+public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
+    public var conv: FAConv2D<Scalar>
+    public var norm: FABatchNorm<Scalar>
     @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
     
-    init(_ cIn: Int, _ cOut: Int, ks: Int = 3, stride: Int = 2){
+    public init(_ cIn: Int, _ cOut: Int, ks: Int = 3, stride: Int = 2){
         // TODO (when control flow AD works): use Conv2D without bias
         self.conv = FAConv2D(filterShape: (ks, ks, cIn, cOut), 
                            strides: (stride,stride), 
@@ -114,7 +114,7 @@ struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
     }
 
     @differentiable
-    func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         return norm.applied(to: conv.applied(to: input))
     }
     

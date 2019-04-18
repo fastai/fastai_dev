@@ -116,12 +116,12 @@ extension Learner {
         var iter: Int = 0
         
         public override func epochWillStart(learner: Learner) {
-            pbar = ProgressBar(learner.data.train.count(where: {_ in true}))
+            pbar = ProgressBar(learner.data.train.count)
         }
         
         public override func validationWillStart(learner: Learner) {
             if pbar != nil { pbar!.remove() }
-            pbar = ProgressBar(learner.data.valid.count(where: {_ in true}))
+            pbar = ProgressBar(learner.data.valid.count)
         }
         
         public override func epochDidFinish(learner: Learner) {
