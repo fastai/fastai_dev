@@ -1,4 +1,4 @@
-echo "Building 'impractical' notabooks... ;-)"
+echo "Building 'impractical' notebooks... ;-)"
 
 for file in *.ipynb
 do
