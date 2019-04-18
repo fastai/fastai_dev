@@ -33,9 +33,9 @@ public struct FADataset<Element> where Element: TensorGroup{
     }
     
     public var ds: Dataset<Element> { 
-        if !shuffle { return innerDs.batched(Int64(bs))}
+        if !shuffle { return innerDs.batched(bs)}
         let seed = Int64.random(in: Int64.min..<Int64.max)
-        return innerDs.shuffled(sampleCount: Int64(dsCount), randomSeed: seed).batched(Int64(bs))
+        return innerDs.shuffled(sampleCount: dsCount, randomSeed: seed).batched(bs)
     }
     
     public init(_ ds: Dataset<Element>, len: Int, shuffle: Bool = false, bs: Int = 64){
@@ -73,6 +73,7 @@ public enum LearnerAction: Error {
 public final class Learner<Label: TensorGroup,
                            Opt: TensorFlow.Optimizer & AnyObject>
     where Opt.Scalar: Differentiable,
+          Opt.Model: Layer,
           // Constrain model input to Tensor<Float>, to work around
           // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
           Opt.Model.Input == Tensor<Float>
