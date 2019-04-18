@@ -32,39 +32,58 @@ open class StepDelegate<Scalar: TensorFlowFloatingPoint> {
 class StatefulOptimizer<Model: Layer,
                         Scalar: TensorFlowFloatingPoint>: Optimizer
     where Model.AllDifferentiableVariables == Model.CotangentVector{
-    var config: HeterogeneousDictionary
+    var configs: [HeterogeneousDictionary]
     var learningRate: Float {
-        get { return config[LearningRate()] } 
-        set { config[LearningRate()] = newValue }
+        get { return configs.last![LearningRate()] } 
+        set { 
+            for i in configs.indices {self.configs[i][LearningRate()] = newValue }
+        }
     }
+    var learningRates: [Float] {
+        get {
+            var res: [Float] = []
+            for config in configs {res.append(config[LearningRate()])}
+            return res
+        }
+        set { 
+            for i in configs.indices {self.configs[i][LearningRate()] = newValue[i] } 
+        }
+    }
+    var splits: (Int) -> Int
     var states: [String: Model.AllDifferentiableVariables]
     var statDelegates: [StatDelegate<Scalar>]
     var stepDelegates: [StepDelegate<Scalar>]
     init(
         stepDelegates: [StepDelegate<Scalar>],
         statDelegates: [StatDelegate<Scalar>],
-        config: HeterogeneousDictionary
+        configs: [HeterogeneousDictionary],
+        splits: @escaping (Int) -> Int
     ) {
-        self.config = HeterogeneousDictionary()
+        self.configs = Array(repeating: HeterogeneousDictionary(), count: configs.count)
         states = [:]
         for stepDelegate in stepDelegates {
-            self.config.merge(stepDelegate.defaultConfig) { (_, new) in new }
+            for i in self.configs.indices { self.configs[i].merge(stepDelegate.defaultConfig) { (_, new) in new } }
         }
         for statDelegate in statDelegates {
-            self.config.merge(statDelegate.defaultConfig) { (_, new) in new }
+            for i in self.configs.indices { self.configs[i].merge(statDelegate.defaultConfig) { (_, new) in new } }
             states[statDelegate.name] = Model.AllDifferentiableVariables.zero
         }
-        self.config.merge(config) { (_, new) in new }
+        for i in 0..<configs.count {
+            self.configs[i].merge(configs[i]) { (_, new) in new }
+        }
         self.stepDelegates = stepDelegates
         self.statDelegates = statDelegates
+        self.splits = splits
     }
+        
     func update(
         _ model: inout Model.AllDifferentiableVariables,
         along direction: Model.CotangentVector
     ) {
-        for kp in model.recursivelyAllWritableKeyPaths(to: Tensor<Scalar>.self) {
+        for (i,kp) in model.recursivelyAllWritableKeyPaths(to: Tensor<Scalar>.self).enumerated() {
             var grad = direction[keyPath: kp]
             var state = states.mapValues(){$0[keyPath: kp]}
+            var config = configs[splits(i)]
             for statDelegate in statDelegates {
                 statDelegate.update(
                     state: &state,
