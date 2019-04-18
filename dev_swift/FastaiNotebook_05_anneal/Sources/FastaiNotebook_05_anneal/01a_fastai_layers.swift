@@ -56,7 +56,7 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
     }
     
     @differentiable
-    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let activation = forward(input)
         delegate.didProduceActivation(activation)
         return activation
@@ -109,7 +109,7 @@ public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     }
     
     @differentiable
-    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let activation = forward(input)
         delegate.didProduceActivation(activation)
         return activation
@@ -189,7 +189,7 @@ public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     }
     
     @differentiable
-    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let activation = forward(input)
         delegate.didProduceActivation(activation)
         return activation
@@ -268,7 +268,7 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     }
     
     @differentiable
-    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let activation = forward(input)
         delegate.didProduceActivation(activation)
         return activation
@@ -288,7 +288,7 @@ public struct FAAdaptiveAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     }
     
     @differentiable
-    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let activation = forward(input)
         delegate.didProduceActivation(activation)
         return activation

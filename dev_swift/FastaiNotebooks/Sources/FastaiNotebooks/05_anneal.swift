@@ -28,7 +28,7 @@ extension Learner where Opt.Scalar: PythonConvertible{
         public override func batchDidFinish(learner: Learner) {
             if learner.inTrain {
                 losses.append(learner.currentLoss)
-                lrs.append(learner.optimizer.learningRate)
+                lrs.append(learner.opt.learningRate)
             }
         }
         
@@ -158,7 +158,7 @@ extension Learner where Opt.Scalar: BinaryFloatingPoint {
         }
         
         override public func batchWillStart(learner: Learner) {
-            learner.optimizer.learningRate = Opt.Scalar(scheduler(learner.pctEpochs/Float(learner.epochCount)))
+            learner.opt.learningRate = Opt.Scalar(scheduler(learner.pctEpochs/Float(learner.epochCount)))
         }
     }
     

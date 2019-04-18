@@ -10,7 +10,7 @@ import TensorFlow
 public typealias TI = Tensor<Int32>
 
 public func accuracy(_ output: TF, _ target: TI) -> TF{
-    let corrects = Tensor<Float>(output.argmax(squeezingAxis: 1) .== target)
+    let corrects = TF(output.argmax(squeezingAxis: 1) .== target)
     return corrects.mean()
 }
 
