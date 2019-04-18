@@ -33,9 +33,9 @@ public struct FADataset<Element> where Element: TensorGroup{
     }
     
     public var ds: Dataset<Element> { 
-        if !shuffle { return innerDs.batched(Int64(bs))}
+        if !shuffle { return innerDs.batched(bs)}
         let seed = Int64.random(in: Int64.min..<Int64.max)
-        return innerDs.shuffled(sampleCount: Int64(dsCount), randomSeed: seed).batched(Int64(bs))
+        return innerDs.shuffled(sampleCount: dsCount, randomSeed: seed).batched(bs)
     }
     
     public init(_ ds: Dataset<Element>, len: Int, shuffle: Bool = false, bs: Int = 64){
@@ -73,16 +73,17 @@ public enum LearnerAction: Error {
 public final class Learner<Label: TensorGroup,
                            Opt: TensorFlow.Optimizer & AnyObject>
     where Opt.Scalar: Differentiable,
+          Opt.Model: Layer,
           // Constrain model input to Tensor<Float>, to work around
           // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
           Opt.Model.Input == Tensor<Float>
 {
     // Common type aliases.
+    public typealias Model = Opt.Model
     public typealias Input = Model.Input
     public typealias Data = DataBunch<DataBatch<Input, Label>>
     public typealias Loss = Tensor<Float>
     public typealias Optimizer = Opt
-    public typealias Model = Optimizer.Model
     public typealias Variables = Model.AllDifferentiableVariables
     public typealias EventHandler = (Learner) throws -> Void
     
@@ -164,12 +165,12 @@ public final class Learner<Label: TensorGroup,
     ///   - modelInitializer: The closure that produces the model to be trained.
     public init(data: Data,
                 lossFunction: @escaping LossFunction.F,
-                optimizer: Optimizer,
+                optimizer: (Model) -> Optimizer,
                 initializingWith modelInitializer: () -> Model) {
         self.data = data
-        self.optimizer = optimizer
         self.lossFunction = LossFunction(lossFunction)
         self.model = modelInitializer()
+        self.optimizer = optimizer(self.model)
     }
 }
 
