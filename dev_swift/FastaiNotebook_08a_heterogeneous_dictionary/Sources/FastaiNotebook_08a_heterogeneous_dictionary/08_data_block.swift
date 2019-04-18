@@ -218,3 +218,32 @@ public func openAndResize(fname: StringTensor, size: Int) -> TF{
 }
 
 public let imagenetStats = (mean: TF([0.485, 0.456, 0.406]), std: TF([0.229, 0.224, 0.225]))
+
+public func prevPow2(_ x: Int) -> Int { 
+    var res = 1
+    while res <= x { res *= 2 }
+    return res / 2
+}
+
+public struct CNNModel: Layer {
+    public var convs: [ConvBN<Float>]
+    public var pool = FAAdaptiveAvgPool2D<Float>()
+    public var flatten = Flatten<Float>()
+    public var linear: FADense<Float>
+    
+    public init(channelIn: Int, nOut: Int, filters: [Int]){
+        convs = []
+        let (l1,l2) = (channelIn, prevPow2(channelIn * 9))
+        convs = [ConvBN(l1,   l2,   stride: 1),
+                 ConvBN(l2,   l2*2, stride: 2),
+                 ConvBN(l2*2, l2*4, stride: 2)]
+        let allFilters = [l2*4] + filters
+        for i in 0..<filters.count { convs.append(ConvBN(allFilters[i], allFilters[i+1])) }
+        linear = FADense<Float>(inputSize: filters.last!, outputSize: nOut)
+    }
+    
+    @differentiable
+    public func applied(to input: TF) -> TF {
+        return input.sequenced(through: convs, pool, flatten, linear)
+    }
+}
