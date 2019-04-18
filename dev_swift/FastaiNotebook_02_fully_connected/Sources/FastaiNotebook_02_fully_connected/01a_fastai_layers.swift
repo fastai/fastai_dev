@@ -80,6 +80,83 @@ public extension FADense {
 
 
 @_fixed_layout
+public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
+    public var filter: Tensor<Scalar>
+    public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
+    @noDerivative public let activation: Activation
+    @noDerivative public let strides: (Int, Int)
+    @noDerivative public let padding: Padding
+    
+    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
+
+    public init(
+        filter: Tensor<Scalar>,
+        activation: @escaping Activation,
+        strides: (Int, Int),
+        padding: Padding
+    ) {
+        self.filter = filter
+        self.activation = activation
+        self.strides = strides
+        self.padding = padding
+    }
+
+    @differentiable
+    public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
+        return activation(input.convolved2D(withFilter: filter,
+                                            strides: (1, strides.0, strides.1, 1),
+                                            padding: padding))
+    }
+    
+    @differentiable
+    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+        let activation = forward(input)
+        delegate.didProduceActivation(activation)
+        return activation
+    }
+}
+
+public extension FANoBiasConv2D {
+    init<G: RandomNumberGenerator>(
+        filterShape: (Int, Int, Int, Int),
+        strides: (Int, Int) = (1, 1),
+        padding: Padding = .valid,
+        activation: @escaping Activation = identity,
+        generator: inout G
+    ) {
+        let filterTensorShape = TensorShape([
+            filterShape.0, filterShape.1,
+            filterShape.2, filterShape.3])
+        self.init(
+            filter: Tensor(glorotUniform: filterTensorShape, generator: &generator),
+            activation: activation,
+            strides: strides,
+            padding: padding)
+    }
+}
+
+public extension FANoBiasConv2D {
+    init(
+        filterShape: (Int, Int, Int, Int),
+        strides: (Int, Int) = (1, 1),
+        padding: Padding = .valid,
+        activation: @escaping Activation = identity,
+        seed: (Int64, Int64) = (Int64.random(in: Int64.min..<Int64.max),
+                                Int64.random(in: Int64.min..<Int64.max))
+    ) {
+        let filterTensorShape = TensorShape([
+            filterShape.0, filterShape.1,
+            filterShape.2, filterShape.3])
+        self.init(
+            filter: Tensor(glorotUniform: filterTensorShape, seed: seed),
+            activation: activation,
+            strides: (strides.0, strides.1),
+            padding: padding)
+    }
+}
+
+
+@_fixed_layout
 public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     public var filter: Tensor<Scalar>
     public var bias: Tensor<Scalar>
@@ -202,7 +279,7 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 @_fixed_layout
 public struct FAAdaptiveAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
-
+    
     public init() {}
 
     @differentiable
