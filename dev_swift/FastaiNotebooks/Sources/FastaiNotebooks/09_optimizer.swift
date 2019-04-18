@@ -217,12 +217,8 @@ class StepCount: StatDelegate<Float> {
     }
 }
 
-func debias<Scalar: TensorFlowFloatingPoint>(
-    momentum: Scalar,
-    dampening: Scalar,
-    step: Tensor<Scalar> 
-) -> Tensor<Scalar> {
-    return dampening * (1 - pow(momentum, step)) / (1 - momentum)
+func debias<Scalar: TensorFlowFloatingPoint>(_ mom: Scalar, _ damp: Scalar, _ step: Tensor<Scalar>) -> Tensor<Scalar> {
+    return damp * (1 - pow(mom, step)) / (1 - mom)
 }
 
 public struct Epsilon: HetDictKey, Equatable {
@@ -237,15 +233,9 @@ class AdamStep: StepDelegate<Float> {
         config: inout HeterogeneousDictionary
     ) {
         let debiasedLearningRate = config[LearningRate()] / debias(
-            momentum: config[Momentum()],
-            dampening: config[MomentumDampening()],
-            step: state["step"]!
-        )
+            config[Momentum()], config[MomentumDampening()], state["step"]!)
         let debiasedRMSGrad = sqrt(state["averageSquaredGrad"]! / debias(
-            momentum: config[SquareMomentum()],
-            dampening: config[SquareMomentumDampening()],
-            step: state["step"]!
-        )) + config[Epsilon()]
+            config[SquareMomentum()], config[SquareMomentumDampening()], state["step"]!)) + config[Epsilon()]
         param -= debiasedLearningRate * state["averageGrad"]! / debiasedRMSGrad
     }
 }
