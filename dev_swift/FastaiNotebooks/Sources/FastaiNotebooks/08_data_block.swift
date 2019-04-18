@@ -213,7 +213,7 @@ public func openAndResize(fname: StringTensor, size: Int) -> TF{
     let decodedImg = Raw.decodeJpeg(contents: imgBytes, channels: 3, dctMethod: "")
     let resizedImg = Tensor<Float>(Raw.resizeNearestNeighbor(
         images: Tensor<UInt8>([decodedImg]), 
-        size: Tensor<Int32>([Int32(size), Int32(size)])))
+        size: Tensor<Int32>([Int32(size), Int32(size)]))) / 255.0
     return resizedImg.reshaped(to: TensorShape(size, size, 3))
 }
 
