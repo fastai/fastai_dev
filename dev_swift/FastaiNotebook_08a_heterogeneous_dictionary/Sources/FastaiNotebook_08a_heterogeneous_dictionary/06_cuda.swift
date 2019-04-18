@@ -23,10 +23,10 @@ extension Array: Layer where Element: Layer, Element.Input == Element.Output {
     public typealias Output = Element.Output
     
     @differentiable(vjp: _vjpApplied)
-    public func applied(to input: Input) -> Output {
+    public func call(_ input: Input) -> Output {
         var activation = input
         for layer in self {
-            activation = layer.applied(to: activation)
+            activation = layer(activation)
         }
         return activation
     }
@@ -37,9 +37,7 @@ extension Array: Layer where Element: Layer, Element.Input == Element.Output {
         var activation = input
         var pullbacks: [(Input.CotangentVector) -> (Element.CotangentVector, Input.CotangentVector)] = []
         for layer in self {
-            let (newActivation, newPullback) = layer.valueWithPullback(at: activation) {
-                $0.applied(to: $1)
-            }
+            let (newActivation, newPullback) = layer.valueWithPullback(at: activation) { $0($1) }
             activation = newActivation
             pullbacks.append(newPullback)
         }
@@ -78,7 +76,7 @@ public struct CnnModel: Layer {
     }
     
     @differentiable
-    public func applied(to input: TF) -> TF {
+    public func call(_ input: TF) -> TF {
         return input.sequenced(through: convs, pool, flatten, linear)
     }
 }

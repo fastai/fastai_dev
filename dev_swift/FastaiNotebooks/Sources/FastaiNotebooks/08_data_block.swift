@@ -243,7 +243,7 @@ public struct CNNModel: Layer {
     }
     
     @differentiable
-    public func applied(to input: TF) -> TF {
+    public func call(_ input: TF) -> TF {
         return input.sequenced(through: convs, pool, flatten, linear)
     }
 }

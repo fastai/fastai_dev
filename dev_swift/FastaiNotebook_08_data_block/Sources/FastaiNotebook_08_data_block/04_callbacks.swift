@@ -17,7 +17,7 @@ public struct BasicModel: Layer {
     }
     
     @differentiable
-    public func applied(to input: Tensor<Float>) -> Tensor<Float> {
+    public func call(_ input: Tensor<Float>) -> Tensor<Float> {
         return input.sequenced(through: layer1, layer2)
     }
 }
@@ -98,9 +98,9 @@ public final class Learner<Label: TensorGroup,
     /// The dataset on which the model will be trained.
     public var data: Data
     /// The optimizer used for updating model parameters along gradient vectors.
-    public var optimizer: Optimizer
+    public var opt: Optimizer
     /// The function that computes a loss value when given a prediction and a label.
-    public var lossFunction: LossFunction
+    public var lossFunc: LossFunction
     /// The model being trained.
     public var model: Model
     
@@ -164,13 +164,13 @@ public final class Learner<Label: TensorGroup,
     ///   - optimizer: The optimizer used for updating model parameters.
     ///   - modelInitializer: The closure that produces the model to be trained.
     public init(data: Data,
-                lossFunction: @escaping LossFunction.F,
-                optimizer: (Model) -> Optimizer,
-                initializingWith modelInitializer: () -> Model) {
+                lossFunc: @escaping LossFunction.F,
+                optFunc: (Model) -> Optimizer,
+                modelInit: () -> Model) {
         self.data = data
-        self.lossFunction = LossFunction(lossFunction)
-        self.model = modelInitializer()
-        self.optimizer = optimizer(self.model)
+        self.lossFunc = LossFunction(lossFunc)
+        self.model = modelInit()
+        self.opt = optFunc(self.model)
     }
 }
 
@@ -180,19 +180,19 @@ extension Learner {
     /// - Parameter batch: The batch of input data and labels to be trained on.
     ///
     private func evaluate(onBatch batch: DataBatch<Input, Label>) throws {
-        currentOutput = model.applied(to: currentInput!)
-        currentLoss = lossFunction.f(currentOutput!, currentTarget!)
+        currentOutput = model(currentInput!)
+        currentLoss = lossFunc.f(currentOutput!, currentTarget!)
     }
     
     private func train(onBatch batch: DataBatch<Input, Label>) throws {
         let (xb,yb) = (currentInput!,currentTarget!)
         (currentLoss, currentGradient) = model.valueWithGradient { model -> Loss in 
-            let y = model.applied(to: xb)                                      
+            let y = model(xb)                                      
             currentOutput = y
-            return lossFunction.f(y, yb)
+            return lossFunc.f(y, yb)
         }
         try delegates.forEach { try $0.didProduceNewGradient(learner: self) }
-        optimizer.update(&model.allDifferentiableVariables, along: self.currentGradient)
+        opt.update(&model.allDifferentiableVariables, along: self.currentGradient)
     }
     
     /// Performs a training epoch on a Dataset.
