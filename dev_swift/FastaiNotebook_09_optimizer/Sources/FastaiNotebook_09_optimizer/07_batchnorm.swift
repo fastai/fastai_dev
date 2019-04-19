@@ -100,6 +100,9 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
 }
 
 public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
+    
     public var conv: FANoBiasConv2D<Scalar>
     public var norm: FABatchNorm<Scalar>
     @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
@@ -116,13 +119,6 @@ public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         return norm(conv(input))
-    }
-    
-    @differentiable
-    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        let activation = forward(input)
-        delegate.didProduceActivation(activation)
-        return activation
     }
 }
 

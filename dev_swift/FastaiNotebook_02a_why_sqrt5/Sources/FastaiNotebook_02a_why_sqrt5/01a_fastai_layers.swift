@@ -14,15 +14,14 @@ public protocol FALayer: Layer {
     func forward(_ input: Input) -> Output
 }
 
-//TODO: figure out to make this work
-//public extension FALayer {
-//    @differentiable
-//    func call(_ input: Input) -> Output {
-//        let activation = forward(input)
-//        delegate.didProduceActivation(activation)
-//        return activation
-//    }
-//}
+public extension FALayer {
+   @differentiable
+   func call(_ input: Input) -> Output {
+       let activation = forward(input)
+       delegate.didProduceActivation(activation)
+       return activation
+   }
+}
 
 open class LayerDelegate<Output> {
     public init() {}
@@ -32,7 +31,10 @@ open class LayerDelegate<Output> {
 
 
 @_fixed_layout
-public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {  
+public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer { 
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
+    
     public var weight: Tensor<Scalar>
     public var bias: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
@@ -54,13 +56,6 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         return activation(matmul(input, weight) + bias)
     }
-    
-    @differentiable
-    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        let activation = forward(input)
-        delegate.didProduceActivation(activation)
-        return activation
-    }
 }
 
 public extension FADense {
@@ -81,6 +76,9 @@ public extension FADense {
 
 @_fixed_layout
 public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
+    
     public var filter: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
     @noDerivative public let activation: Activation
@@ -106,13 +104,6 @@ public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
         return activation(input.convolved2D(withFilter: filter,
                                             strides: (1, strides.0, strides.1, 1),
                                             padding: padding))
-    }
-    
-    @differentiable
-    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        let activation = forward(input)
-        delegate.didProduceActivation(activation)
-        return activation
     }
 }
 
@@ -158,6 +149,9 @@ public extension FANoBiasConv2D {
 
 @_fixed_layout
 public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
+    
     public var filter: Tensor<Scalar>
     public var bias: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
@@ -186,13 +180,6 @@ public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
         return activation(input.convolved2D(withFilter: filter,
                                             strides: (1, strides.0, strides.1, 1),
                                             padding: padding) + bias)
-    }
-    
-    @differentiable
-    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        let activation = forward(input)
-        delegate.didProduceActivation(activation)
-        return activation
     }
 }
 
@@ -240,6 +227,9 @@ public extension FAConv2D {
 
 @_fixed_layout
 public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
+    
     @noDerivative let poolSize: (Int, Int, Int, Int)
     @noDerivative let strides: (Int, Int, Int, Int)
     @noDerivative let padding: Padding
