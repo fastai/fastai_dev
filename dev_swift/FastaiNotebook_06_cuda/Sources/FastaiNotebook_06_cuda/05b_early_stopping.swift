@@ -33,7 +33,7 @@ extension Learner where Opt.Scalar: BinaryFloatingPoint {
         }
         
         override public func batchWillStart(learner: Learner) {
-            learner.optimizer.learningRate = Opt.Scalar(scheduler(Float(learner.currentIter)/Float(numIter)))
+            learner.opt.learningRate = Opt.Scalar(scheduler(Float(learner.currentIter)/Float(numIter)))
         }
         
         override public func batchDidFinish(learner: Learner) throws {

@@ -27,7 +27,7 @@ extension LearningPhaseDependent {
         }
     }
 
-    @differentiating(applied)
+    @differentiating(forward)
     func gradForward(_ input: Input) ->
         (value: Output, pullback: (Output.CotangentVector) ->
             (Self.CotangentVector, Input.CotangentVector)) {
@@ -40,7 +40,7 @@ extension LearningPhaseDependent {
     }
     
     @differentiable
-    public func applied(to input: Input) -> Output {
+    public func call(_ input: Input) -> Output {
         let activation = forward(input)
         delegate.didProduceActivation(activation)
         return activation
@@ -115,11 +115,11 @@ public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
 
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        return norm.applied(to: conv.applied(to: input))
+        return norm(conv(input))
     }
     
     @differentiable
-    public func applied(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let activation = forward(input)
         delegate.didProduceActivation(activation)
         return activation
@@ -140,7 +140,7 @@ public struct CnnModelBN: Layer {
     }
     
     @differentiable
-    public func applied(to input: TF) -> TF {
+    public func call(_ input: TF) -> TF {
         return input.sequenced(through: convs, pool, flatten, linear)
     }
 }

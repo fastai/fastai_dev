@@ -8,10 +8,11 @@ import Foundation
 import Just
 import Path
 
+@discardableResult
 public func shellCommand(_ launchPath: String, _ arguments: [String]) -> String?
 {
     let task = Process()
-    task.executableURL = URL.init(fileURLWithPath:launchPath)
+    task.executableURL = URL(fileURLWithPath:launchPath)
     task.arguments = arguments
 
     let pipe = Pipe()
@@ -26,11 +27,11 @@ public func shellCommand(_ launchPath: String, _ arguments: [String]) -> String?
 
 public func downloadFile(_ url: String, dest: String?=nil, force: Bool=false){
     let dest_name = (dest ?? (Path.cwd/url.split(separator: "/").last!).string)
-    let url_dest = URL.init(fileURLWithPath: (dest ?? (Path.cwd/url.split(separator: "/").last!).string))
+    let url_dest = URL(fileURLWithPath: (dest ?? (Path.cwd/url.split(separator: "/").last!).string))
     if (force || !Path(dest_name)!.exists){
         print("Downloading \(url)...")
         if let cts = Just.get(url).content{
-            do    {try cts.write(to: URL.init(fileURLWithPath:dest_name))}
+            do    {try cts.write(to: URL(fileURLWithPath:dest_name))}
             catch {print("Can't write to \(url_dest).\n\(error)")}
         } else {print("Can't reach \(url)")}
     }
@@ -57,9 +58,9 @@ func loadMNIST<T:ConvertableFromByte & TensorFlowScalar>(training: Bool, labels:
     let file = path/fname
     if !file.exists {
         downloadFile("\(baseUrl)\(fname).gz", dest:(path/"\(fname).gz").string)
-        _ = shellCommand("/bin/gunzip", ["-fq", (path/"\(fname).gz").string])
+        shellCommand("/bin/gunzip", ["-fq", (path/"\(fname).gz").string])
     }
-    let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: file.string)).dropFirst(dropK)
+    let data = try! Data(contentsOf: URL(fileURLWithPath: file.string)).dropFirst(dropK)
     if labels { return Tensor(data.map(T.init)) }
     else      { return Tensor(data.map(T.init)).reshaped(to: shape)}
 }
@@ -77,18 +78,9 @@ public func loadMNIST(path:Path, flat:Bool = false) -> (Tensor<Float>, Tensor<In
 public let mnistPath = Path.home/".fastai"/"data"/"mnist_tst"
 
 import Dispatch
-public func time(_ function: () -> ()) {
-    let start = DispatchTime.now()
-    function()
-    let end = DispatchTime.now()
-    let nanoseconds = Double(end.uptimeNanoseconds - start.uptimeNanoseconds)
-    let milliseconds = nanoseconds / 1e6
-    print("\(milliseconds) ms")
-}
-
-public func time(repeating: Int, _ function: () -> ()) {
-    function()
-    var times:[Double] = []
+public func time(repeating: Int=1, _ function: () -> ()) {
+    if repeating > 1 { function() }
+    var times = [Double]()
     for _ in 1...repeating{
         let start = DispatchTime.now()
         function()
@@ -100,15 +92,21 @@ public func time(repeating: Int, _ function: () -> ()) {
     print("\(times.reduce(0.0, +)/Double(times.count)) ms")
 }
 
+public extension String {
+    func findFirst(_ pat:String) -> Range<String.Index>? {
+        return range(of: pat, options: .regularExpression)
+    }
+}
+
 public func notebookToScript(fname: String){
-    let url_fname = URL.init(fileURLWithPath: fname)
+    let url_fname = URL(fileURLWithPath: fname)
     let last = fname.lastPathComponent
     let out_fname = (url_fname.deletingLastPathComponent().appendingPathComponent("FastaiNotebooks", isDirectory: true)
                      .appendingPathComponent("Sources", isDirectory: true)
                      .appendingPathComponent("FastaiNotebooks", isDirectory: true).appendingPathComponent(last)
                      .deletingPathExtension().appendingPathExtension("swift"))
     do{
-        let data = try Data.init(contentsOf: url_fname)
+        let data = try Data(contentsOf: url_fname)
         let jsonData = try! JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
         let cells = jsonData["cells"] as! [[String:Any]]
         var module = """
@@ -120,24 +118,19 @@ file to edit: \(fname.lastPathComponent)
         
 """
         for cell in cells{
-            if let source = cell["source"] as? [String]{
-                if source.isEmpty {continue}
-                if source[0].range(of: #"^\s*//\s*export\s*$"#, options: .regularExpression) != nil{
-                    module.append("\n" + source[1...].joined() + "\n")
-                }
-            }
+             if let source = cell["source"] as? [String], !source.isEmpty,
+                 source[0].findFirst(#"^\s*//\s*export\s*$"#) != nil {
+                 module.append("\n" + source[1...].joined() + "\n")
+             }
         }
         try? module.write(to: out_fname, atomically: false, encoding: .utf8)
     } catch {print("Can't read the content of \(fname)")}
 }
 
 public func exportNotebooks(_ path: Path){
-    for entry in try! path.ls(){
-        if entry.kind == Entry.Kind.file{
-            if entry.path.basename().range(of: #"^\d*_.*ipynb$"#, options: .regularExpression) != nil { 
-                print("Converting \(entry.path.basename())")
-                notebookToScript(fname: entry.path.basename())
-            }
-        }
+    for entry in try! path.ls() where entry.kind == Entry.Kind.file && 
+        entry.path.basename().findFirst(#"^\d*_.*ipynb$"#) != nil {
+        print("Converting \(entry.path.basename())")
+        notebookToScript(fname: entry.path.basename())
     }
 }
