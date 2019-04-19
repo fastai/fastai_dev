@@ -14,15 +14,14 @@ public protocol FALayer: Layer {
     func forward(_ input: Input) -> Output
 }
 
-// TODO: This doesn't actually work. So we'll just paste it into every layer definition for now.
-// extension FALayer {
-//     @differentiable
-//     public func applied(to input: Input, in context: Context) -> Output {
-//         let activation = forward(input, in: context)
-//         delegate.didProduceActivation(activation, in: context)
-//         return activation
-//     }
-// }
+public extension FALayer {
+    @differentiable
+    public func call(_ input: Input) -> Output {
+        let activation = forward(input)
+        delegate.didProduceActivation(activation)
+        return activation
+    }
+}
 
 open class LayerDelegate<Output> {
     public init() {}
@@ -292,5 +291,11 @@ public struct FAAdaptiveAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
         let activation = forward(input)
         delegate.didProduceActivation(activation)
         return activation
+    }
+}
+
+extension KeyPathIterable {
+    public var keyPaths: [WritableKeyPath<Self, Tensor<Float>>] {
+        return recursivelyAllWritableKeyPaths(to: Tensor<Float>.self)
     }
 }
