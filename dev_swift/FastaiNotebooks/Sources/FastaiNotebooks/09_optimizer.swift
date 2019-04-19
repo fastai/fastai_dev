@@ -7,57 +7,46 @@ file to edit: 09_optimizer.ipynb
 import Path
 import TensorFlow
 
-open class StatDelegate<Scalar: TensorFlowFloatingPoint> {
+//Expandable enum to have easier names than LearningRate.self.
+public struct HyperParams {
+    public static let lr = LearningRate.self
+}
+
+open class StatDelegate {
     open var name: String { return "" }
     var defaultConfig: HeterogeneousDictionary { return HeterogeneousDictionary() }
-    func update(
-        state: inout [String: Tensor<Scalar>],
-        for param: Tensor<Scalar>,
-        along direction: Tensor<Scalar>,
+    public func update(
+        state: inout [String: Tensor<Float>],
+        for param: Tensor<Float>,
+        along direction: Tensor<Float>,
         config: inout HeterogeneousDictionary
     ) { }
 }
 
 //export
-open class StepDelegate<Scalar: TensorFlowFloatingPoint> {
+open class StepDelegate {
     var defaultConfig: HeterogeneousDictionary { return HeterogeneousDictionary() }
-    func update(
-        param: inout Tensor<Scalar>,
-        along direction: inout Tensor<Scalar>,
-        state: [String: Tensor<Scalar>],
+    public func update(
+        param: inout Tensor<Float>,
+        along direction: inout Tensor<Float>,
+        state: [String: Tensor<Float>],
         config: inout HeterogeneousDictionary
     ) { }
 }
 
-class StatefulOptimizer<Model: Layer,
-                        Scalar: TensorFlowFloatingPoint>: Optimizer
+public class StatefulOptimizer<Model: Layer>
     where Model.AllDifferentiableVariables == Model.CotangentVector{
-    var configs: [HeterogeneousDictionary]
-    var learningRate: Float {
-        get { return configs.last![LearningRate()] } 
-        set { 
-            for i in configs.indices {self.configs[i][LearningRate()] = newValue }
-        }
-    }
-    var learningRates: [Float] {
-        get {
-            var res: [Float] = []
-            for config in configs {res.append(config[LearningRate()])}
-            return res
-        }
-        set { 
-            for i in configs.indices {self.configs[i][LearningRate()] = newValue[i] } 
-        }
-    }
-    var splits: (Int) -> Int
-    var states: [String: Model.AllDifferentiableVariables]
-    var statDelegates: [StatDelegate<Scalar>]
-    var stepDelegates: [StepDelegate<Scalar>]
-    init(
-        stepDelegates: [StepDelegate<Scalar>],
-        statDelegates: [StatDelegate<Scalar>],
+    public var configs: [HeterogeneousDictionary]
+    public var splitFunc: (Int) -> Int
+    public var states: [String: Model.AllDifferentiableVariables]
+    public var statDelegates: [StatDelegate]
+    public var stepDelegates: [StepDelegate]
+    public init(
+        for model: __shared Model,
+        stepDelegates: [StepDelegate],
+        statDelegates: [StatDelegate],
         configs: [HeterogeneousDictionary],
-        splits: @escaping (Int) -> Int
+        splitFunc: @escaping (Int) -> Int
     ) {
         self.configs = Array(repeating: HeterogeneousDictionary(), count: configs.count)
         states = [:]
@@ -73,17 +62,17 @@ class StatefulOptimizer<Model: Layer,
         }
         self.stepDelegates = stepDelegates
         self.statDelegates = statDelegates
-        self.splits = splits
+        self.splitFunc = splitFunc
     }
         
     func update(
         _ model: inout Model.AllDifferentiableVariables,
         along direction: Model.CotangentVector
     ) {
-        for (i,kp) in model.recursivelyAllWritableKeyPaths(to: Tensor<Scalar>.self).enumerated() {
+        for (i,kp) in model.recursivelyAllWritableKeyPaths(to: Tensor<Float>.self).enumerated() {
             var grad = direction[keyPath: kp]
             var state = states.mapValues(){$0[keyPath: kp]}
-            var config = configs[splits(i)]
+            var config = configs[splitFunc(i)]
             for statDelegate in statDelegates {
                 statDelegate.update(
                     state: &state,
@@ -101,141 +90,196 @@ class StatefulOptimizer<Model: Layer,
                     config: &config
                 )
             }
+            configs[splitFunc(i)] = config
         }
     }
 }
 
-class SGDStep: StepDelegate<Float> {
-    override func update(
+extension StatefulOptimizer{
+    public convenience init (for model: __shared Model,
+                             stepDelegates: [StepDelegate],
+                             statDelegates: [StatDelegate],
+                             config: HeterogeneousDictionary) {
+        self.init(for: model,
+                  stepDelegates: stepDelegates,
+                  statDelegates: statDelegates,
+                  configs: [config],
+                  splitFunc: { _ in return 0 })
+    }
+}
+
+public class SGDStep: StepDelegate {
+    override public func update(
         param: inout Tensor<Float>,
         along direction: inout Tensor<Float>,
         state: [String: Tensor<Float>],
         config: inout HeterogeneousDictionary
     ) {
-        param -= direction * config[LearningRate()]
+        param -= direction * config[HyperParams.lr]
     }
 }
 
-public struct WeightDecayKey: HetDictKey, Equatable {
-    public static var defaultValue: Float = 0.0
+public struct WeightDecayKey: HetDictKey { public static var defaultValue: Float = 0 }
+
+public extension HyperParams {
+    static let wd = WeightDecayKey.self
 }
 
-class WeightDecay: StepDelegate<Float> {
-    override func update(
+public class WeightDecay: StepDelegate {
+    override public func update(
         param: inout Tensor<Float>,
         along direction: inout Tensor<Float>,
         state: [String: Tensor<Float>],
         config: inout HeterogeneousDictionary
     ) {
-        param *= 1 - config[LearningRate()] * config[WeightDecayKey()]
+        param *= 1 - config[HyperParams.lr] * config[HyperParams.wd]
     }
 }
 
-
-class L2Regularization: StepDelegate<Float> {
-    override func update(
+public class L2Regularization: StepDelegate {
+    override public func update(
         param: inout Tensor<Float>,
         along direction: inout Tensor<Float>,
         state: [String: Tensor<Float>],
         config: inout HeterogeneousDictionary
     ) {
-        direction += config[WeightDecayKey()] * param
+        direction += config[HyperParams.wd] * param
     }
 }
 
-
-public struct Momentum: HetDictKey, Equatable {
-    public static var defaultValue: Float = 0.9
+//Expandable enum to have tab completes/typo-proof for state variable names.
+public struct StateKeys {
+    public static let avgGrad = "averageGrad"
 }
 
-public struct MomentumDampening: HetDictKey, Equatable {
-    public static var defaultValue: Float = 0.9
+
+public struct Momentum: HetDictKey { public static var defaultValue: Float = 0.9 }
+public struct MomentumDampening: HetDictKey, Equatable { public static var defaultValue: Float = 0.1 }
+public extension HyperParams {
+    static let mom = Momentum.self
+    static let momDamp = MomentumDampening.self
 }
 
-class AverageGrad: StatDelegate<Float> {
+class AverageGrad: StatDelegate {
     let dampened: Bool
     init(dampened: Bool = false) { self.dampened = dampened }
-    override var name: String { return "averageGrad" }
+    override var name: String { return StateKeys.avgGrad }
     override func update(
         state: inout [String: Tensor<Float>],
         for param: Tensor<Float>,
         along direction: Tensor<Float>,
         config: inout HeterogeneousDictionary
     ) {
-        state["averageGrad"]! *= config[Momentum()]
-        config[MomentumDampening()] = 1.0 - (dampened ? config[Momentum()] : 0.0)
-        state["averageGrad"]! += config[MomentumDampening()] * direction
+        state[StateKeys.avgGrad]! *= config[HyperParams.mom]
+        config[HyperParams.momDamp] = 1.0 - (dampened ? config[HyperParams.mom] : 0.0)
+        state[StateKeys.avgGrad]! += config[HyperParams.momDamp] * direction
     }
 }
 
-class MomentumStep: StepDelegate<Float> {
-    override func update(
+public class MomentumStep: StepDelegate {
+    override public func update(
         param: inout Tensor<Float>,
         along direction: inout Tensor<Float>,
         state: [String: Tensor<Float>],
         config: inout HeterogeneousDictionary
     ) {
-        param -= config[LearningRate()] * state["averageGrad"]!
+        param -= state[StateKeys.avgGrad]! * config[HyperParams.lr]
     }
 }
 
+public struct SquareMomentum: HetDictKey { public static var defaultValue: Float = 0.99 }
+public struct SquareMomentumDampening: HetDictKey { public static var defaultValue: Float = 0.99 }
 
-public struct SquareMomentum: HetDictKey, Equatable {
-    public static var defaultValue: Float = 0.99
+public extension HyperParams {
+    static let ²mom = Momentum.self
+    static let ²momDamp = MomentumDampening.self
 }
 
-public struct SquareMomentumDampening: HetDictKey, Equatable {
-    public static var defaultValue: Float = 0.99
+public extension StateKeys {
+    static let avgSqr = "averageSquaredGrad"
 }
 
-
-class AverageSquaredGrad: StatDelegate<Float> {
+class AverageSquaredGrad: StatDelegate {
     let dampened: Bool
-    init(dampened: Bool = false) { self.dampened = dampened }
-    override var name: String { return "averageSquaredGrad" }
+    init(dampened: Bool = true) { self.dampened = dampened }
+    override var name: String { return StateKeys.avgSqr }
     override func update(
         state: inout [String: Tensor<Float>],
         for param: Tensor<Float>,
         along direction: Tensor<Float>,
         config: inout HeterogeneousDictionary
     ) {
-        state["averageSquaredGrad"]! *= config[SquareMomentum()]
-        config[SquareMomentumDampening()] = 1.0 - (dampened ? config[SquareMomentum()] : 0.0)
-        state["averageSquaredGrad"]! += config[SquareMomentumDampening()] * direction.squared()
+        state[StateKeys.avgSqr]! *= config[HyperParams.²mom]
+        config[HyperParams.²momDamp] = 1.0 - (dampened ? config[HyperParams.²mom] : 0.0)
+        state[StateKeys.avgSqr]! += config[HyperParams.²momDamp] * direction.squared()
     }
 }
 
-class StepCount: StatDelegate<Float> {
-    override var name: String { return "step" }
+public extension StateKeys {
+    static let step = "stepCount"
+}
+
+class StepCount: StatDelegate {
+    override var name: String { return StateKeys.step }
     override func update(
         state: inout [String: Tensor<Float>],
         for param: Tensor<Float>,
         along direction: Tensor<Float>,
         config: inout HeterogeneousDictionary
     ) {
-        state["step"]! += 1.0
+        state[StateKeys.step]! += 1.0
     }
 }
 
-func debias<Scalar: TensorFlowFloatingPoint>(_ mom: Scalar, _ damp: Scalar, _ step: Tensor<Scalar>) -> Tensor<Scalar> {
-    return damp * (1 - pow(mom, step)) / (1 - mom)
+public struct Epsilon: HetDictKey { public static var defaultValue: Float = 1e-5 }
+public extension HyperParams {
+    static let eps = Epsilon.self
 }
 
-public struct Epsilon: HetDictKey, Equatable {
-    public static var defaultValue: Float = 1e-5
-}
-
-class AdamStep: StepDelegate<Float> {
-    override func update(
+public class AdamStep: StepDelegate {
+    override public func update(
         param: inout Tensor<Float>,
         along direction: inout Tensor<Float>,
         state: [String: Tensor<Float>],
         config: inout HeterogeneousDictionary
     ) {
-        let debiasedLearningRate = config[LearningRate()] / debias(
-            config[Momentum()], config[MomentumDampening()], state["step"]!)
-        let debiasedRMSGrad = sqrt(state["averageSquaredGrad"]! / debias(
-            config[SquareMomentum()], config[SquareMomentumDampening()], state["step"]!)) + config[Epsilon()]
-        param -= debiasedLearningRate * state["averageGrad"]! / debiasedRMSGrad
+        let step = state[StateKeys.step]!
+        let (mom,damp) = (config[HyperParams.mom],config[HyperParams.momDamp])
+        let debias1 = damp * (1 - pow(mom, step)) / (1 - mom)
+        let num = debias1 * state[StateKeys.avgGrad]!
+        
+        let (²mom,²damp) = (config[HyperParams.²mom],config[HyperParams.²momDamp])
+        let debias2 = ²damp * (1 - pow(²mom, step)) / (1 - ²mom)
+        let denom = sqrt(state[StateKeys.avgSqr]!/debias2) + config[HyperParams.eps]
+        
+        param -= config[HyperParams.lr] * num / denom
+    }
+}
+
+public func SGDOpt<Model>(lr: Float, mom: Float = 0.9, wd: Float = 0.0, dampening: Bool = false
+                         ) -> ((Model) -> StatefulOptimizer<Model>) {
+    var steppers = (mom != 0) ? [MomentumStep()] : [SGDStep()]
+    if wd != 0 { steppers.append(WeightDecay()) }
+    let stats = (mom != 0) ? [AverageGrad(dampened: dampening)] : []
+    var config = HeterogeneousDictionary(HyperParams.lr, lr)
+    if mom != 0 { config[HyperParams.mom] = mom }
+    if wd != 0  { config[HyperParams.wd ] = wd  }
+    return { model -> StatefulOptimizer<Model> in
+        return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)
+    }
+}
+
+public func AdamOpt<Model>(lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Float = 0.0, eps: Float = 1e-5
+                         ) -> ((Model) -> StatefulOptimizer<Model>) {
+    var steppers: [StepDelegate] = [AdamStep()]
+    if wd != 0 { steppers.append(WeightDecay()) }
+    let stats = [AverageGrad(dampened: true), AverageSquaredGrad(), StepCount()]
+    var config = HeterogeneousDictionary(HyperParams.lr, lr)
+    config[HyperParams.mom] = mom
+    config[HyperParams.²mom] = beta
+    config[HyperParams.eps] = eps
+    if wd != 0  { config[HyperParams.wd ] = wd  }
+    return { model -> StatefulOptimizer<Model> in
+        return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)
     }
 }
