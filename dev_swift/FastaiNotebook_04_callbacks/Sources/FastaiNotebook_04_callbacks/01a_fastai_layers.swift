@@ -14,14 +14,15 @@ public protocol FALayer: Layer {
     func forward(_ input: Input) -> Output
 }
 
-public extension FALayer {
-    @differentiable
-    public func call(_ input: Input) -> Output {
-        let activation = forward(input)
-        delegate.didProduceActivation(activation)
-        return activation
-    }
-}
+//TODO: figure out to make this work
+//public extension FALayer {
+//    @differentiable
+//    func call(_ input: Input) -> Output {
+//        let activation = forward(input)
+//        delegate.didProduceActivation(activation)
+//        return activation
+//    }
+//}
 
 open class LayerDelegate<Output> {
     public init() {}

@@ -71,7 +71,7 @@ public class StatefulOptimizer<Model: Layer>
         _ model: inout Model.AllDifferentiableVariables,
         along direction: Model.CotangentVector
     ) {
-        for (i,kp) in model.recursivelyAllWritableKeyPaths(to: Tensor<Float>.self).enumerated() {
+        for (i,kp) in model.keyPaths.enumerated() {
             var grad = direction[keyPath: kp]
             var state = states.mapValues(){$0[keyPath: kp]}
             var config = configs[splitFunc(i)]
