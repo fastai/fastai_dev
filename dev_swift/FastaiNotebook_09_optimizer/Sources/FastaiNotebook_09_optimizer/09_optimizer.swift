@@ -67,7 +67,7 @@ public class StatefulOptimizer<Model: Layer>
         self.splitFunc = splitFunc
     }
         
-    func update(
+    public func update(
         _ model: inout Model.AllDifferentiableVariables,
         along direction: Model.CotangentVector
     ) {
@@ -108,6 +108,25 @@ extension StatefulOptimizer{
                   configs: [config],
                   splitFunc: { _ in return 0 })
     }
+}
+
+extension StatefulOptimizer: Optimizer{
+  public var learningRate: Float {
+    get { return configs.last![HyperParams.lr] }
+    set {
+      for i in configs.indices {self.configs[i][HyperParams.lr] = newValue }
+    }
+  }
+  public var learningRates: [Float] {
+    get {
+      var res: [Float] = []
+        for config in configs {res.append(config[HyperParams.lr])}
+      return res
+    }
+    set {
+      for i in configs.indices {self.configs[i][HyperParams.lr] = newValue[i] }
+    }
+  }
 }
 
 public class SGDStep: StepDelegate {
