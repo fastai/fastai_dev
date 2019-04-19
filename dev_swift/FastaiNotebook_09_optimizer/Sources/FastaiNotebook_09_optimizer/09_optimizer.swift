@@ -15,6 +15,7 @@ public struct HyperParams {
 open class StatDelegate {
     open var name: String { return "" }
     var defaultConfig: HeterogeneousDictionary { return HeterogeneousDictionary() }
+    public init() {}
     public func update(
         state: inout [String: Tensor<Float>],
         for param: Tensor<Float>,
@@ -26,6 +27,7 @@ open class StatDelegate {
 //export
 open class StepDelegate {
     var defaultConfig: HeterogeneousDictionary { return HeterogeneousDictionary() }
+    public init() {}
     public func update(
         param: inout Tensor<Float>,
         along direction: inout Tensor<Float>,
@@ -160,11 +162,11 @@ public extension HyperParams {
     static let momDamp = MomentumDampening.self
 }
 
-class AverageGrad: StatDelegate {
-    let dampened: Bool
-    init(dampened: Bool = false) { self.dampened = dampened }
-    override var name: String { return StateKeys.avgGrad }
-    override func update(
+public class AverageGrad: StatDelegate {
+    public let dampened: Bool
+    public init(dampened: Bool = false) { self.dampened = dampened }
+    override public var name: String { return StateKeys.avgGrad }
+    override public func update(
         state: inout [String: Tensor<Float>],
         for param: Tensor<Float>,
         along direction: Tensor<Float>,
@@ -199,11 +201,11 @@ public extension StateKeys {
     static let avgSqr = "averageSquaredGrad"
 }
 
-class AverageSquaredGrad: StatDelegate {
+public class AverageSquaredGrad: StatDelegate {
     let dampened: Bool
-    init(dampened: Bool = true) { self.dampened = dampened }
-    override var name: String { return StateKeys.avgSqr }
-    override func update(
+    public init(dampened: Bool = true) { self.dampened = dampened }
+    override public var name: String { return StateKeys.avgSqr }
+    override public func update(
         state: inout [String: Tensor<Float>],
         for param: Tensor<Float>,
         along direction: Tensor<Float>,
@@ -219,9 +221,9 @@ public extension StateKeys {
     static let step = "stepCount"
 }
 
-class StepCount: StatDelegate {
-    override var name: String { return StateKeys.step }
-    override func update(
+public class StepCount: StatDelegate {
+    override public var name: String { return StateKeys.step }
+    override public func update(
         state: inout [String: Tensor<Float>],
         for param: Tensor<Float>,
         along direction: Tensor<Float>,
@@ -256,21 +258,19 @@ public class AdamStep: StepDelegate {
     }
 }
 
-public func SGDOpt<Model>(lr: Float, mom: Float = 0.9, wd: Float = 0.0, dampening: Bool = false
-                         ) -> ((Model) -> StatefulOptimizer<Model>) {
+public func SGDOpt<Model>(for model: Model, lr: Float, mom: Float = 0.9, wd: Float = 0.0, dampening: Bool = false
+                         ) -> StatefulOptimizer<Model> {
     var steppers = (mom != 0) ? [MomentumStep()] : [SGDStep()]
     if wd != 0 { steppers.append(WeightDecay()) }
     let stats = (mom != 0) ? [AverageGrad(dampened: dampening)] : []
     var config = HeterogeneousDictionary(HyperParams.lr, lr)
     if mom != 0 { config[HyperParams.mom] = mom }
     if wd != 0  { config[HyperParams.wd ] = wd  }
-    return { model -> StatefulOptimizer<Model> in
-        return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)
-    }
+    return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)
 }
 
-public func AdamOpt<Model>(lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Float = 0.0, eps: Float = 1e-5
-                         ) -> ((Model) -> StatefulOptimizer<Model>) {
+public func AdamOpt<Model>(for model: Model, lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Float = 0.0, eps: Float = 1e-5
+                         ) -> StatefulOptimizer<Model> {
     var steppers: [StepDelegate] = [AdamStep()]
     if wd != 0 { steppers.append(WeightDecay()) }
     let stats = [AverageGrad(dampened: true), AverageSquaredGrad(), StepCount()]
@@ -279,7 +279,5 @@ public func AdamOpt<Model>(lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Fl
     config[HyperParams.²mom] = beta
     config[HyperParams.eps] = eps
     if wd != 0  { config[HyperParams.wd ] = wd  }
-    return { model -> StatefulOptimizer<Model> in
-        return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)
-    }
+    return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)
 }
