@@ -18,5 +18,5 @@ public func testNearZero(_ a:TF, tolerance:Float=1e-3) {
 }
 
 public func mse(_ out:TF, _ targ:TF) -> TF {
-    return (out.squeezingShape(at: -1) - targ).squared().mean()
+    return (out.squeeze(-1)-targ).squared().mean()
 }

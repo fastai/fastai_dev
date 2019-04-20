@@ -5,14 +5,9 @@ file to edit: /home/ubuntu/git/fastai_docs/dev_swift/01_matmul.ipynb/lastPathCom
 */
         
 import Path
+import TensorFlow
 
-
-// One of the cool things about Swift for TensorFlow is that we can directly call into
-// Python.  First we import Python into Swift.
-import Python
-
-
-// You can import arbitrary Python modules and directly use them.
-// No wrappers, interface libraries, code generators, or build steps.
-public let np = Python.import("numpy")
-public let plt = Python.import("matplotlib.pyplot")
+public extension Tensor where Scalar: TensorFlowFloatingPoint {
+    @differentiable func squeeze(_ at: Int )->Tensor { return squeezingShape(at:at) }
+    @differentiable func unsqueeze(_ at: Int)->Tensor { return expandingShape(at:at) }
+}
