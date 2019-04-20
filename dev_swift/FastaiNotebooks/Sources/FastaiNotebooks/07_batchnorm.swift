@@ -4,7 +4,6 @@ file to edit: 07_batchnorm.ipynb
 
 */
         
-import FastaiNotebook_06_cuda
 import Path
 import TensorFlow
 import Python
@@ -18,20 +17,20 @@ protocol LearningPhaseDependent: Layer {
     associatedtype Input
     associatedtype Output
     
-    var delegate: LayerDelegate<Output> { get set }
+    //var delegate: LayerDelegate<Output> { get set }
     @differentiable func forwardTraining(to input: Input) -> Output
     @differentiable func forwardInference(to input: Input) -> Output
 }
 
 extension LearningPhaseDependent {
-    func forward(_ input: Input) -> Output {
+    public func call(_ input: Input) -> Output {
         switch Context.local.learningPhase {
         case .training: return forwardTraining(to: input)
         case .inference: return forwardInference(to: input)
         }
     }
 
-    @differentiating(forward)
+    @differentiating(call)
     func gradForward(_ input: Input) ->
         (value: Output, pullback: (Self.Output.CotangentVector) ->
             (Self.CotangentVector, Self.Input.CotangentVector)) {
@@ -41,13 +40,6 @@ extension LearningPhaseDependent {
         case .inference:
             return valueWithPullback(at: input) { $0.forwardInference(to: $1) }
         }
-    }
-    
-    @differentiable
-    public func call(_ input: Input) -> Output {
-        let activation = forward(input)
-        delegate.didProduceActivation(activation)
-        return activation
     }
 }
 
@@ -63,7 +55,7 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
     // Running statistics
     @noDerivative let runningMean: Reference<Tensor<Scalar>>
     @noDerivative let runningVariance: Reference<Tensor<Scalar>>
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
+    //@noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
     // Trainable parameters
     public var scale: Tensor<Scalar>
     public var offset: Tensor<Scalar>
@@ -101,6 +93,8 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
 }
 
 public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
     public var conv: FANoBiasConv2D<Scalar>
     public var norm: FABatchNorm<Scalar>
     @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()

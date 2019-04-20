@@ -4,6 +4,11 @@ file to edit: 05_anneal.ipynb
 
 */
         
+import FastaiNotebook_04_callbacks
+
+import Path
+import TensorFlow
+
 import Python
 
 public func plot<S1, S2>(_ arr1: [S1], _ arr2: [S2], logScale:Bool = false, xLabel: String="", yLabel: String = "") 
