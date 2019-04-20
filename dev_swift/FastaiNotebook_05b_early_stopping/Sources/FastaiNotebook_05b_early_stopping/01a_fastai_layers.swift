@@ -8,6 +8,9 @@ file to edit: 01a_fastai_layers.ipynb
 import TensorFlow
 
 public protocol FALayer: Layer {
+    associatedtype Input
+    associatedtype Output
+    
     var delegate: LayerDelegate<Output> { get set }
     
     @differentiable
@@ -32,9 +35,6 @@ open class LayerDelegate<Output> {
 
 @_fixed_layout
 public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer { 
-    public typealias Input = Tensor<Scalar>
-    public typealias Output = Tensor<Scalar>
-    
     public var weight: Tensor<Scalar>
     public var bias: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
@@ -76,9 +76,6 @@ public extension FADense {
 
 @_fixed_layout
 public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
-    public typealias Input = Tensor<Scalar>
-    public typealias Output = Tensor<Scalar>
-    
     public var filter: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
     @noDerivative public let activation: Activation
@@ -227,9 +224,6 @@ public extension FAConv2D {
 
 @_fixed_layout
 public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
-    public typealias Input = Tensor<Scalar>
-    public typealias Output = Tensor<Scalar>
-    
     @noDerivative let poolSize: (Int, Int, Int, Int)
     @noDerivative let strides: (Int, Int, Int, Int)
     @noDerivative let padding: Padding
@@ -256,13 +250,6 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         return input.averagePooled(kernelSize: poolSize, strides: strides, padding: padding)
     }
-    
-    @differentiable
-    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        let activation = forward(input)
-        delegate.didProduceActivation(activation)
-        return activation
-    }
 }
 
 
@@ -275,13 +262,6 @@ public struct FAAdaptiveAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         return input.mean(alongAxes: [1,2])
-    }
-    
-    @differentiable
-    public func call(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        let activation = forward(input)
-        delegate.didProduceActivation(activation)
-        return activation
     }
 }
 

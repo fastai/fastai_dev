@@ -14,6 +14,9 @@ class Reference<T> {
 }
 
 protocol LearningPhaseDependent: Layer {
+    associatedtype Input
+    associatedtype Output
+    
     var delegate: LayerDelegate<Output> { get set }
     @differentiable func forwardTraining(to input: Input) -> Output
     @differentiable func forwardInference(to input: Input) -> Output
@@ -29,8 +32,8 @@ extension LearningPhaseDependent {
 
     @differentiating(forward)
     func gradForward(_ input: Input) ->
-        (value: Output, pullback: (Output.CotangentVector) ->
-            (Self.CotangentVector, Input.CotangentVector)) {
+        (value: Output, pullback: (Self.Output.CotangentVector) ->
+            (Self.CotangentVector, Self.Input.CotangentVector)) {
         switch Context.local.learningPhase {
         case .training:
             return valueWithPullback(at: input) { $0.forwardTraining(to: $1) }
@@ -63,9 +66,6 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
     // Trainable parameters
     public var scale: Tensor<Scalar>
     public var offset: Tensor<Scalar>
-    // TODO: check why these aren't being synthesized
-    public typealias Input = Tensor<Scalar>
-    public typealias Output = Tensor<Scalar>
     
     public init(featureCount: Int, momentum: Scalar, epsilon: Scalar = 1e-5) {
         self.momentum = momentum
@@ -100,9 +100,6 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
 }
 
 public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
-    public typealias Input = Tensor<Scalar>
-    public typealias Output = Tensor<Scalar>
-    
     public var conv: FANoBiasConv2D<Scalar>
     public var norm: FABatchNorm<Scalar>
     @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
