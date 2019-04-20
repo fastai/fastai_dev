@@ -4,6 +4,7 @@ file to edit: 04_callbacks.ipynb
 
 */
         
+import FastaiNotebook_03_minibatch_training
 import Path
 import TensorFlow
 

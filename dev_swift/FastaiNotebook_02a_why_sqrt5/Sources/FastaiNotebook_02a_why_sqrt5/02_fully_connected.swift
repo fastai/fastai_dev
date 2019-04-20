@@ -4,6 +4,7 @@ file to edit: 02_fully_connected.ipynb
 
 */
         
+import FastaiNotebook_01a_fastai_layers
 import Path
 import TensorFlow
 

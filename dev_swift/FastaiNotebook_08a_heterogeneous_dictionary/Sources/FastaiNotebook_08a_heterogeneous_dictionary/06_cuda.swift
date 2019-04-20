@@ -4,6 +4,7 @@ file to edit: 06_cuda.ipynb
 
 */
         
+import FastaiNotebook_05b_early_stopping
 import Path
 import TensorFlow
 import Python

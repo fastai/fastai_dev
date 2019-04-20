@@ -4,6 +4,7 @@ file to edit: 07_batchnorm.ipynb
 
 */
         
+import FastaiNotebook_06_cuda
 import Path
 import TensorFlow
 import Python

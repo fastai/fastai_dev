@@ -4,6 +4,7 @@ file to edit: 03_minibatch_training.ipynb
 
 */
         
+import FastaiNotebook_02a_why_sqrt5
 import Path
 import TensorFlow
 

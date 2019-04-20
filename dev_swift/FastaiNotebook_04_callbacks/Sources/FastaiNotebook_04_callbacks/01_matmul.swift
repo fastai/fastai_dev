@@ -4,7 +4,13 @@ file to edit: 01_matmul.ipynb
 
 */
         
+
+// One of the cool things about Swift for TensorFlow is that we can directly call into
+// Python.  First we import Python into Swift.
 import Python
 
+
+// You can import arbitrary Python modules and directly use them.
+// No wrappers, interface libraries, code generators, or build steps.
 public let np = Python.import("numpy")
 public let plt = Python.import("matplotlib.pyplot")

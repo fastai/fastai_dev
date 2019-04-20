@@ -4,6 +4,8 @@ file to edit: 02a_why_sqrt5.ipynb
 
 */
         
+import FastaiNotebook_02_fully_connected
+
 import Foundation
 import TensorFlow
 import Path

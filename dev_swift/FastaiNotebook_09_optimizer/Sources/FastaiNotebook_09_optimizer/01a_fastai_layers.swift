@@ -4,6 +4,8 @@ file to edit: 01a_fastai_layers.ipynb
 
 */
         
+import FastaiNotebook_00_load_data
+import Path
 
 import TensorFlow
 
