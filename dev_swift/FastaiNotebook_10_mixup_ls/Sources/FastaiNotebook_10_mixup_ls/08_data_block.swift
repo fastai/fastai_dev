@@ -22,7 +22,7 @@ public func downloadImagette(path: Path = dataPath) -> Path {
     return file
 }
 
-public func fetchFiles(path: Path, recurse: Bool = false, extensions: [String]? = nil) -> [Path]{
+public func fetchFiles(path: Path, recurse: Bool = false, extensions: [String]? = nil) -> [Path] {
     var res: [Path] = []
     for p in try! path.ls(){
         if p.kind == .directory && recurse { 
@@ -43,7 +43,7 @@ public struct ItemList<Item>{
     }
 }
 
-public extension ItemList where Item == Path{
+public extension ItemList where Item == Path {
     init(fromFolder path: Path, extensions: [String], recurse: Bool = true) {
         self.init(items: fetchFiles(path: path, recurse: recurse, extensions: extensions),
                   path:  path)
@@ -84,42 +84,37 @@ public protocol Processor {
 }
 
 public extension Processor {
-    
-    func process(items: [Input]) -> [Output]{
-        return items.map(){process1(item: $0)}
+    func process(items: [Input]) -> [Output] {
+        return items.map { process1(item: $0) }
     }
     
-    func deprocess(items: [Output]) -> [Input]{
-        return items.map(){deprocess1(item: $0)}
+    func deprocess(items: [Output]) -> [Input] {
+        return items.map { deprocess1(item: $0) }
     }
 }
 
 public struct NoopProcessor<Item>: Processor {
     public init() {}
-    public typealias Input = Item
-    public typealias Output = Item
+   
+    public mutating func initState(items: [Item]) {}
     
-    public mutating func initState(items: [Input]){}
-    
-    public func process1  (item: Input)  -> Output { return item }
-    public func deprocess1(item: Output) -> Input  { return item }
+    public func process1  (item: Item) -> Item { return item }
+    public func deprocess1(item: Item) -> Item { return item }
 }
 
 public struct CategoryProcessor: Processor {
     public init() {}
-    public typealias Input = String
-    public typealias Output = Int32
-    public var vocab: [Input]? = nil
-    public var reverseMap: [Input: Output]? = nil
+    public var vocab: [String]? = nil
+    public var reverseMap: [String: Int32]? = nil
     
-    public mutating func initState(items: [Input]){
+    public mutating func initState(items: [String]) {
         vocab = Array(Set(items)).sorted()
         reverseMap = [:]
-        for (i,x) in vocab!.enumerated(){ reverseMap![x] = Int32(i) }
+        for (i,x) in vocab!.enumerated() { reverseMap![x] = Int32(i) }
     }
     
-    public func process1  (item: Input)  -> Output { return reverseMap![item]! }
-    public func deprocess1(item: Output) -> Input  { return vocab![Int(item)] }
+    public func process1  (item: String) -> Int32 { return reverseMap![item]! }
+    public func deprocess1(item: Int32)  -> String { return vocab![Int(item)] }
 }
 
 public struct LabeledItemList<PI,PL> where PI: Processor, PL: Processor{
@@ -172,7 +167,7 @@ public struct LabeledElement<I: TensorGroup, L: TensorGroup>: TensorGroup {
     public var xb: I
     public var yb: L    
     
-    public init(xb: I, yb: L){
+    public init(xb: I, yb: L) {
         (self.xb, self.yb) = (xb, yb)
     }
 }
@@ -209,12 +204,32 @@ where I: TensorGroup, TI: TensorGroup & Differentiable, L: TensorGroup{
 }
 
 public func openAndResize(fname: StringTensor, size: Int) -> TF{
-    let imgBytes = Raw.readFile(filename: fname)
-    let decodedImg = Raw.decodeJpeg(contents: imgBytes, channels: 3, dctMethod: "")
+    let decodedImg = StringTensor(readFile: fname).decodeJpeg(channels: 3)
     let resizedImg = Tensor<Float>(Raw.resizeNearestNeighbor(
         images: Tensor<UInt8>([decodedImg]), 
         size: Tensor<Int32>([Int32(size), Int32(size)]))) / 255.0
     return resizedImg.reshaped(to: TensorShape(size, size, 3))
+}
+
+public extension FADataset {
+    func oneBatch() -> Element? {
+        for batch in ds { return batch }
+        return nil
+    }
+} 
+
+public func showImages(_ xb: TF, labels: [String]? = nil) {
+    let (rows,cols) = (3,3)
+    plt.figure(figsize: [9, 9])
+    for i in 0..<(rows * cols) {
+        let img = plt.subplot(rows, cols, i + 1)
+        img.axis("off")
+        let x = xb[i].makeNumpyArray()
+        img.imshow(x)
+        if labels != nil { img.set_title(labels![i]) }
+        if (i + 1) >= (rows * cols) { break }
+    }
+    plt.show()
 }
 
 public let imagenetStats = (mean: TF([0.485, 0.456, 0.406]), std: TF([0.229, 0.224, 0.225]))

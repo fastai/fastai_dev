@@ -10,7 +10,7 @@ import TensorFlow
 
 // S4TF doesn't provide the ability to read a file yet, but TensorFlow does, so 
 // give StringTensor an initializer to do this.
-extension StringTensor {
+public extension StringTensor {
     // Read a file into a Tensor.
     init(readFile filename: String) {
         self.init(readFile: StringTensor(filename))
