@@ -252,7 +252,7 @@ public struct CNNModel: Layer {
                  ConvBN(l2,   l2*2, stride: 2),
                  ConvBN(l2*2, l2*4, stride: 2)]
         let allFilters = [l2*4] + filters
-        for i in 0..<filters.count { convs.append(ConvBN(allFilters[i], allFilters[i+1], ks: 3, stride: 2)) }
+        for i in 0..<filters.count { convs.append(ConvBN(allFilters[i], allFilters[i+1], stride: 2)) }
         linear = FADense<Float>(filters.last!, nOut)
     }
     
