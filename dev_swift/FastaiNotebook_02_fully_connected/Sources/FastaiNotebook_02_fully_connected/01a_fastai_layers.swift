@@ -307,3 +307,31 @@ extension KeyPathIterable {
         return recursivelyAllWritableKeyPaths(to: Tensor<Float>.self)
     }
 }
+
+precedencegroup ExponentiationPrecedence {
+    associativity: right
+    higherThan: MultiplicationPrecedence
+}
+
+infix operator ** : ExponentiationPrecedence
+
+public func ** (lhs: Int, rhs: Int) -> Int {
+    return Int(pow(Double(lhs), Double(rhs)))
+}
+
+public func ** (lhs: Double, rhs: Double) -> Double {
+    return pow(lhs, rhs)
+}
+
+public func **<T : BinaryFloatingPoint>(_ x: T, _ y: T) -> T {
+    return T(pow(Double(x), Double(y)))
+}
+
+public func **<T>(_ x: Tensor<T>, _ y: Tensor<T>) -> Tensor<T>
+  where T : FloatingPoint { return pow(x, y)}
+
+public func **<T>(_ x: T, _ y: Tensor<T>) -> Tensor<T>
+  where T : FloatingPoint { return pow(x, y)}
+
+public func **<T>(_ x: Tensor<T>, _ y: T) -> Tensor<T>
+  where T : FloatingPoint { return pow(x, y)}
