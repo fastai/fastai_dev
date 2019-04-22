@@ -18,23 +18,17 @@ extension Learner {
     public func makeAddChannel() -> AddChannel { return AddChannel() }
 }
 
-public func conv<Scalar>(_ cIn: Int, _ cOut: Int, ks: Int = 3, stride: Int = 2) -> FAConv2D<Scalar> {
-    return FAConv2D<Scalar>(filterShape: (ks, ks, cIn, cOut), 
-                            strides: (stride,stride), 
-                            padding: .same, 
-                            activation: relu)
-}
-
 public struct CnnModel: Layer {
     public var convs: [FAConv2D<Float>]
     public var pool = FAGlobalAvgPool2D<Float>()
     public var linear: FADense<Float>
     
     public init(channelIn: Int, nOut: Int, filters: [Int]){
-        convs = []
         let allFilters = [channelIn] + filters
-        for i in 0..<filters.count { convs.append(conv(allFilters[i], allFilters[i+1])) }
-        linear = FADense<Float>(inputSize: filters.last!, outputSize: nOut)
+        convs = Array(0..<filters.count).map { i in
+            return FAConv2D(allFilters[i], allFilters[i+1], ks: 3, stride: 2)
+        }
+        linear = FADense<Float>(filters.last!, nOut)
     }
     
     @differentiable

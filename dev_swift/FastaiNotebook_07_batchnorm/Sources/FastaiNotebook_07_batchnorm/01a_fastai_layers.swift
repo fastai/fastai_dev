@@ -7,8 +7,6 @@ file to edit: /home/ubuntu/fastai_docs/dev_swift/01a_fastai_layers.ipynb/lastPat
 import Path
 import TensorFlow
 
-var rng = PhiloxRandomNumberGenerator.global
-
 public extension Tensor where Scalar: TensorFlowFloatingPoint {
     init(kaimingNormal shape: TensorShape, negativeSlope: Double = 1.0) {
         // Assumes Leaky ReLU nonlinearity
@@ -16,7 +14,8 @@ public extension Tensor where Scalar: TensorFlowFloatingPoint {
         let spatialDimCount = shape.count - 2
         let receptiveField = shape[0..<spatialDimCount].contiguousSize
         let fanIn = shape[spatialDimCount] * receptiveField
-        self.init(randomNormal: shape, stddev: gain/sqrt(Scalar(fanIn)), generator: &rng)
+        self.init(randomNormal: shape)
+        self *= Tensor<Scalar>(gain/sqrt(Scalar(fanIn)))
     }
 }
 
@@ -126,7 +125,7 @@ public extension FANoBiasConv2D {
     init(
         filterShape: (Int, Int, Int, Int),
         strides: (Int, Int) = (1, 1),
-        padding: Padding = .valid,
+        padding: Padding = .same,
         activation: @escaping Activation = identity
     ) {
         let filterTensorShape = TensorShape([
@@ -141,7 +140,7 @@ public extension FANoBiasConv2D {
 }
 
 public extension FANoBiasConv2D {
-    init(_ cIn: Int, _ cOut: Int, ks: Int, stride: Int = 1, padding: Padding = .valid,
+    init(_ cIn: Int, _ cOut: Int, ks: Int, stride: Int = 1, padding: Padding = .same,
          activation: @escaping Activation = identity){
         self.init(filterShape: (ks, ks, cIn, cOut),
                   strides: (stride, stride),
@@ -191,7 +190,7 @@ public extension FAConv2D {
     init(
         filterShape: (Int, Int, Int, Int),
         strides: (Int, Int) = (1, 1),
-        padding: Padding = .valid,
+        padding: Padding = .same,
         activation: @escaping Activation = identity
     ) {
         let filterTensorShape = TensorShape([
@@ -207,7 +206,7 @@ public extension FAConv2D {
 }
 
 public extension FAConv2D {
-    init(_ cIn: Int, _ cOut: Int, ks: Int, stride: Int = 1, padding: Padding = .valid,
+    init(_ cIn: Int, _ cOut: Int, ks: Int, stride: Int = 1, padding: Padding = .same,
          activation: @escaping Activation = identity){
         self.init(filterShape: (ks, ks, cIn, cOut),
                   strides: (stride, stride),
