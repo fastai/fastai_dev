@@ -5,6 +5,30 @@ file to edit: /home/ubuntu/fastai_docs/dev_swift/01a_fastai_layers.ipynb/lastPat
 */
         
 import Path
+import TensorFlow
+
+var rng = PhiloxRandomNumberGenerator.global
+
+public extension Tensor where Scalar: TensorFlowFloatingPoint {
+    init(kaimingNormal shape: TensorShape, negativeSlope: Double = 1.0) {
+        // Assumes Leaky ReLU nonlinearity
+        let gain = Scalar(sqrt(2.0 / (1.0 + pow(negativeSlope, 2))))
+        let spatialDimCount = shape.count - 2
+        let receptiveField = shape[0..<spatialDimCount].contiguousSize
+        let fanIn = shape[spatialDimCount] * receptiveField
+        self.init(randomNormal: shape, stddev: gain/sqrt(Scalar(fanIn)), generator: &rng)
+    }
+}
+
+public extension Tensor where Scalar: TensorFlowFloatingPoint {
+    func std() -> Tensor<Scalar> { return standardDeviation() }
+    func std(alongAxes a: [Int]) -> Tensor<Scalar> { return standardDeviation(alongAxes: a) }
+    func std(alongAxes a: Tensor<Int32>) -> Tensor<Scalar> { return standardDeviation(alongAxes: a) }
+    func std(alongAxes a: Int...) -> Tensor<Scalar> { return standardDeviation(alongAxes: a) }
+    func std(squeezingAxes a: [Int]) -> Tensor<Scalar> { return standardDeviation(squeezingAxes: a) }
+    func std(squeezingAxes a: Tensor<Int32>) -> Tensor<Scalar> { return standardDeviation(squeezingAxes: a) }
+    func std(squeezingAxes a: Int...) -> Tensor<Scalar> { return standardDeviation(squeezingAxes: a) }
+}
 
 import TensorFlow
 
@@ -60,16 +84,9 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
 }
 
 public extension FADense {
-    init(
-        inputSize: Int,
-        outputSize: Int,
-        activation: @escaping Activation = identity,
-        seed: (Int64, Int64) = (Int64.random(in: Int64.min..<Int64.max),
-                                Int64.random(in: Int64.min..<Int64.max))
-    ) {
-        self.init(weight: Tensor(glorotUniform: [inputSize, outputSize],
-                                 seed: seed),
-                  bias: Tensor(zeros: [outputSize]),
+    init(_ nIn: Int, _ nOut: Int, activation: @escaping Activation = identity) {
+        self.init(weight: Tensor(kaimingNormal: [nIn, nOut]),
+                  bias: Tensor(zeros: [nOut]),
                   activation: activation)
     }
 }
@@ -106,18 +123,17 @@ public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 }
 
 public extension FANoBiasConv2D {
-    init<G: RandomNumberGenerator>(
+    init(
         filterShape: (Int, Int, Int, Int),
         strides: (Int, Int) = (1, 1),
         padding: Padding = .valid,
-        activation: @escaping Activation = identity,
-        generator: inout G
+        activation: @escaping Activation = identity
     ) {
         let filterTensorShape = TensorShape([
             filterShape.0, filterShape.1,
             filterShape.2, filterShape.3])
         self.init(
-            filter: Tensor(glorotUniform: filterTensorShape, generator: &generator),
+            filter: Tensor(kaimingNormal: filterTensorShape),
             activation: activation,
             strides: strides,
             padding: padding)
@@ -125,22 +141,12 @@ public extension FANoBiasConv2D {
 }
 
 public extension FANoBiasConv2D {
-    init(
-        filterShape: (Int, Int, Int, Int),
-        strides: (Int, Int) = (1, 1),
-        padding: Padding = .valid,
-        activation: @escaping Activation = identity,
-        seed: (Int64, Int64) = (Int64.random(in: Int64.min..<Int64.max),
-                                Int64.random(in: Int64.min..<Int64.max))
-    ) {
-        let filterTensorShape = TensorShape([
-            filterShape.0, filterShape.1,
-            filterShape.2, filterShape.3])
-        self.init(
-            filter: Tensor(glorotUniform: filterTensorShape, seed: seed),
-            activation: activation,
-            strides: (strides.0, strides.1),
-            padding: padding)
+    init(_ cIn: Int, _ cOut: Int, ks: Int, stride: Int = 1, padding: Padding = .valid,
+         activation: @escaping Activation = identity){
+        self.init(filterShape: (ks, ks, cIn, cOut),
+                  strides: (stride, stride),
+                  padding: padding,
+                  activation: activation)
     }
 }
 
@@ -182,18 +188,17 @@ public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 }
 
 public extension FAConv2D {
-    init<G: RandomNumberGenerator>(
+    init(
         filterShape: (Int, Int, Int, Int),
         strides: (Int, Int) = (1, 1),
         padding: Padding = .valid,
-        activation: @escaping Activation = identity,
-        generator: inout G
+        activation: @escaping Activation = identity
     ) {
         let filterTensorShape = TensorShape([
             filterShape.0, filterShape.1,
             filterShape.2, filterShape.3])
         self.init(
-            filter: Tensor(glorotUniform: filterTensorShape, generator: &generator),
+            filter: Tensor(kaimingNormal: filterTensorShape),
             bias: Tensor(zeros: TensorShape([filterShape.3])),
             activation: activation,
             strides: strides,
@@ -202,23 +207,12 @@ public extension FAConv2D {
 }
 
 public extension FAConv2D {
-    init(
-        filterShape: (Int, Int, Int, Int),
-        strides: (Int, Int) = (1, 1),
-        padding: Padding = .valid,
-        activation: @escaping Activation = identity,
-        seed: (Int64, Int64) = (Int64.random(in: Int64.min..<Int64.max),
-                                Int64.random(in: Int64.min..<Int64.max))
-    ) {
-        let filterTensorShape = TensorShape([
-            filterShape.0, filterShape.1,
-            filterShape.2, filterShape.3])
-        self.init(
-            filter: Tensor(glorotUniform: filterTensorShape, seed: seed),
-            bias: Tensor(zeros: TensorShape([filterShape.3])),
-            activation: activation,
-            strides: (strides.0, strides.1),
-            padding: padding)
+    init(_ cIn: Int, _ cOut: Int, ks: Int, stride: Int = 1, padding: Padding = .valid,
+         activation: @escaping Activation = identity){
+        self.init(filterShape: (ks, ks, cIn, cOut),
+                  strides: (stride, stride),
+                  padding: padding,
+                  activation: activation)
     }
 }
 
@@ -244,6 +238,12 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     public init(poolSize: (Int, Int), strides: (Int, Int), padding: Padding = .valid) {
         self.poolSize = (1, poolSize.0, poolSize.1, 1)
         self.strides = (1, strides.0, strides.1, 1)
+        self.padding = padding
+    }
+    
+    public init(_ sz: Int, padding: Padding = .valid) {
+        poolSize = (1, sz, sz, 1)
+        strides = (1, sz, sz, 1)
         self.padding = padding
     }
 
