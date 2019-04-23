@@ -292,7 +292,7 @@ public class AdamStep: StepDelegate {
     }
 }
 
-public func SGDOpt<Model>(lr: Float, mom: Float = 0.9, wd: Float = 0.0, dampening: Bool = false
+public func sgdOpt<Model>(lr: Float, mom: Float = 0.9, wd: Float = 0.0, dampening: Bool = false
                          ) -> ((Model) -> StatefulOptimizer<Model>) {
     var steppers = (mom != 0) ? [MomentumStep()] : [SGDStep()]
     if wd != 0 { steppers.append(WeightDecay()) }
@@ -304,7 +304,7 @@ public func SGDOpt<Model>(lr: Float, mom: Float = 0.9, wd: Float = 0.0, dampenin
         return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)}
 }
 
-public func AdamOpt<Model>(lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Float = 0.0, eps: Float = 1e-5
+public func adamOpt<Model>(lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Float = 0.0, eps: Float = 1e-5
                          ) -> ((Model) -> StatefulOptimizer<Model>) {
     var steppers: [StepDelegate] = [AdamStep()]
     if wd != 0 { steppers.append(WeightDecay()) }
