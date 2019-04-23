@@ -64,7 +64,7 @@ func formatTime(_ t: Float) -> String {
 public struct ProgressBar{
     let total: Int
     let length: Int = 50
-    let showEvery: Float = 0.02
+    //let showEvery: Float = 0.02
     let fillChar: Character = "X"
     public var comment: String = ""
     private var lastVal: Int = 0
@@ -85,7 +85,8 @@ public struct ProgressBar{
         } else if val >= lastVal + waitFor || val == total {
             lastShow = DispatchTime.now().uptimeNanoseconds
             let averageTime = Float(lastShow - startTime) / (1e9 * Float(val))
-            waitFor = max(Int(averageTime / (showEvery + 1e-8)), 1)
+            //waitFor = max(Int(averageTime / (showEvery + 1e-8)), 1)
+            waitFor = 1
             estimatedTotal = Float(total) * averageTime
             update_bar(val)
         }
