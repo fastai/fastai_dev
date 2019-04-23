@@ -64,7 +64,7 @@ func formatTime(_ t: Float) -> String {
 public struct ProgressBar{
     let total: Int
     let length: Int = 50
-    let showEvery: Float = 0.02
+    let showEvery: Float = 0.2
     let fillChar: Character = "X"
     public var comment: String = ""
     private var waitFor: Int = 0
@@ -143,7 +143,7 @@ extension Learner {
 
 /// A non-generalized learning rate scheduler
 extension Learner where Opt.Scalar: BinaryFloatingPoint {
-    public class ParamScheduler: Delegate {
+    public class LRScheduler: Delegate {
         public override var order: Int { return 1 }
         public typealias ScheduleFunc = (Float) -> Float
 
@@ -159,8 +159,8 @@ extension Learner where Opt.Scalar: BinaryFloatingPoint {
         }
     }
     
-    public func makeParamScheduler(scheduler: @escaping (Float) -> Float) -> ParamScheduler {
-        return ParamScheduler(scheduler: scheduler)
+    public func makeLRScheduler(scheduler: @escaping (Float) -> Float) -> LRScheduler {
+        return LRScheduler(scheduler: scheduler)
     }
 }
 
@@ -189,6 +189,7 @@ public func combineSchedules(pcts: [Float], schedules: [(Float) -> Float]) -> ((
     for pct in pcts {cumPcts.append(cumPcts.last! + pct)}
     func inner(pct: Float) -> Float{
         if (pct == 0.0) { return schedules[0](0.0) }
+        if (pct > 1.0)  { return schedules.last!(1.0) }
         let i = cumPcts.firstIndex(where: {$0 >= pct})! - 1
         let actualPos = (pct-cumPcts[i]) / (cumPcts[i+1]-cumPcts[i])
         return schedules[i](actualPos)
