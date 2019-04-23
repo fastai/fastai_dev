@@ -64,12 +64,12 @@ func formatTime(_ t: Float) -> String {
 public struct ProgressBar{
     let total: Int
     let length: Int = 50
-    let showEvery: Float = 0.02
+    let showEvery: Float = 0.2
     let fillChar: Character = "X"
     public var comment: String = ""
-    private var lastVal: Int = 0
     private var waitFor: Int = 0
     private var startTime: UInt64 = 0
+    private var lastPrint: UInt64 = 0
     private var lastShow: UInt64 = 0
     private var estimatedTotal: Float = 0.0
     private var bar: String = ""
@@ -77,22 +77,17 @@ public struct ProgressBar{
     public init(_ c: Int) { total = c }
     
     public mutating func update(_ val: Int){
-        if val == 0 {
-            startTime = DispatchTime.now().uptimeNanoseconds
-            lastShow = startTime
-            waitFor = 1
-            update_bar(0)
-        } else if val >= lastVal + waitFor || val == total {
-            lastShow = DispatchTime.now().uptimeNanoseconds
+        lastShow = DispatchTime.now().uptimeNanoseconds
+        if val == 0 { startTime = lastShow } 
+        else {
             let averageTime = Float(lastShow - startTime) / (1e9 * Float(val))
-            waitFor = max(Int(averageTime / (showEvery + 1e-8)), 1)
             estimatedTotal = Float(total) * averageTime
-            update_bar(val)
         }
+        if val == 0 || lastShow - lastPrint >= Int(1e9 * showEvery) { update_bar(val) }
     }
     
     public mutating func update_bar(_ val: Int){
-        lastVal = val
+        lastPrint = lastShow
         let prevLength = bar.count
         bar = String(repeating: fillChar, count: (val * length) / total)
         bar += String(repeating: "-", count: length - (val * length) / total)
@@ -148,7 +143,7 @@ extension Learner {
 
 /// A non-generalized learning rate scheduler
 extension Learner where Opt.Scalar: BinaryFloatingPoint {
-    public class ParamScheduler: Delegate {
+    public class LRScheduler: Delegate {
         public override var order: Int { return 1 }
         public typealias ScheduleFunc = (Float) -> Float
 
@@ -164,8 +159,8 @@ extension Learner where Opt.Scalar: BinaryFloatingPoint {
         }
     }
     
-    public func makeParamScheduler(scheduler: @escaping (Float) -> Float) -> ParamScheduler {
-        return ParamScheduler(scheduler: scheduler)
+    public func makeLRScheduler(scheduler: @escaping (Float) -> Float) -> LRScheduler {
+        return LRScheduler(scheduler: scheduler)
     }
 }
 
@@ -194,6 +189,7 @@ public func combineSchedules(pcts: [Float], schedules: [(Float) -> Float]) -> ((
     for pct in pcts {cumPcts.append(cumPcts.last! + pct)}
     func inner(pct: Float) -> Float{
         if (pct == 0.0) { return schedules[0](0.0) }
+        if (pct > 1.0)  { return schedules.last!(1.0) }
         let i = cumPcts.firstIndex(where: {$0 >= pct})! - 1
         let actualPos = (pct-cumPcts[i]) / (cumPcts[i+1]-cumPcts[i])
         return schedules[i](actualPos)

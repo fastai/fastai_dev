@@ -27,7 +27,7 @@ public func fetchFiles(path: Path, recurse: Bool = false, extensions: [String]? 
     for p in try! path.ls(){
         if p.kind == .directory && recurse { 
             res += fetchFiles(path: p.path, recurse: recurse, extensions: extensions)
-        } else if extensions == nil || extensions!.contains(p.path.extension.lowercased) {
+        } else if extensions == nil || extensions!.contains(p.path.extension.lowercased()) {
             res.append(p.path)
         }
     }
@@ -252,7 +252,7 @@ public struct CNNModel: Layer {
                  ConvBN(l2,   l2*2, stride: 2),
                  ConvBN(l2*2, l2*4, stride: 2)]
         let allFilters = [l2*4] + filters
-        for i in 0..<filters.count { convs.append(ConvBN(allFilters[i], allFilters[i+1], ks: 3, stride: 2)) }
+        for i in 0..<filters.count { convs.append(ConvBN(allFilters[i], allFilters[i+1], stride: 2)) }
         linear = FADense<Float>(filters.last!, nOut)
     }
     

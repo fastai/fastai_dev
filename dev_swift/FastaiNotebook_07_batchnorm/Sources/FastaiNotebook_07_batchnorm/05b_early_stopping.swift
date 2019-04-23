@@ -10,7 +10,7 @@ import Python
 
 //TODO: when recorder can be accessed as a property, remove it from the return
 extension Learner where Opt.Scalar: PythonConvertible {
-    public func makeDefaultDelegates(metrics: [(Tensor<Float>, Tensor<Int32>) -> Tensor<Float>] = []) -> Recorder {
+    public func makeDefaultDelegates(metrics: [(Output, Label) -> TF] = []) -> Recorder {
         let recorder = makeRecorder()
         delegates = [makeTrainEvalDelegate(), makeShowProgress(), recorder]
         if !metrics.isEmpty { delegates.append(makeAvgMetric(metrics: metrics)) }
