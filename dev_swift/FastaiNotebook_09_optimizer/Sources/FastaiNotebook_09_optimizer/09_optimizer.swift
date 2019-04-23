@@ -318,6 +318,12 @@ public func AdamOpt<Model>(lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Fl
         return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)}
 }
 
+public extension StatefulOptimizer {
+    func setParam(_ hp: String, _ val: Float) {
+        for i in 0..<configs.count { configs[i][hp] = val }
+    }
+}
+
 extension Learner where Opt.Scalar: BinaryFloatingPoint, 
     Opt.Model.AllDifferentiableVariables == Opt.Model.CotangentVector{
     public class ParamScheduler: Delegate {
@@ -338,7 +344,32 @@ extension Learner where Opt.Scalar: BinaryFloatingPoint,
         }
     }
     
-    public func makeParamScheduler(scheduler: @escaping (Float) -> Float, hp: String) -> ParamScheduler {
+    public func makeParamScheduler(_ scheduler: @escaping (Float) -> Float, hp: String) -> ParamScheduler {
         return ParamScheduler(scheduler: scheduler, hp: hp)
+    }
+}
+
+public func oneCycleSchedulers(_ lrMax: Float, pctStart:Float=0.25, divStart: Float = 10, divEnd: Float = 1e5, 
+                               moms: (Float,Float,Float) = (0.95,0.85,0.95)) 
+-> ((Float) -> Float, (Float) -> Float){
+    let lrSched = combineSchedules(
+        pcts: [pctStart, 1-pctStart], 
+        schedules: [makeAnnealer(start: lrMax/divStart, end: lrMax, schedule: cosineSchedule),
+                    makeAnnealer(start: lrMax, end: lrMax/divEnd, schedule: cosineSchedule)])
+    let momSched = combineSchedules(
+        pcts: [pctStart, 1-pctStart], 
+        schedules: [makeAnnealer(start: moms.0, end: moms.1, schedule: cosineSchedule),
+                    makeAnnealer(start: moms.1, end: moms.2, schedule: cosineSchedule)])
+    return (lrSched, momSched)
+}
+
+extension Learner where Opt.Scalar: BinaryFloatingPoint, 
+    Opt.Model.AllDifferentiableVariables == Opt.Model.CotangentVector{
+
+    public func addOneCycleDelegates(_ lrMax: Float, pctStart:Float=0.25, divStart: Float = 10, divEnd: Float = 1e5, 
+                               moms: (Float,Float,Float) = (0.95,0.85,0.95)) {
+        let scheds = oneCycleSchedulers(lrMax, pctStart: pctStart, divStart: divStart, divEnd: divEnd, moms: moms)
+        addDelegates([makeParamScheduler(scheds.0 , hp: HyperParams.lr), 
+                      makeParamScheduler(scheds.1 , hp: HyperParams.mom)])
     }
 }
