@@ -36,6 +36,12 @@ open class StepDelegate {
     ) { }
 }
 
+public extension Tensor where Scalar: Numeric {
+    mutating func reset0() {
+        self = Tensor(0)
+    }
+}
+
 public class StatefulOptimizer<Model: Layer>
     where Model.AllDifferentiableVariables == Model.CotangentVector{
     public var configs: [HeterogeneousDictionary]
@@ -57,7 +63,10 @@ public class StatefulOptimizer<Model: Layer>
         }
         for statDelegate in statDelegates {
             for i in self.configs.indices { self.configs[i].merge(statDelegate.defaultConfig) { (_, new) in new } }
-            states[statDelegate.name] = Model.AllDifferentiableVariables.zero
+            states[statDelegate.name] = model.allDifferentiableVariables
+            for kp in states[statDelegate.name]!.keyPaths { 
+                states[statDelegate.name]![keyPath: kp].reset0()
+            }
         }
         for i in 0..<configs.count {
             self.configs[i].merge(configs[i]) { (_, new) in new }
@@ -289,7 +298,7 @@ public func SGDOpt<Model>(lr: Float, mom: Float = 0.9, wd: Float = 0.0, dampenin
         return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)}
 }
 
-public func AdamOpt<Model>(for model: Model, lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Float = 0.0, eps: Float = 1e-5
+public func AdamOpt<Model>(lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Float = 0.0, eps: Float = 1e-5
                          ) -> ((Model) -> StatefulOptimizer<Model>) {
     var steppers: [StepDelegate] = [AdamStep()]
     if wd != 0 { steppers.append(WeightDecay()) }
