@@ -229,7 +229,7 @@ def get_learn_run(nfs, data, lr, layer, cbs=None, opt_func=None, **kwargs):
     init_cnn(model)
     return get_runner(model, data, lr=lr, cbs=cbs, opt_func=opt_func)
 
-def model_summary(run, learn, find_all=False):
+def model_summary(run, learn, data, find_all=False):
     xb,yb = get_batch(data.valid_dl, run)
     device = next(learn.model.parameters()).device#Model may not be on the GPU yet
     xb,yb = xb.to(device),yb.to(device)
