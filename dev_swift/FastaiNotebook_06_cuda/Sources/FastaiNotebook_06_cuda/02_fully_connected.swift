@@ -7,10 +7,6 @@ file to edit: /home/ubuntu/fastai_docs/dev_swift/02_fully_connected.ipynb/lastPa
 import Path
 import TensorFlow
 
-
-// Typing Tensor<Float> all the time is tedious.  The S4TF team expects to 
-// make "Float" be the default so we can just say "Tensor".  Until that happens
-// though, we can define our own alias.
 public typealias TF=Tensor<Float>
 
 public func normalize(_ x:TF, mean:TF, std:TF) -> TF {
