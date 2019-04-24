@@ -8,9 +8,9 @@ import Path
 import TensorFlow
 import Python
 
-class Reference<T> {
-    var value: T
-    init(_ value: T) { self.value = value }
+public class Reference<T> {
+    public var value: T
+    public init(_ value: T) { self.value = value }
 }
 
 public protocol LearningPhaseDependent: FALayer {
