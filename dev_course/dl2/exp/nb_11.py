@@ -41,7 +41,7 @@ class ResBlock(nn.Module):
         ]
         self.convs = nn.Sequential(*layers)
         self.idconv = noop if ni==nf else conv_layer(ni, nf, 1, act=False)
-        self.pool = noop if stride==1 else nn.AvgPool2d(2)
+        self.pool = noop if stride==1 else nn.AvgPool2d(2, ceil_mode=True)
 
     def forward(self, x): return act_fn(self.convs(x) + self.idconv(self.pool(x)))
 
@@ -85,7 +85,7 @@ def get_batch(dl, learn):
     learn('after_fit')
     return learn.xb,learn.yb
 
-def model_summary(model, find_all=False, print_mod=False):
+def model_summary(model, data, find_all=False, print_mod=False):
     xb,yb = get_batch(data.valid_dl, learn)
     mods = find_modules(model, is_lin_layer) if find_all else model.children()
     f = lambda hook,mod,inp,out: print(f"====\n{mod}\n" if print_mod else "", out.shape)
