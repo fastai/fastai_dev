@@ -152,7 +152,7 @@ public struct SplitLabeledData<PI,PL> where PI: Processor, PL: Processor{
     }
     
     public init(_ sd: SplitData<PI.Input>, fromFunc: (PI.Input) -> PL.Input, procItem: inout PI, procLabel: inout PL){
-        procItem.initState (items: sd.train.items)
+        procItem.initState(items: sd.train.items)
         let trainLabels = sd.train.items.map{ fromFunc($0) }
         procLabel.initState(items: trainLabels)
         self.init(train: LabeledItemList(rawItems: sd.train.items, rawLabels: trainLabels, path: sd.path, 
@@ -160,6 +160,14 @@ public struct SplitLabeledData<PI,PL> where PI: Processor, PL: Processor{
                   valid: LabeledItemList(sd.valid, fromFunc: fromFunc, procItem: procItem, procLabel: procLabel))
     }
 }
+
+/// Make a labeled data without an input processor, by defaulting to a noop processor.
+public func makeLabeledData<T, PL: Processor>(_ sd: SplitData<T>, fromFunc: (T) -> PL.Input, procLabel: inout PL) 
+ -> SplitLabeledData<NoopProcessor<T>, PL> {
+    var pi = NoopProcessor<T>()
+    return SplitLabeledData(sd, fromFunc: fromFunc, procItem: &pi, procLabel: &procLabel)
+}
+
 
 public func parentLabeler(_ fName: Path) -> String { return fName.parent.basename() }
 
