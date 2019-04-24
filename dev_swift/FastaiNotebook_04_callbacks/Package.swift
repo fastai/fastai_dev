@@ -7,7 +7,7 @@ let package = Package(
         .library(name: "FastaiNotebook_04_callbacks", targets: ["FastaiNotebook_04_callbacks"]),
     ],
 dependencies: [
-    .package(path: "/home/ubuntu/dev_swift/FastaiNotebook_03_minibatch_training")
+    .package(path: "../FastaiNotebook_03_minibatch_training")
 ],
 targets: [
     .target(

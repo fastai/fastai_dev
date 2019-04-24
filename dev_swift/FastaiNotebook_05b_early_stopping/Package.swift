@@ -7,7 +7,7 @@ let package = Package(
         .library(name: "FastaiNotebook_05b_early_stopping", targets: ["FastaiNotebook_05b_early_stopping"]),
     ],
 dependencies: [
-    .package(path: "/home/ubuntu/dev_swift/FastaiNotebook_05_anneal")
+    .package(path: "../FastaiNotebook_05_anneal")
 ],
 targets: [
     .target(

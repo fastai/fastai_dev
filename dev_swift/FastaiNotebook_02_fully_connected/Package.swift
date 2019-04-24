@@ -7,7 +7,7 @@ let package = Package(
         .library(name: "FastaiNotebook_02_fully_connected", targets: ["FastaiNotebook_02_fully_connected"]),
     ],
 dependencies: [
-    .package(path: "/home/ubuntu/dev_swift/FastaiNotebook_01a_fastai_layers")
+    .package(path: "../FastaiNotebook_01a_fastai_layers")
 ],
 targets: [
     .target(
