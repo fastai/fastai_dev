@@ -7,7 +7,7 @@ let package = Package(
         .library(name: "FastaiNotebook_09_optimizer", targets: ["FastaiNotebook_09_optimizer"]),
     ],
 dependencies: [
-    .package(path: "/home/ubuntu/dev_swift/FastaiNotebook_08a_heterogeneous_dictionary")
+    .package(path: "../FastaiNotebook_08a_heterogeneous_dictionary")
 ],
 targets: [
     .target(

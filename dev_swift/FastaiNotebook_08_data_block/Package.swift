@@ -7,7 +7,7 @@ let package = Package(
         .library(name: "FastaiNotebook_08_data_block", targets: ["FastaiNotebook_08_data_block"]),
     ],
 dependencies: [
-    .package(path: "/home/ubuntu/dev_swift/FastaiNotebook_07_batchnorm")
+    .package(path: "../FastaiNotebook_07_batchnorm")
 ],
 targets: [
     .target(

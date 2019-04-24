@@ -7,7 +7,7 @@ let package = Package(
         .library(name: "FastaiNotebook_02a_why_sqrt5", targets: ["FastaiNotebook_02a_why_sqrt5"]),
     ],
 dependencies: [
-    .package(path: "/home/ubuntu/dev_swift/FastaiNotebook_02_fully_connected")
+    .package(path: "../FastaiNotebook_02_fully_connected")
 ],
 targets: [
     .target(

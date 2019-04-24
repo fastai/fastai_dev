@@ -7,7 +7,7 @@ let package = Package(
         .library(name: "FastaiNotebook_10_mixup_ls", targets: ["FastaiNotebook_10_mixup_ls"]),
     ],
 dependencies: [
-    .package(path: "/home/ubuntu/dev_swift/FastaiNotebook_09_optimizer")
+    .package(path: "../FastaiNotebook_09_optimizer")
 ],
 targets: [
     .target(
