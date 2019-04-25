@@ -111,11 +111,7 @@ void Mat_MultiplyFloat(Mat m, float val) { *m *= val; }
 void Mat_DivideFloat(Mat m, float val) { *m /= val; }
 void Mat_AbsDiff(Mat src1, Mat src2, Mat dst) { cv::absdiff(*src1, *src2, *dst); }
 void Mat_Add(Mat src1, Mat src2, Mat dst) { cv::add(*src1, *src2, *dst); }
-
-void Mat_AddWeighted(Mat src1, double alpha, Mat src2, double beta, double gamma, Mat dst) {
-    cv::addWeighted(*src1, alpha, *src2, beta, gamma, *dst);
-}
-
+void Mat_AddWeighted(Mat src1, double alpha, Mat src2, double beta, double gamma, Mat dst) { cv::addWeighted(*src1, alpha, *src2, beta, gamma, *dst); }
 void Mat_BitwiseAnd(Mat src1, Mat src2, Mat dst) { cv::bitwise_and(*src1, *src2, *dst); }
 void Mat_BitwiseAndWithMask(Mat src1, Mat src2, Mat dst, Mat mask){ cv::bitwise_and(*src1, *src2, *dst, *mask); }
 void Mat_BitwiseNot(Mat src1, Mat dst) { cv::bitwise_not(*src1, *dst); }
@@ -131,14 +127,8 @@ void Mat_BatchDistance(Mat src1, Mat src2, Mat dist, int dtype, Mat nidx, int no
 }
 
 int Mat_BorderInterpolate(int p, int len, int borderType) { return cv::borderInterpolate(p, len, borderType); }
-
-void  Mat_CalcCovarMatrix(Mat samples, Mat covar, Mat mean, int flags, int ctype) {
-    cv::calcCovarMatrix(*samples, *covar, *mean, flags, ctype);
-}
-
-void  Mat_CartToPolar(Mat x, Mat y, Mat magnitude, Mat angle, bool angleInDegrees) {
-    cv::cartToPolar(*x, *y, *magnitude, *angle, angleInDegrees);
-}
+void  Mat_CalcCovarMatrix(Mat samples, Mat covar, Mat mean, int flags, int ctype) { cv::calcCovarMatrix(*samples, *covar, *mean, flags, ctype); }
+void  Mat_CartToPolar(Mat x, Mat y, Mat magnitude, Mat angle, bool angleInDegrees) { cv::cartToPolar(*x, *y, *magnitude, *angle, angleInDegrees); }
 
 bool Mat_CheckRange(Mat m) { return cv::checkRange(*m); }
 void Mat_Compare(Mat src1, Mat src2, Mat dst, int ct) { cv::compare(*src1, *src2, *dst, ct); }
@@ -165,11 +155,7 @@ void Mat_Exp(Mat src, Mat dst) { cv::exp(*src, *dst); }
 void Mat_ExtractChannel(Mat src, Mat dst, int coi) { cv::extractChannel(*src, *dst, coi); }
 void Mat_FindNonZero(Mat src, Mat idx) { cv::findNonZero(*src, *idx); }
 void Mat_Flip(Mat src, Mat dst, int flipCode) { cv::flip(*src, *dst, flipCode); }
-
-void Mat_Gemm(Mat src1, Mat src2, double alpha, Mat src3, double beta, Mat dst, int flags) {
-    cv::gemm(*src1, *src2, alpha, *src3, beta, *dst, flags);
-}
-
+void Mat_Gemm(Mat src1, Mat src2, double alpha, Mat src3, double beta, Mat dst, int flags) { cv::gemm(*src1, *src2, alpha, *src3, beta, *dst, flags); }
 int Mat_GetOptimalDFTSize(int vecsize) { return cv::getOptimalDFTSize(vecsize); }
 void Mat_Hconcat(Mat src1, Mat src2, Mat dst) { cv::hconcat(*src1, *src2, *dst); }
 void Mat_Vconcat(Mat src1, Mat src2, Mat dst) { cv::vconcat(*src1, *src2, *dst); }
@@ -198,11 +184,7 @@ void Mat_MeanStdDev(Mat src, Mat dstMean, Mat dstStdDev) { cv::meanStdDev(*src, 
 
 void Mat_Merge(struct Mats mats, Mat dst) {
     std::vector<cv::Mat> images;
-
-    for (int i = 0; i < mats.length; ++i) {
-        images.push_back(*mats.mats[i]);
-    }
-
+    for (int i = 0; i < mats.length; ++i) { images.push_back(*mats.mats[i]); }
     cv::merge(images, *dst);
 }
 
@@ -216,11 +198,7 @@ void Mat_MinMaxLoc(Mat m, double* minVal, double* maxVal, Point* minLoc, Point* 
     cv::Point cMinLoc;
     cv::Point cMaxLoc;
     cv::minMaxLoc(*m, minVal, maxVal, &cMinLoc, &cMaxLoc);
-
-    minLoc->x = cMinLoc.x;
-    minLoc->y = cMinLoc.y;
-    maxLoc->x = cMaxLoc.x;
-    maxLoc->y = cMaxLoc.y;
+    minLoc->x = cMinLoc.x; minLoc->y = cMinLoc.y; maxLoc->x = cMaxLoc.x; maxLoc->y = cMaxLoc.y;
 }
 
 void Mat_MulSpectrums(Mat a, Mat b, Mat c, int flags) { cv::mulSpectrums(*a, *b, *c, flags); }
@@ -240,12 +218,9 @@ void Mat_SortIdx(Mat src, Mat dst, int flags) { cv::sortIdx(*src, *dst, flags); 
 void Mat_Split(Mat src, struct Mats* mats) {
     std::vector<cv::Mat> channels;
     cv::split(*src, channels);
+
     mats->mats = new Mat[channels.size()];
-
-    for (size_t i = 0; i < channels.size(); ++i) {
-        mats->mats[i] = new cv::Mat(channels[i]);
-    }
-
+    for (size_t i = 0; i < channels.size(); ++i) { mats->mats[i] = new cv::Mat(channels[i]); }
     mats->length = (int)channels.size();
 }
 
@@ -267,7 +242,6 @@ void Mat_PolarToCart(Mat magnitude, Mat degree, Mat x, Mat y, bool angleInDegree
 
 void Mat_Pow(Mat src, double power, Mat dst) { cv::pow(*src, power, *dst); }
 void Mat_Phase(Mat x, Mat y, Mat angle, bool angleInDegrees) { cv::phase(*x, *y, *angle, angleInDegrees); }
-
 
 Scalar Mat_Sum(Mat src) {
     cv::Scalar c = cv::sum(*src);
