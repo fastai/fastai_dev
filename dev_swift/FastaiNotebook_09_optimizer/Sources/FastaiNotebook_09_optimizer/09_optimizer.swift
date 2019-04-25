@@ -7,7 +7,7 @@ file to edit: 09_optimizer.ipynb
 import Path
 import TensorFlow
 
-//Expandable enum to have easier names than LearningRate.self.
+//Expandable enum to have tab-complete and typo-proof for the hyper-param names
 public struct HyperParams {
     public static let lr = "learningRate"
 }
@@ -16,28 +16,18 @@ open class StatDelegate {
     open var name: String { return "" }
     var defaultConfig: [String:Float] { return [:] }
     public init() {}
-    public func update(
-        state: inout [String: Tensor<Float>],
-        for param: Tensor<Float>,
-        along direction: Tensor<Float>,
-        config: inout [String:Float]
-    ) { }
+    public func update(_ state: inout [String: TF], param: TF, grad: TF, config: inout [String:Float]) { }
 }
 
 //export
 open class StepDelegate {
     var defaultConfig: [String:Float] { return [:] }
     public init() {}
-    public func update(
-        param: inout Tensor<Float>,
-        along direction: inout Tensor<Float>,
-        state: [String: Tensor<Float>],
-        config: inout [String:Float]
-    ) { }
+    public func update(_ param: inout TF, grad: inout TF, state: [String: TF], config: inout [String:Float]) { }
 }
 
 public extension Tensor where Scalar: Numeric {
-    mutating func reset0() {
+    mutating func resetTo0() {
         self = Tensor(0)
     }
 }
@@ -47,33 +37,35 @@ public class StatefulOptimizer<Model: Layer>
     public var configs: [[String:Float]]
     public var splitFunc: (Int) -> Int
     public var states: [String: Model.AllDifferentiableVariables]
-    public var statDelegates: [StatDelegate]
-    public var stepDelegates: [StepDelegate]
+    public var stats: [StatDelegate]
+    public var steppers: [StepDelegate]
     public init(
         for model: __shared Model,
-        stepDelegates: [StepDelegate],
-        statDelegates: [StatDelegate],
+        steppers: [StepDelegate],
+        stats: [StatDelegate],
         configs: [[String:Float]],
         splitFunc: @escaping (Int) -> Int
     ) {
         self.configs = Array(repeating: [:], count: configs.count)
         states = [:]
-        for stepDelegate in stepDelegates {
-            for i in self.configs.indices { self.configs[i].merge(stepDelegate.defaultConfig) { (_, new) in new } }
+        for stepper in steppers {
+            for i in self.configs.indices { 
+                self.configs[i].merge(stepper.defaultConfig) { (_, new) in new } 
+            }
         }
-        for statDelegate in statDelegates {
-            for i in self.configs.indices { self.configs[i].merge(statDelegate.defaultConfig) { (_, new) in new } }
-            states[statDelegate.name] = model.allDifferentiableVariables
-            for kp in states[statDelegate.name]!.keyPaths { 
-                states[statDelegate.name]![keyPath: kp].reset0()
+        for stat in stats {
+            for i in self.configs.indices { 
+                self.configs[i].merge(stat.defaultConfig) { (_, new) in new } 
+            }
+            states[stat.name] = model.allDifferentiableVariables
+            for kp in states[stat.name]!.keyPaths { 
+                states[stat.name]![keyPath: kp].resetTo0()
             }
         }
         for i in 0..<configs.count {
             self.configs[i].merge(configs[i]) { (_, new) in new }
         }
-        self.stepDelegates = stepDelegates
-        self.statDelegates = statDelegates
-        self.splitFunc = splitFunc
+        (self.steppers,self.stats,self.splitFunc) = (steppers,stats,splitFunc)
     }
         
     public func update(
@@ -84,22 +76,12 @@ public class StatefulOptimizer<Model: Layer>
             var grad = direction[keyPath: kp]
             var state = states.mapValues(){$0[keyPath: kp]}
             var config = configs[splitFunc(i)]
-            for statDelegate in statDelegates {
-                statDelegate.update(
-                    state: &state,
-                    for: model[keyPath: kp],
-                    along: grad,
-                    config: &config
-                )
+            for stat in stats {
+                stat.update(&state, param: model[keyPath: kp], grad: grad, config: &config)
             }
             for n in states.keys { states[n]![keyPath: kp] = state[n]! }
-            for stepDelegate in stepDelegates {
-                stepDelegate.update(
-                    param: &model[keyPath: kp],
-                    along: &grad,
-                    state: state,
-                    config: &config
-                )
+            for stepper in steppers {
+                stepper.update(&model[keyPath: kp], grad: &grad, state: state, config: &config)
             }
             configs[splitFunc(i)] = config
         }
@@ -113,6 +95,7 @@ extension StatefulOptimizer: Optimizer{
             for i in configs.indices {self.configs[i][HyperParams.lr] = newValue }
         }
     }
+    //For discriminative learning rates
     public var learningRates: [Float] {
         get {
             var res: [Float] = []
@@ -127,12 +110,12 @@ extension StatefulOptimizer: Optimizer{
 
 extension StatefulOptimizer{
     public convenience init (for model: __shared Model,
-                             stepDelegates: [StepDelegate],
-                             statDelegates: [StatDelegate],
+                             steppers: [StepDelegate],
+                             stats: [StatDelegate],
                              config: [String:Float]) {
         self.init(for: model,
-                  stepDelegates: stepDelegates,
-                  statDelegates: statDelegates,
+                  steppers: steppers,
+                  stats: stats,
                   configs: [config],
                   splitFunc: { _ in return 0 })
     }
@@ -140,17 +123,10 @@ extension StatefulOptimizer{
 
 public class SGDStep: StepDelegate {
     override public var defaultConfig: [String: Float] { return [HyperParams.lr: 3e-3] }
-    override public func update(
-        param: inout TF,
-        along direction: inout TF,
-        state: [String: TF],
-        config: inout [String:Float]
-    ) {
-        param -= direction * config[HyperParams.lr]!
+    override public func update(_ param: inout TF, grad: inout TF, state: [String: TF], config: inout [String:Float]) {
+        param -= grad * config[HyperParams.lr]!
     }
 }
-
-//public struct WeightDecayKey: HetDictKey { public static var defaultValue: Float = 0 }
 
 public extension HyperParams {
     static let wd = "weightDecay"
@@ -158,25 +134,15 @@ public extension HyperParams {
 
 public class WeightDecay: StepDelegate {
     override public var defaultConfig: [String: Float] { return [HyperParams.wd: 0] }
-    override public func update(
-        param: inout TF,
-        along direction: inout TF,
-        state: [String: TF],
-        config: [String:Float]
-    ) {
+    override public func update(_ param: inout TF, grad: inout TF, state: [String: TF], config: inout [String:Float]) {
         param *= 1 - config[HyperParams.lr]! * config[HyperParams.wd]!
     }
 }
 
 public class L2Regularization: StepDelegate {
     override public var defaultConfig: [String: Float] { return [HyperParams.wd: 0] }
-    override public func update(
-        param: inout TF,
-        along direction: inout TF,
-        state: [String: TF],
-        config: [String:Float]
-    ) {
-        direction += config[HyperParams.wd]! * param
+    override public func update(_ param: inout TF, grad: inout TF, state: [String: TF], config: inout [String:Float]) {
+        grad += config[HyperParams.wd]! * param
     }
 }
 
@@ -185,9 +151,6 @@ public struct StateKeys {
     public static let avgGrad = "averageGrad"
 }
 
-
-//public struct Momentum: HetDictKey { public static var defaultValue: Float = 0.9 }
-//public struct MomentumDampening: HetDictKey, Equatable { public static var defaultValue: Float = 0.1 }
 public extension HyperParams {
     static let mom = "momentum"
     static let momDamp = "dampening"
@@ -198,31 +161,18 @@ public class AverageGrad: StatDelegate {
     public let dampened: Bool
     public init(dampened: Bool = false) { self.dampened = dampened }
     override public var name: String { return StateKeys.avgGrad }
-    override public func update(
-        state: inout [String: TF],
-        for param: TF,
-        along direction: TF,
-        config: inout [String:Float]
-    ) {
+    override public func update(_ state: inout [String: TF], param: TF, grad: TF, config: inout [String:Float]) {
         state[StateKeys.avgGrad]! *= config[HyperParams.mom]!
         config[HyperParams.momDamp] = 1.0 - (dampened ? config[HyperParams.mom]! : 0.0)
-        state[StateKeys.avgGrad]! += config[HyperParams.momDamp]! * direction
+        state[StateKeys.avgGrad]! += config[HyperParams.momDamp]! * grad
     }
 }
 
 public class MomentumStep: StepDelegate {
-    override public func update(
-        param: inout TF,
-        along direction: inout TF,
-        state: [String: TF],
-        config: [String:Float]
-    ) {
+    override public func update(_ param: inout TF, grad: inout TF, state: [String: TF], config: inout [String:Float]) {
         param -= state[StateKeys.avgGrad]! * config[HyperParams.lr]!
     }
 }
-
-//public struct SquareMomentum: HetDictKey { public static var defaultValue: Float = 0.99 }
-//public struct SquareMomentumDampening: HetDictKey { public static var defaultValue: Float = 0.99 }
 
 public extension HyperParams {
     static let ²mom = "momentumSquares"
@@ -238,15 +188,10 @@ public class AverageSquaredGrad: StatDelegate {
     public init(dampened: Bool = true) { self.dampened = dampened }
     override public var name: String { return StateKeys.avgSqr }
     override public var defaultConfig: [String: Float] { return [HyperParams.²mom: 0.99] }
-    override public func update(
-        state: inout [String: TF],
-        for param: TF,
-        along direction: TF,
-        config: inout [String:Float]
-    ) {
+    override public func update(_ state: inout [String: TF], param: TF, grad: TF, config: inout [String:Float]) {
         state[StateKeys.avgSqr]! *= config[HyperParams.²mom]!
         config[HyperParams.²momDamp] = 1.0 - (dampened ? config[HyperParams.²mom]! : 0.0)
-        state[StateKeys.avgSqr]! += config[HyperParams.²momDamp]! * direction.squared()
+        state[StateKeys.avgSqr]! += config[HyperParams.²momDamp]! * grad.squared()
     }
 }
 
@@ -256,12 +201,7 @@ public extension StateKeys {
 
 public class StepCount: StatDelegate {
     override public var name: String { return StateKeys.step }
-    override public func update(
-        state: inout [String: TF],
-        for param: TF,
-        along direction: TF,
-        config: [String:Float]
-    ) {
+    override public func update(_ state: inout [String: TF], param: TF, grad: TF, config: inout [String:Float]) {
         state[StateKeys.step]! += 1.0
     }
 }
@@ -273,12 +213,7 @@ public extension HyperParams {
 
 public class AdamStep: StepDelegate {
     override public var defaultConfig: [String: Float] { return [HyperParams.eps: 1e-5] }
-    override public func update(
-        param: inout TF,
-        along direction: inout TF,
-        state: [String: TF],
-        config: [String:Float]
-    ) {
+    override public func update(_ param: inout TF, grad: inout TF, state: [String: TF], config: inout [String:Float]) {
         let step = state[StateKeys.step]!
         let (mom,damp) = (config[HyperParams.mom]!,config[HyperParams.momDamp]!)
         let debias1 = damp * (1 - pow(mom, step)) / (1 - mom)
@@ -301,7 +236,7 @@ public func sgdOpt<Model>(lr: Float, mom: Float = 0.9, wd: Float = 0.0, dampenin
     if mom != 0 { config[HyperParams.mom] = mom }
     if wd != 0  { config[HyperParams.wd ] = wd  }
     return {model in 
-        return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)}
+        return StatefulOptimizer(for: model, steppers: steppers, stats: stats, config: config)}
 }
 
 public func adamOpt<Model>(lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Float = 0.0, eps: Float = 1e-5
@@ -315,7 +250,7 @@ public func adamOpt<Model>(lr: Float, mom: Float = 0.9, beta: Float=0.99, wd: Fl
     config[HyperParams.eps] = eps
     if wd != 0  { config[HyperParams.wd ] = wd  }
     return {model in 
-        return StatefulOptimizer(for: model, stepDelegates: steppers, statDelegates: stats, config: config)}
+        return StatefulOptimizer(for: model, steppers: steppers, stats: stats, config: config)}
 }
 
 public extension StatefulOptimizer {
