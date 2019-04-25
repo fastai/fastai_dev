@@ -14,8 +14,23 @@ mv opencv-${OPENCV_VERSION} OpenCV
 cd OpenCV
 mkdir build
 cd build
-cmake -D CMAKE_BUILD_TYPE=Release -D OPENCV_GENERATE_PKGCONFIG=YES -D WITH_QT=OFF -D WITH_OPENGL=ON -D FORCE_VTK=ON -D WITH_TBB=ON -D WITH_GDAL=ON -D WITH_XINE=ON -D ENABLE_PRECOMPILED_HEADERS=OFF ..
-make -j4
+cmake \
+  -D BUILD_LIST=core,imgproc,imgcodecs \
+  -D CMAKE_BUILD_TYPE=Release \
+  -D OPENCV_GENERATE_PKGCONFIG=YES \
+  -D WITH_QT=OFF \
+  -D WITH_OPENGL=ON \
+  -D FORCE_VTK=ON \
+  -D WITH_TBB=ON \
+  -D WITH_GDAL=ON \
+  -D WITH_XINE=ON \
+  -D ENABLE_PRECOMPILED_HEADERS=OFF \
+  -D WITH_IPP=ON \
+  -D CPU_BASELINE=NATIVE \
+  -D ENABLE_FAST_MATH=ON \
+  -D BUILD_JPEG=ON \
+  .. | tee install_cv4.log
+make -j $(nproc --all)
 sudo make install
 sudo ldconfig
 popd
