@@ -4,28 +4,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// Wrapper for std::vector<string>
-typedef struct CStrings {
-    const char** strs;
-    int length;
-} CStrings;
-
-typedef struct ByteArray {
-    char* data;
-    int length;
-} ByteArray;
-
-// Wrapper for std::vector<int>
-typedef struct IntVector {
-    int* val;
-    int length;
-} IntVector;
-
-// Wrapper for std::vector<float>
-typedef struct FloatVector {
-    float* val;
-    int length;
-} FloatVector;
+typedef struct CStrings    { const char** strs; int length; } CStrings;
+typedef struct ByteArray   { char* data;        int length; } ByteArray;
+typedef struct IntVector   { int* val;          int length; } IntVector;
+typedef struct FloatVector { float* val;        int length; } FloatVector;
 
 #ifdef __cplusplus
 #include <opencv2/opencv.hpp>
@@ -38,17 +20,8 @@ typedef struct RawData {
     struct ByteArray data;
 } RawData;
 
-// Wrapper for an individual cv::Point2f
-typedef struct Point2f {
-    float x;
-    float y;
-} Point2f;
-
-// Wrapper for an individual cv::cvPoint
-typedef struct Point {
-    int x;
-    int y;
-} Point;
+typedef struct Point2f { float x; float y; } Point2f;
+typedef struct Point { int x; int y; } Point;
 
 // Wrapper for the vector of Point structs aka std::vector<Point>
 typedef struct Points {
@@ -56,7 +29,6 @@ typedef struct Points {
     int length;
 } Points;
 
-// Contour is alias for Points
 typedef Points Contour;
 
 // Wrapper for the vector of Points vectors aka std::vector< std::vector<Point> >

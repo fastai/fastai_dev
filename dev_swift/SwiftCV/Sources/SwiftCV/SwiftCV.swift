@@ -43,25 +43,14 @@ public enum MatType: Int32 {
     case CV_64F = 6
 }
 
-public struct Mat {
+public class Mat {
     /// CV Mat wrapper
     internal var p: COpenCV.Mat
 
-    public var cols: Int {
-        return Int(COpenCV.Mat_Cols(p))
-    }
-
-    public var rows: Int {
-        return Int(COpenCV.Mat_Rows(p))
-    }
-
-    public var channels: Int {
-        return Int(COpenCV.Mat_Channels(p))
-    }
-
-    public var type: MatType {
-        return MatType(rawValue: COpenCV.Mat_Type(p))!
-    }
+    public var cols: Int { return Int(COpenCV.Mat_Cols(p)) }
+    public var rows: Int { return Int(COpenCV.Mat_Rows(p)) }
+    public var channels: Int { return Int(COpenCV.Mat_Channels(p)) }
+    public var type: MatType { return MatType(rawValue: COpenCV.Mat_Type(p))!  }
 
     public var size: [Int] {
         var intVector = COpenCV.IntVector()
@@ -74,52 +63,32 @@ public struct Mat {
         return size
     }
 
-    public var total: Int {
-        return Int(COpenCV.Mat_Total(p))
-    }
-
-    public var elemSize: Int {
-        return Int(COpenCV.Mat_ElemSize(p))
-    }
+    public var total: Int { return Int(COpenCV.Mat_Total(p)) }
+    public var elemSize: Int { return Int(COpenCV.Mat_ElemSize(p)) }
+    public var isContinuous: Bool { return Bool(COpenCV.Mat_IsContinuous(p)) }
+    public func clone() -> Mat { return Mat(COpenCV.Mat_Clone(p)) }
 
     public var dataPtr: UnsafeMutablePointer<Int8> {
-        let byteArr = COpenCV.Mat_DataPtr(p)
-        return byteArr.data
-    }
-
-    public var isContinuous: Bool {
-        return Bool(COpenCV.Mat_IsContinuous(p))
-    }
-
-    public func clone() -> Mat {
-        return Mat(COpenCV.Mat_Clone(p))
+        return COpenCV.Mat_DataPtr(p).data
     }
 
     public init(_ pMat: COpenCV.Mat? = nil) {
-        if pMat != nil {
-            p = pMat!
-        } else {
-            p = Mat_New()
-        }
+        if pMat != nil { p = pMat!  }
+        else           { p = Mat_New() }
     }
 
     public init(_ mat: Mat? = nil) {
-        if mat != nil {
-            p = mat!.p
-        } else {
-            p = Mat_New()
-        }
+        if mat != nil { p = mat!.p }
+        else          { p = Mat_New() }
     }
 
-    public init() {
-        p = Mat_New()
-    }
+    public init() { p = Mat_New() }
+    deinit { Mat_Close(p) }
 }
 
 
 public func imread(_ filename: String, _ flags: IMReadMode = IMReadMode.IMREAD_COLOR) -> Mat {
-    let ret = Image_IMRead(strdup(filename), flags.rawValue)!
-    return Mat(ret)
+    return Mat(Image_IMRead(strdup(filename), flags.rawValue)!)
 }
 
 public func imwrite(_ filename: String, _ img: Mat) -> Bool {
@@ -168,8 +137,7 @@ public func copyMakeBorder(_ src: Mat, _ dst: Mat? = nil,
 
 public func remap(_ src: Mat, _ dst: Mat? = nil,
                   _ map1: Mat, _ map2: Mat,
-                  _ interpolation: InterpolationFlag,
-                  _ borderType: BorderType, bv: RGBA
+                  _ interpolation: InterpolationFlag, _ borderType: BorderType, bv: RGBA
 ) -> Mat {
     let out = Mat(dst)
     let bcol = COpenCV.Scalar(val1: bv.b, val2: bv.g, val3: bv.r, val4: bv.b)
@@ -203,6 +171,5 @@ public func transpose(_ src: Mat, _ dst: Mat? = nil) -> Mat {
     return out
 }
 
-public func cvVersion() -> String {
-    return String(cString: COpenCV.openCVVersion()!)
-}
+public func cvVersion() -> String { return String(cString: COpenCV.openCVVersion()!) }
+
