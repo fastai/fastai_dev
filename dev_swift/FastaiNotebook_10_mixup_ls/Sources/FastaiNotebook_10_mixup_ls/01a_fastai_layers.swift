@@ -315,6 +315,10 @@ extension KeyPathIterable {
     }
 }
 
+extension Layer {
+    public var parameters: AllDifferentiableVariables { return allDifferentiableVariables }
+}
+
 precedencegroup ExponentiationPrecedence {
     associativity: right
     higherThan: MultiplicationPrecedence
