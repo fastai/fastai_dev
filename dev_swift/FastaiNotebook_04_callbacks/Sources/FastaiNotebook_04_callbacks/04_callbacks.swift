@@ -69,7 +69,7 @@ public enum LearnerAction: Error {
     case stop(reason: String)
 }
 
-/// A model learner, responsible for initializing and training a model on a given dataset.
+/// Initializes and trains a model on a given dataset.
 public final class Learner<Label: TensorGroup,
                            Opt: TensorFlow.Optimizer & AnyObject>
     where Opt.Scalar: Differentiable,
@@ -78,7 +78,6 @@ public final class Learner<Label: TensorGroup,
           // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
           Opt.Model.Input == Tensor<Float>
 {
-    // Common type aliases.
     public typealias Model = Opt.Model
     public typealias Input = Model.Input
     public typealias Output = Model.Output
@@ -96,13 +95,9 @@ public final class Learner<Label: TensorGroup,
         init(_ f: @escaping F) { self.f = f }
     }
     
-    /// The dataset on which the model will be trained.
     public var data: Data
-    /// The optimizer used for updating model parameters along gradient vectors.
     public var opt: Optimizer
-    /// The function that computes a loss value when given a prediction and a label.
     public var lossFunc: LossFunction
-    /// The model being trained.
     public var model: Model
     
     //Is there a better way to initialize those to not make them Optionals?
@@ -110,21 +105,13 @@ public final class Learner<Label: TensorGroup,
     public var currentTarget: Label!
     public var currentOutput: Output!
     
-    /// The number of total epochs.
     public private(set) var epochCount: Int = .zero
-    /// The current epoch.
     public private(set) var currentEpoch: Int = .zero
-    /// The current gradient.
     public private(set) var currentGradient: Model.CotangentVector = .zero
-    /// The current loss.
     public private(set) var currentLoss: Loss = .zero
-    /// In training mode or not
     public private(set) var inTrain: Bool = false
-    /// The current epoch + iteration, float between 0.0 and epochCount
     public private(set) var pctEpochs: Float = 0.0
-    /// The current iteration
     public private(set) var currentIter: Int = 0
-    /// The number of iterations in the current dataset
     public private(set) var iterCount: Int = 0
     
     open class Delegate {
@@ -132,22 +119,17 @@ public final class Learner<Label: TensorGroup,
         public init () {}
         
         open func trainingWillStart(learner: Learner) throws {}
-        /// The completion of model training.
         open func trainingDidFinish(learner: Learner) throws {}
-        /// A closure which will be called upon the start of an epoch.
         open func epochWillStart(learner: Learner) throws {}
-        /// A closure which will be called upon the completion of an epoch.
         open func epochDidFinish(learner: Learner) throws {}
-        /// A closure which will be called upon the start of model validation.
         open func validationWillStart(learner: Learner) throws {}
-        /// A closure which will be called upon the start of training on a batch.
         open func batchWillStart(learner: Learner) throws {}
-        /// A closure which will be called upon the completion of training on a batch.
         open func batchDidFinish(learner: Learner) throws {}
-        /// A closure which will be called when a new gradient has been computed.
         open func didProduceNewGradient(learner: Learner) throws {}
-        /// A closure which will be called upon the completion of an optimizer update.
         open func optimizerDidUpdate(learner: Learner) throws {}
+        open func batchSkipped(learner: Learner, reason:String) throws {}
+        open func epochSkipped(learner: Learner, reason:String) throws {}
+        open func trainingStopped(learner: Learner, reason:String) throws {}
         ///
         /// TODO: learnerDidProduceNewOutput and learnerDidProduceNewLoss need to
         /// be differentiable once we can have the loss function inside the Learner
@@ -157,29 +139,15 @@ public final class Learner<Label: TensorGroup,
         didSet { delegates.sort { $0.order < $1.order } }
     }
     
-    /// Creates a learner.
-    ///
-    /// - Parameters:
-    ///   - data: The databunch used for training and validation.
-    ///   - lossFunction: The loss function.
-    ///   - optimizer: The optimizer used for updating model parameters.
-    ///   - modelInitializer: The closure that produces the model to be trained.
-    public init(data: Data,
-                lossFunc: @escaping LossFunction.F,
-                optFunc: (Model) -> Optimizer,
-                modelInit: () -> Model) {
-        self.data = data
-        self.lossFunc = LossFunction(lossFunc)
+    public init(data: Data, lossFunc: @escaping LossFunction.F,
+                optFunc: (Model) -> Optimizer, modelInit: ()->Model) {
+        (self.data,self.lossFunc) = (data,LossFunction(lossFunc))
         model = modelInit()
         opt = optFunc(self.model)
     }
 }
 
 extension Learner {
-    /// Trains the model on the given batch.
-    ///
-    /// - Parameter batch: The batch of input data and labels to be trained on.
-    ///
     private func evaluate(onBatch batch: DataBatch<Input, Label>) throws {
         currentOutput = model(currentInput)
         currentLoss = lossFunc.f(currentOutput, currentTarget)
@@ -196,14 +164,17 @@ extension Learner {
         opt.update(&model.allDifferentiableVariables, along: self.currentGradient)
     }
     
-    /// Performs a training epoch on a Dataset.
     private func train(onDataset ds: FADataset<DataBatch<Input, Label>>) throws {
         iterCount = ds.count
         for batch in ds.ds {
             (currentInput, currentTarget) = (batch.xb, batch.yb)
-            try delegates.forEach { try $0.batchWillStart(learner: self) }
-            do { if inTrain { try train(onBatch: batch) } else { try evaluate(onBatch: batch) }}
-            catch LearnerAction.skipBatch {}
+            do {
+                try delegates.forEach { try $0.batchWillStart(learner: self) }
+                if inTrain { try train(onBatch: batch) } else { try evaluate(onBatch: batch) }
+            }
+            catch LearnerAction.skipBatch(let reason) {
+                try delegates.forEach {try $0.batchSkipped(learner: self, reason:reason)}
+            }
             try delegates.forEach { try $0.batchDidFinish(learner: self) }
         }
     }
@@ -223,23 +194,22 @@ extension Learner {
                     do { try train(onDataset: data.train) }
                     try delegates.forEach { try $0.validationWillStart(learner: self) }
                     do { try train(onDataset: data.valid) }
-                    
-                } catch LearnerAction.skipEpoch {}
+                } catch LearnerAction.skipEpoch(let reason) {
+                    try delegates.forEach {try $0.epochSkipped(learner: self, reason:reason)}
+                }
                 try delegates.forEach { try $0.epochDidFinish(learner: self) }
             }
-        } catch LearnerAction.stop {}
+        } catch LearnerAction.stop(let reason) {
+            try delegates.forEach {try $0.trainingStopped(learner: self, reason:reason)}
+        }
+
         try delegates.forEach { try $0.trainingDidFinish(learner: self) }
     }
 }
 
 public extension Learner {
-    func addDelegate(_ delegate: Learner.Delegate) {
-        delegates.append(delegate)
-    }
-    
-    func addDelegates(_ delegates: [Learner.Delegate]) {
-        self.delegates += delegates
-    }
+    func addDelegate (_ delegate :  Learner.Delegate ) { delegates.append(delegate) }
+    func addDelegates(_ delegates: [Learner.Delegate]) { self.delegates += delegates }
 }
 
 extension Learner {
@@ -250,9 +220,7 @@ extension Learner {
 
         public override func epochWillStart(learner: Learner) {
             Context.local.learningPhase = .training
-            learner.pctEpochs = Float(learner.currentEpoch)
-            learner.inTrain = true
-            learner.currentIter = 0
+            (learner.pctEpochs,learner.inTrain,learner.currentIter) = (Float(learner.currentEpoch),true,0)
         }
         
         public override func batchDidFinish(learner: Learner) {
@@ -308,9 +276,7 @@ extension Learner {
 extension Learner {
     public class Normalize: Delegate {
         public let mean, std: TF
-        public init(mean: TF, std: TF){ 
-            (self.mean,self.std) = (mean,std)
-        }
+        public init(mean: TF, std: TF) { (self.mean,self.std) = (mean,std) }
         
         public override func batchWillStart(learner: Learner) {
             learner.currentInput = (learner.currentInput! - mean) / std
