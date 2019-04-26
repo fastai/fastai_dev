@@ -1,3 +1,5 @@
+set -ex
+
 OPENCV_VERSION='4.1.0'
 
 sudo apt-fast -y update
