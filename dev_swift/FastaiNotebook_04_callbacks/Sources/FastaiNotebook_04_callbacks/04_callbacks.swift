@@ -64,9 +64,9 @@ public func mnistDataBunch(path: Path = mnistPath, flat: Bool = false, bs: Int =
 }
 
 public enum LearnerAction: Error {
-    case skipEpoch
-    case skipBatch
-    case stop
+    case skipEpoch(reason: String)
+    case skipBatch(reason: String)
+    case stop(reason: String)
 }
 
 /// A model learner, responsible for initializing and training a model on a given dataset.
@@ -106,9 +106,9 @@ public final class Learner<Label: TensorGroup,
     public var model: Model
     
     //Is there a better way to initialize those to not make them Optionals?
-    public var currentInput: Input? = nil
-    public var currentTarget: Label? = nil
-    public var currentOutput: Output? = nil
+    public var currentInput: Input!
+    public var currentTarget: Label!
+    public var currentOutput: Output!
     
     /// The number of total epochs.
     public private(set) var epochCount: Int = .zero
@@ -181,8 +181,8 @@ extension Learner {
     /// - Parameter batch: The batch of input data and labels to be trained on.
     ///
     private func evaluate(onBatch batch: DataBatch<Input, Label>) throws {
-        currentOutput = model(currentInput!)
-        currentLoss = lossFunc.f(currentOutput!, currentTarget!)
+        currentOutput = model(currentInput)
+        currentLoss = lossFunc.f(currentOutput, currentTarget)
     }
     
     private func train(onBatch batch: DataBatch<Input, Label>) throws {
