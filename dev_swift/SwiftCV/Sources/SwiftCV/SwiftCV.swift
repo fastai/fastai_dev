@@ -167,4 +167,6 @@ public func transpose(_ src: Mat, _ dst: Mat? = nil) -> Mat {
 }
 
 public func cvVersion() -> String { return String(cString: COpenCV.openCVVersion()!) }
+public func SetNumThreads(_ nthreads:Int) { COpenCV.SetNumThreads(numericCast(nthreads)) }
+public func GetNumThreads()->Int { return numericCast(COpenCV.GetNumThreads()) }
 
