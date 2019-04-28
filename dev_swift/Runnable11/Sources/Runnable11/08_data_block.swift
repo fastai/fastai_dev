@@ -27,7 +27,7 @@ public func fetchFiles(path: Path, recurse: Bool = false, extensions: [String]? 
     for p in try! path.ls(){
         if p.kind == .directory && recurse { 
             res += fetchFiles(path: p.path, recurse: recurse, extensions: extensions)
-        } else if extensions == nil || extensions!.contains(p.path.extension.lowercased) {
+        } else if extensions == nil || extensions!.contains(p.path.extension.lowercased()) {
             res.append(p.path)
         }
     }

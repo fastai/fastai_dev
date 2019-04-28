@@ -316,7 +316,7 @@ extension KeyPathIterable {
 }
 
 extension Layer {
-    public var parameters: AllDifferentiableVariables { return allDifferentiableVariables }
+    public var variables: AllDifferentiableVariables { return allDifferentiableVariables }
 }
 
 precedencegroup ExponentiationPrecedence {
