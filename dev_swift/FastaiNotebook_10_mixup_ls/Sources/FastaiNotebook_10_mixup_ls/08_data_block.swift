@@ -10,9 +10,9 @@ import Python
 
 public let dataPath = Path.home/".fastai"/"data"
 
-public func downloadImagenette(path: Path = dataPath) -> Path {
-    let url = "https://s3.amazonaws.com/fast-ai-imageclas/imagenette-160.tgz"
-    let fname = "imagenette-160"
+public func downloadImagenette(path: Path = dataPath, sz:String="-160") -> Path {
+    let url = "https://s3.amazonaws.com/fast-ai-imageclas/imagenette\(sz).tgz"
+    let fname = "imagenette\(sz)"
     let file = path/fname
     try! path.mkdir(.p)
     if !file.exists {
@@ -60,13 +60,8 @@ public struct SplitData<Item>{
     }
     
     public init(_ il: ItemList<Item>, fromFunc: (Item) -> Bool){
-        var (trn, val): ([Item], [Item]) = ([], [])
-        for x in il.items {
-            if fromFunc(x) { val.append(x) }
-            else           { trn.append(x) }
-        }
-        self.init(train: ItemList(items: trn, path: il.path),
-                  valid: ItemList(items: val, path: il.path))
+        self.init(train: ItemList(items: il.items.filter { !fromFunc($0) }, path: il.path),
+                  valid: ItemList(items: il.items.filter {  fromFunc($0) }, path: il.path))
     }
 }
 
