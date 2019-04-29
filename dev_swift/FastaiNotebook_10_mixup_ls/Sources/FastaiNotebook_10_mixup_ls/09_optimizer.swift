@@ -37,19 +37,26 @@ public func mergeDicts(_ dicts: inout [[String:Float]], with newDicts: [[String:
     }
 }
 
-public func initState<Model: Layer>(for model: Model, names: [String]) 
--> [WritableKeyPath<Model.AllDifferentiableVariables, TF>: [String:TF]] {
-    return [WritableKeyPath<Model.AllDifferentiableVariables, TF>: [String:TF]](
-        uniqueKeysWithValues: model.parameters.keyPaths.map { ($0, [String:TF](
-            uniqueKeysWithValues: names.map { ($0, TF(0))}
-        ))}
-    )
-}
-
 extension Dictionary where Value == Int{
     public init(mapFromArrays arrays: [[Key]]){
         self.init(uniqueKeysWithValues: arrays.enumerated().flatMap { i, arr in arr.map { ($0, i) } })
     }
+}
+
+//Why doesn't this work?
+//extension Dictionary {
+//    public init(constant: Value, keys: Array(Keys)){
+//        self.init(uniqueKeysWithValues: keys.map { ($0, constant) })
+//    }
+//}
+
+public func initState<Model: Layer>(for model: Model, names: [String]) 
+-> [WritableKeyPath<Model.AllDifferentiableVariables, TF>: [String:TF]] {
+    return [WritableKeyPath<Model.AllDifferentiableVariables, TF>: [String:TF]](
+        uniqueKeysWithValues: model.variables.keyPaths.map { ($0, [String:TF](
+            uniqueKeysWithValues: names.map { ($0, TF(0))}
+        ))}
+    )
 }
 
 public class StatefulOptimizer<Model: Layer>
@@ -117,7 +124,7 @@ extension StatefulOptimizer{
                   steppers: steppers,
                   stats: stats,
                   hpGroups: [hps],
-                  splitArray: [model.parameters.keyPaths])
+                  splitArray: [model.variables.keyPaths])
     }
 }
 
