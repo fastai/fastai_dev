@@ -1,32 +1,35 @@
 //import TensorFlow
 import Path
 import FastaiNotebook_08_data_block
-import vips
-import CSwiftVips
-import SwiftVips
+import SwiftCV
 import Foundation
-
-vipsInit()
 
 let path = downloadImagenette(sz:"-320")
 let allNames = fetchFiles(path: path/"train", recurse: true, extensions: ["jpeg", "jpg"])
 let fNames = Array(allNames[0..<256])
-let ns = fNames.map {$0.string}
-//let ns = allNames.map {$0.string} // 34.3 s
+//let ns = fNames.map {$0.string}
+let ns = allNames.map {$0.string}
 
-func readAndResize(_ name:String)->Double {
-  guard let img = vipsLoadImage(name) else { fatalError("failed to read \(name)") }
-  let w = Double(vips_image_get_width(img))
-  let h = Double(vips_image_get_height(img))
-  let rimg = vipsResize(img, 224/w, 224/h)
-  return vipsMax(rimg)
+SetNumThreads(0)
+
+func readImage(_ path:String)->Mat {
+    let cvImg = imread(path)
+    return cvtColor(cvImg, nil, ColorConversionCode.COLOR_BGR2RGB)
 }
 
+func readAndResize(_ name:String)->UInt8 {
+  let cvImg = readImage(name)
+  let rImg = resize(cvImg, nil, Size(224, 224), 0, 0, InterpolationFlag.INTER_LINEAR)
+  let ptr = UnsafeBufferPointer<UInt8>(start: UnsafePointer<UInt8>(rImg.dataPtr), count: rImg.count)
+  return ptr[0]
+}
+
+var stats = [UInt8]()
 time {
-  let stats = ns.concurrentMap(nthreads:4, readAndResize)
-  //let stats = ns.map(readAndResize)
-  print(stats)
+  stats = ns.concurrentMap(nthreads:4, readAndResize)
+  //stats = ns.map(readAndResize)
 }
+print(stats[0..<10])
 
 
 
