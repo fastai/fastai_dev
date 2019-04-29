@@ -2,8 +2,8 @@ import Foundation
 
 // ThreadSafe and concurrentMap based on https://talk.objc.io/episodes/S01E90-concurrent-map
 public final class ThreadSafe<A> {
-  private var _value: A
-  private let queue = DispatchQueue(label: "ThreadSafe")
+  var _value: A
+  let queue = DispatchQueue(label: "ThreadSafe")
   init(_ value: A) { self._value = value }
   
   var value: A {
