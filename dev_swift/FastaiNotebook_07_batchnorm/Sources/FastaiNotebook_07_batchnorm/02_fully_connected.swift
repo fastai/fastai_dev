@@ -17,6 +17,12 @@ public func testNearZero(_ a: TF, tolerance: Float = 1e-3) {
     assert(abs(a) < tolerance, "Near zero: \(a)")
 }
 
+public func testSame(_ a: TF, _ b: TF) {
+    // Check shapes match so broadcasting doesn't hide shape errors.
+    assert(a.shape == b.shape)
+    testNearZero(a-b)
+}
+
 public func mse(_ out: TF, _ targ: TF) -> TF {
     return (out.squeezingShape(at: -1) - targ).squared().mean()
 }
