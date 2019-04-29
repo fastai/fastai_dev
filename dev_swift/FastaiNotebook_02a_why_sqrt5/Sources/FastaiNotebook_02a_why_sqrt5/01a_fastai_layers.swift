@@ -29,17 +29,10 @@ public extension Tensor where Scalar: TensorFlowFloatingPoint {
     func std(squeezingAxes a: Int...) -> Tensor<Scalar> { return standardDeviation(squeezingAxes: a) }
 }
 
-// Subclass this in traditional OOP style to define new delegates.
-open class LayerDelegate<Output> {
-    public init() {}
-    
-    open func didProduceActivation(_ activation: Output) {}
-}
-
 
 // FALayer is a layer that supports callbacks through its LayerDelegate.
 public protocol FALayer: Layer {
-    var delegate: LayerDelegate<Output> { get set }
+    var delegates: [(Output) -> ()] { get set }
     
     // FALayer's will implement this instead of `func call`.
     @differentiable
@@ -53,7 +46,7 @@ public extension FALayer {
     @differentiable(vjp: callGrad)
     func call(_ input: Input) -> Output {
         let activation = forward(input)
-        delegate.didProduceActivation(activation)
+        delegates.forEach { $0(activation) }
         return activation
     }
        
@@ -65,6 +58,8 @@ public extension FALayer {
         (Output, (Self.Output.CotangentVector) -> (Self.CotangentVector, Self.Input.CotangentVector)) {
         return Swift.valueWithPullback(at: self, input) { (m, i) in m.forward(i) }
     }
+    
+    mutating func addDelegate(_ d: @escaping (Output) -> ()) { delegates.append(d) }
 }
 
 
@@ -75,8 +70,7 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
     public var bias: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
     @noDerivative public let activation: Activation
-    
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
+    @noDerivative public var delegates: [(Output) -> ()] = []
 
     public init(
         weight: Tensor<Scalar>,
@@ -111,7 +105,7 @@ public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative public let strides: (Int, Int)
     @noDerivative public let padding: Padding
     
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
+    @noDerivative public var delegates: [(Output) -> ()] = []
 
     public init(
         filter: Tensor<Scalar>,
@@ -174,7 +168,7 @@ public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative public let strides: (Int, Int)
     @noDerivative public let padding: Padding
     
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
+    @noDerivative public var delegates: [(Output) -> ()] = []
 
     public init(
         filter: Tensor<Scalar>,
@@ -234,7 +228,7 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative let strides: (Int, Int, Int, Int)
     @noDerivative let padding: Padding
     
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
+    @noDerivative public var delegates: [(Output) -> ()] = []
 
     public init(
         poolSize: (Int, Int, Int, Int),
@@ -267,7 +261,7 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 
 @_fixed_layout
 public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
+    @noDerivative public var delegates: [(Output) -> ()] = []
     
     public init() {}
 
