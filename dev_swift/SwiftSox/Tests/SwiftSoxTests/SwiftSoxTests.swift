@@ -15,7 +15,7 @@ final class SwiftSoxTests: XCTestCase {
 
     func testReadSwift() {
       let fd = ReadSoxAudio("sounds/beep-01a.mp3")
-      let sig = fd.signal
+      let sig = fd.pointee.signal
       XCTAssertEqual(sig.rate, 44100.0)
       XCTAssertEqual(sig.precision, 16)
       XCTAssertEqual(sig.channels, 1)

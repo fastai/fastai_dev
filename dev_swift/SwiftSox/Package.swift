@@ -6,9 +6,8 @@ let package = Package(
     name: "SwiftSox",
     products: [ .library( name: "SwiftSox", targets: ["SwiftSox"]), ],
     targets: [
-        .target( name: "SwiftSox", dependencies: ["CSox"]),
+        .target( name: "SwiftSox", dependencies: ["sox"]),
         .testTarget( name: "SwiftSoxTests", dependencies: ["SwiftSox"]),
-        .target( name: "CSox", dependencies: ["sox"]),
         .systemLibrary( name: "sox", pkgConfig: "sox")
     ]
 )

@@ -10,9 +10,9 @@ import Python
 
 public let dataPath = Path.home/".fastai"/"data"
 
-public func downloadImagenette(path: Path = dataPath, sz:String="-160") -> Path {
-    let url = "https://s3.amazonaws.com/fast-ai-imageclas/imagenette\(sz).tgz"
-    let fname = "imagenette\(sz)"
+public func downloadImagenette(path: Path = dataPath) -> Path {
+    let url = "https://s3.amazonaws.com/fast-ai-imageclas/imagenette-160.tgz"
+    let fname = "imagenette-160"
     let file = path/fname
     try! path.mkdir(.p)
     if !file.exists {
@@ -20,6 +20,18 @@ public func downloadImagenette(path: Path = dataPath, sz:String="-160") -> Path 
         _ = "/bin/tar".shell("-xzf", (path/"\(fname).tgz").string, "-C", path.string)
     }
     return file
+}
+
+
+public func show_img<T:NumpyScalarCompatible>(_ img: Tensor<T>, _ w: Int = 7, _ h: Int = 5) {
+    show_img(img.makeNumpyArray(), w, h)
+}
+
+public func show_img(_ img: PythonObject, _ w: Int = 7, _ h: Int = 5) {
+    plt.figure(figsize: [w, h])
+    plt.imshow(img)
+    plt.axis("off")
+    plt.show()
 }
 
 public func fetchFiles(path: Path, recurse: Bool = false, extensions: [String]? = nil) -> [Path] {

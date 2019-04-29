@@ -1,82 +1,70 @@
 //import TensorFlow
-//import Path
-//import FastaiNotebook_08_data_block
+import Path
+import FastaiNotebook_08_data_block
 import vips
+import CSwiftVips
+import SwiftVips
 import Foundation
 
-if vips_init("init") != 0 { fatalError("Failed in init vips") }
-
-let queue = DispatchQueue(label: "q", attributes: .concurrent)
-let nt = 8
-let semaphore = DispatchSemaphore(value: nt)
-for i in 0 ..< 15 {
-  semaphore.wait()
-  queue.async {
-    let songNumber = i + 1
-    print("Downloading song", songNumber)
-    sleep(1) // Download take ~2 sec each
-    print("Downloaded song", songNumber)
-    semaphore.signal()
-  }
-}
-for _ in (0..<nt) {semaphore.wait()}
-print("done")
-
-/*
-func readImage(_ path:String)->Mat {
-  let cvImg = imread(path)
-  return cvtColor(cvImg, nil, ColorConversionCode.COLOR_BGR2RGB)
-}
-func readResized(_ fn:String)->Mat {
-  return resize(readImage(fn), nil, Size(224, 224), 0, 0, InterpolationFlag.INTER_AREA)
-}
-
-public protocol Countable { var count:Int {get} }
-extension Mat  :Countable {}
-extension Array:Countable {}
-
-public extension Sequence where Element:Countable {
-  var totalCount:Int { return map({ $0.count }).reduce(0, +) }
-}
-
+vipsInit()
 
 let path = downloadImagenette(sz:"")
-let allNames = fetchFiles(path: path/"train/n03425413", recurse: false, extensions: ["jpeg", "jpg"])
+let allNames = fetchFiles(path: path/"train", recurse: true, extensions: ["jpeg", "jpg"])
 let fNames = Array(allNames[0..<256])
 let ns = fNames.map {$0.string}
-let imgpath = ns[0]
-let cvImg = readImage(imgpath)
 
-func f()->Array<Mat?> {
-  var result = Array<Mat?>(repeating: nil, count: ns.count)
-  let q = DispatchQueue(label: "q", attributes: .concurrent)
-  var lock = pthread_mutex_t()
-  let semaphore = DispatchSemaphore(value: 2)
-  let c = ns.count
-  for i in 0..<10 {
-    semaphore.wait()
-    print(i)
-    DispatchQueue.global().async {
-      //result[i] = nil
-      //result[i] = transformed
-      //if i==0 {print("*** ", i)}
-      pthread_mutex_lock(&lock)
-      let transformed = readResized(ns[i])
-      semaphore.signal()
-      pthread_mutex_unlock(&lock)
-    }
-  }
-  print("c")
-  semaphore.wait()
-  print("d")
-
-  return result
+func readAndResize(_ name:String)->Double {
+  guard let img = vipsLoadImage(name) else { fatalError("failed to read \(name)") }
+  let w = Double(vips_image_get_width(img))
+  let h = Double(vips_image_get_height(img))
+  let rimg = vipsResize(img, 224/w, 224/h)
+  return vipsMax(rimg)
 }
 
-//time { _ = ns.map(readResized) }
-//time { _ = f() }
+time {
+  let stats = ns.concurrentMap(nthreads:5, readAndResize)
+  print(stats)
+}
 
-let r = f()
-print(r[200] ?? "NA")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+let q = DispatchQueue(label: "q", qos: .userInitiated, attributes: .concurrent)
+let l = DispatchQueue(label: "l")
+let nt = 4
+
+let semaphore = DispatchSemaphore(value: nt)
+var stats = [(Int,Double)]()
+time {
+  for (i,n) in ns.enumerated() {
+    semaphore.wait()
+    q.async {
+      let r = readAndResize(n)
+      l.sync {stats.append((i,r))}
+      semaphore.signal()
+    }
+  }
+  for _ in (0..<nt) {semaphore.wait()}
+  let r2 = stats.sorted{$0.0 < $1.0}.map{$0.1}
+//   print(r2)
+}
 */
 
