@@ -81,7 +81,6 @@ public class Mat {
     }
 }
 
-
 public func imread(_ filename: String, _ flags: IMReadMode = IMReadMode.IMREAD_COLOR) -> Mat {
     return Mat(Image_IMRead(strdup(filename), flags.rawValue)!)
 }
