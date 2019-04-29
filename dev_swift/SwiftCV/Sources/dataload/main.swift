@@ -10,7 +10,7 @@ let fNames = Array(allNames[0..<256])
 //let ns = fNames.map {$0.string}
 let ns = allNames.map {$0.string}
 
-SetNumThreads(1)
+SetNumThreads(0)
 
 func readImage(_ path:String)->Mat {
     let cvImg = imread(path)
