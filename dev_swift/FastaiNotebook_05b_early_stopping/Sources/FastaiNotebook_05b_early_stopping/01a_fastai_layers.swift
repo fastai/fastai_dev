@@ -59,6 +59,11 @@ public extension FALayer {
         return Swift.valueWithPullback(at: self, input) { (m, i) in m.forward(i) }
     }
     
+    var delegates: [(Output) -> ()] { 
+        get { return [] }
+        set {}
+    }
+    
     mutating func addDelegate(_ d: @escaping (Output) -> ()) { delegates.append(d) }
 }
 
@@ -70,7 +75,6 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
     public var bias: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
     @noDerivative public let activation: Activation
-    @noDerivative public var delegates: [(Output) -> ()] = []
 
     public init(
         weight: Tensor<Scalar>,
@@ -104,8 +108,6 @@ public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative public let activation: Activation
     @noDerivative public let strides: (Int, Int)
     @noDerivative public let padding: Padding
-    
-    @noDerivative public var delegates: [(Output) -> ()] = []
 
     public init(
         filter: Tensor<Scalar>,
@@ -167,8 +169,6 @@ public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative public let activation: Activation
     @noDerivative public let strides: (Int, Int)
     @noDerivative public let padding: Padding
-    
-    @noDerivative public var delegates: [(Output) -> ()] = []
 
     public init(
         filter: Tensor<Scalar>,
@@ -227,8 +227,6 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative let poolSize: (Int, Int, Int, Int)
     @noDerivative let strides: (Int, Int, Int, Int)
     @noDerivative let padding: Padding
-    
-    @noDerivative public var delegates: [(Output) -> ()] = []
 
     public init(
         poolSize: (Int, Int, Int, Int),
@@ -261,8 +259,6 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 
 @_fixed_layout
 public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
-    @noDerivative public var delegates: [(Output) -> ()] = []
-    
     public init() {}
 
     @differentiable
