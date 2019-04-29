@@ -29,39 +29,44 @@ public extension Tensor where Scalar: TensorFlowFloatingPoint {
     func std(squeezingAxes a: Int...) -> Tensor<Scalar> { return standardDeviation(squeezingAxes: a) }
 }
 
-import TensorFlow
 
+// FALayer is a layer that supports callbacks through its LayerDelegate.
 public protocol FALayer: Layer {
-    associatedtype Input
-    associatedtype Output
+    var delegates: [(Output) -> ()] { get set }
     
-    var delegate: LayerDelegate<Output> { get set }
-    
+    // FALayer's will implement this instead of `func call`.
     @differentiable
     func forward(_ input: Input) -> Output
+    
+    associatedtype Input
+    associatedtype Output
 }
 
 public extension FALayer {
-    // NOTE: AutoDiff synthesizes a leaking VJP for this, so we define a custom VJP.
-    // NOTE: If we use `@differentiating`, then there is a linker error. So we use `@differentiable` instead.
     @differentiable(vjp: callGrad)
     func call(_ input: Input) -> Output {
         let activation = forward(input)
-        delegate.didProduceActivation(activation)
+        delegates.forEach { $0(activation) }
         return activation
     }
-    
+       
+    // NOTE: AutoDiff synthesizes a leaking VJP for this, so we define a custom VJP.
+    //    TF-475: https://bugs.swift.org/browse/TF-475
+    // NOTE: If we use `@differentiating`, then there is a linker error. So we use `@differentiable` instead.
+    //    TF-476: https://bugs.swift.org/browse/TF-476
     func callGrad(_ input: Input) ->
         (Output, (Self.Output.CotangentVector) -> (Self.CotangentVector, Self.Input.CotangentVector)) {
         return Swift.valueWithPullback(at: self, input) { (m, i) in m.forward(i) }
     }
+    
+    var delegates: [(Output) -> ()] { 
+        get { return [] }
+        set {}
+    }
+    
+    mutating func addDelegate(_ d: @escaping (Output) -> ()) { delegates.append(d) }
 }
 
-open class LayerDelegate<Output> {
-    public init() {}
-    
-    open func didProduceActivation(_ activation: Output) {}
-}
 
 
 @_fixed_layout
@@ -70,8 +75,6 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
     public var bias: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
     @noDerivative public let activation: Activation
-    
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
 
     public init(
         weight: Tensor<Scalar>,
@@ -105,8 +108,6 @@ public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative public let activation: Activation
     @noDerivative public let strides: (Int, Int)
     @noDerivative public let padding: Padding
-    
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
 
     public init(
         filter: Tensor<Scalar>,
@@ -168,8 +169,6 @@ public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative public let activation: Activation
     @noDerivative public let strides: (Int, Int)
     @noDerivative public let padding: Padding
-    
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
 
     public init(
         filter: Tensor<Scalar>,
@@ -228,8 +227,6 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative let poolSize: (Int, Int, Int, Int)
     @noDerivative let strides: (Int, Int, Int, Int)
     @noDerivative let padding: Padding
-    
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
 
     public init(
         poolSize: (Int, Int, Int, Int),
@@ -262,8 +259,6 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 
 @_fixed_layout
 public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
-    @noDerivative public var delegate: LayerDelegate<Output> = LayerDelegate()
-    
     public init() {}
 
     @differentiable
@@ -316,7 +311,10 @@ extension KeyPathIterable {
 }
 
 extension Layer {
-    public var variables: AllDifferentiableVariables { return allDifferentiableVariables }
+    public var variables: AllDifferentiableVariables {
+        get { return allDifferentiableVariables }
+        set { allDifferentiableVariables = newValue }
+    }
 }
 
 precedencegroup ExponentiationPrecedence {

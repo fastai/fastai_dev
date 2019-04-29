@@ -8,8 +8,7 @@ import Path
 import TensorFlow
 
 public struct BasicModel: Layer {
-    public var layer1: FADense<Float>
-    public var layer2: FADense<Float>
+    public var layer1, layer2: FADense<Float>
     
     public init(nIn: Int, nHid: Int, nOut: Int){
         layer1 = FADense(nIn, nHid, activation: relu)
@@ -18,14 +17,14 @@ public struct BasicModel: Layer {
     
     @differentiable
     public func call(_ input: Tensor<Float>) -> Tensor<Float> {
-        return input.sequenced(through: layer1, layer2)
+        return layer2(layer1(input))
     }
 }
 
-public struct FADataset<Element> where Element: TensorGroup{
+public struct FADataset<Element> where Element: TensorGroup {
     public var innerDs: Dataset<Element>
-    public var shuffle: Bool = false
-    public var bs: Int = 64 
+    public var shuffle = false
+    public var bs = 64 
     public var dsCount: Int
     
     public var count: Int {
@@ -38,26 +37,25 @@ public struct FADataset<Element> where Element: TensorGroup{
         return innerDs.shuffled(sampleCount: dsCount, randomSeed: seed).batched(bs)
     }
     
-    public init(_ ds: Dataset<Element>, len: Int, shuffle: Bool = false, bs: Int = 64){
+    public init(_ ds: Dataset<Element>, len: Int, shuffle: Bool = false, bs: Int = 64) {
         (self.innerDs,self.dsCount,self.shuffle,self.bs) = (ds, len, shuffle, bs)
     }
 }
 
 public struct DataBunch<Element> where Element: TensorGroup{
-    public var train: FADataset<Element>
-    public var valid: FADataset<Element> 
+    public var train, valid: FADataset<Element>
     
-    public init(train: Dataset<Element>, valid: Dataset<Element>, trainLen: Int, validLen: Int,  bs: Int = 64) {
+    public init(train: Dataset<Element>, valid: Dataset<Element>, trainLen: Int, validLen: Int, bs: Int = 64) {
         self.train = FADataset(train, len: trainLen, shuffle: true,  bs: bs)
         self.valid = FADataset(valid, len: validLen, shuffle: false, bs: 2*bs)
     }
 }
 
-public func mnistDataBunch(path: Path = mnistPath, flat: Bool = false, bs: Int = 64
-                          ) -> DataBunch<DataBatch<TF, TI>>{
+public func mnistDataBunch(path: Path = mnistPath, flat: Bool = false, bs: Int = 64)
+   -> DataBunch<DataBatch<TF, TI>> {
     let (xTrain,yTrain,xValid,yValid) = loadMNIST(path: path, flat: flat)
-    return DataBunch(train: Dataset(elements:DataBatch(xb:xTrain, yb:yTrain)), 
-                     valid: Dataset(elements:DataBatch(xb:xValid, yb:yValid)),
+    return DataBunch(train: Dataset(elements: DataBatch(xb:xTrain, yb: yTrain)), 
+                     valid: Dataset(elements: DataBatch(xb:xValid, yb: yValid)),
                      trainLen: xTrain.shape[0],
                      validLen: xValid.shape[0],
                      bs: bs)
@@ -82,7 +80,7 @@ public final class Learner<Label: TensorGroup,
     public typealias Input = Model.Input
     public typealias Output = Model.Output
     public typealias Data = DataBunch<DataBatch<Input, Label>>
-    public typealias Loss = Tensor<Float>
+    public typealias Loss = TF
     public typealias Optimizer = Opt
     public typealias Variables = Model.AllDifferentiableVariables
     public typealias EventHandler = (Learner) throws -> Void
@@ -100,19 +98,18 @@ public final class Learner<Label: TensorGroup,
     public var lossFunc: LossFunction
     public var model: Model
     
-    //Is there a better way to initialize those to not make them Optionals?
     public var currentInput: Input!
     public var currentTarget: Label!
     public var currentOutput: Output!
     
-    public private(set) var epochCount: Int = .zero
-    public private(set) var currentEpoch: Int = .zero
-    public private(set) var currentGradient: Model.CotangentVector = .zero
-    public private(set) var currentLoss: Loss = .zero
-    public private(set) var inTrain: Bool = false
-    public private(set) var pctEpochs: Float = 0.0
-    public private(set) var currentIter: Int = 0
-    public private(set) var iterCount: Int = 0
+    public private(set) var epochCount = 0
+    public private(set) var currentEpoch = 0
+    public private(set) var currentGradient = Model.CotangentVector.zero
+    public private(set) var currentLoss = Loss.zero
+    public private(set) var inTrain = false
+    public private(set) var pctEpochs = Float.zero
+    public private(set) var currentIter = 0
+    public private(set) var iterCount = 0
     
     open class Delegate {
         open var order: Int { return 0 }
@@ -154,14 +151,14 @@ extension Learner {
     }
     
     private func train(onBatch batch: DataBatch<Input, Label>) throws {
-        let (xb,yb) = (currentInput!,currentTarget!)
+        let (xb,yb) = (currentInput!,currentTarget!) //We still have to force-unwrap those for AD...
         (currentLoss, currentGradient) = model.valueWithGradient { model -> Loss in 
             let y = model(xb)                                      
             currentOutput = y
             return lossFunc.f(y, yb)
         }
-        try delegates.forEach { try $0.didProduceNewGradient(learner: self) }
-        opt.update(&model.allDifferentiableVariables, along: self.currentGradient)
+        for d in delegates { try d.didProduceNewGradient(learner: self) }
+        opt.update(&model.variables, along: self.currentGradient)
     }
     
     private func train(onDataset ds: FADataset<DataBatch<Input, Label>>) throws {
@@ -169,13 +166,13 @@ extension Learner {
         for batch in ds.ds {
             (currentInput, currentTarget) = (batch.xb, batch.yb)
             do {
-                try delegates.forEach { try $0.batchWillStart(learner: self) }
+                for d in delegates { try d.batchWillStart(learner: self) }
                 if inTrain { try train(onBatch: batch) } else { try evaluate(onBatch: batch) }
             }
             catch LearnerAction.skipBatch(let reason) {
-                try delegates.forEach {try $0.batchSkipped(learner: self, reason:reason)}
+                for d in delegates {try d.batchSkipped(learner: self, reason:reason)}
             }
-            try delegates.forEach { try $0.batchDidFinish(learner: self) }
+            for d in delegates { try d.batchDidFinish(learner: self) }
         }
     }
 }
@@ -186,24 +183,24 @@ extension Learner {
     public func fit(_ epochCount: Int) throws {
         self.epochCount = epochCount
         do {
-            try delegates.forEach { try $0.trainingWillStart(learner: self) }
+            for d in delegates { try d.trainingWillStart(learner: self) }
             for i in 0..<epochCount {
                 self.currentEpoch = i
                 do {
-                    try delegates.forEach { try $0.epochWillStart(learner: self) }
-                    do { try train(onDataset: data.train) }
-                    try delegates.forEach { try $0.validationWillStart(learner: self) }
-                    do { try train(onDataset: data.valid) }
+                    for d in delegates { try d.epochWillStart(learner: self) }
+                    try train(onDataset: data.train)
+                    for d in delegates { try d.validationWillStart(learner: self) }
+                    try train(onDataset: data.valid)
                 } catch LearnerAction.skipEpoch(let reason) {
-                    try delegates.forEach {try $0.epochSkipped(learner: self, reason:reason)}
+                    for d in delegates {try d.epochSkipped(learner: self, reason:reason)}
                 }
-                try delegates.forEach { try $0.epochDidFinish(learner: self) }
+                for d in delegates { try d.epochDidFinish(learner: self) }
             }
         } catch LearnerAction.stop(let reason) {
-            try delegates.forEach {try $0.trainingStopped(learner: self, reason:reason)}
+            for d in delegates {try d.trainingStopped(learner: self, reason:reason)}
         }
 
-        try delegates.forEach { try $0.trainingDidFinish(learner: self) }
+        for d in delegates { try d.trainingDidFinish(learner: self) }
     }
 }
 
@@ -242,9 +239,9 @@ extension Learner {
     public class AvgMetric: Delegate {
         public let metrics: [(Output, Label) -> TF]
         var total: Int = 0
-        var partials: [TF] = []
+        var partials = [TF]()
         
-        public init(metrics: [(Output, Label) -> TF]){ self.metrics = metrics}
+        public init(metrics: [(Output, Label) -> TF]) { self.metrics = metrics}
         
         public override func epochWillStart(learner: Learner) {
             total = 0
