@@ -10,9 +10,9 @@ import Python
 
 public let dataPath = Path.home/".fastai"/"data"
 
-public func downloadImagenette(path: Path = dataPath) -> Path {
-    let url = "https://s3.amazonaws.com/fast-ai-imageclas/imagenette-160.tgz"
-    let fname = "imagenette-160"
+public func downloadImagenette(path: Path = dataPath, sz:String="-160") -> Path {
+    let url = "https://s3.amazonaws.com/fast-ai-imageclas/imagenette\(sz).tgz"
+    let fname = "imagenette\(sz)"
     let file = path/fname
     try! path.mkdir(.p)
     if !file.exists {
@@ -21,7 +21,6 @@ public func downloadImagenette(path: Path = dataPath) -> Path {
     }
     return file
 }
-
 
 public func show_img<T:NumpyScalarCompatible>(_ img: Tensor<T>, _ w: Int = 7, _ h: Int = 5) {
     show_img(img.makeNumpyArray(), w, h)
@@ -220,7 +219,7 @@ where I: TensorGroup, TI: TensorGroup & Differentiable, L: TensorGroup{
 
 public func openAndResize(fname: StringTensor, size: Int) -> TF{
     let decodedImg = StringTensor(readFile: fname).decodeJpeg(channels: 3)
-    let resizedImg = Tensor<Float>(Raw.resizeNearestNeighbor(
+    let resizedImg = Tensor<Float>(Raw.resizeBilinear(
         images: Tensor<UInt8>([decodedImg]), 
         size: Tensor<Int32>([Int32(size), Int32(size)]))) / 255.0
     return resizedImg.reshaped(to: TensorShape(size, size, 3))
