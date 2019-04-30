@@ -46,7 +46,7 @@ public extension FALayer {
     @differentiable(vjp: callGrad)
     func call(_ input: Input) -> Output {
         let activation = forward(input)
-        delegates.forEach { $0(activation) }
+        for d in delegates { d(activation) }
         return activation
     }
        
@@ -90,7 +90,7 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
 
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        return activation(matmul(input, weight) + bias)
+        return activation(input • weight + bias)
     }
 }
 
@@ -346,6 +346,13 @@ public func **<T>(_ x: T, _ y: Tensor<T>) -> Tensor<T>
 
 public func **<T>(_ x: Tensor<T>, _ y: T) -> Tensor<T>
   where T : FloatingPoint { return pow(x, y)}
+
+precedencegroup Group { associativity: left }
+infix operator >| : Group
+public func >| <A, B, C>(_ lhs: @escaping (A) -> B,
+                   _ rhs: @escaping (B) -> C) -> (A) -> C {
+    return { rhs(lhs($0)) }
+}
 
 public extension Differentiable {
     @differentiable
