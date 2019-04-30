@@ -4,6 +4,15 @@ file to edit: 00_load_data.ipynb
 
 */
 
+precedencegroup ExponentiationPrecedence {
+    associativity: right
+    higherThan: MultiplicationPrecedence
+}
+infix operator ** : ExponentiationPrecedence
+
+precedencegroup CompositionPrecedence { associativity: left }
+infix operator >| : CompositionPrecedence
+
 import Foundation
 import Just
 import Path

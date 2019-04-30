@@ -46,7 +46,7 @@ public extension FALayer {
     @differentiable(vjp: callGrad)
     func call(_ input: Input) -> Output {
         let activation = forward(input)
-        delegates.forEach { $0(activation) }
+        for d in delegates { d(activation) }
         return activation
     }
        
@@ -61,7 +61,7 @@ public extension FALayer {
     
     //We also add a default init to our `delegates` variable, so that we don't have to define it each time, as
     //well as a function to easily add a delegate.
-    public var delegates: [(Output) -> ()] { 
+    var delegates: [(Output) -> ()] { 
         get { return [] }
         set {}
     }
@@ -90,7 +90,7 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
 
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        return activation(matmul(input, weight) + bias)
+        return activation(input • weight + bias)
     }
 }
 
@@ -318,13 +318,6 @@ extension Layer {
         set { allDifferentiableVariables = newValue }
     }
 }
-
-precedencegroup ExponentiationPrecedence {
-    associativity: right
-    higherThan: MultiplicationPrecedence
-}
-
-infix operator ** : ExponentiationPrecedence
 
 public func ** (lhs: Int, rhs: Int) -> Int {
     return Int(pow(Double(lhs), Double(rhs)))
