@@ -4,6 +4,20 @@ file to edit: 00_load_data.ipynb
 
 */
 
+precedencegroup ExponentiationPrecedence {
+    associativity: right
+    higherThan: MultiplicationPrecedence
+}
+infix operator ** : ExponentiationPrecedence
+
+precedencegroup CompositionPrecedence { associativity: left }
+
+infix operator >| : CompositionPrecedence
+func >| <A,B,C>(_ lhs: @escaping (A) -> B,
+                  _ rhs: @escaping (B) -> C) -> (A) -> C {
+    return { rhs(lhs($0)) }
+}
+
 import Foundation
 import Just
 import Path
