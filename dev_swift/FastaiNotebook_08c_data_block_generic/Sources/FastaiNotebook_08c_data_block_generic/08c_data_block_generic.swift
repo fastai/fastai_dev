@@ -87,6 +87,8 @@ public struct CategoryProcessor: Processor {
     private(set) public var intToLabel: [String] = []
     private(set) public var labelToInt: [String:Int] = [:]
     
+    public init() {}
+    
     public mutating func initState(_ items: [String]) {
         intToLabel = Array(Set(items)).sorted()
         labelToInt = Dictionary(uniqueKeysWithValues:
