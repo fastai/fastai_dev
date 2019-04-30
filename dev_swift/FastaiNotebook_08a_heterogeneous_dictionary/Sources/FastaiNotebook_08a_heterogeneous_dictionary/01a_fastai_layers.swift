@@ -59,7 +59,9 @@ public extension FALayer {
         return Swift.valueWithPullback(at: self, input) { (m, i) in m.forward(i) }
     }
     
-    var delegates: [(Output) -> ()] { 
+    //We also add a default init to our `delegates` variable, so that we don't have to define it each time, as
+    //well as a function to easily add a delegate.
+    public var delegates: [(Output) -> ()] { 
         get { return [] }
         set {}
     }
@@ -347,13 +349,13 @@ public func **<T>(_ x: Tensor<T>, _ y: T) -> Tensor<T>
 
 public extension Differentiable {
     @differentiable
-    func sequenced<L1: Layer, L2: Layer>(_ l1: L1, _ l2: L2) -> L2.Output
+    func compose<L1: Layer, L2: Layer>(_ l1: L1, _ l2: L2) -> L2.Output
         where L1.Input == Self, L1.Output == L2.Input {
         return sequenced(through: l1, l2)
     }
     
     @differentiable
-    func composer<L1: Layer, L2: Layer, L3: Layer>(_ l1: L1, _ l2: L2, _ l3: L3) -> L3.Output
+    func compose<L1: Layer, L2: Layer, L3: Layer>(_ l1: L1, _ l2: L2, _ l3: L3) -> L3.Output
         where L1.Input == Self, L1.Output == L2.Input, L2.Output == L3.Input {
         return sequenced(through: l1, l2, l3)
     }
