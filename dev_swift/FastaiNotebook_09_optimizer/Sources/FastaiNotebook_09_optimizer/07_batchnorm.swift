@@ -17,8 +17,8 @@ public protocol LearningPhaseDependent: FALayer {
     associatedtype Input
     associatedtype Output
     
-    @differentiable func forwardTraining(to input: Input) -> Output
-    @differentiable func forwardInference(to input: Input) -> Output
+    @differentiable func forwardTraining(_ input: Input) -> Output
+    @differentiable func forwardInference(_ input: Input) -> Output
 }
 
 extension LearningPhaseDependent {
@@ -29,8 +29,8 @@ extension LearningPhaseDependent {
     @differentiable
     public func forward(_ input: Input) -> Output {
         switch Context.local.learningPhase {
-        case .training: return forwardTraining(to: input)
-        case .inference: return forwardInference(to: input)
+        case .training:  return forwardTraining(input)
+        case .inference: return forwardInference(input)
         }
     }
 
@@ -40,9 +40,9 @@ extension LearningPhaseDependent {
             (Self.CotangentVector, Self.Input.CotangentVector)) {
         switch Context.local.learningPhase {
         case .training:
-            return valueWithPullback(at: input) { $0.forwardTraining(to: $1) }
+            return valueWithPullback(at: input) { $0.forwardTraining ($1) }
         case .inference:
-            return valueWithPullback(at: input) { $0.forwardInference(to: $1) }
+            return valueWithPullback(at: input) { $0.forwardInference($1) }
         }
     }
 }
@@ -54,14 +54,11 @@ public protocol Norm: Layer where Input == Tensor<Scalar>, Output == Tensor<Scal
 
 public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm {
     // Configuration hyperparameters
-    @noDerivative var momentum: Scalar
-    @noDerivative var epsilon: Scalar
+    @noDerivative var momentum, epsilon: Scalar
     // Running statistics
-    @noDerivative let runningMean: Reference<Tensor<Scalar>>
-    @noDerivative let runningVariance: Reference<Tensor<Scalar>>
+    @noDerivative let runningMean, runningVariance: Reference<Tensor<Scalar>>
     // Trainable parameters
-    public var scale: Tensor<Scalar>
-    public var offset: Tensor<Scalar>
+    public var scale, offset: Tensor<Scalar>
     
     public init(featureCount: Int, momentum: Scalar, epsilon: Scalar = 1e-5) {
         self.momentum = momentum
@@ -77,7 +74,7 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
     }
 
     @differentiable
-    public func forwardTraining(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func forwardTraining(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let mean = input.mean(alongAxes: [0, 1, 2])
         let variance = input.variance(alongAxes: [0, 1, 2])
         runningMean.value += (mean - runningMean.value) * (1 - momentum)
@@ -87,7 +84,7 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
     }
     
     @differentiable
-    public func forwardInference(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func forwardInference(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let mean = runningMean.value
         let variance = runningVariance.value
         let normalizer = rsqrt(variance + epsilon) * scale
@@ -96,23 +93,16 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
 }
 
 struct BatchNormResult<Scalar : TensorFlowFloatingPoint> : Differentiable{
-    let y: Tensor<Scalar>
-    let batchMean: Tensor<Scalar> 
-    let batchVariance: Tensor<Scalar>
-    let reserveSpace1: Tensor<Scalar>
-    let reserveSpace2: Tensor<Scalar>
+    let y, batchMean, batchVariance, reserveSpace1, reserveSpace2: Tensor<Scalar>
 }
 
 public struct TFBatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm {
     // Configuration hyperparameters
-    @noDerivative var momentum: Scalar
-    @noDerivative var epsilon: Scalar
+    @noDerivative var momentum, epsilon: Scalar
     // Running statistics
-    @noDerivative let runningMean: Reference<Tensor<Scalar>>
-    @noDerivative let runningVariance: Reference<Tensor<Scalar>>
+    @noDerivative let runningMean, runningVariance: Reference<Tensor<Scalar>>
     // Trainable parameters
-    public var scale: Tensor<Scalar>
-    public var offset: Tensor<Scalar>
+    public var scale, offset: Tensor<Scalar>
     
     public init(featureCount: Int, momentum: Scalar, epsilon: Scalar = 1e-5) {
         self.momentum = momentum
@@ -128,7 +118,7 @@ public struct TFBatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
     }
 
     @differentiable
-    public func forwardTraining(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func forwardTraining(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let res = TFBatchNorm<Scalar>.fusedBatchNorm(
             input, scale: scale, offset: offset, epsilon: epsilon)
         let (output, mean, variance) = (res.y, res.batchMean, res.batchVariance)
@@ -138,7 +128,7 @@ public struct TFBatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
      }
     
     @differentiable
-    public func forwardInference(to input: Tensor<Scalar>) -> Tensor<Scalar> {
+    public func forwardInference(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
         let mean = runningMean.value
         let variance = runningVariance.value
         let normalizer = rsqrt(variance + epsilon) * scale
@@ -213,6 +203,6 @@ public struct CnnModelBN: Layer {
     
     @differentiable
     public func call(_ input: TF) -> TF {
-        return input.sequenced(through: convs, pool, linear)
+        return input.compose(convs, pool, linear)
     }
 }

@@ -210,8 +210,8 @@ public func transformData<I,TI,L>(
     tfmItem: (I) -> TI
 ) -> DataBunch<DataBatch<TI,L>> 
 where I: TensorGroup, TI: TensorGroup & Differentiable, L: TensorGroup{
-    return DataBunch(train: data.train.innerDs.map{ DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
-                     valid: data.valid.innerDs.map{ DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
+    return DataBunch(train: data.train.innerDs.map(parallelCallCount: 10) { DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
+                     valid: data.valid.innerDs.map(parallelCallCount: 10) { DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
                      trainLen: data.train.dsCount, 
                      validLen: data.valid.dsCount,
                      bs: data.train.bs)
