@@ -61,7 +61,7 @@ public extension FALayer {
     
     //We also add a default init to our `delegates` variable, so that we don't have to define it each time, as
     //well as a function to easily add a delegate.
-    public var delegates: [(Output) -> ()] { 
+    var delegates: [(Output) -> ()] { 
         get { return [] }
         set {}
     }
@@ -319,13 +319,6 @@ extension Layer {
     }
 }
 
-precedencegroup ExponentiationPrecedence {
-    associativity: right
-    higherThan: MultiplicationPrecedence
-}
-
-infix operator ** : ExponentiationPrecedence
-
 public func ** (lhs: Int, rhs: Int) -> Int {
     return Int(pow(Double(lhs), Double(rhs)))
 }
@@ -346,13 +339,6 @@ public func **<T>(_ x: T, _ y: Tensor<T>) -> Tensor<T>
 
 public func **<T>(_ x: Tensor<T>, _ y: T) -> Tensor<T>
   where T : FloatingPoint { return pow(x, y)}
-
-precedencegroup Group { associativity: left }
-infix operator >| : Group
-public func >| <A, B, C>(_ lhs: @escaping (A) -> B,
-                   _ rhs: @escaping (B) -> C) -> (A) -> C {
-    return { rhs(lhs($0)) }
-}
 
 public extension Differentiable {
     @differentiable
