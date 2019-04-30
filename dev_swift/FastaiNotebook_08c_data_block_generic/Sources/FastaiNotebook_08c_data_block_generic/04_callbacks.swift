@@ -61,6 +61,12 @@ public func mnistDataBunch(path: Path = mnistPath, flat: Bool = false, bs: Int =
                      bs: bs)
 }
 
+public extension Sequence {
+  func first() -> Element? {
+    return first(where: {_ in true})
+  }
+}
+
 public enum LearnerAction: Error {
     case skipEpoch(reason: String)
     case skipBatch(reason: String)
