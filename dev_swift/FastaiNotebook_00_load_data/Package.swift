@@ -9,7 +9,7 @@ let package = Package(
 dependencies: [
     .package(url: "https://github.com/mxcl/Path.swift", from: "0.16.1"),
     .package(url: "https://github.com/JustHTTP/Just", from: "0.7.1"),
-    .package(url: "https://github.com/latenitesoft/NotebookExport", .branch("fastai"))
+    .package(url: "https://github.com/latenitesoft/NotebookExport", from: "0.5.0")
 ],
 targets: [
     .target(

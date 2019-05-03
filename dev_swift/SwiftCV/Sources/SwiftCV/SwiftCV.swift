@@ -44,22 +44,23 @@ public enum MatType: Int32 {
 }
 
 public class Mat {
-    /// CV Mat wrapper
     internal var p: COpenCV.Mat
+
+    public init() { p = Mat_New() }
+    deinit { Mat_Close(p) }
 
     public var cols: Int { return Int(COpenCV.Mat_Cols(p)) }
     public var rows: Int { return Int(COpenCV.Mat_Rows(p)) }
     public var channels: Int { return Int(COpenCV.Mat_Channels(p)) }
     public var type: MatType { return MatType(rawValue: COpenCV.Mat_Type(p))!  }
+    public var count: Int { return total*elemSize }
 
     public var size: [Int] {
         var intVector = COpenCV.IntVector()
         var size: [Int] = []
         COpenCV.Mat_Size(p, &intVector)
         let vec = UnsafeBufferPointer<Int32>(start: intVector.val, count: Int(intVector.length))
-        for (_, val) in vec.enumerated() {
-            size.append(Int(val))
-        }
+        for (_, val) in vec.enumerated() { size.append(Int(val)) }
         return size
     }
 
@@ -68,24 +69,17 @@ public class Mat {
     public var isContinuous: Bool { return Bool(COpenCV.Mat_IsContinuous(p)) }
     public func clone() -> Mat { return Mat(COpenCV.Mat_Clone(p)) }
 
-    public var dataPtr: UnsafeMutablePointer<Int8> {
-        return COpenCV.Mat_DataPtr(p).data
-    }
+    public var dataPtr: UnsafeMutablePointer<Int8> { return COpenCV.Mat_DataPtr(p).data }
 
     public init(_ pMat: COpenCV.Mat? = nil) {
         if pMat != nil { p = pMat!  }
         else           { p = Mat_New() }
     }
-
     public init(_ mat: Mat? = nil) {
         if mat != nil { p = mat!.p }
         else          { p = Mat_New() }
     }
-
-    public init() { p = Mat_New() }
-    deinit { Mat_Close(p) }
 }
-
 
 public func imread(_ filename: String, _ flags: IMReadMode = IMReadMode.IMREAD_COLOR) -> Mat {
     return Mat(Image_IMRead(strdup(filename), flags.rawValue)!)
@@ -172,4 +166,6 @@ public func transpose(_ src: Mat, _ dst: Mat? = nil) -> Mat {
 }
 
 public func cvVersion() -> String { return String(cString: COpenCV.openCVVersion()!) }
+public func SetNumThreads(_ nthreads:Int) { COpenCV.SetNumThreads(numericCast(nthreads)) }
+public func GetNumThreads()->Int { return numericCast(COpenCV.GetNumThreads()) }
 

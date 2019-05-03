@@ -293,4 +293,10 @@ struct ByteArray toByteArray(const char* buf, int len) {
 
 int64 GetCVTickCount() { return cv::getTickCount(); }
 double GetTickFrequency() { return cv::getTickFrequency(); }
+void SetNumThreads(int nthreads) {
+  cv::setNumThreads(nthreads);
+  //omp_set_num_threads(nthreads);
+  //ippSetNumThreads(nthreads);
+}
+int GetNumThreads() { return cv::getNumThreads(); }
 

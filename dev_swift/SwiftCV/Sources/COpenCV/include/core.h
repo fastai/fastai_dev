@@ -155,6 +155,9 @@ typedef struct Mats {
     int length;
 } Mats;
 
+void SetNumThreads(int nthreads);
+int GetNumThreads();
+
 Mat Mats_get(struct Mats mats, int i);
 struct DMatches MultiDMatches_get(struct MultiDMatches mds, int index);
 
