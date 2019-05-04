@@ -75,12 +75,12 @@ class AWD_LSTM(nn.Module):
                  hidden_p=0.2, input_p=0.6, embed_p=0.1, weight_p=0.5):
         super().__init__()
         self.bs,self.emb_sz,self.n_hid,self.n_layers = 1,emb_sz,n_hid,n_layers
-        self.encoder = nn.Embedding(vocab_sz, emb_sz, padding_idx=pad_token)
-        self.encoder_dp = EmbeddingDropout(self.encoder, embed_p)
+        self.emb = nn.Embedding(vocab_sz, emb_sz, padding_idx=pad_token)
+        self.emb_dp = EmbeddingDropout(self.emb, embed_p)
         self.rnns = [nn.LSTM(emb_sz if l == 0 else n_hid, (n_hid if l != n_layers - 1 else emb_sz), 1,
                              batch_first=True) for l in range(n_layers)]
         self.rnns = nn.ModuleList([WeightDropout(rnn, weight_p) for rnn in self.rnns])
-        self.encoder.weight.data.uniform_(-self.initrange, self.initrange)
+        self.emb.weight.data.uniform_(-self.initrange, self.initrange)
         self.input_dp = RNNDropout(input_p)
         self.hidden_dps = nn.ModuleList([RNNDropout(hidden_p) for l in range(n_layers)])
 
@@ -89,7 +89,7 @@ class AWD_LSTM(nn.Module):
         if bs!=self.bs:
             self.bs=bs
             self.reset()
-        raw_output = self.input_dp(self.encoder_dp(input))
+        raw_output = self.input_dp(self.emb_dp(input))
         new_hidden,raw_outputs,outputs = [],[],[]
         for l, (rnn,hid_dp) in enumerate(zip(self.rnns, self.hidden_dps)):
             raw_output, new_h = rnn(raw_output, self.hidden[l])
@@ -112,8 +112,8 @@ class AWD_LSTM(nn.Module):
 class LinearDecoder(nn.Module):
     def __init__(self, n_out, n_hid, output_p, tie_encoder=None, bias=True):
         super().__init__()
-        self.decoder = nn.Linear(n_hid, n_out, bias=bias)
         self.output_dp = RNNDropout(output_p)
+        self.decoder = nn.Linear(n_hid, n_out, bias=bias)
         if bias: self.decoder.bias.data.zero_()
         if tie_encoder: self.decoder.weight = tie_encoder.weight
         else: init.kaiming_uniform_(self.decoder.weight)
@@ -134,7 +134,7 @@ def get_language_model(vocab_sz, emb_sz, n_hid, n_layers, pad_token, output_p=0.
                        embed_p=0.1, weight_p=0.5, tie_weights=True, bias=True):
     rnn_enc = AWD_LSTM(vocab_sz, emb_sz, n_hid=n_hid, n_layers=n_layers, pad_token=pad_token,
                        hidden_p=hidden_p, input_p=input_p, embed_p=embed_p, weight_p=weight_p)
-    enc = rnn_enc.encoder if tie_weights else None
+    enc = rnn_enc.emb if tie_weights else None
     return SequentialRNN(rnn_enc, LinearDecoder(vocab_sz, emb_sz, output_p, tie_encoder=enc, bias=bias))
 
 class GradientClipping(Callback):
@@ -143,7 +143,7 @@ class GradientClipping(Callback):
         if self.clip:  nn.utils.clip_grad_norm_(self.run.model.parameters(), self.clip)
 
 class RNNTrainer(Callback):
-    def __init__(self, alpha, beta): self.alpha,self.beta = alpha,beta
+    def __init__(self, α, β): self.α,self.β = α,β
 
     def after_pred(self):
         #Save the extra outputs for later and only returns the true output.
@@ -152,10 +152,10 @@ class RNNTrainer(Callback):
 
     def after_loss(self):
         #AR and TAR
-        if self.alpha != 0.:  self.run.loss += self.alpha * self.out[-1].float().pow(2).mean()
-        if self.beta != 0.:
+        if self.α != 0.:  self.run.loss += self.α * self.out[-1].float().pow(2).mean()
+        if self.β != 0.:
             h = self.raw_out[-1]
-            if len(h)>1: self.run.loss += self.beta * (h[:,1:] - h[:,:-1]).float().pow(2).mean()
+            if len(h)>1: self.run.loss += self.β * (h[:,1:] - h[:,:-1]).float().pow(2).mean()
 
     def begin_epoch(self):
         #Shuffle the texts at the beginning of the epoch
