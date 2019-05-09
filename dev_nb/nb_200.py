@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 from collections import OrderedDict
 from typing import *
 import pandas as pd, numpy as np
+from enum import Enum
+from torch import tensor
 
 def listify(o):
     if o is None: return []
@@ -52,16 +54,23 @@ def get_files(path, extensions=None, recurse=False, include=None):
         f = [o.name for o in os.scandir(path) if o.is_file()]
         return _get_files(path, f, extensions)
 
+def grab_idx(batch, i):
+    return [grab_idx(b,i) for b in batch] if isinstance(batch, list) else batch[i]
+
 class Processor():
     def __call__(self, items):  return items
     def process1(self, item):   return item
     def deprocess1(self, item): return item
     def deprocess(self, items): return items
 
+TfmY = Enum('TfmY', 'No Mask Image Point Bbox')
+
 class ItemGetter():
-    _default_proc = None
+    default_proc = None
+    default_tfm = TfmY.No
+
     def __init__(self, procs=None):
-        self.procs = [p() for p in listify(self._default_proc)] if procs is None else procs
+        self.procs = [p() for p in listify(self.default_proc)] if procs is None else procs
     def __call__(self, items): return compose(items, self.procs)
 
     def get(self, o): return o  #How to get the actual item from o (example: fn -> Image, idxs -> 1hot encoded tensor)
@@ -71,11 +80,10 @@ class ItemGetter():
     def show_xys(self, xs, ys, y_get, **kwargs): raise NotImplementedError #How to show a bunch of xs and ys
 
 class ItemList():
-    def __init__(self, items, item_get=None, tfms=None):
-        if item_get is None: item_get = ItemGetter()
-        self.item_get,self.tfms = item_get,tfms
+    def __init__(self, items, item_get=None):
+        self.item_get = ItemGetter() if item_get is None else item_get
         self.items = self.item_get(listify(items))
-    def _get(self, i): return compose(self.item_get.get(i), self.tfms)
+    def _get(self, i): return self.item_get.get(i)
     def __getitem__(self, idx):
         try: return self._get(self.items[idx])
         except TypeError:
@@ -92,10 +100,6 @@ class ItemList():
         if len(self)>10: res = res[:-1]+ '...]'
         return res
 
-    def new(self, items, cls=None): #Unused for now... TODO remove?
-        if cls is None: cls=self.__class__
-        return cls(items, tfms=self.tfms)
-
     def deproc(self, item):
         item = self.item_get.raw(item)
         for proc in reversed(listify(self.item_get.procs)):
@@ -108,10 +112,20 @@ class ItemList():
         return self.deproc(item) if isint else [self.deprocess(o) for o in item]
 
 class LabeledData():
-    def __init__(self, x, y, tfms=None):  self.x,self.y,self.tfms = x,y,tfms
+    def __init__(self, x, y, tfms=None, tfm_y=TfmY.No):
+        self.x,self.y,self.tfms,self.tfm_y = x,y,tfms,tfm_y
     def __repr__(self):        return f'{self.__class__.__name__}\nx: {self.x}\ny: {self.y}\n'
-    def __getitem__(self,idx): return compose((self.x[idx],self.y[idx]), self.tfms)
+    def __getitem__(self,idx):
+        #TODO? Make below works if idx is a mask/array/list
+        x = self.x[idx]
+        with AddXContext(self.y, x) as yil: y = yil[idx]
+        return compose((x,y), self.tfms, tfm_y=self.tfm_y)
     def __len__(self):         return len(self.x)
+
+    def deproc(self, o):
+        x = self.x.deproc(o[0])
+        with AddXContext(self.y, x) as yil: y = yil.deproc(o[1])
+        return (x,y)
 
 from torch.utils.data.dataloader import DataLoader
 def get_dl(ds, bs, shuffle=False, drop_last=False, **kwargs):
@@ -127,12 +141,12 @@ class DataBunch():
     def valid_ds(self): return self.valid_dl.dataset
 
     def show_batch(self, is_valid=False, items=9, **kwargs):
-        x,y = next(iter(self.valid_dl if is_valid else self.train_dl))
-        self.train_ds.x.item_get.show_xys(
-            [self.train_ds.x.deproc(x[i]) for i in range(items)],
-            [self.train_ds.y.deproc(y[i]) for i in range(items)],
-            self.train_ds.y.item_get,
-            **kwargs)
+        xb,yb = next(iter(self.valid_dl if is_valid else self.train_dl))
+        xs,ys = [],[]
+        for i in range(items):
+            x,y = self.train_ds.deproc((grab_idx(xb, i), grab_idx(yb, i)))
+            xs.append(x); ys.append(y)
+        self.train_ds.x.item_get.show_xys(xs, ys, self.train_ds.y.item_get, **kwargs)
 
 class DataBlock():
     get_x_cls = ItemGetter
@@ -146,23 +160,25 @@ class DataBlock():
     def label(self, items):       raise NotImplementedError
     #Explain how to label your items. Return a list of labels
 
-    def __init__(self, tfms_x=None, tfms_y=None, tfms_xy=None, get_x=None, get_y=None):
+    def __init__(self, tfms=None, tfm_y=None, get_x=None, get_y=None):
         self.source = self.get_source()
         items = ItemList(self.get_items(self.source)) #Just for fancy indexing
         split_idx = self.split(items)
         labels = ItemList(self.label(items))
         if get_x is None: get_x = self.get_x_cls()
         if get_y is None: get_y = self.get_y_cls()
-        x_train,x_valid = map(lambda o: ItemList(items[o],  item_get=get_x, tfms=tfms_x), split_idx)
-        y_train,y_valid = map(lambda o: ItemList(labels[o], item_get=get_y, tfms=tfms_y), split_idx)
-        self.train = LabeledData(x_train, y_train, tfms_xy)
-        self.valid = LabeledData(x_valid, y_valid, tfms_xy)
+        x_train,x_valid = map(lambda o: ItemList(items[o],  item_get=get_x), split_idx)
+        y_train,y_valid = map(lambda o: ItemList(labels[o], item_get=get_y), split_idx)
+        if tfm_y is None: tfm_y = get_y.default_tfm
+        self.train = LabeledData(x_train, y_train, tfms=tfms, tfm_y=tfm_y)
+        self.valid = LabeledData(x_valid, y_valid, tfms=tfms, tfm_y=tfm_y)
 
     def databunch(self, bs=64, **kwargs):
         dls = [get_dl(ds, bs, shuffle=s, drop_last=s, **kwargs) for (ds, s) in zip([self.train, self.valid], [True,False])]
         return DataBunch(*dls)
 
 class ImageGetter(ItemGetter):
+    default_tfm = TfmY.Image
     def __init__(self, procs=None, cmap=None, alpha=1.):
         super().__init__(procs)
         self.cmap,self.alpha = cmap,alpha
@@ -195,7 +211,7 @@ class CategoryProcessor(Processor):
     def deproc1(self, idx): return self.vocab[idx]
 
 class CategoryGetter(ItemGetter):
-    _default_proc = CategoryProcessor
+    default_proc = CategoryProcessor
     def show(self, x, ax): ax.set_title(x)
 
 image_extensions = set(k for k,v in mimetypes.types_map.items() if v.startswith('image/'))
@@ -229,26 +245,24 @@ def re_labeller(items, pat):
         return res.group(1)
     return func_labeller(items, _inner)
 
-def make_rgb(item): return item.convert('RGB')
+class Transform():
+    _order=0
+    _tfm_y_func={TfmY.Image: 'apply_img',   TfmY.Mask: 'apply_mask', TfmY.No: 'noop',
+                 TfmY.Point: 'apply_point', TfmY.Bbox: 'apply_bbox'}
 
-class Transform(): _order=0
+    def apply(self, x):       return x
+    def apply_img(self, y):   return self.apply(y)
+    def apply_mask(self, y):  return self.apply_img(y)
+    def apply_point(self, y): return y
+    def apply_bbox(self, y):  return self.apply_point(y)
 
-class ResizeFixed(Transform):
-    _order=10
-    def __init__(self,size,mode=PIL.Image.BILINEAR):
-        if isinstance(size,int): size=(size,size)
-        self.size,self.mode = size,mode
+    def randomize(self): pass
 
-    def __call__(self, item): return item.resize(self.size, self.mode)
-
-def to_byte_tensor(item):
-    res = torch.ByteTensor(torch.ByteStorage.from_buffer(item.tobytes()))
-    w,h = item.size
-    return res.view(h,w,-1).permute(2,0,1)
-to_byte_tensor._order=20
-
-def to_float_tensor(item): return item.float().div_(255.)
-to_float_tensor._order=30
+    def __call__(self, o, tfm_y=TfmY.No):
+        (x,y) = o
+        self.randomize() #Ensures we have the same state for x and y
+        self.x = x #Saves the x in case it's needed in the apply for y (x.size for apply_point for instance)
+        return self.apply(x),getattr(self, self._tfm_y_func[tfm_y], noop)(y)
 
 def onehot(x, c):
     res = torch.zeros(c)
@@ -270,7 +284,7 @@ class MultiCategoryProcessor(CategoryProcessor):
     def deproc1(self, idx): return [self.vocab[i] for i in idx]
 
 class MultiCategoryGetter(ItemGetter):
-    _default_proc = MultiCategoryProcessor
+    default_proc = MultiCategoryProcessor
 
     def get(self, o): return onehot(o, len(self.procs[0].vocab))
     def raw(self, o): return [i for i,x in enumerate(o) if x == 1]
@@ -284,9 +298,68 @@ def read_column(df, col_name, prefix='', suffix='', delim=None):
     return values
 
 class SegmentMaskGetter(ImageGetter):
+    default_tfm = TfmY.Mask
     def __init__(self, procs=None, cmap='tab20', alpha=0.5):
         super().__init__(procs, cmap=cmap, alpha=alpha)
 
-def make_mask(item): return item.convert('L')
-def to_long_tensor(item): return item.long()
-to_long_tensor._order=30
+class PointsGetter(ItemGetter):
+    default_tfm = TfmY.Point
+    def __init__(self, procs=None, do_scale=True, y_first=False):
+        super().__init__(procs)
+        self.do_scale,self.y_first = do_scale,y_first
+
+    def get(self, o):
+        if not isinstance(o, torch.Tensor): o = tensor(o)
+        o = o.view(-1, 2).float()
+        if not self.y_first: o = o.flip(1)
+        if self.do_scale and hasattr(self, '_x') and self._x is not None:
+            sz = tensor(list(self._x.size)).float()
+            o = o * 2/sz - 1
+        return o
+
+    def raw(self, o):
+        o = o.flip(1)
+        if hasattr(self, '_x') and self._x is not None:
+            sz = tensor([self._x.shape[1:]]).float()
+            o = (o + 1) * sz/2
+        return o
+
+    def show(self, x, ax):
+        params = {'s': 10, 'marker': '.', 'c': 'r'}
+        ax.scatter(x[:, 1], x[:, 0], **params)
+
+class BBoxProcessor(MultiCategoryProcessor):
+    def __call__(self, items):
+        if self.vocab is None:
+            vocab = set()
+            for c in items: vocab = vocab.union(set(c[1]))
+            self.vocab = ['background'] + list(vocab)
+            self.vocab.sort()
+            self.otoi  = {v:k for k,v in enumerate(self.vocab)}
+        return [self.proc1(o) for o in items]
+    def proc1(self, item):  return item[0],super().proc1(item[1])
+    def deproc1(self, idx): return idx[0],super().deproc1(idx[1])
+
+from matplotlib import patches, patheffects
+
+def _draw_outline(o, lw):
+    o.set_path_effects([patheffects.Stroke(linewidth=lw, foreground='black'), patheffects.Normal()])
+
+def _draw_rect(ax, b, color='white', text=None, text_size=14):
+    patch = ax.add_patch(patches.Rectangle(b[:2], *b[-2:], fill=False, edgecolor=color, lw=2))
+    _draw_outline(patch, 4)
+    if text is not None:
+        patch = ax.text(*b[:2], text, verticalalignment='top', color=color, fontsize=text_size, weight='bold')
+        _draw_outline(patch,1)
+
+class BBoxGetter(PointsGetter):
+    default_proc = BBoxProcessor
+    default_tfm = TfmY.Bbox
+
+    def get(self, o): return super().get(o[0]).view(-1,4),o[1]
+    def raw(self, o): return super().raw(o[0].view(-1,2)).view(-1,4),o[1]
+
+    def show(self, x, ax):
+        bbox,label = x
+        for b,l in zip(bbox, label):
+            if l != 'background': _draw_rect(ax, [b[1],b[0],b[3]-b[1],b[2]-b[0]], text=l)
