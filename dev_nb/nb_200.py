@@ -351,6 +351,36 @@ class DecodeImg(Transform):
     def apply_image(self, y): return y.convert(self.mode_x if self.mode_y is None else self.mode_y)
     def apply_mask(self, y):  return y.convert('L' if self.mode_y is None else self.mode_y)
 
+class ResizeFixed(Transform):
+    "Resize image to `size` using `mode_x` (and `mode_y` on targets)."
+    _order=10
+    def __init__(self, size, mode_x=PIL.Image.BILINEAR, mode_y=None):
+        if isinstance(size,int): size=(size,size)
+        size = (size[1],size[0]) #PIL takes size in the otherway round
+        self.size,self.mode_x,self.mode_y = size,mode_x,mode_y
+
+    def apply(self, x):       return x.resize(self.size, self.mode_x)
+    def apply_image(self, y): return y.resize(self.size, self.mode_x if self.mode_y is None else self.mode_y)
+    def apply_mask(self, y):  return y.resize(self.size, PIL.Image.NEAREST if self.mode_y is None else self.mode_y)
+
+class ToByteTensor(Transform):
+    "Transform our items to byte tensors."
+    _order=20
+
+    def apply(self, x):
+        res = torch.ByteTensor(torch.ByteStorage.from_buffer(x.tobytes()))
+        w,h = x.size
+        return res.view(h,w,-1).permute(2,0,1)
+
+class ToFloatTensor(Transform):
+    "Transform our items to float tensors (int in the case of mask)."
+    _order=20
+    def __init__(self, div_x=255., div_y=None):
+        self.div_x,self.div_y = div_x,div_y
+    def apply(self, x):      return x.float().div_(self.div_x)
+    def apply_mask(self, x):
+        return x.long() if self.div_y is None else x.long().div_(self.div_y)
+
 class MultiCategoryProcessor(CategoryProcessor):
     "A Processor for multi-labeled categories."
     def proc1(self, item):  return [self.otoi[o] for o in item if o in self.otoi]
@@ -445,3 +475,17 @@ class BBoxGetter(PointsGetter):
         bbox,label = x
         for b,l in zip(bbox, label):
             if l != 'background': _draw_rect(ax, [b[1],b[0],b[3]-b[1],b[2]-b[0]], text=l)
+
+def bb_pad_collate(samples, pad_idx=0):
+    "Collate function for bounding boxes targets."
+    max_len = max([len(s[1][1]) for s in samples])
+    bboxes = torch.zeros(len(samples), max_len, 4)
+    labels = torch.zeros(len(samples), max_len).long() + pad_idx
+    imgs = []
+    for i,s in enumerate(samples):
+        imgs.append(s[0][None])
+        bbs, lbls = s[1]
+        if not (bbs.nelement() == 0):
+            bboxes[i,-len(lbls):] = bbs
+            labels[i,-len(lbls):] = tensor(lbls)
+    return torch.cat(imgs,0), (bboxes,labels)
