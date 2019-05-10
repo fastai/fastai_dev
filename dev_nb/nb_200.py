@@ -6,7 +6,7 @@
 
 from fastai.datasets import URLs, untar_data
 from pathlib import Path
-import torch, re, PIL, os, mimetypes, csv, operator
+import torch, re, PIL, os, mimetypes, csv, operator, pickle
 import matplotlib.pyplot as plt
 from collections import OrderedDict
 from typing import *
@@ -338,8 +338,8 @@ class Transform():
 
     def __call__(self, o, tfm_y=TfmY.No):
         (x,y) = o
-        self.randomize() #Ensures we have the same state for x and y
         self.x = x #Saves the x in case it's needed in the apply for y (x.size for apply_point for instance)
+        self.randomize() #Ensures we have the same state for x and y
         return self.apply(x),getattr(self, self._tfm_y_func[tfm_y], noop)(y)
 
 class DecodeImg(Transform):
@@ -440,6 +440,8 @@ class PointsGetter(ItemGetter):
     def show(self, x, ax):
         params = {'s': 10, 'marker': '.', 'c': 'r'}
         ax.scatter(x[:, 1], x[:, 0], **params)
+
+from fastai.vision.data import get_annotations
 
 class BBoxProcessor(MultiCategoryProcessor):
     "A processor for bounding boxes."
