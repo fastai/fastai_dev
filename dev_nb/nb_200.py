@@ -78,7 +78,7 @@ def get_files(path, extensions=None, recurse=False, include=None):
 
 def grab_idx(batch, i):
     "Return the `i`-th sample in `batch`"
-    return [grab_idx(b,i) for b in batch] if isinstance(batch, list) else batch[i]
+    return [grab_idx(b,i) for b in batch] if isinstance(batch, list) else batch[i].detach().cpu()
 
 def read_column(df, col_name, prefix='', suffix='', delim=None):
     "Read `col_name` in `df`, optionnally adding `prefix` or `suffix`."
@@ -198,12 +198,12 @@ class DataBunch():
     @property
     def valid_ds(self): return self.valid_dl.dataset
 
-    def show_batch(self, is_valid=False, items=9, **kwargs):
+    def show_batch(self, batch = None, is_valid=False, items=9, **kwargs):
         "Show `items` element of a batch, depending on `is_valid` for the dl it draw from."
-        xb,yb = next(iter(self.valid_dl if is_valid else self.train_dl))
+        if batch is None: batch = next(iter(self.valid_dl if is_valid else self.train_dl))
         xs,ys = [],[]
         for i in range(items):
-            x,y = self.train_ds.deproc((grab_idx(xb, i), grab_idx(yb, i)))
+            x,y = self.train_ds.deproc((grab_idx(batch[0], i), grab_idx(batch[1], i)))
             xs.append(x); ys.append(y)
         self.train_ds.x.item_get.show_xys(xs, ys, self.train_ds.y.item_get, **kwargs)
 
