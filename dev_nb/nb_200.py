@@ -6,15 +6,28 @@
 
 from fastai.datasets import URLs, untar_data
 from pathlib import Path
-import torch, re, PIL, os, mimetypes, csv
+import torch, re, PIL, os, mimetypes, csv, operator
 import matplotlib.pyplot as plt
 from collections import OrderedDict
 from typing import *
 import pandas as pd, numpy as np
 from enum import Enum
-from torch import tensor
+from torch import tensor,Tensor
+
+def test(a,b,cmp,cname=None,tst_name=''):
+    if cname is None: cname=cmp.__name__
+    assert cmp(a,b),f"{tst_name},{cname}:\n{a}\n{b}"
+
+def test_eq(a,b,tst_name=''):
+    if isinstance(a, np.ndarray) or (isinstance(a, Tensor) and not len(a.shape) == 0):
+        assert len(a) == len(b), f"{tst_name}, lengths mismatch:\n{a}\n{b}"
+        test(a,b,lambda x,y: (x == y).all(),'==',tst_name)
+    else: test(a,b,operator.eq,'==',tst_name)
+
+def noop(x): return x
 
 def listify(o):
+    "Make `o` a list."
     if o is None: return []
     if isinstance(o, list): return o
     if isinstance(o, str): return [o]
@@ -22,16 +35,24 @@ def listify(o):
     return [o]
 
 def compose(x, funcs, *args, order_key='_order', **kwargs):
+    "Apply all `funcs` to `x` in order, pass along `args` and `kwargs`."
     key = lambda o: getattr(o, order_key, 0)
-    for f in sorted(listify(funcs), key=key): x = f(x, **kwargs)
+    for f in sorted(listify(funcs), key=key): x = f(x, *args, **kwargs)
     return x
 
 def uniqueify(x, sort=False):
+    "Return the unqiue elements in `x`, optionally `sort`-ed."
     res = list(OrderedDict.fromkeys(x).keys())
     if sort: res.sort()
     return res
 
 def setify(o): return o if isinstance(o,set) else set(listify(o))
+
+def onehot(x, c):
+    "Return the one-hot encoded tensor for `x` with `c` classes."
+    res = torch.zeros(c)
+    res[x] = 1.
+    return res
 
 def _get_files(p, fs, extensions=None):
     p = Path(p)
@@ -40,6 +61,7 @@ def _get_files(p, fs, extensions=None):
     return res
 
 def get_files(path, extensions=None, recurse=False, include=None):
+    "Get all the files in `path` with optional `extensions`."
     path = Path(path)
     extensions = setify(extensions)
     extensions = {e.lower() for e in extensions}
@@ -55,29 +77,53 @@ def get_files(path, extensions=None, recurse=False, include=None):
         return _get_files(path, f, extensions)
 
 def grab_idx(batch, i):
+    "Return the `i`-th sample in `batch`"
     return [grab_idx(b,i) for b in batch] if isinstance(batch, list) else batch[i]
 
+def read_column(df, col_name, prefix='', suffix='', delim=None):
+    "Read `col_name` in `df`, optionnally adding `prefix` or `suffix`."
+    values = df[col_name].values.astype(str)
+    values = np.char.add(np.char.add(prefix, values), suffix)
+    if delim is not None:
+        values = np.array(list(csv.reader(values, delimiter=delim)))
+    return values
+
 class Processor():
-    def __call__(self, items):  return items
-    def process1(self, item):   return item
-    def deprocess1(self, item): return item
-    def deprocess(self, items): return items
+    "A basic class to preprocess some data."
+    def __call__(self, items): return items
+    def process1(self, item):  return item
+    def deproc1(self, item):   return item
+    def deproc(self, items):   return items
 
 TfmY = Enum('TfmY', 'No Mask Image Point Bbox')
 
 class ItemGetter():
+    "A basic class for representing some data type."
+    #Subclass for default processor associated to this data type (example: CategoryGetter has CategoryProcessor)
     default_proc = None
+    #Subclass for default `tfm_y` value associated to this data type (example: SegmentMaskGetter has TfmY.Mask)
     default_tfm = TfmY.No
 
     def __init__(self, procs=None):
+        "Initialize with `default_proc` if no `procs` are passed."
         self.procs = [p() for p in listify(self.default_proc)] if procs is None else procs
-    def __call__(self, items): return compose(items, self.procs)
+    def __call__(self, items):
+        "Process data when called on it."
+        return compose(items, self.procs)
 
-    def get(self, o): return o  #How to get the actual item from o (example: fn -> Image, idxs -> 1hot encoded tensor)
-    def raw(self, o): return o  #Undoes get when needed for representation (1hot encoded tensor -> idxs)
+    def get(self, o):
+        "How to get the actual item from `o` (example: fn -> Image, idxs -> 1hot encoded tensor)."
+        return o
+    def raw(self, o):
+        "Undoes get when needed for representation (1hot encoded tensor -> idxs)."
+        return o
 
-    def show(self, x, ax):                       raise NotImplementedError #How to show one element
-    def show_xys(self, xs, ys, y_get, **kwargs): raise NotImplementedError #How to show a bunch of xs and ys
+    def show(self, x, ax):
+        "How to show one element `x` on `ax`."
+        raise NotImplementedError
+    def show_xys(self, xs, ys, y_get, **kwargs):
+        "How to organize the show of multiple `xs` and `ys`"
+        raise NotImplementedError
 
 class ItemList():
     def __init__(self, items, item_get=None):
@@ -101,6 +147,7 @@ class ItemList():
         return res
 
     def deproc(self, item):
+        "Calls `raw` on item then `deproc1` for all processors."
         item = self.item_get.raw(item)
         for proc in reversed(listify(self.item_get.procs)):
             item = proc.deproc1(item)
@@ -109,7 +156,15 @@ class ItemList():
     def obj(self, idx):
         isint = isinstance(idx, int) or (isinstance(idx,torch.LongTensor) and not idx.ndim)
         item = self[idx]
-        return self.deproc(item) if isint else [self.deprocess(o) for o in item]
+        return self.deproc(item) if isint else [self.deproc(o) for o in item]
+
+class AddXContext():
+    "Context manager that adds `x` to `il.item_get`."
+    def __init__(self, il, x): self.il,self.x = il,x
+    def __enter__(self, *args):
+        self.il.item_get._x = self.x
+        return self.il
+    def __exit__(self, *args): self.il.item_get._x = None
 
 class LabeledData():
     def __init__(self, x, y, tfms=None, tfm_y=TfmY.No):
@@ -123,15 +178,18 @@ class LabeledData():
     def __len__(self):         return len(self.x)
 
     def deproc(self, o):
+        "Calls deproc on the x and y of `o`."
         x = self.x.deproc(o[0])
         with AddXContext(self.y, x) as yil: y = yil.deproc(o[1])
         return (x,y)
 
 from torch.utils.data.dataloader import DataLoader
 def get_dl(ds, bs, shuffle=False, drop_last=False, **kwargs):
+    "Basic function to get a `DataLoader`"
     return DataLoader(ds, batch_size=bs, shuffle=shuffle, drop_last=drop_last, **kwargs)
 
 class DataBunch():
+    "Basic wrapper around several `DataLoader`."
     def __init__(self, train_dl, valid_dl):
         self.train_dl,self.valid_dl = train_dl,valid_dl
 
@@ -141,6 +199,7 @@ class DataBunch():
     def valid_ds(self): return self.valid_dl.dataset
 
     def show_batch(self, is_valid=False, items=9, **kwargs):
+        "Show `items` element of a batch, depending on `is_valid` for the dl it draw from."
         xb,yb = next(iter(self.valid_dl if is_valid else self.train_dl))
         xs,ys = [],[]
         for i in range(items):
@@ -149,22 +208,27 @@ class DataBunch():
         self.train_ds.x.item_get.show_xys(xs, ys, self.train_ds.y.item_get, **kwargs)
 
 class DataBlock():
-    get_x_cls = ItemGetter
-    get_y_cls = ItemGetter
-    def get_source(self):         raise NotImplementedError
-    #Return the source of your data (path, dataframe...) and optionally download it
-    def get_items(self, source):  raise NotImplementedError
-    #Use source to return the list of all items
-    def split(self, items):       raise NotImplementedError
-    #Explain how so split the items. Return two list of integers or two boolean masks
-    def label(self, items):       raise NotImplementedError
-    #Explain how to label your items. Return a list of labels
+    "Main class to represent a dataset. Subclass the 2 properties and 4 methods below to your need."
+    get_x_cls = ItemGetter #Type of input
+    get_y_cls = ItemGetter #Type of targer
+    def get_source(self):
+        "Return the source of your data (path, dataframe...), optionally download it."
+        raise NotImplementedError
+    def get_items(self, source):
+        "Use `source` to return the list of all items."
+        raise NotImplementedError
+    def split(self, items):
+        "Explain how so split the `items`. Return two disjoint lists of indices or two boolean masks."
+        raise NotImplementedError
+    def label(self, items):
+        "Explain how to label your `items`. Return a list of labels."
+        raise NotImplementedError
 
     def __init__(self, tfms=None, tfm_y=None, get_x=None, get_y=None):
         self.source = self.get_source()
         items = ItemList(self.get_items(self.source)) #Just for fancy indexing
         split_idx = self.split(items)
-        labels = ItemList(self.label(items))
+        labels = ItemList(self.label(items))          #Just for fancy indexing
         if get_x is None: get_x = self.get_x_cls()
         if get_y is None: get_y = self.get_y_cls()
         x_train,x_valid = map(lambda o: ItemList(items[o],  item_get=get_x), split_idx)
@@ -174,10 +238,12 @@ class DataBlock():
         self.valid = LabeledData(x_valid, y_valid, tfms=tfms, tfm_y=tfm_y)
 
     def databunch(self, bs=64, **kwargs):
+        "How to convert to a `DataBunch`. Subclass if needed."
         dls = [get_dl(ds, bs, shuffle=s, drop_last=s, **kwargs) for (ds, s) in zip([self.train, self.valid], [True,False])]
         return DataBunch(*dls)
 
 class ImageGetter(ItemGetter):
+    "An `ItemGetter` for image types."
     default_tfm = TfmY.Image
     def __init__(self, procs=None, cmap=None, alpha=1.):
         super().__init__(procs)
@@ -195,13 +261,12 @@ class ImageGetter(ItemGetter):
             y_get.show(y, ax)
 
 class CategoryProcessor(Processor):
+    "A `Processor` for categories."
     def __init__(self): self.vocab=None
 
     def __call__(self, items):
         #The vocab is defined on the first use.
-        if self.vocab is None:
-            self.vocab = uniqueify(items)
-            self.otoi  = {v:k for k,v in enumerate(self.vocab)}
+        if self.vocab is None: self.create_vocab(items)
         return [self.proc1(o) for o in items]
     def proc1(self, item):  return self.otoi[item]
 
@@ -210,42 +275,55 @@ class CategoryProcessor(Processor):
         return [self.deproc1(idx) for idx in idxs]
     def deproc1(self, idx): return self.vocab[idx]
 
+    def create_vocab(self, items):
+        "Create the `vocab` from `items`."
+        self.vocab = uniqueify(items, sort=True)
+        self.otoi  = {v:k for k,v in enumerate(self.vocab)}
+
 class CategoryGetter(ItemGetter):
+    "An `ItemGetter` suitable for single-label classification targets"
     default_proc = CategoryProcessor
     def show(self, x, ax): ax.set_title(x)
 
 image_extensions = set(k for k,v in mimetypes.types_map.items() if v.startswith('image/'))
 
 def get_image_files(path, include=None):
+    "Get image files in `path` recursively."
     return get_files(path, extensions=image_extensions, recurse=True, include=include)
 
 def random_splitter(items, valid_pct=0.2, seed=None):
+    "Split `items` between train/val with `valid_pct` randomly."
     if seed is not None: torch.manual_seed(seed)
     rand_idx = torch.randperm(len(items))
     cut = int(valid_pct * len(items))
-    return rand_idx[:cut],rand_idx[cut:]
+    return rand_idx[cut:],rand_idx[:cut]
 
 def _grandparent_mask(items, name):
     return [(o.parent.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-2]) == name for o in items]
 
 def grandparent_splitter(items, train_name='train', valid_name='valid'):
+    "Split `items` from the grand parent folder names (`train_name` and `valid_name`)."
     return _grandparent_mask(items, train_name),_grandparent_mask(items, valid_name)
 
 def parent_labeller(items):
+    "Label `items` with the parent folder name."
     return [o.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-1] for o in items]
 
 def func_labeller(items, func):
+    "Label `items` according to `func`."
     return [func(o) for o in items]
 
 def re_labeller(items, pat):
+    "Label `items` with a regex `pat`."
     pat = re.compile(pat)
     def _inner(o):
         res = pat.search(str(o))
-        assert res,f'Failed to find "{pat}" in "{s}"'
+        assert res,f'Failed to find "{pat}" in "{o}"'
         return res.group(1)
     return func_labeller(items, _inner)
 
 class Transform():
+    "Basic class for data augmentation transforms."
     _order=0
     _tfm_y_func={TfmY.Image: 'apply_img',   TfmY.Mask: 'apply_mask', TfmY.No: 'noop',
                  TfmY.Point: 'apply_point', TfmY.Bbox: 'apply_bbox'}
@@ -264,51 +342,55 @@ class Transform():
         self.x = x #Saves the x in case it's needed in the apply for y (x.size for apply_point for instance)
         return self.apply(x),getattr(self, self._tfm_y_func[tfm_y], noop)(y)
 
-def onehot(x, c):
-    res = torch.zeros(c)
-    res[x] = 1.
-    return res
+class DecodeImg(Transform):
+    "Convert regular image to RGB, masks to L mode."
+    def __init__(self, mode_x='RGB', mode_y=None):
+        self.mode_x,self.mode_y = mode_x,mode_y
+
+    def apply(self, x):       return x.convert(self.mode_x)
+    def apply_image(self, y): return y.convert(self.mode_x if self.mode_y is None else self.mode_y)
+    def apply_mask(self, y):  return y.convert('L' if self.mode_y is None else self.mode_y)
 
 class MultiCategoryProcessor(CategoryProcessor):
-    def __call__(self, items):
-        #The vocab is defined on the first use.
-        if self.vocab is None:
-            vocab = set()
-            for c in items: vocab = vocab.union(set(c))
-            self.vocab = list(vocab)
-            self.vocab.sort()
-            self.otoi  = {v:k for k,v in enumerate(self.vocab)}
-        return [self.proc1(o) for o in items]
+    "A Processor for multi-labeled categories."
     def proc1(self, item):  return [self.otoi[o] for o in item if o in self.otoi]
 
     def deproc1(self, idx): return [self.vocab[i] for i in idx]
 
-class MultiCategoryGetter(ItemGetter):
-    default_proc = MultiCategoryProcessor
+    def create_vocab(self, items):
+        vocab = set()
+        for c in items: vocab = vocab.union(set(c))
+        self.vocab = list(vocab)
+        self.vocab.sort()
+        self.otoi  = {v:k for k,v in enumerate(self.vocab)}
 
-    def get(self, o): return onehot(o, len(self.procs[0].vocab))
-    def raw(self, o): return [i for i,x in enumerate(o) if x == 1]
+class MultiCategoryGetter(ItemGetter):
+    "An `ItemGetter` suitable for multi-label classification targets."
+    default_proc = MultiCategoryProcessor
+    def __init__(self, procs=None, encoded=False, classes=None):
+        if procs is None and encoded: procs=[]
+        super().__init__(procs)
+        self.encoded,self.classes=encoded,classes
+    def get(self, o): return o if self.encoded else onehot(o, len(self.procs[0].vocab))
+    def raw(self, o):
+        return [self.classes[i] if self.encoded else i for i,x in enumerate(o) if x == 1]
     def show(self, x, ax): ax.set_title(';'.join(x))
 
-def read_column(df, col_name, prefix='', suffix='', delim=None):
-    values = df[col_name].values.astype(str)
-    values = np.char.add(np.char.add(prefix, values), suffix)
-    if delim is not None:
-        values = np.array(list(csv.reader(values, delimiter=delim)))
-    return values
-
 class SegmentMaskGetter(ImageGetter):
+    "An `ItemGetter` for segmentation mask targets."
     default_tfm = TfmY.Mask
     def __init__(self, procs=None, cmap='tab20', alpha=0.5):
         super().__init__(procs, cmap=cmap, alpha=alpha)
 
 class PointsGetter(ItemGetter):
+    "An `ItemGetter` for points."
     default_tfm = TfmY.Point
     def __init__(self, procs=None, do_scale=True, y_first=False):
         super().__init__(procs)
         self.do_scale,self.y_first = do_scale,y_first
 
     def get(self, o):
+        "Inner representation of point is scaled from -1 to 1 and y first."
         if not isinstance(o, torch.Tensor): o = tensor(o)
         o = o.view(-1, 2).float()
         if not self.y_first: o = o.flip(1)
@@ -318,6 +400,7 @@ class PointsGetter(ItemGetter):
         return o
 
     def raw(self, o):
+        "Put y second and unscale."
         o = o.flip(1)
         if hasattr(self, '_x') and self._x is not None:
             sz = tensor([self._x.shape[1:]]).float()
@@ -329,14 +412,12 @@ class PointsGetter(ItemGetter):
         ax.scatter(x[:, 1], x[:, 0], **params)
 
 class BBoxProcessor(MultiCategoryProcessor):
-    def __call__(self, items):
-        if self.vocab is None:
-            vocab = set()
-            for c in items: vocab = vocab.union(set(c[1]))
-            self.vocab = ['background'] + list(vocab)
-            self.vocab.sort()
-            self.otoi  = {v:k for k,v in enumerate(self.vocab)}
-        return [self.proc1(o) for o in items]
+    "A processor for bounding boxes."
+    def create_vocab(self, items):
+        super().create_vocab([c[1] for c in items])
+        self.vocab.insert(0, 'background')
+        self.otoi  = {v:k for k,v in enumerate(self.vocab)}
+
     def proc1(self, item):  return item[0],super().proc1(item[1])
     def deproc1(self, idx): return idx[0],super().deproc1(idx[1])
 
@@ -353,6 +434,7 @@ def _draw_rect(ax, b, color='white', text=None, text_size=14):
         _draw_outline(patch,1)
 
 class BBoxGetter(PointsGetter):
+    "An `ItemGetter` for bounding boxes."
     default_proc = BBoxProcessor
     default_tfm = TfmY.Bbox
 
