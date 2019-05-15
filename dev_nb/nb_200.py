@@ -510,9 +510,10 @@ class DataBlock():
         ds = ds.transformed(self.tfms_ds + listify(tfms), **{**self.tfm_kwargs, **tfm_kwargs})
         return ds
 
-    def databunch(self, ds_tfms=None, dl_tfms=None, bs=64, **tfm_kwargs):
+    def databunch(self, ds_tfms=None, dl_tfms=None, bs=64, tfm_kwargs=None, **kwargs):
+        tfm_kwargs = ifnone(tfm_kwargs, {})
         dls = get_dls(self.datasource(tfms=ds_tfms, **tfm_kwargs), bs, tfms=dl_tfms,
-                      tfm_kwargs={**self.tfm_kwargs, **tfm_kwargs})
+                      tfm_kwargs={**self.tfm_kwargs, **tfm_kwargs}, **kwargs)
         return DataBunch(*dls)
 
 class Image(Item):    tfm = Imagify
@@ -625,7 +626,7 @@ class BBoxEncoder(Transform):
     def show(self, x, ax):
         bbox,label = x
         for b,l in zip(bbox, label):
-            if l != 'background': _draw_rect(ax, [b[1],b[0],b[3]-b[1],b[2]-b[0]], text=l)
+            if l != '#bg': _draw_rect(ax, [b[1],b[0],b[3]-b[1],b[2]-b[0]], text=l)
 
 class BBox(Item):
     tfm = BBoxEncoder
