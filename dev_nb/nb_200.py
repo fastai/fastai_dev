@@ -312,6 +312,7 @@ TfmY = Enum('TfmY', 'Mask Image Point Bbox No')
 class ImageTransform():
     "Basic class for image transforms."
     _order=10
+    _data_aug=False
     _tfm_y_func={TfmY.Image: 'apply_img',   TfmY.Mask: 'apply_mask', TfmY.No: 'noop',
                  TfmY.Point: 'apply_point', TfmY.Bbox: 'apply_bbox'}
     _decode_y_func={TfmY.Image: 'unapply_img',   TfmY.Mask: 'unapply_mask', TfmY.No: 'noop',
@@ -320,12 +321,14 @@ class ImageTransform():
     def randomize(self): pass
 
     def __call__(self, o, filt=0, **kwargs):
+        if self._data_aug and filt != 0: return o
         x,y = o
         self.x,self.filt = x,filt # Saves the x in case it's needed in the apply for y and filt
         self.randomize() # Ensures we have the same state for x and y
         return self.apply(x),self.apply_y(y, **kwargs)
 
     def decode(self, o, filt=0, **kwargs):
+        if self._data_aug and filt != 0: return o
         (x,y) = o
         self.x,self.filt = x,filt
         return self.unapply(x),self.unapply_y(y, **kwargs)
