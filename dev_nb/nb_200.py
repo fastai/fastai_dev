@@ -12,7 +12,7 @@ from collections import OrderedDict
 from typing import *
 from enum import Enum
 from functools import partial,reduce
-from torch import tensor
+from torch import as_tensor
 from IPython.core.debugger import set_trace
 
 def ifnone(a, b): return b if a is None else a
@@ -32,6 +32,18 @@ def test_equal(a,b): test(a,b,torch.equal,'==')
 def test_np_eq(a,b): test(a,b,np.equal,'==')
 
 def compose(*funcs): return reduce(lambda f,g: lambda x: f(g(x)), reversed(funcs), noop)
+def is_listy(x:Any)->bool: return isinstance(x, (tuple,list))
+
+def tensor(x, *rest):
+    "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
+    if len(rest): x = (tuple(x),)+rest
+    # Pytorch bug in dataloader using num_workers>0
+    if is_listy(x) and len(x)==0: return tensor(0)
+    res = torch.tensor(x) if is_listy(x) else as_tensor(x)
+    if res.dtype is torch.int32:
+        warn('Tensor is int32: upgrading to int64; for better performance use int64 input')
+        return res.long()
+    return res
 
 def listify(o):
     "Make `o` a list."
@@ -70,9 +82,10 @@ def apply_all(x, funcs, *args, order_key='_order', filter_kwargs=False, **kwargs
 
 def mask2idxs(mask): return [i for i,m in enumerate(mask) if m]
 
-def uniqueify(x, sort=False, bidir=False):
+def uniqueify(x, sort=False, bidir=False, start=None):
     "Return the unique elements in `x`, optionally `sort`-ed, optionally return the reverse correspondance."
     res = list(OrderedDict.fromkeys(x).keys())
+    if start is not None: res = listify(start)+res
     if sort: res.sort()
     if bidir: return res, {v:k for k,v in enumerate(res)}
     return res
@@ -380,7 +393,7 @@ class ToByteTensor(ImageTransform):
         return res.view(h,w,-1).permute(2,0,1)
 
     def unapply(self, x):
-        x = torch.clamp(x, 0, 1)
+        if x.dtype in [torch.float16, torch.float32]: x = torch.clamp(x, 0, 1)
         return x[0] if x.shape[0] == 1 else x.permute(1,2,0)
 
 class ToFloatTensor(ImageTransform):
@@ -395,6 +408,11 @@ class TransformedDataLoader():
     def __init__(self, dl, tfms=None, **tfm_kwargs):
         self.dl,self.tfms,self.tfm_kwargs = dl,order_sorted(tfms),tfm_kwargs
 
+    @classmethod
+    def from_dset(cls, dset, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
+        dl = DataLoader(dset, bs, **kwargs)
+        return cls(dl, tfms=tfms, **(ifnone(tfm_kwargs,{})))
+
     def __len__(self): return len(self.dl)
     def __iter__(self):
         for b in self.dl: yield apply_all(b, self.tfms, filter_kwargs=True, **self.tfm_kwargs)
@@ -408,8 +426,9 @@ class TransformedDataLoader():
 
 from torch.utils.data.dataloader import DataLoader
 
-def get_dls(il, bs=64, tfms=None, **tfm_kwargs):
-    return [TransformedDataLoader(DataLoader(il[i], bs, shuffle=i==0), tfms=tfms, **tfm_kwargs) for i in range_of(il)]
+def get_dls(il, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
+    return [TransformedDataLoader.from_dset(il[i], bs, shuffle=i==0, tfms=tfms, tfm_kwargs=tfm_kwargs, **kwargs)
+            for i in range_of(il)]
 
 def grab_item(b,k):
     if isinstance(b, (list,tuple)): return [grab_item(o,k) for o in b]
@@ -437,8 +456,8 @@ class DataBunch():
         for k,ax in enumerate(axs.flatten()):
             self.dls[i].dataset.show(grab_item(b,k), ax=ax, show_func=show_func, **kwargs)
 
-def _ds_databunch(self, bs=64, tfms=None, **tfm_kwargs):
-    dls = get_dls(self, bs=bs, tfms=tfms, **tfm_kwargs)
+def _ds_databunch(self, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
+    dls = get_dls(self, bs=bs, tfms=tfms, tfm_kwargs=tfm_kwargs, **kwargs)
     return DataBunch(*dls)
 
 DataSource.databunch = _ds_databunch
@@ -463,9 +482,9 @@ class Normalize(Transform):
     def denorm(self, x):    return x * self.std + self.mean
 
 class Item():
-    default_tfm = None
-    default_tfm_ds = None
-    default_tfm_kwargs = None
+    tfm = None
+    tfm_ds = None
+    tfm_kwargs = None
 
 class DataBlock():
     type_cls = (Item,Item)
@@ -476,12 +495,12 @@ class DataBlock():
 
     def __init__(self, tfms_x=None, tfms_y=None, tfms_ds=None):
         (x,y) = self.type_cls
-        self.tfms_x = [t() for t in listify(x.default_tfm)] if tfms_x is None else tfms_x
-        self.tfms_y = [t() for t in listify(y.default_tfm)] if tfms_y is None else tfms_y
+        self.tfms_x = [t() for t in listify(x.tfm)] if tfms_x is None else tfms_x
+        self.tfms_y = [t() for t in listify(y.tfm)] if tfms_y is None else tfms_y
         if tfms_ds is None:
-            tfms_ds = [t() for t in listify(x.default_tfm_ds) + listify(y.default_tfm_ds)]
+            tfms_ds = [t() for t in listify(x.tfm_ds) + listify(y.tfm_ds)]
         self.tfms_ds = tfms_ds
-        self.tfm_kwargs = {**ifnone(x.default_tfm_kwargs, {}), **ifnone(y.default_tfm_kwargs, {}) }
+        self.tfm_kwargs = {**ifnone(x.tfm_kwargs, {}), **ifnone(y.tfm_kwargs, {}) }
 
     def datasource(self, tfms=None, **tfm_kwargs):
         source = self.get_source()
@@ -493,14 +512,11 @@ class DataBlock():
 
     def databunch(self, ds_tfms=None, dl_tfms=None, bs=64, **tfm_kwargs):
         dls = get_dls(self.datasource(tfms=ds_tfms, **tfm_kwargs), bs, tfms=dl_tfms,
-                      **{**self.tfm_kwargs, **tfm_kwargs})
+                      tfm_kwargs={**self.tfm_kwargs, **tfm_kwargs})
         return DataBunch(*dls)
 
-class Image(Item):
-    default_tfm = Imagify
-
-class Category(Item):
-    default_tfm = Categorize
+class Image(Item):    tfm = Imagify
+class Category(Item): tfm = Categorize
 
 class MultiCategorize(Transform):
     _order=1
@@ -528,7 +544,7 @@ class OneHotEncode(Transform):
     def decode(self, o):   return [i for i,x in enumerate(o) if x == 1]
 
 class MultiCategory(Item):
-    default_tfm = [MultiCategorize, OneHotEncode]
+    tfm = [MultiCategorize, OneHotEncode]
 
 def get_str_column(df, col_name, prefix='', suffix='', delim=None):
     "Read `col_name` in `df`, optionnally adding `prefix` or `suffix`."
@@ -539,8 +555,8 @@ def get_str_column(df, col_name, prefix='', suffix='', delim=None):
     return values
 
 class SegmentMask(Item):
-    default_tfm = partial(Imagify, cmap='tab20', alpha=0.5)
-    default_tfm_kwargs = {'tfm_y': TfmY.Mask}
+    tfm = partial(Imagify, cmap='tab20', alpha=0.5)
+    tfm_kwargs = {'tfm_y': TfmY.Mask}
 
 class PointScaler(Transform):
     _order = 5 #Run before we apply any ImageTransform
@@ -567,9 +583,9 @@ class PointShow(Transform):
         ax.scatter(x[:, 1], x[:, 0], **params)
 
 class Points(Item):
-    default_tfm = PointShow
-    default_tfm_ds = PointScaler
-    default_tfm_kwargs = {'tfm_y': TfmY.Point}
+    tfm = PointShow
+    tfm_ds = PointScaler
+    tfm_kwargs = {'tfm_y': TfmY.Point}
 
 from fastai.vision.data import get_annotations
 from matplotlib import patches, patheffects
@@ -604,9 +620,7 @@ class BBoxEncoder(Transform):
         if self.vocab is not None: return
         vals = set()
         for c in items.train: vals = vals.union(set(c[1]))
-        self.vocab = uniqueify(list(vals), sort=True)
-        self.vocab.insert(0, 'background')
-        self.otoi  = {v:k for k,v in enumerate(self.vocab)}
+        self.vocab,self.otoi = uniqueify(list(vals), sort=True, bidir=True, start='#bg')
 
     def show(self, x, ax):
         bbox,label = x
@@ -614,9 +628,9 @@ class BBoxEncoder(Transform):
             if l != 'background': _draw_rect(ax, [b[1],b[0],b[3]-b[1],b[2]-b[0]], text=l)
 
 class BBox(Item):
-    default_tfm = BBoxEncoder
-    default_tfm_ds = BBoxScaler
-    default_tfm_kwargs = {'tfm_y': TfmY.Bbox}
+    tfm = BBoxEncoder
+    tfm_ds = BBoxScaler
+    tfm_kwargs = {'tfm_y': TfmY.Bbox}
 
 def bb_pad_collate(samples, pad_idx=0):
     max_len = max([len(s[1][1]) for s in samples])
