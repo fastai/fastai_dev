@@ -271,7 +271,6 @@ def show_image(im, ax=None, figsize=None, **kwargs):
     ax.axis('off')
     return ax
 
-
 class Imagify(Transform):
     def __init__(self, f=PIL.Image.open, cmap=None, alpha=1.): self.f,self.cmap,self.alpha = f,cmap,alpha
     def __call__(self, fn): return PIL.Image.open(fn)
@@ -322,8 +321,8 @@ class ImageTransform():
 
     def __call__(self, o, filt=0, **kwargs):
         x,y = o
-        self.randomize() # Ensures we have the same state for x and y
         self.x,self.filt = x,filt # Saves the x in case it's needed in the apply for y and filt
+        self.randomize() # Ensures we have the same state for x and y
         return self.apply(x),self.apply_y(y, **kwargs)
 
     def decode(self, o, filt=0, **kwargs):
@@ -488,7 +487,8 @@ class DataBlock():
         return ds
 
     def databunch(self, ds_tfms=None, dl_tfms=None, bs=64, **tfm_kwargs):
-        dls = get_dls(self.datasource(tfms=ds_tfms, **tfm_kwargs), bs, **{**self.tfm_kwargs, **tfm_kwargs})
+        dls = get_dls(self.datasource(tfms=ds_tfms, **tfm_kwargs), bs, tfms=dl_tfms,
+                      **{**self.tfm_kwargs, **tfm_kwargs})
         return DataBunch(*dls)
 
 class Image(Item):
