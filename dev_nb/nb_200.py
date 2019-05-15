@@ -376,7 +376,9 @@ class ToByteTensor(ImageTransform):
         w,h = x.size
         return res.view(h,w,-1).permute(2,0,1)
 
-    def unapply(self, x): return x[0] if x.shape[0] == 1 else x.permute(1,2,0)
+    def unapply(self, x):
+        x = torch.clamp(x, 0, 1)
+        return x[0] if x.shape[0] == 1 else x.permute(1,2,0)
 
 class ToFloatTensor(ImageTransform):
     "Transform our items to float tensors (int in the case of mask)."
