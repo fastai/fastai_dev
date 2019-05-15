@@ -280,6 +280,34 @@ class Imagify(Transform):
         alpha = ifnone(alpha,self.alpha)
         return show_image(im, ax, figsize=figsize, cmap=cmap, alpha=alpha)
 
+class Categorize(Transform):
+    _order=1
+    def __init__(self):   self.vocab = None
+    def __call__(self,o): return self.o2i[o]
+    def decode(self, o):  return self.vocab[o]
+    def show(self, o, ax=None):
+        if ax is None: print(o)
+        else: ax.set_title(o)
+
+    def setup(self, items):
+        if self.vocab is not None: return
+        vals = [o for o in items.train]
+        self.vocab,self.o2i = uniqueify(vals, sort=True, bidir=True)
+
+def _ds_show(self, o, filt=0, show_func=None, **kwargs):
+    o = self.decode(o, filt)
+    if show_func is None: show_func=_get_show_func(self.tfms)
+    show_func(o, **kwargs)
+
+DataSource.show = _ds_show
+
+def _fl_show(self, o, show_func=None, **kwargs):
+    o = self.decode(o)
+    if show_func is None: show_func=_get_show_func(self.il.tfms)
+    show_func(o, **kwargs)
+
+FilteredList.show = _fl_show
+
 TfmY = Enum('TfmY', 'Mask Image Point Bbox No')
 
 class ImageTransform():
@@ -329,6 +357,51 @@ class DecodeImg(ImageTransform):
     def apply_image(self, y): return y.convert(ifnone(self.mode_y,self.mode_x))
     def apply_mask(self, y):  return y.convert(ifnone(self.mode_y,'L'))
 
+class ResizeFixed(ImageTransform):
+    "Resize image to `size` using `mode_x` (and `mode_y` on targets)."
+    _order=15
+    def __init__(self, size, mode_x=PIL.Image.BILINEAR, mode_y=None):
+        if isinstance(size,int): size=(size,size)
+        size = (size[1],size[0]) #PIL takes size in the otherway round
+        self.size,self.mode_x,self.mode_y = size,mode_x,mode_y
+
+    def apply(self, x):       return x.resize(self.size, self.mode_x)
+    def apply_image(self, y): return y.resize(self.size, ifnone(self.mode_y,self.mode_x))
+    def apply_mask(self, y):  return y.resize(self.size, ifnone(self.mode_y,PIL.Image.NEAREST))
+
+class ToByteTensor(ImageTransform):
+    "Transform our items to byte tensors."
+    _order=20
+    def apply(self, x):
+        res = torch.ByteTensor(torch.ByteStorage.from_buffer(x.tobytes()))
+        w,h = x.size
+        return res.view(h,w,-1).permute(2,0,1)
+
+    def unapply(self, x): return x[0] if x.shape[0] == 1 else x.permute(1,2,0)
+
+class ToFloatTensor(ImageTransform):
+    "Transform our items to float tensors (int in the case of mask)."
+    _order=20
+    def __init__(self, div_x=255., div_y=None): self.div_x,self.div_y = div_x,div_y
+    def apply(self, x): return x.float().div_(self.div_x)
+    def apply_mask(self, x):
+        return x.long() if self.div_y is None else x.long().div_(self.div_y)
+
+class TransformedDataLoader():
+    def __init__(self, dl, tfms=None, **tfm_kwargs):
+        self.dl,self.tfms,self.tfm_kwargs = dl,order_sorted(tfms),tfm_kwargs
+
+    def __len__(self): return len(self.dl)
+    def __iter__(self):
+        for b in self.dl: yield apply_all(b, self.tfms, filter_kwargs=True, **self.tfm_kwargs)
+
+    def decode(self, o):
+        return apply_all(o, [getattr(f, 'decode', noop) for f in reversed(self.tfms)],
+                         filter_kwargs=True, **self.tfm_kwargs)
+
+    @property
+    def dataset(self): return self.dl.dataset
+
 from torch.utils.data.dataloader import DataLoader
 
 def get_dls(il, bs=64, tfms=None, **tfm_kwargs):
@@ -353,12 +426,37 @@ class DataBunch():
     def valid_ds(self): return self.valid_dl.dataset
 
     def show_batch(self, i=0, items=9, cols=3, figsize=None, show_func=None, **kwargs):
-        b = self.one_batch(i)
+        b = self.dls[i].decode(self.one_batch(i))
         rows = (items+cols-1) // cols
         if figsize is None: figsize = (cols*3, rows*3)
         fig,axs = plt.subplots(rows, cols, figsize=figsize)
         for k,ax in enumerate(axs.flatten()):
             self.dls[i].dataset.show(grab_item(b,k), ax=ax, show_func=show_func, **kwargs)
+
+def _ds_databunch(self, bs=64, tfms=None, **tfm_kwargs):
+    dls = get_dls(self, bs=bs, tfms=tfms, **tfm_kwargs)
+    return DataBunch(*dls)
+
+DataSource.databunch = _ds_databunch
+
+class Normalize(Transform):
+    def __init__(self, mean, std, do_x=True, do_y=False):
+        self.mean,self.std,self.do_x,self.do_y = mean,std,do_x,do_y
+
+    def __call__(self, b):
+        x,y = b
+        if self.do_x: x = self.normalize(x)
+        if self.do_y: y = self.normalize(y)
+        return x,y
+
+    def decode(self, b):
+        x,y = b
+        if self.do_x: x = self.denorm(x)
+        if self.do_y: y = self.denorm(y)
+        return x,y
+
+    def normalize(self, x): return (x - self.mean) / self.std
+    def denorm(self, x):    return x * self.std + self.mean
 
 class Item():
     default_tfm = None
@@ -514,3 +612,16 @@ class BBox(Item):
     default_tfm = BBoxEncoder
     default_tfm_ds = BBoxScaler
     default_tfm_kwargs = {'tfm_y': TfmY.Bbox}
+
+def bb_pad_collate(samples, pad_idx=0):
+    max_len = max([len(s[1][1]) for s in samples])
+    bboxes = torch.zeros(len(samples), max_len, 4)
+    labels = torch.zeros(len(samples), max_len).long() + pad_idx
+    imgs = []
+    for i,s in enumerate(samples):
+        imgs.append(s[0][None])
+        bbs, lbls = s[1]
+        if not (bbs.nelement() == 0):
+            bboxes[i,-len(lbls):] = bbs
+            labels[i,-len(lbls):] = tensor(lbls)
+    return torch.cat(imgs,0), (bboxes,labels)
