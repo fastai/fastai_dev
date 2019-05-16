@@ -12,7 +12,7 @@ from collections import OrderedDict
 from typing import *
 from enum import Enum
 from functools import partial,reduce
-from torch import as_tensor
+from torch import as_tensor,Tensor
 from IPython.core.debugger import set_trace
 
 def ifnone(a, b): return b if a is None else a
@@ -29,7 +29,7 @@ def test(a,b,cmp,cname=None):
 def test_eq(a,b):    test(a,b,operator.eq,'==')
 def test_ne(a,b):    test(a,b,operator.ne,'!=')
 def test_equal(a,b): test(a,b,torch.equal,'==')
-def test_np_eq(a,b): test(a,b,np.equal,'==')
+def test_np_eq(a,b): test(a,b,np.array_equal,'==')
 
 def listify(o):
     "Make `o` a list."
@@ -219,12 +219,11 @@ def _get_show_func(tfms):
         if hasattr(t, 'show') and t.show is not None: return t.show
     return None
 
-def show_xy(x, y, show_x, show_y, **kwargs):
-    # can pass func or obj with a `show` method
-    show_x = getattr(show_x, 'show', show_x)
-    show_y = getattr(show_y, 'show', show_y)
-    kwargs['ax'] = feed_kwargs(show_x, x, **kwargs)
-    feed_kwargs(show_y, y, **kwargs)
+def show_xs(xs, shows, ax=None, **kwargs):
+    for x,show in zip(xs,shows):
+        # can pass func or obj with a `show` method
+        show = getattr(show, 'show', show)
+        ax = feed_kwargs(show, x, ax=ax, **kwargs)
 
 class TupleTransform():
     def __init__(self, *tfms): self.tfms = [order_sorted(tfm) for tfm in listify(tfms)]
@@ -246,36 +245,45 @@ class TupleTransform():
     def show(self, o, show_x=None, show_y=None, **kwargs):
         if show_x is None: show_x=_get_show_func(self.tfms[0])
         if show_y is None: show_y=_get_show_func(self.tfms[1])
-        show_xy(*o, show_x, show_y, **kwargs)
+        show_xs(o, (show_x, show_y), **kwargs)
 
 image_extensions = set(k for k,v in mimetypes.types_map.items() if v.startswith('image/'))
 
-def get_image_files(path, include=None):
+def get_image_files(path, include=None, **kwargs):
     "Get image files in `path` recursively."
     return get_files(path, extensions=image_extensions, recurse=True, include=include)
 
-def random_splitter(items, valid_pct=0.2, seed=None):
+def image_getter(suf='', **kwargs):
+    def _inner(o, **kwargs):
+        return get_image_files(o/suf, **kwargs)
+    return _inner
+
+def random_splitter(valid_pct=0.2, seed=None, **kwargs):
     "Split `items` between train/val with `valid_pct` randomly."
-    if seed is not None: torch.manual_seed(seed)
-    rand_idx = torch.randperm(len(items))
-    cut = int(valid_pct * len(items))
-    return rand_idx[cut:],rand_idx[:cut]
+    def _inner(o, **kwargs):
+        if seed is not None: torch.manual_seed(seed)
+        rand_idx = torch.randperm(len(o))
+        cut = int(valid_pct * len(o))
+        return rand_idx[cut:],rand_idx[:cut]
+    return _inner
 
 def _grandparent_mask(items, name):
     return [(o.parent.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-2]) == name for o in items]
 
-def grandparent_splitter(items, train_name='train', valid_name='valid'):
+def grandparent_splitter(train_name='train', valid_name='valid', **kwargs):
     "Split `items` from the grand parent folder names (`train_name` and `valid_name`)."
-    return _grandparent_mask(items, train_name),_grandparent_mask(items, valid_name)
+    def _inner(o, **kwargs):
+        return _grandparent_mask(o, train_name),_grandparent_mask(o, valid_name)
+    return _inner
 
-def parent_label(o):
+def parent_label(o, **kwargs):
     "Label `item` with the parent folder name."
     return o.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-1]
 
 def re_labeller(pat):
     "Label `item` with regex `pat`."
     pat = re.compile(pat)
-    def _inner(o):
+    def _inner(o, **kwargs):
         res = pat.search(str(o))
         assert res,f'Failed to find "{pat}" in "{o}"'
         return res.group(1)
@@ -284,6 +292,7 @@ def re_labeller(pat):
 def show_image(im, ax=None, figsize=None, **kwargs):
     "Show a PIL image on `ax`."
     if ax is None: _,ax = plt.subplots(figsize=figsize)
+    if isinstance(im,Tensor) and im.shape[0]<5: im=im.permute(1,2,0)
     ax.imshow(im, **kwargs)
     ax.axis('off')
     return ax
@@ -328,12 +337,7 @@ TfmY = Enum('TfmY', 'Mask Image Point Bbox No')
 
 class ImageTransform():
     "Basic class for image transforms."
-    _order=10
-    _data_aug=False
-    _tfm_y_func={TfmY.Image: 'apply_img',   TfmY.Mask: 'apply_mask', TfmY.No: 'noop',
-                 TfmY.Point: 'apply_point', TfmY.Bbox: 'apply_bbox'}
-    _decode_y_func={TfmY.Image: 'unapply_img',   TfmY.Mask: 'unapply_mask', TfmY.No: 'noop',
-                   TfmY.Point: 'unapply_point', TfmY.Bbox: 'unapply_bbox'}
+    _order,_data_aug = 10,False
 
     def randomize(self): pass
 
@@ -350,24 +354,28 @@ class ImageTransform():
         self.x,self.filt = x,filt
         return self.unapply(x),self.unapply_y(y, **kwargs)
 
-    def noop(self,x):         return x
-    def apply_img(self, y):   return self.apply(y)
-    def apply_mask(self, y):  return self.apply_img(y)
+    def _tfm_name(self, t, is_decode=False):
+        return ('unapply_' if is_decode else 'apply_') + t.name.lower()
+
+    def apply_no(self,y):     return y
+    def apply_image(self, y): return self.apply(y)
+    def apply_mask(self, y):  return self.apply_image(y)
     def apply_point(self, y): return y
     def apply_bbox(self, y):  return self.apply_point(y)
 
     def apply(self, x): return x
     def apply_y(self, y, tfm_y=TfmY.No):
-        return getattr(self, self._tfm_y_func[tfm_y])(y)
+        return getattr(self, self._tfm_name(tfm_y))(y)
 
-    def unapply_img(self, y):   return self.unapply(y)
-    def unapply_mask(self, y):  return self.unapply_img(y)
+    def unapply_no(self,y):     return y
+    def unapply_image(self, y): return self.unapply(y)
+    def unapply_mask(self, y):  return self.unapply_image(y)
     def unapply_point(self, y): return y
     def unapply_bbox(self, y):  return self.unapply_point(y)
 
     def unapply(self, x): return x
     def unapply_y(self, y, tfm_y=TfmY.No):
-        return getattr(self, self._decode_y_func[tfm_y])(y)
+        return getattr(self, self._tfm_name(tfm_y,True))(y)
 
 class DecodeImg(ImageTransform):
     "Convert regular image to RGB, masks to L mode."
@@ -414,11 +422,6 @@ class TfmDataLoader():
     def __init__(self, dl, tfms=None, **tfm_kwargs):
         self.dl,self.tfms,self.tfm_kwargs = dl,order_sorted(tfms),tfm_kwargs
 
-    @classmethod
-    def from_dset(cls, dset, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
-        dl = DataLoader(dset, bs, **kwargs)
-        return cls(dl, tfms=tfms, **(ifnone(tfm_kwargs,{})))
-
     def __len__(self): return len(self.dl)
     def __iter__(self):
         for b in self.dl: yield apply_all(b, self.tfms, filter_kwargs=True, **self.tfm_kwargs)
@@ -432,8 +435,12 @@ class TfmDataLoader():
 
 from torch.utils.data.dataloader import DataLoader
 
+def get_dl(dset, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
+    dl = DataLoader(dset, bs, **kwargs)
+    return TfmDataLoader(dl, tfms=tfms, **(ifnone(tfm_kwargs,{})))
+
 def get_dls(dsrc, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
-    return [TfmDataLoader.from_dset(dsrc[i], bs, shuffle=i==0, tfms=tfms, tfm_kwargs=tfm_kwargs, **kwargs)
+    return [get_dl(dsrc[i], bs, shuffle=i==0, tfms=tfms, tfm_kwargs=tfm_kwargs, **kwargs)
             for i in range_of(dsrc)]
 
 def grab_item(b,k):
@@ -463,8 +470,7 @@ class DataBunch():
             self.dls[i].dataset.show(grab_item(b,k), ax=ax, show_func=show_func, **kwargs)
 
 def _dsrc_databunch(self, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
-    dls = get_dls(self, bs=bs, tfms=tfms, tfm_kwargs=tfm_kwargs, **kwargs)
-    return DataBunch(*dls)
+    return DataBunch(*get_dls(self, bs=bs, tfms=tfms, tfm_kwargs=tfm_kwargs, **kwargs))
 
 DataSource.databunch = _dsrc_databunch
 
@@ -497,32 +503,35 @@ class Normalize(Transform):
     def normalize(self, x): return (x - self.mean) / self.std
     def denorm(self, x):    return x * self.std + self.mean
 
-class Item():
-    tfm = None
-    tfm_ds = None
-    tfm_kwargs = None
+class Item(): tfm,tfm_ds,tfm_kwargs = None,None,None
+
+def resolve_tfms(o, tfmx, tfmy=None):
+    if o is not None: return o
+    return [t() for t in listify(tfmx)+listify(tfmy)]
 
 class DataBlock():
     types = (Item,Item)
-    def get_source(self):        raise NotImplementedError
-    def get_items(self, source): raise NotImplementedError
-    def split(self, items):      raise NotImplementedError
-    def label_func(self, item):  raise NotImplementedError
+    @staticmethod
+    def get_items(source): raise NotImplementedError
+    @staticmethod
+    def split(items):      raise NotImplementedError
+    @staticmethod
+    def label_func(item):  raise NotImplementedError
 
-    def __init__(self, tfms_x=None, tfms_y=None, tfms_ds=None):
-        (x,y) = self.types
-        self.tfms_x = [t() for t in listify(x.tfm)] if tfms_x is None else tfms_x
-        self.tfms_y = [t() for t in listify(y.tfm)] if tfms_y is None else tfms_y
-        if tfms_ds is None:
-            tfms_ds = [t() for t in listify(x.tfm_ds) + listify(y.tfm_ds)]
-        self.tfms_ds = tfms_ds
+    def __init__(self, source, tfms_x=None, tfms_y=None, tfms_ds=None):
+        self.source = source
+        x,y = self.types
+        self.tfms_x =  resolve_tfms(tfms_x, x.tfm)
+        self.tfms_y =  resolve_tfms(tfms_y,  y.tfm)
+        self.tfms_ds = resolve_tfms(tfms_ds, x.tfm_ds, y.tfm_ds)
         self.tfm_kwargs = {**ifnone(x.tfm_kwargs, {}), **ifnone(y.tfm_kwargs, {}) }
 
     def datasource(self, tfms=None, **tfm_kwargs):
-        source = self.get_source()
-        items = self.get_items(source)
-        split_idx = self.split(items)
-        ds = DataSource(items, TupleTransform(self.tfms_x, [self.label_func] + listify(self.tfms_y)), split_idx)
+        cls = self.__class__
+        items = cls.get_items(self.source, self=self)
+        split_idx = cls.split(items, self=self)
+        lf = partial(cls.label_func, self=self)
+        ds = DataSource(items, TupleTransform(self.tfms_x, [lf] + listify(self.tfms_y)), split_idx)
         ds = ds.transformed(self.tfms_ds + listify(tfms), **{**self.tfm_kwargs, **tfm_kwargs})
         return ds
 
@@ -531,6 +540,12 @@ class DataBlock():
         dls = get_dls(self.datasource(tfms=ds_tfms, **tfm_kwargs), bs, tfms=dl_tfms,
                       tfm_kwargs={**self.tfm_kwargs, **tfm_kwargs}, **kwargs)
         return DataBunch(*dls)
+
+    @property
+    def xt(self): return self.tfms_x[0]
+
+    @property
+    def yt(self): return self.tfms_y[0]
 
 class Image(Item):    tfm = Imagify
 class Category(Item): tfm = Categorize
@@ -642,10 +657,7 @@ class BBoxEncoder(Transform):
         for b,l in zip(bbox, label):
             if l != '#bg': _draw_rect(ax, [b[1],b[0],b[3]-b[1],b[2]-b[0]], text=l)
 
-class BBox(Item):
-    tfm = BBoxEncoder
-    tfm_ds = BBoxScaler
-    tfm_kwargs = {'tfm_y': TfmY.Bbox}
+class BBox(Item): tfm,tfm_ds,tfm_kwargs = BBoxEncoder,BBoxScaler,{'tfm_y': TfmY.Bbox}
 
 def bb_pad_collate(samples, pad_idx=0):
     max_len = max([len(s[1][1]) for s in samples])
