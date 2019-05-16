@@ -188,12 +188,12 @@ class DataSource():
     def valid(self): return self[1]
 
 class FilteredList:
-    def __init__(self, il, filt): self.il,self.filt = il,filt
-    def __getitem__(self,i): return self.il.get(i,self.filt)
-    def __len__(self): return self.il.len(self.filt)
+    def __init__(self, dsrc, filt): self.dsrc,self.filt = dsrc,filt
+    def __getitem__(self,i): return self.dsrc.get(i,self.filt)
+    def __len__(self): return self.dsrc.len(self.filt)
 
     def __iter__(self):
-        return (self.il.get(j,self.filt) for j in range_of(self))
+        return (self.dsrc.get(j,self.filt) for j in range_of(self))
 
     def __repr__(self):
         res = f'({len(self)} items) ['
@@ -202,11 +202,11 @@ class FilteredList:
         res += ']\n'
         return res
 
-    def decode(self, o): return self.il.decode(o, self.filt)
+    def decode(self, o): return self.dsrc.decode(o, self.filt)
 
 class Transform():
     _order = 0
-    def setup(self, data): return    # 1-time setup
+    def setup(self, dsrc): return    # 1-time setup
     def __call__(self,o):  return o  # transform
     def decode(self,o):    return o  # reverse transform for display
 
@@ -231,13 +231,13 @@ class TupleTransform():
                           filter_kwargs=True, **kwargs)
                 for x,tfm in zip(o,self.tfms)]
 
-    def setup(self, data):
-        old_tfms = getattr(data, 'tfms', []).copy()
+    def setup(self, dsrc):
+        old_tfms = getattr(dsrc, 'tfms', []).copy()
         for tfm in self.tfms:
             for t in tfm:
-                getattr(t, 'setup', noop)(data)
-                data.tfms.append(t)
-            data.tfms = old_tfms.copy()
+                getattr(t, 'setup', noop)(dsrc)
+                dsrc.tfms.append(t)
+            dsrc.tfms = old_tfms.copy()
 
     def show(self, o, show_x=None, show_y=None, **kwargs):
         if show_x is None: show_x=_get_show_func(self.tfms[0])
@@ -301,21 +301,21 @@ class Categorize(Transform):
         if ax is None: print(o)
         else: ax.set_title(o)
 
-    def setup(self, items):
+    def setup(self, dsrc):
         if self.vocab is not None: return
-        vals = [o for o in items.train]
+        vals = [o for o in dsrc.train]
         self.vocab,self.o2i = uniqueify(vals, sort=True, bidir=True)
 
-def _ds_show(self, o, filt=0, show_func=None, **kwargs):
+def _dsrc_show(self, o, filt=0, show_func=None, **kwargs):
     o = self.decode(o, filt)
     if show_func is None: show_func=_get_show_func(self.tfms)
     show_func(o, **kwargs)
 
-DataSource.show = _ds_show
+DataSource.show = _dsrc_show
 
 def _fl_show(self, o, show_func=None, **kwargs):
     o = self.decode(o)
-    if show_func is None: show_func=_get_show_func(self.il.tfms)
+    if show_func is None: show_func=_get_show_func(self.dsrc.tfms)
     show_func(o, **kwargs)
 
 FilteredList.show = _fl_show
@@ -392,8 +392,8 @@ class ToByteTensor(ImageTransform):
         w,h = x.size
         return res.view(h,w,-1).permute(2,0,1)
 
-    def unapply(self, x):
-        if x.dtype in [torch.float16, torch.float32]: x = torch.clamp(x, 0, 1)
+    def unapply(self, x): return self.unapply_mask(torch.clamp(x, 0, 1))
+    def unapply_mask(self, x):
         return x[0] if x.shape[0] == 1 else x.permute(1,2,0)
 
 class ToFloatTensor(ImageTransform):
@@ -404,7 +404,7 @@ class ToFloatTensor(ImageTransform):
     def apply_mask(self, x):
         return x.long() if self.div_y is None else x.long().div_(self.div_y)
 
-class TransformedDataLoader():
+class TfmDataLoader():
     def __init__(self, dl, tfms=None, **tfm_kwargs):
         self.dl,self.tfms,self.tfm_kwargs = dl,order_sorted(tfms),tfm_kwargs
 
@@ -426,9 +426,9 @@ class TransformedDataLoader():
 
 from torch.utils.data.dataloader import DataLoader
 
-def get_dls(il, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
-    return [TransformedDataLoader.from_dset(il[i], bs, shuffle=i==0, tfms=tfms, tfm_kwargs=tfm_kwargs, **kwargs)
-            for i in range_of(il)]
+def get_dls(dsrc, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
+    return [TfmDataLoader.from_dset(dsrc[i], bs, shuffle=i==0, tfms=tfms, tfm_kwargs=tfm_kwargs, **kwargs)
+            for i in range_of(dsrc)]
 
 def grab_item(b,k):
     if isinstance(b, (list,tuple)): return [grab_item(o,k) for o in b]
@@ -456,11 +456,11 @@ class DataBunch():
         for k,ax in enumerate(axs.flatten()):
             self.dls[i].dataset.show(grab_item(b,k), ax=ax, show_func=show_func, **kwargs)
 
-def _ds_databunch(self, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
+def _dsrc_databunch(self, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
     dls = get_dls(self, bs=bs, tfms=tfms, tfm_kwargs=tfm_kwargs, **kwargs)
     return DataBunch(*dls)
 
-DataSource.databunch = _ds_databunch
+DataSource.databunch = _dsrc_databunch
 
 class Normalize(Transform):
     def __init__(self, mean, std, do_x=True, do_y=False):
@@ -487,14 +487,14 @@ class Item():
     tfm_kwargs = None
 
 class DataBlock():
-    type_cls = (Item,Item)
+    types = (Item,Item)
     def get_source(self):        raise NotImplementedError
     def get_items(self, source): raise NotImplementedError
     def split(self, items):      raise NotImplementedError
     def label_func(self, item):  raise NotImplementedError
 
     def __init__(self, tfms_x=None, tfms_y=None, tfms_ds=None):
-        (x,y) = self.type_cls
+        (x,y) = self.types
         self.tfms_x = [t() for t in listify(x.tfm)] if tfms_x is None else tfms_x
         self.tfms_y = [t() for t in listify(y.tfm)] if tfms_y is None else tfms_y
         if tfms_ds is None:
@@ -527,12 +527,11 @@ class MultiCategorize(Transform):
     def show(self, o, ax=None):
         (print if ax is None else ax.set_title)(';'.join(o))
 
-    def setup(self, items):
+    def setup(self, dsrc):
         if self.vocab is not None: return
         vals = set()
-        for c in items.train: vals = vals.union(set(c))
-        vals = list(vals)
-        self.vocab,self.o2i = uniqueify(vals, sort=True, bidir=True)
+        for c in dsrc.train: vals = vals.union(set(c))
+        self.vocab,self.o2i = uniqueify(list(vals), sort=True, bidir=True)
 
 class OneHotEncode(Transform):
     _order=10
@@ -602,7 +601,6 @@ def _draw_rect(ax, b, color='white', text=None, text_size=14):
         _draw_outline(patch,1)
 
 class BBoxScaler(PointScaler):
-
     def __call__(self, o, tfm_y=TfmY.Bbox):
         (x,y) = o
         return x, (super().__call__((x,y[0]))[1].view(-1,4),y[1])
@@ -617,10 +615,10 @@ class BBoxEncoder(Transform):
     def __call__(self,x): return (x[0],[self.otoi[o] for o in x[1] if o in self.otoi])
     def decode(self, o):  return (o[0], [self.vocab[i] for i in o[1]])
 
-    def setup(self, items):
+    def setup(self, dsrc):
         if self.vocab is not None: return
         vals = set()
-        for c in items.train: vals = vals.union(set(c[1]))
+        for c in dsrc.train: vals = vals.union(set(c[1]))
         self.vocab,self.otoi = uniqueify(list(vals), sort=True, bidir=True, start='#bg')
 
     def show(self, x, ax):
