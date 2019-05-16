@@ -392,17 +392,19 @@ class ToByteTensor(ImageTransform):
         w,h = x.size
         return res.view(h,w,-1).permute(2,0,1)
 
-    def unapply(self, x): return self.unapply_mask(torch.clamp(x, 0, 1))
-    def unapply_mask(self, x):
+    def unapply(self, x):
         return x[0] if x.shape[0] == 1 else x.permute(1,2,0)
 
 class ToFloatTensor(ImageTransform):
     "Transform our items to float tensors (int in the case of mask)."
-    _order=20
+    _order=5 #Need to run after CUDA on the GPU
     def __init__(self, div_x=255., div_y=None): self.div_x,self.div_y = div_x,div_y
     def apply(self, x): return x.float().div_(self.div_x)
     def apply_mask(self, x):
         return x.long() if self.div_y is None else x.long().div_(self.div_y)
+
+    def unapply(self, x):      return torch.clamp(x, 0, 1)
+    def unapply_mask(self, x): return x
 
 class TfmDataLoader():
     def __init__(self, dl, tfms=None, **tfm_kwargs):
@@ -462,7 +464,17 @@ def _dsrc_databunch(self, bs=64, tfms=None, tfm_kwargs=None, **kwargs):
 
 DataSource.databunch = _dsrc_databunch
 
+from fastai.torch_core import to_device, to_cpu
+import torch.nn.functional as F
+
+class Cuda(Transform):
+    _order = 0
+    def __init__(self,device): self.device=device
+    def __call__(self, b, tfm_y=TfmY.No): return to_device(b, self.device)
+    def decode(self, b): return to_cpu(b)
+
 class Normalize(Transform):
+    _order=99
     def __init__(self, mean, std, do_x=True, do_y=False):
         self.mean,self.std,self.do_x,self.do_y = mean,std,do_x,do_y
 
