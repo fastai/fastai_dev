@@ -377,8 +377,8 @@ class ResizeFixed(ImageTransform):
     _order=15
     def __init__(self, size, mode_x=PIL.Image.BILINEAR, mode_y=None):
         if isinstance(size,int): size=(size,size)
-        size = (size[1],size[0]) #PIL takes size in the otherway round
-        self.size,self.mode_x,self.mode_y = size,mode_x,mode_y
+        self.size = (size[1],size[0]) #PIL takes size in the otherway round
+        self.mode_x,self.mode_y = mode_x,mode_y
 
     def apply(self, x):       return x.resize(self.size, self.mode_x)
     def apply_image(self, y): return y.resize(self.size, ifnone(self.mode_y,self.mode_x))
