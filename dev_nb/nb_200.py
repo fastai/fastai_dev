@@ -31,20 +31,6 @@ def test_ne(a,b):    test(a,b,operator.ne,'!=')
 def test_equal(a,b): test(a,b,torch.equal,'==')
 def test_np_eq(a,b): test(a,b,np.equal,'==')
 
-def compose(*funcs): return reduce(lambda f,g: lambda x: f(g(x)), reversed(funcs), noop)
-def is_listy(x:Any)->bool: return isinstance(x, (tuple,list))
-
-def tensor(x, *rest):
-    "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
-    if len(rest): x = (tuple(x),)+rest
-    # Pytorch bug in dataloader using num_workers>0
-    if is_listy(x) and len(x)==0: return tensor(0)
-    res = torch.tensor(x) if is_listy(x) else as_tensor(x)
-    if res.dtype is torch.int32:
-        warn('Tensor is int32: upgrading to int64; for better performance use int64 input')
-        return res.long()
-    return res
-
 def listify(o):
     "Make `o` a list."
     if o is None: return []
@@ -55,6 +41,24 @@ def listify(o):
     try: a = len(o)
     except: return [o]
     return list(o)
+
+def tuplify(o):
+    "Make `o` a tuple."
+    return tuple(listify(o))
+
+def compose(*funcs): return reduce(lambda f,g: lambda x: f(g(x)), reversed(funcs), noop)
+def is_listy(x:Any)->bool: return isinstance(x, (tuple,list))
+
+def tensor(x, *rest):
+    "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
+    if len(rest): x = tuplify(x)+rest
+    # Pytorch bug in dataloader using num_workers>0
+    if is_listy(x) and len(x)==0: return tensor(0)
+    res = torch.tensor(x) if is_listy(x) else as_tensor(x)
+    if res.dtype is torch.int32:
+        warn('Tensor is int32: upgrading to int64; for better performance use int64 input')
+        return res.long()
+    return res
 
 from inspect import getfullargspec
 
