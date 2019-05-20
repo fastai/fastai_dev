@@ -28,13 +28,18 @@ def is_export(cell, default):
     tst = check_re_pattern(cell, r'^\s*#\s*exports?\s*(\S+)\s*$')
     return os.path.sep.join(tst.groups()[0].split('.')) if tst else None
 
+def find_default_export(cells):
+    for cell in cells:
+        tst = check_re_pattern(cell, r'^\s*#\s*default_exp\s*(\S*)\s*$')
+        if tst is not None: return tst.groups()[0]
+
 def notebook2scriptSingle(fname):
     "Finds cells starting with `#export` and puts them into a new module"
     fname = Path(fname)
     nb = json.load(open(fname,'r'))
     default = find_default_export(nb['cells'])
     default = os.path.sep.join(default.split('.'))
-    fname_out = Path.cwd()/'fastai'/f'{default}.py'
+    fname_out = Path.cwd()/'fastai_local'/f'{default}.py'
     code_cells = [c for c in nb['cells'] if is_export(c, default) is not None]
     module = f'''
 #################################################
