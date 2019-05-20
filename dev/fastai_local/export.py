@@ -6,6 +6,7 @@
 
 import json,fire,re,os,shutil,glob
 from pathlib import Path
+from typing import Union, Optional
 
 def is_root(path): return (Path(path)/'.root').exists()
 
@@ -33,7 +34,7 @@ def find_default_export(cells):
         tst = check_re_pattern(cell, r'^\s*#\s*default_exp\s*(\S*)\s*$')
         if tst is not None: return tst.groups()[0]
 
-def notebook2scriptSingle(fname):
+def _notebook2script(fname):
     "Finds cells starting with `#export` and puts them into a new module"
     fname = Path(fname)
     nb = json.load(open(fname,'r'))
@@ -54,3 +55,18 @@ def notebook2scriptSingle(fname):
     output_path = fname.parent/'exp'/fname_out
     open(output_path,'w').write(module[:-2])
     print(f"Converted {fname} to {output_path}")
+
+def _get_sorted_files(all_fs: Union[bool,str], up_to=None):
+    "Return the list of files corresponding to `g` in the current dir."
+    if (all_fs==True): ret = glob.glob('*.ipynb') # Checks both that is bool type and that is True
+    else: ret = glob.glob(all_fs) if isinstance(g,str) else []
+    if len(ret)==0: print('WARNING: No files found')
+    if up_to is not None: ret = [f for f in ret if str(f)<=str(up_to)]
+    return sorted(ret)
+
+def notebook2script(fname=None, all_fs:Optional[Union[bool,str]]=None, up_to=None):
+    # initial checks
+    assert fname or all_fs
+    if (all_fs is None) and (up_to is not None): all_fs=True # Enable allFiles if upTo is present
+    fnames = _get_sorted_files(all_fs, up_to=up_to) if all_fs else [fname]
+    [_notebook2script(f) for f in fnames]
