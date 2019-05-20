@@ -4,39 +4,16 @@
 #################################################
 # file to edit: dev/00_export.ipynb
 
-import json,fire,re,os,shutil
+import json,fire,re,os,shutil,glob
 from pathlib import Path
 
-
-
-
-The root directory is cleary identified by having a .root file in it.
-
 def is_root(path): return (Path(path)/'.root').exists()
-
-
-
-
 
 def export_dest(fname):
     "Returns the destination for an export coming from `fname`"
     fn = Path(fname)
     while not is_root(fn): fn = fn.parent
     return fn/'fastai'/Path(fname).relative_to(fn)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def check_re_pattern(cell, pat):
     "Check if `cell` contains given `pat`."
@@ -45,13 +22,8 @@ def check_re_pattern(cell, pat):
     if len(src) == 0: return False
     return re.match(pat, src[0], re.IGNORECASE)
 
-
-
 def is_export(cell, default):
     "Check if `cell` is to be exported and returns the name of the module."
-    if check_re_pattern(cell, r'^\s*#\s*exports?\s*$') is not None: return default
+    if check_re_pattern(cell, r'^\s*#\s*exports?\s*$'): return default
     tst = check_re_pattern(cell, r'^\s*#\s*exports?\s*(\S+)\s*$')
-    return os.path.sep.join(tst.groups()[0].split('.')) if tst is not None else None
-
-
-
+    return os.path.sep.join(tst.groups()[0].split('.')) if tst else None
