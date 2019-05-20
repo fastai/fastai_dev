@@ -5,8 +5,7 @@
 # file to edit: dev/01_test.ipynb
 
 import numpy as np,torch,operator,sys,os
-from typing import *
-from fastai.gen_doc.nbdoc import show_doc
+from typing import Iterable, Iterator, Generator, Callable, Sequence
 from torch import as_tensor,Tensor
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace

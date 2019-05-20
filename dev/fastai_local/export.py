@@ -6,15 +6,12 @@
 
 import json,fire,re,os,shutil,glob
 from pathlib import Path
+from fastai.gen_doc.nbdoc import show_doc
 from typing import Union, Optional
+from typeguard import typechecked
+NoneType = type(None)
 
-def is_root(path): return (Path(path)/'.root').exists()
-
-def export_dest(fname):
-    "Returns the destination for an export coming from `fname`"
-    fn = Path(fname)
-    while not is_root(fn): fn = fn.parent
-    return fn/'fastai'/Path(fname).relative_to(fn)
+def chk(f): return typechecked(always=True)(f)
 
 def check_re_pattern(cell, pat):
     "Check if `cell` contains given `pat`."
@@ -32,7 +29,7 @@ def is_export(cell, default):
 def find_default_export(cells):
     for cell in cells:
         tst = check_re_pattern(cell, r'^\s*#\s*default_exp\s*(\S*)\s*$')
-        if tst is not None: return tst.groups()[0]
+        if tst: return tst.groups()[0]
 
 def _notebook2script(fname):
     "Finds cells starting with `#export` and puts them into a new module"
