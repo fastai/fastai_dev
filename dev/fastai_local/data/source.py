@@ -2,6 +2,12 @@
 
 __all__ = ['coll_repr', 'ListContainer', 'DataSource', 'TfmList']
 
+from ..imports import *
+from ..test import *
+from ..core import *
+from .pipeline import *
+
+
 def coll_repr(c, max=1000):
     "String repr of up to `max` items of (possibly lazy) collection `c`"
     return f'({len(c)} items) [' + ','.join(itertools.islice(map(str,c), 10)) + ('...'
