@@ -4,10 +4,37 @@ entries:
     - external_url: https://github.com/fastai/fastai/blob/master/README.md#installation
       output: web
       title: Installation
-    - output: web
-      title: Export
-      url: /export.html
     output: web
-    title: Foobar
+    title: Getting started
+  - folderitems:
+    - output: web
+      title: data_source
+      url: /data_source.html
+    - output: web
+      title: data_pipeline
+      url: /data_pipeline.html
+    - output: web
+      title: data_core
+      url: /data_core.html
+    output: web
+    title: Data
+  - folderitems:
+    - output: web
+      title: core
+      url: /core.html
+    - output: web
+      title: test
+      url: /test.html
+    output: web
+    title: Core
+  - folderitems:
+    - output: web
+      title: export
+      url: /export.html
+    - output: web
+      title: export2html
+      url: /export2html.html
+    output: web
+    title: Notebook
   output: web
   title: Sidebar
