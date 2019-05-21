@@ -40,7 +40,7 @@ def _create_mod_file(fname, nb_path):
         f.write('\n\n__all__ = []')
 
 def func_class_names(code):
-    "Find the names of the function or class in "
+    "Find the names of the function or class defined in `code`"
     names = re.findall(r'^(?:def|class)\s+([^\(\s]*)\s*\(', code, re.MULTILINE)
     return [n for n in names if not n.startswith('_')]
 
@@ -85,7 +85,7 @@ def _notebook2script(fname):
         orig = '' if e==default else f'#Comes from {fname.name}.\n'
         code = '\n\n' + orig + '\n'.join(_deal_import(c['source'].split('\n')[1:], fname_out))
         # remove trailing spaces
-        _add2add(fname_out, [f"'{f}'" for f in _func_class_names(code)])
+        _add2add(fname_out, [f"'{f}'" for f in func_class_names(code)])
         code = re.sub(r' +$', '', code, flags=re.MULTILINE)
         with open(fname_out, 'a') as f: f.write(code)
     print(f"Converted {fname}.")

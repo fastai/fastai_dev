@@ -11,8 +11,9 @@ from ..imports import *
 from .export import *
 
 import nbformat
-from nbconvert.preprocessors import Preprocessor
+from nbconvert.preprocessors import ExecutePreprocessor, Preprocessor
 from nbconvert import HTMLExporter
+from nbformat.sign import NotebookNotary
 from traitlets.config import Config
 
 def remove_widget_state(cell):
@@ -24,7 +25,7 @@ def remove_widget_state(cell):
 
 def hide_cells(cell):
     "Hide cell that need to be hidden"
-    for pat in [r'^\s*#\s*export\s+', r'^\s*#\s*hide\s+', r'^\s*#\s*default_exp\s+']:
+    for pat in [r'^\s*#\s*export\s+', r'^\s*#\s*hide\s+', r'^\s*#\s*default_exp\s+', r's*show_doc\(']:
         if check_re(cell, pat): cell['metadata'] = {'hide_input': True}
     return cell
 
@@ -33,11 +34,14 @@ def _show_doc_cell(name):
             'execution_count': None,
             'metadata': {},
             'outputs': [],
-            'source': f"show_doc('name')"}
+            'source': f"show_doc({name})"}
 
 def add_show_docs(cells):
+    "Add `show_doc` for each exported function or class"
+    res = []
     for cell in cells:
-        if check_re(cell, r'^\s*#\s*exports?\s') is not None:
-
-
-process_cells = [remove_widget_state, hide_cells]
+        res.append(cell)
+        if check_re(cell, r'^\s*#\s*exports?\s*'):
+            names = func_class_names(cell['source'])
+            for n in names: res.append(_show_doc_cell(n))
+    return res
