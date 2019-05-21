@@ -10,7 +10,9 @@ from ..test import *
 from ..core import *
 
 from .pipeline import *
+
 from .source import *
+
 from fastai.datasets import *
 
 def _get_files(p, fs, extensions=None):
@@ -55,12 +57,12 @@ def random_splitter(valid_pct=0.2, seed=None, **kwargs):
         return rand_idx[cut:],rand_idx[:cut]
     return _inner
 
-def _grandparent_mask(items, name): return mask2idxs(Path(o).parent.parent.name == name for o in items)
+def _grandparent_idxs(items, name): return mask2idxs(Path(o).parent.parent.name == name for o in items)
 
 def grandparent_splitter(train_name='train', valid_name='valid'):
     "Split `items` from the grand parent folder names (`train_name` and `valid_name`)."
     def _inner(o, **kwargs):
-        return _grandparent_mask(o, train_name),_grandparent_mask(o, valid_name)
+        return _grandparent_idxs(o, train_name),_grandparent_idxs(o, valid_name)
     return _inner
 
 def parent_label(o, **kwargs):
