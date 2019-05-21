@@ -5,7 +5,7 @@ __all__ = ['test_fail', 'test', 'equals', 'nequals', 'test_eq', 'test_ne', 'test
 import numpy as np,operator,torch
 from torch import Tensor
 from numpy import ndarray,array
-from typing import Iterable
+from typing import Iterable,Generator
 
 def test_fail(f, msg='', contains=''):
     "Fails with `msg` unless `f()` raises an exception and (optionally) has `contains` in `e.args`"
@@ -24,7 +24,7 @@ def equals(a,b):
     cmp = (torch.equal    if isinstance(a, Tensor  ) else
            np.array_equal if isinstance(a, ndarray ) else
            operator.eq    if isinstance(a, str     ) else
-           _all_equal     if isinstance(a, Iterable) else
+           _all_equal     if isinstance(a, (list,tuple,Generator)) else
            operator.eq)
     return cmp(a,b)
 
