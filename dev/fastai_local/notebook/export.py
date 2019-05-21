@@ -15,16 +15,16 @@ def check_re(cell, pat):
 
 def is_export(cell, default):
     "Check if `cell` is to be exported and returns the name of the module."
-    if _check_re(cell, r'^\s*#\s*exports?\s*$'):
+    if check_re(cell, r'^\s*#\s*exports?\s*$'):
         if default is None: print(f"This cell doesn't have an export destination and was ignored:\n{cell['source'][1]}")
         return default
-    tst = _check_re(cell, r'^\s*#\s*exports?\s*(\S+)\s*$')
+    tst = check_re(cell, r'^\s*#\s*exports?\s*(\S+)\s*$')
     return os.path.sep.join(tst.groups()[0].split('.')) if tst else None
 
 def find_default_export(cells):
     "Find in `cells` the default export module."
     for cell in cells:
-        tst = _check_re(cell, r'^\s*#\s*default_exp\s*(\S*)\s*$')
+        tst = check_re(cell, r'^\s*#\s*default_exp\s*(\S*)\s*$')
         if tst: return tst.groups()[0]
 
 def _create_mod_file(fname, nb_path):
