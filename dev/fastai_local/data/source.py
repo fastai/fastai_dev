@@ -33,8 +33,7 @@ class DataSource():
     "Applies a `Pipeline` of `tfms` to filtered subsets of `items`"
     def __init__(self, items, tfms=noop, filts=None):
         if filts is None: filts = [range_of(items)]
-        ft = mask2idxs if isinstance(filts[0][0], bool) else noop
-        self.filts = listify(ListContainer(ft(filt)) for filt in filts)
+        self.filts = listify(ListContainer(mask2idxs(filt)) for filt in filts)
         self.items,self.tfm = ListContainer(items),Pipeline(tfms)
         self.tfm.setup(self)
 

@@ -70,9 +70,9 @@ def compose(*funcs: Callable):
 
 def mask2idxs(mask):
     "Convert bool mask list to index list"
-    mask = listify(mask)
-    if not isinstance(mask[0],bool): return mask
-    return [i for i,m in enumerate(mask) if m]
+    mask = list(mask)
+    if isinstance(mask[0],bool): return [i for i,m in enumerate(mask) if m]
+    return [int(i) for i in mask]
 
 def uniqueify(x, sort=False, bidir=False, start=None):
     "Return the unique elements in `x`, optionally `sort`-ed, optionally return the reverse correspondance."
