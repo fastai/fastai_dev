@@ -4,6 +4,7 @@ __all__ = ['chk', 'ifnone', 'noop', 'noops', 'range_of', 'is_listy', 'is_iter', 
            'compose', 'mask2idxs', 'uniqueify', 'setify', 'all_equal', 'opt_call', 'add_docs', 'docs']
 
 from .test import *
+
 from .imports import *
 
 
