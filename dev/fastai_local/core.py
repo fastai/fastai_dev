@@ -69,6 +69,7 @@ def compose(*funcs: Callable):
 
 def mask2idxs(mask):
     "Convert bool mask list to index list"
+    mask = listify(mask)
     if not isinstance(mask[0],bool): return mask
     return [i for i,m in enumerate(mask) if m]
 
