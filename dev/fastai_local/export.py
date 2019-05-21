@@ -58,11 +58,11 @@ def _relative_import(name, fname):
     return '.' * (len(splits)-len(mods)+1) + '.'.join(mods)
 
 def _deal_import(code_lines, fname):
-    pat = re.compile(r'from (fastai_local.(\S*)) import (\S*)$')
+    pat = re.compile(r'from (fastai_local.\S*) import (\S*)$')
     lines = []
     for line in code_lines:
         match = re.match(pat, line)
-        if match: lines.append(f"from {_relative_import(match.groups()[0], fname)} import {match.groups()[1]}")
+        if match: lines.append(f"from {_relative_import(match.groups()[0], fname)} import {match.groups()[1]}\n")
         else: lines.append(line)
     return lines
 
@@ -94,8 +94,7 @@ def _get_sorted_files(all_fs: Union[bool,str], up_to=None):
     if up_to is not None: ret = [f for f in ret if str(f)<=str(up_to)]
     return sorted(ret)
 
-@chk
-def notebook2script(fname=None, all_fs:Optional[Union[bool,str]]=None, up_to=None):
+def notebook2script(fname=None, all_fs=None, up_to=None):
     # initial checks
     assert fname or all_fs
     if (all_fs is None) and (up_to is not None): all_fs=True # Enable allFiles if upTo is present
