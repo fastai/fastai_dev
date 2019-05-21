@@ -6,6 +6,7 @@ import numpy as np,operator,torch
 from torch import Tensor
 from numpy import ndarray,array
 from typing import Iterable
+from .imports import *
 
 def test_fail(f, msg='', contains=''):
     "Fails with `msg` unless `f()` raises an exception and (optionally) has `contains` in `e.args`"

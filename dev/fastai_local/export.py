@@ -37,8 +37,17 @@ def _create_mod_file(fname, nb_path):
         f.write('\n\n__all__ = []')
 
 def _func_class_names(code):
-    names = re.findall(r'^(?:def|class)\s+([^\(\s]*\s*)\(', code, re.MULTILINE)
+    names = re.findall(r'^(?:def|class)\s+([^\(\s]*)\s*\(', code, re.MULTILINE)
     return [n for n in names if not n.startswith('_')]
+
+def _add2add(fname, names, line_width=120):
+    if len(names) == 0: return
+    with open(fname, 'r') as f: text = f.read()
+    tw = TextWrapper(width=120, initial_indent='', subsequent_indent=' '*11, break_long_words=False)
+    re_all = re.search(r'__all__\s*=\s*\[([^\]]*)\]', text)
+    start,end = re_all.start(),re_all.end()
+    text_all = tw.wrap(f"{text[start:end-1]}{'' if text[end-2]=='[' else ', '}{', '.join(names)}]")
+    with open(fname, 'w') as f: f.write(text[:start] + '\n'.join(text_all) + text[end:])
 
 def _notebook2script(fname):
     "Finds cells starting with `#export` and puts them into a new module"
@@ -68,8 +77,7 @@ def _get_sorted_files(all_fs: Union[bool,str], up_to=None):
     if up_to is not None: ret = [f for f in ret if str(f)<=str(up_to)]
     return sorted(ret)
 
-@chk
-def notebook2script(fname=None, all_fs:Optional[Union[bool,str]]=None, up_to=None):
+def notebook2script(fname=None, all_fs=None, up_to=None):
     # initial checks
     assert fname or all_fs
     if (all_fs is None) and (up_to is not None): all_fs=True # Enable allFiles if upTo is present
