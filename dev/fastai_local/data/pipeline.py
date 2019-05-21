@@ -2,6 +2,10 @@
 
 __all__ = ['opt_call', 'Transform']
 
+from ..imports import *
+from ..test import *
+from ..core import *
+
 def opt_call(f, fname='__call__', *args, **kwargs):
     "Call `f.{fname}(*args, **kwargs)`, or `noop` if not defined"
     return getattr(f,fname,noop)(*args, **kwargs)
