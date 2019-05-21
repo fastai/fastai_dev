@@ -18,7 +18,8 @@ from typeguard import typechecked
 NoneType = type(None)
 
 from fastai.gen_doc.nbdoc import show_doc
-from fastai_local.test import *
+from .test import *
+
 
 def chk(f): return typechecked(always=True)(f)
 

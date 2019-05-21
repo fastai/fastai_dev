@@ -2,8 +2,8 @@
 
 __all__ = ['is_export', 'find_default_export', 'notebook2script']
 
-from fastai_local.core import *
-from fastai_local.test import *
+from .core import *
+from .test import *
 import json,re,os,shutil,glob
 from textwrap import TextWrapper
 from typing import Iterable,Iterator,Generator,Callable,Sequence,List,Tuple,Union,Optional
@@ -37,8 +37,34 @@ def _create_mod_file(fname, nb_path):
         f.write('\n\n__all__ = []')
 
 def _func_class_names(code):
-    names = re.findall(r'^(?:def|class)\s+([^\(\s]*\s*)\(', code, re.MULTILINE)
+    names = re.findall(r'^(?:def|class)\s+([^\(\s]*)\s*\(', code, re.MULTILINE)
     return [n for n in names if not n.startswith('_')]
+
+def _add2add(fname, names, line_width=120):
+    if len(names) == 0: return
+    with open(fname, 'r') as f: text = f.read()
+    tw = TextWrapper(width=120, initial_indent='', subsequent_indent=' '*11, break_long_words=False)
+    re_all = re.search(r'__all__\s*=\s*\[([^\]]*)\]', text)
+    start,end = re_all.start(),re_all.end()
+    text_all = tw.wrap(f"{text[start:end-1]}{'' if text[end-2]=='[' else ', '}{', '.join(names)}]")
+    with open(fname, 'w') as f: f.write(text[:start] + '\n'.join(text_all) + text[end:])
+
+def _relative_import(name, fname):
+    mods = name.split('.')
+    splits = str(fname).split(os.path.sep)
+    if mods[0] not in splits: return name
+    splits = splits[splits.index(mods[0]):]
+    while splits[0] == mods[0]: splits,mods = splits[1:],mods[1:]
+    return '.' * (len(splits)-len(mods)+1) + '.'.join(mods)
+
+def _deal_import(code_lines, fname):
+    pat = re.compile(r'from (fastai_local.(\S*)) import (\S*)$')
+    lines = []
+    for line in code_lines:
+        match = re.match(pat, line)
+        if match: lines.append(f"from {_relative_import(match.groups()[0], fname)} import {match.groups()[1]}")
+        else: lines.append(line)
+    return lines
 
 def _notebook2script(fname):
     "Finds cells starting with `#export` and puts them into a new module"
@@ -53,7 +79,7 @@ def _notebook2script(fname):
     for (c,e) in cells:
         fname_out = Path.cwd()/'fastai_local'/f'{e}.py'
         orig = '' if e==default else f'#Comes from {fname.name}.\n'
-        code = '\n\n' + orig + ''.join(c['source'][1:])
+        code = '\n\n' + orig + ''.join(_deal_import(c['source'][1:], fname_out))
         # remove trailing spaces
         _add2add(fname_out, [f"'{f}'" for f in _func_class_names(code)])
         code = re.sub(r' +$', '', code, flags=re.MULTILINE)
