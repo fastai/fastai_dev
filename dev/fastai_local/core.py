@@ -96,7 +96,7 @@ def add_docs(cls, **docs):
     "Copy values from `docs` to `cls` docstrings, and confirm all public methods are documented"
     for k,v in docs.items(): getattr(cls,k).__doc__ = v
     # List of public callables without docstring
-    nodoc = [c for n,c in cls.__dict__.items() if isinstance(c,Callable)
+    nodoc = [c for n,c in vars(cls).items() if isinstance(c,Callable)
              and not n.startswith('_') and c.__doc__ is None]
     assert not nodoc, f"Missing docs: {nodoc}"
     assert cls.__doc__ is not None, f"Missing class docs: {cls}"
