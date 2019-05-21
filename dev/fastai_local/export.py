@@ -2,9 +2,12 @@
 
 __all__ = ['is_export', 'find_default_export', 'notebook2script']
 
+from fastai_local.core import *
 from fastai_local.test import *
 import json,re,os,shutil,glob
 from textwrap import TextWrapper
+from typing import Iterable,Iterator,Generator,Callable,Sequence,List,Tuple,Union,Optional
+from pathlib import Path
 
 def _check_re(cell, pat):
     if cell['cell_type'] != 'code': return False
@@ -34,7 +37,7 @@ def _create_mod_file(fname, nb_path):
         f.write('\n\n__all__ = []')
 
 def _func_class_names(code):
-    names = re.findall(r'^(?:def|class)\s+([^\(]*)\(', code, re.MULTILINE)
+    names = re.findall(r'^(?:def|class)\s+([^\(\s]*\s*)\(', code, re.MULTILINE)
     return [n for n in names if not n.startswith('_')]
 
 def _notebook2script(fname):
@@ -52,7 +55,7 @@ def _notebook2script(fname):
         orig = '' if e==default else f'#Comes from {fname.name}.\n'
         code = '\n\n' + orig + ''.join(c['source'][1:])
         # remove trailing spaces
-        _add2add(fname_out, [f_func_class_names(code))
+        _add2add(fname_out, [f"'{f}'" for f in _func_class_names(code)])
         code = re.sub(r' +$', '', code, flags=re.MULTILINE)
         with open(fname_out, 'a') as f: f.write(code)
     print(f"Converted {fname}.")
@@ -65,6 +68,7 @@ def _get_sorted_files(all_fs: Union[bool,str], up_to=None):
     if up_to is not None: ret = [f for f in ret if str(f)<=str(up_to)]
     return sorted(ret)
 
+@chk
 def notebook2script(fname=None, all_fs:Optional[Union[bool,str]]=None, up_to=None):
     # initial checks
     assert fname or all_fs
