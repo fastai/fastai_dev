@@ -3,8 +3,9 @@
 __all__ = ['chk', 'ifnone', 'noop', 'noops', 'range_of', 'is_listy', 'is_iter', 'listify', 'tuplify', 'tensor',
            'compose', 'mask2idxs', 'uniqueify', 'setify']
 
-from .imports import *
 from .test import *
+from .imports import *
+
 
 def chk(f): return typechecked(always=True)(f)
 
