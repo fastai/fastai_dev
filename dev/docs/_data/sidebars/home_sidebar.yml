@@ -1,0 +1,13 @@
+entries:
+- folders:
+  - folderitems:
+    - external_url: https://github.com/fastai/fastai/blob/master/README.md#installation
+      output: web
+      title: Installation
+    - output: web
+      title: Export
+      url: /export.html
+    output: web
+    title: Foobar
+  output: web
+  title: Sidebar
