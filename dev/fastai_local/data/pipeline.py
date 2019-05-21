@@ -63,8 +63,8 @@ class Pipeline():
     def add(self, tfms, items=None):
         "Call `setup` on all `tfms` and append them to this pipeline"
         for t in sorted(listify(tfms), key=lambda o: getattr(o, 'order', 0)):
-            if hasattr(t, 'setup'): t.setup(self(items))
             self.tfms.append(t)
+            if hasattr(t, 'setup'): t.setup(self(items))
 
     def __getattr__(self, k):
         "Find last tfm in `self.tfms` that has attr `k`"
