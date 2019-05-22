@@ -9,6 +9,7 @@ from ..test import *
 from ..core import *
 
 
+@docs
 class Transform():
     "A function that `encodes` if `filt` matches, and optionally `decodes`, with an optional `setup`"
     order,filt = 0,None
@@ -22,28 +23,38 @@ class Transform():
         "classmethod: Turn `f` into a `Transform` unless it already is one"
         return f if hasattr(f,'decode') or isinstance(f,Transform) else cls(f)
 
-    def __call__(self, o, filt=None, **kwargs):
-        "Call `self.encodes` unless `filt` is passed and it doesn't match `self.filt`"
-        if self.filt is not None and self.filt!=filt: return o
-        return self.encodes(o, **kwargs)
-
-    def decode(self, o, filt=None, **kwargs):
-        "Call `self.decodes` unless `filt` is passed and it doesn't match `self.filt`"
-        if self.filt is not None and self.filt!=filt: return o
-        return self.decodes(o, **kwargs)
-
+    def _filt_match(self, filt): return self.filt is None or self.filt==filt
+    def __call__(self, o, filt=None, **kwargs): return self.encodes(o, **kwargs) if self._filt_match(filt) else o
+    def decode  (self, o, filt=None, **kwargs): return self.decodes(o, **kwargs) if self._filt_match(filt) else o
     def __repr__(self): return str(self.encodes) if self.__class__==Transform else str(self.__class__)
     def decodes(self, o, *args, **kwargs): return o
 
+    _doc=dict(__call__="Call `self.encodes` unless `filt` is passed and it doesn't match `self.filt`",
+              decode="Call `self.decodes` unless `filt` is passed and it doesn't match `self.filt`",
+              decodes="Override to implement custom decoding")
+
 class Pipeline():
-    "A pipeline of transforms, composed and applied for encode/decode, and setup one at a time"
-    def __init__(self, tfms): self.tfms,self.inactiv = [],[Transform.create(t) for t in listify(tfms)]
+    "A pipeline of transforms applied to a collection, composed and applied for encode/decode, and setup one at a time"
+    def __init__(self, tfms, items=None):
+        self.items,self.tfms = items,[]
+        self.add([Transform.create(t) for t in listify(tfms)])
+
+    def add(self, tfms):
+        "Call `setup` on all `tfms` and append them to this pipeline"
+        for t in sorted(listify(tfms), key=lambda o: getattr(o, 'order', 0)):
+            self.tfms.append(t)
+            if hasattr(t, 'setup'): t.setup(self)
+
     def __call__(self, x, **kwargs): return self.composed(x, **kwargs)
     def decode(self, x, **kwargs): return self.composed(x, rev=True, fname='decode', **kwargs)
+    def __eq__(self, b): return all_equal(self, b)
+    def __len__(self): return len(self.items)
+    def __getitem__(self, i):
+        its = self.items[i]
+        return [self(o) for o in its] if is_listy(its) else self(its)
 
     def composed(self, x, rev=False, fname='__call__', **kwargs):
         "Compose `{fname}` of all `self.tfms` (reversed if `rev`) on `x`"
-        self.setup()
         tfms = reversed(self.tfms) if rev else self.tfms
         for f in tfms: x = opt_call(f, fname, x, **kwargs)
         return x
@@ -52,22 +63,10 @@ class Pipeline():
     def delete(self, idx): del(self.tfms[idx])
     def remove(self, tfm): self.tfms.remove(tfm)
 
-    def setup(self, items=None):
-        "Call `setup` on all `self.tfms` and make them active in this pipeline"
-        tfms = self.inactiv
-        self.inactiv = []
-        self.add(tfms, items)
-
-    def add(self, tfms, items=None):
-        "Call `setup` on all `tfms` and append them to this pipeline"
-        for t in sorted(listify(tfms), key=lambda o: getattr(o, 'order', 0)):
-            self.tfms.append(t)
-            if hasattr(t, 'setup'): t.setup(items)
-
     def __getattr__(self, k):
         "Find last tfm in `self.tfms` that has attr `k`"
         try: return next(getattr(t,k) for t in reversed(self.tfms) if hasattr(t,k))
-        except: raise AttributeError(k)
+        except StopIteration: raise AttributeError(k) from None
 
 add_docs(
     Pipeline,

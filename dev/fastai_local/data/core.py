@@ -35,7 +35,7 @@ def get_files(path, extensions=None, recurse=False, include=None):
     else:
         f = [o.name for o in os.scandir(path) if o.is_file()]
         res = _get_files(path, f, extensions)
-    return res
+    return ListContainer(res)
 
 image_extensions = set(k for k,v in mimetypes.types_map.items() if v.startswith('image/'))
 
@@ -52,7 +52,7 @@ def random_splitter(valid_pct=0.2, seed=None, **kwargs):
     "Create function that splits `items` between train/val with `valid_pct` randomly."
     def _inner(o, **kwargs):
         if seed is not None: torch.manual_seed(seed)
-        rand_idx = torch.randperm(len(o))
+        rand_idx = ListContainer(int(i) for i in torch.randperm(len(o)))
         cut = int(valid_pct * len(o))
         return rand_idx[cut:],rand_idx[:cut]
     return _inner
