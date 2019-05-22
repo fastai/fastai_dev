@@ -73,17 +73,9 @@ def _deal_import(code_lines, fname):
 
 def _get_index():
     if not (Path(__file__).parent/'index.txt').exists(): return {}
-    with open(Path(__file__).parent/'index.txt', 'r') as f:
-        res = {}
-        for line in f.readlines():
-            splits = line.split(':')
-            if len(splits) >=1: res[splits[0]] = splits[1]
-    return res
+    return json.load(open(Path(__file__).parent/'index.txt', 'r'))
 
-def _save_index(index):
-    print(index)
-    with open(Path(__file__).parent/'index.txt', 'w') as f:
-        for k,v in index.items(): f.write(f'{k:v}\n')
+def _save_index(index): json.dump(index, open(Path(__file__).parent/'index.txt', 'w'))
 
 def _notebook2script(fname):
     "Finds cells starting with `#export` and puts them into a new module"

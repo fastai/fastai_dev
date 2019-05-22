@@ -153,14 +153,36 @@ def download_data(url, fname=None, c_key=ConfigKey.Archive, ext='.tgz', force_do
         download_url(f'{url}{ext}', fname, overwrite=force_download)
     return fname
 
+def _get_check(url):
+    checks = json.load(open(Path(__file__).parent/'checks.txt', 'r'))
+    return checks.get(url, None)
+
+def _check_file(fname):
+    size = os.path.getsize(fname)
+    with open(fname, "rb") as f:
+        hash_nb = hashlib.md5(f.read(2**20)).hexdigest()
+    return [size,hash_nb]
+
+def _add_check(url, fname):
+    "Internal function to update the internal check file with `url` and check on `fname`."
+    checks = json.load(open(Path(__file__).parent/'checks.txt', 'r'))
+    checks[url] = _check_file(fname)
+    json.dump(checks, open(Path(__file__).parent/'checks.txt', 'w'))
+
 def untar_data(url, fname=None, dest=None, c_key=ConfigKey.Data, force_download=False):
     "Download `url` to `fname` if `dest` doesn't exist, and un-tgz to folder `dest`."
     default_dest = _url2path(url, c_key=c_key, ext='')
     dest = default_dest if dest is None else Path(dest)/default_dest.name
+    fname = Path(fname or _url2path(url, c_key=c_key))
+    if fname.exists() and _get_check(url) and _check_file(fname) != _get_check(url):
+        print("A new version of this is available, downloading...")
+        force_download = True
     if force_download:
         if fname.exists(): os.remove(fname)
         if dest.exists(): shutil.rmtree(dest)
     if not dest.exists():
         fname = download_data(url, fname=fname, c_key=c_key)
+        if _get_check(url) and _check_file(fname) != _get_check(url):
+            print(f"File downloaded is broken. Remove {fname} and try again.")
         tarfile.open(fname, 'r:gz').extractall(dest.parent)
     return dest
