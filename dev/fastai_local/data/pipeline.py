@@ -26,7 +26,7 @@ class Transform():
     def __repr__(self): return str(self.encodes) if self.__class__==Transform else str(self.__class__)
     def decodes(self, o, *args, **kwargs): return o
 
-    _doc=dict(__call__="Call `self.encodes` unless `filt` is passed and it doesn't match `self.filt`",
+    _docs=dict(__call__="Call `self.encodes` unless `filt` is passed and it doesn't match `self.filt`",
               decode="Call `self.decodes` unless `filt` is passed and it doesn't match `self.filt`",
               decodes="Override to implement custom decoding")
 

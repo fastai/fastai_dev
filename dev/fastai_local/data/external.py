@@ -131,6 +131,7 @@ def _get_config():
     return config
 
 ConfigKey = IntEnum('ConfigKey', 'Data Archive Model')
+ConfigKey.__doc__ = "Keys for a path in the fastai config file"
 
 def get_path(c_key=ConfigKey.Data):
     return Path(_get_config()[f"{c_key.name.lower()}_path"])
