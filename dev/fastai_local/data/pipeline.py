@@ -3,11 +3,8 @@
 __all__ = ['Transform', 'Pipeline']
 
 from ..imports import *
-
 from ..test import *
-
 from ..core import *
-
 
 class Transform():
     "A function that `encodes` if `filt` matches, and optionally `decodes`, with an optional `setup`"
