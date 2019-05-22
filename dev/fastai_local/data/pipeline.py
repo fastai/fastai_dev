@@ -34,7 +34,6 @@ class Pipeline():
     "A pipeline of transforms applied to a collection, composed and applied for encode/decode, and setup one at a time"
     def __init__(self, tfms, items=None):
         self.items,self.tfms = ListContainer(items),[]
-        print(self.items)
         self.add([Transform.create(t) for t in listify(tfms)])
 
     def add(self, tfms):
@@ -47,10 +46,10 @@ class Pipeline():
     def decode(self, x, **kwargs): return self.composed(x, rev=True, fname='decode', **kwargs)
     def __eq__(self, b): return all_equal(self, b)
     def __len__(self): return len(self.items)
+    def decoded(self, idx): return self.decode(self[idx])
     def __getitem__(self, i):
         its = self.items[i]
-        set_trace()
-        return [self(o) for o in its] if is_listy(its) else self(its)
+        return its.mapped(self) if isinstance(its,ListContainer) else self(its)
 
     def composed(self, x, rev=False, fname='__call__', **kwargs):
         "Compose `{fname}` of all `self.tfms` (reversed if `rev`) on `x`"
@@ -70,7 +69,9 @@ class Pipeline():
 add_docs(
     Pipeline,
     __call__="Compose `__call__` of all `tfms` on `x`",
+    __getitem__="Return transformed item(s) `i` (`i` can be slice, list of indices, mask, or int)",
     decode="Compose `decode` of all `tfms` on `x`",
     delete="Delete transform `idx` from pipeline",
     remove="Remove `tfm` from pipeline",
+    decoded="Decoded version of `__getitem__`",
 )

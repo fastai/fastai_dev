@@ -149,7 +149,7 @@ def mask2idxs(mask):
 
 def is_listy(x):
     "`isinstance(x, (tuple,list,ListContainer))`"
-    return isinstance(x, (tuple,list,ListContainer))
+    return isinstance(x, (tuple,list,ListContainer,slice))
 
 #Comes from 02_data_pipeline.ipynb.
 def opt_call(f, fname='__call__', *args, **kwargs):
