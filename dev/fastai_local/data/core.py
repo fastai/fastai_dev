@@ -13,7 +13,8 @@ from .pipeline import *
 
 from .source import *
 
-from fastai.datasets import *
+from .external import *
+
 
 def _get_files(p, fs, extensions=None):
     p = Path(p)
