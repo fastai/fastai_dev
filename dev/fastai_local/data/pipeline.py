@@ -37,9 +37,7 @@ class Transform():
 
 class Pipeline():
     "A pipeline of transforms, composed and applied for encode/decode, and setup one at a time"
-    def __init__(self, tfms):
-        self.tfms,self.inactiv_tfms = [],[Transform.create(t) for t in listify(tfms)]
-
+    def __init__(self, tfms): self.tfms,self.inactiv = [],[Transform.create(t) for t in listify(tfms)]
     def __call__(self, x, **kwargs): return self.composed(x, **kwargs)
     def decode(self, x, **kwargs): return self.composed(x, rev=True, fname='decode', **kwargs)
 
@@ -56,15 +54,15 @@ class Pipeline():
 
     def setup(self, items=None):
         "Call `setup` on all `self.tfms` and make them active in this pipeline"
-        tfms = self.inactiv_tfms
-        self.inactiv_tfms = []
+        tfms = self.inactiv
+        self.inactiv = []
         self.add(tfms, items)
 
     def add(self, tfms, items=None):
         "Call `setup` on all `tfms` and append them to this pipeline"
         for t in sorted(listify(tfms), key=lambda o: getattr(o, 'order', 0)):
             self.tfms.append(t)
-            if hasattr(t, 'setup'): t.setup(self(items))
+            if hasattr(t, 'setup'): t.setup(items)
 
     def __getattr__(self, k):
         "Find last tfm in `self.tfms` that has attr `k`"
