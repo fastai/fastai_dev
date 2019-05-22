@@ -71,12 +71,14 @@ def remove_empty(cells):
 def get_metadata(cells):
     "Find the cell with title and summary in `cells`."
     pat = re.compile('^\s*#\s*([^\n]*)\n*>\s*([^\n]*)')
-    for cell in cells:
+    for i,cell in enumerate(cells):
         if cell['cell_type'] == 'markdown':
             match = re.match(pat, cell['source'])
-            if match: return {'keywords': 'fastai',
-                              'summary' : match.groups()[1],
-                              'title'   : match.groups()[0]}
+            if match:
+                cells.pop(i)
+                return {'keywords': 'fastai',
+                        'summary' : match.groups()[1],
+                        'title'   : match.groups()[0]}
     return {'keywords': 'fastai',
             'summary' : 'summary',
             'title'   : 'Title'}
@@ -107,13 +109,17 @@ def _exporter():
     exporter.template_path.append(str((Path('fastai_local')/'notebook').absolute()))
     return exporter
 
+process_cells = [remove_fake_headers, add_show_docs, remove_hidden, remove_empty]
+process_cell  = [hide_cells, remove_widget_state]
+
 def convert_nb(fname, dest_path='docs'):
     "Convert a notebook `fname` to html file in `dest_path`."
+    fname = Path(fname).absolute()
     nb = read_nb(fname)
     nb['cells'] = compose(*process_cells)(nb['cells'])
     nb['cells'] = [compose(*process_cell)(c) for c in nb['cells']]
     fname = Path(fname).absolute()
-    dest_name = fname.with_suffix('.html').name.split('_')[-1]
+    dest_name = '_'.join(fname.with_suffix('.html').name.split('_')[1:])
     meta_jekyll = get_metadata(nb['cells'])
     meta_jekyll['nb_path'] = f'{fname.parent.name}/{fname.name}'
     nb = execute_nb(nb)
@@ -127,8 +133,8 @@ def convert_all(path='.', dest_path='docs', force_all=False):
     for fname in path.glob("*.ipynb"):
         # only rebuild modified files
         if fname.name.startswith('_'): continue
-        fname_out = Path(dest_path)/fname.with_suffix('.html').name
-        if not force_all and fname_out.exists() and os.path.getmtime(fname) > os.path.getmtime(fname_out):
+        fname_out = Path(dest_path)/'_'.join(fname.with_suffix('.html').name.split('_')[1:])
+        if not force_all and fname_out.exists() and os.path.getmtime(fname) < os.path.getmtime(fname_out):
             continue
         print(f"converting: {fname} => {fname_out}")
         changed_cnt += 1
