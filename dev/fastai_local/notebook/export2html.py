@@ -106,7 +106,7 @@ def _exporter():
     exporter.exclude_input_prompt=True
     exporter.exclude_output_prompt=True
     exporter.template_file = 'jekyll.tpl'
-    exporter.template_path.append(str((Path('fastai_local')/'notebook').absolute()))
+    exporter.template_path.append(str(Path(__file__).parent))
     return exporter
 
 process_cells = [remove_fake_headers, add_show_docs, remove_hidden, remove_empty]
