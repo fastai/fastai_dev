@@ -55,6 +55,11 @@ class DataSource():
         res = f'{self.__class__.__name__}\n'
         return res + '\n'.join(f'{i}: {coll_repr(o)}' for i,o in enumerate(self))
 
+    def decode_batch(self, b):
+        "Decode a batch of `x,y` (i.e. from a `DataLoader`)"
+        d = map(self.decode, zip(*b))
+        return list(zip(*d))
+
 DataSource.train,DataSource.valid = property(lambda x: x[0]),property(lambda x: x[1])
 
 add_docs(
