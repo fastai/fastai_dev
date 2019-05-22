@@ -92,11 +92,11 @@ def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:
         im = torch.zeros(5,5)
-        im[2] = 1.
+        im[2,:] = 1.
         im[:,2] = 1.
     else:
         im = torch.zeros(3,5,5)
-        im[0,2] = 1.
+        im[0,2,:] = 1.
         im[1,:,2] = 1.
     return im
 
