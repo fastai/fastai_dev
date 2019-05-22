@@ -12,6 +12,7 @@ from functools import partial,reduce
 from typeguard import typechecked
 from fastai.gen_doc.nbdoc import show_doc
 from textwrap import TextWrapper
+from fastprogress import progress_bar,master_bar
 
 NoneType = type(None)
 
