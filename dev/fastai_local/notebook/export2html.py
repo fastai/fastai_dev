@@ -109,6 +109,9 @@ def _exporter():
     exporter.template_path.append(str((Path('fastai_local')/'notebook').absolute()))
     return exporter
 
+process_cells = [remove_fake_headers, add_show_docs, remove_hidden, remove_empty]
+process_cell  = [hide_cells, remove_widget_state]
+
 def convert_nb(fname, dest_path='docs'):
     "Convert a notebook `fname` to html file in `dest_path`."
     fname = Path(fname).absolute()
