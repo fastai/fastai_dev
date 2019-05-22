@@ -8,6 +8,7 @@ from .test import *
 
 from .imports import *
 
+from itertools import zip_longest
 
 def chk(f): return typechecked(always=True)(f)
 
@@ -85,7 +86,7 @@ def uniqueify(x, sort=False, bidir=False, start=None):
 
 def setify(o): return o if isinstance(o,set) else set(listify(o))
 
-def all_equal(a,b): return len(a)==len(b) and all(equals(a_,b_) for a_,b_ in zip(a,b))
+def all_equal(a,b): return all(equals(a_,b_) for a_,b_ in zip_longest(a,b))
 
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
