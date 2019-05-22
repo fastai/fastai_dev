@@ -29,14 +29,15 @@ class Transform():
     def __repr__(self): return str(self.encodes) if self.__class__==Transform else str(self.__class__)
     def decodes(self, o, *args, **kwargs): return o
 
-    _doc=dict(__call__="Call `self.encodes` unless `filt` is passed and it doesn't match `self.filt`",
+    _docs=dict(__call__="Call `self.encodes` unless `filt` is passed and it doesn't match `self.filt`",
               decode="Call `self.decodes` unless `filt` is passed and it doesn't match `self.filt`",
               decodes="Override to implement custom decoding")
 
 class Pipeline():
     "A pipeline of transforms applied to a collection, composed and applied for encode/decode, and setup one at a time"
     def __init__(self, tfms, items=None):
-        self.items,self.tfms = items,[]
+        self.items,self.tfms = ListContainer(items),[]
+        print(self.items)
         self.add([Transform.create(t) for t in listify(tfms)])
 
     def add(self, tfms):
@@ -51,6 +52,7 @@ class Pipeline():
     def __len__(self): return len(self.items)
     def __getitem__(self, i):
         its = self.items[i]
+        set_trace()
         return [self(o) for o in its] if is_listy(its) else self(its)
 
     def composed(self, x, rev=False, fname='__call__', **kwargs):
