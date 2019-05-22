@@ -72,9 +72,18 @@ def _deal_import(code_lines, fname):
     return lines
 
 def _get_index():
-    if (Path.cwd()/'fastai_local'/'index.pkl').exists():
-        return pickle.load(open(Path.cwd()/'fastai_local'/'index.pkl', 'rb'))
-    return {}
+    if not (Path(__file__).parent/'index.txt').exists(): return {}
+    with open(Path(__file__).parent/'index.txt', 'r') as f:
+        res = {}
+        for line in f.readlines():
+            splits = line.split(':')
+            if len(splits) >=1: res[splits[0]] = splits[1]
+    return res
+
+def _save_index(index):
+    print(index)
+    with open(Path(__file__).parent/'index.txt', 'w') as f:
+        for k,v in index.items(): f.write(f'{k:v}\n')
 
 def _notebook2script(fname):
     "Finds cells starting with `#export` and puts them into a new module"
@@ -97,7 +106,7 @@ def _notebook2script(fname):
         index.update({f: fname.name for f in func_names})
         code = re.sub(r' +$', '', code, flags=re.MULTILINE)
         with open(fname_out, 'a') as f: f.write(code)
-    pickle.dump(index, open(Path.cwd()/'fastai_local'/'index.pkl', 'wb'))
+    _save_index(index)
     print(f"Converted {fname}.")
 
 def _get_sorted_files(all_fs: Union[bool,str], up_to=None):
