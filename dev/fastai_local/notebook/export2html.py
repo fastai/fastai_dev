@@ -128,9 +128,10 @@ def convert_all(path='.', dest_path='docs', force_all=False):
         # only rebuild modified files
         if fname.name.startswith('_'): continue
         fname_out = Path(dest_path)/fname.with_suffix('.html').name
-        if not force_all and fname_out.exists() and os.path.getmtime(fname) < os.path.getmtime(fname_out):
+        if not force_all and fname_out.exists() and os.path.getmtime(fname) > os.path.getmtime(fname_out):
             continue
         print(f"converting: {fname} => {fname_out}")
         changed_cnt += 1
-        convert_nb(fname, dest_path=dest_path)
-    if changed_cnt!=0: print("No notebooks were modified")
+        try: convert_nb(fname, dest_path=dest_path)
+        except: print("Failed")
+    if changed_cnt==0: print("No notebooks were modified")
