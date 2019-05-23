@@ -16,17 +16,17 @@ def in_ipython():
     else:
         return False
 
-IN_IPYTHON = is_in_ipython()
+IN_IPYTHON = in_ipython()
 
 def in_colab():
     "Check if the code is running in Google Colaboratory"
-    if not IS_IN_IPYTHON: return False
+    if not IN_IPYTHON: return False
     try:
         from google import colab
         return True
     except: return False
 
-IN_COLAB = is_in_colab()
+IN_COLAB = in_colab()
 
 def in_notebook():
     "Check if the code is running in a jupyter notebook"
@@ -46,6 +46,3 @@ def in_notebook():
         return False      # Probably standard Python interpreter
 
 IN_NOTEBOOK = in_notebook()
-if IN_NOTEBOOK:
-    try: from IPython.display import display, HTML
-    except: IN_NOTEBOOK = False
