@@ -3,8 +3,11 @@
 __all__ = ['Transform', 'Pipeline', 'PipedList']
 
 from ..imports import *
+
 from ..test import *
+
 from ..core import *
+
 
 @docs
 class Transform():
@@ -22,6 +25,7 @@ class Transform():
 
     def _filt_match(self, filt): return self.filt is None or self.filt==filt
     def __call__(self, o, filt=None, **kwargs): return self.encodes(o, **kwargs) if self._filt_match(filt) else o
+    def __getitem__(self, x): return self(x)
     def decode  (self, o, filt=None, **kwargs): return self.decodes(o, **kwargs) if self._filt_match(filt) else o
     def __repr__(self): return str(self.encodes) if self.__class__==Transform else str(self.__class__)
     def decodes(self, o, *args, **kwargs): return o
@@ -49,20 +53,22 @@ class Pipeline():
         return x
 
     def __call__(self, x, **kwargs): return self.composed(x, **kwargs)
+    def __getitem__(self, x): return self(x)
     def decode(self, x, **kwargs): return self.composed(x, rev=True, fname='decode', **kwargs)
     def __repr__(self): return str(self.tfms)
     def delete(self, idx): del(self.tfms[idx])
     def remove(self, tfm): self.tfms.remove(tfm)
 
-    def __getattr__(self, k):
-        "Find last tfm in `self.tfms` that has attr `k`"
-        try: return next(getattr(t,k) for t in reversed(self.tfms) if hasattr(t,k))
-        except StopIteration: raise AttributeError(k) from None
+    def show(self, o):
+        "Find last transform that supports `show` and pass it decoded `o`"
+        for t in reversed(self.tfms):
+            o = getattr(t, 'decode', noop)(o)
+            s = getattr(t, 'show', None)
+            if s: return s(o)
 
 add_docs(
     Pipeline,
     __call__="Compose `__call__` of all `tfms` on `x`",
-    __getattr__="Search through `tfms` for last one which contains `k`",
     decode="Compose `decode` of all `tfms` on `x`",
     delete="Delete transform `idx` from pipeline",
     remove="Remove `tfm` from pipeline",
@@ -70,22 +76,22 @@ add_docs(
 
 class PipedList(Pipeline):
     "A `Pipeline` of transforms applied to a collection of `items`"
-    def __init__(self, tfms, items=None):
+    def __init__(self, items, tfms):
         self.items = ListContainer(items)
         super().__init__(tfms)
 
     def __getitem__(self, i):
         its = self.items[i]
-        return its.mapped(self) if isinstance(its,ListContainer) else self(its)
+        return its.mapped(self) if is_iter(i) else self(its)
 
     def __eq__(self, b): return all_equal(self, b)
     def __len__(self): return len(self.items)
     def decode_at(self, idx): return self.decode(self[idx])
-    def show_at(self, idx): return self.show(self.decode_at(idx))
+    def show_at(self, idx): return self.show(self[idx])
 
 add_docs(
     PipedList,
     __getitem__="Return transformed item(s) `i` (`i` can be slice, list of indices, mask, or int)",
-    show_at="`show` (found using `__getattr__`) the decoded item at `idx`",
+    show_at="`show` the decoded item at `idx`",
     decode_at="Decoded version of `__getitem__`",
 )

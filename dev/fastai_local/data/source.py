@@ -3,9 +3,13 @@
 __all__ = ['coll_repr', 'DataSource']
 
 from ..imports import *
+
 from ..test import *
+
 from ..core import *
+
 from .pipeline import *
+
 
 def coll_repr(c, max=1000):
     "String repr of up to `max` items of (possibly lazy) collection `c`"
