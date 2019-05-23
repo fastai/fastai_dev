@@ -83,6 +83,30 @@ summary: "The functions that transform the dev notebooks in the documentation of
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="treat_backticks" class="doc_header"><code>treat_backticks</code><a class="source_link" data-toggle="collapse" data-target="#treat_backticks-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>treat_backticks</code>(<strong><code>cell</code></strong>)</p>
+</blockquote>
+<div class="collapse" id="treat_backticks-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#treat_backticks-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>treat_backticks</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Add links to backticks words in <code>cell</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
@@ -180,7 +204,7 @@ summary: "The functions that transform the dev notebooks in the documentation of
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst_nb</span> <span class="o">=</span> <span class="n">read_nb</span><span class="p">(</span><span class="s1">&#39;91_export.ipynb&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst_nb</span> <span class="o">=</span> <span class="n">read_nb</span><span class="p">(</span><span class="s1">&#39;91_notebook_export.ipynb&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">cell</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tst_nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]):</span>
     <span class="k">if</span> <span class="n">cell</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#export</span><span class="se">\n</span><span class="s1">def read_nb&#39;</span><span class="p">):</span> <span class="k">break</span>
 <span class="n">tst_cells</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tst_nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">][</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
@@ -269,37 +293,6 @@ summary: "The functions that transform the dev notebooks in the documentation of
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">x</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[1, 3]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -328,7 +321,7 @@ summary: "The functions that transform the dev notebooks in the documentation of
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst_nb</span> <span class="o">=</span> <span class="n">read_nb</span><span class="p">(</span><span class="s1">&#39;91_export.ipynb&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst_nb</span> <span class="o">=</span> <span class="n">read_nb</span><span class="p">(</span><span class="s1">&#39;91_notebook_export.ipynb&#39;</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">get_metadata</span><span class="p">(</span><span class="n">tst_nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]),</span> <span class="p">{</span>
     <span class="s1">&#39;keywords&#39;</span><span class="p">:</span> <span class="s1">&#39;fastai&#39;</span><span class="p">,</span>
     <span class="s1">&#39;summary&#39;</span><span class="p">:</span> <span class="s1">&#39;The functions that transform the dev notebooks in the fastai library&#39;</span><span class="p">,</span>
