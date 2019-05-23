@@ -22,6 +22,9 @@ summary: "Low-level transform pipelines"
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Convenience-functions">Convenience functions<a class="anchor-link" href="#Convenience-functions">&#182;</a></h2>
@@ -40,9 +43,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="opt_call" class="doc_header"><code>opt_call</code><a class="source_link" data-toggle="collapse" data-target="#opt_call-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>opt_call</code>(<strong><code>f</code></strong>, <strong><code>fname</code></strong>=<strong><em><code>'__call__'</code></em></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="opt_call" class="doc_header"><code>opt_call</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>opt_call</code>(<strong><code>f</code></strong>, <strong><code>fname</code></strong>=<em><code>'__call__'</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="opt_call-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#opt_call-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>opt_call</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Call <code>f.{fname}(*args, **kwargs)</code>, or <a href="/fastai_local.core.html#noop"><code>noop</code></a> if not defined</p>
+<p>Call <code>f.{fname}(*args, **kwargs)</code>, or <a href="/core.html#noop"><code>noop</code></a> if not defined</p>
 
 </div>
 
@@ -88,9 +91,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Transform" class="doc_header"><code>class</code> <code>Transform</code><a class="source_link" data-toggle="collapse" data-target="#Transform-pytest" style="float:right; padding-right:10px">[test]</a></h2><blockquote><p><code>Transform</code>(<strong><code>encodes</code></strong>=<strong><em><code>None</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h3 id="Transform" class="doc_header"><code>class</code> <code>Transform</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Transform--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Transform</code>(<strong><code>encodes</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Transform-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Transform-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>Transform</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>A function that <code>encodes</code> if <code>filt</code> matches, and optionally <code>decodes</code>, with an optional <code>setup</code></p>
+<p>A function that <code>encodes</code> if <code>filt</code> matches, and optionally <code>decodes</code>, with an optional <code>setup</code></p>
 
 </div>
 
@@ -113,15 +116,14 @@ summary: "Low-level transform pipelines"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">a</span>
-<span class="k">def</span> <span class="nf">add_undo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">-</span><span class="n">a</span>
-<span class="n">addt</span>  <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">decodes</span><span class="o">=</span><span class="n">add_undo</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tneg</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">)</span>
+<span class="n">tstr</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="nb">print</span><span class="p">)</span>
 
 <span class="n">start</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">addt</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">addt</span><span class="p">[</span><span class="n">start</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">addt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">start</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">tneg</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">tneg</span><span class="p">[</span><span class="n">start</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">tneg</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">start</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -166,9 +168,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Transform.__call__" class="doc_header"><code>__call__</code><a class="source_link" data-toggle="collapse" data-target="#Transform-__call__-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>__call__</code>(<strong><code>o</code></strong>, <strong><code>filt</code></strong>=<strong><em><code>None</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Transform.__call__" class="doc_header"><code>__call__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Transform--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>__call__</code>(<strong><code>o</code></strong>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Transform-__call__-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Transform-__call__-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>__call__</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Call <code>self.encodes</code> unless <code>filt</code> is passed and it doesn't match <code>self.filt</code></p>
+<p>Call <code>self.encodes</code> unless <code>filt</code> is passed and it doesn't match <code>self.filt</code></p>
 
 </div>
 
@@ -187,9 +189,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Transform.decode" class="doc_header"><code>decode</code><a class="source_link" data-toggle="collapse" data-target="#Transform-decode-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>decode</code>(<strong><code>o</code></strong>, <strong><code>filt</code></strong>=<strong><em><code>None</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Transform.decode" class="doc_header"><code>decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Transform--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode</code>(<strong><code>o</code></strong>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Transform-decode-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Transform-decode-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>decode</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Call <code>self.decodes</code> unless <code>filt</code> is passed and it doesn't match <code>self.filt</code></p>
+<p>Call <code>self.decodes</code> unless <code>filt</code> is passed and it doesn't match <code>self.filt</code></p>
 
 </div>
 
@@ -208,9 +210,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Transform.create" class="doc_header"><code>create</code><a class="source_link" data-toggle="collapse" data-target="#Transform-create-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>create</code>(<strong><code>f</code></strong>, <strong><code>filt</code></strong>=<strong><em><code>None</code></em></strong>)</p>
+<h4 id="Transform.create" class="doc_header"><code>create</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Transform--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create</code>(<strong><code>f</code></strong>, <strong><code>filt</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
-<div class="collapse" id="Transform-create-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Transform-create-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>create</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>classmethod: Turn <code>f</code> into a <code>Transform</code> unless it already is one</p>
+<p>classmethod: Turn <code>f</code> into a <a href="/data.pipeline.html#Transform"><code>Transform</code></a> unless it already is one</p>
 
 </div>
 
@@ -232,9 +234,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Pipeline" class="doc_header"><code>class</code> <code>Pipeline</code><a class="source_link" data-toggle="collapse" data-target="#Pipeline-pytest" style="float:right; padding-right:10px">[test]</a></h2><blockquote><p><code>Pipeline</code>(<strong><code>tfms</code></strong>)</p>
+<h3 id="Pipeline" class="doc_header"><code>class</code> <code>Pipeline</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Pipeline</code>(<strong><code>tfms</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Pipeline-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Pipeline-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>Pipeline</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>A pipeline of composed (for encode/decode) transforms, setup one at a time</p>
+<p>A pipeline of composed (for encode/decode) transforms, setup one at a time</p>
 
 </div>
 
@@ -260,7 +262,7 @@ summary: "Low-level transform pipelines"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">Transform</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">),</span> <span class="n">Transform</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="nb">int</span><span class="p">)]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">tneg</span><span class="p">,</span><span class="n">tstr</span><span class="p">]</span>
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">tfms</span><span class="p">)</span>
 
 <span class="n">start</span> <span class="o">=</span> <span class="mi">2</span>
@@ -268,6 +270,51 @@ summary: "Low-level transform pipelines"
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s2">&quot;-2&quot;</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pipe</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">start</span><span class="p">)</span>
+<span class="n">test</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;-2\n&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">f</span><span class="p">):</span> <span class="n">do_something</span><span class="p">(</span><span class="n">my_object</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -284,9 +331,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.__call__" class="doc_header"><code>__call__</code><a class="source_link" data-toggle="collapse" data-target="#Pipeline-__call__-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>__call__</code>(<strong><code>x</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Pipeline.__call__" class="doc_header"><code>__call__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>__call__</code>(<strong><code>x</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Pipeline-__call__-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Pipeline-__call__-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>__call__</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Compose <code>__call__</code> of all <code>tfms</code> on <code>x</code></p>
+<p>Compose <code>__call__</code> of all <code>tfms</code> on <code>x</code></p>
 
 </div>
 
@@ -305,9 +352,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.decode" class="doc_header"><code>decode</code><a class="source_link" data-toggle="collapse" data-target="#Pipeline-decode-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>decode</code>(<strong><code>x</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Pipeline.decode" class="doc_header"><code>decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode</code>(<strong><code>x</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Pipeline-decode-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Pipeline-decode-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>decode</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Compose <code>decode</code> of all <code>tfms</code> on <code>x</code></p>
+<p>Compose <code>decode</code> of all <code>tfms</code> on <code>x</code></p>
 
 </div>
 
@@ -326,9 +373,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.delete" class="doc_header"><code>delete</code><a class="source_link" data-toggle="collapse" data-target="#Pipeline-delete-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>delete</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="Pipeline.delete" class="doc_header"><code>delete</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>delete</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Pipeline-delete-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Pipeline-delete-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>delete</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Delete transform <code>idx</code> from pipeline</p>
+<p>Delete transform <code>idx</code> from pipeline</p>
 
 </div>
 
@@ -347,9 +394,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.remove" class="doc_header"><code>remove</code><a class="source_link" data-toggle="collapse" data-target="#Pipeline-remove-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>remove</code>(<strong><code>tfm</code></strong>)</p>
+<h4 id="Pipeline.remove" class="doc_header"><code>remove</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>remove</code>(<strong><code>tfm</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Pipeline-remove-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Pipeline-remove-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>remove</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Remove <code>tfm</code> from pipeline</p>
+<p>Remove <code>tfm</code> from pipeline</p>
 
 </div>
 
@@ -368,9 +415,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.add" class="doc_header"><code>add</code><a class="source_link" data-toggle="collapse" data-target="#Pipeline-add-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>add</code>(<strong><code>tfms</code></strong>)</p>
+<h4 id="Pipeline.add" class="doc_header"><code>add</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add</code>(<strong><code>tfms</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Pipeline-add-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Pipeline-add-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>add</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Call <code>setup</code> on all <code>tfms</code> and append them to this pipeline</p>
+<p>Call <code>setup</code> on all <code>tfms</code> and append them to this pipeline</p>
 
 </div>
 
@@ -389,9 +436,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.show" class="doc_header"><code>show</code><a class="source_link" data-toggle="collapse" data-target="#Pipeline-show-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>show</code>(<strong><code>o</code></strong>)</p>
+<h4 id="Pipeline.show" class="doc_header"><code>show</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show</code>(<strong><code>o</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Pipeline-show-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Pipeline-show-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>show</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Find last transform that supports <code>show</code> and pass it decoded <code>o</code></p>
+<p>Find last transform that supports <code>show</code> and pass it decoded <code>o</code></p>
 
 </div>
 
@@ -413,9 +460,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PipedList" class="doc_header"><code>class</code> <code>PipedList</code><a class="source_link" data-toggle="collapse" data-target="#PipedList-pytest" style="float:right; padding-right:10px">[test]</a></h2><blockquote><p><code>PipedList</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>) :: <code>Pipeline</code></p>
+<h3 id="PipedList" class="doc_header"><code>class</code> <code>PipedList</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#PipedList--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>PipedList</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>) :: <a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a></p>
 </blockquote>
-<div class="collapse" id="PipedList-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#PipedList-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>PipedList</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>A <code>Pipeline</code> of transforms applied to a collection of <code>items</code></p>
+<p>A <a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a> of transforms applied to a collection of <code>items</code></p>
 
 </div>
 
@@ -460,11 +507,11 @@ summary: "Low-level transform pipelines"
     <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">o2i</span> <span class="o">=</span> <span class="n">uniqueify</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bidir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;I&#39;m a </span><span class="si">{o}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">lbl_</span><span class="p">(</span><span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="n">o</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">_lbl</span><span class="p">(</span><span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="n">o</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">test_fns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dog_0.jpg&#39;</span><span class="p">,</span><span class="s1">&#39;cat_0.jpg&#39;</span><span class="p">,</span><span class="s1">&#39;cat_2.jpg&#39;</span><span class="p">,</span><span class="s1">&#39;cat_1.jpg&#39;</span><span class="p">,</span><span class="s1">&#39;dog_1.jpg&#39;</span><span class="p">]</span>
 <span class="n">tcat</span> <span class="o">=</span> <span class="n">_Cat</span><span class="p">()</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">PipedList</span><span class="p">(</span><span class="n">test_fns</span><span class="p">,</span> <span class="p">[</span><span class="n">tcat</span><span class="p">,</span><span class="n">lbl_</span><span class="p">])</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">PipedList</span><span class="p">(</span><span class="n">test_fns</span><span class="p">,</span> <span class="p">[</span><span class="n">tcat</span><span class="p">,</span><span class="n">_lbl</span><span class="p">])</span>
 
 <span class="n">test_eq</span><span class="p">(</span><span class="n">tcat</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span><span class="s1">&#39;dog&#39;</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">pipe</span><span class="p">)</span>
@@ -482,6 +529,24 @@ summary: "Low-level transform pipelines"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="PipedList.__getitem__" class="doc_header"><code>__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#PipedList--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>__getitem__</code>(<strong><code>i</code></strong>)</p>
+</blockquote>
+<p>Transformed item(s) at <code>i</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -492,30 +557,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="PipedList.__getitem__" class="doc_header"><code>__getitem__</code><a class="source_link" data-toggle="collapse" data-target="#PipedList-__getitem__-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>__getitem__</code>(<strong><code>i</code></strong>)</p>
+<h4 id="PipedList.decode_at" class="doc_header"><code>decode_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#PipedList--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode_at</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="PipedList-__getitem__-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#PipedList-__getitem__-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>__getitem__</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Return transformed item(s) <code>i</code> (<code>i</code> can be slice, list of indices, mask, or int)</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="PipedList.decode_at" class="doc_header"><code>decode_at</code><a class="source_link" data-toggle="collapse" data-target="#PipedList-decode_at-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>decode_at</code>(<strong><code>idx</code></strong>)</p>
-</blockquote>
-<div class="collapse" id="PipedList-decode_at-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#PipedList-decode_at-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>decode_at</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Decoded version of <code>__getitem__</code></p>
+<p>Decoded item at <code>idx</code></p>
 
 </div>
 
@@ -547,9 +591,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="PipedList.show_at" class="doc_header"><code>show_at</code><a class="source_link" data-toggle="collapse" data-target="#PipedList-show_at-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>show_at</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="PipedList.show_at" class="doc_header"><code>show_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#PipedList--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_at</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="PipedList-show_at-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#PipedList-show_at-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>show_at</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p><code>show</code> the decoded item at <code>idx</code></p>
+<p>Show item at <code>idx</code></p>
 
 </div>
 
@@ -598,9 +642,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TfmList" class="doc_header"><code>class</code> <code>TfmList</code><a class="source_link" data-toggle="collapse" data-target="#TfmList-pytest" style="float:right; padding-right:10px">[test]</a></h2><blockquote><p><code>TfmList</code>(<strong><code>tfms</code></strong>)</p>
+<h3 id="TfmList" class="doc_header"><code>class</code> <code>TfmList</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#TfmList--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TfmList</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="TfmList-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#TfmList-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>TfmList</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div>
+
 </div>
 
 </div>
@@ -614,11 +658,21 @@ summary: "Low-level transform pipelines"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tadd</span>  <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">decodes</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">-</span><span class="mi">1</span> <span class="p">)</span>
-<span class="n">tmult</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">decodes</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_TNorm</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="p">(</span><span class="n">o</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span>
+    <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="p">(</span><span class="n">o</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="n">its</span> <span class="o">=</span> <span class="n">tensor</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">its</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">its</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 
-<span class="n">tfm</span> <span class="o">=</span> <span class="n">TfmList</span><span class="p">([</span><span class="n">tadd</span><span class="p">,</span><span class="n">tmult</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">tfm</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">tnrm</span> <span class="o">=</span> <span class="n">_TNorm</span><span class="p">()</span>
+<span class="n">source</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">tfm</span> <span class="o">=</span> <span class="n">TfmList</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">[</span><span class="n">tneg</span><span class="p">,</span> <span class="p">[</span><span class="n">tneg</span><span class="p">,</span><span class="n">tnrm</span><span class="p">]])</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">tfm</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -631,22 +685,37 @@ summary: "Low-level transform pipelines"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># class _TNorm(Transform):</span>
-<span class="c1">#     def __init__(self): self.m,self.s = 0,1</span>
-<span class="c1">#     def encodes(self, o): return (o-self.m)/self.s</span>
-<span class="c1">#     def decodes(self, o): return (o*self.s)+self.m</span>
-<span class="c1">#     def setup(self, items):</span>
-<span class="c1">#         its = tensor(items)</span>
-<span class="c1">#         self.m,self.s = its.mean(),its.std()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">tfm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">t</span>
+</pre></div>
 
-<span class="c1"># tnrm = _TNorm()</span>
-<span class="c1"># tfm = TfmList([tadd,tnrm])</span>
-<span class="c1"># source = [1,2,3,4]</span>
-<span class="c1"># dsrc = DataSource(source, tfm)</span>
-<span class="c1"># x,y = zip(*dsrc.train)</span>
-<span class="c1"># test_close(tensor(y).mean(), 0)</span>
-<span class="c1"># test_close(tensor(y).std(), 1)</span>
-<span class="c1"># test_eq(x, (2,3,4,5))</span>
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[-2, tensor(0.3873)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfm</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 </pre></div>
 
     </div>
