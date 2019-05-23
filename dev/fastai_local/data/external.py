@@ -164,7 +164,7 @@ def _add_check(url, fname):
     "Internal function to update the internal check file with `url` and check on `fname`."
     checks = json.load(open(Path(__file__).parent/'checks.txt', 'r'))
     checks[url] = _check_file(fname)
-    json.dump(checks, open(Path(__file__).parent/'checks.txt', 'w'))
+    json.dump(checks, open(Path(__file__).parent/'checks.txt', 'w'), indent=2)
 
 def untar_data(url, fname=None, dest=None, c_key=ConfigKey.Data, force_download=False):
     "Download `url` to `fname` if `dest` doesn't exist, and un-tgz to folder `dest`."
