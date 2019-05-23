@@ -5,9 +5,7 @@ __all__ = ['chk', 'ifnone', 'noop', 'noops', 'range_of', 'is_iter', 'listify', '
            'mask2idxs', 'is_listy', 'opt_call']
 
 from .test import *
-
 from .imports import *
-
 from itertools import zip_longest
 
 def chk(f): return typechecked(always=True)(f)

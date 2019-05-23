@@ -3,11 +3,8 @@
 __all__ = ['Transform', 'Pipeline', 'PipedList']
 
 from ..imports import *
-
 from ..test import *
-
 from ..core import *
-
 
 @docs
 class Transform():
