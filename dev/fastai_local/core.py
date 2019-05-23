@@ -7,7 +7,6 @@ __all__ = ['chk', 'ifnone', 'noop', 'noops', 'range_of', 'is_iter', 'listify', '
 from .test import *
 from .imports import *
 from .notebook.showdoc import show_doc
-from itertools import zip_longest
 
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 def chk(f): return typechecked(always=True)(f)

@@ -5,6 +5,7 @@ __all__ = ['Transform', 'Pipeline', 'PipedList', 'TfmList']
 from ..imports import *
 from ..test import *
 from ..core import *
+from ..notebook.showdoc import show_doc
 
 @docs
 class Transform():
@@ -52,6 +53,8 @@ class Pipeline():
     def __call__(self, x, **kwargs): return self.composed(x, **kwargs)
     def __getitem__(self, x): return self(x)
     def decode(self, x, **kwargs): return self.composed(x, rev=True, fname='decode', **kwargs)
+    def decode_at(self, idx): return self.decode(self[idx])
+    def show_at(self, idx): return self.show(self[idx])
     def __repr__(self): return str(self.tfms)
     def delete(self, idx): del(self.tfms[idx])
     def remove(self, tfm): self.tfms.remove(tfm)
@@ -67,11 +70,12 @@ add_docs(
     Pipeline,
     __call__="Compose `__call__` of all `tfms` on `x`",
     decode="Compose `decode` of all `tfms` on `x`",
+    decode_at="Decoded item at `idx`",
+    show_at  ="Show item at `idx`",
     delete="Delete transform `idx` from pipeline",
     remove="Remove `tfm` from pipeline",
 )
 
-@docs
 class PipedList(Pipeline):
     "A `Pipeline` of transforms applied to a collection of `items`"
     def __init__(self, items, tfms):
@@ -85,14 +89,10 @@ class PipedList(Pipeline):
 
     def __eq__(self, b): return all_equal(self, b)
     def __len__(self): return len(self.items)
-    def decode_at(self, idx): return self.decode(self[idx])
-    def show_at(self, idx): return self.show(self[idx])
-
-    _docs=dict(decode_at="Decoded item at `idx`",
-               show_at  ="Show item at `idx`")
 
 class TfmList():
     def __init__(self, items, tfms): self.activ,self.tfms = None,[PipedList(items, t) for t in listify(tfms)]
+    def __repr__(self): return f'TfmList({self.tfms})'
 
     def __getitem__(self, i):
         if self.activ is not None: return self.activ[i]
@@ -108,7 +108,5 @@ class TfmList():
 
     def show(self, o, ax=None, **kwargs):
         for p,t in zip(o,self.tfms): ax = t.show(p, ax=ax, **kwargs)
-
-    def __repr__(self): return f'TfmList({self.tfms})'
 
     xt,yt = add_props(lambda i,x:x.tfms[i], 2)
