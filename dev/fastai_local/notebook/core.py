@@ -2,9 +2,7 @@
 
 __all__ = ['in_ipython', 'IN_IPYTHON', 'in_colab', 'IN_COLAB', 'in_notebook', 'IN_NOTEBOOK']
 
-from ..core import *
 from ..imports import *
-from ..test import *
 
 def in_ipython():
     "Check if the code is running in the ipython environment (jupyter including)"

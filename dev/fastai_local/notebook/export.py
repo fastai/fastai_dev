@@ -3,8 +3,6 @@
 __all__ = ['read_nb', 'check_re', 'is_export', 'find_default_export', 'export_names', 'notebook2script', 'get_name',
            'qual_name', 'source_nb']
 
-from ..core import *
-from ..test import *
 from ..imports import *
 from .core import *
 import nbformat,inspect

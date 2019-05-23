@@ -4,11 +4,7 @@ __all__ = ['is_enum', 'add_pytorch_index', 'is_fastai_module', 'FASTAI_DOCS', 'd
            'get_function_source', 'SOURCE_URL', 'get_source_link', 'FASTAI_NB_DEV', 'source_link', 'type_repr',
            'format_param', 'show_doc']
 
-from ..core import *
 from ..imports import *
-from ..data.pipeline import *
-from ..data.external import *
-from ..test import *
 from .export import *
 import inspect,enum
 from IPython.display import Markdown,display
@@ -161,7 +157,7 @@ def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True):
     else: raise Exception(f'show_doc not supported for {full_name}')
     link = get_source_link(elt)
     source_link = f'<a href="{link}" class="source_link" style="float:right">[source]</a>'
-    title_level = ifnone(title_level, 3 if inspect.isclass(elt) else 4)
+    title_level = title_level or (3 if inspect.isclass(elt) else 4)
     doc =  f'<h{title_level} id="{anchor_id}" class="doc_header">{name}{source_link}</h{title_level}>'
     doc += f'\n\n> {args}\n\n'
     if doc_string and inspect.getdoc(elt): doc += add_doc_links(inspect.getdoc(elt))
