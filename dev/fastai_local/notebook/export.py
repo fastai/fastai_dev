@@ -116,7 +116,11 @@ def notebook2script(fname=None, all_fs=None, up_to=None):
     fnames = _get_sorted_files(all_fs, up_to=up_to) if all_fs else [fname]
     [_notebook2script(f) for f in fnames]
 
-def source_nb(func):
+def source_nb(func, is_name=False):
     "Return the name of the notebook where `func` was defined"
     index = _get_index()
-    return index.get(func.__name__, "Not found")
+    if is_name: name = func
+    else: name = func.__qualname__ if hasattr(func, '__qualname__') else func.__name__
+    while len(name) > 0:
+        if name in index: return index[name]
+        name = '.'.join(name.split('.')[:-1])
