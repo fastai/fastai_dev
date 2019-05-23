@@ -74,7 +74,7 @@
   "process_cell": "93_notebook_export2html.ipynb",
   "convert_nb": "93_notebook_export2html.ipynb",
   "convert_all": "93_notebook_export2html.ipynb",
-  "TfmList": "_07_data_blocks.ipynb",
+  "TfmList": "02_data_pipeline.ipynb",
   "custom_dir": "01_core.ipynb",
   "TfmDataLoader": "04_data_core.ipynb",
   "DataBunch": "04_data_core.ipynb",
@@ -91,5 +91,6 @@
   "get_source_link": "92_notebook_showdoc.ipynb",
   "FASTAI_NB_DEV": "92_notebook_showdoc.ipynb",
   "type_repr": "92_notebook_showdoc.ipynb",
-  "format_param": "92_notebook_showdoc.ipynb"
+  "format_param": "92_notebook_showdoc.ipynb",
+  "add_props": "01_core.ipynb"
 }
