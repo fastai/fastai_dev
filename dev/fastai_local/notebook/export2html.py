@@ -4,9 +4,8 @@ __all__ = ['remove_widget_state', 'hide_cells', 'treat_backticks', 'remove_hidde
            'remove_fake_headers', 'remove_empty', 'get_metadata', 'ExecuteShowDocPreprocessor', 'execute_nb',
            'process_cells', 'process_cell', 'convert_nb', 'convert_all']
 
-from ..core import *
-from ..test import *
 from ..imports import *
+from ..core import compose
 from .export import *
 from .showdoc import *
 import nbformat
@@ -89,14 +88,25 @@ def get_metadata(cells):
 class ExecuteShowDocPreprocessor(ExecutePreprocessor):
     "An `ExecutePreprocessor` that only executes `show_doc` and `import` cells"
     def preprocess_cell(self, cell, resources, index):
-        pat = re.compile(r"show_doc\(([\w\.]*)|^\s*#\s*exports?\s*")
-        if 'source' in cell and cell.cell_type == "code":
+        pat = re.compile(r"show_doc\(([\w\.]*)\)|^\s*#\s*exports?\s*")
+        if 'source' in cell and cell['cell_type'] == "code":
             if re.search(pat, cell['source']):
                 return super().preprocess_cell(cell, resources, index)
         return cell, resources
 
-def execute_nb(nb, metadata=None, show_doc_only=True):
+def _import_show_doc_cell(name=None):
+    "Add an import show_doc cell + deal with the __file__ hack if necessary."
+    source = f"#export\nfrom fastai_local.notebook.showdoc import show_doc"
+    if name: source += f"\nfrom pathlib import Path\n__file__ = {name}"
+    return {'cell_type': 'code',
+            'execution_count': None,
+            'metadata': {'hide_input': True},
+            'outputs': [],
+            'source': source}
+
+def execute_nb(nb, metadata=None, show_doc_only=True, name=None):
     "Execute `nb` (or only the `show_doc` cells) with `metadata`"
+    nb['cells'].insert(0, _import_show_doc_cell(name))
     ep_cls = ExecuteShowDocPreprocessor if show_doc_only else ExecutePreprocessor
     ep = ep_cls(timeout=600, kernel_name='python3')
     metadata = metadata or {}
@@ -115,17 +125,25 @@ def _exporter():
 process_cells = [remove_fake_headers, add_show_docs, remove_hidden, remove_empty]
 process_cell  = [hide_cells, remove_widget_state, treat_backticks]
 
+def _find_file(cells):
+    "Find in `cells` if a __file__ is defined."
+    pat = re.compile(r'^__file__\s*=\s*(\S*)\s*', re.MULTILINE)
+    for cell in cells:
+        if cell['cell_type']=='code' and re.search(pat, cell['source']):
+            return re.search(pat, cell['source']).groups()[0]
+
 def convert_nb(fname, dest_path='docs'):
     "Convert a notebook `fname` to html file in `dest_path`."
     fname = Path(fname).absolute()
     nb = read_nb(fname)
+    _name = _find_file(nb['cells'])
     nb['cells'] = compose(*process_cells)(nb['cells'])
     nb['cells'] = [compose(*process_cell)(c) for c in nb['cells']]
     fname = Path(fname).absolute()
     dest_name = '.'.join(fname.with_suffix('.html').name.split('_')[1:])
     meta_jekyll = get_metadata(nb['cells'])
     meta_jekyll['nb_path'] = f'{fname.parent.name}/{fname.name}'
-    nb = execute_nb(nb)
+    nb = execute_nb(nb, name=_name)
     with open(f'{dest_path}/{dest_name}','w') as f:
         f.write(_exporter().from_notebook_node(nb, resources=meta_jekyll)[0])
 
