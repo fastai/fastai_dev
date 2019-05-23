@@ -56,12 +56,12 @@ class Pipeline():
     def delete(self, idx): del(self.tfms[idx])
     def remove(self, tfm): self.tfms.remove(tfm)
 
-    def show(self, o):
+    def show(self, o, *args, **kwargs):
         "Find last transform that supports `show` and pass it decoded `o`"
         for t in reversed(self.tfms):
             o = getattr(t, 'decode', noop)(o)
             s = getattr(t, 'show', None)
-            if s: return s(o)
+            if s: return s(o, *args, **kwargs)
 
 add_docs(
     Pipeline,
@@ -71,6 +71,7 @@ add_docs(
     remove="Remove `tfm` from pipeline",
 )
 
+@docs
 class PipedList(Pipeline):
     "A `Pipeline` of transforms applied to a collection of `items`"
     def __init__(self, items, tfms):
@@ -78,6 +79,7 @@ class PipedList(Pipeline):
         super().__init__(tfms)
 
     def __getitem__(self, i):
+        "Transformed item(s) at `i`"
         its = self.items[i]
         return its.mapped(self) if is_iter(i) else self(its)
 
@@ -86,19 +88,15 @@ class PipedList(Pipeline):
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx): return self.show(self[idx])
 
-add_docs(
-    PipedList,
-    __getitem__="Return transformed item(s) `i` (`i` can be slice, list of indices, mask, or int)",
-    show_at="`show` the decoded item at `idx`",
-    decode_at="Decoded version of `__getitem__`",
-)
+    _docs=dict(decode_at="Decoded item at `idx`",
+               show_at  ="Show item at `idx`")
 
 class TfmList():
-    def __init__(self, tfms): self.activ,self.tfms = None,[Pipeline(t) for t in listify(tfms)]
+    def __init__(self, items, tfms): self.activ,self.tfms = None,[PipedList(items, t) for t in listify(tfms)]
 
-    def __call__(self, o, **kwargs):
-        if self.activ is not None: return self.activ(o, **kwargs)
-        return [t(o, **kwargs) for t in self.tfms]
+    def __getitem__(self, i):
+        if self.activ is not None: return self.activ[i]
+        return [t[i] for t in self.tfms]
 
     def decode(self, o, **kwargs): return [t.decode(p, **kwargs) for p,t in zip(o,self.tfms)]
 
@@ -108,10 +106,9 @@ class TfmList():
             tfm.setup(o)
         self.activ=None
 
-    def show(self, o, **kwargs): return show_xs(o, self.tfms, **kwargs)
+    def show(self, o, ax=None, **kwargs):
+        for p,t in zip(o,self.tfms): ax = t.show(p, ax=ax, **kwargs)
+
     def __repr__(self): return f'TfmList({self.tfms})'
 
-    @property
-    def xt(self): return self.tfms[0]
-    @property
-    def yt(self): return self.tfms[1]
+    xt,yt = add_props(lambda i,x:x.tfms[i], 2)
