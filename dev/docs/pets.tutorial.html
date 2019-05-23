@@ -4,7 +4,7 @@ title: Tutorial: Using `fastai.data` for Pets
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets dataset."
+summary: "Using [`DataSource`](/data.source.html#DataSource), [`Pipeline`](/data.pipeline.html#Pipeline), [`PipedList`](/data.pipeline.html#PipedList), and [`Transform`](/data.pipeline.html#Transform)s to load the Pets dataset."
 ---
 <!--
 
@@ -42,13 +42,7 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Using-only-Transform-and-Pipeline">Using only <code>Transform</code> and <code>Pipeline</code><a class="anchor-link" href="#Using-only-Transform-and-Pipeline">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's see how to use fastai's lower level classes to load the Pets dataset. First, we'll need to grab the dataset. We use <em>source</em> to refer to the underlying source of our data (e.g. a directory on disk, a database connection, a network connection, etc).</p>
+<p>Let's see how to use <code>fastai.data</code> to process the Pets dataset. We use <em>source</em> to refer to the underlying source of our data (e.g. a directory on disk, a database connection, a network connection, etc).</p>
 
 </div>
 </div>
@@ -68,7 +62,34 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We need to create a <code>Transform</code> that converts from a single item in <code>source</code> to our <code>x</code> and <code>y</code> for modeling. <code>setup</code> will be called once when the <code>DataSource</code> is created, so we can use that to create our <code>vocab</code> of all possible labels.</p>
+<p>We grab the items and split indices:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">items</span> <span class="o">=</span> <span class="n">get_image_files</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="n">split_idx</span> <span class="o">=</span> <span class="n">random_splitter</span><span class="p">()(</span><span class="n">items</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Using-only-Transform">Using only <a href="/data.pipeline.html#Transform"><code>Transform</code></a><a class="anchor-link" href="#Using-only-Transform">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We'll need this function to create consistently sized tensors from image files:</p>
 
 </div>
 </div>
@@ -90,26 +111,30 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We need to create a <a href="/data.pipeline.html#Transform"><code>Transform</code></a> that converts from an index to our <code>x</code> and <code>y</code> for modeling.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">PetTfm</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">train_idx</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">train_idx</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">train_idx</span> <span class="o">=</span> <span class="n">source</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="n">train_idx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">train_idx</span> <span class="o">=</span> <span class="n">items</span><span class="p">,</span><span class="n">train_idx</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labeller</span> <span class="o">=</span> <span class="n">re_labeller</span><span class="p">(</span><span class="n">pat</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;/([^/]+)_\d+.jpg$&#39;</span><span class="p">)</span>
-    
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
-        <span class="n">vals</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labeller</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">train_idx</span><span class="p">])</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labeller</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">o2i</span> <span class="o">=</span> <span class="n">uniqueify</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bidir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         
-    <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
-        <span class="c1"># Before transform is initialized we just return the raw item</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span> <span class="n">o</span>
+    <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">resized_image</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">o2i</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">labeller</span><span class="p">(</span><span class="n">o</span><span class="p">)]</span>
-
+    
     <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
     <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span> <span class="n">show_image</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
@@ -121,7 +146,7 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can now create the <code>PetTfm</code>, and grab the items and split indices.</p>
+<p>We can now create the <code>PetTfm</code>. We pass the training set indices to the constructor so it can create a vocab from only those items.</p>
 
 </div>
 </div>
@@ -131,10 +156,7 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">items</span> <span class="o">=</span> <span class="n">get_image_files</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-<span class="n">split_idx</span> <span class="o">=</span> <span class="n">random_splitter</span><span class="p">()(</span><span class="n">items</span><span class="p">)</span>
-<span class="n">tfm</span> <span class="o">=</span> <span class="n">PetTfm</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">split_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">pets</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">tfm</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pets</span> <span class="o">=</span> <span class="n">PetTfm</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">split_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -147,7 +169,7 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">pets</span><span class="o">.</span><span class="n">decoded</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">pets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">y</span>
 </pre></div>
 
@@ -163,7 +185,7 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(torch.Size([3, 128, 128]), &#39;japanese_chin&#39;)</pre>
+<pre>(torch.Size([3, 128, 128]), 23)</pre>
 </div>
 
 </div>
@@ -177,7 +199,7 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pets</span><span class="o">.</span><span class="n">show</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pets</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">pets</span><span class="o">.</span><span class="n">decode</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -199,6 +221,122 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Using-PipedList">Using <a href="/data.pipeline.html#PipedList"><code>PipedList</code></a><a class="anchor-link" href="#Using-PipedList">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a> simply runs a sequence of transforms in order, and <a href="/data.pipeline.html#PipedList"><code>PipedList</code></a> applies a pipeline lazily to items of a collection. This makes it easier for us to separate out steps of a process, so that we can re-use them and modify the process more easily. For instance, we could add data augmentation, data normalization, etc.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">labeller</span> <span class="o">=</span> <span class="n">re_labeller</span><span class="p">(</span><span class="n">pat</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;/([^/]+)_\d+.jpg$&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">CatLbl</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">train_idx</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">o2i</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">train_idx</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">train_idx</span>
+    <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">o2i</span><span class="p">[</span><span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">o2i</span> <span class="k">else</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">train_idx</span><span class="p">]</span><span class="o">.</span><span class="n">itemgot</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">o2i</span> <span class="o">=</span> <span class="n">uniqueify</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bidir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">CatLbl</span><span class="p">(</span><span class="n">split_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:(</span><span class="n">o</span><span class="p">,</span><span class="n">labeller</span><span class="p">(</span><span class="n">o</span><span class="p">)),</span> <span class="n">c</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pets</span> <span class="o">=</span> <span class="n">PipedList</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">tfms</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">pets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">t</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(PosixPath(&#39;/home/ubuntu/.fastai/data/oxford-iiit-pet/images/japanese_chin_113.jpg&#39;),
+ 23)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">pets</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -372,7 +510,7 @@ summary: "Using `DataSource`, `Pipeline`, and `Transform`s to load the Pets data
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can now use this to feed a <code>DataLoader</code> and view a batch.</p>
+<p>We can now use this to feed a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> and view a batch.</p>
 
 </div>
 </div>

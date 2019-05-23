@@ -178,7 +178,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is simply <code>get_files</code> called with a list of standard image extensions.</p>
+<p>This is simply <a href="/data.core.html#get_files"><code>get_files</code></a> called with a list of standard image extensions.</p>
 
 </div>
 </div>
@@ -222,7 +222,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>It's often useful to be able to create functions with customized behavior. <code>fastai.data</code> generally uses functions named as verbs ending in <code>er</code> things that create these functions. <code>image_getter</code> is a simple example of such a function creator.</p>
+<p>It's often useful to be able to create functions with customized behavior. <code>fastai.data</code> generally uses functions named as verbs ending in <code>er</code> things that create these functions. <a href="/data.core.html#image_getter"><code>image_getter</code></a> is a simple example of such a function creator.</p>
 
 </div>
 </div>
@@ -401,7 +401,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that <code>parent_label</code> doesn't have anything customize, so it doesn't return a function - you can just use it directly.</p>
+<p>Note that <a href="/data.core.html#parent_label"><code>parent_label</code></a> doesn't have anything customize, so it doesn't return a function - you can just use it directly.</p>
 
 </div>
 </div>
@@ -462,7 +462,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>re_labeller</code> is a very flexible function since it handles any regex search of the stringified item. For instance, here's an example the replicates the previous <code>parent_label</code> results.</p>
+<p><a href="/data.core.html#re_labeller"><code>re_labeller</code></a> is a very flexible function since it handles any regex search of the stringified item. For instance, here's an example the replicates the previous <a href="/data.core.html#parent_label"><code>parent_label</code></a> results.</p>
 
 </div>
 </div>
@@ -530,7 +530,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>show_image</code> can show b&amp;w images...</p>
+<p><a href="/data.core.html#show_image"><code>show_image</code></a> can show b&amp;w images...</p>
 
 </div>
 </div>
@@ -755,6 +755,98 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Classes">Classes<a class="anchor-link" href="#Classes">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="TfmDataLoader" class="doc_header"><code>class</code> <code>TfmDataLoader</code><a class="source_link" data-toggle="collapse" data-target="#TfmDataLoader-pytest" style="float:right; padding-right:10px">[test]</a></h2><blockquote><p><code>TfmDataLoader</code>(<strong><code>dl</code></strong>, <strong><code>tfms</code></strong>=<strong><em><code>None</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<div class="collapse" id="TfmDataLoader-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#TfmDataLoader-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>TfmDataLoader</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">neg</span><span class="p">)</span>
+<span class="n">start</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">dl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmDataLoader</span><span class="p">(</span><span class="n">dl</span><span class="p">,</span> <span class="n">tfms</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">tdl</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">tdl</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="DataBunch" class="doc_header"><code>class</code> <code>DataBunch</code><a class="source_link" data-toggle="collapse" data-target="#DataBunch-pytest" style="float:right; padding-right:10px">[test]</a></h2><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>)</p>
+</blockquote>
+<div class="collapse" id="DataBunch-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataBunch-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>DataBunch</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Basic wrapper around several <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>s.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dbch</span> <span class="o">=</span> <span class="n">DataBunch</span><span class="p">(</span><span class="n">dl</span><span class="p">,</span><span class="n">tdl</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dbch</span><span class="o">.</span><span class="n">train_dl</span><span class="p">)))</span>
+<span class="n">test_eq</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">dbch</span><span class="o">.</span><span class="n">valid_dl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">())</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 

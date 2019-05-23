@@ -22,8 +22,6 @@ from torch.utils.data import DataLoader,SequentialSampler,RandomSampler
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace
 
-from fastai.gen_doc.nbdoc import show_doc
-
 NoneType = type(None)
 
 def all_equal(a,b):

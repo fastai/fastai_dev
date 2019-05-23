@@ -77,7 +77,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_nb</span> <span class="o">=</span> <span class="n">read_nb</span><span class="p">(</span><span class="s1">&#39;91_export.ipynb&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_nb</span> <span class="o">=</span> <span class="n">read_nb</span><span class="p">(</span><span class="s1">&#39;91_notebook_export.ipynb&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -219,7 +219,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
  &#39;execution_count&#39;: 1,
  &#39;metadata&#39;: {&#39;hide_input&#39;: False},
  &#39;outputs&#39;: [],
- &#39;source&#39;: &#39;# export\nfrom fastai_local.core import *\nfrom fastai_local.test import *\nfrom fastai_local.imports import *\nfrom fastai_local.notebook.core import *\nimport nbformat&#39;}</pre>
+ &#39;source&#39;: &#39;# export\nfrom fastai_local.core import *\nfrom fastai_local.test import *\nfrom fastai_local.imports import *\nfrom fastai_local.notebook.core import *\nimport nbformat,inspect&#39;}</pre>
 </div>
 
 </div>
@@ -434,8 +434,9 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 <span class="n">test_eq</span><span class="p">(</span><span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;def my_func ():</span><span class="se">\n</span><span class="s2">  pass</span><span class="se">\n</span><span class="s2">default_bla = []:&quot;</span><span class="p">,</span> <span class="n">func_only</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;my_func&quot;</span><span class="p">])</span>
 <span class="c1">#Private objects are ignored</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;def my_func ():</span><span class="se">\n</span><span class="s2">  pass</span><span class="se">\n</span><span class="s2">_default_bla = []:&quot;</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;my_func&quot;</span><span class="p">])</span>
-<span class="c1">#Objects with dots are ignored</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;def my_func ():</span><span class="se">\n</span><span class="s2">  pass</span><span class="se">\n</span><span class="s2">default.bla = []:&quot;</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;my_func&quot;</span><span class="p">])</span>
+<span class="c1">#Objects with dots are privates if one part is private</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;def my_func ():</span><span class="se">\n</span><span class="s2">  pass</span><span class="se">\n</span><span class="s2">default.bla = []:&quot;</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;my_func&quot;</span><span class="p">,</span> <span class="s2">&quot;default.bla&quot;</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;def my_func ():</span><span class="se">\n</span><span class="s2">  pass</span><span class="se">\n</span><span class="s2">default._bla = []:&quot;</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;my_func&quot;</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -551,18 +552,9 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">]</span>
-<span class="n">L</span> <span class="o">=</span> <span class="n">L</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-</pre></div>
-
-    </div>
 </div>
-</div>
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -570,13 +562,31 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 <div class="output_area">
 
 
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_name" class="doc_header"><code>get_name</code><a class="source_link" data-toggle="collapse" data-target="#get_name-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>get_name</code>(<strong><code>obj</code></strong>)</p>
+</blockquote>
+<div class="collapse" id="get_name-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#get_name-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>get_name</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Get the name of <code>obj</code></p>
 
-<div class="output_text output_subarea output_execute_result">
-<pre>&#39;&#39;</pre>
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai_local.data.pipeline</span> <span class="k">import</span> <span class="o">*</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">get_name</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">),</span> <span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">get_name</span><span class="p">(</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">composed</span><span class="p">),</span> <span class="s1">&#39;composed&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">get_name</span><span class="p">(</span><span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span> <span class="s1">&#39;Union&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -593,7 +603,45 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="source_nb" class="doc_header"><code>source_nb</code><a class="source_link" data-toggle="collapse" data-target="#source_nb-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>source_nb</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<strong><em><code>False</code></em></strong>)</p>
+<h4 id="qual_name" class="doc_header"><code>qual_name</code><a class="source_link" data-toggle="collapse" data-target="#qual_name-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>qual_name</code>(<strong><code>obj</code></strong>)</p>
+</blockquote>
+<div class="collapse" id="qual_name-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#qual_name-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>qual_name</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Get the qualified name of <code>obj</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">qual_name</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">),</span> <span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">qual_name</span><span class="p">(</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">composed</span><span class="p">),</span> <span class="s1">&#39;Pipeline.composed&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="source_nb" class="doc_header"><code>source_nb</code><a class="source_link" data-toggle="collapse" data-target="#source_nb-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>source_nb</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<strong><em><code>None</code></em></strong>, <strong><code>return_all</code></strong>=<strong><em><code>False</code></em></strong>)</p>
 </blockquote>
 <div class="collapse" id="source_nb-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#source_nb-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>source_nb</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Return the name of the notebook where <code>func</code> was defined</p>
 
@@ -604,6 +652,14 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can either pass an object or its name (by default <code>is_name</code> will look if <code>func</code> is a string or not, but you can override if there is some inconsistent behavior).</p>
+<p>If passed a method of a class, the function will return the notebook in which the largest part of the function was defined in case there is a monkey-matching that defines <code>class.method</code> in a different notebook than <code>class</code>. If <code>return_all=True</code>, the function will return a tuple with the name by which the function was found and the notebook.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -620,8 +676,12 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 <span class="c1">#Add a test of class.func when it&#39;s added through a monkey-patch</span>
 
 <span class="c1">#Test with name</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">,</span> <span class="n">is_name</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="s1">&#39;02_data_pipeline.ipynb&#39;</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="s1">&#39;Pipeline.decode&#39;</span><span class="p">,</span> <span class="n">is_name</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="s1">&#39;02_data_pipeline.ipynb&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">),</span> <span class="s1">&#39;02_data_pipeline.ipynb&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="s1">&#39;Pipeline.decode&#39;</span><span class="p">),</span> <span class="s1">&#39;02_data_pipeline.ipynb&#39;</span><span class="p">)</span>
+
+<span class="c1">#Test return_all</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">,</span> <span class="n">return_all</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">,</span><span class="s1">&#39;02_data_pipeline.ipynb&#39;</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">decode</span><span class="p">,</span> <span class="n">return_all</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">,</span><span class="s1">&#39;02_data_pipeline.ipynb&#39;</span><span class="p">))</span>
 </pre></div>
 
     </div>
