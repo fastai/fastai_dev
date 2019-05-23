@@ -94,11 +94,11 @@ add_docs(
 )
 
 class TfmList():
-    def __init__(self, tfms): self.activ,self.tfms = None,[Pipeline(t) for t in listify(tfms)]
+    def __init__(self, items, tfms): self.activ,self.tfms = None,[PipedList(items, t) for t in listify(tfms)]
 
-    def __call__(self, o, **kwargs):
-        if self.activ is not None: return self.activ(o, **kwargs)
-        return [t(o, **kwargs) for t in self.tfms]
+    def __getitem__(self, i):
+        if self.activ is not None: return self.activ[i]
+        return [t[i] for t in self.tfms]
 
     def decode(self, o, **kwargs): return [t.decode(p, **kwargs) for p,t in zip(o,self.tfms)]
 
@@ -111,7 +111,4 @@ class TfmList():
     def show(self, o, **kwargs): return show_xs(o, self.tfms, **kwargs)
     def __repr__(self): return f'TfmList({self.tfms})'
 
-    @property
-    def xt(self): return self.tfms[0]
-    @property
-    def yt(self): return self.tfms[1]
+    xt,yt = add_props(lambda i,x:x.tfms[i], 2)
