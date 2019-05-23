@@ -111,7 +111,7 @@ class TfmDataLoader():
         for k,v in kwargs.items(): setattr(self,k,v)
 
     def __len__(self): return len(self.dl)
-    def __dir__(self): return custom_dir(self, self._xtra)
+    def __dir__(self): return custom_dir(self, 'batchsize num_workers dataset sampler pin_memory'.split())
     def __iter__(self): return map(self.tfm, self.dl)
     def decode(self, o): return self.tfm.decode(o)
     def one_batch(self): return next(iter(self))
