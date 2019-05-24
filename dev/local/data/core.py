@@ -108,22 +108,20 @@ def _DataLoader__getattr(self,k):
 DataLoader.__getattr__ = _DataLoader__getattr
 
 @docs
-class TfmDataLoader():
+class TfmDataLoader(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfms`"
+    _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
+
     def __init__(self, dl, tfms=None, **kwargs):
         self.dl,self.tfm = dl,Pipeline(tfms)
+        self.default = self.dl # for `GetAttr`
         for k,v in kwargs.items(): setattr(self,k,v)
 
     def __len__(self): return len(self.dl)
-    def __dir__(self): return custom_dir(self, 'batchsize num_workers dataset sampler pin_memory'.split())
     def __iter__(self): return map(self.tfm, self.dl)
     def decode(self, o): return self.tfm.decode(o)
     def one_batch(self): return next(iter(self))
     def decode_batch(self): return self.decode(self.one_batch())
-
-    def __getattr__(self, k):
-        try: return getattr(self.dl, k)
-        except AttributeError: raise AttributeError(k) from None
 
     _docs = dict(decode="Decode `o` using `tfm`",
                  one_batch="Grab first batch of `dl`",
@@ -134,5 +132,5 @@ class DataBunch():
     def __init__(self, *dls): self.dls = dls
     def __getitem__(self, i): return self.dls[i]
 
-DataBunch.train_dl,DataBunch.valid_dl = add_props(lambda i,x: x[i]        , 2)
-DataBunch.train_ds,DataBunch.valid_ds = add_props(lambda i,x: x[i].dataset, 2)
+    train_dl,valid_dl = add_props(lambda i,x: x[i]        , 2)
+    train_ds,valid_ds = add_props(lambda i,x: x[i].dataset, 2)
