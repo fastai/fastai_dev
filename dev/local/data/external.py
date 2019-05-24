@@ -130,7 +130,7 @@ def _get_config():
         yaml.dump(config, yaml_file, default_flow_style=False)
     return config
 
-ConfigKey = IntEnum('ConfigKey', 'Data Archive Model')
+ConfigKey = Enum('ConfigKey', 'Data Archive Model')
 
 def get_path(c_key=ConfigKey.Data):
     return Path(_get_config()[f"{c_key.name.lower()}_path"])
