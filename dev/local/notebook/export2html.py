@@ -116,7 +116,7 @@ class ExecuteShowDocPreprocessor(ExecutePreprocessor):
 
 def _import_show_doc_cell(name=None):
     "Add an import show_doc cell + deal with the __file__ hack if necessary."
-    source = f"#export\nfrom fastai_local.notebook.showdoc import show_doc"
+    source = f"#export\nfrom local.notebook.showdoc import show_doc"
     if name: source += f"\nfrom pathlib import Path\n__file__ = {name}"
     return {'cell_type': 'code',
             'execution_count': None,

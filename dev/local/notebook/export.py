@@ -76,7 +76,7 @@ def _relative_import(name, fname):
     return '.' * (len(splits)) + '.'.join(mods)
 
 def _deal_import(code_lines, fname):
-    pat = re.compile(r'from (fastai_local.\S*) import (\S*)$')
+    pat = re.compile(r'from (local.\S*) import (\S*)$')
     lines = []
     for line in code_lines:
         line = re.sub('_'+'file_', '__'+'file__', line) #Need to break __file__ or that line will be treated
@@ -101,12 +101,12 @@ def _notebook2script(fname):
     default = find_default_export(nb['cells'])
     if default is not None:
         default = os.path.sep.join(default.split('.'))
-        _create_mod_file(Path.cwd()/'fastai_local'/f'{default}.py', fname)
+        _create_mod_file(Path.cwd()/'local'/f'{default}.py', fname)
     index = _get_index()
     exports = [is_export(c, default) for c in nb['cells']]
     cells = [(c,e) for (c,e) in zip(nb['cells'],exports) if e is not None]
     for (c,e) in cells:
-        fname_out = Path.cwd()/'fastai_local'/f'{e}.py'
+        fname_out = Path.cwd()/'local'/f'{e}.py'
         orig = '' if e==default else f'#Comes from {fname.name}.\n'
         code = '\n\n' + orig + '\n'.join(_deal_import(c['source'].split('\n')[1:], fname_out))
         # remove trailing spaces
