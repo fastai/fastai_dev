@@ -87,6 +87,9 @@ def _get_index():
     return json.load(open(Path(__file__).parent/'index.txt', 'r'))
 
 def _save_index(index): json.dump(index, open(Path(__file__).parent/'index.txt', 'w'), indent=2)
+def _init_index():
+    if (Path(__file__).parent/'index.txt').exists():
+        os.remove((Path(__file__).parent/'index.txt'))
 
 def _notebook2script(fname):
     "Finds cells starting with `#export` and puts them into a new module"
@@ -105,7 +108,8 @@ def _notebook2script(fname):
         code = '\n\n' + orig + '\n'.join(_deal_import(c['source'].split('\n')[1:], fname_out))
         # remove trailing spaces
         names = export_names(code)
-        _add2add(fname_out, [f"'{f}'" for f in names if '.' not in f] + extra_add(code))
+        extra = extra_add(code)
+        _add2add(fname_out, [f"'{f}'" for f in names if '.' not in f] + ([] if extra is None else extra))
         index.update({f: fname.name for f in names})
         code = re.sub(r' +$', '', code, flags=re.MULTILINE)
         with open(fname_out, 'a') as f: f.write(code)
