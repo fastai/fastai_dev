@@ -2,7 +2,8 @@
 
 __all__ = ['chk', 'ifnone', 'noop', 'noops', 'range_of', 'is_iter', 'listify', 'tuplify', 'tensor', 'compose',
            'uniqueify', 'setify', 'mapper', 'make_cross_image', 'coll_repr', 'partialler', 'custom_dir', 'add_props',
-           'add_docs', 'docs', 'ListContainer', 'mask2idxs', 'is_listy', 'opt_call', 'all_union', 'all_disjoint']
+           'add_docs', 'docs', 'GetAttr', 'ListContainer', 'mask2idxs', 'is_listy', 'opt_call', 'all_union',
+           'all_disjoint']
 
 from .test import *
 from .imports import *
@@ -108,7 +109,7 @@ def custom_dir(c, add:List):
     "Implement custom `__dir__`, adding `add` to `cls`"
     return dir(type(c)) + list(c.__dict__.keys()) + add
 
-def add_props(f, n):
+def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))
 
@@ -126,19 +127,31 @@ def docs(cls):
     add_docs(cls, **cls._docs)
     return cls
 
+class GetAttr:
+    "Inherit from this to have all attr accesses in `self._xtra` passed down to `self.default`"
+    _xtra=[]
+    def __getattr__(self,k):
+        assert self._xtra, "Inherited from `GetAttr` but no `_xtra` attrs listed"
+        if k in self._xtra: return getattr(self.default, k)
+        raise AttributeError(k)
+    def __dir__(self): return custom_dir(self, self._xtra)
+
 def _mask2idxs(mask):
     mask = list(mask)
     if isinstance(mask[0],bool): return [i for i,m in enumerate(mask) if m]
     return [int(i) for i in mask]
 
 @docs
-class ListContainer():
+class ListContainer(GetAttr):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     _xtra =  [o for o in dir(list) if not o.startswith('_')]
-    def __getattr__(self,k):
-        "Pass on all `list` methods to `items` (e.g. `append`, `sort`, ...)"
-        if k in self._xtra: return getattr(self.items, k)
-        raise AttributeError(k)
+
+    def __init__(self, items, use_list=False): self.items = self.default = list(items) if use_list else listify(items)
+    def __len__(self): return len(self.items)
+    def __iter__(self): return iter(self.items)
+    def __delitem__(self, i): del(self.items[i])
+    def __repr__(self): return f'{self.__class__.__name__} {coll_repr(self)}'
+    def __eq__(self,b): return all_equal(b,self)
 
     def __getitem__(self, idx):
         res = [self.items[i] for i in _mask2idxs(idx)] if is_iter(idx) else self.items[idx]
@@ -149,14 +162,6 @@ class ListContainer():
         idx = listify(idx)
         if not is_iter(o): o = [o]*len(idx)
         for i,o_ in zip(idx,o): self.items[i] = o_
-
-    def __init__(self, items, use_list=False): self.items = list(items) if use_list else listify(items)
-    def __len__(self): return len(self.items)
-    def __iter__(self): return iter(self.items)
-    def __delitem__(self, i): del(self.items[i])
-    def __repr__(self): return f'{self.__class__.__name__} {coll_repr(self)}'
-    def __eq__(self,b): return all_equal(b,self)
-    def __dir__(self): return custom_dir(self, self._xtra)
 
     def mapped(self, f):    return ListContainer(map(f, self))
     def zipped(self):       return ListContainer(zip(*self))

@@ -110,4 +110,4 @@ class TfmList():
     def show(self, o, ax=None, **kwargs):
         for p,t in zip(o,self.tfms): ax = t.show(p, ax=ax, **kwargs)
 
-    xt,yt = add_props(lambda i,x:x.tfms[i], 2)
+    xt,yt = add_props(lambda i,x:x.tfms[i])
