@@ -13,7 +13,7 @@ def read_nb(fname):
 
 def check_re(cell, pat):
     if cell['cell_type'] != 'code': return False
-    return re.match(pat, cell['source'], re.IGNORECASE | re.MULTILINE)
+    return re.search(pat, cell['source'], re.IGNORECASE | re.MULTILINE)
 
 def is_export(cell, default):
     "Check if `cell` is to be exported and returns the name of the module."

@@ -98,7 +98,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_files" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>False</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_files" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get all the files in <code>path</code> with optional <code>extensions</code>, optionally with <code>recurse</code>.</p>
 
@@ -122,11 +122,11 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t3</span> <span class="o">=</span> <span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="o">/</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">)</span>
-<span class="n">t7</span> <span class="o">=</span> <span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="o">/</span><span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t3</span> <span class="o">=</span> <span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="o">/</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">t7</span> <span class="o">=</span> <span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="o">/</span><span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">t</span>  <span class="o">=</span> <span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">t3</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">t7</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="o">/</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.jpg&#39;</span><span class="p">)),</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="o">/</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">False</span><span class="p">)),</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">)))</span>
 <span class="n">t</span>
 </pre></div>
@@ -152,6 +152,54 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It's often useful to be able to create functions with customized behavior. <code>fastai.data</code> generally uses functions named as CamelCase verbs ending in <code>er</code> to create these functions. <a href="/data.core.html#FileGetter"><code>FileGetter</code></a> is a simple example of such a function creator.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="FileGetter" class="doc_header"><code>FileGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FileGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Create <a href="/data.core.html#get_files"><code>get_files</code></a> partial function that searches path suffix <code>suf</code> and passes along args</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fpng</span> <span class="o">=</span> <span class="n">FileGetter</span><span class="p">(</span><span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t7</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">fpng</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="o">/</span><span class="s1">&#39;7&#39;</span><span class="p">)))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">fpng</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+<span class="n">fpng_r</span> <span class="o">=</span> <span class="n">FileGetter</span><span class="p">(</span><span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">fpng_r</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">)))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
@@ -167,7 +215,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_image_files" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="get_image_files" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get image files in <code>path</code> recursively.</p>
 
@@ -211,7 +259,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="image_getter" class="doc_header"><code>image_getter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>image_getter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="ImageGetter" class="doc_header"><code>ImageGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ImageGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create <a href="/data.core.html#get_image_files"><code>get_image_files</code></a> partial function that searches path suffix <code>suf</code> and passes along <code>kwargs</code></p>
 
@@ -225,7 +273,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>It's often useful to be able to create functions with customized behavior. <code>fastai.data</code> generally uses functions named as verbs ending in <code>er</code> things that create these functions. <a href="/data.core.html#image_getter"><code>image_getter</code></a> is a simple example of such a function creator.</p>
+<p>Same as <a href="/data.core.html#FileGetter"><code>FileGetter</code></a>, but for image extensions.</p>
 
 </div>
 </div>
@@ -235,9 +283,8 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="s1">&#39;3&#39;</span><span class="p">)</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">image_getter</span><span class="p">(</span><span class="s1">&#39;train&#39;</span><span class="p">,</span>  <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="s1">&#39;3&#39;</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">get_files</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="s1">&#39;3&#39;</span><span class="p">)),</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">ImageGetter</span><span class="p">(</span>  <span class="s1">&#39;train&#39;</span><span class="p">,</span>                    <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="s1">&#39;3&#39;</span><span class="p">)(</span><span class="n">path</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -270,7 +317,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="random_splitter" class="doc_header"><code>random_splitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>random_splitter</code>(<strong><code>valid_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="RandomSplitter" class="doc_header"><code>RandomSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RandomSplitter</code>(<strong><code>valid_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create function that splits <code>items</code> between train/val with <code>valid_pct</code> randomly.</p>
 
@@ -288,7 +335,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">src</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">random_splitter</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">RandomSplitter</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">trn</span><span class="p">,</span><span class="n">val</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
 <span class="k">assert</span> <span class="mi">0</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">trn</span><span class="p">)</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
 <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">o</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">val</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">trn</span><span class="p">)</span>
@@ -335,7 +382,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="grandparent_splitter" class="doc_header"><code>grandparent_splitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>grandparent_splitter</code>(<strong><code>train_name</code></strong>=<em><code>'train'</code></em>, <strong><code>valid_name</code></strong>=<em><code>'valid'</code></em>)</p>
+<h4 id="GrandparentSplitter" class="doc_header"><code>GrandparentSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GrandparentSplitter</code>(<strong><code>train_name</code></strong>=<em><code>'train'</code></em>, <strong><code>valid_name</code></strong>=<em><code>'valid'</code></em>)</p>
 </blockquote>
 <p>Split <code>items</code> from the grand parent folder names (<code>train_name</code> and <code>valid_name</code>).</p>
 
@@ -356,7 +403,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
          <span class="n">path</span><span class="o">/</span><span class="s1">&#39;valid/7/7320.png&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">/</span><span class="s1">&#39;train/7/9833.png&#39;</span><span class="p">,</span>  
          <span class="n">path</span><span class="o">/</span><span class="s1">&#39;train/3/7666.png&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">/</span><span class="s1">&#39;valid/3/925.png&#39;</span><span class="p">,</span>
          <span class="n">path</span><span class="o">/</span><span class="s1">&#39;train/7/724.png&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">/</span><span class="s1">&#39;valid/3/93055.png&#39;</span><span class="p">]</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">grandparent_splitter</span><span class="p">()</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">GrandparentSplitter</span><span class="p">()</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">items</span><span class="p">),[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]])</span>
 </pre></div>
 
@@ -451,7 +498,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="re_labeller" class="doc_header"><code>re_labeller</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>re_labeller</code>(<strong><code>pat</code></strong>)</p>
+<h4 id="RegexLabeller" class="doc_header"><code>RegexLabeller</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RegexLabeller</code>(<strong><code>pat</code></strong>)</p>
 </blockquote>
 <p>Label <code>item</code> with regex <code>pat</code>.</p>
 
@@ -465,7 +512,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/data.core.html#re_labeller"><code>re_labeller</code></a> is a very flexible function since it handles any regex search of the stringified item. For instance, here's an example the replicates the previous <a href="/data.core.html#parent_label"><code>parent_label</code></a> results.</p>
+<p><a href="/data.core.html#RegexLabeller"><code>RegexLabeller</code></a> is a very flexible function since it handles any regex search of the stringified item. For instance, here's an example the replicates the previous <a href="/data.core.html#parent_label"><code>parent_label</code></a> results.</p>
 
 </div>
 </div>
@@ -475,7 +522,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">re_labeller</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/(\d)/&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">RegexLabeller</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/(\d)/&#39;</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">parent_label</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
 <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span>
 </pre></div>
@@ -783,7 +830,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="TfmDataLoader" class="doc_header"><code>class</code> <code>TfmDataLoader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmDataLoader--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TfmDataLoader</code>(<strong><code>dl</code></strong>, <strong><code>tfms</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="TfmDataLoader" class="doc_header"><code>class</code> <code>TfmDataLoader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmDataLoader--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TfmDataLoader</code>(<strong><code>dl</code></strong>, <strong><code>tfms</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -827,7 +874,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="DataBunch" class="doc_header"><code>class</code> <code>DataBunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>)</p>
+<h2 id="DataBunch" class="doc_header"><code>class</code> <code>DataBunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>)</p>
 </blockquote>
 <p>Basic wrapper around several <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>s.</p>
 

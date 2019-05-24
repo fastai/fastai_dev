@@ -3,7 +3,7 @@
 __all__ = ['test_fail', 'test', 'nequals', 'test_eq', 'test_ne', 'is_close', 'test_close', 'test_is', 'test_stdout']
 
 from .imports import *
-from fastai.gen_doc.nbdoc import show_doc
+from .notebook.showdoc import show_doc
 
 def test_fail(f, msg='', contains=''):
     "Fails with `msg` unless `f()` raises an exception and (optionally) has `contains` in `e.args`"

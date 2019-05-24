@@ -50,9 +50,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="test_fail" class="doc_header"><code>test_fail</code><a class="source_link" data-toggle="collapse" data-target="#test_fail-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>test_fail</code>(<strong><code>f</code></strong>, <strong><code>msg</code></strong>=<strong><em><code>''</code></em></strong>, <strong><code>contains</code></strong>=<strong><em><code>''</code></em></strong>)</p>
+<h4 id="test_fail" class="doc_header"><code>test_fail</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#Simple-test-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_fail</code>(<strong><code>f</code></strong>, <strong><code>msg</code></strong>=<em><code>''</code></em>, <strong><code>contains</code></strong>=<em><code>''</code></em>)</p>
 </blockquote>
-<div class="collapse" id="test_fail-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#test_fail-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>test_fail</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Fails with <code>msg</code> unless <code>f()</code> raises an exception and (optionally) has <code>contains</code> in <code>e.args</code></p>
+<p>Fails with <code>msg</code> unless <code>f()</code> raises an exception and (optionally) has <code>contains</code> in <code>e.args</code></p>
 
 </div>
 
@@ -91,9 +91,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="test" class="doc_header"><code>test</code><a class="source_link" data-toggle="collapse" data-target="#test-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>test</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>cmp</code></strong>, <strong><code>cname</code></strong>=<strong><em><code>None</code></em></strong>)</p>
+<h4 id="test" class="doc_header"><code>test</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#Simple-test-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>cmp</code></strong>, <strong><code>cname</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
-<div class="collapse" id="test-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#test-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>test</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p><code>assert</code> that <code>cmp(a,b)</code>; display inputs and <code>cname or cmp.__name__</code> if it fails</p>
+<p><code>assert</code> that <code>cmp(a,b)</code>; display inputs and <code>cname or cmp.__name__</code> if it fails</p>
 
 </div>
 
@@ -128,9 +128,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="all_equal" class="doc_header"><code>all_equal</code><a href="https://github.com/fastai/fastai/blob/master/local/imports.py#L27" class="source_link" style="float:right">[source]</a><a class="source_link" data-toggle="collapse" data-target="#all_equal-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>all_equal</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="all_equal" class="doc_header"><code>all_equal</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/local/imports.py#L30" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>all_equal</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="all_equal-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#all_equal-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>all_equal</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Compares whether <code>a</code> and <code>b</code> are the same length and have the same contents</p>
+<p>Compares whether <code>a</code> and <code>b</code> are the same length and have the same contents</p>
 
 </div>
 
@@ -162,9 +162,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="equals" class="doc_header"><code>equals</code><a href="https://github.com/fastai/fastai/blob/master/local/imports.py#L31" class="source_link" style="float:right">[source]</a><a class="source_link" data-toggle="collapse" data-target="#equals-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>equals</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="equals" class="doc_header"><code>equals</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/local/imports.py#L34" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>equals</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="equals-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#equals-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>equals</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Compares <code>a</code> and <code>b</code> for equality; supports sublists, tensors and arrays too</p>
+<p>Compares <code>a</code> and <code>b</code> for equality; supports sublists, tensors and arrays too</p>
 
 </div>
 
@@ -199,9 +199,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="nequals" class="doc_header"><code>nequals</code><a class="source_link" data-toggle="collapse" data-target="#nequals-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>nequals</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="nequals" class="doc_header"><code>nequals</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#Simple-test-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nequals</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="nequals-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#nequals-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>nequals</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Compares <code>a</code> and <code>b</code> for <code>not equals</code></p>
+<p>Compares <code>a</code> and <code>b</code> for <code>not equals</code></p>
 
 </div>
 
@@ -262,9 +262,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="test_eq" class="doc_header"><code>test_eq</code><a class="source_link" data-toggle="collapse" data-target="#test_eq-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>test_eq</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="test_eq" class="doc_header"><code>test_eq</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_eq</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="test_eq-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#test_eq-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>test_eq</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p><code>test</code> that <code>a==b</code></p>
+<p><a href="/test.html"><code>test</code></a> that <code>a==b</code></p>
 
 </div>
 
@@ -318,9 +318,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="test_ne" class="doc_header"><code>test_ne</code><a class="source_link" data-toggle="collapse" data-target="#test_ne-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>test_ne</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="test_ne" class="doc_header"><code>test_ne</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_ne</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="test_ne-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#test_ne-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>test_ne</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p><code>test</code> that <code>a!=b</code></p>
+<p><a href="/test.html"><code>test</code></a> that <code>a!=b</code></p>
 
 </div>
 
@@ -374,9 +374,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_close" class="doc_header"><code>is_close</code><a class="source_link" data-toggle="collapse" data-target="#is_close-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>is_close</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>eps</code></strong>=<strong><em><code>1e-05</code></em></strong>)</p>
+<h4 id="is_close" class="doc_header"><code>is_close</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_close</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>eps</code></strong>=<em><code>1e-05</code></em>)</p>
 </blockquote>
-<div class="collapse" id="is_close-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#is_close-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>is_close</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Is <code>a</code> within <code>eps</code> of <code>b</code></p>
+<p>Is <code>a</code> within <code>eps</code> of <code>b</code></p>
 
 </div>
 
@@ -411,9 +411,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="test_close" class="doc_header"><code>test_close</code><a class="source_link" data-toggle="collapse" data-target="#test_close-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>test_close</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>eps</code></strong>=<strong><em><code>1e-05</code></em></strong>)</p>
+<h4 id="test_close" class="doc_header"><code>test_close</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_close</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>eps</code></strong>=<em><code>1e-05</code></em>)</p>
 </blockquote>
-<div class="collapse" id="test_close-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#test_close-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>test_close</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p><code>test</code> that <code>a</code> is within <code>eps</code> of <code>b</code></p>
+<p><a href="/test.html"><code>test</code></a> that <code>a</code> is within <code>eps</code> of <code>b</code></p>
 
 </div>
 
@@ -462,9 +462,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="test_is" class="doc_header"><code>test_is</code><a class="source_link" data-toggle="collapse" data-target="#test_is-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>test_is</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="test_is" class="doc_header"><code>test_is</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_is</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="test_is-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#test_is-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>test_is</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p><code>test</code> that <code>a is b</code></p>
+<p><a href="/test.html"><code>test</code></a> that <code>a is b</code></p>
 
 </div>
 
@@ -501,9 +501,9 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="test_stdout" class="doc_header"><code>test_stdout</code><a class="source_link" data-toggle="collapse" data-target="#test_stdout-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>test_stdout</code>(<strong><code>f</code></strong>, <strong><code>exp</code></strong>)</p>
+<h4 id="test_stdout" class="doc_header"><code>test_stdout</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_stdout</code>(<strong><code>f</code></strong>, <strong><code>exp</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="test_stdout-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#test_stdout-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>test_stdout</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div>
+
 </div>
 
 </div>

@@ -91,7 +91,7 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Transform" class="doc_header"><code>class</code> <code>Transform</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Transform--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Transform</code>(<strong><code>encodes</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="Transform" class="doc_header"><code>class</code> <code>Transform</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Transform--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transform</code>(<strong><code>encodes</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>A function that <code>encodes</code> if <code>filt</code> matches, and optionally <code>decodes</code>, with an optional <code>setup</code></p>
 
@@ -234,7 +234,7 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Pipeline" class="doc_header"><code>class</code> <code>Pipeline</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Pipeline</code>(<strong><code>tfms</code></strong>)</p>
+<h2 id="Pipeline" class="doc_header"><code>class</code> <code>Pipeline</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Pipeline</code>(<strong><code>tfms</code></strong>)</p>
 </blockquote>
 <p>A pipeline of composed (for encode/decode) transforms, setup one at a time</p>
 
@@ -416,7 +416,7 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="PipedList" class="doc_header"><code>class</code> <code>PipedList</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#PipedList--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>PipedList</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>) :: <a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a></p>
+<h2 id="PipedList" class="doc_header"><code>class</code> <code>PipedList</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#PipedList--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PipedList</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>) :: <a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a></p>
 </blockquote>
 <p>A <a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a> of transforms applied to a collection of <code>items</code></p>
 
@@ -437,9 +437,27 @@ summary: "Low-level transform pipelines"
 <span class="n">t</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s1">&#39;-2&#39;</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">pipe</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>PipedList: ListContainer (3 items) [1,2,3]
+tfms - [&lt;built-in function neg&gt;, &lt;class &#39;str&#39;&gt;]</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -476,9 +494,27 @@ summary: "Low-level transform pipelines"
 <span class="n">t</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pipe</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">([</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span><span class="s1">&#39;dog&#39;</span><span class="p">],</span> <span class="nb">map</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">decode</span><span class="p">,</span><span class="n">t</span><span class="p">))</span>
+<span class="n">pipe</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>PipedList: ListContainer (5 items) [dog_0.jpg,cat_0.jpg,cat_2.jpg,cat_1.jpg,dog_1.jpg]
+tfms - [&lt;function _lbl at 0x7f48200249d8&gt;, &lt;class &#39;__main__._Cat&#39;&gt;]</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -598,7 +634,7 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="TfmList" class="doc_header"><code>class</code> <code>TfmList</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#TfmList--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TfmList</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>)</p>
+<h2 id="TfmList" class="doc_header"><code>class</code> <code>TfmList</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#TfmList--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TfmList</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>)</p>
 </blockquote>
 
 </div>

@@ -75,8 +75,9 @@ def get_source_link(func, local=False, is_name=None):
     "Return a link to the notebook where `func` is defined."
     pref = '' if local else FASTAI_NB_DEV
     is_name = is_name or isinstance(func, str)
-    find_name,nb_name = source_nb(func, is_name=is_name, return_all=True)
-    if nb_name is None: return '' if is_name else get_function_source(func)
+    src = source_nb(func, is_name=is_name, return_all=True)
+    if src is None: return '' if is_name else get_function_source(func)
+    find_name,nb_name = src
     nb = read_nb(nb_name)
     pat = re.compile(f'^{find_name}\s+=|^(def|class)\s+{find_name}\s*\(', re.MULTILINE)
     for i,cell in enumerate(nb['cells']):
@@ -148,7 +149,7 @@ def _format_cls_doc(cls, full_name:str)->str:
     if parent_class != object: args += f' :: {doc_link(get_name(parent_class))}'
     return name,args
 
-def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True):
+def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, default_cls_level=2):
     "Show documentation for element `elt`. Supported types: class, function, and enum."
     anchor_id = qual_name(elt)
     elt = getattr(elt, '__func__', elt)
@@ -160,7 +161,7 @@ def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True):
     else: raise Exception(f'show_doc not supported for {full_name}')
     link = get_source_link(elt)
     source_link = f'<a href="{link}" class="source_link" style="float:right">[source]</a>'
-    title_level = title_level or (3 if inspect.isclass(elt) else 4)
+    title_level = title_level or (default_cls_level if inspect.isclass(elt) else 4)
     doc =  f'<h{title_level} id="{anchor_id}" class="doc_header">{name}{source_link}</h{title_level}>'
     doc += f'\n\n> {args}\n\n'
     if doc_string and inspect.getdoc(elt): doc += add_doc_links(inspect.getdoc(elt))
