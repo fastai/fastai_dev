@@ -105,5 +105,19 @@
   "process_cells": "93_notebook_export2html.ipynb",
   "process_cell": "93_notebook_export2html.ipynb",
   "convert_nb": "93_notebook_export2html.ipynb",
-  "convert_all": "93_notebook_export2html.ipynb"
+  "convert_all": "93_notebook_export2html.ipynb",
+  "file_getter": "04_data_core.ipynb",
+  "image_convert": "06_vision_core.ipynb",
+  "ResizeFixed": "06_vision_core.ipynb",
+  "ToByteTensor": "06_vision_core.ipynb",
+  "ToFloatTensor": "06_vision_core.ipynb",
+  "partialler": "01_core.ipynb",
+  "image_converter": "06_vision_core.ipynb",
+  "image_resize": "06_vision_core.ipynb",
+  "image_resize.order": "06_vision_core.ipynb",
+  "image_resizer": "06_vision_core.ipynb",
+  "image2byte": "06_vision_core.ipynb",
+  "unpermute_image": "06_vision_core.ipynb",
+  "image2byte_tfm": "06_vision_core.ipynb",
+  "ImageToFloatTensor": "06_vision_core.ipynb"
 }
