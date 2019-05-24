@@ -135,7 +135,100 @@ summary: "The functions that transform the dev notebooks in the documentation of
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#TODO tests</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cell_type&#39;</span><span class="p">:</span> <span class="s1">&#39;markdown&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;This is a `Tensor`&#39;</span><span class="p">}</span>
+<span class="k">assert</span> <span class="n">treat_backticks</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;cell_type&#39;</span><span class="p">:</span> <span class="s1">&#39;markdown&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;This is a [`Tensor`](https://pytorch.org/docs/stable/tensors.html#torch-tensor)&#39;</span><span class="p">}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="convert_links" class="doc_header"><code>convert_links</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/93_notebook_export2html.ipynb#Cell-processors" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>convert_links</code>(<strong><code>cell</code></strong>)</p>
+</blockquote>
+<p>Convert the .ipynb links to .html</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cell_type&#39;</span><span class="p">:</span> <span class="s1">&#39;markdown&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s2">&quot;This is a link to a [notebook](01_core.ipynb).&quot;</span><span class="p">}</span>
+<span class="k">assert</span> <span class="n">convert_links</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;cell_type&#39;</span><span class="p">:</span> <span class="s1">&#39;markdown&#39;</span><span class="p">,</span> 
+                               <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s2">&quot;This is a link to a [notebook](01_core.html).&quot;</span><span class="p">}</span>
+<span class="n">cell</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cell_type&#39;</span><span class="p">:</span> <span class="s1">&#39;markdown&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s2">&quot;This is a link to a [page](01_core.html).&quot;</span><span class="p">}</span>
+<span class="k">assert</span> <span class="n">convert_links</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="o">==</span> <span class="n">cell</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="add_jekyll_notes" class="doc_header"><code>add_jekyll_notes</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/93_notebook_export2html.ipynb#Cell-processors" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_jekyll_notes</code>(<strong><code>cell</code></strong>)</p>
+</blockquote>
+<p>Convert block quotes to jekyll notes in <code>cell</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Supported styles are <code>Warning</code>, <code>Note</code> and <code>Important</code>:</p>
+<div markdown="span" class="alert alert-danger" role="alert"><i class="fa fa-danger-circle"></i> <b>Warning: </b>There will be no second warning!</div>
+<div markdown="span" class="alert alert-warning" role="alert"><i class="fa fa-warning-circle"></i> <b>Important: </b>Pay attention! This is important.</div>
+<div markdown="span" class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note: </b>Take note of this.</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">w</span><span class="p">,</span><span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;Warning&#39;</span><span class="p">,</span> <span class="s1">&#39;Note&#39;</span><span class="p">,</span> <span class="s1">&#39;Important&#39;</span><span class="p">,</span> <span class="s1">&#39;Bla&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;danger&#39;</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">]):</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cell_type&#39;</span><span class="p">:</span> <span class="s1">&#39;markdown&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;&gt; </span><span class="si">{w}</span><span class="s2">: This is my final {w.lower()}!&quot;</span><span class="p">}</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;&lt;div markdown=&quot;span&quot; class=&quot;alert alert-</span><span class="si">{s}</span><span class="s1">&quot; role=&quot;alert&quot;&gt;&#39;</span>
+    <span class="n">res</span> <span class="o">+=</span> <span class="n">f</span><span class="s1">&#39;&lt;i class=&quot;fa fa-</span><span class="si">{s}</span><span class="s1">-circle&quot;&gt;&lt;/i&gt; &lt;b&gt;</span><span class="si">{w}</span><span class="s1">: &lt;/b&gt;This is my final {w.lower()}!&lt;/div&gt;&#39;</span>
+    <span class="k">assert</span> <span class="n">add_jekyll_notes</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;cell_type&#39;</span><span class="p">:</span> <span class="s1">&#39;markdown&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">res</span><span class="p">}</span>
 </pre></div>
 
     </div>
@@ -157,6 +250,7 @@ summary: "The functions that transform the dev notebooks in the documentation of
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="remove_hidden" class="doc_header"><code>remove_hidden</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/93_notebook_export2html.ipynb#Cell-processors" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>remove_hidden</code>(<strong><code>cells</code></strong>)</p>
 </blockquote>
+<p>Remove in <code>cells</code> the ones with a flag <code>#hide</code> or <code>#default_exp</code></p>
 
 </div>
 
@@ -439,36 +533,6 @@ summary: "The functions that transform the dev notebooks in the documentation of
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst_nb</span> <span class="o">=</span> <span class="n">read_nb</span><span class="p">(</span><span class="s1">&#39;91_notebook_export.ipynb&#39;</span><span class="p">)</span>
-<span class="n">_find_file</span><span class="p">(</span><span class="n">tst_nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&#34;Path(&#39;fastai_local&#39;).absolute()/&#39;notebook&#39;/&#39;export.py&#39;&#34;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -510,92 +574,6 @@ summary: "The functions that transform the dev notebooks in the documentation of
 
 </div>
 
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">convert_nb</span><span class="p">(</span><span class="s2">&quot;93_notebook_export2html.ipynb&quot;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">CellExecutionError</span>                        Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-116-b6863ae93524&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>convert_nb<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;93_notebook_export2html.ipynb&#34;</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-106-55d57742a451&gt;</span> in <span class="ansi-cyan-fg">convert_nb</span><span class="ansi-blue-fg">(fname, dest_path)</span>
-<span class="ansi-green-intense-fg ansi-bold">     11</span>     meta_jekyll <span class="ansi-blue-fg">=</span> get_metadata<span class="ansi-blue-fg">(</span>nb<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;cells&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     12</span>     meta_jekyll<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;nb_path&#39;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">f&#39;{fname.parent.name}/{fname.name}&#39;</span>
-<span class="ansi-green-fg">---&gt; 13</span><span class="ansi-red-fg">     </span>nb <span class="ansi-blue-fg">=</span> execute_nb<span class="ansi-blue-fg">(</span>nb<span class="ansi-blue-fg">,</span> name<span class="ansi-blue-fg">=</span>_name<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     14</span>     <span class="ansi-green-fg">with</span> open<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f&#39;{dest_path}/{dest_name}&#39;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;w&#39;</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">as</span> f<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">     15</span>         f<span class="ansi-blue-fg">.</span>write<span class="ansi-blue-fg">(</span>_exporter<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>from_notebook_node<span class="ansi-blue-fg">(</span>nb<span class="ansi-blue-fg">,</span> resources<span class="ansi-blue-fg">=</span>meta_jekyll<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-112-9caa1ccf97fe&gt;</span> in <span class="ansi-cyan-fg">execute_nb</span><span class="ansi-blue-fg">(nb, metadata, show_doc_only, name)</span>
-<span class="ansi-green-intense-fg ansi-bold">     16</span>     metadata <span class="ansi-blue-fg">=</span> metadata <span class="ansi-green-fg">or</span> <span class="ansi-blue-fg">{</span><span class="ansi-blue-fg">}</span>
-<span class="ansi-green-intense-fg ansi-bold">     17</span>     pnb <span class="ansi-blue-fg">=</span> nbformat<span class="ansi-blue-fg">.</span>from_dict<span class="ansi-blue-fg">(</span>nb<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 18</span><span class="ansi-red-fg">     </span>ep<span class="ansi-blue-fg">.</span>preprocess<span class="ansi-blue-fg">(</span>pnb<span class="ansi-blue-fg">,</span> metadata<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     19</span>     <span class="ansi-green-fg">return</span> pnb
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.7/site-packages/nbconvert/preprocessors/execute.py</span> in <span class="ansi-cyan-fg">preprocess</span><span class="ansi-blue-fg">(self, nb, resources, km)</span>
-<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span class="ansi-green-fg">with</span> self<span class="ansi-blue-fg">.</span>setup_preprocessor<span class="ansi-blue-fg">(</span>nb<span class="ansi-blue-fg">,</span> resources<span class="ansi-blue-fg">,</span> km<span class="ansi-blue-fg">=</span>km<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    360</span>             self<span class="ansi-blue-fg">.</span>log<span class="ansi-blue-fg">.</span>info<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;Executing notebook with kernel: %s&#34;</span> <span class="ansi-blue-fg">%</span> self<span class="ansi-blue-fg">.</span>kernel_name<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">--&gt; 361</span><span class="ansi-red-fg">             </span>nb<span class="ansi-blue-fg">,</span> resources <span class="ansi-blue-fg">=</span> super<span class="ansi-blue-fg">(</span>ExecutePreprocessor<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>preprocess<span class="ansi-blue-fg">(</span>nb<span class="ansi-blue-fg">,</span> resources<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    362</span>             info_msg <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_wait_for_reply<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>kc<span class="ansi-blue-fg">.</span>kernel_info<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    363</span>             nb<span class="ansi-blue-fg">.</span>metadata<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;language_info&#39;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> info_msg<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;content&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;language_info&#39;</span><span class="ansi-blue-fg">]</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.7/site-packages/nbconvert/preprocessors/base.py</span> in <span class="ansi-cyan-fg">preprocess</span><span class="ansi-blue-fg">(self, nb, resources)</span>
-<span class="ansi-green-intense-fg ansi-bold">     67</span>         &#34;&#34;&#34;
-<span class="ansi-green-intense-fg ansi-bold">     68</span>         <span class="ansi-green-fg">for</span> index<span class="ansi-blue-fg">,</span> cell <span class="ansi-green-fg">in</span> enumerate<span class="ansi-blue-fg">(</span>nb<span class="ansi-blue-fg">.</span>cells<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">---&gt; 69</span><span class="ansi-red-fg">             </span>nb<span class="ansi-blue-fg">.</span>cells<span class="ansi-blue-fg">[</span>index<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> resources <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>preprocess_cell<span class="ansi-blue-fg">(</span>cell<span class="ansi-blue-fg">,</span> resources<span class="ansi-blue-fg">,</span> index<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     70</span>         <span class="ansi-green-fg">return</span> nb<span class="ansi-blue-fg">,</span> resources
-<span class="ansi-green-intense-fg ansi-bold">     71</span> 
-
-<span class="ansi-green-fg">&lt;ipython-input-91-c74b06b2ec57&gt;</span> in <span class="ansi-cyan-fg">preprocess_cell</span><span class="ansi-blue-fg">(self, cell, resources, index)</span>
-<span class="ansi-green-intense-fg ansi-bold">      6</span>         <span class="ansi-green-fg">if</span> <span class="ansi-blue-fg">&#39;source&#39;</span> <span class="ansi-green-fg">in</span> cell <span class="ansi-green-fg">and</span> cell<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;cell_type&#39;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">==</span> <span class="ansi-blue-fg">&#34;code&#34;</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">      7</span>             <span class="ansi-green-fg">if</span> re<span class="ansi-blue-fg">.</span>search<span class="ansi-blue-fg">(</span>pat<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;source&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">----&gt; 8</span><span class="ansi-red-fg">                 </span><span class="ansi-green-fg">return</span> super<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>preprocess_cell<span class="ansi-blue-fg">(</span>cell<span class="ansi-blue-fg">,</span> resources<span class="ansi-blue-fg">,</span> index<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span>         <span class="ansi-green-fg">return</span> cell<span class="ansi-blue-fg">,</span> resources
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.7/site-packages/nbconvert/preprocessors/execute.py</span> in <span class="ansi-cyan-fg">preprocess_cell</span><span class="ansi-blue-fg">(self, cell, resources, cell_index)</span>
-<span class="ansi-green-intense-fg ansi-bold">    383</span>             <span class="ansi-green-fg">for</span> out <span class="ansi-green-fg">in</span> outputs<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    384</span>                 <span class="ansi-green-fg">if</span> out<span class="ansi-blue-fg">.</span>output_type <span class="ansi-blue-fg">==</span> <span class="ansi-blue-fg">&#39;error&#39;</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 385</span><span class="ansi-red-fg">                     </span><span class="ansi-green-fg">raise</span> CellExecutionError<span class="ansi-blue-fg">.</span>from_cell_and_msg<span class="ansi-blue-fg">(</span>cell<span class="ansi-blue-fg">,</span> out<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    386</span>             <span class="ansi-green-fg">if</span> <span class="ansi-blue-fg">(</span>reply <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">and</span> reply<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;content&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;status&#39;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">==</span> <span class="ansi-blue-fg">&#39;error&#39;</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    387</span>                 <span class="ansi-green-fg">raise</span> CellExecutionError<span class="ansi-blue-fg">.</span>from_cell_and_msg<span class="ansi-blue-fg">(</span>cell<span class="ansi-blue-fg">,</span> reply<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;content&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-red-fg">CellExecutionError</span>: An error occurred while executing the following cell:
-------------------
-#export
-from fastai_local.notebook.showdoc import show_doc
-from pathlib import Path
-_file_ = {name}&#34;
-------------------
-
-<span class="ansi-cyan-fg">  File </span><span class="ansi-green-fg">&#34;&lt;ipython-input-1-ca58d8d3001c&gt;&#34;</span><span class="ansi-cyan-fg">, line </span><span class="ansi-green-fg">4</span>
-<span class="ansi-red-fg">    _file_ = {name}&#34;</span>
-                    ^
-<span class="ansi-red-fg">SyntaxError</span><span class="ansi-red-fg">:</span> EOL while scanning string literal
-
-SyntaxError: EOL while scanning string literal (&lt;ipython-input-1-ca58d8d3001c&gt;, line 4)
-</pre>
-</div>
 </div>
 
 </div>

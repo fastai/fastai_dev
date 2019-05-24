@@ -2,12 +2,15 @@
 
 __all__ = ['is_enum', 'add_pytorch_index', 'is_fastai_module', 'FASTAI_DOCS', 'doc_link', 'add_doc_links',
            'get_function_source', 'SOURCE_URL', 'get_source_link', 'FASTAI_NB_DEV', 'source_link', 'type_repr',
-           'format_param', 'show_doc']
+           'format_param', 'show_doc', 'md2html', 'doc']
 
 from ..imports import *
+from .core import *
 from .export import *
-import inspect,enum
+import inspect,enum,nbconvert
 from IPython.display import Markdown,display
+from IPython.core import page
+from nbconvert import HTMLExporter
 
 def is_enum(cls):
     "Check if `cls` is an enum or another type of class"
@@ -163,3 +166,17 @@ def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True):
     if doc_string and inspect.getdoc(elt): doc += add_doc_links(inspect.getdoc(elt))
     if disp: display(Markdown(doc))
     else: return doc
+
+def md2html(md):
+    "Convert markdown `md` to HTML code"
+    if nbconvert.__version__ < '5.5.0': return HTMLExporter().markdown2html(md)
+    else: return HTMLExporter().markdown2html(defaultdict(lambda: defaultdict(dict)), md)
+
+def doc(elt):
+    "Show `show_doc` info in preview window"
+    md = show_doc(elt, disp=False)
+    output = md2html(md)
+    if IN_COLAB: get_ipython().run_cell_magic(u'html', u'', output)
+    else:
+        try: page.page({'text/html': output})
+        except: display(Markdown(md))

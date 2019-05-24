@@ -100,5 +100,9 @@
   "source_link": "92_notebook_showdoc.ipynb",
   "show_doc": "92_notebook_showdoc.ipynb",
   "treat_backticks": "93_notebook_export2html.ipynb",
-  "test_stdout": "00_test.ipynb"
+  "test_stdout": "00_test.ipynb",
+  "md2html": "92_notebook_showdoc.ipynb",
+  "doc": "92_notebook_showdoc.ipynb",
+  "convert_links": "93_notebook_export2html.ipynb",
+  "add_jekyll_notes": "93_notebook_export2html.ipynb"
 }

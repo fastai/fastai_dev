@@ -22,6 +22,9 @@ summary: "Base container for all the items"
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Convenience-functions">Convenience functions<a class="anchor-link" href="#Convenience-functions">&#182;</a></h2>
@@ -40,9 +43,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="coll_repr" class="doc_header"><code>coll_repr</code><a class="source_link" data-toggle="collapse" data-target="#coll_repr-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>coll_repr</code>(<strong><code>c</code></strong>, <strong><code>max</code></strong>=<strong><em><code>1000</code></em></strong>)</p>
+<h4 id="coll_repr" class="doc_header"><code>coll_repr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>coll_repr</code>(<strong><code>c</code></strong>, <strong><code>max</code></strong>=<em><code>1000</code></em>)</p>
 </blockquote>
-<div class="collapse" id="coll_repr-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#coll_repr-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>coll_repr</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>String repr of up to <code>max</code> items of (possibly lazy) collection <code>c</code></p>
+<p>String repr of up to <code>max</code> items of (possibly lazy) collection <code>c</code></p>
 
 </div>
 
@@ -83,9 +86,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DataSource" class="doc_header"><code>class</code> <code>DataSource</code><a class="source_link" data-toggle="collapse" data-target="#DataSource-pytest" style="float:right; padding-right:10px">[test]</a></h2><blockquote><p><code>DataSource</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>=<strong><em><code>None</code></em></strong>, <strong><code>filts</code></strong>=<strong><em><code>None</code></em></strong>) :: <a href="/fastai_local.data.pipeline.html#Pipeline"><code>Pipeline</code></a></p>
+<h3 id="DataSource" class="doc_header"><code>class</code> <code>DataSource</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>DataSource</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>=<em><code>None</code></em>, <strong><code>filts</code></strong>=<em><code>None</code></em>) :: <a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a></p>
 </blockquote>
-<div class="collapse" id="DataSource-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataSource-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>DataSource</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Applies a <a href="/fastai_local.data.pipeline.html#Pipeline"><code>Pipeline</code></a> of <code>tfms</code> to filtered subsets of <code>items</code></p>
+<p>Applies a <a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a> of <code>tfms</code> to filtered subsets of <code>items</code></p>
 
 </div>
 
@@ -103,7 +106,7 @@ summary: "Base container for all the items"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A <code>DataSource</code> provides filtering and transformation capabilities to a list of items. If you don't pass any filters or transforms, it simply provides a single subset with the same behavior as a <code>ListContainer</code>.</p>
+<p>A <a href="/data.source.html#DataSource"><code>DataSource</code></a> provides filtering and transformation capabilities to a list of items. If you don't pass any filters or transforms, it simply provides a single subset with the same behavior as a <a href="/core.html#ListContainer"><code>ListContainer</code></a>.</p>
 
 </div>
 </div>
@@ -225,7 +228,7 @@ summary: "Base container for all the items"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The subset idx is also passed to your transform, so if it is an instance of <code>Transform</code> it will only be applied if the filt idx matches.</p>
+<p>The subset idx is also passed to your transform, so if it is an instance of <a href="/data.pipeline.html#Transform"><code>Transform</code></a> it will only be applied if the filt idx matches.</p>
 
 </div>
 </div>
@@ -262,9 +265,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.get" class="doc_header"><code>get</code><a class="source_link" data-toggle="collapse" data-target="#DataSource-get-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>get</code>(<strong><code>idx</code></strong>, <strong><code>filt</code></strong>=<strong><em><code>0</code></em></strong>)</p>
+<h4 id="DataSource.get" class="doc_header"><code>get</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get</code>(<strong><code>idx</code></strong>, <strong><code>filt</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
-<div class="collapse" id="DataSource-get-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataSource-get-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>get</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Value(s) at <code>idx</code> from filtered subset <code>filt</code></p>
+<p>Value(s) at <code>idx</code> from filtered subset <code>filt</code></p>
 
 </div>
 
@@ -319,9 +322,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.decode_at" class="doc_header"><code>decode_at</code><a class="source_link" data-toggle="collapse" data-target="#DataSource-decode_at-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>decode_at</code>(<strong><code>idx</code></strong>, <strong><code>filt</code></strong>=<strong><em><code>0</code></em></strong>)</p>
+<h4 id="DataSource.decode_at" class="doc_header"><code>decode_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode_at</code>(<strong><code>idx</code></strong>, <strong><code>filt</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
-<div class="collapse" id="DataSource-decode_at-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataSource-decode_at-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>decode_at</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Decoded version of <code>get</code></p>
+<p>Decoded version of <code>get</code></p>
 
 </div>
 
@@ -354,9 +357,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.__getitem__" class="doc_header"><code>__getitem__</code><a class="source_link" data-toggle="collapse" data-target="#DataSource-__getitem__-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>__getitem__</code>(<strong><code>i</code></strong>)</p>
+<h4 id="DataSource.__getitem__" class="doc_header"><code>__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>__getitem__</code>(<strong><code>i</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="DataSource-__getitem__-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataSource-__getitem__-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>__getitem__</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Filtered subset <code>i</code></p>
+<p>Filtered subset <code>i</code></p>
 
 </div>
 
@@ -404,9 +407,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.__len__" class="doc_header"><code>__len__</code><a class="source_link" data-toggle="collapse" data-target="#DataSource-__len__-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>__len__</code>()</p>
+<h4 id="DataSource.__len__" class="doc_header"><code>__len__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>__len__</code>()</p>
 </blockquote>
-<div class="collapse" id="DataSource-__len__-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataSource-__len__-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>__len__</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Number of filtered subsets</p>
+<p>Number of filtered subsets</p>
 
 </div>
 
@@ -454,9 +457,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.__iter__" class="doc_header"><code>__iter__</code><a class="source_link" data-toggle="collapse" data-target="#DataSource-__iter__-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>__iter__</code>()</p>
+<h4 id="DataSource.__iter__" class="doc_header"><code>__iter__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>__iter__</code>()</p>
 </blockquote>
-<div class="collapse" id="DataSource-__iter__-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataSource-__iter__-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>__iter__</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div>
+
 </div>
 
 </div>
@@ -502,9 +505,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.len" class="doc_header"><code>len</code><a class="source_link" data-toggle="collapse" data-target="#DataSource-len-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>len</code>(<strong><code>filt</code></strong>=<strong><em><code>0</code></em></strong>)</p>
+<h4 id="DataSource.len" class="doc_header"><code>len</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>len</code>(<strong><code>filt</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
-<div class="collapse" id="DataSource-len-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataSource-len-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>len</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p><code>len</code> of subset <code>filt</code></p>
+<p><code>len</code> of subset <code>filt</code></p>
 
 </div>
 
@@ -552,9 +555,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.decode" class="doc_header"><code>decode</code><a href="https://github.com/fastai/fastai/blob/master/fastai_local/data/pipeline.py#L52" class="source_link" style="float:right">[source]</a><a class="source_link" data-toggle="collapse" data-target="#Pipeline-decode-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>decode</code>(<strong><code>x</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Pipeline.decode" class="doc_header"><code>decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode</code>(<strong><code>x</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="Pipeline-decode-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#Pipeline-decode-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>decode</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Compose <code>decode</code> of all <code>tfms</code> on <code>x</code></p>
+<p>Compose <code>decode</code> of all <code>tfms</code> on <code>x</code></p>
 
 </div>
 
@@ -587,9 +590,9 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.show_at" class="doc_header"><code>show_at</code><a class="source_link" data-toggle="collapse" data-target="#DataSource-show_at-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>show_at</code>(<strong><code>idx</code></strong>, <strong><code>filt</code></strong>=<strong><em><code>0</code></em></strong>)</p>
+<h4 id="DataSource.show_at" class="doc_header"><code>show_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_at</code>(<strong><code>idx</code></strong>, <strong><code>filt</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
-<div class="collapse" id="DataSource-show_at-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataSource-show_at-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>show_at</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Call <code>tfm.show</code> for item <code>idx</code>/<code>filt</code></p>
+<p>Call <code>tfm.show</code> for item <code>idx</code>/<code>filt</code></p>
 
 </div>
 

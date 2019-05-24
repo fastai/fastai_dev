@@ -22,6 +22,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Get,-split,-and-label">Get, split, and label<a class="anchor-link" href="#Get,-split,-and-label">&#182;</a></h2>
@@ -95,9 +98,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_files" class="doc_header"><code>get_files</code><a class="source_link" data-toggle="collapse" data-target="#get_files-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<strong><em><code>None</code></em></strong>, <strong><code>recurse</code></strong>=<strong><em><code>False</code></em></strong>, <strong><code>include</code></strong>=<strong><em><code>None</code></em></strong>)</p>
+<h4 id="get_files" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>False</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
-<div class="collapse" id="get_files-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#get_files-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>get_files</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Get all the files in <code>path</code> with optional <code>extensions</code>, optionally with <code>recurse</code>.</p>
+<p>Get all the files in <code>path</code> with optional <code>extensions</code>, optionally with <code>recurse</code>.</p>
 
 </div>
 
@@ -164,9 +167,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_image_files" class="doc_header"><code>get_image_files</code><a class="source_link" data-toggle="collapse" data-target="#get_image_files-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>include</code></strong>=<strong><em><code>None</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="get_image_files" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="get_image_files-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#get_image_files-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>get_image_files</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Get image files in <code>path</code> recursively.</p>
+<p>Get image files in <code>path</code> recursively.</p>
 
 </div>
 
@@ -208,9 +211,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="image_getter" class="doc_header"><code>image_getter</code><a class="source_link" data-toggle="collapse" data-target="#image_getter-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>image_getter</code>(<strong><code>suf</code></strong>=<strong><em><code>''</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="image_getter" class="doc_header"><code>image_getter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>image_getter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="image_getter-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#image_getter-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>image_getter</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Create <code>get_image_files</code> partial function that searches path suffix <code>suf</code> and passes along <code>kwargs</code></p>
+<p>Create <a href="/data.core.html#get_image_files"><code>get_image_files</code></a> partial function that searches path suffix <code>suf</code> and passes along <code>kwargs</code></p>
 
 </div>
 
@@ -267,9 +270,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="random_splitter" class="doc_header"><code>random_splitter</code><a class="source_link" data-toggle="collapse" data-target="#random_splitter-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>random_splitter</code>(<strong><code>valid_pct</code></strong>=<strong><em><code>0.2</code></em></strong>, <strong><code>seed</code></strong>=<strong><em><code>None</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="random_splitter" class="doc_header"><code>random_splitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>random_splitter</code>(<strong><code>valid_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="random_splitter-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#random_splitter-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>random_splitter</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Create function that splits <code>items</code> between train/val with <code>valid_pct</code> randomly.</p>
+<p>Create function that splits <code>items</code> between train/val with <code>valid_pct</code> randomly.</p>
 
 </div>
 
@@ -332,9 +335,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="grandparent_splitter" class="doc_header"><code>grandparent_splitter</code><a class="source_link" data-toggle="collapse" data-target="#grandparent_splitter-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>grandparent_splitter</code>(<strong><code>train_name</code></strong>=<strong><em><code>'train'</code></em></strong>, <strong><code>valid_name</code></strong>=<strong><em><code>'valid'</code></em></strong>)</p>
+<h4 id="grandparent_splitter" class="doc_header"><code>grandparent_splitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>grandparent_splitter</code>(<strong><code>train_name</code></strong>=<em><code>'train'</code></em>, <strong><code>valid_name</code></strong>=<em><code>'valid'</code></em>)</p>
 </blockquote>
-<div class="collapse" id="grandparent_splitter-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#grandparent_splitter-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>grandparent_splitter</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Split <code>items</code> from the grand parent folder names (<code>train_name</code> and <code>valid_name</code>).</p>
+<p>Split <code>items</code> from the grand parent folder names (<code>train_name</code> and <code>valid_name</code>).</p>
 
 </div>
 
@@ -387,9 +390,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="parent_label" class="doc_header"><code>parent_label</code><a class="source_link" data-toggle="collapse" data-target="#parent_label-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>parent_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="parent_label" class="doc_header"><code>parent_label</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parent_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="parent_label-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#parent_label-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>parent_label</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Label <code>item</code> with the parent folder name.</p>
+<p>Label <code>item</code> with the parent folder name.</p>
 
 </div>
 
@@ -448,9 +451,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="re_labeller" class="doc_header"><code>re_labeller</code><a class="source_link" data-toggle="collapse" data-target="#re_labeller-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>re_labeller</code>(<strong><code>pat</code></strong>)</p>
+<h4 id="re_labeller" class="doc_header"><code>re_labeller</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>re_labeller</code>(<strong><code>pat</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="re_labeller-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#re_labeller-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>re_labeller</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Label <code>item</code> with regex <code>pat</code>.</p>
+<p>Label <code>item</code> with regex <code>pat</code>.</p>
 
 </div>
 
@@ -516,9 +519,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_image" class="doc_header"><code>show_image</code><a class="source_link" data-toggle="collapse" data-target="#show_image-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>show_image</code>(<strong><code>im</code></strong>, <strong><code>ax</code></strong>=<strong><em><code>None</code></em></strong>, <strong><code>figsize</code></strong>=<strong><em><code>None</code></em></strong>, <strong><code>title</code></strong>=<strong><em><code>None</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="show_image" class="doc_header"><code>show_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_image</code>(<strong><code>im</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="show_image-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#show_image-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>show_image</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Show a PIL image on <code>ax</code>.</p>
+<p>Show a PIL image on <code>ax</code>.</p>
 
 </div>
 
@@ -657,9 +660,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_title" class="doc_header"><code>show_title</code><a class="source_link" data-toggle="collapse" data-target="#show_title-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<strong><em><code>None</code></em></strong>)</p>
+<h4 id="show_title" class="doc_header"><code>show_title</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
-<div class="collapse" id="show_title-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#show_title-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>show_title</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Set title of <code>ax</code> to <code>o</code>, or print <code>o</code> if <code>ax</code> is <code>None</code></p>
+<p>Set title of <code>ax</code> to <code>o</code>, or print <code>o</code> if <code>ax</code> is <code>None</code></p>
 
 </div>
 
@@ -716,9 +719,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_image_batch" class="doc_header"><code>show_image_batch</code><a class="source_link" data-toggle="collapse" data-target="#show_image_batch-pytest" style="float:right; padding-right:10px">[test]</a></h4><blockquote><p><code>show_image_batch</code>(<strong><code>b</code></strong>, <strong><code>show</code></strong>=<strong><em><code>'_show_batch_item'</code></em></strong>, <strong><code>items</code></strong>=<strong><em><code>9</code></em></strong>, <strong><code>cols</code></strong>=<strong><em><code>3</code></em></strong>, <strong><code>figsize</code></strong>=<strong><em><code>None</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="show_image_batch" class="doc_header"><code>show_image_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_image_batch</code>(<strong><code>b</code></strong>, <strong><code>show</code></strong>=<em><code>'_show_batch_item'</code></em>, <strong><code>items</code></strong>=<em><code>9</code></em>, <strong><code>cols</code></strong>=<em><code>3</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="show_image_batch-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#show_image_batch-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>show_image_batch</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Display batch <code>b</code> in a grid of size <code>items</code> with <code>cols</code> width</p>
+<p>Display batch <code>b</code> in a grid of size <code>items</code> with <code>cols</code> width</p>
 
 </div>
 
@@ -780,9 +783,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TfmDataLoader" class="doc_header"><code>class</code> <code>TfmDataLoader</code><a class="source_link" data-toggle="collapse" data-target="#TfmDataLoader-pytest" style="float:right; padding-right:10px">[test]</a></h2><blockquote><p><code>TfmDataLoader</code>(<strong><code>dl</code></strong>, <strong><code>tfms</code></strong>=<strong><em><code>None</code></em></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h3 id="TfmDataLoader" class="doc_header"><code>class</code> <code>TfmDataLoader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmDataLoader--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TfmDataLoader</code>(<strong><code>dl</code></strong>, <strong><code>tfms</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="TfmDataLoader-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#TfmDataLoader-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>TfmDataLoader</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div>
+
 </div>
 
 </div>
@@ -824,9 +827,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DataBunch" class="doc_header"><code>class</code> <code>DataBunch</code><a class="source_link" data-toggle="collapse" data-target="#DataBunch-pytest" style="float:right; padding-right:10px">[test]</a></h2><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>)</p>
+<h3 id="DataBunch" class="doc_header"><code>class</code> <code>DataBunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>)</p>
 </blockquote>
-<div class="collapse" id="DataBunch-pytest"><div class="card card-body pytest_card"><a type="button" data-toggle="collapse" data-target="#DataBunch-pytest" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a><p>No tests found for <code>DataBunch</code>. To contribute a test please refer to <a href="/dev/test.html">this guide</a> and <a href="https://forums.fast.ai/t/improving-expanding-functional-tests/32929">this discussion</a>.</p></div></div><p>Basic wrapper around several <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>s.</p>
+<p>Basic wrapper around several <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>s.</p>
 
 </div>
 
