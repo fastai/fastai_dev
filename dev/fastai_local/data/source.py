@@ -5,6 +5,7 @@ __all__ = ['coll_repr', 'DataSource']
 from ..imports import *
 from ..test import *
 from ..core import *
+from .core import *
 from .pipeline import *
 
 def coll_repr(c, max=1000):
