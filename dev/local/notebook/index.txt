@@ -111,6 +111,7 @@
   "convert_links": "93_notebook_export2html.ipynb",
   "add_jekyll_notes": "93_notebook_export2html.ipynb",
   "remove_hidden": "93_notebook_export2html.ipynb",
+  "find_default_level": "93_notebook_export2html.ipynb",
   "add_show_docs": "93_notebook_export2html.ipynb",
   "remove_fake_headers": "93_notebook_export2html.ipynb",
   "remove_empty": "93_notebook_export2html.ipynb",
