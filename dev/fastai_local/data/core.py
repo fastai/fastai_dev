@@ -9,6 +9,7 @@ from ..test import *
 from ..core import *
 from .pipeline import *
 from .external import *
+from ..notebook.showdoc import show_doc
 
 def _get_files(p, fs, extensions=None):
     p = Path(p)

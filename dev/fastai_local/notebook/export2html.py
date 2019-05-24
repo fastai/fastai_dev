@@ -47,7 +47,7 @@ def add_jekyll_notes(cell):
         res = f'<div markdown="span" class="alert alert-{style}" role="alert">'
         return res + f'<i class="fa fa-{style}-circle"></i> <b>{title}: </b>{text}</div>'
     if cell['cell_type'] == 'markdown':
-        cell['source'] = re.sub(r'>\s*([^:]*):\s*([^\n]*)(?:\n|$)', _inner, cell['source'], re.MULTILINE)
+        cell['source'] = re.sub(r'>\s*([^:]*):\s*([^\n]*)(?:\n|$)', _inner, cell['source'])
     return cell
 
 def remove_hidden(cells):
