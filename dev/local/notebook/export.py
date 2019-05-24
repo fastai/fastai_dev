@@ -43,7 +43,7 @@ def _not_private(n):
 
 def export_names(code, func_only=False):
     "Find the names of the objects, functions or classes defined in `code` that are exported."
-    names = re.findall(r'^(?:def|class)\s+([^\(\s]*)\s*\(', code, re.MULTILINE)
+    names = re.findall(r'^(?:def|class)\s+([^\(\s]*)\s*(?:\(|:)', code, re.MULTILINE)
     if not func_only: names += re.findall(r'^([^\(\s]*)\s*=', code, re.MULTILINE)
     return [n for n in names if _not_private(n)]
 
