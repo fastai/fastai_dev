@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from fastai_local.notebook.export import notebook2script
+from local.notebook.export import notebook2script
 from fastai.script import *
 
 @call_parse

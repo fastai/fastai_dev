@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from fastai_local.notebook.export2html import convert_all
+from local.notebook.export2html import convert_all
 from fastai.script import *
 import yaml, os, sys
 from pathlib import Path

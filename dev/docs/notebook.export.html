@@ -222,7 +222,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
  &#39;execution_count&#39;: 1,
  &#39;metadata&#39;: {&#39;hide_input&#39;: False},
  &#39;outputs&#39;: [],
- &#39;source&#39;: &#39;# export\nfrom fastai_local.imports import *\nfrom fastai_local.notebook.core import *\nimport nbformat,inspect&#39;}</pre>
+ &#39;source&#39;: &#39;# export\nfrom local.imports import *\nfrom local.notebook.core import *\nimport nbformat,inspect&#39;}</pre>
 </div>
 
 </div>
@@ -482,10 +482,10 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">_relative_import</span><span class="p">(</span><span class="s1">&#39;fastai_local.core&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;fastai_local&#39;</span><span class="p">)</span><span class="o">/</span><span class="s1">&#39;data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;.core&#39;</span>
-<span class="k">assert</span> <span class="n">_relative_import</span><span class="p">(</span><span class="s1">&#39;fastai_local.core&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;fastai_local&#39;</span><span class="p">)</span><span class="o">/</span><span class="s1">&#39;vision&#39;</span><span class="o">/</span><span class="s1">&#39;data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;..core&#39;</span>
-<span class="k">assert</span> <span class="n">_relative_import</span><span class="p">(</span><span class="s1">&#39;fastai_local.vision.transform&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;fastai_local&#39;</span><span class="p">)</span><span class="o">/</span><span class="s1">&#39;vision&#39;</span><span class="o">/</span><span class="s1">&#39;data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;.transform&#39;</span>
-<span class="k">assert</span> <span class="n">_relative_import</span><span class="p">(</span><span class="s1">&#39;fastai_local.notebook.core&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;fastai_local&#39;</span><span class="p">)</span><span class="o">/</span><span class="s1">&#39;data&#39;</span><span class="o">/</span><span class="s1">&#39;external.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;..notebook.core&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">_relative_import</span><span class="p">(</span><span class="s1">&#39;local.core&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">)</span><span class="o">/</span><span class="s1">&#39;data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;.core&#39;</span>
+<span class="k">assert</span> <span class="n">_relative_import</span><span class="p">(</span><span class="s1">&#39;local.core&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">)</span><span class="o">/</span><span class="s1">&#39;vision&#39;</span><span class="o">/</span><span class="s1">&#39;data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;..core&#39;</span>
+<span class="k">assert</span> <span class="n">_relative_import</span><span class="p">(</span><span class="s1">&#39;local.vision.transform&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">)</span><span class="o">/</span><span class="s1">&#39;vision&#39;</span><span class="o">/</span><span class="s1">&#39;data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;.transform&#39;</span>
+<span class="k">assert</span> <span class="n">_relative_import</span><span class="p">(</span><span class="s1">&#39;local.notebook.core&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">)</span><span class="o">/</span><span class="s1">&#39;data&#39;</span><span class="o">/</span><span class="s1">&#39;external.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;..notebook.core&#39;</span>
 </pre></div>
 
     </div>
@@ -583,7 +583,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai_local.data.pipeline</span> <span class="k">import</span> <span class="o">*</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.data.pipeline</span> <span class="k">import</span> <span class="o">*</span>
 <span class="k">assert</span> <span class="n">get_name</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;Pipeline&#39;</span>
 <span class="k">assert</span> <span class="n">get_name</span><span class="p">(</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">composed</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;composed&#39;</span>
 <span class="k">assert</span> <span class="n">get_name</span><span class="p">(</span><span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;Union&#39;</span>
@@ -669,9 +669,9 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai_local.data.pipeline</span> <span class="k">import</span> <span class="n">Transform</span>
-<span class="kn">from</span> <span class="nn">fastai_local.test</span> <span class="k">import</span> <span class="n">test_fail</span>
-<span class="kn">from</span> <span class="nn">fastai_local.core</span> <span class="k">import</span> <span class="n">opt_call</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.data.pipeline</span> <span class="k">import</span> <span class="n">Transform</span>
+<span class="kn">from</span> <span class="nn">local.test</span> <span class="k">import</span> <span class="n">test_fail</span>
+<span class="kn">from</span> <span class="nn">local.core</span> <span class="k">import</span> <span class="n">opt_call</span>
 
 <span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">test_fail</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;00_test.ipynb&#39;</span>
 <span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">Transform</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;02_data_pipeline.ipynb&#39;</span>

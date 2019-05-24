@@ -7,6 +7,7 @@ from ..test import *
 from ..core import *
 from .core import *
 from .pipeline import *
+from ..notebook.showdoc import show_doc
 
 def coll_repr(c, max=1000):
     "String repr of up to `max` items of (possibly lazy) collection `c`"

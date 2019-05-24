@@ -35,7 +35,7 @@ def is_fastai_module(name):
 
 #Might change once the library is renamed fastai.
 def _is_fastai_class(ft): return belongs_to_module(ft, 'fastai_source')
-def _strip_fastai(s): return re.sub(r'^fastai_local\.', '', s)
+def _strip_fastai(s): return re.sub(r'^local\.', '', s)
 FASTAI_DOCS = ''
 
 def doc_link(name, include_bt:bool=True):
