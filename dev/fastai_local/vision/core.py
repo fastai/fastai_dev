@@ -12,7 +12,7 @@ from ..data.external import *
 
 from PIL import Image
 
-_all_ = ['Image']
+# _all_ = ['Image']
 
 def image_convert(img, mode='RGB'):
     "Convert `img` to `mode`"

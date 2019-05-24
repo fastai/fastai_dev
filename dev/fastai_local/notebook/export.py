@@ -87,9 +87,9 @@ def _get_index():
     return json.load(open(Path(__file__).parent/'index.txt', 'r'))
 
 def _save_index(index): json.dump(index, open(Path(__file__).parent/'index.txt', 'w'), indent=2)
-def _init_index():
+def _reset_index():
     if (Path(__file__).parent/'index.txt').exists():
-        os.remove((Path(__file__).parent/'index.txt'))
+        os.remove(Path(__file__).parent/'index.txt')
 
 def _notebook2script(fname):
     "Finds cells starting with `#export` and puts them into a new module"
@@ -129,6 +129,7 @@ def notebook2script(fname=None, all_fs=None, up_to=None):
     "Convert `fname` or all the notebook satisfying `all_fs`."
     # initial checks
     assert fname or all_fs
+    if all_fs: _reset_index()
     if (all_fs is None) and (up_to is not None): all_fs=True # Enable allFiles if upTo is present
     fnames = _get_sorted_files(all_fs, up_to=up_to) if all_fs else [fname]
     [_notebook2script(f) for f in fnames]
