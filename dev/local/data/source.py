@@ -40,7 +40,7 @@ add_docs(
     decode="Transform decode",
 )
 
-class _DsrcSubset:
+class DsrcSubset:
     def __init__(self, dsrc, filt): self.dsrc,self.filt,self.filts = dsrc,filt,dsrc.filts[filt]
     def __getitem__(self,i): return self.dsrc[self.filts[i]]
     def decode(self, o, **kwargs): return self.dsrc.decode(o, self.filt, **kwargs)
