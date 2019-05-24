@@ -35,7 +35,7 @@ def treat_backticks(cell):
 def convert_links(cell):
     "Convert the .ipynb links to .html"
     if cell['cell_type'] == 'markdown':
-        cell['source'] = re.sub(r'\[([^\]]*)\]\(([^\)]*).ipynb\)', r'[\1](\2.html)', cell['source'])
+        cell['source'] = re.sub(r'\[([^http][^\]]*)\]\(([^\)]*).ipynb\)', r'[\1](\2.html)', cell['source'])
     return cell
 
 def add_jekyll_notes(cell):
