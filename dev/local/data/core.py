@@ -107,7 +107,9 @@ def _DataLoader__getattr(self,k):
     except AttributeError: raise AttributeError(k) from None
 DataLoader.__getattr__ = _DataLoader__getattr
 
+@docs
 class TfmDataLoader():
+    "Transformed `DataLoader` using a `Pipeline` of `tfms`"
     def __init__(self, dl, tfms=None, **kwargs):
         self.dl,self.tfm = dl,Pipeline(tfms)
         for k,v in kwargs.items(): setattr(self,k,v)
@@ -122,6 +124,10 @@ class TfmDataLoader():
     def __getattr__(self, k):
         try: return getattr(self.dl, k)
         except AttributeError: raise AttributeError(k) from None
+
+    _docs = dict(decode="Decode `o` using `tfm`",
+                 one_batch="Grab first batch of `dl`",
+                 decode_batch="Decoded first batch of `dl`")
 
 class DataBunch():
     "Basic wrapper around several `DataLoader`s."
