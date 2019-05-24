@@ -89,6 +89,7 @@ class PipedList(Pipeline):
 
     def __eq__(self, b): return all_equal(self, b)
     def __len__(self): return len(self.items)
+    def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms}"
 
 class TfmList():
     def __init__(self, items, tfms): self.activ,self.tfms = None,[PipedList(items, t) for t in listify(tfms)]

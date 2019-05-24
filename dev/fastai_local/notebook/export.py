@@ -52,8 +52,11 @@ def extra_add(code):
     if re.search(pat, code):
         names = re.search(pat, code).groups()[0]
         names = re.sub('\s*,\s*', ',', names)
-        names = names.replace('"', '').replace("'", "")
-        return names.split(',')
+        names = names.replace('"', "'")
+        code = re.sub(pat, '', code)
+        code = re.sub(r'([^\n]|^)\n*$', r'\1', code)
+        return names.split(','),re.sub(pat, '', code)
+    return [],code
 
 def _add2add(fname, names, line_width=120):
     if len(names) == 0: return
@@ -108,8 +111,8 @@ def _notebook2script(fname):
         code = '\n\n' + orig + '\n'.join(_deal_import(c['source'].split('\n')[1:], fname_out))
         # remove trailing spaces
         names = export_names(code)
-        extra = extra_add(code)
-        _add2add(fname_out, [f"'{f}'" for f in names if '.' not in f] + ([] if extra is None else extra))
+        extra,code = extra_add(code)
+        _add2add(fname_out, [f"'{f}'" for f in names if '.' not in f] + extra)
         index.update({f: fname.name for f in names})
         code = re.sub(r' +$', '', code, flags=re.MULTILINE)
         with open(fname_out, 'a') as f: f.write(code)

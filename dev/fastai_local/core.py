@@ -2,7 +2,7 @@
 
 __all__ = ['chk', 'ifnone', 'noop', 'noops', 'range_of', 'is_iter', 'listify', 'tuplify', 'tensor', 'compose',
            'uniqueify', 'setify', 'mapper', 'make_cross_image', 'coll_repr', 'partialler', 'custom_dir', 'add_props',
-           'add_docs', 'docs', 'ListContainer', 'mask2idxs', 'is_listy', 'opt_call']
+           'add_docs', 'docs', 'ListContainer', 'mask2idxs', 'is_listy', 'opt_call', 'all_union', 'all_disjoint']
 
 from .test import *
 from .imports import *
@@ -145,10 +145,14 @@ class ListContainer():
         if isinstance(res,(tuple,list)) and not isinstance(res,ListContainer): res = ListContainer(res)
         return res
 
+    def __setitem__(self, idx, o):
+        idx = listify(idx)
+        if not is_iter(o): o = [o]*len(idx)
+        for i,o_ in zip(idx,o): self.items[i] = o_
+
     def __init__(self, items, use_list=False): self.items = list(items) if use_list else listify(items)
     def __len__(self): return len(self.items)
     def __iter__(self): return iter(self.items)
-    def __setitem__(self, i, o): self.items[i] = o
     def __delitem__(self, i): del(self.items[i])
     def __repr__(self): return f'{self.__class__.__name__} {coll_repr(self)}'
     def __eq__(self,b): return all_equal(b,self)
@@ -176,3 +180,13 @@ def is_listy(x):
 def opt_call(f, fname='__call__', *args, **kwargs):
     "Call `f.{fname}(*args, **kwargs)`, or `noop` if not defined"
     return getattr(f,fname,noop)(*args, **kwargs)
+
+#Comes from 05_data_source.ipynb.
+def all_union(sets):
+    "Set of union of all `sets` (each `setified` if needed)"
+    return set().union(*(map(setify,sets)))
+
+#Comes from 05_data_source.ipynb.
+def all_disjoint(sets):
+    "`True` iif no element appears in more than one item of `sets`"
+    return sum(map(len,sets))==len(all_union(sets))
