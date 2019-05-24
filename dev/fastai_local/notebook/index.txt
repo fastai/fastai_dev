@@ -106,6 +106,7 @@
   "process_cell": "93_notebook_export2html.ipynb",
   "convert_nb": "93_notebook_export2html.ipynb",
   "convert_all": "93_notebook_export2html.ipynb",
+  "extra_add": "91_notebook_export.ipynb"
   "file_getter": "04_data_core.ipynb",
   "image_convert": "06_vision_core.ipynb",
   "ResizeFixed": "06_vision_core.ipynb",
@@ -119,14 +120,5 @@
   "image2byte": "06_vision_core.ipynb",
   "unpermute_image": "06_vision_core.ipynb",
   "image2byte_tfm": "06_vision_core.ipynb",
-  "ImageToFloatTensor": "06_vision_core.ipynb",
-  "ImageConverter": "06_vision_core.ipynb",
-  "ImageResizer": "06_vision_core.ipynb",
-  "ImageToByteTensor": "06_vision_core.ipynb",
-  "ByteToFloatTensor": "06_vision_core.ipynb",
-  "FileGetter": "04_data_core.ipynb",
-  "ImageGetter": "04_data_core.ipynb",
-  "RandomSplitter": "04_data_core.ipynb",
-  "GrandparentSplitter": "04_data_core.ipynb",
-  "RegexLabeller": "04_data_core.ipynb"
+  "ImageToFloatTensor": "06_vision_core.ipynb"
 }
