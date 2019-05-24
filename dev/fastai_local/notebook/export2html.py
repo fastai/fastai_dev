@@ -35,7 +35,7 @@ def treat_backticks(cell):
 def convert_links(cell):
     "Convert the .ipynb links to .html"
     if cell['cell_type'] == 'markdown':
-        cell['source'] = re.sub(r'\[([^\]]*)\]\(([^\)]*).ipynb\)', r'[\1](\2.html)', cell['source'])
+        cell['source'] = re.sub(r'\[([^http][^\]]*)\]\(([^\)]*).ipynb\)', r'[\1](\2.html)', cell['source'])
     return cell
 
 def add_jekyll_notes(cell):
@@ -43,7 +43,8 @@ def add_jekyll_notes(cell):
     t2style = {'Note': 'info', 'Warning': 'danger', 'Important': 'warning'}
     def _inner(m):
         title,text = m.groups()
-        style = t2style.get(title, 'info')
+        style = t2style.get(title, None)
+        if style is None: return f"> {m.groups()[0]}: m.groups()[1]"
         res = f'<div markdown="span" class="alert alert-{style}" role="alert">'
         return res + f'<i class="fa fa-{style}-circle"></i> <b>{title}: </b>{text}</div>'
     if cell['cell_type'] == 'markdown':
