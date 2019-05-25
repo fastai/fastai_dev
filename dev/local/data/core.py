@@ -132,5 +132,5 @@ class DataBunch():
     def __init__(self, *dls): self.dls = dls
     def __getitem__(self, i): return self.dls[i]
 
-    train_dl,valid_dl = add_props(lambda i,x: x[i]        , 2)
-    train_ds,valid_ds = add_props(lambda i,x: x[i].dataset, 2)
+    train_dl,valid_dl = add_props(lambda i,x: x[i])
+    train_ds,valid_ds = add_props(lambda i,x: x[i].dataset)
