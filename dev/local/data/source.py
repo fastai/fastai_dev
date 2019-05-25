@@ -14,10 +14,10 @@ class DataSource(PipedList):
     "Applies a `Pipeline` of `tfms` to filtered subsets of `items`"
     def __init__(self, items, tfms=None, filts=None):
         if filts is None: filts = [range_of(items)]
-        self.filts = listify(mask2idxs(filt) for filt in filts)
+        self.filts = L(mask2idxs(filt) for filt in filts)
         # Create map from item id to filter id
         assert all_disjoint(self.filts)
-        self.filt_idx = ListContainer([None]*len(items))
+        self.filt_idx = L([None]*len(items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
         super().__init__(items, tfms)
 
@@ -31,7 +31,7 @@ class DataSource(PipedList):
     def __getitem__(self, i):
         "Transformed item(s) at `i`"
         its,fts = self.items[i],self.filt_idx[i]
-        if is_iter(i): return ListContainer(self.tfm(it, filt=f) for it,f in zip(its,fts))
+        if is_iter(i): return L(self.tfm(it, filt=f) for it,f in zip(its,fts))
         else: return self.tfm(its, filt=fts)
 
     _docs = dict(len="`len` of subset `filt`",
@@ -63,6 +63,7 @@ class DsrcSubset():
     def __init__(self, dsrc, filt): self.dsrc,self.filt,self.filts = dsrc,filt,dsrc.filts[filt]
     def __getitem__(self,i): return self.dsrc[self.filts[i]]
     def decode(self, o, **kwargs): return self.dsrc.decode(o, filt=self.filt, **kwargs)
+    def decode_batch(self, b, **kwargs): return self.dsrc.decode_batch(b, filt=self.filt, **kwargs)
     def decode_at(self, i, **kwargs): return self.decode(self[i], **kwargs)
     def show_at  (self, i, **kwargs): return self.dsrc.show(self[i], filt=self.filt, **kwargs)
     def __len__(self): return len(self.filts)
@@ -70,6 +71,7 @@ class DsrcSubset():
     def __repr__(self): return coll_repr(self)
 
     _docs = dict(decode="Transform decode",
+                 decode_batch="Transform decode batch",
                  __getitem__="Encoded item(s) at `i`",
                  decode_at="Decoded item at `i`",
                  show_at="Show decoded item at `i`")

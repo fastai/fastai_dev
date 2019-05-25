@@ -38,7 +38,7 @@ class Transform():
 class Pipeline():
     "A pipeline of composed (for encode/decode) transforms, setup one at a time"
     def __init__(self, tfms):
-        self.tfms,self._tfms = [],[Transform.create(t) for t in listify(tfms)]
+        self.tfms,self._tfms = [],[Transform.create(t) for t in L(tfms)]
 
     def setup(self, items=None):
         "Transform setup"
@@ -47,7 +47,7 @@ class Pipeline():
 
     def add(self, tfms, items=None):
         "Call `setup` on all `tfms` and append them to this pipeline"
-        for t in sorted(listify(tfms), key=lambda o: getattr(o, 'order', 0)):
+        for t in sorted(L(tfms), key=lambda o: getattr(o, 'order', 0)):
             self.tfms.append(t)
             if hasattr(t, 'setup'): t.setup(items)
 
@@ -85,7 +85,7 @@ class PipedList(GetAttr):
     _xtra = 'decode __call__ show'.split()
 
     def __init__(self, items, tfms):
-        self.items = ListContainer(items)
+        self.items = L(items)
         self.default = self.tfm = Pipeline(tfms)
         self.tfm.setup(self)
 
@@ -94,10 +94,16 @@ class PipedList(GetAttr):
         its = self.items[i]
         return its.mapped(self.tfm) if is_iter(i) else self.tfm(its)
 
+    def decode_batch(self, b, **kwargs):
+        "Decode `b`, a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
+        transp = L(zip(*L(b)))
+        return transp.mapped(partial(self.decode, **kwargs)).zipped()
+
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx): return self.show(self[idx])
     def __eq__(self, b): return all_equal(self, b)
     def __len__(self): return len(self.items)
+    def __iter__(self): return (self[i] for i in range_of(self))
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfm}"
 
     _docs = dict(decode_at="Decoded item at `idx`",
@@ -105,7 +111,7 @@ class PipedList(GetAttr):
 
 class Pipelines(Transform):
     "Create a `Pipeline` for each tfm in `tfms`. Generally used inside a `PipedList`"
-    def __init__(self, tfms): self.activ,self.tfms = None,[Pipeline(t) for t in listify(tfms)]
+    def __init__(self, tfms): self.activ,self.tfms = None,[Pipeline(t) for t in L(tfms)]
     def __repr__(self): return f'Pipelines({self.tfms})'
 
     def encodes(self, o, *args, **kwargs):
@@ -131,6 +137,6 @@ class Pipelines(Transform):
     @classmethod
     def create(cls, items, tfms, xtra=None):
         "PipedList over `items` with `tfms` `Pipelines` as first tfm optionally followed by any `xtra` tfms"
-        return PipedList(items, [cls(tfms)]+listify(xtra))
+        return PipedList(items, cls(tfms)+L(xtra))
 
     xt,yt = add_props(lambda i,x:x.tfms[i])

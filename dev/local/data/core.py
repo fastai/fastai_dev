@@ -31,7 +31,7 @@ def get_files(path, extensions=None, recurse=True, include=None):
     else:
         f = [o.name for o in os.scandir(path) if o.is_file()]
         res = _get_files(path, f, extensions)
-    return ListContainer(res)
+    return L(res)
 
 def FileGetter(suf='', extensions=None, recurse=True, include=None):
     "Create `get_files` partial function that searches path suffix `suf` and passes along args"
@@ -53,7 +53,7 @@ def RandomSplitter(valid_pct=0.2, seed=None, **kwargs):
     "Create function that splits `items` between train/val with `valid_pct` randomly."
     def _inner(o, **kwargs):
         if seed is not None: torch.manual_seed(seed)
-        rand_idx = ListContainer(int(i) for i in torch.randperm(len(o)))
+        rand_idx = L(int(i) for i in torch.randperm(len(o)))
         cut = int(valid_pct * len(o))
         return rand_idx[cut:],rand_idx[:cut]
     return _inner
@@ -116,6 +116,7 @@ class TfmDataLoader(GetAttr):
 
     def __init__(self, dl, tfms=None, **kwargs):
         self.dl,self.tfm = dl,Pipeline(tfms)
+        self.tfm.setup(self)
         self.default = self.dl # for `GetAttr`
         for k,v in kwargs.items(): setattr(self,k,v)
 
