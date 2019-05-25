@@ -17,22 +17,25 @@ entries:
   - folderitems:
     - output: web,pdf
       title: Data Pipeline
-      url: /data_pipeline.html
+      url: /data.pipeline.html
     - output: web,pdf
       title: Data Source
-      url: /data_source.html
+      url: /data.source.html
     - output: web,pdf
       title: Data Core
-      url: /data_core.html
+      url: /data.core.html
     output: web
     title: Data
   - folderitems:
     - output: web,pdf
       title: Export to modules
-      url: /export.html
+      url: /notebook.export.html
     - output: web,pdf
       title: Convert to html
-      url: /export_html.html
+      url: /notebook.export2html.html
+    - output: web,pdf
+      title: Show doc
+      url: /notebook.showdoc.html
     output: web
     title: Notebook
   - folderitems:

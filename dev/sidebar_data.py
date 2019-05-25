@@ -15,13 +15,14 @@ sidebar_d = {
         #'Support': '/support'
     },
     'Data': {
-        'Data Pipeline': '/data_pipeline',
-        'Data Source': '/data_source',
-        'Data Core': '/data_core',
+        'Data Pipeline': '/data.pipeline',
+        'Data Source': '/data.source',
+        'Data Core': '/data.core',
     },
     'Notebook': {
-        'Export to modules': '/export',
-        'Convert to html': '/export_html',
+        'Export to modules': '/notebook.export',
+        'Convert to html': '/notebook.export2html',
+        'Show doc': '/notebook.showdoc'
     },
     'Core': {
         'Core': '/core',
