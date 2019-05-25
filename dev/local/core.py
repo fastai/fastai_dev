@@ -53,7 +53,7 @@ def make_cross_image(bw=True):
 
 def coll_repr(c, max=1000):
     "String repr of up to `max` items of (possibly lazy) collection `c`"
-    return f'({len(c)} items) [' + ','.join(itertools.islice(map(str,c), 10)) + ('...'
+    return f'(#{len(c)}) [' + ','.join(itertools.islice(map(str,c), 10)) + ('...'
             if len(c)>10 else '') + ']'
 
 def partialler(f, *args, order=None, **kwargs):
@@ -115,7 +115,7 @@ class ListContainer(GetAttr):
     def __init__(self, items, use_list=False): self.items = self.default = list(items) if use_list else _listify(items)
     def __len__(self): return len(self.items)
     def __delitem__(self, i): del(self.items[i])
-    def __repr__(self): return f'{self.__class__.__name__} {coll_repr(self)}'
+    def __repr__(self): return f'{coll_repr(self)}'
     def __eq__(self,b): return all_equal(b,self)
     def __iter__(self): return (self[i] for i in range_of(self))
 

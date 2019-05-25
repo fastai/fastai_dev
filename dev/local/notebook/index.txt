@@ -55,6 +55,7 @@
   "RegexLabeller": "04_data_core.ipynb",
   "show_image": "04_data_core.ipynb",
   "show_title": "04_data_core.ipynb",
+  "show_titled_image": "04_data_core.ipynb",
   "show_image_batch": "04_data_core.ipynb",
   "TfmDataLoader": "04_data_core.ipynb",
   "DataBunch": "04_data_core.ipynb",

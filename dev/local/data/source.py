@@ -64,7 +64,7 @@ class DsrcSubset():
     def __getitem__(self,i): return self.dsrc[self.filts[i]]
     def decode(self, o, **kwargs): return self.dsrc.decode(o, filt=self.filt, **kwargs)
     def decode_at(self, i, **kwargs): return self.decode(self[i], **kwargs)
-    def show_at  (self, i, **kwargs): return self.dsrc.show(self[i], **kwargs)
+    def show_at  (self, i, **kwargs): return self.dsrc.show(self[i], filt=self.filt, **kwargs)
     def __len__(self): return len(self.filts)
     def __eq__(self,b): return all_equal(b,self)
     def __repr__(self): return coll_repr(self)
