@@ -94,10 +94,16 @@ class PipedList(GetAttr):
         its = self.items[i]
         return its.mapped(self.tfm) if is_iter(i) else self.tfm(its)
 
+    def decode_batch(self, b):
+        "Decode `b`, a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
+        transp = ListContainer(zip(*listify(b)))
+        return transp.mapped(self.decode).zipped()
+
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx): return self.show(self[idx])
     def __eq__(self, b): return all_equal(self, b)
     def __len__(self): return len(self.items)
+    def __iter__(self): return (self[i] for i in range_of(self))
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfm}"
 
     _docs = dict(decode_at="Decoded item at `idx`",

@@ -36,7 +36,7 @@ def equals(a,b):
     cmp = (torch.equal    if isinstance(a, Tensor  ) and a.dim() else 
            np.array_equal if isinstance(a, ndarray ) else
            operator.eq    if isinstance(a, str     ) else
-           all_equal     if isinstance(a, (list,tuple,Generator,Iterator)) else
+           all_equal      if isinstance(a, (list,tuple,Generator,Iterator)) else
            operator.eq)
     return cmp(a,b)
 
