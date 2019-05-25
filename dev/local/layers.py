@@ -2,8 +2,8 @@
 
 __all__ = ['Lambda', 'PartialLayer', 'View', 'ResizeBatch', 'Flatten', 'Debugger', 'sigmoid_range', 'SigmoidRange',
            'PoolFlatten', 'AdaptiveConcatPool2d', 'NormType', 'BatchNorm', 'BatchNorm1dFlat', 'BnDropLin',
-           'init_default', 'defaults', 'ConvLayer', 'FlattenedLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat',
-           'BCELossFlat', 'MSELossFlat', 'trunc_normal_', 'Embedding']
+           'init_default', 'ConvLayer', 'FlattenedLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
+           'MSELossFlat', 'trunc_normal_', 'Embedding']
 
 from .imports import *
 from .test import *
@@ -129,7 +129,7 @@ def _conv_func(ndim=2, transpose=False):
     assert 1 <= ndim <=3
     return getattr(nn, f'Conv{"Transpose" if transpose else ""}{ndim}d')
 
-defaults = SimpleNamespace(activation=nn.ReLU)
+defaults.activation=nn.ReLU
 
 class ConvLayer(nn.Sequential):
     "Create a sequence of convolutional (`ni` to `nf`), ReLU (if `use_activ`) and `norm_type` layers."

@@ -2,7 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_title', 'show_titled_image',
-           'show_image_batch', 'TfmDataLoader', 'DataBunch']
+           'show_image_batch', 'Cuda', 'Normalize', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -109,26 +109,30 @@ def _DataLoader__getattr(self,k):
     except AttributeError: raise AttributeError(k) from None
 DataLoader.__getattr__ = _DataLoader__getattr
 
-@docs
-class TfmDataLoader(GetAttr):
-    "Transformed `DataLoader` using a `Pipeline` of `tfms`"
-    _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
+class Cuda(Transform):
+    def __init__(self,device): self.device=defaults.device
+    def encodes(self, b): return to_device(b, self.device)
+    def decodes(self, b): return to_cpu(b)
 
-    def __init__(self, dl, tfms=None, **kwargs):
-        self.dl,self.tfm = dl,Pipeline(tfms)
-        self.tfm.setup(self)
-        self.default = self.dl # for `GetAttr`
-        for k,v in kwargs.items(): setattr(self,k,v)
+class Normalize(Transform):
+    _order=99
+    def __init__(self, mean, std, do_x=True, do_y=False):
+        self.mean,self.std,self.do_x,self.do_y = mean,std,do_x,do_y
 
-    def __len__(self): return len(self.dl)
-    def __iter__(self): return map(self.tfm, self.dl)
-    def decode(self, o): return self.tfm.decode(o)
-    def one_batch(self): return next(iter(self))
-    def decode_batch(self): return self.decode(self.one_batch())
+    def encodes(self, b):
+        x,y = b
+        if self.do_x: x = self.normalize(x)
+        if self.do_y: y = self.normalize(y)
+        return x,y
 
-    _docs = dict(decode="Decode `o` using `tfm`",
-                 one_batch="Grab first batch of `dl`",
-                 decode_batch="Decoded first batch of `dl`")
+    def decodes(self, b):
+        x,y = b
+        if self.do_x: x = self.denorm(x)
+        if self.do_y: y = self.denorm(y)
+        return x,y
+
+    def normalize(self, x): return (x - self.mean) / self.std
+    def denorm(self, x):    return x * self.std + self.mean
 
 class DataBunch():
     "Basic wrapper around several `DataLoader`s."
