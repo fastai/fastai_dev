@@ -68,6 +68,8 @@
   "Categorize": "04_data_core.ipynb",
   "TfmDataLoader": "04_data_core.ipynb",
   "Cuda": "04_data_core.ipynb",
+  "MaskedTransform": "04_data_core.ipynb",
+  "ByteToFloatTensode": "04_data_core.ipynb",
   "Normalize": "04_data_core.ipynb",
   "DataBunch": "04_data_core.ipynb",
   "all_union": "05_data_source.ipynb",
