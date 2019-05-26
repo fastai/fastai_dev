@@ -153,7 +153,7 @@ def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, defau
     "Show documentation for element `elt`. Supported types: class, function, and enum."
     anchor_id = qual_name(elt)
     elt = getattr(elt, '__func__', elt)
-    name = name or get_name(elt)
+    name = name or qual_name(elt)
     if inspect.isclass(elt):
         if is_enum(elt.__class__):   name,args = _format_enum_doc(elt, name)
         else:                        name,args = _format_cls_doc (elt, name)
