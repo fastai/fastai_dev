@@ -3,7 +3,8 @@
 __all__ = ['Lambda', 'PartialLayer', 'View', 'ResizeBatch', 'Flatten', 'Debugger', 'sigmoid_range', 'SigmoidRange',
            'PoolFlatten', 'AdaptiveConcatPool2d', 'NormType', 'BatchNorm', 'BatchNorm1dFlat', 'BnDropLin',
            'init_default', 'ConvLayer', 'FlattenedLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
-           'MSELossFlat', 'trunc_normal_', 'Embedding']
+           'MSELossFlat', 'trunc_normal_', 'Embedding', 'SelfAttention', 'PooledSelfAttention2d', 'icnr_init',
+           'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN', 'ResBlock']
 
 from .imports import *
 from .test import *
@@ -120,7 +121,7 @@ def init_default(m, func=nn.init.kaiming_normal_):
         if hasattr(m, 'bias') and hasattr(m.bias, 'data'): m.bias.data.fill_(0.)
     return m
 
-def _relu(inplace:bool=False, leaky:float=None):
+def _relu(inplace=False, leaky=None):
     "Return a relu activation, maybe `leaky` and `inplace`."
     return nn.LeakyReLU(inplace=inplace, negative_slope=leaky) if leaky is not None else nn.ReLU(inplace=inplace)
 
@@ -167,19 +168,19 @@ class FlattenedLoss():
         input = input.view(-1,input.shape[-1]) if self.is_2d else input.view(-1)
         return self.func.__call__(input, target.view(-1), **kwargs)
 
-def CrossEntropyLossFlat(*args, axis:int=-1, **kwargs):
+def CrossEntropyLossFlat(*args, axis=-1, **kwargs):
     "Same as `nn.CrossEntropyLoss`, but flattens input and target."
     return FlattenedLoss(nn.CrossEntropyLoss, *args, axis=axis, **kwargs)
 
-def BCEWithLogitsLossFlat(*args, axis:int=-1, floatify:bool=True, **kwargs):
+def BCEWithLogitsLossFlat(*args, axis=-1, floatify=True, **kwargs):
     "Same as `nn.BCEWithLogitsLoss`, but flattens input and target."
     return FlattenedLoss(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
-def BCELossFlat(*args, axis:int=-1, floatify:bool=True, **kwargs):
+def BCELossFlat(*args, axis=-1, floatify=True, **kwargs):
     "Same as `nn.BCELoss`, but flattens input and target."
     return FlattenedLoss(nn.BCELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
-def MSELossFlat(*args, axis:int=-1, floatify:bool=True, **kwargs):
+def MSELossFlat(*args, axis=-1, floatify=True, **kwargs):
     "Same as `nn.MSELoss`, but flattens input and target."
     return FlattenedLoss(nn.MSELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
@@ -193,3 +194,127 @@ class Embedding(nn.Embedding):
     def __init__(self, ni, nf):
         super().__init__(ni, nf)
         trunc_normal_(self.weight.data, std=0.01)
+
+class SelfAttention(nn.Module):
+    "Self attention layer for `n_channels`."
+    def __init__(self, n_channels):
+        super().__init__()
+        self.query = self._conv(n_channels, n_channels//8)
+        self.key   = self._conv(n_channels, n_channels//8)
+        self.value = self._conv(n_channels, n_channels)
+        self.gamma = nn.Parameter(tensor([0.]))
+
+    def _conv(self,n_in,n_out):
+        return ConvLayer(n_in, n_out, ks=1, ndim=1, norm_type=NormType.Spectral, act_cls=None, bias=False)
+
+    def forward(self, x):
+        #Notation from the paper.
+        size = x.size()
+        x = x.view(*size[:2],-1)
+        f,g,h = self.query(x),self.key(x),self.value(x)
+        beta = F.softmax(torch.bmm(f.transpose(1,2), g), dim=1)
+        o = self.gamma * torch.bmm(h, beta) + x
+        return o.view(*size).contiguous()
+
+class PooledSelfAttention2d(nn.Module):
+    "Pooled self attention layer for 2d."
+    def __init__(self, n_channels):
+        super().__init__()
+        self.n_channels = n_channels
+        self.query = self._conv(n_channels, n_channels//8)
+        self.key   = self._conv(n_channels, n_channels//8)
+        self.value = self._conv(n_channels, n_channels//2)
+        self.out   = self._conv(n_channels//2, n_channels)
+        self.gamma = nn.Parameter(tensor([0.]))
+
+    def _conv(self,n_in,n_out):
+        return ConvLayer(n_in, n_out, ks=1, norm_type=NormType.Spectral, act_cls=None, bias=False)
+
+    def forward(self, x):
+        n_ftrs = x.shape[2]*x.shape[3]
+        f = self.query(x).view(-1, self.n_channels//8, n_ftrs)
+        g = F.max_pool2d(self.key(x),   [2,2]).view(-1, self.n_channels//8, n_ftrs//4)
+        h = F.max_pool2d(self.value(x), [2,2]).view(-1, self.n_channels//2, n_ftrs//4)
+        beta = F.softmax(torch.bmm(f.transpose(1, 2), g), -1)
+        o = self.out(torch.bmm(h, beta.transpose(1,2)).view(-1, self.n_channels//2, x.shape[2], x.shape[3]))
+        return self.gamma * o + x
+
+def icnr_init(x, scale=2, init=nn.init.kaiming_normal_):
+    "ICNR init of `x`, with `scale` and `init` function"
+    ni,nf,h,w = x.shape
+    ni2 = int(ni/(scale**2))
+    k = init(x.new_zeros([ni2,nf,h,w])).transpose(0, 1)
+    k = k.contiguous().view(ni2, nf, -1)
+    k = k.repeat(1, 1, scale**2)
+    k = k.contiguous().view([nf,ni,h,w]).transpose(0, 1)
+    return k
+
+class PixelShuffle_ICNR(nn.Sequential):
+    "Upsample by `scale` from `ni` filters to `nf` (default `ni`), using `nn.PixelShuffle`."
+    def __init__(self, ni, nf=None, scale=2, blur=False, norm_type=NormType.Weight, act_cls=defaults.activation):
+        super().__init__()
+        nf = ifnone(nf, ni)
+        layers = [ConvLayer(ni, nf*(scale**2), ks=1, norm_type=norm_type, act_cls=act_cls, bias=False),
+                  nn.PixelShuffle(scale)]
+        layers[0][0].weight.data.copy_(icnr_init(layers[0][0].weight.data))
+        if blur: layers += [nn.ReplicationPad2d((1,0,1,0)), nn.AvgPool2d(2, stride=1)]
+        super().__init__(*layers)
+
+class SequentialEx(nn.Module):
+    "Like `nn.Sequential`, but with ModuleList semantics, and can access module input"
+    def __init__(self, *layers):
+        super().__init__()
+        self.layers = nn.ModuleList(layers)
+
+    def forward(self, x):
+        res = x
+        for l in self.layers:
+            res.orig = x
+            nres = l(res)
+            # We have to remove res.orig to avoid hanging refs and therefore memory leaks
+            res.orig = None
+            res = nres
+        return res
+
+    def __getitem__(self,i): return self.layers[i]
+    def append(self,l):      return self.layers.append(l)
+    def extend(self,l):      return self.layers.extend(l)
+    def insert(self,i,l):    return self.layers.insert(i,l)
+
+class MergeLayer(nn.Module):
+    "Merge a shortcut with the result of the module by adding them or concatenating them if `dense=True`."
+    def __init__(self, dense:bool=False):
+        super().__init__()
+        self.dense=dense
+
+    def forward(self, x): return torch.cat([x,x.orig], dim=1) if self.dense else (x+x.orig)
+
+class SimpleCNN(nn.Sequential):
+    "Create a simple CNN with `filters`."
+    def __init__(self, filters, kernel_szs=None, strides=None, bn=True):
+        nl = len(filters)-1
+        kernel_szs = ifnone(kernel_szs, [3]*nl)
+        strides    = ifnone(strides   , [2]*nl)
+        layers = [ConvLayer(filters[i], filters[i+1], kernel_szs[i], stride=strides[i],
+                  norm_type=(NormType.Batch if bn and i<nl-1 else None)) for i in range(nl)]
+        layers.append(PoolFlatten())
+        super().__init__(*layers)
+
+class ResBlock(nn.Module):
+    "Resnet block from `ni` to `nh` with `stride`"
+    def __init__(self, expansion, ni, nh, stride=1, norm_type=NormType.Batch, **kwargs):
+        super().__init__()
+        norm2 = NormType.BatchZero if norm_type==NormType.Batch else norm_type
+        nf,ni = nh*expansion,ni*expansion
+        layers  = [ConvLayer(ni, nh, 3, stride=stride, norm_type=norm_type, **kwargs),
+                   ConvLayer(nh, nf, 3, norm_type=norm2, act=None)
+        ] if expansion == 1 else [
+                   ConvLayer(ni, nh, 1, norm_type=norm_type, **kwargs),
+                   ConvLayer(nh, nh, 3, stride=stride, norm_type=norm_type, **kwargs),
+                   ConvLayer(nh, nf, 1, norm_type=norm2, act=None, **kwargs)
+        ]
+        self.convs = nn.Sequential(*layers)
+        self.idconv = noop if ni==nf else ConvLayer(ni, nf, 1, act=None, **kwargs)
+        self.pool = noop if stride==1 else nn.AvgPool2d(2, ceil_mode=True)
+
+    def forward(self, x): return act_fn(self.convs(x) + self.idconv(self.pool(x)))

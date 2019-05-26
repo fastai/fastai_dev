@@ -165,8 +165,9 @@ def convert_nb(fname, dest_path='docs'):
     nb = read_nb(fname)
     cls_lvl = find_default_level(nb['cells'])
     _name = _find_file(nb['cells'])
-    nb['cells'] = compose(*process_cells, partial(add_show_docs, cls_lvl=cls_lvl))(nb['cells'])
-    nb['cells'] = [compose(*process_cell)(c) for c in nb['cells']]
+    nb['cells'] = compose(*process_cells,partial(add_show_docs, cls_lvl=cls_lvl))(nb['cells'])
+    nb['cells'] = [compose(partial(copy_images, fname=fname, dest=dest_path), *process_cell)(c)
+                    for c in nb['cells']]
     fname = Path(fname).absolute()
     dest_name = '.'.join(fname.with_suffix('.html').name.split('_')[1:])
     meta_jekyll = get_metadata(nb['cells'])

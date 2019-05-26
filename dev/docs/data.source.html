@@ -110,12 +110,6 @@ summary: "Base container for all the items"
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Classes">Classes<a class="anchor-link" href="#Classes">&#182;</a></h2>
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
@@ -140,55 +134,10 @@ summary: "Base container for all the items"
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="DsrcSubset" class="doc_header"><code>class</code> <code>DsrcSubset</code><a href="" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DsrcSubset</code>(<strong><code>dsrc</code></strong>, <strong><code>filt</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="DsrcSubset.decode" class="doc_header"><code>decode</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/__main__.py#L5" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A <a href="/data.source.html#DataSource"><code>DataSource</code></a> provides filtering and transformation capabilities to a list of items. If you don't pass any filters or transforms, it simply provides a single subset with the same behavior as a <a href="/core.html#ListContainer"><code>ListContainer</code></a>.</p>
+<p>A <a href="/data.source.html#DataSource"><code>DataSource</code></a> provides filtering and transformation capabilities to a list of items. Although it has all the attributes of <a href="/data.pipeline.html#PipedList"><code>PipedList</code></a> (since it's a subclass) they are mainly used internally; you will generally want to instead access its <code>subset</code>s.</p>
+<p>If you don't pass any filters or transforms, it simply provides a single subset (of type <a href="/data.source.html#DsrcSubset"><code>DsrcSubset</code></a>) with the same behavior as a <a href="/core.html#L"><code>L</code></a>.</p>
 
 </div>
 </div>
@@ -200,6 +149,14 @@ summary: "Base container for all the items"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">inp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
 <span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">,</span><span class="n">inp</span><span class="p">)</span>            <span class="c1"># No filters, so equal to input items</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">n_subsets</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">test_ne</span><span class="p">(</span><span class="n">dsrc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>          <span class="c1"># Retrieve one item (subset 0 is the default)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>    <span class="c1"># Retrieve two items by index</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">]</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>   <span class="c1"># Retrieve two items by mask</span>
 </pre></div>
 
     </div>
@@ -208,23 +165,9 @@ summary: "Base container for all the items"
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">,</span><span class="n">inp</span><span class="p">)</span>               <span class="c1"># No filters, so equal to input items</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">inp</span><span class="p">)</span>     <span class="c1"># Only one subset</span>
-<span class="n">test_ne</span><span class="p">(</span><span class="n">dsrc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>         <span class="c1"># Retrieve one item (subset 0 is the default)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># Retrieve two items by index</span>
-<span class="n">mask</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">]</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># Retrieve two items by mask</span>
-<span class="n">dsrc</span>
-</pre></div>
-
-    </div>
 </div>
-</div>
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -232,10 +175,11 @@ summary: "Base container for all the items"
 <div class="output_area">
 
 
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="DsrcSubset" class="doc_header"><code>class</code> <code>DsrcSubset</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DsrcSubset</code>(<strong><code>dsrc</code></strong>, <strong><code>filt</code></strong>)</p>
+</blockquote>
+<p>A filtered subset of a <a href="/data.source.html#DataSource"><code>DataSource</code></a></p>
 
-<div class="output_text output_subarea output_execute_result">
-<pre>DataSource: ListContainer (5 items) [0,1,2,3,4]
-tfms - []</pre>
 </div>
 
 </div>
@@ -246,7 +190,7 @@ tfms - []</pre>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Passing <code>filts</code> allows you to create multiple subsets.</p>
+<p>Passing <code>filts</code> to the <a href="/data.source.html#DataSource"><code>DataSource</code></a> constructor allows you to create multiple subsets, each of type <a href="/data.source.html#DsrcSubset"><code>DsrcSubset</code></a>.</p>
 
 </div>
 </div>
@@ -258,15 +202,14 @@ tfms - []</pre>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># filts can be indices</span>
 <span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">filts</span><span class="o">=</span><span class="p">[</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>          <span class="c1"># item 2 of subset 1</span>
 
-<span class="c1"># filts can be boolean masks (they don&#39;t have to cover all items, but must be disjoint)</span>
-<span class="n">filts</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">]]</span>
-<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">filts</span><span class="o">=</span><span class="n">filts</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">n_subsets</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>       <span class="c1"># Subset 0 is aliased to `train`</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>     <span class="c1"># Subset 1 is aliased to `valid`</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>
+<span class="k">assert</span> <span class="s1">&#39;[1,3,4]&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">dsrc</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;[0,2]&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">dsrc</span><span class="p">)</span>
 <span class="n">dsrc</span>
 </pre></div>
 
@@ -282,12 +225,31 @@ tfms - []</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>DataSource: ListContainer (5 items) [0,1,2,3,4]
-tfms - []</pre>
+<pre>(#2) [0,2]
+(#3) [1,3,4]
+tfm - []</pre>
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># filts can be boolean masks (they don&#39;t have to cover all items, but must be disjoint)</span>
+<span class="n">filts</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">]]</span>
+<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">filts</span><span class="o">=</span><span class="n">filts</span><span class="p">)</span>
+
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -304,84 +266,7 @@ tfms - []</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># apply transforms to all items</span>
-<span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">filts</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
-<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">tfms</span><span class="p">,</span> <span class="n">filts</span><span class="o">=</span><span class="n">filts</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">0</span><span class="p">),[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">1</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">0</span><span class="p">)[</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The subset idx is also passed to your transform, so if it is an instance of <a href="/data.pipeline.html#Transform"><code>Transform</code></a> it will only be applied if the filt idx matches.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># only transform subset 1</span>
-<span class="k">class</span> <span class="nc">_Tfm</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span>
-    <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">//</span><span class="mi">2</span>
-    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">f</span><span class="s2">&quot; * </span><span class="si">{x}</span><span class="s2">&quot;</span>
-        
-<span class="n">tfm</span> <span class="o">=</span> <span class="n">_Tfm</span><span class="p">(</span><span class="n">filt</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">tfm</span><span class="p">,</span> <span class="n">filts</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">0</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">1</span><span class="p">),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.__getitem__" class="doc_header"><code>__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>__getitem__</code>(<strong><code>i</code></strong>)</p>
-</blockquote>
-<p>Transformed item(s) at <code>i</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>i</code> can be an int, or list of ints, or a boolean mask.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsrc</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="n">dsrc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dsrc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dsrc</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -396,28 +281,7 @@ tfms - []</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>([1], 1, 1)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.decode_at" class="doc_header"><code>decode_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode_at</code>(<strong><code>idx</code></strong>)</p>
-</blockquote>
-<p>Decoded item at <code>idx</code></p>
-
+<pre>False</pre>
 </div>
 
 </div>
@@ -431,14 +295,122 @@ tfms - []</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">6</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">decode_at</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">is_iter</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># apply transforms to all items</span>
+<span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">filts</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">tfms</span><span class="p">,</span> <span class="n">filts</span><span class="o">=</span><span class="n">filts</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">,[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The subset index is also passed to your transform, so if it is an instance of <a href="/data.pipeline.html#Transform"><code>Transform</code></a> it will only be applied if the filt idx matches.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># only transform subset 1</span>
+<span class="k">class</span> <span class="nc">_Tfm</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span>
+    <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">//</span><span class="mi">2</span>
+    <span class="k">def</span> <span class="nf">shows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">f</span><span class="s2">&quot; * </span><span class="si">{x}</span><span class="s2">&quot;</span>
+        
+<span class="n">tfm</span> <span class="o">=</span> <span class="n">_Tfm</span><span class="p">(</span><span class="n">filt</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">tfm</span><span class="p">,</span> <span class="n">filts</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">dsrc</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#2) [1,2]
+(#3) [0,6,8]
+tfm - [&lt;class &#39;__main__._Tfm&#39;&gt;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="DataSource-Methods"><a href="/data.source.html#DataSource"><code>DataSource</code></a> Methods<a class="anchor-link" href="#DataSource-Methods">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You won't need to use many methods of <a href="/data.source.html#DataSource"><code>DataSource</code></a>, since normally you'll be accessing subsets, and therefore will be using <a href="/data.source.html#DsrcSubset"><code>DsrcSubset</code></a> methods. However there are a few <a href="/data.source.html#DataSource"><code>DataSource</code></a> methods that may be useful:</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -499,7 +471,261 @@ tfms - []</pre>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.decode" class="doc_header"><code>decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode</code>(<strong><code>x</code></strong>, <strong><code>filt</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="DataSource.subset" class="doc_header"><code>subset</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>subset</code>(<strong><code>i</code></strong>)</p>
+</blockquote>
+<p>Filtered <a href="/data.source.html#DsrcSubset"><code>DsrcSubset</code></a> <code>i</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Subset 0 is aliased to the <code>train</code> property, and subset 1 is aliased to the <code>valid</code> property.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsrc</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#3) [0,6,8]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="DataSource.subsets" class="doc_header"><code>subsets</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>subsets</code>()</p>
+</blockquote>
+<p>Iterator for all subsets</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">subsets</span><span class="p">()):</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Subset </span><span class="si">{i}</span><span class="s2">: </span><span class="si">{s}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Subset 0: (#2) [1,2]
+Subset 1: (#3) [0,6,8]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="DsrcSubset-Methods"><a href="/data.source.html#DsrcSubset"><code>DsrcSubset</code></a> Methods<a class="anchor-link" href="#DsrcSubset-Methods">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="DsrcSubset" class="doc_header"><code>class</code> <code>DsrcSubset</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DsrcSubset</code>(<strong><code>dsrc</code></strong>, <strong><code>filt</code></strong>)</p>
+</blockquote>
+<p>A filtered subset of a <a href="/data.source.html#DataSource"><code>DataSource</code></a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="DsrcSubset.__getitem__" class="doc_header"><code>__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>__getitem__</code>(<strong><code>i</code></strong>)</p>
+</blockquote>
+<p>Encoded item(s) at <code>i</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>6</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="DsrcSubset.show_at" class="doc_header"><code>show_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_at</code>(<strong><code>i</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Show decoded item at <code>i</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">show_at</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39; * 3&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="DsrcSubset.decode_at" class="doc_header"><code>decode_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode_at</code>(<strong><code>i</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Decoded item at <code>i</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">decode_at</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="DsrcSubset.decode" class="doc_header"><code>decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decode</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Transform decode</p>
 
@@ -517,41 +743,7 @@ tfms - []</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">filt</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.show_at" class="doc_header"><code>show_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_at</code>(<strong><code>idx</code></strong>)</p>
-</blockquote>
-<p>Show item at <code>idx</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">show_at</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39; * 3&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
     </div>
