@@ -2,7 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_title', 'show_titled_image',
-           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'Normalize', 'DataBunch']
+           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'MaskedTransform', 'ByteToFloatTensode',
+           'Normalize', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -83,14 +84,18 @@ def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
     "Show a PIL image on `ax`."
     ax = ifnone(ax,ctx)
     if ax is None: _,ax = plt.subplots(figsize=figsize)
+    # Handle pytorch axis order
     if isinstance(im,Tensor) and im.shape[0]<5: im=im.permute(1,2,0)
+    # Handle 1-channel images
+    if im.shape[-1]==1: im=im[...,0]
     ax.imshow(im, **kwargs)
     if title is not None: ax.set_title(title)
     ax.axis('off')
     return ax
 
-def show_title(o, ax=None):
+def show_title(o, ax=None, ctx=None):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
+    ax = ifnone(ax,ctx)
     if ax is None: print(o)
     else: ax.set_title(o)
 
@@ -142,7 +147,16 @@ class TfmDataLoader(GetAttr):
     def one_batch(self): return next(iter(self))
     def decode(self, b): return getattr(self.dataset,'decode_batch',noop)(self.tfm.decode(b))
 
+    def show_batch(self, b=None, max_rows=1000, ctxs=None, **kwargs):
+        "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
+        if b is None: b=self.one_batch()
+        b = self.tfm.decode(b)
+        rows = itertools.islice(zip(*L(b)), max_rows)
+        if ctxs is None: ctxs = [None]*len(b)
+        for o,ctx in zip(rows,ctxs): self.dataset.show(o, ctx=ctx)
+
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
+                 show_batch="Show each item of `b`",
                  one_batch="Grab first batch of `dl`")
 
 @docs
@@ -154,26 +168,53 @@ class Cuda(Transform):
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
+class MaskedTransform(Transform):
+    "Abstract class to apply a `Transform` to elements of a collection based on a `mask` (defaults to (True,False))."
+    def __init__(self, mask=None): self.mask = ifnone(mask, (True,False))
+    def _apply(self,f,b): return tuple(f(o) if p else o for o,p in zip(b,self.mask))
+    def encodes(self, b): return self._apply(self._encode_one,b)
+    def decodes(self, b): return self._apply(self._decode_one,b)
+
 @docs
-class Normalize(Transform):
-    "Normalize/denorm batch (where `fld_mask`, defaults to (True,False), is True) using `mean` and `std`"
-    _order=99
-    def __init__(self, mean, std, fld_mask=None):
-        self.flds = ifnone(flds, (True,False))
+class ByteToFloatTensode(MaskedTransform):
+    "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
+    order=20 #Need to run after CUDA if on the GPU
+    def __init__(self, div=True, mask=None):
+        super().__init__(mask)
+        self.div = div
+
+    def _encode_one(self, o): return o.float().div_(255.) if self.div else o.float()
+    def _decode_one(self, o): return o.clamp(0., 1.) if self.div else o
+
+    _docs=dict(encodes="Convert items matching `mask` to float and optionally divide by 255",
+               decodes="Clamp to (0,1) items matching `mask`")
+
+@docs
+class Normalize(MaskedTransform):
+    "Normalize/denorm batch"
+    order=99
+    def __init__(self, mean, std, mask=None):
+        super().__init__(mask)
         self.mean,self.std = mean,std
 
-    def _apply(self,f,b): return tuple(f(o) if p else o for o,p in zip(b,self.flds))
-    def encodes(self, b): self._apply(self.normalize,b)
-    def decodes(self, b): self._apply(self.denormalize,b)
-    def _normalize(self, x): return (x-self.mean) / self.std
-    def _denorm(self, x):    return (x*self.std ) + self.mean
+    def _encode_one(self, x): return (x-self.mean) / self.std
+    def _decode_one(self, x):    return (x*self.std ) + self.mean
 
-    _docs=dict(encodes="Normalize batch matching `fld_mask`", decodes="Denormalize batch matching `fld_mask`")
+    _docs=dict(encodes="Normalize batch matching `mask`", decodes="Denormalize batch matching `mask`")
 
-class DataBunch():
+@docs
+class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."
-    def __init__(self, *dls): self.dls = dls
+    _xtra = 'one_batch show_batch dataset'.split()
+
+    def __init__(self, *dls): self.dls,self.default = dls,dls[0]
     def __getitem__(self, i): return self.dls[i]
 
     train_dl,valid_dl = add_props(lambda i,x: x[i])
     train_ds,valid_ds = add_props(lambda i,x: x[i].dataset)
+
+    _docs=dict(__getitem__="Retrieve `DataLoader` at `i` (`0` is training, `1` is validation)",
+              train_dl="Training `DataLoader`",
+              valid_dl="Validation `DataLoader`",
+              train_ds="Training `Dataset`",
+              valid_ds="Validation `Dataset`")
