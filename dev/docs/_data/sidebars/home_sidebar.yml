@@ -16,11 +16,20 @@ entries:
     title: Getting started
   - folderitems:
     - output: web,pdf
+      title: Pets tutorial
+      url: /pets.tutorial.html
+    output: web
+    title: Tutorials
+  - folderitems:
+    - output: web,pdf
       title: Data Pipeline
       url: /data.pipeline.html
     - output: web,pdf
       title: Data Source
       url: /data.source.html
+    - output: web,pdf
+      title: Data External
+      url: /data.external.html
     - output: web,pdf
       title: Data Core
       url: /data.core.html
@@ -36,9 +45,15 @@ entries:
     - output: web,pdf
       title: Show doc
       url: /notebook.showdoc.html
+    - output: web,pdf
+      title: Core functions
+      url: notebook.core.html
     output: web
     title: Notebook
   - folderitems:
+    - output: web,pdf
+      title: Layers
+      url: /layers.html
     - output: web,pdf
       title: Core
       url: /core.html

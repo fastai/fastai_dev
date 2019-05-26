@@ -14,18 +14,24 @@ sidebar_d = {
         #'Performance': '/performance',
         #'Support': '/support'
     },
+    'Tutorials': {
+        'Pets tutorial': '/pets.tutorial',
+    },
     'Data': {
         'Data Pipeline': '/data.pipeline',
         'Data Source': '/data.source',
+        'Data External': '/data.external',
         'Data Core': '/data.core',
     },
     'Notebook': {
         'Export to modules': '/notebook.export',
         'Convert to html': '/notebook.export2html',
-        'Show doc': '/notebook.showdoc'
+        'Show doc': '/notebook.showdoc',
+        'Core functions': 'notebook.core',
     },
     'Core': {
+        'Layers': '/layers',
         'Core': '/core',
-        'Test': '/test'
+        'Test': '/test',
     },
 }

@@ -131,675 +131,67 @@ summary: "Basic functions used in the fastai library"
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Utility-functions">Utility functions<a class="anchor-link" href="#Utility-functions">&#182;</a></h2>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="ifnone" class="doc_header"><code>ifnone</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ifnone</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
-</blockquote>
-<p><code>b</code> if <code>a</code> is None else <code>a</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Since <code>b if a is None else a</code> is such a common pattern, we wrap it in a function. However, be careful, because python will evaluate <em>both</em> <code>a</code> and <code>b</code> when calling <a href="/core.html#ifnone"><code>ifnone</code></a> (which it doesn't do if using the <code>if</code> version directly).</p>
-
+<h4 id="Path.ls"><a href="/core.html#Path.ls"><code>Path.ls</code></a><a class="anchor-link" href="#Path.ls">&#182;</a></h4>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">ifnone</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">ifnone</span><span class="p">(</span><span class="mi">2</span>   <span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="noop" class="doc_header"><code>noop</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>noop</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
-</blockquote>
-<p>Do nothing</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">noop</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="noops" class="doc_header"><code>noops</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>noops</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
-</blockquote>
-<p>Do nothing (method)</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_t</span><span class="p">():</span> <span class="n">foo</span><span class="o">=</span><span class="n">noops</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">_t</span><span class="p">()</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="range_of" class="doc_header"><code>range_of</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>range_of</code>(<strong><code>x</code></strong>)</p>
-</blockquote>
-<p>All indices of collection <code>x</code> (i.e. <code>list(range(len(x)))</code>)</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">range_of</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_iter" class="doc_header"><code>is_iter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_iter</code>(<strong><code>o</code></strong>)</p>
-</blockquote>
-<p>Test whether <code>o</code> can be used in a <code>for</code> loop</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">is_iter</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
-<span class="k">assert</span> <span class="ow">not</span> <span class="n">is_iter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-<span class="k">assert</span> <span class="n">is_iter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
-<span class="k">assert</span> <span class="p">(</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="listify" class="doc_header"><code>listify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>listify</code>(<strong><code>o</code></strong>)</p>
-</blockquote>
-<p>Make <code>o</code> a list.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">listify</span><span class="p">(</span><span class="kc">None</span><span class="p">),[])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">listify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-<span class="n">test_ne</span><span class="p">(</span><span class="n">listify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">listify</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">),[</span><span class="s1">&#39;abc&#39;</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">listify</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">listify</span><span class="p">(</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">listify</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">)),[</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">)])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">listify</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)]),[</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">listify</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">],</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.1</span><span class="p">]))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="tuplify" class="doc_header"><code>tuplify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tuplify</code>(<strong><code>o</code></strong>)</p>
-</blockquote>
-<p>Make <code>o</code> a tuple</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">tuplify</span><span class="p">(</span><span class="kc">None</span><span class="p">),())</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">tuplify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="tensor" class="doc_header"><code>tensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tensor</code>(<strong><code>x</code></strong>, <strong>*<code>rest</code></strong>)</p>
-</blockquote>
-<p>Like <code>torch.as_tensor</code>, but handle lists too, and can pass multiple vector elements directly.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="compose" class="doc_header"><code>compose</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compose</code>(<strong>*<code>funcs</code></strong>:<code>Callable</code>)</p>
-</blockquote>
-<p>Create a function that composes all functions in <code>funcs</code>, passing along remaining <code>*args</code> and <code>**kwargs</code> to all</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">:</span> <span class="p">(</span><span class="n">o</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="n">p</span>
-<span class="n">f2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="n">o</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">p</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f2</span><span class="p">(</span><span class="n">f1</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">compose</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">)(</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f2</span><span class="p">(</span><span class="n">f1</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span><span class="n">p</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">compose</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">)(</span><span class="mi">3</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f2</span><span class="p">(</span><span class="n">f1</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span>  <span class="mi">3</span><span class="p">),</span>  <span class="mi">3</span><span class="p">),</span> <span class="n">compose</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">)(</span><span class="mi">3</span><span class="p">,</span>  <span class="mi">3</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="uniqueify" class="doc_header"><code>uniqueify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>uniqueify</code>(<strong><code>x</code></strong>, <strong><code>sort</code></strong>=<em><code>False</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>, <strong><code>start</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<p>Return the unique elements in <code>x</code>, optionally <code>sort</code>-ed, optionally return the reverse correspondance.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">uniqueify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">])),{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">})</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">uniqueify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="n">v</span><span class="p">,</span><span class="n">o</span> <span class="o">=</span> <span class="n">uniqueify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">bidir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">v</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">o</span><span class="p">,{</span><span class="mi">1</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
-<span class="n">v</span><span class="p">,</span><span class="n">o</span> <span class="o">=</span> <span class="n">uniqueify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bidir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">v</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">o</span><span class="p">,{</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="setify" class="doc_header"><code>setify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>setify</code>(<strong><code>o</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span><span class="nb">set</span><span class="p">())</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">),{</span><span class="s1">&#39;abc&#39;</span><span class="p">})</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]),{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)),{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">}),{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="mapper" class="doc_header"><code>mapper</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mapper</code>(<strong><code>f</code></strong>)</p>
-</blockquote>
-<p>Create a function that maps <code>f</code> over an input collection</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">func</span> <span class="o">=</span> <span class="n">mapper</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span><span class="n">o</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="make_cross_image" class="doc_header"><code>make_cross_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>make_cross_image</code>(<strong><code>bw</code></strong>=<em><code>True</code></em>)</p>
-</blockquote>
-<p>Create a tensor containing a cross image, either <code>bw</code> (True) or color</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="coll_repr" class="doc_header"><code>coll_repr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>coll_repr</code>(<strong><code>c</code></strong>, <strong><code>max</code></strong>=<em><code>1000</code></em>)</p>
-</blockquote>
-<p>String repr of up to <code>max</code> items of (possibly lazy) collection <code>c</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">coll_repr</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)),</span> <span class="s1">&#39;(1000 items) [0,1,2,3,4,5,6,7,8,9...]&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="partialler" class="doc_header"><code>partialler</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partialler</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
-</blockquote>
-<p>Like <code>functools.partial</code> but also copies over docstring</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="s2">&quot;test func&quot;</span>
-    <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">a</span>
-<span class="n">_f</span><span class="o">.</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span>
-
-<span class="n">f</span> <span class="o">=</span> <span class="n">partialler</span><span class="p">(</span><span class="n">_f</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">partialler</span><span class="p">(</span><span class="n">_f</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="s2">&quot;test func&quot;</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">_f</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="custom_dir" class="doc_header"><code>custom_dir</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>custom_dir</code>(<strong><code>c</code></strong>, <strong><code>add</code></strong>:<code>List</code>[<code>T</code>])</p>
-</blockquote>
-<p>Implement custom <code>__dir__</code>, adding <code>add</code> to <code>cls</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="add_props" class="doc_header"><code>add_props</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Utility-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_props</code>(<strong><code>f</code></strong>, <strong><code>n</code></strong>)</p>
-</blockquote>
-<p>Create properties passing each of <code>range(n)</code> to f</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_T</span><span class="p">():</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">add_props</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">:</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-<span class="n">t</span> <span class="o">=</span> <span class="n">_T</span><span class="p">()</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is a quick way to generate, for instance, <em>train</em> and <em>valid</em> versions of a property. See <a href="/data.core.html#DataBunch"><code>DataBunch</code></a> definition for an example of this.</p>
+<p>We add an <code>ls()</code> method to <code>pathlib.Path</code> which is simply defined as <code>list(Path.iterdir())</code>, mainly for convenience in REPL environments such as notebooks.</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">ls</span><span class="p">()</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span>
+<span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>PosixPath(&#39;_09_data_blocks_tutorial_vision.ipynb&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -855,11 +247,148 @@ summary: "Basic functions used in the fastai library"
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Classes">Classes<a class="anchor-link" href="#Classes">&#182;</a></h2>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="custom_dir" class="doc_header"><code>custom_dir</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Documentation-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>custom_dir</code>(<strong><code>c</code></strong>, <strong><code>add</code></strong>:<code>List</code>[<code>T</code>])</p>
+</blockquote>
+<p>Implement custom <code>__dir__</code>, adding <code>add</code> to <code>cls</code></p>
+
+</div>
+
+</div>
+
 </div>
 </div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="is_iter" class="doc_header"><code>is_iter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Documentation-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_iter</code>(<strong><code>o</code></strong>)</p>
+</blockquote>
+<p>Test whether <code>o</code> can be used in a <code>for</code> loop</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">is_iter</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">is_iter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">is_iter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="coll_repr" class="doc_header"><code>coll_repr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Documentation-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>coll_repr</code>(<strong><code>c</code></strong>, <strong><code>max</code></strong>=<em><code>1000</code></em>)</p>
+</blockquote>
+<p>String repr of up to <code>max</code> items of (possibly lazy) collection <code>c</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">coll_repr</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)),</span> <span class="s1">&#39;(#1000) [0,1,2,3,4,5,6,7,8,9...]&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="GetAttr" class="doc_header"><code>class</code> <code>GetAttr</code><a href="" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GetAttr</code>()</p>
+</blockquote>
+<p>Inherit from this to have all attr accesses in <code>self._xtra</code> passed down to <code>self.default</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_C</span><span class="p">(</span><span class="n">GetAttr</span><span class="p">):</span> <span class="n">default</span><span class="p">,</span><span class="n">_xtra</span> <span class="o">=</span> <span class="s1">&#39;Hi&#39;</span><span class="p">,[</span><span class="s1">&#39;lower&#39;</span><span class="p">]</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">_C</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s1">&#39;hi&#39;</span><span class="p">)</span>
+<span class="n">test_fail</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+<span class="k">assert</span> <span class="s1">&#39;lower&#39;</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -876,7 +405,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ListContainer" class="doc_header"><code>class</code> <code>ListContainer</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#ListContainer--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ListContainer</code>(<strong><code>items</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="L" class="doc_header"><code>class</code> <code>L</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>L</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
 </blockquote>
 <p>Behaves like a list of <code>items</code> but can also index with list of indices or masks</p>
 
@@ -888,28 +417,36 @@ summary: "Basic functions used in the fastai library"
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can create an <a href="/core.html#L"><code>L</code></a> from an existing iterable (e.g. a list, range, etc) and access or modify it with an int list/tuple index, mask, int, or slice. All <code>list</code> methods can also be used with <a href="/core.html#L"><code>L</code></a>.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">ListContainer</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
 
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">)))</span>
 <span class="n">test_ne</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[[</span><span class="kc">False</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span> <span class="o">+</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">]],</span> <span class="p">[</span><span class="mi">10</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">tensor</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;h&quot;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>                <span class="c1"># implicit tuple</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>              <span class="c1"># list</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>               <span class="c1"># slice</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[[</span><span class="kc">False</span><span class="p">]</span><span class="o">*</span><span class="mi">11</span> <span class="o">+</span> <span class="p">[</span><span class="kc">True</span><span class="p">]],</span> <span class="p">[</span><span class="mi">11</span><span class="p">])</span> <span class="c1"># mask</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">t</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;h&quot;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">11</span><span class="p">)</span>
 <span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;h&quot;</span><span class="p">)</span>
 <span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">,</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;j&quot;</span><span class="p">,</span><span class="s2">&quot;k&quot;</span><span class="p">])</span>
 <span class="n">t</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">L</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
 <span class="n">t</span>
 </pre></div>
 
@@ -925,7 +462,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>ListContainer (13 items) [h,11,10,j,0,k,0,5,4,3...]</pre>
+<pre>(#12) [11,10,9,j,0,k,0,4,3,2...]</pre>
 </div>
 
 </div>
@@ -933,6 +470,72 @@ summary: "Basic functions used in the fastai library"
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can also modify an <a href="/core.html#L"><code>L</code></a> with <code>append</code> and <code>+</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">L</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">[])</span>
+<span class="n">t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">t</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">t</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">L</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>An <a href="/core.html#L"><code>L</code></a> can be constructed from anything iterable, although tensors and arrays will not be iterated over on construction, unless you pass <code>use_list</code> to the constructor.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">test_ne</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">),[</span><span class="s1">&#39;abc&#39;</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">)),[</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">)])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)]),[</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">],</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.1</span><span class="p">]))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.1</span><span class="p">]),</span> <span class="n">use_list</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.1</span><span class="p">])</span>  <span class="c1"># `use_list=True` to unwrap arrays/tensors</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Methods">Methods<a class="anchor-link" href="#Methods">&#182;</a></h3>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -943,9 +546,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ListContainer.mapped" class="doc_header"><code>mapped</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#ListContainer--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mapped</code>(<strong><code>f</code></strong>)</p>
+<h4 id="L.mapped" class="doc_header"><code>mapped</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mapped</code>(<strong><code>f</code></strong>)</p>
 </blockquote>
-<p>Create new <a href="/core.html#ListContainer"><code>ListContainer</code></a> with <code>f</code> applied to all <code>items</code></p>
+<p>Create new <a href="/core.html#L"><code>L</code></a> with <code>f</code> applied to all <code>items</code></p>
 
 </div>
 
@@ -960,7 +563,7 @@ summary: "Basic functions used in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">ListContainer</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -977,9 +580,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ListContainer.zipped" class="doc_header"><code>zipped</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#ListContainer--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>zipped</code>()</p>
+<h4 id="L.zipped" class="doc_header"><code>zipped</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>zipped</code>()</p>
 </blockquote>
-<p>Create new <a href="/core.html#ListContainer"><code>ListContainer</code></a> with <code>zip(*items)</code></p>
+<p>Create new <a href="/core.html#L"><code>L</code></a> with <code>zip(*items)</code></p>
 
 </div>
 
@@ -994,7 +597,7 @@ summary: "Basic functions used in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">ListContainer</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="s1">&#39;abc&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">L</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="s1">&#39;abc&#39;</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">zipped</span><span class="p">(),</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)])</span>
 </pre></div>
 
@@ -1012,9 +615,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ListContainer.itemgot" class="doc_header"><code>itemgot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#ListContainer--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>itemgot</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="L.itemgot" class="doc_header"><code>itemgot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>itemgot</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
-<p>Create new <a href="/core.html#ListContainer"><code>ListContainer</code></a> with item <code>idx</code> of all <code>items</code></p>
+<p>Create new <a href="/core.html#L"><code>L</code></a> with item <code>idx</code> of all <code>items</code></p>
 
 </div>
 
@@ -1046,9 +649,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ListContainer.attrgot" class="doc_header"><code>attrgot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#ListContainer--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>attrgot</code>(<strong><code>k</code></strong>)</p>
+<h4 id="L.attrgot" class="doc_header"><code>attrgot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>attrgot</code>(<strong><code>k</code></strong>)</p>
 </blockquote>
-<p>Create new <a href="/core.html#ListContainer"><code>ListContainer</code></a> with attr <code>k</code> of all <code>items</code></p>
+<p>Create new <a href="/core.html#L"><code>L</code></a> with attr <code>k</code> of all <code>items</code></p>
 
 </div>
 
@@ -1064,7 +667,67 @@ summary: "Basic functions used in the fastai library"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">)]</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">ListContainer</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">attrgot</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">),</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">attrgot</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">),</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Utility-functions">Utility functions<a class="anchor-link" href="#Utility-functions">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Basics">Basics<a class="anchor-link" href="#Basics">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="ifnone" class="doc_header"><code>ifnone</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Basics" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ifnone</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+</blockquote>
+<p><code>b</code> if <code>a</code> is None else <code>a</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Since <code>b if a is None else a</code> is such a common pattern, we wrap it in a function. However, be careful, because python will evaluate <em>both</em> <code>a</code> and <code>b</code> when calling <a href="/core.html#ifnone"><code>ifnone</code></a> (which it doesn't do if using the <code>if</code> version directly).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">ifnone</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">ifnone</span><span class="p">(</span><span class="mi">2</span>   <span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1084,9 +747,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mask2idxs" class="doc_header"><code>mask2idxs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#ListContainer--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mask2idxs</code>(<strong><code>mask</code></strong>)</p>
+<h4 id="noop" class="doc_header"><code>noop</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Basics" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>noop</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>Convert bool mask or index list to index <a href="/core.html#ListContainer"><code>ListContainer</code></a></p>
+<p>Do nothing</p>
 
 </div>
 
@@ -1101,8 +764,7 @@ summary: "Basic functions used in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">mask2idxs</span><span class="p">([</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">]),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">mask2idxs</span><span class="p">(</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">noop</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1122,9 +784,177 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_listy" class="doc_header"><code>is_listy</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#ListContainer--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_listy</code>(<strong><code>x</code></strong>)</p>
+<h4 id="noops" class="doc_header"><code>noops</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Basics" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>noops</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p><code>isinstance(x, (tuple,list,ListContainer))</code></p>
+<p>Do nothing (method)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_t</span><span class="p">():</span> <span class="n">foo</span><span class="o">=</span><span class="n">noops</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">_t</span><span class="p">()</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Collection-functions">Collection functions<a class="anchor-link" href="#Collection-functions">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tuplify" class="doc_header"><code>tuplify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tuplify</code>(<strong><code>o</code></strong>)</p>
+</blockquote>
+<p>Make <code>o</code> a tuple</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">tuplify</span><span class="p">(</span><span class="kc">None</span><span class="p">),())</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">tuplify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="uniqueify" class="doc_header"><code>uniqueify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>uniqueify</code>(<strong><code>x</code></strong>, <strong><code>sort</code></strong>=<em><code>False</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>, <strong><code>start</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Return the unique elements in <code>x</code>, optionally <code>sort</code>-ed, optionally return the reverse correspondance.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">uniqueify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">])),{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">})</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">uniqueify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">v</span><span class="p">,</span><span class="n">o</span> <span class="o">=</span> <span class="n">uniqueify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">bidir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">v</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">o</span><span class="p">,{</span><span class="mi">1</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<span class="n">v</span><span class="p">,</span><span class="n">o</span> <span class="o">=</span> <span class="n">uniqueify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bidir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">v</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">o</span><span class="p">,{</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="setify" class="doc_header"><code>setify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>setify</code>(<strong><code>o</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span><span class="nb">set</span><span class="p">())</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">),{</span><span class="s1">&#39;abc&#39;</span><span class="p">})</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]),{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)),{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">setify</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">}),{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="is_listy" class="doc_header"><code>is_listy</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_listy</code>(<strong><code>x</code></strong>)</p>
+</blockquote>
+<p><code>isinstance(x, (tuple,list,L))</code></p>
 
 </div>
 
@@ -1140,12 +970,574 @@ summary: "Basic functions used in the fastai library"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">is_listy</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
-<span class="k">assert</span> <span class="n">is_listy</span><span class="p">(</span><span class="n">ListContainer</span><span class="p">([</span><span class="mi">1</span><span class="p">]))</span>
+<span class="k">assert</span> <span class="n">is_listy</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="mi">1</span><span class="p">]))</span>
 <span class="k">assert</span> <span class="n">is_listy</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 <span class="k">assert</span> <span class="ow">not</span> <span class="n">is_listy</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">]))</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="range_of" class="doc_header"><code>range_of</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>range_of</code>(<strong><code>x</code></strong>)</p>
+</blockquote>
+<p>All indices of collection <code>x</code> (i.e. <code>list(range(len(x)))</code>)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">range_of</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="mask2idxs" class="doc_header"><code>mask2idxs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mask2idxs</code>(<strong><code>mask</code></strong>)</p>
+</blockquote>
+<p>Convert bool mask or index list to index <a href="/core.html#L"><code>L</code></a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">mask2idxs</span><span class="p">([</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">]),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">mask2idxs</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Tensor-functions">Tensor functions<a class="anchor-link" href="#Tensor-functions">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="s2">&quot;Apply `func` recursively to `x`, passing on args&quot;</span>
+    <span class="k">if</span> <span class="n">is_listy</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">dict</span><span class="p">):</span>  <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tensor" class="doc_header"><code>tensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Tensor-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tensor</code>(<strong><code>x</code></strong>, <strong>*<code>rest</code></strong>)</p>
+</blockquote>
+<p>Like <code>torch.as_tensor</code>, but handle lists too, and can pass multiple vector elements directly.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="to_detach" class="doc_header"><code>to_detach</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Tensor-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_detach</code>(<strong><code>b</code></strong>, <strong><code>cpu</code></strong>=<em><code>True</code></em>)</p>
+</blockquote>
+<p>Recursively detach lists of tensors in <code>b</code>; put them on the CPU if <code>cpu=True</code>.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="to_half" class="doc_header"><code>to_half</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Tensor-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_half</code>(<strong><code>b</code></strong>)</p>
+</blockquote>
+<p>Recursively map lists of tensors in <code>b</code> to FP16.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="to_float" class="doc_header"><code>to_float</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Tensor-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_float</code>(<strong><code>b</code></strong>)</p>
+</blockquote>
+<p>Recursively map lists of int tensors in <code>b</code> to float.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="to_device" class="doc_header"><code>to_device</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Tensor-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_device</code>(<strong><code>b</code></strong>, <strong><code>device</code></strong>=<em><code>device(type='cuda', index=0)</code></em>)</p>
+</blockquote>
+<p>Recursively put <code>b</code> on <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a>.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1</span><span class="p">,(</span><span class="n">t2</span><span class="p">,</span><span class="n">t3</span><span class="p">)</span> <span class="o">=</span> <span class="n">to_device</span><span class="p">([</span><span class="mi">3</span><span class="p">,[</span><span class="n">tensor</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tensor</span><span class="p">(</span><span class="mi">2</span><span class="p">)]])</span>
+<span class="n">test_eq</span><span class="p">((</span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">,</span><span class="n">t3</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t2</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span> <span class="s2">&quot;torch.cuda.LongTensor&quot;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t3</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span> <span class="s2">&quot;torch.cuda.LongTensor&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="to_cpu" class="doc_header"><code>to_cpu</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Tensor-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_cpu</code>(<strong><code>b</code></strong>)</p>
+</blockquote>
+<p>Recursively map lists of tensors in <code>b</code> to the cpu.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t3</span> <span class="o">=</span> <span class="n">to_cpu</span><span class="p">(</span><span class="n">t3</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t3</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span> <span class="s2">&quot;torch.LongTensor&quot;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Functions-on-functions">Functions on functions<a class="anchor-link" href="#Functions-on-functions">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="compose" class="doc_header"><code>compose</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Functions-on-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compose</code>(<strong>*<code>funcs</code></strong>:<code>Callable</code>)</p>
+</blockquote>
+<p>Create a function that composes all functions in <code>funcs</code>, passing along remaining <code>*args</code> and <code>**kwargs</code> to all</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">:</span> <span class="p">(</span><span class="n">o</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="n">p</span>
+<span class="n">f2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="n">o</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">p</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f2</span><span class="p">(</span><span class="n">f1</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">compose</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">)(</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f2</span><span class="p">(</span><span class="n">f1</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span><span class="n">p</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">compose</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">)(</span><span class="mi">3</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f2</span><span class="p">(</span><span class="n">f1</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span>  <span class="mi">3</span><span class="p">),</span>  <span class="mi">3</span><span class="p">),</span> <span class="n">compose</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">)(</span><span class="mi">3</span><span class="p">,</span>  <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="mapper" class="doc_header"><code>mapper</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Functions-on-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mapper</code>(<strong><code>f</code></strong>)</p>
+</blockquote>
+<p>Create a function that maps <code>f</code> over an input collection</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">func</span> <span class="o">=</span> <span class="n">mapper</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span><span class="n">o</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="partialler" class="doc_header"><code>partialler</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Functions-on-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partialler</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Like <code>functools.partial</code> but also copies over docstring</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="s2">&quot;test func&quot;</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">a</span>
+<span class="n">_f</span><span class="o">.</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">partialler</span><span class="p">(</span><span class="n">_f</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">partialler</span><span class="p">(</span><span class="n">_f</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="s2">&quot;test func&quot;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">_f</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Other-helpers">Other helpers<a class="anchor-link" href="#Other-helpers">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="add_props" class="doc_header"><code>add_props</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Other-helpers" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_props</code>(<strong><code>f</code></strong>, <strong><code>n</code></strong>=<em><code>2</code></em>)</p>
+</blockquote>
+<p>Create properties passing each of <code>range(n)</code> to f</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_T</span><span class="p">():</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">add_props</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">:</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">_T</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is a quick way to generate, for instance, <em>train</em> and <em>valid</em> versions of a property. See <a href="/data.core.html#DataBunch"><code>DataBunch</code></a> definition for an example of this.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="make_cross_image" class="doc_header"><code>make_cross_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Other-helpers" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>make_cross_image</code>(<strong><code>bw</code></strong>=<em><code>True</code></em>)</p>
+</blockquote>
+<p>Create a tensor containing a cross image, either <code>bw</code> (True) or color</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">make_cross_image</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">make_cross_image</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">));</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
 </div>
 </div>
 
