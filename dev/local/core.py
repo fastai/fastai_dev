@@ -76,7 +76,6 @@ def _listify(o):
     if is_iter(o): return list(o)
     return [o]
 
-@docs
 class L(GetAttr):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     _xtra =  [o for o in dir(list) if not o.startswith('_')]
@@ -99,30 +98,31 @@ class L(GetAttr):
         return a
 
     def __getitem__(self, idx):
+        "Retrieve `idx` (can be list of indices, or mask, or int) items"
         res = [self.items[i] for i in _mask2idxs(idx)] if is_iter(idx) else self.items[idx]
         if isinstance(res,(tuple,list)) and not isinstance(res,L): res = L(res)
         return res
 
     def __setitem__(self, idx, o):
+        "Set `idx` (can be list of indices, or mask, or int) items to `o` (which is broadcast if not iterable)"
         idx = idx if isinstance(idx,L) else _listify(idx)
         if not is_iter(o): o = [o]*len(idx)
         for i,o_ in zip(idx,o): self.items[i] = o_
 
+    def sorted(self, key=None):
+        "New `L` sorted by `key`. If key is str then use `attrgetter`. If key is int then use `itemgetter`."
+        if isinstance(key,str):   k=lambda o:getattr(o,key,0)
+        elif isinstance(key,int): k=itemgetter(key)
+        else: k=key
+        return L(sorted(self.items, key=k))
+
     def mapped(self, f):    return L(map(f, self))
     def zipped(self):       return L(zip(*self))
     def itemgot(self, idx): return self.mapped(itemgetter(idx))
-    def attrgot(self, k):   return self.mapped(attrgetter(k))
+    def attrgot(self, k):   return self.mapped(lambda o:getattr(o,k,0))
     def tensored(self):     return self.mapped(tensor)
     def stack(self, dim=0): return torch.stack(list(self.tensored()), dim=dim)
     def cat  (self, dim=0): return torch.cat  (list(self.tensored()), dim=dim)
-
-    _docs=dict(mapped="Create new `L` with `f` applied to all `items`",
-              zipped="Create new `L` with `zip(*items)`",
-              itemgot="Create new `L` with item `idx` of all `items`",
-              attrgot="Create new `L` with attr `k` of all `items`",
-              tensored="`mapped(tensor)`",
-              stack="Same as `torch.stack`",
-              cat="Same as `torch.cat`")
 
 defaults = SimpleNamespace()
 
@@ -198,8 +198,10 @@ def to_cpu(b):
     return to_device(b,'cpu')
 
 @chk
-def compose(*funcs: Callable):
+def compose(*funcs: Callable, order=None):
     "Create a function that composes all functions in `funcs`, passing along remaining `*args` and `**kwargs` to all"
+    funcs = L(funcs)
+    if order is not None: funcs = funcs.sorted(order)
     def _inner(x, *args, **kwargs):
         for f in L(funcs): x = f(x, *args, **kwargs)
         return x
