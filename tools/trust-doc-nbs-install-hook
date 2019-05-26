@@ -28,6 +28,6 @@ from pathlib import Path
 fin  = Path("tools")/"trust-doc-nbs"
 fout = Path(".git")/"hooks"/"post-merge"
 
-print("Installing .git/hooks/post-merge to automatically trust docs_src notebooks")
+print("Installing .git/hooks/post-merge to automatically trust dev and dev_nb notebooks")
 copy2(fin, fout)
 print("Success")
