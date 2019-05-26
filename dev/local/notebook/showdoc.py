@@ -127,12 +127,12 @@ def format_param(p):
         else: res += f'=*`{repr(default)}`*'
     return res
 
-def _format_enum_doc(enum, full_name:str)->str:
+def _format_enum_doc(enum, full_name):
     "Formatted `enum` definition to show in documentation"
     vals = ', '.join(enum.__members__.keys())
     return f'<code>{full_name}</code>',f'<code>Enum</code> = [{vals}]'
 
-def _format_func_doc(func, full_name:str=None)->str:
+def _format_func_doc(func, full_name=None):
     "Formatted `func` definition to show in documentation"
     sig = inspect.signature(func)
     name = f'<code>{full_name or func.__name__}</code>'
@@ -142,7 +142,7 @@ def _format_func_doc(func, full_name:str=None)->str:
     f_name = f"<code>class</code> {name}" if inspect.isclass(func) else name
     return f'{f_name}',f'{name}{arg_str}'
 
-def _format_cls_doc(cls, full_name:str)->str:
+def _format_cls_doc(cls, full_name):
     "Formatted `cls` definition to show in documentation"
     parent_class = inspect.getclasstree([cls])[-1][0][1][0]
     name,args = _format_func_doc(cls, full_name)
@@ -151,19 +151,19 @@ def _format_cls_doc(cls, full_name:str)->str:
 
 def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, default_cls_level=2):
     "Show documentation for element `elt`. Supported types: class, function, and enum."
-    anchor_id = qual_name(elt)
     elt = getattr(elt, '__func__', elt)
     name = name or qual_name(elt)
     if inspect.isclass(elt):
         if is_enum(elt.__class__):   name,args = _format_enum_doc(elt, name)
         else:                        name,args = _format_cls_doc (elt, name)
     elif isinstance(elt, Callable):  name,args = _format_func_doc(elt, name)
-    else: raise Exception(f'show_doc not supported for {full_name}')
+    elif isinstance(elt, property):  name,args = name, ''
+    else: raise Exception(f'show_doc not supported for {name}')
     link = get_source_link(elt)
     source_link = f'<a href="{link}" class="source_link" style="float:right">[source]</a>'
     title_level = title_level or (default_cls_level if inspect.isclass(elt) else 4)
-    doc =  f'<h{title_level} id="{anchor_id}" class="doc_header">{name}{source_link}</h{title_level}>'
-    doc += f'\n\n> {args}\n\n'
+    doc =  f'<h{title_level} id="{name}" class="doc_header">{name}{source_link}</h{title_level}>'
+    doc += f'\n\n> {args}\n\n' if len(args) > 0 else '\n\n'
     if doc_string and inspect.getdoc(elt): doc += add_doc_links(inspect.getdoc(elt))
     if disp: display(Markdown(doc))
     else: return doc
