@@ -2,8 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_title', 'show_titled_image',
-           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'MappedTransform', 'ByteToFloatTensor',
-           'Normalize', 'DataBunch']
+           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -113,7 +112,8 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     _order=1
-    def __init__(self, vocab=None, train_attr="train", subset_idx=None):
+    def __init__(self, vocab=None, train_attr="train", subset_idx=None, mask=None, is_tuple=None):
+        super().__init__(mask=mask,is_tuple=is_tuple)
         self.vocab,self.train_attr,self.subset_idx = vocab,train_attr,subset_idx
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
@@ -134,16 +134,13 @@ DataLoader.__getattr__ = _DataLoader__getattr
 
 @docs
 class TfmDataLoader(GetAttr):
-    "Transformed `DataLoader` using a `Pipeline` of `tfms`"
+    "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfms=None, batch_size=16, shuffle=False,
+    def __init__(self, dataset, tfm=None, batch_size=16, shuffle=False,
                  sampler=None, batch_sampler=None, num_workers=1, **kwargs):
         self.dl = DataLoader(dataset, batch_size, shuffle, sampler, batch_sampler, num_workers=num_workers)
-        self.tfm = Pipeline(tfms)
-        self.tfm.set_mapped()
-        self.tfm.setup(self)
-        self.default = self.dl # for `GetAttr`
+        self.default,self.tfm = self.dl,tfm
         for k,v in kwargs.items(): setattr(self,k,v)
 
     def __len__(self): return len(self.dl)
@@ -159,6 +156,15 @@ class TfmDataLoader(GetAttr):
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
         for o,ctx in zip(rows,ctxs): self.dataset.show(o, ctx=ctx)
 
+    @classmethod
+    def build(cls, dataset, tfms=None, is_tuple=True, batch_size=16, shuffle=False,
+              sampler=None, batch_sampler=None, num_workers=1, **kwargs):
+        tfm = Pipeline(tfms)
+        if is_tuple: tfm.set_tupled()
+        res = cls(dataset, tfm, batch_size, shuffle, sampler, batch_sampler, num_workers=num_workers)
+        tfm.setup(res)
+        return res
+
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
                  show_batch="Show each item of `b`",
                  one_batch="Grab first batch of `dl`")
@@ -166,52 +172,39 @@ class TfmDataLoader(GetAttr):
 @docs
 class Cuda(Transform):
     "Move batch to `device` (defaults to `defaults.device`)"
-    def __init__(self,device=defaults.device): self.device=device
+    def __init__(self,device=defaults.device, mask=None, is_tuple=None):
+        super().__init__(mask=mask,is_tuple=is_tuple)
+        self.device=device
+
     def encodes(self, b): return to_device(b, self.device)
     def decodes(self, b): return to_cpu(b)
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
 @docs
-class MappedTransform(Transform):
-    "Abstract class to map a `Transform` to elements of a collection based on a `mask` (defaults to (True,False))."
-    def __init__(self, mask=None, mapped=None): self.mask,self.mapped = ifnone(mask, (True,False)),mapped
-    def encodes(self, b): return self._apply(self._encode_one,b)
-    def decodes(self, b): return self._apply(self._decode_one,b)
-    def _decode_one(self, b): return b
-    def set_mapped(self, tf=True): self.mapped = ifnone(self.mapped,tf)
-
-    def _apply(self,f,b):
-        return tuple(f(o) if p else o for o,p in zip(b,self.mask)) if self.mapped else f(b)
-
-    _docs=dict(encodes="Map transform over `b` if `mapped`, otherwise apply transform directly",
-               decodes="Map transform decode over `b` if `mapped`, otherwise apply transform directly",
-               set_mapped="Set `mapped` to `tf` if it was `None`")
-
-@docs
-class ByteToFloatTensor(MappedTransform):
+class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order=20 #Need to run after CUDA if on the GPU
-    def __init__(self, div=True, mask=None, mapped=None):
-        super().__init__(mask, mapped)
+    def __init__(self, div=True, mask=None, is_tuple=None):
+        super().__init__(mask=mask,is_tuple=is_tuple)
         self.div = div
 
-    def _encode_one(self, o): return o.float().div_(255.) if self.div else o.float()
-    def _decode_one(self, o): return o.clamp(0., 1.) if self.div else o
+    def encodes(self, o): return o.float().div_(255.) if self.div else o.float()
+    def decodes(self, o): return o.clamp(0., 1.) if self.div else o
 
     _docs=dict(encodes="Convert items matching `mask` to float and optionally divide by 255",
                decodes="Clamp to (0,1) items matching `mask`")
 
 @docs
-class Normalize(MappedTransform):
+class Normalize(Transform):
     "Normalize/denorm batch"
     order=99
-    def __init__(self, mean, std, mask=None, mapped=None):
-        super().__init__(mask, mapped)
+    def __init__(self, mean, std, mask=None, is_tuple=None):
+        super().__init__(mask=mask,is_tuple=is_tuple)
         self.mean,self.std = mean,std
 
-    def _encode_one(self, x): return (x-self.mean) / self.std
-    def _decode_one(self, x):    return (x*self.std ) + self.mean
+    def encodes(self, x): return (x-self.mean) / self.std
+    def decodes(self, x):    return (x*self.std ) + self.mean
 
     _docs=dict(encodes="Normalize batch matching `mask`", decodes="Denormalize batch matching `mask`")
 
