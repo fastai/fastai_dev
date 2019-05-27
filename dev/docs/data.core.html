@@ -25,15 +25,29 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Not exported since we only use it for examples</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Get,-split,-and-label">Get, split, and label<a class="anchor-link" href="#Get,-split,-and-label">&#182;</a></h2>
+<h2 id="Get,-split,-label,-and-show">Get, split, label, and show<a class="anchor-link" href="#Get,-split,-label,-and-show">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For most data source creation we need functions to get a list of items, split them in to train/valid sets, and label them. fastai provides functions to make each of these steps easy (especially when combined with <code>fastai.data.blocks</code>).</p>
+<p>For most data source creation we need functions to get a list of items, split them in to train/valid sets, and label them. fastai provides functions to make each of these steps easy (especially when combined with <code>fastai.data.blocks</code>), along with showing data (we'll only define image showing in this section).</p>
 
 </div>
 </div>
@@ -98,7 +112,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_files" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>get_files</code>" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get all the files in <code>path</code> with optional <code>extensions</code>, optionally with <code>recurse</code>.</p>
 
@@ -143,7 +157,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>ListContainer (709 items) [/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7010.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/79.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/9022.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7284.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7085.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7547.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8698.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8463.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7525.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8345.png...]</pre>
+<pre>(#709) [/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7010.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/79.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/9022.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7284.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7085.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7547.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8698.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8463.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7525.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8345.png...]</pre>
 </div>
 
 </div>
@@ -171,7 +185,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="FileGetter" class="doc_header"><code>FileGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FileGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>FileGetter</code>" class="doc_header"><code>FileGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FileGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create <a href="/data.core.html#get_files"><code>get_files</code></a> partial function that searches path suffix <code>suf</code> and passes along args</p>
 
@@ -215,7 +229,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_image_files" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>get_image_files</code>" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get image files in <code>path</code> recursively.</p>
 
@@ -259,7 +273,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ImageGetter" class="doc_header"><code>ImageGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ImageGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>ImageGetter</code>" class="doc_header"><code>ImageGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ImageGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create <a href="/data.core.html#get_image_files"><code>get_image_files</code></a> partial function that searches path suffix <code>suf</code> and passes along <code>kwargs</code></p>
 
@@ -317,7 +331,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="RandomSplitter" class="doc_header"><code>RandomSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RandomSplitter</code>(<strong><code>valid_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>RandomSplitter</code>" class="doc_header"><code>RandomSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RandomSplitter</code>(<strong><code>valid_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create function that splits <code>items</code> between train/val with <code>valid_pct</code> randomly.</p>
 
@@ -357,8 +371,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(ListContainer (24 items) [10,18,16,23,28,26,20,7,21,22...],
- ListContainer (6 items) [12,0,6,25,8,15])</pre>
+<pre>((#24) [10,18,16,23,28,26,20,7,21,22...], (#6) [12,0,6,25,8,15])</pre>
 </div>
 
 </div>
@@ -382,7 +395,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="GrandparentSplitter" class="doc_header"><code>GrandparentSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GrandparentSplitter</code>(<strong><code>train_name</code></strong>=<em><code>'train'</code></em>, <strong><code>valid_name</code></strong>=<em><code>'valid'</code></em>)</p>
+<h4 id="<code>GrandparentSplitter</code>" class="doc_header"><code>GrandparentSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GrandparentSplitter</code>(<strong><code>train_name</code></strong>=<em><code>'train'</code></em>, <strong><code>valid_name</code></strong>=<em><code>'valid'</code></em>)</p>
 </blockquote>
 <p>Split <code>items</code> from the grand parent folder names (<code>train_name</code> and <code>valid_name</code>).</p>
 
@@ -403,8 +416,8 @@ summary: "Functions for getting, splitting, and labeling data, etc"
          <span class="n">path</span><span class="o">/</span><span class="s1">&#39;valid/7/7320.png&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">/</span><span class="s1">&#39;train/7/9833.png&#39;</span><span class="p">,</span>  
          <span class="n">path</span><span class="o">/</span><span class="s1">&#39;train/3/7666.png&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">/</span><span class="s1">&#39;valid/3/925.png&#39;</span><span class="p">,</span>
          <span class="n">path</span><span class="o">/</span><span class="s1">&#39;train/7/724.png&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">/</span><span class="s1">&#39;valid/3/93055.png&#39;</span><span class="p">]</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">GrandparentSplitter</span><span class="p">()</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">items</span><span class="p">),[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]])</span>
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">GrandparentSplitter</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">splitter</span><span class="p">(</span><span class="n">items</span><span class="p">),[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]])</span>
 </pre></div>
 
     </div>
@@ -437,7 +450,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="parent_label" class="doc_header"><code>parent_label</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parent_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>parent_label</code>" class="doc_header"><code>parent_label</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parent_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Label <code>item</code> with the parent folder name.</p>
 
@@ -498,7 +511,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="RegexLabeller" class="doc_header"><code>RegexLabeller</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RegexLabeller</code>(<strong><code>pat</code></strong>)</p>
+<h4 id="<code>RegexLabeller</code>" class="doc_header"><code>RegexLabeller</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RegexLabeller</code>(<strong><code>pat</code></strong>)</p>
 </blockquote>
 <p>Label <code>item</code> with regex <code>pat</code>.</p>
 
@@ -550,7 +563,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Convenience-functions">Convenience functions<a class="anchor-link" href="#Convenience-functions">&#182;</a></h2>
+<h3 id="Show">Show<a class="anchor-link" href="#Show">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -566,7 +579,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_image" class="doc_header"><code>show_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_image</code>(<strong><code>im</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>show_image</code>" class="doc_header"><code>show_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_image</code>(<strong><code>im</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Show a PIL image on <code>ax</code>.</p>
 
@@ -707,7 +720,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_title" class="doc_header"><code>show_title</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>show_title</code>" class="doc_header"><code>show_title</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Set title of <code>ax</code> to <code>o</code>, or print <code>o</code> if <code>ax</code> is <code>None</code></p>
 
@@ -756,6 +769,27 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>show_titled_image</code>" class="doc_header"><code>show_titled_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_titled_image</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>)</p>
+</blockquote>
+<p>Call <a href="/data.core.html#show_image"><code>show_image</code></a> destructuring <code>o</code> to <code>(img,title)</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -766,7 +800,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_image_batch" class="doc_header"><code>show_image_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_image_batch</code>(<strong><code>b</code></strong>, <strong><code>show</code></strong>=<em><code>'_show_batch_item'</code></em>, <strong><code>items</code></strong>=<em><code>9</code></em>, <strong><code>cols</code></strong>=<em><code>3</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>show_image_batch</code>" class="doc_header"><code>show_image_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_image_batch</code>(<strong><code>b</code></strong>, <strong><code>show</code></strong>=<em><code>'show_titled_image'</code></em>, <strong><code>items</code></strong>=<em><code>9</code></em>, <strong><code>cols</code></strong>=<em><code>3</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Display batch <code>b</code> in a grid of size <code>items</code> with <code>cols</code> width</p>
 
@@ -809,11 +843,104 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </div>
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="<code>class</code> <code>Categorize</code>" class="doc_header"><code>class</code> <code>Categorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Categorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Categorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>, <strong><code>train_attr</code></strong>=<em><code>'train'</code></em>, <strong><code>subset_idx</code></strong>=<em><code>None</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>is_tuple</code></strong>=<em><code>None</code></em>) :: <a href="/data.pipeline.html#Transform"><code>Transform</code></a></p>
+</blockquote>
+<p>Reversible transform of category string to <code>vocab</code> id</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Classes">Classes<a class="anchor-link" href="#Classes">&#182;</a></h2>
+<h3 id="End-to-end-dataset-example-with-MNIST">End-to-end dataset example with MNIST<a class="anchor-link" href="#End-to-end-dataset-example-with-MNIST">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">items</span> <span class="o">=</span> <span class="n">get_image_files</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">splits</span> <span class="o">=</span> <span class="n">splitter</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="n">train</span><span class="p">,</span><span class="n">valid</span> <span class="o">=</span> <span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">splits</span><span class="p">)</span>
+<span class="n">train</span><span class="p">,</span><span class="n">valid</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>((#709) [/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7010.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/79.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/9022.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7284.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7085.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7547.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8698.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8463.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7525.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8345.png...],
+ (#699) [/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/9968.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/79.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/8356.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/9909.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/9374.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/8188.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/9816.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/7356.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/7079.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/8190.png...])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">timg</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">,</span> <span class="n">shows</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">show_image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+<span class="n">tfms</span> <span class="o">=</span> <span class="p">[[</span><span class="n">timg</span><span class="p">,</span><span class="n">array</span><span class="p">,</span><span class="n">tensor</span><span class="p">,</span><span class="n">partial</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)],</span>
+        <span class="p">[</span><span class="n">parent_label</span><span class="p">,</span> <span class="n">Categorize</span><span class="p">(</span><span class="n">subset_idx</span><span class="o">=</span><span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">])]]</span>
+<span class="n">tfm</span> <span class="o">=</span> <span class="n">Tuplify</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">tfms</span><span class="p">)</span>
+<span class="n">datasets</span> <span class="o">=</span> <span class="n">TransformedList</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">tfm</span><span class="p">)</span>
+<span class="n">datasets</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+<span class="c1"># NB: `DataSource` is an easier way to handle this common case</span>
+<span class="n">train_ds</span><span class="p">,</span><span class="n">valid_ds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">datasets</span><span class="o">.</span><span class="n">subset</span><span class="p">,</span> <span class="n">splits</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">train_ds</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">xd</span><span class="p">,</span><span class="n">yd</span> <span class="o">=</span> <span class="n">train_ds</span><span class="o">.</span><span class="n">decode_at</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">parent_label</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="n">yd</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span><span class="n">xd</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -830,8 +957,9 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TfmDataLoader" class="doc_header"><code>class</code> <code>TfmDataLoader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmDataLoader--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TfmDataLoader</code>(<strong><code>dl</code></strong>, <strong><code>tfms</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="<code>class</code> <code>TfmDataLoader</code>" class="doc_header"><code>class</code> <code>TfmDataLoader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmDataLoader--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TfmDataLoader</code>(<strong><code>dataset</code></strong>, <strong><code>tfm</code></strong>=<em><code>None</code></em>, <strong><code>batch_size</code></strong>=<em><code>16</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>batch_sampler</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>1</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
 </blockquote>
+<p>Transformed <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> using a <a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a> of <code>tfm</code></p>
 
 </div>
 
@@ -846,15 +974,127 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">neg</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfm</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">neg</span><span class="p">)</span>
+<span class="n">dummy_tfm</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">noop</span><span class="p">,</span> <span class="n">shows</span><span class="o">=</span><span class="n">show_title</span><span class="p">)</span>
 <span class="n">start</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">dl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmDataLoader</span><span class="p">(</span><span class="n">dl</span><span class="p">,</span> <span class="n">tfms</span><span class="p">)</span>
+<span class="n">tl</span> <span class="o">=</span> <span class="n">TransformedList</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">dummy_tfm</span><span class="p">)</span>
+<span class="n">tl</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmDataLoader</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">tl</span><span class="p">,</span> <span class="n">tfm</span><span class="p">,</span> <span class="n">is_tuple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">tdl</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tdl</span><span class="p">),</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tl</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">tdl</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
 
-<span class="n">b</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Methods">Methods<a class="anchor-link" href="#Methods">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>TfmDataLoader.one_batch</code>" class="doc_header"><code>TfmDataLoader.one_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmDataLoader--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmDataLoader.one_batch</code>()</p>
+</blockquote>
+<p>Grab first batch of <code>dl</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
 <span class="n">test_eq</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">tdl</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>TfmDataLoader.decode</code>" class="doc_header"><code>TfmDataLoader.decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmDataLoader--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmDataLoader.decode</code>(<strong><code>b</code></strong>)</p>
+</blockquote>
+<p>Decode <code>b</code> using <code>ds_tfm</code> and <code>tfm</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">tdl</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>TfmDataLoader.show_batch</code>" class="doc_header"><code>TfmDataLoader.show_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmDataLoader--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmDataLoader.show_batch</code>(<strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>max_rows</code></strong>=<em><code>1000</code></em>, <strong><code>ctxs</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Show each item of <code>b</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_stdout</span><span class="p">(</span><span class="n">tdl</span><span class="o">.</span><span class="n">show_batch</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;(tensor(0),)</span>
+<span class="s2">(tensor(1),)</span>
+<span class="s2">(tensor(2),)</span>
+<span class="s2">(tensor(3),)&quot;&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -874,7 +1114,288 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DataBunch" class="doc_header"><code>class</code> <code>DataBunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>)</p>
+<h2 id="<code>class</code> <code>Cuda</code>" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Cuda--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>device(type='cuda', index=0)</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>is_tuple</code></strong>=<em><code>None</code></em>) :: <a href="/data.pipeline.html#Transform"><code>Transform</code></a></p>
+</blockquote>
+<p>Move batch to <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a> (defaults to <a href="/core.html#defaults.device"><code>defaults.device</code></a>)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfm</span> <span class="o">=</span> <span class="n">Cuda</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Cuda.encodes</code>" class="doc_header"><code>Cuda.encodes</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Cuda--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.encodes</code>(<strong><code>b</code></strong>)</p>
+</blockquote>
+<p>Move batch to <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note that, like all <a href="/data.pipeline.html#Transform"><code>Transform</code></a>s, <code>encodes</code> is called by <code>tfm()</code> and <code>decodes</code> is called by <code>tfm.decode()</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">tfm</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span><span class="s1">&#39;torch.cuda.LongTensor&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Cuda.decodes</code>" class="doc_header"><code>Cuda.decodes</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Cuda--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.decodes</code>(<strong><code>b</code></strong>)</p>
+</blockquote>
+<p>Return batch to CPU</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">tfm</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span><span class="s1">&#39;torch.LongTensor&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="<code>class</code> <code>ByteToFloatTensor</code>" class="doc_header"><code>class</code> <code>ByteToFloatTensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#ByteToFloatTensor--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ByteToFloatTensor</code>(<strong><code>div</code></strong>=<em><code>True</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>is_tuple</code></strong>=<em><code>None</code></em>) :: <a href="/data.pipeline.html#Transform"><code>Transform</code></a></p>
+</blockquote>
+<p>Transform image to float tensor, optionally dividing by 255 (e.g. for images).</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">tensor</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">tfm</span> <span class="o">=</span> <span class="n">ByteToFloatTensor</span><span class="p">(</span><span class="n">is_tuple</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ft</span> <span class="o">=</span> <span class="n">tfm</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">([</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ft</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span><span class="s1">&#39;torch.FloatTensor&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span><span class="s1">&#39;torch.LongTensor&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="<code>class</code> <code>Normalize</code>" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Normalization--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>is_tuple</code></strong>=<em><code>None</code></em>) :: <a href="/data.pipeline.html#Transform"><code>Transform</code></a></p>
+</blockquote>
+<p>Normalize/denorm batch</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">broadcast_vec</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">ndim</span><span class="p">,</span> <span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="n">cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="s2">&quot;Make a vector broadcastable over `dim` (out of `ndim` total) by prepending and appending unit axes&quot;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">ndim</span>
+    <span class="n">v</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">to_device</span> <span class="k">if</span> <span class="n">cuda</span> <span class="k">else</span> <span class="n">noop</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="n">o</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mean</span><span class="p">,</span><span class="n">std</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,[</span><span class="mf">0.5</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
+<span class="n">mean</span><span class="p">,</span><span class="n">std</span> <span class="o">=</span> <span class="n">broadcast_vec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
+<span class="n">dl_tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">Cuda</span><span class="p">(),</span> <span class="n">ByteToFloatTensor</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span><span class="n">std</span><span class="p">)]</span>
+<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmDataLoader</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">dl_tfms</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span>  <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+<span class="n">xd</span><span class="p">,</span><span class="n">yd</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">decode</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+<span class="n">xd</span> <span class="o">=</span> <span class="n">xd</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span> <span class="s1">&#39;torch.cuda.FloatTensor&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">xd</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span> <span class="s1">&#39;torch.FloatTensor&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">&lt;</span><span class="mf">0.0</span>
+<span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">&gt;</span><span class="mf">0.5</span>
+<span class="k">assert</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">xd</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">1</span>
+<span class="k">assert</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">xd</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">&lt;</span><span class="mf">0.5</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_</span><span class="p">,</span><span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">tdl</span><span class="o">.</span><span class="n">show_batch</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="n">ctxs</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="<code>class</code> <code>DataBunch</code>" class="doc_header"><code>class</code> <code>DataBunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
 </blockquote>
 <p>Basic wrapper around several <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>s.</p>
 
@@ -891,12 +1412,126 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dbch</span> <span class="o">=</span> <span class="n">DataBunch</span><span class="p">(</span><span class="n">dl</span><span class="p">,</span><span class="n">tdl</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dbch</span><span class="o">.</span><span class="n">train_dl</span><span class="p">)))</span>
-<span class="n">test_eq</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">dbch</span><span class="o">.</span><span class="n">valid_dl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">())</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dbch</span> <span class="o">=</span> <span class="n">DataBunch</span><span class="p">(</span><span class="n">tdl</span><span class="p">,</span><span class="n">tdl</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span>  <span class="o">=</span> <span class="n">dbch</span><span class="o">.</span><span class="n">train_dl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+<span class="n">x2</span><span class="p">,</span><span class="n">y2</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tdl</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
+<span class="n">x2</span><span class="p">,</span><span class="n">y2</span> <span class="o">=</span> <span class="n">dbch</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>DataBunch.__getitem__</code>" class="doc_header"><code>DataBunch.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataBunch.__getitem__</code>(<strong><code>i</code></strong>)</p>
+</blockquote>
+<p>Retrieve <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> at <code>i</code> (<code>0</code> is training, <code>1</code> is validation)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span> <span class="o">=</span> <span class="n">dbch</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="train_dl" class="doc_header">train_dl<a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="valid_dl" class="doc_header">valid_dl<a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="train_ds" class="doc_header">train_ds<a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <code>Dataset</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="valid_ds" class="doc_header">valid_ds<a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <code>Dataset</code></p>
+
+</div>
+
+</div>
+
 </div>
 </div>
 
