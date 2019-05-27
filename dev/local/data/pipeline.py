@@ -35,12 +35,10 @@ class Transform():
               show="Call `shows` with decoded `o`")
 
 @docs
-class Pipeline():
+class Pipeline(NewChk):
     "A pipeline of composed (for encode/decode) transforms, setup one at a time"
-    def __new__(cls, tfms): return tfms if isinstance(tfms,cls) else super().__new__(cls)
-
     def __init__(self, tfms):
-        if hasattr(self,'_tfms'): return
+        if self._newchk: return
         self.tfms,self._tfms = [],[Transform.create(t) for t in L(tfms)]
 
     def setup(self, items=None):

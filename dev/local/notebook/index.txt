@@ -18,6 +18,7 @@
   "is_iter": "01_core.ipynb",
   "coll_repr": "01_core.ipynb",
   "GetAttr": "01_core.ipynb",
+  "NewChk": "01_core.ipynb",
   "L": "01_core.ipynb",
   "defaults": "01_core.ipynb",
   "ifnone": "01_core.ipynb",
