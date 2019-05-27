@@ -32,9 +32,14 @@ def image_resize(img, size, resample=Image.BILINEAR):
     return img.resize(size, resample=resample)
 image_resize.order=10
 
-def ImageResizer(size, resample=Image.BILINEAR):
-    if not is_listy(size): size=(size,size)
-    return partialler(image_resize, size=size, resample=resample)
+class ImageResizer(MappedTransform):
+    "Resize image to `size` using `resample"
+    def __init__(self, size, resample=Image.BILINEAR, mask=None, mapped=None):
+        super().__init__(mask, mapped)
+        if not is_listy(size): size=(size,size)
+        self.size,self.resample = size,resample
+
+    def _encode_one(self, o): return image_resize(o, size=self.size, resample=self.resample)
 
 def image2byte(img):
     "Transform image to byte tensor in `c*h*w` dim order."
@@ -46,6 +51,8 @@ def unpermute_image(img):
     "Convert `c*h*w` dim order to `h*w*c` (or just `h*w` if 1 channel)"
     return img[0] if img.shape[0] == 1 else img.permute(1,2,0)
 
-def ImageToByteTensor():
+class ImageToByteTensor(MappedTransform):
     "Transform image to byte tensor in `c*h*w` dim order."
-    return Transform(image2byte, decodes=unpermute_image, order=15)
+    order=15
+    def _encode_one(self, o): return image2byte(o)
+    def _decode_one(self, o): return unpermute_image(o)

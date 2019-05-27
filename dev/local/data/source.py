@@ -34,6 +34,11 @@ class DataSource(PipedList):
         if is_iter(i): return L(self.tfm(it, filt=f) for it,f in zip(its,fts))
         else: return self.tfm(its, filt=fts)
 
+    @classmethod
+    def pipelines(cls, items, tfms=None, filts=None, xtra=None):
+        "Create `DataSource` from `Pipeline` starting with `Pipelines` of `tfms` then transforms in `xtra`"
+        return cls(items, Pipelines.xtra(tfms, xtra=xtra), filts=filts)
+
     _docs = dict(len="`len` of subset `filt`",
                  subset="Filtered `DsrcSubset` `i`",
                  subsets="Iterator for all subsets")

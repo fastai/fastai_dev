@@ -2,7 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_title', 'show_titled_image',
-           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'MaskedTransform', 'ByteToFloatTensor',
+           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'MappedTransform', 'ByteToFloatTensor',
            'Normalize', 'DataBunch']
 
 from ..imports import *
@@ -141,6 +141,7 @@ class TfmDataLoader(GetAttr):
                  sampler=None, batch_sampler=None, num_workers=1, **kwargs):
         self.dl = DataLoader(dataset, batch_size, shuffle, sampler, batch_sampler, num_workers=num_workers)
         self.tfm = Pipeline(tfms)
+        self.tfm.set_mapped()
         self.tfm.setup(self)
         self.default = self.dl # for `GetAttr`
         for k,v in kwargs.items(): setattr(self,k,v)
@@ -171,22 +172,28 @@ class Cuda(Transform):
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
-class MaskedTransform(Transform):
-    "Abstract class to apply a `Transform` to elements of a collection based on a `mask` (defaults to (True,False))."
-    def __init__(self, mask=None, with_lbl=True): self.mask,self.with_lbl = ifnone(mask, (True,False)),with_lbl
+@docs
+class MappedTransform(Transform):
+    "Abstract class to map a `Transform` to elements of a collection based on a `mask` (defaults to (True,False))."
+    def __init__(self, mask=None, mapped=None): self.mask,self.mapped = ifnone(mask, (True,False)),mapped
     def encodes(self, b): return self._apply(self._encode_one,b)
     def decodes(self, b): return self._apply(self._decode_one,b)
+    def _decode_one(self, b): return b
+    def set_mapped(self, tf=True): self.mapped = ifnone(self.mapped,tf)
 
     def _apply(self,f,b):
-        if self.with_lbl: return tuple(f(o) if p else o for o,p in zip(b,self.mask))
-        return f(b)
+        return tuple(f(o) if p else o for o,p in zip(b,self.mask)) if self.mapped else f(b)
+
+    _docs=dict(encodes="Map transform over `b` if `mapped`, otherwise apply transform directly",
+               decodes="Map transform decode over `b` if `mapped`, otherwise apply transform directly",
+               set_mapped="Set `mapped` to `tf` if it was `None`")
 
 @docs
-class ByteToFloatTensor(MaskedTransform):
+class ByteToFloatTensor(MappedTransform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order=20 #Need to run after CUDA if on the GPU
-    def __init__(self, div=True, mask=None, with_lbl=True):
-        super().__init__(mask, with_lbl)
+    def __init__(self, div=True, mask=None, mapped=None):
+        super().__init__(mask, mapped)
         self.div = div
 
     def _encode_one(self, o): return o.float().div_(255.) if self.div else o.float()
@@ -196,11 +203,11 @@ class ByteToFloatTensor(MaskedTransform):
                decodes="Clamp to (0,1) items matching `mask`")
 
 @docs
-class Normalize(MaskedTransform):
+class Normalize(MappedTransform):
     "Normalize/denorm batch"
     order=99
-    def __init__(self, mean, std, mask=None, with_lbl=True):
-        super().__init__(mask, with_lbl)
+    def __init__(self, mean, std, mask=None, mapped=None):
+        super().__init__(mask, mapped)
         self.mean,self.std = mean,std
 
     def _encode_one(self, x): return (x-self.mean) / self.std

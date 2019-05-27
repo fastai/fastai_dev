@@ -34,7 +34,9 @@ class Transform():
               decodes="Override to implement custom decoding",
               show="Call `shows` with decoded `o`")
 
-@docs
+def _set_mapped(tfms, m=True):
+    for t in tfms: getattr(t,'set_mapped',noop)(m)
+
 class Pipeline(NewChk):
     "A pipeline of composed (for encode/decode) transforms, setup one at a time"
     def __init__(self, tfms):
@@ -43,6 +45,8 @@ class Pipeline(NewChk):
 
     def setup(self, items=None):
         "Transform setup"
+        if getattr(self,'has_setup', False): return
+        self.has_setup = True
         self.add(self._tfms, items)
         self._tfms = None
 
@@ -73,12 +77,7 @@ class Pipeline(NewChk):
             if hasattr(t, 'shows'): return t.show(o, *args, **kwargs)
             o = getattr(t, 'decode', noop)(o)
 
-    _docs = dict(__call__="Compose `__call__` of all `tfms` on `x`",
-                decode="Compose `decode` of all `tfms` on `x`",
-                decode_at="Decoded item at `idx`",
-                show_at="Show item at `idx`",
-                delete="Delete transform `idx` from pipeline",
-                remove="Remove `tfm` from pipeline")
+    def set_mapped(self, m=True): _set_mapped(self._tfms, m)
 
 @docs
 class PipedList(GetAttr):
@@ -88,7 +87,8 @@ class PipedList(GetAttr):
     def __init__(self, items, tfms):
         self.items = L(items)
         self.tfm = Pipeline(tfms)
-        if not isinstance(tfms,Pipeline): self.tfm.setup(self)
+        self.tfm.setup(self)
+        self.has_setup = True
         self.default = self.tfm
 
     def __getitem__(self, i):
@@ -139,8 +139,10 @@ class Pipelines(Transform):
         self.activ=None
 
     @classmethod
-    def create(cls, items, tfms, xtra=None):
+    def xtra(cls, tfms, xtra=None):
         "PipedList over `items` with `tfms` `Pipelines` as first tfm optionally followed by any `xtra` tfms"
-        return PipedList(items, cls(tfms)+L(xtra))
+        xtra = L(xtra)
+        _set_mapped(xtra)
+        return Pipeline(cls(tfms)+xtra)
 
     xt,yt = add_props(lambda i,x:x.tfms[i])
