@@ -37,7 +37,10 @@ class Transform():
 @docs
 class Pipeline():
     "A pipeline of composed (for encode/decode) transforms, setup one at a time"
+    def __new__(cls, tfms): return tfms if isinstance(tfms,cls) else super().__new__(cls)
+
     def __init__(self, tfms):
+        if hasattr(self,'_tfms'): return
         self.tfms,self._tfms = [],[Transform.create(t) for t in L(tfms)]
 
     def setup(self, items=None):
@@ -49,7 +52,7 @@ class Pipeline():
         "Call `setup` on all `tfms` and append them to this pipeline"
         for t in sorted(L(tfms), key=lambda o: getattr(o, 'order', 0)):
             self.tfms.append(t)
-            if hasattr(t, 'setup'): t.setup(items)
+            if hasattr(t, 'setup') and items is not None: t.setup(items)
 
     def composed(self, x, rev=False, fname='__call__', **kwargs):
         "Compose `{fname}` of all `self.tfms` (reversed if `rev`) on `x`"
@@ -86,8 +89,9 @@ class PipedList(GetAttr):
 
     def __init__(self, items, tfms):
         self.items = L(items)
-        self.default = self.tfm = Pipeline(tfms)
-        self.tfm.setup(self)
+        self.tfm = Pipeline(tfms)
+        if not isinstance(tfms,Pipeline): self.tfm.setup(self)
+        self.default = self.tfm
 
     def __getitem__(self, i):
         "Transformed item(s) at `i`"
@@ -99,6 +103,7 @@ class PipedList(GetAttr):
         transp = L(zip(*L(b)))
         return transp.mapped(partial(self.decode, **kwargs)).zipped()
 
+    def subset(self, idxs): return self.__class__(self.items[idxs], self.tfm)
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx): return self.show(self[idx])
     def __eq__(self, b): return all_equal(self, b)
@@ -107,7 +112,8 @@ class PipedList(GetAttr):
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfm}"
 
     _docs = dict(decode_at="Decoded item at `idx`",
-                 show_at  ="Show item at `idx`")
+                 show_at="Show item at `idx`",
+                 subset="New `PipedList` that only includes items at `idxs`")
 
 class Pipelines(Transform):
     "Create a `Pipeline` for each tfm in `tfms`. Generally used inside a `PipedList`"

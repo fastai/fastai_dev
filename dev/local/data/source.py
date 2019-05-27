@@ -29,7 +29,7 @@ class DataSource(PipedList):
     def __repr__(self): return '\n'.join(map(str,self.subsets())) + f'\ntfm - {self.tfm}'
 
     def __getitem__(self, i):
-        "Transformed item(s) at `i`"
+        "Transformed item(s) at `i`, using the appropriate filter"
         its,fts = self.items[i],self.filt_idx[i]
         if is_iter(i): return L(self.tfm(it, filt=f) for it,f in zip(its,fts))
         else: return self.tfm(its, filt=fts)
@@ -45,9 +45,9 @@ class DsrcSubset():
     "A filtered subset of a `DataSource`"
     def __init__(self, dsrc, filt): self.dsrc,self.filt,self.filts = dsrc,filt,dsrc.filts[filt]
     def __getitem__(self,i): return self.dsrc[self.filts[i]]
-    def decode(self, o, **kwargs): return self.dsrc.decode(o, self.filt, **kwargs)
+    def decode(self, o, **kwargs): return self.dsrc.decode(o, filt=self.filt, **kwargs)
     def decode_at(self, i, **kwargs): return self.decode(self[i], **kwargs)
-    def show_at  (self, i, **kwargs): return self.dsrc.show(self.decode_at(i), **kwargs)
+    def show_at  (self, i, **kwargs): return self.dsrc.show(self[i], filt=self.filt, **kwargs)
     def __len__(self): return len(self.filts)
     def __eq__(self,b): return all_equal(b,self)
     def __repr__(self): return coll_repr(self)

@@ -2,7 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_title', 'show_titled_image',
-           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'MaskedTransform', 'ByteToFloatTensode',
+           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'MaskedTransform', 'ByteToFloatTensor',
            'Normalize', 'DataBunch']
 
 from ..imports import *
@@ -113,13 +113,14 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     _order=1
-    def __init__(self, vocab=None, train_attr="train"):
-        self.vocab,self.train_attr = vocab,train_attr
+    def __init__(self, vocab=None, train_attr="train", subset_idx=None):
+        self.vocab,self.train_attr,self.subset_idx = vocab,train_attr,subset_idx
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
     def setup(self, dsrc):
         if self.vocab is not None: return
-        if self.train_attr: dsrc = getattr(dsrc,self.train_attr)
+        if self.subset_idx is not None: dsrc = dsrc.subset(self.subset_idx)
+        elif self.train_attr: dsrc = getattr(dsrc,self.train_attr)
         self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)
 
     def encodes(self, o): return self.o2i[o] if self.o2i else o
@@ -170,17 +171,20 @@ class Cuda(Transform):
 
 class MaskedTransform(Transform):
     "Abstract class to apply a `Transform` to elements of a collection based on a `mask` (defaults to (True,False))."
-    def __init__(self, mask=None): self.mask = ifnone(mask, (True,False))
-    def _apply(self,f,b): return tuple(f(o) if p else o for o,p in zip(b,self.mask))
+    def __init__(self, mask=None, with_lbl=True): self.mask,self.with_lbl = ifnone(mask, (True,False)),with_lbl
     def encodes(self, b): return self._apply(self._encode_one,b)
     def decodes(self, b): return self._apply(self._decode_one,b)
 
+    def _apply(self,f,b):
+        if self.with_lbl: return tuple(f(o) if p else o for o,p in zip(b,self.mask))
+        return f(b)
+
 @docs
-class ByteToFloatTensode(MaskedTransform):
+class ByteToFloatTensor(MaskedTransform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order=20 #Need to run after CUDA if on the GPU
-    def __init__(self, div=True, mask=None):
-        super().__init__(mask)
+    def __init__(self, div=True, mask=None, with_lbl=True):
+        super().__init__(mask, with_lbl)
         self.div = div
 
     def _encode_one(self, o): return o.float().div_(255.) if self.div else o.float()
@@ -193,8 +197,8 @@ class ByteToFloatTensode(MaskedTransform):
 class Normalize(MaskedTransform):
     "Normalize/denorm batch"
     order=99
-    def __init__(self, mean, std, mask=None):
-        super().__init__(mask)
+    def __init__(self, mean, std, mask=None, with_lbl=True):
+        super().__init__(mask, with_lbl)
         self.mean,self.std = mean,std
 
     def _encode_one(self, x): return (x-self.mean) / self.std

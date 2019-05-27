@@ -81,11 +81,12 @@ class L(GetAttr):
     _xtra =  [o for o in dir(list) if not o.startswith('_')]
 
     def __init__(self, items=None, *rest, use_list=False):
+        if hasattr(self,'items'): return
         items = [] if items is None else items
         self.items = self.default = list(items) if use_list else _listify(items)
         self.items += list(rest)
 
-    def __new__(cls, items=None, *rest, use_list=False): return items if isinstance(items,L) else super().__new__(cls)
+    def __new__(cls, items=None, *rest, use_list=False): return items if isinstance(items,cls) else super().__new__(cls)
     def __len__(self): return len(self.items)
     def __delitem__(self, i): del(self.items[i])
     def __repr__(self): return f'{coll_repr(self)}'
@@ -109,12 +110,12 @@ class L(GetAttr):
         if not is_iter(o): o = [o]*len(idx)
         for i,o_ in zip(idx,o): self.items[i] = o_
 
-    def sorted(self, key=None):
+    def sorted(self, key=None, reverse=False):
         "New `L` sorted by `key`. If key is str then use `attrgetter`. If key is int then use `itemgetter`."
         if isinstance(key,str):   k=lambda o:getattr(o,key,0)
         elif isinstance(key,int): k=itemgetter(key)
         else: k=key
-        return L(sorted(self.items, key=k))
+        return L(sorted(self.items, key=k, reverse=reverse))
 
     def mapped(self, f):    return L(map(f, self))
     def zipped(self):       return L(zip(*self))
