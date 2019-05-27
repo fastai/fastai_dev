@@ -37,10 +37,10 @@ class Transform():
 def _set_mapped(tfms, m=True):
     for t in tfms: getattr(t,'set_mapped',noop)(m)
 
-class Pipeline(NewChk):
+@newchk
+class Pipeline():
     "A pipeline of composed (for encode/decode) transforms, setup one at a time"
     def __init__(self, tfms):
-        if self._newchk: return
         self.tfms,self._tfms = [],[Transform.create(t) for t in L(tfms)]
 
     def setup(self, items=None):
