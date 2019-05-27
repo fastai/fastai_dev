@@ -137,8 +137,10 @@ class TfmDataLoader(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfms`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dl, tfms=None, **kwargs):
-        self.dl,self.tfm = dl,Pipeline(tfms)
+    def __init__(self, dataset, tfms=None, batch_size=16, shuffle=False,
+                 sampler=None, batch_sampler=None, num_workers=1, **kwargs):
+        self.dl = DataLoader(dataset, batch_size, shuffle, sampler, batch_sampler, num_workers=num_workers)
+        self.tfm = Pipeline(tfms)
         self.tfm.setup(self)
         self.default = self.dl # for `GetAttr`
         for k,v in kwargs.items(): setattr(self,k,v)
@@ -153,7 +155,7 @@ class TfmDataLoader(GetAttr):
         if b is None: b=self.one_batch()
         b = self.tfm.decode(b)
         rows = itertools.islice(zip(*L(b)), max_rows)
-        if ctxs is None: ctxs = [None]*len(b)
+        if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
         for o,ctx in zip(rows,ctxs): self.dataset.show(o, ctx=ctx)
 
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
