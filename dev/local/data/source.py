@@ -35,9 +35,9 @@ class DataSource(PipedList):
         else: return self.tfm(its, filt=fts)
 
     @classmethod
-    def pipelines(cls, items, tfms=None, filts=None, xtra=None):
+    def pipelines(cls, items, tfms=None, filts=None, final_tfms=None):
         "Create `DataSource` from `Pipeline` starting with `Pipelines` of `tfms` then transforms in `xtra`"
-        return cls(items, Pipelines.xtra(tfms, xtra=xtra), filts=filts)
+        return cls(items, Pipelines.build(tfms, final_tfms=final_tfms), filts=filts)
 
     _docs = dict(len="`len` of subset `filt`",
                  subset="Filtered `DsrcSubset` `i`",

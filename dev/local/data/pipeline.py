@@ -139,10 +139,10 @@ class Pipelines(Transform):
         self.activ=None
 
     @classmethod
-    def xtra(cls, tfms, xtra=None):
+    def build(cls, tfms, final_tfms=None):
         "PipedList over `items` with `tfms` `Pipelines` as first tfm optionally followed by any `xtra` tfms"
-        xtra = L(xtra)
-        _set_mapped(xtra)
-        return Pipeline(cls(tfms)+xtra)
+        final_tfms = L(final_tfms)
+        _set_mapped(final_tfms)
+        return Pipeline(cls(tfms)+final_tfms)
 
     xt,yt = add_props(lambda i,x:x.tfms[i])
