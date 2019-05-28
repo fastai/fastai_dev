@@ -36,8 +36,8 @@ class DataSource(TfmdList):
 
     @classmethod
     def build(cls, items, tfms=None, filts=None, final_tfms=None):
-        "Create `DataSource` from `Pipeline` starting with `Tuplify` of `tfms` then transforms in `final_tfms`"
-        return cls(items, Tuplify.piped(tfms, final_tfms), filts=filts)
+        "Create `DataSource` from `Pipeline` starting with `TfmOver` of `tfms` then transforms in `final_tfms`"
+        return cls(items, TfmOver.piped(tfms, final_tfms), filts=filts)
 
     _docs = dict(len="`len` of subset `filt`",
                  setup="Transform setup",
