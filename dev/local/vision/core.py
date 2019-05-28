@@ -14,15 +14,13 @@ from PIL import Image
 
 class Imagify(Transform):
     "Open an `Image` from path `fn`, show with `cmap` and `alpha`"
-    def __init__(self, func=Image.open, cmap=None, alpha=1.):
+    def __init__(self, func=Image.open, **kwargs):
         super().__init__()
-        self.func,self.cmap,self.alpha = func,cmap,alpha
+        self.func,self.kw = func,kwargs
 
     def encodes(self, fn): return Image.open(fn)
-    def shows(self, im, ctx=None, figsize=None, cmap=None, alpha=None):
-        return show_image(im, ax=ctx, figsize=figsize,
-                          cmap=ifnone(cmap,self.cmap),
-                          alpha=ifnone(alpha,self.alpha))
+    def shows(self, im, ctx=None, figsize=None):
+        return show_image(im, ax=ctx, figsize=figsize, **self.kw)
 
 class ImageConverter(Transform):
     "Convert `img` to `mode`"
