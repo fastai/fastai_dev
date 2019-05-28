@@ -2,7 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_title', 'show_titled_image',
-           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'DataBunch']
+           'show_image_batch', 'Categorize', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -133,13 +133,13 @@ def _DataLoader__getattr(self,k):
 DataLoader.__getattr__ = _DataLoader__getattr
 
 @docs
-class TfmDataLoader(GetAttr):
+class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfm=None, batch_size=16, shuffle=False,
+    def __init__(self, dataset, tfm=None, bs=16, shuffle=False,
                  sampler=None, batch_sampler=None, num_workers=1, **kwargs):
-        self.dl = DataLoader(dataset, batch_size, shuffle, sampler, batch_sampler, num_workers=num_workers)
+        self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers)
         self.default,self.tfm = self.dl,tfm
         for k,v in kwargs.items(): setattr(self,k,v)
 
@@ -157,11 +157,11 @@ class TfmDataLoader(GetAttr):
         for o,ctx in zip(rows,ctxs): self.dataset.show(o, ctx=ctx)
 
     @classmethod
-    def build(cls, dataset, tfms=None, is_tuple=True, batch_size=16, shuffle=False,
+    def build(cls, dataset, tfms=None, bs=16, is_tuple=True, shuffle=False,
               sampler=None, batch_sampler=None, num_workers=1, **kwargs):
         tfm = Pipeline(tfms)
         if is_tuple: tfm.set_tupled()
-        res = cls(dataset, tfm, batch_size, shuffle, sampler, batch_sampler, num_workers=num_workers)
+        res = cls(dataset, tfm, bs, shuffle, sampler, batch_sampler, num_workers=num_workers)
         tfm.setup(res)
         return res
 
