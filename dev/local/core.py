@@ -2,8 +2,8 @@
 
 __all__ = ['newchk', 'chk', 'tensor', 'add_docs', 'docs', 'custom_dir', 'is_iter', 'coll_repr', 'GetAttr', 'L',
            'defaults', 'ifnone', 'noop', 'noops', 'tuplify', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs',
-           'apply', 'to_detach', 'to_half', 'to_float', 'to_device', 'to_cpu', 'compose', 'mapper', 'partialler',
-           'add_props', 'make_cross_image', 'opt_call', 'all_union', 'all_disjoint']
+           'apply', 'to_detach', 'to_half', 'to_float', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs',
+           'compose', 'mapper', 'partialler', 'add_props', 'make_cross_image', 'opt_call', 'all_union', 'all_disjoint']
 
 from .test import *
 from .imports import *
@@ -219,6 +219,22 @@ def to_device(b, device=defaults.device):
 def to_cpu(b):
     "Recursively map lists of tensors in `b ` to the cpu."
     return to_device(b,'cpu')
+
+def item_find(x, idx=0):
+    "Recursively takes the `idx`-th element of `x`"
+    if is_listy(x): return item_find(x[idx])
+    if isinstance(x,dict):
+        key = list(x.keys())[idx] if isinstance(idx, int) else idx
+        return item_find(x[key])
+    return x
+
+def find_device(b):
+    "Recursively search the device of `b`."
+    return item_find(b).device
+
+def find_bs(b):
+    "Recursively search the batch size of `b`."
+    return item_find(b).shape[0]
 
 @chk
 def compose(*funcs: Callable, order=None):
