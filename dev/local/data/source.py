@@ -12,14 +12,14 @@ from ..notebook.showdoc import show_doc
 @docs
 class DataSource(TfmdList):
     "Applies a `tfm` to filtered subsets of `items`"
-    def __init__(self, items, tfm=noop, filts=None):
+    def __init__(self, items, tfm=noop, filts=None, do_setup=True):
         if filts is None: filts = [range_of(items)]
         self.filts = L(mask2idxs(filt) for filt in filts)
         # Create map from item id to filter id
         assert all_disjoint(self.filts)
         self.filt_idx = L([None]*len(items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
-        super().__init__(items, tfm)
+        super().__init__(items, tfm, do_setup=do_setup)
 
     @property
     def n_subsets(self): return len(self.filts)
@@ -37,9 +37,7 @@ class DataSource(TfmdList):
     @classmethod
     def build(cls, items, tfms=None, filts=None, final_tfms=None):
         "Create `DataSource` from `Pipeline` starting with `Tuplify` of `tfms` then transforms in `final_tfms`"
-        res = cls(items, Tuplify.piped(tfms, final_tfms), filts=filts)
-        res.setup()
-        return res
+        return cls(items, Tuplify.piped(tfms, final_tfms), filts=filts)
 
     _docs = dict(len="`len` of subset `filt`",
                  setup="Transform setup",
