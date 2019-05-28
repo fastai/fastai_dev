@@ -101,10 +101,13 @@ class L(GetAttr):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     _xtra =  [o for o in dir(list) if not o.startswith('_')]
 
-    def __init__(self, items=None, *rest, use_list=False):
+    def __init__(self, items=None, *rest, use_list=False, match=None):
         items = [] if items is None else items
         self.items = self.default = list(items) if use_list else _listify(items)
         self.items += list(rest)
+        if match is not None:
+            if len(self.items)==1: self.items = self.items*len(match)
+            else: assert len(self.items)==len(match), 'Match length mismatch'
 
     def __len__(self): return len(self.items)
     def __delitem__(self, i): del(self.items[i])
@@ -158,9 +161,9 @@ def noops(self, x, *args, **kwargs):
     "Do nothing (method)"
     return x
 
-def tuplify(o):
+def tuplify(o, use_list=False, match=None):
     "Make `o` a tuple"
-    return tuple(L(o))
+    return tuple(L(o, use_list=use_list, match=match))
 
 def uniqueify(x, sort=False, bidir=False, start=None):
     "Return the unique elements in `x`, optionally `sort`-ed, optionally return the reverse correspondance."

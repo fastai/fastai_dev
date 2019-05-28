@@ -173,6 +173,7 @@ def convert_nb(fname, dest_path='docs'):
     meta_jekyll = get_metadata(nb['cells'])
     meta_jekyll['nb_path'] = f'{fname.parent.name}/{fname.name}'
     nb = execute_nb(nb, name=_name)
+    nb['cells'] = [clean_exports(c) for c in nb['cells']]
     with open(f'{dest_path}/{dest_name}','w') as f:
         f.write(_exporter().from_notebook_node(nb, resources=meta_jekyll)[0])
 

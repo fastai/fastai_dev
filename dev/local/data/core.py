@@ -2,7 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_title', 'show_titled_image',
-           'show_image_batch', 'Categorize', 'TfmDataLoader', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'DataBunch']
+           'show_image_batch', 'Categorize', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -117,7 +117,7 @@ class Categorize(Transform):
         self.vocab,self.train_attr,self.subset_idx = vocab,train_attr,subset_idx
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
-    def setup(self, dsrc):
+    def setups(self, dsrc):
         if self.vocab is not None: return
         if self.subset_idx is not None: dsrc = dsrc.subset(self.subset_idx)
         elif self.train_attr: dsrc = getattr(dsrc,self.train_attr)
@@ -133,15 +133,18 @@ def _DataLoader__getattr(self,k):
 DataLoader.__getattr__ = _DataLoader__getattr
 
 @docs
-class TfmDataLoader(GetAttr):
+class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfm=None, batch_size=16, shuffle=False,
+    def __init__(self, dataset, tfms=None, bs=16, is_tuple=True, shuffle=False,
                  sampler=None, batch_sampler=None, num_workers=1, **kwargs):
-        self.dl = DataLoader(dataset, batch_size, shuffle, sampler, batch_sampler, num_workers=num_workers)
+        tfm = Pipeline(tfms)
+        if is_tuple: tfm.set_tupled()
+        self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers)
         self.default,self.tfm = self.dl,tfm
         for k,v in kwargs.items(): setattr(self,k,v)
+        tfm.setup(self)
 
     def __len__(self): return len(self.dl)
     def __iter__(self): return map(self.tfm, self.dl)
@@ -155,15 +158,6 @@ class TfmDataLoader(GetAttr):
         rows = itertools.islice(zip(*L(b)), max_rows)
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
         for o,ctx in zip(rows,ctxs): self.dataset.show(o, ctx=ctx)
-
-    @classmethod
-    def build(cls, dataset, tfms=None, is_tuple=True, batch_size=16, shuffle=False,
-              sampler=None, batch_sampler=None, num_workers=1, **kwargs):
-        tfm = Pipeline(tfms)
-        if is_tuple: tfm.set_tupled()
-        res = cls(dataset, tfm, batch_size, shuffle, sampler, batch_sampler, num_workers=num_workers)
-        tfm.setup(res)
-        return res
 
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
                  show_batch="Show each item of `b`",
