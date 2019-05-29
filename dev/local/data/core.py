@@ -166,8 +166,8 @@ class TfmdDL(GetAttr):
 @docs
 class Cuda(Transform):
     "Move batch to `device` (defaults to `defaults.device`)"
-    def __init__(self,device=defaults.device, mask=None, is_tuple=None):
-        super().__init__(mask=mask,is_tuple=is_tuple)
+    def __init__(self,device=defaults.device):
+        super().__init__(is_tuple=False)
         self.device=device
 
     def encodes(self, b): return to_device(b, self.device)

@@ -20,7 +20,9 @@ class Imagify(Transform):
 
     def encodes(self, fn): return Image.open(fn)
     def shows(self, im, ctx=None, figsize=None):
-        return show_image(im, ax=ctx, figsize=figsize, **self.kw)
+        kw = self.kw
+        if figsize: kw['figsize']=figsize
+        return show_image(im, ax=ctx, **kw)
 
 class ImageConverter(Transform):
     "Convert `img` to `mode`"
