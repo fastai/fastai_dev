@@ -17,6 +17,9 @@ sidebar_d = {
     'Tutorials': {
         'Pets tutorial': '/pets.tutorial',
     },
+    'Training': {
+        'Training loop': '/learner',
+    },
     'Data': {
         'Data Pipeline': '/data.pipeline',
         'Data Source': '/data.source',

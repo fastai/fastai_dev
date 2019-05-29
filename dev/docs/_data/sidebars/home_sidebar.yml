@@ -22,6 +22,12 @@ entries:
     title: Tutorials
   - folderitems:
     - output: web,pdf
+      title: Training loop
+      url: /learner.html
+    output: web
+    title: Training
+  - folderitems:
+    - output: web,pdf
       title: Data Pipeline
       url: /data.pipeline.html
     - output: web,pdf

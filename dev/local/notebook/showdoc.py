@@ -145,7 +145,7 @@ def _format_func_doc(func, full_name=None):
     name = f'<code>{full_name or func.__name__}</code>'
     arg_str = f"({', '.join(fmt_params)})"
     f_name = f"<code>class</code> {name}" if inspect.isclass(func) else name
-    return f'{f_name}',f'{_escape_chars(name)}{arg_str}'
+    return f'{f_name}',f'{name}{arg_str}'
 
 def _format_cls_doc(cls, full_name):
     "Formatted `cls` definition to show in documentation"
