@@ -172,7 +172,7 @@ class TfmOver(Transform):
         tfms = L(ifnone(tfms,[None]))
         final_tfms = L(final_tfms)
         _set_tupled(final_tfms)
-        init_tfm = partial(tuplify,match=tfms)
+        init_tfm = partial(replicate,match=tfms)
         return Pipeline([init_tfm,cls(tfms)] + final_tfms)
 
     xt,yt = add_props(lambda i,x:x.tfms[i])

@@ -25,6 +25,7 @@
   "noop": "01_core.ipynb",
   "noops": "01_core.ipynb",
   "tuplify": "01_core.ipynb",
+  "replicate": "01_core.ipynb",
   "uniqueify": "01_core.ipynb",
   "setify": "01_core.ipynb",
   "is_listy": "01_core.ipynb",
