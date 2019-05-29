@@ -4,7 +4,7 @@ __all__ = ['newchk', 'chk', 'tensor', 'add_docs', 'docs', 'custom_dir', 'is_iter
            'defaults', 'ifnone', 'noop', 'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of',
            'mask2idxs', 'apply', 'to_detach', 'to_half', 'to_float', 'to_device', 'to_cpu', 'item_find', 'find_device',
            'find_bs', 'compose', 'mapper', 'partialler', 'add_props', 'make_cross_image', 'opt_call', 'all_union',
-           'all_disjoint']
+           'all_disjoint', 'camel2snake', 'trainable_params', 'camel2snake']
 
 from .test import *
 from .imports import *
@@ -154,7 +154,7 @@ def ifnone(a, b):
     "`b` if `a` is None else `a`"
     return b if a is None else a
 
-def noop (x, *args, **kwargs):
+def noop (x=None, *args, **kwargs):
     "Do nothing"
     return x
 
@@ -293,3 +293,22 @@ def all_union(sets):
 def all_disjoint(sets):
     "`True` iif no element appears in more than one item of `sets`"
     return sum(map(len,sets))==len(all_union(sets))
+
+#Comes from 12_learner.ipynb.
+_camel_re1 = re.compile('(.)([A-Z][a-z]+)')
+_camel_re2 = re.compile('([a-z0-9])([A-Z])')
+def camel2snake(name):
+    s1 = re.sub(_camel_re1, r'\1_\2', name)
+    return re.sub(_camel_re2, r'\1_\2', s1).lower()
+
+#Comes from 12_learner.ipynb.
+def trainable_params(m):
+    "Return all trainable parameters of `m`"
+    return [p for p in m.parameters() if p.requires_grad]
+
+#Comes from 12_learner.ipynb.
+_camel_re1 = re.compile('(.)([A-Z][a-z]+)')
+_camel_re2 = re.compile('([a-z0-9])([A-Z])')
+def camel2snake(name):
+    s1 = re.sub(_camel_re1, r'\1_\2', name)
+    return re.sub(_camel_re2, r'\1_\2', s1).lower()
