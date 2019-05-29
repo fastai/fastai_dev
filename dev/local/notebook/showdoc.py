@@ -132,15 +132,20 @@ def _format_enum_doc(enum, full_name):
     vals = ', '.join(enum.__members__.keys())
     return f'<code>{full_name}</code>',f'<code>Enum</code> = [{vals}]'
 
+def _escape_chars(s):
+    return s.replace('_', '\_')
+
 def _format_func_doc(func, full_name=None):
     "Formatted `func` definition to show in documentation"
-    sig = inspect.signature(func)
-    name = f'<code>{full_name or func.__name__}</code>'
-    fmt_params = [format_param(param) for name,param
+    try:
+        sig = inspect.signature(func)
+        fmt_params = [format_param(param) for name,param
                   in sig.parameters.items() if name not in ('self','cls')]
+    except: fmt_params = []
+    name = f'<code>{full_name or func.__name__}</code>'
     arg_str = f"({', '.join(fmt_params)})"
     f_name = f"<code>class</code> {name}" if inspect.isclass(func) else name
-    return f'{f_name}',f'{name}{arg_str}'
+    return f'{f_name}',f'{_escape_chars(name)}{arg_str}'
 
 def _format_cls_doc(cls, full_name):
     "Formatted `cls` definition to show in documentation"
@@ -157,8 +162,7 @@ def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, defau
         if is_enum(elt.__class__):   name,args = _format_enum_doc(elt, name)
         else:                        name,args = _format_cls_doc (elt, name)
     elif isinstance(elt, Callable):  name,args = _format_func_doc(elt, name)
-    elif isinstance(elt, property):  name,args = name, ''
-    else: raise Exception(f'show_doc not supported for {name}')
+    else:                            name,args = name, ''
     link = get_source_link(elt)
     source_link = f'<a href="{link}" class="source_link" style="float:right">[source]</a>'
     title_level = title_level or (default_cls_level if inspect.isclass(elt) else 4)
