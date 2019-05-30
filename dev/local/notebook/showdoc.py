@@ -162,7 +162,7 @@ def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, defau
         if is_enum(elt.__class__):   name,args = _format_enum_doc(elt, name)
         else:                        name,args = _format_cls_doc (elt, name)
     elif isinstance(elt, Callable):  name,args = _format_func_doc(elt, name)
-    else:                            name,args = name, ''
+    else:                            name,args = f"<code>{name}</code>", ''
     link = get_source_link(elt)
     source_link = f'<a href="{link}" class="source_link" style="float:right">[source]</a>'
     title_level = title_level or (default_cls_level if inspect.isclass(elt) else 4)
