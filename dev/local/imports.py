@@ -1,5 +1,5 @@
 import io,operator,sys,os,re,os,mimetypes,csv,itertools,json,shutil,glob,pickle,tarfile
-import hashlib,itertools,types,random,inspect,functools,random,time,math
+import hashlib,itertools,types,random,inspect,functools,random,time,math,copy
 
 from contextlib import redirect_stdout,contextmanager
 from typing import Iterable,Iterator,Generator,Callable,Sequence,List,Tuple,Union,Optional

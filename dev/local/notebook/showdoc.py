@@ -80,9 +80,15 @@ def get_source_link(func, local=False, is_name=None):
     find_name,nb_name = src
     nb = read_nb(nb_name)
     pat = re.compile(f'^{find_name}\s+=|^(def|class)\s+{find_name}\s*\(', re.MULTILINE)
+    if len(find_name.split('.')) == 2:
+        clas,func = find_name.split('.')
+        pat2 = re.compile(f'@patch\s*\ndef\s+{func}\s*\([^:]*:\s*{clas}\s*(?:,|\))')
+    else: pat2 = None
     for i,cell in enumerate(nb['cells']):
-        if cell['cell_type'] == 'code' and re.search(pat, cell['source']): break
-    if re.search(pat, cell['source']) is None:
+        if cell['cell_type'] == 'code':
+            if re.search(pat, cell['source']):  break
+            if pat2 is not None and re.search(pat2, cell['source']): break
+    if re.search(pat, cell['source']) is None and (pat2 is not None and re.search(pat2, cell['source']) is None):
         return '' if is_name else get_function_source(func)
     header_pat = re.compile(r'^\s*#+\s*(.*)$')
     while i >= 0:
