@@ -159,6 +159,8 @@
   "AvgLoss": "12_learner.ipynb",
   "AvgSmoothLoss": "12_learner.ipynb",
   "Recorder": "12_learner.ipynb",
+  "Learner.no_logging": "12_learner.ipynb",
+  "Learner.validate": "12_learner.ipynb",
   "in_ipython": "90_notebook_core.ipynb",
   "IN_IPYTHON": "90_notebook_core.ipynb",
   "in_colab": "90_notebook_core.ipynb",
