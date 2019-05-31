@@ -103,6 +103,9 @@ class Learner():
 
     def add_cb(self, cb):
         "Add `cb` to the list of `Callback` and register `self` as their learner"
+        if getattr(self, cb.name, None):
+            error = f"There is another object registered in self.{cb.name}, pick a new name."
+            assert isinstance(getattr(self, cb.name), cb.__class__), error
         cb.learn = self
         setattr(self, cb.name, cb)
         self.cbs.append(cb)
