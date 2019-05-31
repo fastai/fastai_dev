@@ -50,7 +50,9 @@ class Item():
     def shows(o,**kwargs): print(o)
 
 def _set_tupled(tfms, m=True):
+    tfms = L(tfms)
     for t in tfms: getattr(t,'set_tupled',noop)(m)
+    return tfms
 
 @newchk
 class Pipeline(Transform):
@@ -164,9 +166,7 @@ class TfmOver(Transform):
     def piped(cls, tfms=None, final_tfms=None):
         "`Pipeline` that duplicates input, then maps `TfmOver` over `tfms`, optionally followed by any `final_tfms`"
         tfms = L(ifnone(tfms,[None]))
-        final_tfms = L(final_tfms)
-        _set_tupled(final_tfms)
         init_tfm = partial(replicate,match=tfms)
-        return Pipeline([init_tfm,cls(tfms)] + final_tfms)
+        return Pipeline([init_tfm,cls(tfms)] + _set_tupled(final_tfms))
 
     xt,yt = add_props(lambda i,x:x.tfms[i])
