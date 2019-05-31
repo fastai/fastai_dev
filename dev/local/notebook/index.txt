@@ -48,6 +48,7 @@
   "make_cross_image": "01_core.ipynb",
   "opt_call": "02_data_pipeline.ipynb",
   "Transform": "02_data_pipeline.ipynb",
+  "Item": "02_data_pipeline.ipynb",
   "Pipeline": "02_data_pipeline.ipynb",
   "make_tfm": "02_data_pipeline.ipynb",
   "TfmdList": "02_data_pipeline.ipynb",

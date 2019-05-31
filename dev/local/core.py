@@ -115,6 +115,7 @@ class L(GetAttr):
     def __repr__(self): return f'{coll_repr(self)}'
     def __eq__(self,b): return all_equal(b,self)
     def __iter__(self): return (self[i] for i in range(len(self)))
+    def __mul__ (a,b): return L(a.items*b)
     def __add__ (a,b): return L(a.items+_listify(b))
     def __radd__(a,b): return L(b)+a
     def __addi__(a,b):
