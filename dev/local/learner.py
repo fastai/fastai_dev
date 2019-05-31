@@ -2,7 +2,7 @@
 
 __all__ = ['Callback', 'TrainEvalCallback', 'CancelFitException', 'CancelEpochException', 'CancelTrainException',
            'CancelValidException', 'CancelBatchException', 'event', 'Learner', 'VerboseCallback', 'Metric', 'AvgMetric',
-           'AvgLoss', 'AvgSmoothLoss', 'Recorder']
+           'AvgLoss', 'AvgSmoothLoss', 'Recorder', 'GatherPredsCallback']
 
 from .imports import *
 from .test import *
@@ -103,6 +103,9 @@ class Learner():
 
     def add_cb(self, cb):
         "Add `cb` to the list of `Callback` and register `self` as their learner"
+        if getattr(self, cb.name, None):
+            error = f"There is another object registered in self.{cb.name}, pick a new name."
+            assert isinstance(getattr(self, cb.name), cb.__class__), error
         cb.learn = self
         setattr(self, cb.name, cb)
         self.cbs.append(cb)
@@ -185,7 +188,10 @@ class Learner():
             finally:                   self('after_fit')
 
     def __call__(self, event_name):
-        "Call `event_name` for all callbacks"
+        "Call `event_name` (one or a list) for all callbacks"
+        for e in L(event_name): self._call_one(e)
+
+    def _call_one(self, event_name):
         assert hasattr(event, event_name)
         [cb(event_name) for cb in self.cbs.sorted("order")]
 
@@ -327,14 +333,58 @@ def _learner_no_logging(self):
 
 Learner.no_logging = _learner_no_logging
 
-def _learn_validate(self, dl=None, cbs=None, metrics=None):
-    "Validate on `dl` with potential new `cbs` and `metrics`."
+def _learn_validate(self, dl=None, cbs=None):
+    "Validate on `dl` with potential new `cbs`."
     self.dl = dl or self.data.valid_dl
-    metrics = metrics or self.metrics
     with self.added_cbs(cbs), self.no_logging():
-        self('begin_fit'); self('begin_epoch'); self('begin_validate')
+        self(['begin_fit', 'begin_epoch', 'begin_validate'])
         self.all_batches()
-        self('after_validate'); self('after_epoch'); self('after_fit')
+        self(['after_validate', 'after_epoch', 'after_fit'])
     return self.recorder.values[-1]
 
 Learner.validate = _learn_validate
+
+@contextmanager
+def _learn_loss_not_reduced(self):
+    "A context manager to evaluate `loss_func` with reduction set to none."
+    if hasattr(self.loss_func, 'reduction'):
+        self.old_red = getattr(self.loss_func, 'reduction')
+        setattr(self.loss_func, 'reduction', 'none')
+        yield
+        setattr(self.loss_func, 'reduction', self.old_red)
+    else:
+        old_loss_func = self.loss_func
+        self.loss_func = partial(self.loss_func, reduction='none')
+        yield
+        self.loss_func = old_loss_func
+
+Learner.loss_not_reduced = _learn_loss_not_reduced
+
+class GatherPredsCallback(Callback):
+    "`Callback` that saves the predictions and targets, optionally `with_loss`"
+    def __init__(self, with_loss=False): self.with_loss = with_loss
+
+    def begin_validate(self):
+        "Initialize containers"
+        self.preds,self.targets = [],[]
+        if self.with_loss: self.losses = []
+
+    def after_batch(self):
+        "Save predictions, targets and potentially losses"
+        self.preds.append(to_detach(self.pred))
+        self.targets.append(to_detach(self.yb))
+        if self.with_loss: self.losses.append(to_detach(self.loss))
+
+def _learn_get_preds(self, ds_idx=1, with_loss=False):
+    "Get the predictions and targets on the `ds_idx`-th dataset, optionally `with_loss`"
+    self.dl = self.data.dls[ds_idx]
+    cb = GatherPredsCallback(with_loss=with_loss)
+    with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
+        self(['begin_fit', 'begin_epoch', 'begin_validate'])
+        self.all_batches()
+        self(['after_validate', 'after_epoch', 'after_fit'])
+        if with_loss: return (torch.cat(cb.preds),torch.cat(cb.targets),torch.cat(cb.losses))
+        res = (torch.cat(cb.preds),torch.cat(cb.targets))
+    return res
+
+Learner.get_preds = _learn_get_preds

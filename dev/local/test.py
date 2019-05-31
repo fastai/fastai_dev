@@ -45,7 +45,8 @@ def test_is(a,b):
     "`test` that `a is b`"
     test(a,b,operator.is_, 'is')
 
-def test_stdout(f, exp):
+def test_stdout(f, exp, regex=False):
     s = io.StringIO()
     with redirect_stdout(s): f()
-    test_eq(s.getvalue(), f'{exp}\n')
+    if regex: assert re.search(exp, s.getvalue()) is not None
+    else: test_eq(s.getvalue(), f'{exp}\n' if len(exp) > 0 else '')

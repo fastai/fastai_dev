@@ -18,7 +18,9 @@ def check_re(cell, pat):
 def is_export(cell, default):
     "Check if `cell` is to be exported and returns the name of the module."
     if check_re(cell, r'^\s*#\s*exports?\s*$'):
-        if default is None: print(f"This cell doesn't have an export destination and was ignored:\n{cell['source'][1]}")
+        if default is None:
+            set_trace()
+            print(f"This cell doesn't have an export destination and was ignored:\n{cell['source'][1]}")
         return default
     tst = check_re(cell, r'^\s*#\s*exports?\s*(\S+)\s*$')
     return os.path.sep.join(tst.groups()[0].split('.')) if tst else None
