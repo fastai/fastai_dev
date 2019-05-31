@@ -170,7 +170,7 @@ class Learner():
         finally:                     self('after_validate')
 
     def fit(self, n_epoch, cbs=None, reset_opt=False):
-        "Fit `self.model` for `epochs` using `cbs`. Optionally `reset_opt`."
+        "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
         with self.added_cbs(cbs):
             if reset_opt or not self.opt: self.opt = self.opt_func(self.splitter(self.model), lr=self.lr)
 
