@@ -13,7 +13,7 @@
   "chk": "01_core.ipynb",
   "tensor": "01_core.ipynb",
   "Tensor.ndim": "01_core.ipynb",
-  "ls": "01_core.ipynb",
+  "Path.ls": "01_core.ipynb",
   "add_docs": "01_core.ipynb",
   "docs": "01_core.ipynb",
   "custom_dir": "01_core.ipynb",
