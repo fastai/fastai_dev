@@ -42,6 +42,11 @@ def patch(f):
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 def chk(f): return typechecked(always=True)(f)
 
+@patch
+def ls(self:Path):
+    "Contents of path as a list"
+    return list(self.iterdir())
+
 def tensor(x, *rest):
     "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
     if len(rest): x = (x,)+rest
@@ -55,14 +60,13 @@ def tensor(x, *rest):
 
 Tensor.ndim = property(lambda x: x.dim())
 
-@patch
-def ls(self:Path):
-    "Contents of path as a list"
-    return list(self.iterdir())
-
-def add_docs(cls, **docs):
+def add_docs(cls, cls_doc=None, **docs):
     "Copy values from `docs` to `cls` docstrings, and confirm all public methods are documented"
-    for k,v in docs.items(): getattr(cls,k).__doc__ = v
+    if cls_doc is not None: cls.__doc__ = cls_doc
+    for k,v in docs.items():
+        f = getattr(cls,k)
+        if hasattr(f,'__func__'): f = f.__func__ # required for class methods
+        f.__doc__ = v
     # List of public callables without docstring
     nodoc = [c for n,c in vars(cls).items() if isinstance(c,Callable)
              and not n.startswith('_') and c.__doc__ is None]
