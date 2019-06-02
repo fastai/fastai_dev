@@ -95,7 +95,7 @@ class Pipeline(Transform):
     def show(self, o, *args, **kwargs):
         "Find last transform that supports `shows` and call it"
         for t in reversed(self.tfms):
-            if getattr(t,'assoc',None): return t.show(o, *args, **kwargs)
+            if getattr(t,'assoc',None) and hasattr(t.assoc,'shows'): return t.show(o, *args, **kwargs)
             o = getattr(t, 'decode', noop)(o)
 
     def set_tupled(self, m=True): _set_tupled(self._tfms, m)
@@ -143,7 +143,7 @@ class TfmOver(Transform):
     "Create tuple containing each of `tfms` applied to each of `o`"
     def __init__(self, tfms=None):
         if tfms is None: tfms = [None]
-        self.activ,self.tfms,self.assoc = None,L(tfms).mapped(Pipeline),1
+        self.activ,self.tfms,self.assoc = None,L(tfms).mapped(Pipeline),Item
 
     def __call__(self, o, *args, **kwargs):
         "List of output of each of `tfms` on `o`"

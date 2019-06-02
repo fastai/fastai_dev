@@ -13,7 +13,7 @@ from ..data.external import *
 from PIL import Image
 
 class Imagify(Transform):
-    "Open an `Image` from path `fn`, show with `cmap` and `alpha`"
+    "Open an `Image` from path `fn`, show with `**kwargs`"
     def __init__(self, func=Image.open, **kwargs): self.func,self.assoc = func,ImageItem(**kwargs)
     def encodes(self, fn): return Image.open(fn)
 
