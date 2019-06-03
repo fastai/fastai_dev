@@ -12,7 +12,7 @@ from ..notebook.showdoc import show_doc
 class LambdaItem:
     "An item that calls `f` on `show`"
     def __init__(self,f): self.f=f
-    def shows(self,o,**kwargs): return self.f(o,**kwargs)
+    def show(self,o,**kwargs): return self.f(o,**kwargs)
 
 @docs
 class DataSource(TfmdList):

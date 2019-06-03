@@ -105,14 +105,14 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     for *o,ax in zip(*b, axs.flatten()): show(o, ax=ax, **kwargs)
 
 class ImageItem:
-    "An item that `shows` with `show_image`"
+    "An item that `show`s with `show_image`"
     def __init__(self, **kwargs): self.kw = kwargs
-    def shows(self, o, ctx=None, **kwargs): return show_image(o, ax=ctx, **{**kwargs,**self.kw})
+    def show(self, o, ctx=None, **kwargs): return show_image(o, ax=ctx, **{**kwargs,**self.kw})
 
 class TitledImageItem:
-    "An item that `shows` with `show_image`"
+    "An item that `show`s an (image,title) tuple with `show_titled_image`"
     def __init__(self, **kwargs): self.kw = kwargs
-    def shows(self, o, ctx=None, **kwargs): return show_titled_image(o, ax=ctx, **{**kwargs,**self.kw})
+    def show(self, o, ctx=None, **kwargs): return show_titled_image(o, ax=ctx, **{**kwargs,**self.kw})
 
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
@@ -123,7 +123,7 @@ class Categorize(Transform):
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
     def setups(self, dsrc):
-        if self.vocab is not None: return
+        if not dsrc: return
         if self.subset_idx is not None: dsrc = dsrc.subset(self.subset_idx)
         elif self.train_attr: dsrc = getattr(dsrc,self.train_attr)
         self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)

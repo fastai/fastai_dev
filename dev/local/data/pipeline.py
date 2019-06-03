@@ -15,12 +15,12 @@ def show_title(o, ax=None, ctx=None):
 
 class Item():
     "An item that displays text (for `Transform.assoc`)"
-    def shows(o, ctx=None, **kwargs):
+    def show(o, ctx=None, **kwargs):
         show_title(o, ctx, **kwargs)
         return ctx
 
 class Transform():
-    order,assoc,filt,_is_setup,mask,is_tuple = [0]+[None]*5
+    order,assoc,filt,_is_setup,_done_setup,mask,is_tuple,prev = [0]+[None]*7
     def __init__(self, encodes=None, mask=None, is_tuple=None, **kwargs):
         if encodes is not None:
             self.encodes=encodes
@@ -32,6 +32,7 @@ class Transform():
         if self._is_setup: return
         self._is_setup = True
         self.setups(items)
+        self._done_setup = True
 
     def _masked(self,b):
         mask = [i==0 for i in range_of(b)] if self.mask is None and self.is_tuple else self.mask
@@ -45,10 +46,14 @@ class Transform():
     def _filt_match(self, filt): return self.filt is None or self.filt==filt
     def __call__(self, b, filt=None, **kwargs): return self._apply(self.encodes, b, filt, **kwargs)
     def decode  (self, b, filt=None, **kwargs): return self._apply(self.decodes, b, filt, **kwargs)
-    def show(self, o, filt=None, **kwargs):
-        od = self.decode(o, filt=filt)
-        if self.assoc: return self.assoc.shows(od, **kwargs)
-        elif hasattr(self,'prev'): return self.prev.show(od, filt=filt, **kwargs)
+    def __getattr__(self, k):
+        def _inner(o, filt=None, **kwargs):
+            od = self.decode(o, filt=filt)
+            if self.assoc: return getattr(self.assoc,k)(od, **kwargs)
+            elif self.prev: return getattr(self.prev,k)(od, filt=filt, **kwargs)
+            elif k=="show": return
+            else: raise AttributeError(k)
+        return _inner
 
     @classmethod
     def create(cls, f, filt=None): return f if isinstance(f,Transform) else cls(f)
