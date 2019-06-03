@@ -45,10 +45,13 @@ class Transform():
     def _filt_match(self, filt): return self.filt is None or self.filt==filt
     def __call__(self, b, filt=None, **kwargs): return self._apply(self.encodes, b, filt, **kwargs)
     def decode  (self, b, filt=None, **kwargs): return self._apply(self.decodes, b, filt, **kwargs)
+    def show(self, o, filt=None, **kwargs):
+        od = self.decode(o, filt=filt)
+        if self.assoc: return self.assoc.shows(od, **kwargs)
+        elif hasattr(self,'prev'): return self.prev.show(od, filt=filt, **kwargs)
 
     @classmethod
     def create(cls, f, filt=None): return f if isinstance(f,Transform) else cls(f)
-    def show(self, o, filt=None, **kwargs): return self.assoc.shows(self.decode(o, filt=filt), **kwargs)
     def __getitem__(self, x): return self(x) # So it can be used as a `Dataset`
     def decodes(self, o, *args, **kwargs): return o
     def setups(self, items): pass
@@ -66,13 +69,15 @@ class Pipeline(Transform):
 
     def setups(self, items=None):
         "Transform setup"
-        tfms = self._tfms
-        self._tfms = None
+        tfms,self._tfms = self._tfms,None
         self.add(tfms, items)
 
     def add(self, tfms, items=None):
         "Call `setup` on all `tfms` and append them to this pipeline"
+        prev=None
         for t in sorted(L(tfms), key=lambda o: getattr(o, 'order', 0)):
+            if prev: t.prev=prev
+            prev=t
             self.tfms.append(t)
             if hasattr(t, 'setup'): t.setup(items)
 
@@ -91,13 +96,7 @@ class Pipeline(Transform):
     def __repr__(self): return str(self.tfms)
     def delete(self, idx): del(self.tfms[idx])
     def remove(self, tfm): self.tfms.remove(tfm)
-
-    def show(self, o, *args, **kwargs):
-        "Find last transform that supports `shows` and call it"
-        for t in reversed(self.tfms):
-            if getattr(t,'assoc',None) and hasattr(t.assoc,'shows'): return t.show(o, *args, **kwargs)
-            o = getattr(t, 'decode', noop)(o)
-
+    def show(self, o, *args, **kwargs): return self.tfms[-1].show(o, *args, **kwargs)
     def set_tupled(self, m=True): _set_tupled(self._tfms, m)
 
 def make_tfm(tfm):
