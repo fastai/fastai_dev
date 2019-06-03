@@ -46,14 +46,11 @@ class Transform():
     def _filt_match(self, filt): return self.filt is None or self.filt==filt
     def __call__(self, b, filt=None, **kwargs): return self._apply(self.encodes, b, filt, **kwargs)
     def decode  (self, b, filt=None, **kwargs): return self._apply(self.decodes, b, filt, **kwargs)
-    def __getattr__(self, k):
-        def _inner(o, filt=None, **kwargs):
-            od = self.decode(o, filt=filt)
-            if self.assoc: return getattr(self.assoc,k)(od, **kwargs)
-            elif self.prev: return getattr(self.prev,k)(od, filt=filt, **kwargs)
-            elif k=="show": return
-            else: raise AttributeError(k)
-        return _inner
+
+    def show(self, o, filt=None, **kwargs):
+        od = self.decode(o, filt=filt)
+        if self.assoc: return self.assoc.show(od, **kwargs)
+        elif self.prev: return self.prev.show(od, filt=filt, **kwargs)
 
     @classmethod
     def create(cls, f, filt=None): return f if isinstance(f,Transform) else cls(f)
