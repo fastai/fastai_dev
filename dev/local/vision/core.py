@@ -13,16 +13,9 @@ from ..data.external import *
 from PIL import Image
 
 class Imagify(Transform):
-    "Open an `Image` from path `fn`, show with `cmap` and `alpha`"
-    def __init__(self, func=Image.open, **kwargs):
-        super().__init__()
-        self.func,self.kw = func,kwargs
-
+    "Open an `Image` from path `fn`, show with `**kwargs`"
+    def __init__(self, func=Image.open, **kwargs): self.func,self.assoc = func,ImageItem(**kwargs)
     def encodes(self, fn): return Image.open(fn)
-    def shows(self, im, ctx=None, figsize=None):
-        kw = self.kw
-        if figsize: kw['figsize']=figsize
-        return show_image(im, ax=ctx, **kw)
 
 class ImageConverter(Transform):
     "Convert `img` to `mode`"
