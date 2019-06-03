@@ -287,7 +287,7 @@ class AvgMetric(Metric):
         self.total += to_detach(self.func(learn.pred, learn.yb))*bs
         self.count += bs
     @property
-    def value(self): return self.total/self.count
+    def value(self): return self.total/self.count if self.count != 0 else None
     @property
     def name(self):  return self.func.__name__
 
@@ -299,7 +299,7 @@ class AvgLoss(Metric):
         self.total += to_detach(learn.loss)*bs
         self.count += bs
     @property
-    def value(self): return self.total/self.count
+    def value(self): return self.total/self.count if self.count != 0 else None
     @property
     def name(self):  return "loss"
 

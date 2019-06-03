@@ -4,7 +4,8 @@ __all__ = ['Lambda', 'PartialLayer', 'View', 'ResizeBatch', 'Flatten', 'Debugger
            'PoolFlatten', 'AdaptiveConcatPool2d', 'NormType', 'BatchNorm', 'BatchNorm1dFlat', 'BnDropLin',
            'init_default', 'ConvLayer', 'FlattenedLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
            'MSELossFlat', 'trunc_normal_', 'Embedding', 'SelfAttention', 'PooledSelfAttention2d', 'icnr_init',
-           'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN', 'ResBlock']
+           'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN', 'ResBlock', 'ParameterModule',
+           'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model']
 
 from .imports import *
 from .test import *
@@ -318,3 +319,36 @@ class ResBlock(nn.Module):
         self.pool = noop if stride==1 else nn.AvgPool2d(2, ceil_mode=True)
 
     def forward(self, x): return act_fn(self.convs(x) + self.idconv(self.pool(x)))
+
+class ParameterModule(nn.Module):
+    "Register a lone parameter `p` in a module."
+    def __init__(self, p):
+        super().__init__()
+        self.val = p
+
+    def forward(self, x): return x
+
+def children_and_parameters(m):
+    "Return the children of `m` and its direct parameters not registered in modules."
+    children = list(m.children())
+    children_p = sum([[id(p) for p in c.parameters()] for c in m.children()],[])
+    for p in m.parameters():
+        if id(p) not in children_p: children.append(ParameterModule(p))
+    return children
+
+class TstModule(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.a = nn.Parameter(torch.randn(1))
+        self.lin = nn.Linear(5,10)
+
+tst = TstModule()
+children = children_and_parameters(tst)
+test_eq(len(children), 2)
+test_eq(children[0], tst.lin)
+assert isinstance(children[1], ParameterModule)
+test_eq(children[1].val, tst.a)
+
+def flatten_model(m):
+    "Return the list of all submodules and parameters of `m`"
+    return sum(map(flatten_model,children_and_parameters(m)),[]) if len(list(m.children())) else [m]
