@@ -28,6 +28,7 @@ class Callback():
         return camel2snake(name or 'callback')
 
     def __call__(self, event_name): getattr(self, event_name, noop)()
+    def __repr__(self): return self.__class__.__name__
 
     _docs=dict(__call__="Call `self.{event_name}` if it's defined",
               __getattr__="Passthrough to get the attributes of `self.learn`",

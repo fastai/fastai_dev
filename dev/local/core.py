@@ -4,7 +4,7 @@ __all__ = ['newchk', 'patch', 'chk', 'tensor', 'add_docs', 'docs', 'custom_dir',
            'defaults', 'ifnone', 'noop', 'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of',
            'mask2idxs', 'apply', 'to_detach', 'to_half', 'to_float', 'to_device', 'to_cpu', 'item_find', 'find_device',
            'find_bs', 'compose', 'mapper', 'partialler', 'add_props', 'make_cross_image', 'opt_call', 'all_union',
-           'all_disjoint', 'camel2snake', 'trainable_params']
+           'all_disjoint', 'camel2snake', 'trainable_params', 'PrettyString']
 
 from .test import *
 from .imports import *
@@ -322,3 +322,8 @@ def camel2snake(name):
 def trainable_params(m):
     "Return all trainable parameters of `m`"
     return [p for p in m.parameters() if p.requires_grad]
+
+#Comes from 14_callback_hook.ipynb.
+class PrettyString(str):
+    "Little hack to get strings to show properly in Jupyter."
+    def __repr__(self): return self

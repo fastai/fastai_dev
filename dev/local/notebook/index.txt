@@ -186,6 +186,17 @@
   "sched_no": "13_callback_schedule.ipynb",
   "sched_exp": "13_callback_schedule.ipynb",
   "combine_scheds": "13_callback_schedule.ipynb",
+  "Hook": "14_callback_hook.ipynb",
+  "hook_output": "14_callback_hook.ipynb",
+  "Hooks": "14_callback_hook.ipynb",
+  "hook_outputs": "14_callback_hook.ipynb",
+  "has_params": "14_callback_hook.ipynb",
+  "HookCallback": "14_callback_hook.ipynb",
+  "ActivationStats": "14_callback_hook.ipynb",
+  "total_params": "14_callback_hook.ipynb",
+  "layer_info": "14_callback_hook.ipynb",
+  "PrettyString": "14_callback_hook.ipynb",
+  "Learner.summary": "14_callback_hook.ipynb",
   "in_ipython": "90_notebook_core.ipynb",
   "IN_IPYTHON": "90_notebook_core.ipynb",
   "in_colab": "90_notebook_core.ipynb",
@@ -236,5 +247,8 @@
   "process_cells": "93_notebook_export2html.ipynb",
   "process_cell": "93_notebook_export2html.ipynb",
   "convert_nb": "93_notebook_export2html.ipynb",
-  "convert_all": "93_notebook_export2html.ipynb"
+  "convert_all": "93_notebook_export2html.ipynb",
+  "synth_data": "95_synth_learner.ipynb",
+  "RegModel": "95_synth_learner.ipynb",
+  "synth_learner": "95_synth_learner.ipynb"
 }
