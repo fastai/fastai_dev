@@ -332,7 +332,7 @@ class Recorder(Callback):
         if self.train_metrics: names = [f'train_{n}' for n in names] + [f'valid_{n}' for n in names]
         else:                  names = ['train_loss', 'valid_loss'] + names[1:]
         if self.add_time: names.append('time')
-        self.metric_names = names
+        self.metric_names = ['epoch']+names
         self.smooth_loss.reset()
 
     def after_batch(self):
@@ -348,7 +348,7 @@ class Recorder(Callback):
         "Set timer if `self.add_time=True`"
         self.cancel_train,self.cancel_valid = False,False
         if self.add_time: self.start_epoch = time.time()
-        self.log = []
+        self.log = [getattr(self, 'epoch', 0)]
 
     def begin_train   (self): [m.reset() for m in self._train_mets]
     def after_train   (self): self.log += [_maybe_item(m.value) for m in self._train_mets]
@@ -360,7 +360,7 @@ class Recorder(Callback):
 
     def after_epoch(self):
         "Store and log the loss/metric values"
-        self.values.append(self.log.copy())
+        self.values.append(self.log[1:].copy())
         if self.add_time: self.log.append(format_time(time.time() - self.start_epoch))
         self.logger(self.log)
 
