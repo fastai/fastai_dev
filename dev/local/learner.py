@@ -166,9 +166,9 @@ class Learner():
         self.n_epoch,self.loss = n_epoch,tensor(0.)
         self('begin_fit')
 
-    def do_epoch_train(self, epoch):
+    def do_epoch_train(self):
         "Execute the training part of the `epoch`-th epoch"
-        self.epoch,self.dl = epoch,self.data.train_dl
+        self.dl = self.data.train_dl
         try:
             self('begin_train')
             self.all_batches()
@@ -178,10 +178,9 @@ class Learner():
     def do_epoch_validate(self):
         "Execute the validation part of an epoch"
         try:
+            self.dl = self.data.valid_dl
             self('begin_validate')
-            with torch.no_grad():
-                self.dl = self.data.valid_dl
-                self.all_batches()
+            with torch.no_grad(): self.all_batches()
         except CancelValidException: self('after_cancel_validate')
         finally:                     self('after_validate')
 
@@ -194,11 +193,11 @@ class Learner():
                 self.do_begin_fit(n_epoch)
                 for epoch in range(n_epoch):
                     try:
-                        self('begin_epoch')
-                        self.do_epoch_train(epoch)
+                        self.epoch=epoch;          self('begin_epoch')
+                        self.do_epoch_train()
                         self.do_epoch_validate()
-                    except CancelEpochException: self('after_cancel_epoch')
-                    finally:                     self('after_epoch')
+                    except CancelEpochException:   self('after_cancel_epoch')
+                    finally:                       self('after_epoch')
 
             except CancelFitException: self('after_cancel_fit')
             finally:                   self('after_fit')
@@ -316,6 +315,9 @@ class AvgSmoothLoss(Metric):
 
 from fastprogress.fastprogress import format_time
 
+def _maybe_item(t):
+    return t.item() if t.numel()==1 else t
+
 class Recorder(Callback):
     order = 20
     "Callback that registers statistics (lr, loss and metrics) during training"
@@ -349,9 +351,9 @@ class Recorder(Callback):
         self.log = []
 
     def begin_train   (self): [m.reset() for m in self._train_mets]
-    def after_train   (self): self.log += [m.value for m in self._train_mets]
+    def after_train   (self): self.log += [_maybe_item(m.value) for m in self._train_mets]
     def begin_validate(self): [m.reset() for m in self._valid_mets]
-    def after_validate(self): self.log += [m.value for m in self._valid_mets]
+    def after_validate(self): self.log += [_maybe_item(m.value) for m in self._valid_mets]
 
     def after_cancel_train(self):    self.cancel_train = True
     def after_cancel_validate(self): self.cancel_valid = True
