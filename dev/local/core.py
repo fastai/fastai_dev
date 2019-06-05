@@ -103,6 +103,7 @@ class GetAttr:
 
 def _mask2idxs(mask):
     mask = list(mask)
+    if len(mask)==0: return []
     if isinstance(mask[0],bool): return [i for i,m in enumerate(mask) if m]
     return [int(i) for i in mask]
 
@@ -282,9 +283,9 @@ def partialler(f, *args, order=None, **kwargs):
     return fnew
 
 def _is_instance(f, gs):
-    tst = [g if type(g) == type else g.__class__ for g in gs]
+    tst = [g if type(g) in [type, 'function'] else g.__class__ for g in gs]
     for g in tst:
-        if isinstance(f, g): return True
+        if isinstance(f, g) or f==g: return True
     return False
 
 def _is_first(f, gs):
