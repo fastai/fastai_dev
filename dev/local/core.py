@@ -3,8 +3,8 @@
 __all__ = ['newchk', 'patch', 'chk', 'tensor', 'add_docs', 'docs', 'custom_dir', 'is_iter', 'coll_repr', 'GetAttr', 'L',
            'defaults', 'ifnone', 'noop', 'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of',
            'mask2idxs', 'apply', 'to_detach', 'to_half', 'to_float', 'to_device', 'to_cpu', 'item_find', 'find_device',
-           'find_bs', 'compose', 'mapper', 'partialler', 'add_props', 'make_cross_image', 'opt_call', 'all_union',
-           'all_disjoint', 'camel2snake', 'trainable_params', 'PrettyString']
+           'find_bs', 'compose', 'mapper', 'partialler', 'sort_by_run', 'add_props', 'make_cross_image', 'opt_call',
+           'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'PrettyString']
 
 from .test import *
 from .imports import *
@@ -131,6 +131,7 @@ class L(GetAttr):
     def __repr__(self): return f'{coll_repr(self)}'
     def __eq__(self,b): return all_equal(b,self)
     def __iter__(self): return (self[i] for i in range(len(self)))
+    def __invert__(self): return L(not i for i in self)
     def __mul__ (a,b): return L(a.items*b)
     def __add__ (a,b): return L(a.items+_listify(b))
     def __radd__(a,b): return L(b)+a
@@ -279,6 +280,30 @@ def partialler(f, *args, order=None, **kwargs):
     if order is not None: fnew.order=order
     elif hasattr(f,'order'): fnew.order=f.order
     return fnew
+
+def _is_instance(f, gs):
+    tst = [g if type(g) == type else g.__class__ for g in gs]
+    for g in tst:
+        if isinstance(f, g): return True
+    return False
+
+def _is_first(f, gs):
+    for o in L(getattr(f, 'run_after', None)):
+        if _is_instance(o, gs): return False
+    for g in gs:
+        if _is_instance(f, L(getattr(g, 'run_before', None))): return False
+    return True
+
+def sort_by_run(fs):
+    end = L(getattr(f, 'toward_end', False) for f in fs)
+    inp,res = L(fs)[~end] + L(fs)[end], []
+    while len(inp) > 0:
+        for i,o in enumerate(inp):
+            if _is_first(o, inp):
+                res.append(inp.pop(i))
+                break
+        else: raise Exception("Impossible to sort")
+    return res
 
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"

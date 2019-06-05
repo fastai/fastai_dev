@@ -163,5 +163,5 @@ def summary(self:Learner):
     res += f"Total trainable params: {trn_ps:,}\n"
     res += f"Total non-trainable params: {ps - trn_ps:,}\n\n"
     res += f"Optimizer used: {self.opt_func}\nLoss function: {self.loss_func}\n\nCallbacks:\n"
-    res += '\n'.join(f"  - {cb}" for cb in self.cbs)
+    res += '\n'.join(f"  - {cb}" for cb in sort_by_run(self.cbs))
     return PrettyString(res)

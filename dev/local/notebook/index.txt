@@ -45,6 +45,7 @@
   "compose": "01_core.ipynb",
   "mapper": "01_core.ipynb",
   "partialler": "01_core.ipynb",
+  "sort_by_run": "01_core.ipynb",
   "add_props": "01_core.ipynb",
   "make_cross_image": "01_core.ipynb",
   "opt_call": "02_data_pipeline.ipynb",

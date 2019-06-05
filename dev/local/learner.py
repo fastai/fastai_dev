@@ -18,7 +18,6 @@ from .optimizer import *
 @docs
 class Callback():
     "Basic class handling tweaks of the training loop by changing a `Learner` in various events"
-    order=0
     def __getattr__(self, k): return getattr(self.learn, k)
 
     @property
@@ -231,7 +230,7 @@ class Learner():
 
     def _call_one(self, event_name):
         assert hasattr(event, event_name)
-        [cb(event_name) for cb in self.cbs.sorted("order")]
+        [cb(event_name) for cb in sort_by_run(self.cbs)]
 
     @contextmanager
     def no_logging(self):
@@ -321,8 +320,9 @@ def _maybe_item(t):
     return t.item() if t.numel()==1 else t
 
 class Recorder(Callback):
-    order = 20
     "Callback that registers statistics (lr, loss and metrics) during training"
+    run_after = TrainEvalCallback
+
     def __init__(self, add_time=True, train_metrics=False, beta=0.98):
         self.add_time,self.train_metrics = add_time,train_metrics
         self.loss,self.smooth_loss = AvgLoss(),AvgSmoothLoss(beta=beta)
