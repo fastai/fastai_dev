@@ -185,10 +185,11 @@ class Learner():
         except CancelValidException: self('after_cancel_validate')
         finally:                     self('after_validate')
 
-    def fit(self, n_epoch, cbs=None, reset_opt=False):
+    def fit(self, n_epoch, lr=None, cbs=None, reset_opt=False):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
         with self.added_cbs(cbs):
-            if reset_opt or not self.opt: self.opt = self.opt_func(self.splitter(self.model), lr=self.lr)
+            if reset_opt or not self.opt:
+                self.opt = self.opt_func(self.splitter(self.model), lr=self.lr if lr is None else lr)
 
             try:
                 self.do_begin_fit(n_epoch)
