@@ -102,9 +102,10 @@ defaults.callbacks = [TrainEvalCallback]
 class Learner():
     "Group together a `model`, some `data` and a `loss_func` to handle training"
     def __init__(self, model, data, loss_func, opt_func=SGD, lr=1e-2, splitter=trainable_params,
-                 cbs=None, cb_funcs=None, metrics=None):
+                 cbs=None, cb_funcs=None, metrics=None, path=None):
         self.model,self.data,self.loss_func = model,data,loss_func
         self.opt_func,self.lr,self.splitter = opt_func,lr,splitter
+        self.path = path if path is not None else getattr(data, 'path', Path('.'))
 
         self.metrics = [m if isinstance(m, Metric) else AvgMetric(m) for m in L(metrics)]
         self.training,self.logger,self.opt = False,print,None
