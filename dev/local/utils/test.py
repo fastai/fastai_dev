@@ -12,15 +12,16 @@ from ..optimizer import *
 from ..learner import *
 from torch.utils.data import TensorDataset
 
-def synth_data(a=2, b=3, bs=16, n_trn=10, n_val=2):
+def synth_data(a=2, b=3, bs=16, n_trn=10, n_val=2, cuda=False):
     x_trn = torch.randn(bs*n_trn, 1)
     y_trn = a*x_trn + b + 0.1*torch.randn(bs*n_trn, 1)
     x_val = torch.randn(bs*n_val, 1)
     y_val = a*x_val + b + 0.1*torch.randn(bs*n_val, 1)
     train_ds = TensorDataset(x_trn, y_trn)
     valid_ds = TensorDataset(x_val, y_val)
-    train_dl = TfmdDL(train_ds, bs=bs, shuffle=True)
-    valid_dl = TfmdDL(valid_ds, bs=bs)
+    tfms = [Cuda()] if cuda else None
+    train_dl = TfmdDL(train_ds, bs=bs, shuffle=True, tfms=tfms)
+    valid_dl = TfmdDL(valid_ds, bs=bs, tfms=tfms)
     return DataBunch(train_dl, valid_dl)
 
 class RegModel(nn.Module):
@@ -29,5 +30,6 @@ class RegModel(nn.Module):
         self.a,self.b = nn.Parameter(torch.randn(1)),nn.Parameter(torch.randn(1))
     def forward(self, x): return x * self.a + self.b
 
-def synth_learner(n_trn=10, n_val=2, **kwargs):
-    return Learner(RegModel(), synth_data(n_trn=n_trn,n_val=n_val), MSELossFlat(), opt_func=partial(SGD, mom=0.9), **kwargs)
+def synth_learner(n_trn=10, n_val=2, cuda=False, **kwargs):
+    return Learner(RegModel(), synth_data(n_trn=n_trn,n_val=n_val, cuda=cuda), MSELossFlat(),
+                   opt_func=partial(SGD, mom=0.9), **kwargs)

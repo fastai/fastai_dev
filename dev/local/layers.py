@@ -165,7 +165,8 @@ class FlattenedLoss():
     def __call__(self, input, target, **kwargs):
         input  = input .transpose(self.axis,-1).contiguous()
         target = target.transpose(self.axis,-1).contiguous()
-        if self.floatify: target = target.float()
+        if self.floatify and target.dtype not in [torch.float16, torch.float32]:
+            target = target.float()
         input = input.view(-1,input.shape[-1]) if self.is_2d else input.view(-1)
         return self.func.__call__(input, target.view(-1), **kwargs)
 
