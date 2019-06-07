@@ -162,13 +162,12 @@ class FlattenedLoss():
     @reduction.setter
     def reduction(self, v): self.func.reduction = v
 
-    def __call__(self, input, target, **kwargs):
-        input  = input .transpose(self.axis,-1).contiguous()
-        target = target.transpose(self.axis,-1).contiguous()
-        if self.floatify and target.dtype not in [torch.float16, torch.float32]:
-            target = target.float()
-        input = input.view(-1,input.shape[-1]) if self.is_2d else input.view(-1)
-        return self.func.__call__(input, target.view(-1), **kwargs)
+    def __call__(self, inp, targ, **kwargs):
+        inp  = inp .transpose(self.axis,-1).contiguous()
+        targ = targ.transpose(self.axis,-1).contiguous()
+        if self.floatify and targ.dtype not in [torch.float16, torch.float32]: targ = targ.float()
+        inp = inp.view(-1,inp.shape[-1]) if self.is_2d else inp.view(-1)
+        return self.func.__call__(inp, targ.view(-1), **kwargs)
 
 def CrossEntropyLossFlat(*args, axis=-1, **kwargs):
     "Same as `nn.CrossEntropyLoss`, but flattens input and target."
