@@ -15,7 +15,7 @@ from PIL import Image
 class Imagify(Transform):
     "Open an `Image` from path `fn`, show with `**kwargs`"
     def __init__(self, func=Image.open, **kwargs): self.func,self.assoc = func,ImageItem(**kwargs)
-    def encodes(self, fn): return Image.open(fn)
+    def encodes(self, fn): return self.func(fn)
 
 class ImageConverter(Transform):
     "Convert `img` to `mode`"

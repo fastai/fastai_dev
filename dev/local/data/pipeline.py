@@ -65,6 +65,8 @@ def _set_tupled(tfms, m=True):
     for t in tfms: getattr(t,'set_tupled',noop)(m)
     return tfms
 
+def _get_assoc(tfm): return tfm.assoc if tfm.assoc else _get_assoc(tfm.prev) if tfm.prev else None
+
 @newchk
 class Pipeline(Transform):
     def __init__(self, tfms=None): self.tfms,self._tfms = [],L(tfms).mapped(Transform.create)
@@ -100,6 +102,8 @@ class Pipeline(Transform):
     def remove(self, tfm): self.tfms.remove(tfm)
     def show(self, o, *args, **kwargs): return self.tfms[-1].show(o, *args, **kwargs)
     def set_tupled(self, m=True): _set_tupled(self._tfms, m)
+    @property
+    def assoc(self): return _get_assoc(self.tfms[-1])
 
 def make_tfm(tfm):
     "Create a `Pipeline` (if `tfm` is listy) or a `Transform` otherwise"
@@ -144,7 +148,7 @@ class TfmOver(Transform):
     "Create tuple containing each of `tfms` applied to each of `o`"
     def __init__(self, tfms=None):
         if tfms is None: tfms = [None]
-        self.activ,self.tfms,self.assoc = None,L(tfms).mapped(Pipeline),Item
+        self.activ,self.tfms = None,L(tfms).mapped(Pipeline)
 
     def __call__(self, o, *args, **kwargs):
         "List of output of each of `tfms` on `o`"
@@ -165,6 +169,9 @@ class TfmOver(Transform):
             self.activ = i
             tfm.setup(o)
         self.activ=None
+
+    @property
+    def assoc(self): return [t.assoc for t in self.tfms]
 
     @classmethod
     def piped(cls, tfms=None, final_tfms=None):

@@ -149,6 +149,8 @@ class TfmdDL(GetAttr):
         self.default,self.tfm = self.dl,tfm
         for k,v in kwargs.items(): setattr(self,k,v)
         tfm.setup(self)
+        if len(tfm.tfms) > 0 and hasattr(self.dataset, 'tfm'):
+            tfm.tfms[0].assoc = getattr(self.dataset.tfm,'assoc',None)
 
     def __len__(self): return len(self.dl)
     def __iter__(self): return map(self.tfm, self.dl)

@@ -54,7 +54,8 @@ DataSource.train,DataSource.valid = add_props(lambda i,x: x.subset(i), 2)
 @docs
 class DsrcSubset():
     "A filtered subset of a `DataSource`"
-    def __init__(self, dsrc, filt): self.dsrc,self.filt,self.filts = dsrc,filt,dsrc.filts[filt]
+    def __init__(self, dsrc, filt):
+        self.dsrc,self.filt,self.filts,self.tfm = dsrc,filt,dsrc.filts[filt],dsrc.tfm
     def __getitem__(self,i): return self.dsrc[self.filts[i]]
     def decode(self, o, **kwargs): return self.dsrc.decode(o, filt=self.filt, **kwargs)
     def decode_batch(self, b, **kwargs): return self.dsrc.decode_batch(b, filt=self.filt, **kwargs)
