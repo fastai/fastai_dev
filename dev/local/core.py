@@ -174,7 +174,7 @@ def ifnone(a, b):
     "`b` if `a` is None else `a`"
     return b if a is None else a
 
-def mk_class(nm, *fld_names, sup=None, **flds):
+def mk_class(nm, *fld_names, sup=None, doc=None, **flds):
     "Dynamically add a class containing `fld_names` to the caller's module"
     for f in fld_names: flds[f]=None
     sup = ifnone(sup, ())
@@ -189,6 +189,7 @@ def mk_class(nm, *fld_names, sup=None, **flds):
     flds['__repr__'] = _repr
     flds['__init__'] = _init
     res = type(nm, sup, flds)
+    if doc is not None: res.__doc__ = doc
     setattr(mod, nm, res)
 
 def noop (x=None, *args, **kwargs):
