@@ -181,10 +181,11 @@ def mk_class(nm, *fld_names, sup=None, **flds):
     if not isinstance(sup, tuple): sup=(sup,)
     stk = inspect.stack()[1]
     mod = ifnone(inspect.getmodule(stk[0]), sys.modules['__main__'])
-    def _init(self, **kwargs):
+    def _init(self, *args, **kwargs):
+        for i,v in enumerate(args): setattr(self, fld_names[i], v)
         for k,v in kwargs.items(): setattr(self,k,v)
     def _repr(self):
-        return '\n'.join(f'{o}: {getattr(self,o)}' for o in dir(self) if not o.startswith('_'))
+        return '\n'.join(f'{o}: {getattr(self,o)}' for o in set(dir(self)) if not o.startswith('_'))
     flds['__repr__'] = _repr
     flds['__init__'] = _init
     res = type(nm, sup, flds)
