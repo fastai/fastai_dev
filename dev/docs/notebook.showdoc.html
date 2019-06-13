@@ -39,7 +39,8 @@ summary: "Functions to show the doc cells in notebooks"
     <span class="n">ConfigKey</span><span class="p">,</span>  <span class="c1">#Enum</span>
     <span class="n">compose</span><span class="p">,</span>    <span class="c1">#Func with star args and type annotation</span>
     <span class="n">untar_data</span><span class="p">,</span> <span class="c1">#Func with defaults</span>
-    <span class="n">add_docs</span>    <span class="c1">#Func with kwargs</span>
+    <span class="n">add_docs</span><span class="p">,</span>   <span class="c1">#Func with kwargs</span>
+    <span class="n">Path</span><span class="o">.</span><span class="n">ls</span>     <span class="c1">#Monkey-patched</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -73,7 +74,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>is_enum</code>" class="doc_header"><code>is_enum</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Gather-the-information" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is\_enum</code>()</p>
+<h4 id="<code>is_enum</code>" class="doc_header"><code>is_enum</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Gather-the-information" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_enum</code>()</p>
 </blockquote>
 <p>Check if <code>cls</code> is an enum or another type of class</p>
 
@@ -124,7 +125,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>add_pytorch_index</code>" class="doc_header"><code>add_pytorch_index</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add\_pytorch\_index</code>(<strong><code>func_name</code></strong>, <strong><code>url</code></strong>)</p>
+<h4 id="<code>add_pytorch_index</code>" class="doc_header"><code>add_pytorch_index</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_pytorch_index</code>(<strong><code>func_name</code></strong>, <strong><code>url</code></strong>)</p>
 </blockquote>
 <p>Add <code>func_name</code> in the PyTorch index for automatic links.</p>
 
@@ -170,7 +171,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>is_fastai_module</code>" class="doc_header"><code>is_fastai_module</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is\_fastai\_module</code>(<strong><code>name</code></strong>)</p>
+<h4 id="<code>is_fastai_module</code>" class="doc_header"><code>is_fastai_module</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_fastai_module</code>(<strong><code>name</code></strong>)</p>
 </blockquote>
 <p>Test if <code>name</code> is a fastai module.</p>
 
@@ -212,7 +213,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>doc_link</code>" class="doc_header"><code>doc_link</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>doc\_link</code>(<strong><code>name</code></strong>, <strong><code>include_bt</code></strong>:<code>bool</code>=<em><code>True</code></em>)</p>
+<h4 id="<code>doc_link</code>" class="doc_header"><code>doc_link</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>doc_link</code>(<strong><code>name</code></strong>, <strong><code>include_bt</code></strong>:<code>bool</code>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Create link to documentation for <code>name</code>.</p>
 
@@ -246,6 +247,9 @@ summary: "Functions to show the doc cells in notebooks"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -253,7 +257,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>add_doc_links</code>" class="doc_header"><code>add_doc_links</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add\_doc\_links</code>(<strong><code>text</code></strong>)</p>
+<h4 id="<code>add_doc_links</code>" class="doc_header"><code>add_doc_links</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_doc_links</code>(<strong><code>text</code></strong>)</p>
 </blockquote>
 <p>Search for doc links for any item between backticks in <code>text</code>.</p>
 
@@ -306,7 +310,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>get_function_source</code>" class="doc_header"><code>get_function_source</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links-to-source" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get\_function\_source</code>(<strong><code>func</code></strong>)</p>
+<h4 id="<code>get_function_source</code>" class="doc_header"><code>get_function_source</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links-to-source" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_function_source</code>(<strong><code>func</code></strong>)</p>
 </blockquote>
 <p>Return link to <code>func</code> in source code</p>
 
@@ -338,7 +342,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;https://github.com/fastai/fastai_docs/tree/master/dev/local/data/pipeline.py#L62&#39;</pre>
+<pre>&#39;https://github.com/fastai/fastai_docs/tree/master/dev/local/data/pipeline.py#L71&#39;</pre>
 </div>
 
 </div>
@@ -359,6 +363,9 @@ summary: "Functions to show the doc cells in notebooks"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -366,7 +373,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>get_source_link</code>" class="doc_header"><code>get_source_link</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links-to-source" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get\_source\_link</code>(<strong><code>func</code></strong>, <strong><code>local</code></strong>=<em><code>False</code></em>, <strong><code>is_name</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>get_source_link</code>" class="doc_header"><code>get_source_link</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links-to-source" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_source_link</code>(<strong><code>func</code></strong>, <strong><code>local</code></strong>=<em><code>False</code></em>, <strong><code>is_name</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Return a link to the notebook where <code>func</code> is defined.</p>
 
@@ -387,6 +394,7 @@ summary: "Functions to show the doc cells in notebooks"
 <span class="k">assert</span> <span class="n">get_source_link</span><span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">get_source_link</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">get_source_link</span><span class="p">(</span><span class="n">chk</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{FASTAI_NB_DEV}</span><span class="s1">01_core.ipynb#Type-checking&#39;</span>
 <span class="k">assert</span> <span class="n">get_source_link</span><span class="p">(</span><span class="n">chk</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;01_core.ipynb#Type-checking&#39;</span>
+<span class="k">assert</span> <span class="n">get_source_link</span><span class="p">(</span><span class="s1">&#39;Path.ls&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{FASTAI_NB_DEV}</span><span class="s1">01_core.ipynb#Monkey-patching&#39;</span>
 </pre></div>
 
     </div>
@@ -413,7 +421,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>source_link</code>" class="doc_header"><code>source_link</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links-to-source" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>source\_link</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<em><code>None</code></em>, <strong><code>disp</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="<code>source_link</code>" class="doc_header"><code>source_link</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Links-to-source" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>source_link</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<em><code>None</code></em>, <strong><code>disp</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Show a relative link to the notebook where <code>func</code> is defined</p>
 
@@ -493,7 +501,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>type_repr</code>" class="doc_header"><code>type_repr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Show-documentation" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>type\_repr</code>(<strong><code>t</code></strong>)</p>
+<h4 id="<code>type_repr</code>" class="doc_header"><code>type_repr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Show-documentation" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>type_repr</code>(<strong><code>t</code></strong>)</p>
 </blockquote>
 <p>Representation of type <code>t</code> (in a type annotation)</p>
 
@@ -540,7 +548,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>format_param</code>" class="doc_header"><code>format_param</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Show-documentation" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>format\_param</code>(<strong><code>p</code></strong>)</p>
+<h4 id="<code>format_param</code>" class="doc_header"><code>format_param</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Show-documentation" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>format_param</code>(<strong><code>p</code></strong>)</p>
 </blockquote>
 <p>Formats function param to <code>param1:Type=val</code>. Font weights: param1=bold, val=italic</p>
 
@@ -639,7 +647,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>show_doc</code>" class="doc_header"><code>show_doc</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Show-documentation" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show\_doc</code>(<strong><code>elt</code></strong>, <strong><code>doc_string</code></strong>=<em><code>True</code></em>, <strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>title_level</code></strong>=<em><code>None</code></em>, <strong><code>disp</code></strong>=<em><code>True</code></em>, <strong><code>default_cls_level</code></strong>=<em><code>2</code></em>)</p>
+<h4 id="<code>show_doc</code>" class="doc_header"><code>show_doc</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/92_notebook_showdoc.ipynb#Show-documentation" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_doc</code>(<strong><code>elt</code></strong>, <strong><code>doc_string</code></strong>=<em><code>True</code></em>, <strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>title_level</code></strong>=<em><code>None</code></em>, <strong><code>disp</code></strong>=<em><code>True</code></em>, <strong><code>default_cls_level</code></strong>=<em><code>2</code></em>)</p>
 </blockquote>
 <p>Show documentation for element <code>elt</code>. Supported types: class, function, and enum.</p>
 

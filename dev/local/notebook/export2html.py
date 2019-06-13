@@ -22,15 +22,19 @@ def remove_widget_state(cell):
                            if not ('data' in l and 'application/vnd.jupyter.widget-view+json' in l.data)]
     return cell
 
+_re_cell_to_hide = r's*show_doc\(|^\s*#\s*export\s+'
+
 def hide_cells(cell):
     "Hide `cell` that need to be hidden"
-    if check_re(cell, r's*show_doc\(|^\s*#\s*(export)\s+'):
+    if check_re(cell, _re_cell_to_hide):
         cell['metadata'] = {'hide_input': True}
     return cell
 
+_re_exports = re.compile(r'^#\s*exports[^\n]*\n')
+
 def clean_exports(cell):
     "Remove exports flag from `cell`"
-    cell['source'] = re.sub(r'^#\s*exports[^\n]*\n', '', cell['source'])
+    cell['source'] = _re_exports.sub('', cell['source'])
     return cell
 
 def treat_backticks(cell):
@@ -38,11 +42,15 @@ def treat_backticks(cell):
     if cell['cell_type'] == 'markdown': cell['source'] = add_doc_links(cell['source'])
     return cell
 
+_re_nb_link = re.compile(r'\[([^\]]*)\]\(([^http][^\)]*).ipynb\)')
+
 def convert_links(cell):
     "Convert the .ipynb links to .html"
     if cell['cell_type'] == 'markdown':
-        cell['source'] = re.sub(r'\[([^http][^\]]*)\]\(([^\)]*).ipynb\)', r'[\1](\2.html)', cell['source'])
+        cell['source'] = _re_nb_link.sub(r'[\1](\2.html)', cell['source'])
     return cell
+
+_re_block_notes = re.compile(r'>\s*([^:]*):\s*([^\n]*)(?:\n|$)')
 
 def add_jekyll_notes(cell):
     "Convert block quotes to jekyll notes in `cell`"
@@ -54,33 +62,36 @@ def add_jekyll_notes(cell):
         res = f'<div markdown="span" class="alert alert-{style}" role="alert">'
         return res + f'<i class="fa fa-{style}-circle"></i> <b>{title}: </b>{text}</div>'
     if cell['cell_type'] == 'markdown':
-        cell['source'] = re.sub(r'>\s*([^:]*):\s*([^\n]*)(?:\n|$)', _inner, cell['source'])
+        cell['source'] = _re_block_notes.sub(_inner, cell['source'])
     return cell
 
+_re_image = re.compile(r'^!\[[^\]]*\]\(([^\)]*)\)|<img src="([^"]*)"', re.MULTILINE)
+
 def copy_images(cell, fname, dest):
-    pat = re.compile(r'^!\[[^\]]*\]\(([^\)]*)\)|<img src="([^"]*)"', re.MULTILINE)
-    if cell['cell_type'] == 'markdown' and re.search(pat, cell['source']):
-        grps = re.search(pat, cell['source']).groups()
+    if cell['cell_type'] == 'markdown' and _re_image.search(cell['source']):
+        grps = _re_image.search(cell['source']).groups()
         src = grps[0] or grps[1]
         os.makedirs((Path(dest)/src).parent, exist_ok=True)
         shutil.copy(Path(fname).parent/src, Path(dest)/src)
     return cell
 
+_re_cell_to_remove = re.compile(r'^\s*#\s*(hide|default_exp|default_cls_lvl)\s+')
+
 def remove_hidden(cells):
     "Remove in `cells` the ones with a flag `#hide` or `#default_exp`"
-    res = []
-    pat = re.compile(r'^\s*#\s*(hide|default_exp)\s+')
-    for cell in cells:
-        if cell['cell_type']=='markdown' or re.search(pat, cell['source']) is None:
-            res.append(cell)
-    return res
+    return [c for c in cells if _re_cell_to_remove.search(c['source']) is None]
+
+_re_default_cls_lvl = re.compile(r'^\s*#\s*default_cls_lvl\s*(\d*)\s*$', re.IGNORECASE | re.MULTILINE)
 
 def find_default_level(cells):
     "Find in `cells` the default export module."
     for cell in cells:
-        tst = check_re(cell, r'^\s*#\s*default_cls_lvl\s*(\d*)\s*$')
+        tst = check_re(cell, _re_default_cls_lvl)
         if tst: return int(tst.groups()[0])
     return 2
+
+_re_export = re.compile(r'^\s*#\s*exports?\s*', re.IGNORECASE | re.MULTILINE)
+_re_show_doc = re.compile(r'show_doc\s*\(\s*([^,\)\s]*)[,\)\s]', re.MULTILINE)
 
 def _show_doc_cell(name, cls_lvl=None):
     return {'cell_type': 'code',
@@ -91,30 +102,28 @@ def _show_doc_cell(name, cls_lvl=None):
 
 def add_show_docs(cells, cls_lvl=None):
     "Add `show_doc` for each exported function or class"
-    sd_pat = re.compile(r'^show_doc\s*\(\s*([^,\)\s]*)[,\)\s]', re.MULTILINE)
-    documented = [re.search(sd_pat, cell['source']).groups()[0] for cell in cells
-                  if cell['cell_type']=='code' and re.search(sd_pat, cell['source']) is not None]
+    documented = [_re_show_doc.search(cell['source']).groups()[0] for cell in cells
+                  if cell['cell_type']=='code' and _re_show_doc.search(cell['source']) is not None]
     res = []
     for cell in cells:
         res.append(cell)
-        if check_re(cell, r'^\s*#\s*exports?\s*'):
+        if check_re(cell, _re_export):
             names = export_names(cell['source'], func_only=True)
             for n in names:
                 if n not in documented: res.append(_show_doc_cell(n, cls_lvl=cls_lvl))
     return res
 
+_re_fake_header = re.compile(r'#+\s+.*-\s*$')
+
 def remove_fake_headers(cells):
     "Remove in `cells` the fake header"
-    res = []
-    pat = re.compile(r'#+.*-$')
-    for cell in cells:
-        if cell['cell_type']=='code' or re.search(pat, cell['source']) is None:
-            res.append(cell)
-    return res
+    return [c for c in cells if c['cell_type']=='code' or _re_fake_header.search(c['source']) is None]
 
 def remove_empty(cells):
     "Remove in `cells` the empty cells"
     return [c for c in cells if len(c['source']) >0]
+
+_re_title_summary = re.compile('^\s*#\s+([^\n]*)\n+>\s*([^\n]*)')
 
 def get_metadata(cells):
     "Find the cell with title and summary in `cells`."
@@ -131,12 +140,13 @@ def get_metadata(cells):
             'summary' : 'summary',
             'title'   : 'Title'}
 
+_re_cell_to_execute = re.compile(r"^\s*show_doc\(([^\)]*)\)|^\s*#\s*exports?\s*", re.MULTILINE)
+
 class ExecuteShowDocPreprocessor(ExecutePreprocessor):
     "An `ExecutePreprocessor` that only executes `show_doc` and `import` cells"
     def preprocess_cell(self, cell, resources, index):
-        pat = re.compile(r"^\s*show_doc\(([^\)]*)\)|^\s*#\s*exports?\s*", re.MULTILINE)
         if 'source' in cell and cell['cell_type'] == "code":
-            if re.search(pat, cell['source']):
+            if _re_cell_to_execute.search(cell['source']):
                 return super().preprocess_cell(cell, resources, index)
         return cell, resources
 
@@ -171,12 +181,13 @@ def _exporter():
 process_cells = [remove_fake_headers, remove_hidden, remove_empty]
 process_cell  = [hide_cells, remove_widget_state, treat_backticks, add_jekyll_notes, convert_links]
 
+_re_file = re.compile(r'^__file__\s*=\s*(\S*)\s*$', re.MULTILINE)
+
 def _find_file(cells):
     "Find in `cells` if a __file__ is defined."
-    pat = re.compile(r'^__file__\s*=\s*(\S*)\s*', re.MULTILINE)
     for cell in cells:
-        if cell['cell_type']=='code' and re.search(pat, cell['source']):
-            return re.search(pat, cell['source']).groups()[0]
+        if cell['cell_type']=='code' and _re_file.search(cell['source']):
+            return _re_file.search(cell['source']).groups()[0]
 
 def convert_nb(fname, dest_path='docs'):
     "Convert a notebook `fname` to html file in `dest_path`."

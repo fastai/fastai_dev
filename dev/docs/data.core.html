@@ -87,8 +87,8 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[PosixPath(&#39;/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7&#39;),
- PosixPath(&#39;/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/3&#39;)]</pre>
+<pre>[PosixPath(&#39;/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3&#39;),
+ PosixPath(&#39;/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/7&#39;)]</pre>
 </div>
 
 </div>
@@ -112,7 +112,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>get_files</code>" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get\_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>get_files</code>" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get all the files in <code>path</code> with optional <code>extensions</code>, optionally with <code>recurse</code>.</p>
 
@@ -157,7 +157,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#709) [/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7010.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/79.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/9022.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7284.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7085.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7547.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8698.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8463.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7525.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8345.png...]</pre>
+<pre>(#709) [/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/9932.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/7189.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/8498.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/8888.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/9004.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/7692.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/7556.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/8762.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/9182.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/7666.png...]</pre>
 </div>
 
 </div>
@@ -229,7 +229,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>get_image_files</code>" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get\_image\_files</code>(<strong><code>path</code></strong>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>get_image_files</code>" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get image files in <code>path</code> recursively.</p>
 
@@ -450,7 +450,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>parent_label</code>" class="doc_header"><code>parent_label</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parent\_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>parent_label</code>" class="doc_header"><code>parent_label</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parent_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Label <code>item</code> with the parent folder name.</p>
 
@@ -579,7 +579,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>show_image</code>" class="doc_header"><code>show_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show\_image</code>(<strong><code>im</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>show_image</code>" class="doc_header"><code>show_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_image</code>(<strong><code>im</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Show a PIL image on <code>ax</code>.</p>
 
@@ -709,30 +709,6 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>show_title</code>" class="doc_header"><code>show_title</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show\_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<p>Set title of <code>ax</code> to <code>o</code>, or print <code>o</code> if <code>ax</code> is <code>None</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
@@ -776,7 +752,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>show_titled_image</code>" class="doc_header"><code>show_titled_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show\_titled\_image</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>)</p>
+<h4 id="<code>show_titled_image</code>" class="doc_header"><code>show_titled_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_titled_image</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Call <a href="/data.core.html#show_image"><code>show_image</code></a> destructuring <code>o</code> to <code>(img,title)</code></p>
 
@@ -800,7 +776,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>show_image_batch</code>" class="doc_header"><code>show_image_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show\_image\_batch</code>(<strong><code>b</code></strong>, <strong><code>show</code></strong>=<em><code>'show_titled_image'</code></em>, <strong><code>items</code></strong>=<em><code>9</code></em>, <strong><code>cols</code></strong>=<em><code>3</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>show_image_batch</code>" class="doc_header"><code>show_image_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Show" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_image_batch</code>(<strong><code>b</code></strong>, <strong><code>show</code></strong>=<em><code>'show_titled_image'</code></em>, <strong><code>items</code></strong>=<em><code>9</code></em>, <strong><code>cols</code></strong>=<em><code>3</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Display batch <code>b</code> in a grid of size <code>items</code> with <code>cols</code> width</p>
 
@@ -835,6 +811,54 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAhEAAADDCAYAAAA890MfAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADl0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDMuMC4yLCBodHRwOi8vbWF0cGxvdGxpYi5vcmcvOIA7rQAABwFJREFUeJzt3U+oZnUdx/HP11wUZQsRLHO0yGwTMWT/wMgCwwqKICwiCBe1KgiiNtGiRVFIq2hXEbWQRIigNmYLp0TB/iCWRZjWZExSWYQoEuWvxXMHL5J455P3ebzN67WZc55n7nN+Z+6PH+9z7pmZWWsFAOBMnbPrAQAAR5OIAAAqIgIAqIgIAKAiIgCAiogAACoi4hDNzO9n5updjwP+VzNz3czctutxwEFYe7dHRAAAFREBAFRExOF73cz8amb+PjPfmJnnzsyJmXlvkszMm2Zmzcw79/avnpm7djtkzmYzc2xmvjMzf5mZh2bmK/ve+9LeXP7dzLxj77W3zswv9v2eH87Mnfv2b5uZ92z3LCDHZ+bumfnHzNx4pmvvzHxkZn49Mw/vreGv2dWJPJuJiMP3wSTXJHl5ksuTfCbJiSRv2Xv/zUnuT3LVvv0T2x0ibMzMc5J8P8nJJC9N8pIk3957+w1JfpPkgiTXJ/n6zEySO5JcNjMXzMy5SV6V5OKZOW9mnpfkiiQ/3uqJQPK+JG9P8rIkr05yXQ649s7MtUk+m+RDSV6Y5N1JHtrKqI8YEXH4vrLWemCt9bckn0/ygWwm6v6J+4V9+1dFRLA7r09yUZJPrbUeWWs9ttY6/UDlybXWV9da/07yzSQvTnLhWuuxJD/NZi6/NsndSW5LcmWSNya5d61lAWbbvrzWOrW39n4vyfEcfO39cJLr11o/WRu/XWud3OLYjwwRcfge2Ld9MpsF+o4kl8/MhdlM7G8lOTYzF2SziP9o66OEjWPZxMK//st7D57eWGs9urf5gr1fT1/hnb6auzWbRVkUsysP7tt+NJu5etC191iS+7Y41iNLRBy+Y/u2L0lyam8B/lmSjyf55Vrrn0luT/KJJPettf66/WFCkk30XrL3Y4kz8eSIOH3FJyJ41jiDtfeBbH4EzdMQEYfvozNz8cycn+TTSW7ce/1Eko/liQX21iftwy7cmeRPSb44M8/fexjtygN83e1JXpnN1dyda617klyazXMU7qzxbHKQtfdrST45M1fMxmUzc+l2h3k0iIjDd0OSH2TzAM/9ST639/qJJOfliQX2yfuwdXvPO7wryWVJ/pDkj0nef4CveyTJz5Pcs3d1l2xuHZ9ca/35kIYLjadde9daN2XzDNsNSR5O8t0k5293mEfDrLV2PQYA4AhyJwIAqIgIAKAiIgCAiogAACoiAgConOk/KHMgbzvn2rPmr3zcfGo3/1fWNRcd38lxd+GWx2+abR9zZs6aOZxdnenWv6u7s9Yyhw+TOXzonmoOuxMBAFREBABQEREAQEVEAAAVEQEAVEQEAFAREQBARUQAABURAQBURAQAUBERAEBFRAAAFREBAFREBABQEREAQEVEAAAVEQEAVEQEAFAREQBARUQAABURAQBURAQAUBERAEBFRAAAFREBAFREBABQEREAQEVEAAAVEQEAVEQEAFAREQBARUQAABURAQBURAQAUBERAEBFRAAAFREBAFREBABQEREAQEVEAAAVEQEAVEQEAFAREQBARUQAABURAQBURAQAUBERAEBFRAAAFREBAFREBABQEREAQEVEAAAVEQEAVEQEAFAREQBARUQAABURAQBURAQAUJm11jP+oY8/+Ipn/kM5a53zontn6wedOXvm8K7OdPvf1d1Zyxw+TObw4XuKOexOBABQEREAQEVEAAAVEQEAVEQEAFAREQBARUQAABURAQBURAQAUBERAEBFRAAAFREBAFREBABQEREAQEVEAAAVEQEAVEQEAFAREQBARUQAABURAQBURAQAUBERAEBFRAAAFREBAFREBABQEREAQEVEAAAVEQEAVEQEAFA59zA+9JqLjh/Gxz4r3Xzqrp0c92z6M77l8e0fc7Z/SP6PrR0c0xzmmfRUc9idCACgIiIAgIqIAAAqIgIAqIgIAKAiIgCAiogAACoiAgCoiAgAoCIiAICKiAAAKiICAKiICACgIiIAgIqIAAAqIgIAqIgIAKAiIgCAiogAACoiAgCoiAgAoCIiAICKiAAAKiICAKiICACgIiIAgIqIAAAqIgIAqIgIAKAiIgCAiogAACoiAgCoiAgAoCIiAICKiAAAKiICAKiICACgIiIAgIqIAAAqIgIAqIgIAKAiIgCAiogAACoiAgCoiAgAoCIiAICKiAAAKiICAKiICACgIiIAgIqIAAAqIgIAqIgIAKAiIgCAiogAACoiAgCoiAgAoCIiAIDKrLV2PQYA4AhyJwIAqIgIAKAiIgCAiogAACoiAgCoiAgAoCIiAICKiAAAKiICAKiICACgIiIAgIqIAAAqIgIAqIgIAKAiIgCAiogAACoiAgCoiAgAoCIiAICKiAAAKiICAKiICACgIiIAgMp/ANNgJy/Zg8oPAAAAAElFTkSuQmCC
 "
 >
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="<code>class</code> <code>ImageItem</code>" class="doc_header"><code>class</code> <code>ImageItem</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Export--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ImageItem</code>(<strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>An item that <code>show</code>s with <a href="/data.core.html#show_image"><code>show_image</code></a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="<code>class</code> <code>TitledImageItem</code>" class="doc_header"><code>class</code> <code>TitledImageItem</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Export--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TitledImageItem</code>(<strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>An item that <code>show</code>s an (image,title) tuple with <a href="/data.core.html#show_titled_image"><code>show_titled_image</code></a></p>
+
 </div>
 
 </div>
@@ -896,8 +920,8 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>((#709) [/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7010.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/79.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/9022.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7284.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7085.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7547.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8698.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8463.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/7525.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/train/7/8345.png...],
- (#699) [/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/9968.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/79.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/8356.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/9909.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/9374.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/8188.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/9816.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/7356.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/7079.png,/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/valid/7/8190.png...])</pre>
+<pre>((#709) [/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/9932.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/7189.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/8498.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/8888.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/9004.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/7692.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/7556.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/8762.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/9182.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/train/3/7666.png...],
+ (#699) [/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/7692.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/7484.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/9157.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/8703.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/9182.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/7130.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/9905.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/8607.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/925.png,/home/ubuntu/fastai_docs/dev/data/mnist_tiny/valid/3/7006.png...])</pre>
 </div>
 
 </div>
@@ -911,7 +935,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">timg</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">,</span> <span class="n">shows</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">show_image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">timg</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">,</span> <span class="n">assoc</span><span class="o">=</span><span class="n">ImageItem</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)))</span>
 <span class="n">tfms</span> <span class="o">=</span> <span class="p">[[</span><span class="n">timg</span><span class="p">,</span><span class="n">array</span><span class="p">,</span><span class="n">tensor</span><span class="p">,</span><span class="n">partial</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)],</span>
         <span class="p">[</span><span class="n">parent_label</span><span class="p">,</span> <span class="n">Categorize</span><span class="p">(</span><span class="n">subset_idx</span><span class="o">=</span><span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">])]]</span>
 <span class="n">tfm</span> <span class="o">=</span> <span class="n">TfmOver</span><span class="o">.</span><span class="n">piped</span><span class="p">(</span><span class="n">tfms</span><span class="p">)</span>
@@ -937,6 +961,37 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_ds</span><span class="o">.</span><span class="n">show_at</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFkAAABlCAYAAAAms095AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADl0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDMuMC4yLCBodHRwOi8vbWF0cGxvdGxpYi5vcmcvOIA7rQAABH1JREFUeJztmz1IZFcUx39n/Cg0iAimMcWKrogRg5126SJkC0HxWxCNSgQFsbW1CApiZFNsFhFJpakU1G1Cigh+pRE/YhBELFYRVDIQkVHvFuatutFEXee88Xl+MAxv3sw7Z378ue96vSPOOYzoEvK7gaeASVbAJCtgkhUwyQqYZAVMsgKBkywiP4nIWxH5S0T+FJFvfO8paH+MiMjnwIZz7lhEcoFfga+dc7/71VPgkuycW3HOHXuH/zyyfGwpeJIBROQHEfkb+AN4C0z62k/QhgsPEYkDioEvge+ccxG/eglkkgGcc6fOud+Az4Bv/ewlsJIvEY+NyQ+HiHwqIlUi8omIxInIV0A18IuvfQVpTBaRdOBn4AvOA7QFfO+c+9HXvoIkOVYJ1HARq5hkBUyyAiZZgXjlekG+y8pNJyzJCphkBUyyAiZZAZOsgElWwCQrYJIVMMkKxLTkcDhMOBymtLSU0tJSRORWj6amJhYWFlhYWPD7KwAxLjkoaC/a36rY0tISALW1tQCsrKwAkJSUBIDI9csEx8fn2y1OTk5ITk4GoLW1FYC+vr779nxbbO3CT7RX4W7F69evATg6OrpyXF9fD0BCQsK1n9va2gJgfHyc3t5eAAYHBwHIz88HoKGhITpN/weWZAVickxeXFwEYH5+HoC2trY7F5qbmwOguLgYgNTUVAC2t7cB3o/ZD4iNyX4Sk2NyXl4eAAUFBff6/NnZGTU1NVdea2lpAaKS4P/FkqxATCbZmw/flXA4DEBXVxebm5sAVFVVAdDZ2fkwzd0DS7ICMTm7uCuHh4cAVFdXA/DmzZv353Z3dwFIT0+PRunL2OzCTwKRZG8+XVRU9K9zXV1dADQ3NwOQk5MTjRbAkuwvgUiyx8jICHC+ijc1NQXA2toaAGlpaQDMzs4CkJ2d/dDlb0xyoCRf5uzsDICBgQEAenp6ADg4OACgv78fgI6OjocqacOFnwQ2yR8yPT0NXEzzQqHzfHk3zaysj/7tjiXZT55Mkj0mJ89/nPrixQsAcnNzAVhdXf3YS1uS/eTJJdmbdZSVlQEXyV5fXwfg2bNn9720JdlPnpzkUChEKBSioqKCiooKIpEIkUiEiYkJJiYmolMzKlc1rhCTi/YaZGRkAODdkzY2NqJWy5KswJNLsrdhxvu3lLflKzMzM2o1LckKPOokn56eArC8vHzlubKykvj467/a2NgYADs7OwA8f/4cgPb29qj1aUlW4FEneX9/H4DCwsIrrw8PDzM6OgpASkoKADMzMwC8fPnyynvr6uoAiIuLi1qflmQFHvXahde7t7W2u7sbgL29vffba72x2ZtVeMfeNq5Xr14BkJiY+LHt2NqFnzzqJH+It8llaGiI4eFh4GLGUV5eDkBjYyMAJSUlD13ekuwngUqyz1iS/cQkK2CSFTDJCphkBbTXLm68AwcZS7ICJlkBk6yASVbAJCtgkhUwyQqYZAVMsgImWQGTrIBJVsAkK2CSFTDJCphkBUyyAiZZAZOsgElWwCQrYJIVMMkKvANmhUS8mVNiSQAAAABJRU5ErkJggg==
+"
+>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -974,7 +1029,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfm</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">neg</span><span class="p">)</span>
-<span class="n">dummy_tfm</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">noop</span><span class="p">,</span> <span class="n">shows</span><span class="o">=</span><span class="n">show_title</span><span class="p">)</span>
+<span class="n">dummy_tfm</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">noop</span><span class="p">,</span><span class="n">assoc</span><span class="o">=</span><span class="n">Item</span><span class="p">)</span>
 <span class="n">start</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">tl</span> <span class="o">=</span> <span class="n">TfmdList</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">dummy_tfm</span><span class="p">)</span>
 <span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">tl</span><span class="p">,</span> <span class="n">tfm</span><span class="p">,</span> <span class="n">is_tuple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -1003,7 +1058,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdDL.one_batch</code>" class="doc_header"><code>TfmdDL.one_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.one\_batch</code>()</p>
+<h4 id="<code>TfmdDL.one_batch</code>" class="doc_header"><code>TfmdDL.one_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.one_batch</code>()</p>
 </blockquote>
 <p>Grab first batch of <code>dl</code></p>
 
@@ -1072,7 +1127,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdDL.show_batch</code>" class="doc_header"><code>TfmdDL.show_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.show\_batch</code>(<strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>max_rows</code></strong>=<em><code>1000</code></em>, <strong><code>ctxs</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>TfmdDL.show_batch</code>" class="doc_header"><code>TfmdDL.show_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.show_batch</code>(<strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>max_rows</code></strong>=<em><code>1000</code></em>, <strong><code>ctxs</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Show each item of <code>b</code></p>
 
@@ -1112,7 +1167,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Cuda</code>" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Cuda--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>device(type='cuda', index=0)</code></em>) :: <a href="/data.pipeline.html#Transform"><code>Transform</code></a></p>
+<h2 id="<code>class</code> <code>Cuda</code>" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#Cuda--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>0</code></em>) :: <a href="/data.pipeline.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Move batch to <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a> (defaults to <a href="/core.html#defaults.device"><code>defaults.device</code></a>)</p>
 
@@ -1370,7 +1425,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -1432,7 +1487,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>DataBunch.__getitem__</code>" class="doc_header"><code>DataBunch.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataBunch.\_\_getitem\_\_</code>(<strong><code>i</code></strong>)</p>
+<h4 id="<code>DataBunch.__getitem__</code>" class="doc_header"><code>DataBunch.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataBunch.__getitem__</code>(<strong><code>i</code></strong>)</p>
 </blockquote>
 <p>Retrieve <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a> at <code>i</code> (<code>0</code> is training, <code>1</code> is validation)</p>
 
@@ -1467,7 +1522,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="train_dl" class="doc_header">train_dl<a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a></p>
+<h4 id="<code>train_dl</code>" class="doc_header"><code>train_dl</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a></p>
 
 </div>
 
@@ -1486,7 +1541,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="valid_dl" class="doc_header">valid_dl<a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a></p>
+<h4 id="<code>valid_dl</code>" class="doc_header"><code>valid_dl</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a></p>
 
 </div>
 
@@ -1505,7 +1560,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="train_ds" class="doc_header">train_ds<a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <code>Dataset</code></p>
+<h4 id="<code>train_ds</code>" class="doc_header"><code>train_ds</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <code>Dataset</code></p>
 
 </div>
 
@@ -1524,7 +1579,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="valid_ds" class="doc_header">valid_ds<a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <code>Dataset</code></p>
+<h4 id="<code>valid_ds</code>" class="doc_header"><code>valid_ds</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <code>Dataset</code></p>
 
 </div>
 

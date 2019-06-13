@@ -27,7 +27,8 @@ summary: "Basic class for handling the training loop"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Synthetic-data">Synthetic data<a class="anchor-link" href="#Synthetic-data">&#182;</a></h2>
+<p>We'll use the following for testing purposes (a basic linear regression problem):</p>
+
 </div>
 </div>
 </div>
@@ -38,15 +39,16 @@ summary: "Basic class for handling the training loop"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="k">import</span> <span class="n">TensorDataset</span>
 
-<span class="k">def</span> <span class="nf">synth_data</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">n_trn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_val</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">synth_data</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">n_trn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_val</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cuda</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">x_trn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="o">*</span><span class="n">n_trn</span><span class="p">)</span>
     <span class="n">y_trn</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">x_trn</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="o">*</span><span class="n">n_trn</span><span class="p">)</span>
     <span class="n">x_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="o">*</span><span class="n">n_val</span><span class="p">)</span>
     <span class="n">y_val</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">x_val</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="o">*</span><span class="n">n_val</span><span class="p">)</span>
     <span class="n">train_ds</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">x_trn</span><span class="p">,</span> <span class="n">y_trn</span><span class="p">)</span>
     <span class="n">valid_ds</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)</span>
-    <span class="n">train_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">valid_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">valid_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">)</span>
+    <span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">Cuda</span><span class="p">()]</span> <span class="k">if</span> <span class="n">cuda</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">train_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">)</span>
+    <span class="n">valid_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">valid_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">DataBunch</span><span class="p">(</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">valid_dl</span><span class="p">)</span>
 </pre></div>
 
@@ -71,12 +73,6 @@ summary: "Basic class for handling the training loop"
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Callback--">Callback -<a class="anchor-link" href="#Callback--">&#182;</a></h2>
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -152,13 +148,16 @@ summary: "Basic class for handling the training loop"
 <ul>
 <li><code>begin_fit</code>: called before doing anything, ideal for initial setup.</li>
 <li><code>begin_epoch</code>: called at the beginning of each epoch, useful for any behavior you need to reset at each epoch.</li>
+<li><code>begin_train</code>: called at the beginning of the training part of an epoch.</li>
 <li><code>begin_batch</code>: called at the beginning of each batch, just after drawing said batch. It can be used to do any setup necessary for the batch (like hyper-parameter scheduling) or to change the input/target before it goes in the model (change of the input with techniques like mixup for instance).</li>
 <li><code>after_pred</code>: called after computing the output of the model on the batch. It can be used to change that output before it's fed to the loss.</li>
 <li><code>after_loss</code>: called after the loss has been computed, but before the backward pass. It can be used to add any penalty to the loss (AR or TAR in RNN training for instance).</li>
 <li><code>after_backward</code>: called after the backward pass, but before the update of the parameters. It can be used to do any change to the gradients before said update (gradient clipping for instance).</li>
 <li><code>after_step</code>: called after the step and before the gradients are zeroed.</li>
 <li><code>after_batch</code>: called at the end of a batch, for any clean-up before the next one.</li>
+<li><code>after_train</code>: called at the end of the training phase of an epoch.</li>
 <li><code>begin_validate</code>: called at the beginning of the validation phase of an epoch, useful for any setup needed specifically for validation.</li>
+<li><code>after_validate</code>: called at the end of the validation part of an epoch.</li>
 <li><code>after_epoch</code>: called at the end of an epoch, for any clean-up before the next one.</li>
 <li><code>after_fit</code>: called at the end of training, for final clean-up.</li>
 </ul>
@@ -235,8 +234,7 @@ summary: "Basic class for handling the training loop"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">TstLearner</span><span class="p">():</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mk_class</span><span class="p">(</span><span class="s1">&#39;TstLearner&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">TstCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">batch_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
@@ -313,7 +311,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<property object at 0x7ff2226ad9f8>" class="doc_header"><property object at 0x7ff2226ad9f8><a href="" class="source_link" style="float:right">[source]</a></h4><p>Name of the <a href="/learner.html#Callback"><code>Callback</code></a>, camel-cased and with Callback removed</p>
+<h4 id="<code>Callback.name</code>" class="doc_header"><code>Callback.name</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Name of the <a href="/learner.html#Callback"><code>Callback</code></a>, camel-cased and with Callback removed</p>
 
 </div>
 
@@ -441,7 +439,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TrainEvalCallback.begin_epoch</code>" class="doc_header"><code>TrainEvalCallback.begin_epoch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#TrainEvalCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_epoch</code>()</p>
+<h4 id="<code>TrainEvalCallback.begin_train</code>" class="doc_header"><code>TrainEvalCallback.begin_train</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#TrainEvalCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_train</code>()</p>
 </blockquote>
 <p>Set the model in training mode</p>
 
@@ -465,6 +463,72 @@ summary: "Basic class for handling the training loop"
 <h4 id="<code>TrainEvalCallback.begin_validate</code>" class="doc_header"><code>TrainEvalCallback.begin_validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#TrainEvalCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_validate</code>()</p>
 </blockquote>
 <p>Set the model in validation mode</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="<code>class</code> <code>GatherPredsCallback</code>" class="doc_header"><code>class</code> <code>GatherPredsCallback</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#GatherPredsCallback--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>GatherPredsCallback</code>(<strong><code>with_loss</code></strong>=<em><code>False</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+</blockquote>
+<p><a href="/learner.html#Callback"><code>Callback</code></a> that saves the predictions and targets, optionally <code>with_loss</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>GatherPredsCallback.begin_validate</code>" class="doc_header"><code>GatherPredsCallback.begin_validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#GatherPredsCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GatherPredsCallback.begin_validate</code>()</p>
+</blockquote>
+<p>Initialize containers</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>GatherPredsCallback.after_batch</code>" class="doc_header"><code>GatherPredsCallback.after_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#GatherPredsCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GatherPredsCallback.after_batch</code>()</p>
+</blockquote>
+<p>Save predictions, targets and potentially losses</p>
 
 </div>
 
@@ -500,9 +564,9 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>CancelBatchException</code>" class="doc_header"><code>class</code> <code>CancelBatchException</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Callbacks-control-flow" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelBatchException</code>() :: <code>Exception</code></p>
+<h3 id="<code>class</code> <code>CancelBatchException</code>" class="doc_header"><code>class</code> <code>CancelBatchException</code><a href="" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelBatchException</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>Exception</code></p>
 </blockquote>
-<p>Skip the rest of this batch and go to <code>after_batch</code></p>
+<p>Interrupts training and go to <code>after_fit</code></p>
 
 </div>
 
@@ -521,9 +585,9 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>CancelTrainException</code>" class="doc_header"><code>class</code> <code>CancelTrainException</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Callbacks-control-flow" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelTrainException</code>() :: <code>Exception</code></p>
+<h3 id="<code>class</code> <code>CancelTrainException</code>" class="doc_header"><code>class</code> <code>CancelTrainException</code><a href="" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelTrainException</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>Exception</code></p>
 </blockquote>
-<p>Skip the rest of the training part of the epoch and go to <code>after_epoch</code></p>
+<p>Skip the rest of the validation part of the epoch and go to <code>after_validate</code></p>
 
 </div>
 
@@ -542,28 +606,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>CancelValidException</code>" class="doc_header"><code>class</code> <code>CancelValidException</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Callbacks-control-flow" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelValidException</code>() :: <code>Exception</code></p>
-</blockquote>
-<p>Skip the rest of the validation part of the epoch and go to <code>after_epoch</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>CancelEpochException</code>" class="doc_header"><code>class</code> <code>CancelEpochException</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Callbacks-control-flow" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelEpochException</code>() :: <code>Exception</code></p>
+<h3 id="<code>class</code> <code>CancelValidException</code>" class="doc_header"><code>class</code> <code>CancelValidException</code><a href="" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelValidException</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>Exception</code></p>
 </blockquote>
 <p>Skip the rest of this epoch and go to <code>after_epoch</code></p>
 
@@ -584,9 +627,30 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>CancelFitException</code>" class="doc_header"><code>class</code> <code>CancelFitException</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Callbacks-control-flow" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelFitException</code>() :: <code>Exception</code></p>
+<h3 id="<code>class</code> <code>CancelEpochException</code>" class="doc_header"><code>class</code> <code>CancelEpochException</code><a href="" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelEpochException</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>Exception</code></p>
 </blockquote>
-<p>Interrupts training and go to <code>after_fit</code></p>
+<p>Skip the rest of the training part of the epoch and go to <code>after_train</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="<code>class</code> <code>CancelFitException</code>" class="doc_header"><code>class</code> <code>CancelFitException</code><a href="" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>CancelFitException</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>Exception</code></p>
+</blockquote>
+<p>Skip the rest of this batch and go to <code>after_batch</code></p>
 
 </div>
 
@@ -600,11 +664,11 @@ summary: "Basic class for handling the training loop"
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>You can detect one of those exceptions occurred and add code that executes right after with the following events:</p>
 <ul>
-<li><code>after_cancel_batch</code>: reached imediately after a <a href="/learner.html#CancelBatchException"><code>CancelBatchException</code></a> before proceeding to <code>after_batch</code></li>
-<li><code>after_cancel_train</code>: reached imediately after a <a href="/learner.html#CancelTrainException"><code>CancelTrainException</code></a> before proceeding to <code>after_epoch</code></li>
-<li><code>after_cancel_valid</code>: reached imediately after a <a href="/learner.html#CancelValidException"><code>CancelValidException</code></a> before proceeding to <code>after_epoch</code></li>
-<li><code>after_cancel_epoch</code>: reached imediately after a <a href="/learner.html#CancelEpochException"><code>CancelEpochException</code></a> before proceeding to <code>after_epoch</code></li>
-<li><code>after_cancel_fit</code>: reached imediately after a <a href="/learner.html#CancelFitException"><code>CancelFitException</code></a> before proceeding to <code>after_fit</code></li>
+<li><code>after_cancel_batch</code>: reached imediately after a <code>CancelBatchException</code> before proceeding to <code>after_batch</code></li>
+<li><code>after_cancel_train</code>: reached imediately after a <code>CancelTrainException</code> before proceeding to <code>after_epoch</code></li>
+<li><code>after_cancel_valid</code>: reached imediately after a <code>CancelValidException</code> before proceeding to <code>after_epoch</code></li>
+<li><code>after_cancel_epoch</code>: reached imediately after a <code>CancelEpochException</code> before proceeding to <code>after_epoch</code></li>
+<li><code>after_cancel_fit</code>: reached imediately after a <code>CancelFitException</code> before proceeding to <code>after_fit</code></li>
 </ul>
 
 </div>
@@ -622,7 +686,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>trainable_params</code>" class="doc_header"><code>trainable_params</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>trainable_params</code>(<strong><code>m</code></strong>)</p>
+<h4 id="<code>trainable_params</code>" class="doc_header"><code>trainable_params</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Callbacks-control-flow" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>trainable_params</code>(<strong><code>m</code></strong>)</p>
 </blockquote>
 <p>Return all trainable parameters of <code>m</code></p>
 
@@ -662,43 +726,9 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>camel2snake</code>" class="doc_header"><code>camel2snake</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Callback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>camel2snake</code>(<strong><code>name</code></strong>)</p>
+<h3 id="<code>class</code> <code>event</code>" class="doc_header"><code>class</code> <code>event</code><a href="" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>event</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">camel2snake</span><span class="p">(</span><span class="s1">&#39;ClassAreCamel&#39;</span><span class="p">),</span> <span class="s1">&#39;class_are_camel&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="event" class="doc_header">event<a href="" class="source_link" style="float:right">[source]</a></h4><p>Object containing all possible events as attributes to get tab-completion and typo-proofing</p>
+<p>All possible events as attributes to get tab-completion and typo-proofing</p>
 
 </div>
 
@@ -720,7 +750,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Learner</code>" class="doc_header"><code>class</code> <code>Learner</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Learner</code>(<strong><code>model</code></strong>, <strong><code>data</code></strong>, <strong><code>loss_func</code></strong>, <strong><code>opt_func</code></strong>=<em><code>'SGD'</code></em>, <strong><code>lr</code></strong>=<em><code>0.01</code></em>, <strong><code>splitter</code></strong>=<em><code>'trainable_params'</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>, <strong><code>cb_funcs</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="<code>class</code> <code>Learner</code>" class="doc_header"><code>class</code> <code>Learner</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Learner</code>(<strong><code>model</code></strong>, <strong><code>data</code></strong>, <strong><code>loss_func</code></strong>, <strong><code>opt_func</code></strong>=<em><code>'SGD'</code></em>, <strong><code>lr</code></strong>=<em><code>0.01</code></em>, <strong><code>splitter</code></strong>=<em><code>'trainable_params'</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>, <strong><code>cb_funcs</code></strong>=<em><code>None</code></em>, <strong><code>metrics</code></strong>=<em><code>None</code></em>, <strong><code>path</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Group together a <code>model</code>, some <code>data</code> and a <code>loss_func</code> to handle training</p>
 
@@ -735,7 +765,8 @@ summary: "Basic class for handling the training loop"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><code>opt_func</code> will be used to create an optimizer when <a href="/learner.html#Learner.fit"><code>Learner.fit</code></a> is called, with <code>lr</code> as a learning rate. <code>splitter</code> is a function taht takes <code>self.model</code> and returns a list of parameter groups (or just one parameter group if there are no different parameter groups). The default is <a href="/learner.html#trainable_params"><code>trainable_params</code></a>, which returns all trainable parameters of the model.</p>
-<p><code>cbs</code> is one or a list of <a href="/learner.html#Callback"><code>Callback</code></a>s  to pass to the <a href="/learner.html#Learner"><code>Learner</code></a>, and <code>cb_funcs</code> is one or a list of functions returning a <a href="/learner.html#Callback"><code>Callback</code></a> that will be called at init. Each <a href="/learner.html#Callback"><code>Callback</code></a> is registered as an attribute of <a href="/learner.html#Learner"><code>Learner</code></a> (with camel case). At creation, a <a href="/learner.html#TrainEvalCallback"><code>TrainEvalCallback</code></a> is always associated to the <a href="/learner.html#Learner"><code>Learner</code></a>.</p>
+<p><code>cbs</code> is one or a list of <a href="/learner.html#Callback"><code>Callback</code></a>s  to pass to the <a href="/learner.html#Learner"><code>Learner</code></a>, and <code>cb_funcs</code> is one or a list of functions returning a <a href="/learner.html#Callback"><code>Callback</code></a> that will be called at init. Each <a href="/learner.html#Callback"><code>Callback</code></a> is registered as an attribute of <a href="/learner.html#Learner"><code>Learner</code></a> (with camel case). At creation, all the callbacks in <a href="/callback.progress.html#defaults.callbacks"><code>defaults.callbacks</code></a> (<a href="/learner.html#TrainEvalCallback"><code>TrainEvalCallback</code></a> and <a href="/learner.html#Recorder"><code>Recorder</code></a>) are associated to the <a href="/learner.html#Learner"><code>Learner</code></a>.</p>
+<p><code>metrics</code> is an optional list of metrics, that can be either functions or <a href="/learner.html#Metric"><code>Metric</code></a>s (see below).</p>
 
 </div>
 </div>
@@ -746,8 +777,8 @@ summary: "Basic class for handling the training loop"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Test init with callbacks</span>
-<span class="k">def</span> <span class="nf">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_val</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">Learner</span><span class="p">(</span><span class="n">RegModel</span><span class="p">(),</span> <span class="n">synth_data</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="n">n_trn</span><span class="p">,</span><span class="n">n_val</span><span class="o">=</span><span class="n">n_val</span><span class="p">),</span> <span class="n">MSELossFlat</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_val</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cuda</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Learner</span><span class="p">(</span><span class="n">RegModel</span><span class="p">(),</span> <span class="n">synth_data</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="n">n_trn</span><span class="p">,</span><span class="n">n_val</span><span class="o">=</span><span class="n">n_val</span><span class="p">,</span> <span class="n">cuda</span><span class="o">=</span><span class="n">cuda</span><span class="p">),</span> <span class="n">MSELossFlat</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <span class="n">tst_learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">()</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tst_learn</span><span class="o">.</span><span class="n">cbs</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
@@ -763,6 +794,10 @@ summary: "Basic class for handling the training loop"
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tst_learn</span><span class="o">.</span><span class="n">cbs</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tst_learn</span><span class="o">.</span><span class="n">cbs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">TstCallback</span><span class="p">)</span>
 <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tst_learn</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;tst&#39;</span><span class="p">))</span>
+
+<span class="c1">#A name that becomes an existing attribute of the Learner will throw an exception (here add_cb)</span>
+<span class="k">class</span> <span class="nc">AddCbCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span> <span class="k">pass</span>
+<span class="n">test_fail</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">cbs</span><span class="o">=</span><span class="n">AddCbCallback</span><span class="p">()))</span>
 </pre></div>
 
     </div>
@@ -785,9 +820,9 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.fit</code>" class="doc_header"><code>Learner.fit</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.fit</code>(<strong><code>n_epoch</code></strong>, <strong><code>cbs</code></strong>=<em><code>None</code></em>, <strong><code>reset_opt</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="<code>Learner.fit</code>" class="doc_header"><code>Learner.fit</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.fit</code>(<strong><code>n_epoch</code></strong>, <strong><code>lr</code></strong>=<em><code>None</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>, <strong><code>reset_opt</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
-<p>Fit <code>self.model</code> for <code>epochs</code> using <code>cbs</code>. Optionally <code>reset_opt</code>.</p>
+<p>Fit <code>self.model</code> for <code>n_epoch</code> using <code>cbs</code>. Optionally <code>reset_opt</code>.</p>
 
 </div>
 
@@ -822,7 +857,7 @@ summary: "Basic class for handling the training loop"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Test of TrainEvalCallback</span>
 <span class="k">class</span> <span class="nc">TestTrainEvalCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
-    <span class="n">order</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#Runs after TrainEvalCallback</span>
+    <span class="n">run_after</span><span class="o">=</span><span class="n">TrainEvalCallback</span>
     <span class="k">def</span> <span class="nf">begin_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
         <span class="n">test_eq</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">pct_train</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">train_iter</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">old_pct_train</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">old_train_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pct_train</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">train_iter</span>
@@ -835,7 +870,7 @@ summary: "Basic class for handling the training loop"
             <span class="n">test_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_iter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_train_iter</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">old_pct_train</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">old_train_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pct_train</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">train_iter</span>
     
-    <span class="k">def</span> <span class="nf">begin_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">begin_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">training</span>
         <span class="n">test_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pct_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">n_epoch</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">old_pct_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pct_train</span>
@@ -963,7 +998,8 @@ summary: "Basic class for handling the training loop"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">xb</span><span class="p">,</span><span class="n">yb</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">()</span>
+<span class="n">xb</span><span class="p">,</span><span class="n">yb</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
 <span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">cbs</span><span class="o">=</span><span class="n">TestOneBatch</span><span class="p">(</span><span class="n">xb</span><span class="p">,</span> <span class="n">yb</span><span class="p">,</span> <span class="mi">42</span><span class="p">))</span>
 <span class="c1">#Remove train/eval</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">cbs</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">cbs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -1013,6 +1049,7 @@ summary: "Basic class for handling the training loop"
     <span class="n">learn</span><span class="o">.</span><span class="n">do_begin_fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">learn</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span><span class="n">learn</span><span class="o">.</span><span class="n">dl</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span>
     <span class="n">learn</span><span class="p">(</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">)</span>
+    <span class="n">learn</span><span class="p">(</span><span class="s1">&#39;begin_train&#39;</span><span class="p">)</span>
 <span class="n">test_stdout</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">all_batches</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">batch_events</span> <span class="o">*</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">train_iter</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 
@@ -1075,7 +1112,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.do_epoch_train</code>" class="doc_header"><code>Learner.do_epoch_train</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.do_epoch_train</code>(<strong><code>epoch</code></strong>)</p>
+<h4 id="<code>Learner.do_epoch_train</code>" class="doc_header"><code>Learner.do_epoch_train</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.do_epoch_train</code>()</p>
 </blockquote>
 <p>Execute the training part of the <code>epoch</code>-th epoch</p>
 
@@ -1093,8 +1130,8 @@ summary: "Basic class for handling the training loop"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learn</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
-<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">do_epoch_train</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span> <span class="o">*</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">epoch</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">do_epoch_train</span><span class="p">(),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;begin_train&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_train&#39;</span><span class="p">]))</span>
 </pre></div>
 
     </div>
@@ -1128,7 +1165,7 @@ summary: "Basic class for handling the training loop"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_stdout</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">do_epoch_validate</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">valid_events</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_stdout</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">do_epoch_validate</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">valid_events</span> <span class="o">*</span> <span class="mi">2</span><span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_validate&#39;</span><span class="p">]))</span>
 </pre></div>
 
     </div>
@@ -1153,7 +1190,7 @@ summary: "Basic class for handling the training loop"
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="<code>Learner.__call__</code>" class="doc_header"><code>Learner.__call__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.__call__</code>(<strong><code>event_name</code></strong>)</p>
 </blockquote>
-<p>Call <code>event_name</code> for all callbacks</p>
+<p>Call <code>event_name</code> (one or a list) for all callbacks</p>
 
 </div>
 
@@ -1336,6 +1373,10 @@ summary: "Basic class for handling the training loop"
 <li><code>pct_train</code>: from 0. to 1., the percentage of training iterations completed</li>
 <li><code>training</code>:  flag to indicate if we're in training mode or not</li>
 </ul>
+<p>The following attribute is added by <a href="/learner.html#Recorder"><code>Recorder</code></a> and should be available unless you went out of your way to remove that callback:</p>
+<ul>
+<li><code>smooth_loss</code>: an exponentially-averaged version of the training loss</li>
+</ul>
 
 </div>
 </div>
@@ -1351,10 +1392,25 @@ summary: "Basic class for handling the training loop"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cycle_events</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;begin_epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;begin_batch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_pred&#39;</span><span class="p">,</span> <span class="s1">&#39;after_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;after_backward&#39;</span><span class="p">,</span> 
-    <span class="s1">&#39;after_step&#39;</span><span class="p">,</span> <span class="s1">&#39;after_batch&#39;</span><span class="p">,</span> <span class="s1">&#39;begin_validate&#39;</span><span class="p">,</span> <span class="s1">&#39;begin_batch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_pred&#39;</span><span class="p">,</span> <span class="s1">&#39;after_loss&#39;</span><span class="p">,</span> 
-    <span class="s1">&#39;after_batch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_fit&#39;</span><span class="p">]</span>
-<span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_val</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">batch_events</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin_batch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_pred&#39;</span><span class="p">,</span> <span class="s1">&#39;after_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;after_backward&#39;</span><span class="p">,</span> <span class="s1">&#39;after_step&#39;</span><span class="p">,</span> <span class="s1">&#39;after_batch&#39;</span><span class="p">]</span>
+<span class="n">batchv_events</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin_batch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_pred&#39;</span><span class="p">,</span> <span class="s1">&#39;after_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;after_batch&#39;</span><span class="p">]</span>
+<span class="n">train_events</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin_train&#39;</span><span class="p">]</span>    <span class="o">+</span> <span class="n">batch_events</span>  <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_train&#39;</span><span class="p">]</span>
+<span class="n">valid_events</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batchv_events</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_validate&#39;</span><span class="p">]</span>
+<span class="n">epoch_events</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">train_events</span> <span class="o">+</span> <span class="n">valid_events</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_epoch&#39;</span><span class="p">]</span>
+<span class="n">cycle_events</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin_fit&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">epoch_events</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_fit&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_val</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">VerboseCallback</span><span class="p">()),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle_events</span><span class="p">))</span>
 </pre></div>
 
@@ -1386,16 +1442,15 @@ summary: "Basic class for handling the training loop"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#test cancel batch</span>
-<span class="n">batch_events</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin_batch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_pred&#39;</span><span class="p">,</span> <span class="s1">&#39;after_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;after_backward&#39;</span><span class="p">,</span> <span class="s1">&#39;after_step&#39;</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batch_events</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batch_events</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
     <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_cancel_batch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_batch&#39;</span><span class="p">]</span>
-    <span class="n">bev</span> <span class="o">=</span> <span class="n">be</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span><span class="mi">3</span> <span class="k">else</span> <span class="n">batch_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span>
-    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bev</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="n">bev</span> <span class="o">=</span> <span class="n">be</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span><span class="mi">3</span> <span class="k">else</span> <span class="n">batchv_events</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_train&#39;</span><span class="p">,</span> <span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bev</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
     <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="n">cancel_at</span><span class="o">=</span><span class="n">e</span><span class="p">)),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
 
 <span class="c1">#CancelBatchException not caught if thrown in any other event</span>
 <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">cycle_events</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">batch_events</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">batch_events</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
         <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()):</span>
             <span class="n">cb</span> <span class="o">=</span> <span class="n">TestCancelCallback</span><span class="p">(</span><span class="n">cancel_at</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
             <span class="n">test_fail</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">cb</span><span class="p">))</span>
@@ -1413,15 +1468,15 @@ summary: "Basic class for handling the training loop"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#test cancel train</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">):</span>
-    <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="k">else</span> <span class="p">[])</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_cancel_train&#39;</span><span class="p">]</span>
-    <span class="n">bev</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span>
-    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bev</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_train&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">):</span>
+    <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch_events</span><span class="p">)</span> <span class="k">else</span> <span class="p">[])</span> 
+    <span class="n">be</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;after_cancel_train&#39;</span><span class="p">,</span> <span class="s1">&#39;after_train&#39;</span><span class="p">]</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batchv_events</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
     <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">CancelTrainException</span><span class="p">,</span> <span class="kc">True</span><span class="p">)),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
 
 <span class="c1">#CancelTrainException not caught if thrown in any other event</span>
 <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">cycle_events</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
         <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()):</span>
             <span class="n">cb</span> <span class="o">=</span> <span class="n">TestCancelCallback</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">CancelTrainException</span><span class="p">)</span>
             <span class="n">test_fail</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">cb</span><span class="p">))</span>
@@ -1439,10 +1494,9 @@ summary: "Basic class for handling the training loop"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#test cancel valid</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]):</span>
-    <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span>
-    <span class="n">bev</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="k">else</span> <span class="p">[])</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_cancel_validate&#39;</span><span class="p">]</span>
-    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bev</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batchv_events</span><span class="p">):</span>
+    <span class="n">bev</span> <span class="o">=</span> <span class="n">batchv_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">batchv_events</span><span class="p">)</span> <span class="k">else</span> <span class="p">[])</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_cancel_validate&#39;</span><span class="p">]</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_train&#39;</span><span class="p">,</span> <span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bev</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
     <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">CancelValidException</span><span class="p">,</span> <span class="kc">False</span><span class="p">)),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
     
 <span class="c1">#CancelValidException not caught if thrown in any other event</span>
@@ -1466,18 +1520,22 @@ summary: "Basic class for handling the training loop"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#test cancel epoch</span>
 <span class="c1">#In train</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">):</span>
-    <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="k">else</span> <span class="p">[])</span> 
-    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_cancel_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_train&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">):</span>
+    <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">batch_events</span><span class="p">)</span> <span class="k">else</span> <span class="p">[])</span> 
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_train&#39;</span><span class="p">,</span> <span class="s1">&#39;after_cancel_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
     <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">CancelEpochException</span><span class="p">,</span> <span class="kc">True</span><span class="p">)),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
-    
+
 <span class="c1">#In valid</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]):</span>
-    <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span>
-    <span class="n">bev</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="k">else</span> <span class="p">[])</span>
-    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bev</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_cancel_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batchv_events</span><span class="p">):</span>
+    <span class="n">bev</span> <span class="o">=</span> <span class="n">batchv_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">batchv_events</span><span class="p">)</span> <span class="k">else</span> <span class="p">[])</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_train&#39;</span><span class="p">,</span> <span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bev</span> 
+    <span class="n">cycle</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;after_validate&#39;</span><span class="p">,</span> <span class="s1">&#39;after_cancel_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
     <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">CancelEpochException</span><span class="p">,</span> <span class="kc">False</span><span class="p">)),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
-    
+
+<span class="c1">#In begin epoch</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">,</span> <span class="n">CancelEpochException</span><span class="p">,</span> <span class="kc">False</span><span class="p">)),</span> 
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_cancel_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]))</span>
+
 <span class="c1">#CancelEpochException not caught if thrown in any other event</span>
 <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;begin_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;after_epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_fit&#39;</span><span class="p">]:</span>
     <span class="k">if</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
@@ -1502,17 +1560,20 @@ summary: "Basic class for handling the training loop"
 <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="s1">&#39;begin_fit&#39;</span><span class="p">,</span> <span class="n">CancelFitException</span><span class="p">)),</span> 
             <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;begin_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;after_cancel_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;after_fit&#39;</span><span class="p">]))</span>
 
+<span class="c1">#In begin epoch</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">,</span> <span class="n">CancelFitException</span><span class="p">,</span> <span class="kc">False</span><span class="p">)),</span> 
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_cancel_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;after_fit&#39;</span><span class="p">]))</span>
 <span class="c1">#In train</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_epoch&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">):</span>
-    <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="k">else</span> <span class="p">[])</span> 
-    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_cancel_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;after_fit&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_train&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">):</span>
+    <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">batch_events</span><span class="p">)</span> <span class="k">else</span> <span class="p">[])</span> 
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_train&#39;</span><span class="p">,</span> <span class="s1">&#39;after_epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_cancel_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;after_fit&#39;</span><span class="p">]</span>
     <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">CancelFitException</span><span class="p">,</span> <span class="kc">True</span><span class="p">)),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
     
 <span class="c1">#In valid</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]):</span>
-    <span class="n">be</span> <span class="o">=</span> <span class="n">batch_events</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span>
-    <span class="n">bev</span> <span class="o">=</span> <span class="n">batch_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="k">else</span> <span class="p">[])</span>
-    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">be</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bev</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_cancel_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;after_fit&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batchv_events</span><span class="p">):</span>
+    <span class="n">bev</span> <span class="o">=</span> <span class="n">batchv_events</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;after_batch&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">batchv_events</span><span class="p">)</span> <span class="k">else</span> <span class="p">[])</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">batch_events</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;after_train&#39;</span><span class="p">,</span> <span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bev</span> 
+    <span class="n">cycle</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;after_validate&#39;</span><span class="p">,</span> <span class="s1">&#39;after_epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;after_cancel_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;after_fit&#39;</span><span class="p">]</span>
     <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">TestCancelCallback</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">CancelFitException</span><span class="p">,</span> <span class="kc">False</span><span class="p">)),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
     
 <span class="c1">#CancelEpochException not caught if thrown in any other event</span>
@@ -1520,6 +1581,784 @@ summary: "Basic class for handling the training loop"
     <span class="n">cb</span> <span class="o">=</span> <span class="n">TestCancelCallback</span><span class="p">(</span><span class="s1">&#39;after_fit&#39;</span><span class="p">,</span> <span class="n">CancelEpochException</span><span class="p">)</span>
     <span class="n">test_fail</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">cb</span><span class="p">))</span>
     <span class="n">learn</span><span class="o">.</span><span class="n">remove_cb</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="c1">#Have to remove it manually  </span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="<code>class</code> <code>Metric</code>" class="doc_header"><code>class</code> <code>Metric</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Metric</code>()</p>
+</blockquote>
+<p>Blueprint for defining a metric</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Metrics can be simple averages (like accuracy) but sometimes their computation is a little bit more complex and can't be averaged over batches (like precision or recall), which is why we need a special class for them. For simple functions that can be computed as averages over batches, we can use the class <a href="/learner.html#AvgMetric"><code>AvgMetric</code></a>, otherwise you'll need to implement the following methods.</p>
+<div markdown="span" class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note: </b>If your [`Metric`](/learner.html#Metric) has state depending on tensors, don't forget to store it on the CPU to avoid any potential memory leaks.</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Metric.reset</code>" class="doc_header"><code>Metric.reset</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Metric.reset</code>()</p>
+</blockquote>
+<p>Reset inner state to prepare for new computation</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Metric.accumulate</code>" class="doc_header"><code>Metric.accumulate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Metric.accumulate</code>(<strong><code>learn</code></strong>)</p>
+</blockquote>
+<p>Use <code>learn</code> to update the state with new results</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Metric.value</code>" class="doc_header"><code>Metric.value</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>The value of the metric</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Metric.name</code>" class="doc_header"><code>Metric.name</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Name of the <a href="/learner.html#Metric"><code>Metric</code></a>, camel-cased and with Metric removed</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="<code>class</code> <code>AvgMetric</code>" class="doc_header"><code>class</code> <code>AvgMetric</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AvgMetric</code>(<strong><code>func</code></strong>) :: <a href="/learner.html#Metric"><code>Metric</code></a></p>
+</blockquote>
+<p>Average the values of <code>func</code> taking into account potential different batch sizes</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">()</span>
+<span class="n">tst</span> <span class="o">=</span> <span class="n">AvgMetric</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">t</span><span class="p">,</span><span class="n">u</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">tst</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">25</span><span class="p">):</span> 
+    <span class="n">learn</span><span class="o">.</span><span class="n">pred</span><span class="p">,</span><span class="n">learn</span><span class="o">.</span><span class="n">yb</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">25</span><span class="p">],</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">25</span><span class="p">]</span>
+    <span class="n">tst</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">learn</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="c1">#With varying batch size</span>
+<span class="n">tst</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">splits</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">splits</span> <span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span> 
+    <span class="n">learn</span><span class="o">.</span><span class="n">pred</span><span class="p">,</span><span class="n">learn</span><span class="o">.</span><span class="n">yb</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">splits</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">splits</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]],</span><span class="n">u</span><span class="p">[</span><span class="n">splits</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">splits</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">tst</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">learn</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="<code>class</code> <code>AvgLoss</code>" class="doc_header"><code>class</code> <code>AvgLoss</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Metrics--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AvgLoss</code>() :: <a href="/learner.html#Metric"><code>Metric</code></a></p>
+</blockquote>
+<p>Average the losses taking into account potential different batch sizes</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst</span> <span class="o">=</span> <span class="n">AvgLoss</span><span class="p">()</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">tst</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">25</span><span class="p">):</span> 
+    <span class="n">learn</span><span class="o">.</span><span class="n">yb</span><span class="p">,</span><span class="n">learn</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">25</span><span class="p">],</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">25</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">tst</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">learn</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="c1">#With varying batch size</span>
+<span class="n">tst</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">splits</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">splits</span> <span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span> 
+    <span class="n">learn</span><span class="o">.</span><span class="n">yb</span><span class="p">,</span><span class="n">learn</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">splits</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">splits</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]],</span><span class="n">t</span><span class="p">[</span><span class="n">splits</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">splits</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">tst</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">learn</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="<code>class</code> <code>AvgSmoothLoss</code>" class="doc_header"><code>class</code> <code>AvgSmoothLoss</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Metrics--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AvgSmoothLoss</code>(<strong><code>beta</code></strong>=<em><code>0.98</code></em>) :: <a href="/learner.html#Metric"><code>Metric</code></a></p>
+</blockquote>
+<p>Smooth average of the losses (exponentially weighted with <code>beta</code>)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst</span> <span class="o">=</span> <span class="n">AvgSmoothLoss</span><span class="p">()</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">tst</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span> 
+    <span class="n">learn</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">25</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">25</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">tst</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">learn</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">*</span><span class="mf">0.98</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">25</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">25</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.98</span><span class="p">)</span>
+    <span class="n">test_close</span><span class="p">(</span><span class="n">val</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.98</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)),</span> <span class="n">tst</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="<code>class</code> <code>Recorder</code>" class="doc_header"><code>class</code> <code>Recorder</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Recorder</code>(<strong><code>add_time</code></strong>=<em><code>True</code></em>, <strong><code>train_metrics</code></strong>=<em><code>False</code></em>, <strong><code>beta</code></strong>=<em><code>0.98</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+</blockquote>
+<p>Callback that registers statistics (lr, loss and metrics) during training</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>By default, metrics are computed on the validation set only, although that can be changed with <code>training_metrics=True</code>. <code>beta</code> is the weight used to compute the exponentially weighted average of the losses (which gives the <code>smooth_loss</code> attribute to <a href="/learner.html#Learner"><code>Learner</code></a>).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Text printed output</span>
+<span class="k">def</span> <span class="nf">tst_metric</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">targ</span><span class="p">):</span> <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">targ</span><span class="p">)</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">tst_metric</span><span class="p">)</span>
+<span class="n">pat</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;[tensor\(\d.\d*\), tensor\(\d.\d*\), tensor\(\d.\d*\), &#39;dd:dd&#39;]&quot;</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">pat</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">TestRecorderCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+    <span class="n">run_after</span><span class="o">=</span><span class="n">Recorder</span>
+    
+    <span class="k">def</span> <span class="nf">begin_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_metrics</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">add_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">train_metrics</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">add_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">smooth_loss</span><span class="o">.</span><span class="n">beta</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span> <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">Metric</span><span class="p">)</span>
+        <span class="n">test_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">smooth_loss</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="c1">#To test what the recorder logs, we use a custom logger function.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_log</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">old_smooth</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">tensor</span><span class="p">(</span><span class="mf">0.</span><span class="p">),</span><span class="mi">0</span>
+    
+    <span class="k">def</span> <span class="nf">after_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">lrs</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+            <span class="n">test_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">lrs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">hypers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;lr&#39;</span><span class="p">])</span>
+            <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">losses</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+            <span class="n">smooth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_smooth</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span>
+            <span class="n">smooth</span> <span class="o">/=</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span>
+            <span class="n">test_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">smooth</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+            <span class="n">test_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smooth_loss</span><span class="p">,</span> <span class="n">smooth</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">old_smooth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_loss</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bs</span> <span class="o">+=</span> <span class="n">find_bs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yb</span><span class="p">)</span>
+        <span class="n">test_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_metrics</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span> 
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span> <span class="n">test_eq</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+    
+    <span class="k">def</span> <span class="nf">begin_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_time</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_epoch</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">epoch</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">begin_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">_train_mets</span><span class="p">:</span> <span class="n">test_eq</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bs</span><span class="p">)</span>
+            
+    <span class="k">def</span> <span class="nf">after_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">+=</span> <span class="p">[</span><span class="n">res</span><span class="p">,</span> <span class="n">res</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_metrics</span> <span class="k">else</span> <span class="p">[</span><span class="n">res</span><span class="p">]</span>
+        <span class="n">test_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">log</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">def</span> <span class="nf">begin_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">loss</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span> <span class="n">test_eq</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bs</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">test_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">+=</span> <span class="p">[</span><span class="n">res</span><span class="p">,</span> <span class="n">res</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_time</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">format_time</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_epoch</span><span class="p">))</span>
+        <span class="n">test_eq</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">tst_metric</span><span class="p">,</span> <span class="n">cb_funcs</span> <span class="o">=</span> <span class="n">TestRecorderCallback</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">metric_names</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;train_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;tst_metric&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">])</span>
+
+<span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">tst_metric</span><span class="p">,</span> <span class="n">cb_funcs</span> <span class="o">=</span> <span class="n">TestRecorderCallback</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">train_metrics</span><span class="o">=</span><span class="kc">True</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">metric_names</span><span class="p">,</span> 
+        <span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;train_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;train_tst_metric&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_tst_metric&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">])</span>
+
+<span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">tst_metric</span><span class="p">,</span> <span class="n">cb_funcs</span> <span class="o">=</span> <span class="n">TestRecorderCallback</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">add_time</span><span class="o">=</span><span class="kc">False</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">metric_names</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="s1">&#39;train_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;tst_metric&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Callback-internals">Callback internals<a class="anchor-link" href="#Callback-internals">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Recorder.begin_fit</code>" class="doc_header"><code>Recorder.begin_fit</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.begin_fit</code>()</p>
+</blockquote>
+<p>Prepare state for training</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Recorder.begin_epoch</code>" class="doc_header"><code>Recorder.begin_epoch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.begin_epoch</code>()</p>
+</blockquote>
+<p>Set timer if <code>self.add_time=True</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Recorder.begin_validate</code>" class="doc_header"><code>Recorder.begin_validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.begin_validate</code>()</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Recorder.after_batch</code>" class="doc_header"><code>Recorder.after_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.after_batch</code>()</p>
+</blockquote>
+<p>Update all metrics and records lr and smooth loss in training</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Recorder.after_epoch</code>" class="doc_header"><code>Recorder.after_epoch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.after_epoch</code>()</p>
+</blockquote>
+<p>Store and log the loss/metric values</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Ploting-tools">Ploting tools<a class="anchor-link" href="#Ploting-tools">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Recorder.plot</code>" class="doc_header"><code>Recorder.plot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.plot</code>(<strong><code>skip_last</code></strong>=<em><code>0</code></em>)</p>
+</blockquote>
+<p>Plot losses vs learning rates with a log scale, optionally <code>skip_last</code> values</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is used in conjunction with <code>LRFinder</code> to determine a good learning rate.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Recorder.plot_lr</code>" class="doc_header"><code>Recorder.plot_lr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.plot_lr</code>()</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Recorder.plot_loss</code>" class="doc_header"><code>Recorder.plot_loss</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.plot_loss</code>()</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Inference-functions">Inference functions<a class="anchor-link" href="#Inference-functions">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Learner.no_logging</code>" class="doc_header"><code>Learner.no_logging</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.no_logging</code>()</p>
+</blockquote>
+<p>Context manager to temporarily remove <code>logger</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">tst_metric</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">learn</span><span class="o">.</span><span class="n">no_logging</span><span class="p">():</span>
+    <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="nb">print</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Learner.validate</code>" class="doc_header"><code>Learner.validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.validate</code>(<strong><code>dl</code></strong>=<em><code>None</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Validate on <code>dl</code> with potential new <code>cbs</code>.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Test result</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">tst_metric</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">valid_ds</span><span class="o">.</span><span class="n">tensors</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="c1">#Test other dl</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">train_ds</span><span class="o">.</span><span class="n">tensors</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="c1">#Test additional callback is executed.</span>
+<span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_events</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;begin_validate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">batchv_events</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">cycle_events</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">cbs</span><span class="o">=</span><span class="n">VerboseCallback</span><span class="p">()),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Learner.loss_not_reduced</code>" class="doc_header"><code>Learner.loss_not_reduced</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.loss_not_reduced</code>()</p>
+</blockquote>
+<p>A context manager to evaluate <code>loss_func</code> with reduction set to none.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">loss_func</span><span class="o">.</span><span class="n">reduction</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">learn</span><span class="o">.</span><span class="n">loss_not_reduced</span><span class="p">():</span>
+    <span class="n">test_eq</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">loss_func</span><span class="o">.</span><span class="n">reduction</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">losses</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">loss_func</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">test_eq</span><span class="p">(</span><span class="n">losses</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">test_eq</span><span class="p">(</span><span class="n">losses</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">loss_func</span><span class="o">.</span><span class="n">reduction</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>Learner.get_preds</code>" class="doc_header"><code>Learner.get_preds</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/12_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.get_preds</code>(<strong><code>ds_idx</code></strong>=<em><code>1</code></em>, <strong><code>with_loss</code></strong>=<em><code>False</code></em>)</p>
+</blockquote>
+<p>Get the predictions and targets on the <code>ds_idx</code>-th dataset, optionally <code>with_loss</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div markdown="span" class="alert alert-danger" role="alert"><i class="fa fa-danger-circle"></i> <b>Warning: </b>If your dataset is unlabelled, the targets will all be 0s.</div>
+<div markdown="span" class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note: </b>If you want to use the option `with_loss=True` on a custom loss function, make sure you have implemented a `reduction` attribute that supports 'none' </div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Test result</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">tst_metric</span><span class="p">)</span>
+<span class="n">preds</span><span class="p">,</span><span class="n">targs</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">get_preds</span><span class="p">()</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">valid_ds</span><span class="o">.</span><span class="n">tensors</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">targs</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">learn</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c1">#Test other dataset</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">16</span><span class="o">*</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">16</span><span class="o">*</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dls</span> <span class="o">+=</span> <span class="p">(</span><span class="n">dl</span><span class="p">,)</span>
+<span class="n">preds</span><span class="p">,</span><span class="n">targs</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">get_preds</span><span class="p">(</span><span class="n">ds_idx</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">targs</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">learn</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c1">#Test with loss</span>
+<span class="n">preds</span><span class="p">,</span><span class="n">targs</span><span class="p">,</span><span class="n">losses</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">get_preds</span><span class="p">(</span><span class="n">ds_idx</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">with_loss</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">targs</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">learn</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">losses</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">targs</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">))</span>
 </pre></div>
 
     </div>

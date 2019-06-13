@@ -15,7 +15,7 @@ from ..optimizer import *
 from ..learner import *
 from .progress import *
 
-from local.utils.fp16 import convert_network, model_grads_to_master_grads, master_params_to_model_params
+from ..utils.fp16 import convert_network, model_grads_to_master_grads, master_params_to_model_params
 
 from torch.nn.utils import parameters_to_vector
 

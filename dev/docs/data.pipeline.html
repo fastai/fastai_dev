@@ -57,7 +57,7 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>opt_call</code>" class="doc_header"><code>opt_call</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>opt\_call</code>(<strong><code>f</code></strong>, <strong><code>fname</code></strong>=<em><code>'__call__'</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>opt_call</code>" class="doc_header"><code>opt_call</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>opt_call</code>(<strong><code>f</code></strong>, <strong><code>fname</code></strong>=<em><code>'__call__'</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Call <code>f.{fname}(*args, **kwargs)</code>, or <a href="/core.html#noop"><code>noop</code></a> if not defined</p>
 
@@ -99,14 +99,83 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>show_title</code>" class="doc_header"><code>show_title</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Set title of <code>ax</code> to <code>o</code>, or print <code>o</code> if <code>ax</code> is <code>None</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="<code>class</code> <code>Item</code>" class="doc_header"><code>class</code> <code>Item</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Transform--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Item</code>()</p>
+</blockquote>
+<p>An item that displays text (for <a href="/data.pipeline.html#Transform.assoc"><code>Transform.assoc</code></a>)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
 <h2 id="<code>class</code> <code>Transform</code>" class="doc_header"><code>class</code> <code>Transform</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Transform--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transform</code>(<strong><code>encodes</code></strong>=<em><code>None</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>is_tuple</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>A function that <code>encodes</code> if <code>filt</code> matches, and optionally <code>decodes</code>, with an optional <code>setup</code></p>
 
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">add_docs</span><span class="p">(</span><span class="n">Transform</span><span class="p">,</span>
+         <span class="s2">&quot;A function that `encodes` if `filt` matches, and optionally `decodes`, with an optional `setup`&quot;</span><span class="p">,</span>
+         <span class="n">create</span><span class="o">=</span><span class="s2">&quot;classmethod: Turn `f` into a `Transform` unless it already is one&quot;</span><span class="p">,</span>
+         <span class="fm">__call__</span><span class="o">=</span><span class="s2">&quot;Call `self.encodes` unless `filt` is passed and it doesn&#39;t match `self.filt`&quot;</span><span class="p">,</span>
+         <span class="n">decode</span><span class="o">=</span><span class="s2">&quot;Call `self.decodes` unless `filt` is passed and it doesn&#39;t match `self.filt`&quot;</span><span class="p">,</span>
+         <span class="n">decodes</span><span class="o">=</span><span class="s2">&quot;Override to implement custom decoding&quot;</span><span class="p">,</span>
+         <span class="n">show</span><span class="o">=</span><span class="s2">&quot;Call `assoc.shows` with decoded `o`&quot;</span><span class="p">,</span>
+         <span class="n">set_tupled</span><span class="o">=</span><span class="s2">&quot;Set `is_tuple` to `tf` if it was `None` (used internally by `TfmOver`)&quot;</span><span class="p">,</span>
+         <span class="n">setup</span><span class="o">=</span><span class="s2">&quot;Override `setups` for setup behavior&quot;</span><span class="p">,</span>
+         <span class="n">setups</span><span class="o">=</span><span class="s2">&quot;Override to implement custom setup behavior&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -124,14 +193,27 @@ summary: "Low-level transform pipelines"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tneg</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">)</span>
-<span class="n">tfloat</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span><span class="n">shows</span><span class="o">=</span><span class="nb">print</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">negtfm</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">Transform</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span> <span class="n">decodes</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">)</span>
+<span class="n">floattfm</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">Transform</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span><span class="n">decodes</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span><span class="n">assoc</span><span class="o">=</span><span class="n">Item</span><span class="p">)</span>
+</pre></div>
 
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfm</span> <span class="o">=</span> <span class="n">negtfm</span><span class="p">()</span>
 <span class="n">start</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">tneg</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">tfm</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">tneg</span><span class="p">[</span><span class="n">start</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">tneg</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">start</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">tfm</span><span class="p">[</span><span class="n">start</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">tfm</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">start</span><span class="p">)</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="n">floattfm</span><span class="p">()</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="s1">&#39;-4&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -141,7 +223,32 @@ summary: "Low-level transform pipelines"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>More commonly, you'll subclass <a href="/data.pipeline.html#Transform"><code>Transform</code></a> and define <code>encodes</code> and <code>decodes</code>.</p>
+<p>If a <a href="/data.pipeline.html#Transform"><code>Transform</code></a> has a <code>prev</code> attr, it will be recursively searched to find an <code>assoc</code>, e.g. for using with <code>show</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfm1</span> <span class="o">=</span> <span class="n">floattfm</span><span class="p">()</span>
+<span class="n">tfm2</span> <span class="o">=</span> <span class="n">negtfm</span><span class="p">()</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">tfm1</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+<span class="n">tfm2</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">tfm1</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">tfm2</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="n">tfm2</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">t2</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">start</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Generally you'll subclass <a href="/data.pipeline.html#Transform"><code>Transform</code></a>, and <code>assoc</code>, <code>encodes</code> and <code>decodes</code>.</p>
 
 </div>
 </div>
@@ -152,6 +259,7 @@ summary: "Low-level transform pipelines"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_AddTfm</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="n">assoc</span><span class="o">=</span><span class="n">Item</span>
     <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">a</span>
     <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">-</span><span class="n">a</span>
     
@@ -216,6 +324,7 @@ summary: "Low-level transform pipelines"
 <span class="n">t</span> <span class="o">=</span> <span class="n">tfm</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">tfm</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">start</span><span class="p">)</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="n">tfm</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="s2">&quot;(1, 2)&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -240,7 +349,6 @@ summary: "Low-level transform pipelines"
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="<code>class</code> <code>Pipeline</code>" class="doc_header"><code>class</code> <code>Pipeline</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Pipeline</code>(<strong><code>tfms</code></strong>=<em><code>None</code></em>) :: <a href="/data.pipeline.html#Transform"><code>Transform</code></a></p>
 </blockquote>
-<p>A pipeline of composed (for encode/decode) transforms, setup one at a time</p>
 
 </div>
 
@@ -256,10 +364,12 @@ summary: "Low-level transform pipelines"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">add_docs</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">,</span>
+         <span class="s2">&quot;A pipeline of composed (for encode/decode) transforms, setup one at a time&quot;</span><span class="p">,</span>
          <span class="fm">__call__</span><span class="o">=</span><span class="s2">&quot;Compose `__call__` of all `tfms` on `x`&quot;</span><span class="p">,</span>
          <span class="n">decode</span><span class="o">=</span><span class="s2">&quot;Compose `decode` of all `tfms` on `x`&quot;</span><span class="p">,</span>
          <span class="n">decode_at</span><span class="o">=</span><span class="s2">&quot;Decoded item at `idx`&quot;</span><span class="p">,</span>
          <span class="n">show_at</span><span class="o">=</span><span class="s2">&quot;Show item at `idx`&quot;</span><span class="p">,</span>
+         <span class="n">show</span><span class="o">=</span><span class="s2">&quot;Show item&quot;</span><span class="p">,</span>
          <span class="n">delete</span><span class="o">=</span><span class="s2">&quot;Delete transform `idx` from pipeline&quot;</span><span class="p">,</span>
          <span class="n">remove</span><span class="o">=</span><span class="s2">&quot;Remove `tfm` from pipeline&quot;</span><span class="p">,</span>
          <span class="n">set_tupled</span><span class="o">=</span><span class="s2">&quot;Set any `MappedTransform`s in `tfms` to tupled mode&quot;</span><span class="p">)</span>
@@ -300,8 +410,7 @@ summary: "Low-level transform pipelines"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Check a standard pipeline</span>
-<span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">tneg</span><span class="p">,</span><span class="n">tfloat</span><span class="p">]</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">tfms</span><span class="p">)</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="n">negtfm</span><span class="p">(),</span><span class="n">floattfm</span><span class="p">()])</span>
 <span class="n">pipe</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
 <span class="n">start</span> <span class="o">=</span> <span class="mi">2</span>
@@ -312,6 +421,26 @@ summary: "Low-level transform pipelines"
 <span class="n">test_eq</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">start</span><span class="p">)</span>
 <span class="c1"># `show` is on `tfloat` so `show_at` decodes that tfm only</span>
 <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="n">pipe</span><span class="o">.</span><span class="n">show_at</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;-1&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Check opposite order</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="n">floattfm</span><span class="p">(),</span><span class="n">negtfm</span><span class="p">()])</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="c1"># `show` is on `tfloat` so needs to decode negtfm first</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="n">pipe</span><span class="o">.</span><span class="n">show_at</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -334,9 +463,9 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Pipeline.__call__</code>" class="doc_header"><code>Pipeline.__call__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.\_\_call\_\_</code>(<strong><code>x</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>Pipeline.__call__</code>" class="doc_header"><code>Pipeline.__call__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.__call__</code>(<strong><code>x</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>Call <code>self.encodes</code> unless <code>filt</code> is passed and it doesn't match <code>self.filt</code></p>
+<p>Call self as a function.</p>
 
 </div>
 
@@ -357,7 +486,6 @@ summary: "Low-level transform pipelines"
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="<code>Pipeline.decode</code>" class="doc_header"><code>Pipeline.decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.decode</code>(<strong><code>x</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>Call <code>self.decodes</code> unless <code>filt</code> is passed and it doesn't match <code>self.filt</code></p>
 
 </div>
 
@@ -437,7 +565,7 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Pipeline.show_at</code>" class="doc_header"><code>Pipeline.show_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.show\_at</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="<code>Pipeline.show_at</code>" class="doc_header"><code>Pipeline.show_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.show_at</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -457,7 +585,7 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Pipeline.decode_at</code>" class="doc_header"><code>Pipeline.decode_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.decode\_at</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="<code>Pipeline.decode_at</code>" class="doc_header"><code>Pipeline.decode_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Pipeline--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.decode_at</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -480,7 +608,7 @@ summary: "Low-level transform pipelines"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>make_tfm</code>" class="doc_header"><code>make_tfm</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Methods" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>make\_tfm</code>(<strong><code>tfm</code></strong>)</p>
+<h4 id="<code>make_tfm</code>" class="doc_header"><code>make_tfm</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#Methods" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>make_tfm</code>(<strong><code>tfm</code></strong>)</p>
 </blockquote>
 <p>Create a <a href="/data.pipeline.html#Pipeline"><code>Pipeline</code></a> (if <code>tfm</code> is listy) or a <a href="/data.pipeline.html#Transform"><code>Transform</code></a> otherwise</p>
 
@@ -521,7 +649,10 @@ summary: "Low-level transform pipelines"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tl</span> <span class="o">=</span> <span class="n">TfmdList</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pipe</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="n">negtfm</span><span class="p">(),</span><span class="n">floattfm</span><span class="p">()])</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+<span class="n">tl</span> <span class="o">=</span> <span class="n">TfmdList</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pipe</span><span class="p">)</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">tl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
@@ -580,11 +711,10 @@ tfms - [&lt;built-in function neg&gt;, &lt;class &#39;float&#39;&gt;]</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_Cat</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
-    <span class="n">order</span><span class="o">=</span><span class="mi">1</span>
-    <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">o2i</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;o2i&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">o</span>
+    <span class="n">assoc</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="n">Item</span><span class="p">,</span><span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">o2i</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_done_setup</span> <span class="k">else</span> <span class="n">o</span>
     <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">o</span><span class="p">]</span>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">o2i</span> <span class="o">=</span> <span class="n">uniqueify</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bidir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">shows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;I&#39;m a </span><span class="si">{o}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">setups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">o2i</span> <span class="o">=</span> <span class="n">uniqueify</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bidir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_lbl</span><span class="p">(</span><span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="n">o</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -599,7 +729,7 @@ tfms - [&lt;built-in function neg&gt;, &lt;class &#39;float&#39;&gt;]</pre>
 <span class="n">t</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tl</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">([</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span><span class="s1">&#39;dog&#39;</span><span class="p">],</span> <span class="nb">map</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">decode</span><span class="p">,</span><span class="n">t</span><span class="p">))</span>
-<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="n">tl</span><span class="o">.</span><span class="n">show_at</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;I&#39;m a dog&quot;</span><span class="p">)</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="n">tl</span><span class="o">.</span><span class="n">show_at</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;dog&quot;</span><span class="p">)</span>
 <span class="n">tl</span>
 </pre></div>
 
@@ -616,7 +746,7 @@ tfms - [&lt;built-in function neg&gt;, &lt;class &#39;float&#39;&gt;]</pre>
 
 <div class="output_text output_subarea output_execute_result">
 <pre>TfmdList: (#5) [dog_0.jpg,cat_0.jpg,cat_2.jpg,cat_1.jpg,dog_1.jpg]
-tfms - [&lt;function _lbl at 0x7fd2513ef8c8&gt;, &lt;class &#39;__main__._Cat&#39;&gt;]</pre>
+tfms - [&lt;function _lbl at 0x7fb65b14b730&gt;, &lt;class &#39;__main__._Cat&#39;&gt;]</pre>
 </div>
 
 </div>
@@ -640,7 +770,7 @@ tfms - [&lt;function _lbl at 0x7fd2513ef8c8&gt;, &lt;class &#39;__main__._Cat&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdList.__getitem__</code>" class="doc_header"><code>TfmdList.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#TfmdList--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdList.\_\_getitem\_\_</code>(<strong><code>i</code></strong>)</p>
+<h4 id="<code>TfmdList.__getitem__</code>" class="doc_header"><code>TfmdList.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#TfmdList--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdList.__getitem__</code>(<strong><code>i</code></strong>)</p>
 </blockquote>
 <p>Transformed item(s) at <code>i</code></p>
 
@@ -703,7 +833,7 @@ tfms - [&lt;function _lbl at 0x7fd2513ef8c8&gt;, &lt;class &#39;__main__._Cat&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdList.show_at</code>" class="doc_header"><code>TfmdList.show_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#TfmdList--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdList.show\_at</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="<code>TfmdList.show_at</code>" class="doc_header"><code>TfmdList.show_at</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/02_data_pipeline.ipynb#TfmdList--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdList.show_at</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
 <p>Show item at <code>idx</code></p>
 
@@ -733,7 +863,7 @@ tfms - [&lt;function _lbl at 0x7fd2513ef8c8&gt;, &lt;class &#39;__main__._Cat&#3
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>I&#39;m a cat
+<pre>cat
 </pre>
 </div>
 </div>
@@ -772,13 +902,10 @@ tfms - [&lt;function _lbl at 0x7fd2513ef8c8&gt;, &lt;class &#39;__main__._Cat&#3
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_TNorm</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span>
-        
+    <span class="n">assoc</span><span class="o">=</span><span class="n">Item</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span>
     <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="p">(</span><span class="n">o</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span>
     <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="p">(</span><span class="n">o</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span>
-    <span class="k">def</span> <span class="nf">shows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
         <span class="n">its</span> <span class="o">=</span> <span class="n">tensor</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">its</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">its</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
@@ -794,9 +921,8 @@ tfms - [&lt;function _lbl at 0x7fd2513ef8c8&gt;, &lt;class &#39;__main__._Cat&#3
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tnrm</span> <span class="o">=</span> <span class="n">_TNorm</span><span class="p">()</span>
-<span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
-<span class="n">tl</span> <span class="o">=</span> <span class="n">TfmdList</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">TfmOver</span><span class="o">.</span><span class="n">piped</span><span class="p">([</span><span class="n">tneg</span><span class="p">,</span> <span class="p">[</span><span class="n">tneg</span><span class="p">,</span><span class="n">tnrm</span><span class="p">]]))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">tl</span> <span class="o">=</span> <span class="n">TfmdList</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">TfmOver</span><span class="o">.</span><span class="n">piped</span><span class="p">([</span><span class="n">negtfm</span><span class="p">(),</span> <span class="p">[</span><span class="n">negtfm</span><span class="p">(),</span><span class="n">_TNorm</span><span class="p">()]]))</span>
 <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">tl</span><span class="p">)</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
@@ -842,6 +968,20 @@ bd (#2) [(#4) [1,2,3,4],(#4) [tensor(1.),tensor(2.),tensor(3.),tensor(4.)]]
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#assoc</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">tfm</span><span class="o">.</span><span class="n">assoc</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="n">Item</span><span class="p">])</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 

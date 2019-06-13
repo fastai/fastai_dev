@@ -54,11 +54,12 @@ def doc_link(name, include_bt:bool=True):
     #Leave as is
     return cname
 
+_re_backticks = re.compile(r'\[`([^`]*)`\](?:\([^)]*\))|`([^`]*)`')
+
 def add_doc_links(text):
     "Search for doc links for any item between backticks in `text`."
-    pat = re.compile("\[`([^`]*)`\](?:\([^)]*\))|`([^`]*)`")
     def _replace_link(m): return doc_link(m.group(1) or m.group(2))
-    return re.sub(pat, _replace_link, text)
+    return _re_backticks.sub(_replace_link, text)
 
 SOURCE_URL = "https://github.com/fastai/fastai_docs/tree/master/dev/"
 
@@ -68,6 +69,8 @@ def get_function_source(func):
     except Exception: return ''
     module = inspect.getmodule(func).__name__.replace('.', '/') + '.py'
     return f"{SOURCE_URL}{module}#L{line}"
+
+_re_header = re.compile(r'^\s*#+\s*(.*)$')
 
 FASTAI_NB_DEV = 'https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/'
 
@@ -93,8 +96,8 @@ def get_source_link(func, local=False, is_name=None):
     header_pat = re.compile(r'^\s*#+\s*(.*)$')
     while i >= 0:
         cell = nb['cells'][i]
-        if cell['cell_type'] == 'markdown' and re.search(header_pat, cell['source']):
-            title = re.search(header_pat, cell['source']).groups()[0]
+        if cell['cell_type'] == 'markdown' and _re_header.search(cell['source']):
+            title = _re_header.search(cell['source']).groups()[0]
             anchor = '-'.join([s for s in title.split(' ') if len(s) > 0])
             return f'{pref}{nb_name}#{anchor}'
         i -= 1

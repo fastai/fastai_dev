@@ -50,7 +50,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>PosixPath(&#39;/home/ubuntu/git/fastai_docs/dev/data/mnist_tiny/test/4605.png&#39;)</pre>
+<pre>PosixPath(&#39;/home/ubuntu/fastai_docs/dev/data/mnist_tiny/test/1503.png&#39;)</pre>
 </div>
 
 </div>
@@ -73,7 +73,7 @@ summary: "Basic image opening/processing functionality"
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="<code>class</code> <code>Imagify</code>" class="doc_header"><code>class</code> <code>Imagify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_vision_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Imagify</code>(<strong><code>func</code></strong>=<em><code>'open'</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/data.pipeline.html#Transform"><code>Transform</code></a></p>
 </blockquote>
-<p>Open an <code>Image</code> from path <code>fn</code>, show with <code>cmap</code> and <code>alpha</code></p>
+<p>Open an <code>Image</code> from path <code>fn</code>, show with <code>**kwargs</code></p>
 
 </div>
 
@@ -106,7 +106,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_png output_subarea output_execute_result">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAAA30lEQVR4nGNgGHAge+v/cl3sUkrTf/79+zcazmdBklPeroyqmAnBbDmnzPBiLXYzW3/+/TtBJB3ZWAS49/evLwfDduySShv7ORjiPv+9w4fNXH4OBrNPf98HYreVQXTX37/n8cj9/bxeApucyK6/f/+iBAKSPx2dGRi+nPnAII1NZ9jfD+tsGDb8vQsXQQq+4+EvjjBw8jC8xtTHG8nAwMDA0IE1EJJvSTAwMBg9+vsTi0eT/1aLiJg9/vurCYtz4v5APHISm1sZbvz5+/fvjxkqWCUZpvz9O0MBuxQdAQDYKl1usylDbwAAAABJRU5ErkJggg==
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAAAtklEQVR4nGNgGFCgdv3/1kR3HJK97xZkXvu7H7tk36tUBqGSv61YJaXWTWNgYJrxBI/NpUiSTES5FQpE7l9EcFiQJPRiGHh9pRKx66r+9+/b1X9nsUtyqKsrssX9ysNtKduMz7q4ZcW/LcItyXDoDYyFzZ8/cGsU+TANt04tnj0YYu5sEJrnKJaQf7tfgIGBgYG3/4s9XAwefEty7k69ya+p4dR9EItDEnb9+/fv32oP3E6lCwAA/dU1hZNmXSkAAAAASUVORK5CYII=
 "
 >
 </div>
@@ -173,7 +173,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>image_resize</code>" class="doc_header"><code>image_resize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_vision_core.ipynb#Functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>image\_resize</code>(<strong><code>img</code></strong>, <strong><code>size</code></strong>, <strong><code>resample</code></strong>=<em><code>2</code></em>)</p>
+<h4 id="<code>image_resize</code>" class="doc_header"><code>image_resize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_vision_core.ipynb#Functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>image_resize</code>(<strong><code>img</code></strong>, <strong><code>size</code></strong>, <strong><code>resample</code></strong>=<em><code>2</code></em>)</p>
 </blockquote>
 <p>Resize image to <code>size</code> using `resample</p>
 
@@ -231,7 +231,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_png output_subarea output_execute_result">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAAA30lEQVR4nGNgGHAge+v/cl3sUkrTf/79+zcazmdBklPeroyqmAnBbDmnzPBiLXYzW3/+/TtBJB3ZWAS49/evLwfDduySShv7ORjiPv+9w4fNXH4OBrNPf98HYreVQXTX37/n8cj9/bxeApucyK6/f/+iBAKSPx2dGRi+nPnAII1NZ9jfD+tsGDb8vQsXQQq+4+EvjjBw8jC8xtTHG8nAwMDA0IE1EJJvSTAwMBg9+vsTi0eT/1aLiJg9/vurCYtz4v5APHISm1sZbvz5+/fvjxkqWCUZpvz9O0MBuxQdAQDYKl1usylDbwAAAABJRU5ErkJggg==
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAAAtklEQVR4nGNgGFCgdv3/1kR3HJK97xZkXvu7H7tk36tUBqGSv61YJaXWTWNgYJrxBI/NpUiSTES5FQpE7l9EcFiQJPRiGHh9pRKx66r+9+/b1X9nsUtyqKsrssX9ysNtKduMz7q4ZcW/LcItyXDoDYyFzZ8/cGsU+TANt04tnj0YYu5sEJrnKJaQf7tfgIGBgYG3/4s9XAwefEty7k69ya+p4dR9EItDEnb9+/fv32oP3E6lCwAA/dU1hZNmXSkAAAAASUVORK5CYII=
 "
 >
 </div>
@@ -278,7 +278,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>unpermute_image</code>" class="doc_header"><code>unpermute_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_vision_core.ipynb#Functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>unpermute\_image</code>(<strong><code>img</code></strong>)</p>
+<h4 id="<code>unpermute_image</code>" class="doc_header"><code>unpermute_image</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_vision_core.ipynb#Functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>unpermute_image</code>(<strong><code>img</code></strong>)</p>
 </blockquote>
 <p>Convert <code>c*h*w</code> dim order to <code>h*w*c</code> (or just <code>h*w</code> if 1 channel)</p>
 
@@ -345,6 +345,48 @@ summary: "Basic image opening/processing functionality"
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's confirm we can pipeline this with <a href="/vision.core.html#Imagify"><code>Imagify</code></a>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="n">Imagify</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span> <span class="n">ImageToByteTensor</span><span class="p">()])</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">))</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">img</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFkAAABYCAYAAACeV1sKAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADl0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDMuMC4yLCBodHRwOi8vbWF0cGxvdGxpYi5vcmcvOIA7rQAAA1lJREFUeJzt27FLlWscB/CPtyvo4BQUBq6GgtE/oEEoEg42OIZOuihRDm6iOIZgNAm2qQ1S/gcN6qCLogiCWxgFQRAUCYnSHbzHA5cEwePv3HP8fcZXz3kev3x5fN7nvKfm9+/f0tX6q9wTuA4y5AAZcoAMOUCGHCBDDpAhB8iQA/wdPF413/nUnPeDbHKADDlAhhwgQw6QIQfIkANkyAGi98kl9fXrV9DV1QW2t7fBkydPDAwMgNu3b4O2trYyzPBUNjlARTf59evX4OPHj2B0dBQ8ePDA2NgY2NnZAY8fPwbv3r2LnmY2OUJFN7nwIXBtbS3o7OwEjx49Olunl5eXQX9/P3j58iV49uxZ2DyzyQFqgh8JKOlgP378AM+fPwd37twBU1NTxQH//fvGx8fBwsIC+PDhQymnQp7ClVdFr8kNDQ0o7jL+pKbmtGB3794NmdOfZJMDZMgBMuQAFb27uIjDw0Nw//59cPPmTbC+vl7qoXJ3UU4Vvbso+Pz5M1hcXDy79v37dzA/Pw8ODg7A7Oxs8OyyySGqYk0u7JOHhobOrtXX14OWlhawtbUF2tvbwcrKSqmnkWtyOVVFk4+Pj8G3b9/OrhVO5gp3haurq6C7uxu8efMG9PX1lWoa5za5KkK+iJOTEzAxMQFevXoF9vf3QWNj42WHyOWinK5Nkwt+/vwJbt26heI/y5mZmcu+dTa5nK5dkwt6e3vBxsYG+PLly2XfMptcTlVxW30ZhZuWq5RNDnDtmlw4+lxbWwMjIyNXPmY2OcC1a/KnT59QPArt6em58jGzyQEqap+8u7sLWltbwY0bNy782qOjIxQfPNzb20NJH3LJfXI5VdSa/PDhQ9DR0YHix011dXXnvubXr19genoaxV3F5ubmlc3zv7LJASqqyU+fPgWTk5OgqakJxTPie/fu4fTwvvDVhsLa+/btW/DixQvQ3NwcM2nZ5BAVtbsoeP/+PZibmwNLS0vn/u7g4CAYHh5Gse1XIHcX5VSRTf6fyiaXU4YcIEMOkCEHyJADZMgBMuQA0WcX5+4lq1k2OUCGHCBDDpAhB8iQA2TIATLkABlygAw5QIYcIEMOkCEHyJADZMgBMuQAGXKADDlAhhwgQw6QIQfIkANkyAEy5AD/AFL23ZJ57EFdAAAAAElFTkSuQmCC
+"
+>
+</div>
+
+</div>
+
 </div>
 </div>
 
