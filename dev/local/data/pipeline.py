@@ -21,12 +21,11 @@ class Item():
 
 class Transform():
     order,assoc,filt,_is_setup,_done_setup,mask,is_tuple,prev = [0]+[None]*7
-    def __init__(self, encodes=None, mask=None, is_tuple=None, **kwargs):
-        if encodes is not None:
-            self.encodes=encodes
-            if hasattr(encodes,'order'): self.order=encodes.order
+    def __init__(self, encodes=None, mask=None, is_tuple=None):
         self.mask,self.is_tuple = mask,is_tuple
-        for k,v in kwargs.items(): setattr(self, k, v)
+        if encodes:
+            self.encodes=encodes
+            self.order = getattr(encodes,'order',0)
 
     def setup(self, items=None):
         if self._is_setup: return
@@ -53,7 +52,8 @@ class Transform():
         elif self.prev: return self.prev.show(od, filt=filt, **kwargs)
 
     @classmethod
-    def create(cls, f, filt=None): return f if isinstance(f,Transform) else cls(f)
+    def create(cls, f, filt=None): return f if isinstance(f,Transform) else cls(encodes=f)
+    def find_assoc(self): return self.assoc if self.assoc else self.prev.find_assoc() if self.prev else None
     def __getitem__(self, x): return self(x) # So it can be used as a `Dataset`
     def decodes(self, o, *args, **kwargs): return o
     def setups(self, items): pass
@@ -64,8 +64,6 @@ def _set_tupled(tfms, m=True):
     tfms = L(tfms)
     for t in tfms: getattr(t,'set_tupled',noop)(m)
     return tfms
-
-def _get_assoc(tfm): return tfm.assoc if tfm.assoc else _get_assoc(tfm.prev) if tfm.prev else None
 
 @newchk
 class Pipeline(Transform):
@@ -92,6 +90,8 @@ class Pipeline(Transform):
         for f in tfms: x = opt_call(f, fname, x, **kwargs)
         return x
 
+    @property
+    def assoc(self): return self.tfms[-1].find_assoc()
     def __call__(self, x, **kwargs): return self.composed(x, **kwargs)
     def __getitem__(self, x): return self(x)
     def decode(self, x, **kwargs): return self.composed(x, rev=True, fname='decode', **kwargs)
@@ -102,8 +102,6 @@ class Pipeline(Transform):
     def remove(self, tfm): self.tfms.remove(tfm)
     def show(self, o, *args, **kwargs): return self.tfms[-1].show(o, *args, **kwargs)
     def set_tupled(self, m=True): _set_tupled(self._tfms, m)
-    @property
-    def assoc(self): return _get_assoc(self.tfms[-1])
 
 def make_tfm(tfm):
     "Create a `Pipeline` (if `tfm` is listy) or a `Transform` otherwise"
@@ -113,7 +111,7 @@ def make_tfm(tfm):
 @docs
 class TfmdList(GetAttr):
     "A transform applied to a collection of `items`"
-    _xtra = 'decode __call__ show'.split()
+    _xtra = 'decode __call__ show assoc'.split()
 
     def __init__(self, items, tfm, do_setup=True):
         self.items = L(items)
@@ -128,7 +126,7 @@ class TfmdList(GetAttr):
     def decode_batch(self, b, **kwargs):
         "Decode `b`, a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         transp = L(zip(*L(b)))
-        return transp.mapped(partial(self.decode, **kwargs)).zipped()
+        return transp.mapped(self.decode, **kwargs).zipped()
 
     def setup(self): getattr(self.tfm,'setup',noop)(self)
     def subset(self, idxs): return self.__class__(self.items[idxs], self.tfm, do_setup=False)
@@ -171,7 +169,7 @@ class TfmOver(Transform):
         self.activ=None
 
     @property
-    def assoc(self): return [t.assoc for t in self.tfms]
+    def assoc(self): return self.tfms.attrgot('assoc') #[t.assoc for t in self.tfms]
 
     @classmethod
     def piped(cls, tfms=None, final_tfms=None):
