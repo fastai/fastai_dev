@@ -4,8 +4,8 @@ __all__ = ['defaults', 'newchk', 'patch', 'chk', 'tensor', 'add_docs', 'docs', '
            'GetAttr', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'noop', 'noops', 'tuplify', 'replicate',
            'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'apply', 'to_detach', 'to_half', 'to_float',
            'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'mapper', 'partialler',
-           'sort_by_run', 'add_props', 'make_cross_image', 'opt_call', 'all_union', 'all_disjoint', 'camel2snake',
-           'trainable_params', 'PrettyString']
+           'sort_by_run', 'num_cpus', 'add_props', 'make_cross_image', 'opt_call', 'all_union', 'all_disjoint',
+           'camel2snake', 'trainable_params', 'PrettyString']
 
 from .test import *
 from .imports import *
@@ -341,6 +341,13 @@ def sort_by_run(fs):
                 break
         else: raise Exception("Impossible to sort")
     return res
+
+def num_cpus():
+    "Get number of cpus"
+    try:                   return len(os.sched_getaffinity(0))
+    except AttributeError: return os.cpu_count()
+
+defaults.cpus = num_cpus()
 
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
