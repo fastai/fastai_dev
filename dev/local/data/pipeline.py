@@ -20,9 +20,9 @@ class Item():
         return ctx
 
 class Transform():
-    order,assoc,filt,_is_setup,_done_setup,mask,is_tuple,prev = [0]+[None]*7
-    def __init__(self, encodes=None, mask=None, is_tuple=None):
-        self.mask,self.is_tuple = mask,is_tuple
+    order,mask,is_tuple,assoc,filt,_is_setup,_done_setup,prev = [0]+[None]*7
+    def __init__(self, encodes=None, **kwargs):
+        for k,v in kwargs.items(): setattr(self, k,v)
         if encodes:
             self.encodes=encodes
             self.order = getattr(encodes,'order',0)
@@ -169,7 +169,7 @@ class TfmOver(Transform):
         self.activ=None
 
     @property
-    def assoc(self): return self.tfms.attrgot('assoc') #[t.assoc for t in self.tfms]
+    def assoc(self): return self.tfms.attrgot('assoc')
 
     @classmethod
     def piped(cls, tfms=None, final_tfms=None):

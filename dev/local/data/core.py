@@ -85,7 +85,9 @@ def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
     ax = ifnone(ax,ctx)
     if ax is None: _,ax = plt.subplots(figsize=figsize)
     # Handle pytorch axis order
-    if isinstance(im,Tensor) and im.shape[0]<5: im=im.permute(1,2,0)
+    if isinstance(im,Tensor):
+        im = to_cpu(im)
+        if im.shape[0]<5: im=im.permute(1,2,0)
     # Handle 1-channel images
     if im.shape[-1]==1: im=im[...,0]
     ax.imshow(im, **kwargs)
@@ -95,14 +97,14 @@ def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
 
 def show_titled_image(o, **kwargs):
     "Call `show_image` destructuring `o` to `(img,title)`"
-    show_image(o[0], title=o[1], **kwargs)
+    show_image(o[0], title=str(o[1]), **kwargs)
 
 def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs):
     "Display batch `b` in a grid of size `items` with `cols` width"
     rows = (items+cols-1) // cols
     if figsize is None: figsize = (cols*3, rows*3)
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
-    for *o,ax in zip(*b, axs.flatten()): show(o, ax=ax, **kwargs)
+    for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
 class ImageItem:
     "An item that `show`s with `show_image`"
