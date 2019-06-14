@@ -21,7 +21,7 @@ class Callback():
 
     @property
     def name(self):
-        "Name of the `Callback`, camel-cased and with Callback removed"
+        "Name of the `Callback`, camel-cased and with '*Callback*' removed"
         name = re.sub(r'Callback$', '', self.__class__.__name__)
         return camel2snake(name or 'callback')
 
