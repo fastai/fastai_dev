@@ -65,8 +65,7 @@ def _set_tupled(tfms, m=True):
     for t in tfms: getattr(t,'set_tupled',noop)(m)
     return tfms
 
-@newchk
-class Pipeline(Transform):
+class Pipeline(Transform, metaclass=PrePostInitMeta):
     def __init__(self, tfms=None): self.tfms,self._tfms = [],L(tfms).mapped(Transform.create)
 
     def setups(self, items=None):
