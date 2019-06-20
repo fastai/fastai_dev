@@ -61,7 +61,8 @@ def patch(f):
     "Decorator: add `f` to the first parameter's class (based on f's type annotations)"
     cls = next(iter(f.__annotations__.values()))
     nf = copy.copy(f)
-    functools.update_wrapper(nf,f)
+    # `functools.update_wrapper` when passing patched function to `Pipeline`, so we do it manually
+    for o in functools.WRAPPER_ASSIGNMENTS: setattr(nf, o, getattr(f,o))
     nf.__qualname__ = f"{cls.__name__}.{f.__name__}"
     setattr(cls, f.__name__, nf)
     return f
