@@ -261,7 +261,7 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 }
 
 
-@_fixed_layout
+@frozen
 public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     public init() {}
 
@@ -276,7 +276,7 @@ extension Array: Layer where Element: Layer, Element.Input == Element.Output {
     public typealias Output = Element.Output
     
     @differentiable(vjp: _vjpApplied)
-    public func call(_ input: Input) -> Output {
+    public func callAsFunction(_ input: Input) -> Output {
         var activation = input
         for layer in self {
             activation = layer(activation)
@@ -285,16 +285,16 @@ extension Array: Layer where Element: Layer, Element.Input == Element.Output {
     }
     
     public func _vjpApplied(_ input: Input)
-        -> (Output, (Output.CotangentVector) -> (Array.CotangentVector, Input.CotangentVector))
+        -> (Output, (Output.TangentVector) -> (Array.TangentVector, Input.TangentVector))
     {
         var activation = input
-        var pullbacks: [(Input.CotangentVector) -> (Element.CotangentVector, Input.CotangentVector)] = []
+        var pullbacks: [(Input.TangentVector) -> (Element.TangentVector, Input.TangentVector)] = []
         for layer in self {
             let (newActivation, newPullback) = layer.valueWithPullback(at: activation) { $0($1) }
             activation = newActivation
             pullbacks.append(newPullback)
         }
-        func pullback(_ v: Input.CotangentVector) -> (Array.CotangentVector, Input.CotangentVector) {
+        func pullback(_ v: Input.TangentVector) -> (Array.TangentVector, Input.TangentVector) {
             var activationGradient = v
             var layerGradients: [Element.CotangentVector] = []
             for pullback in pullbacks.reversed() {
@@ -302,7 +302,7 @@ extension Array: Layer where Element: Layer, Element.Input == Element.Output {
                 activationGradient = newActivationGradient
                 layerGradients.append(newLayerGradient)
             }
-            return (Array.CotangentVector(layerGradients.reversed()), activationGradient)
+            return (Array.TangentVector(layerGradients.reversed()), activationGradient)
         }
         return (activation, pullback)
     }
