@@ -112,7 +112,7 @@ public final class Learner<Label: TensorGroup,
     
     public private(set) var epochCount = 0
     public private(set) var currentEpoch = 0
-    public private(set) var currentGradient = Model.CotangentVector.zero
+    public private(set) var currentGradient = Model.TangentVector.zero
     public private(set) var currentLoss = Loss.zero
     public private(set) var inTrain = false
     public private(set) var pctEpochs = Float.zero
