@@ -118,9 +118,9 @@ def _get_ret(func):
 class Pipeline():
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None): self.raw_fs = L(funcs)
-    def __repr__(self): return f"Pipeline over {self.tfms}"
+    def __repr__(self): return f"Pipeline over {self.fs}"
 
-    def setup(self, t=None):
+    def setup_types(self, t=None):
         self.fs,self.t_show = [],None
         if len(self.raw_fs) == 0: self.final_t = t
         else:
@@ -134,6 +134,13 @@ class Pipeline():
             if hasattr(t, 'show') and self.t_show is None:
                 self.t_idx,self.t_show = i+1,t
             self.final_t = t
+
+    def setup(self, items=None):
+        assert hasattr(self, 'fs'), "Call `setup_types` before `setup`"
+        tfms,self.fs = self.fs,[]
+        for t in tfms:
+            self.fs.append(t)
+            if hasattr(t, 'setup'): t.setup(items)
 
     def __call__(self, o, **kwargs): return compose_tfms(o, self.fs)
     def decode  (self, i, **kwargs): return compose_tfms(i, self.fs, func_nm='decode', reverse=True)
@@ -150,4 +157,5 @@ add_docs(Pipeline,
          __call__="Compose `__call__` of all `tfms` on `o`",
          decode="Compose `decode` of all `tfms` on `i`",
          show="Show item `o`",
-         setup="Go through the transforms in order and propagate the type starting with `t`")
+         setup="Go through the transforms in order and call their potential setup on `items`",
+         setup_types="Go through the transforms in order and propagate the type starting with `t`")

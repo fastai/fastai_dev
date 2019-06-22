@@ -226,17 +226,17 @@ def get_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
     if doc is not None: res.__doc__ = doc
     return res
 
-def mk_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
+def mk_class(nm, *fld_names, sup=None, doc=None, funcs=None, mod=None, **flds):
     "Create a class using `get_class` and add to the caller's module"
-    stk = inspect.stack()[1]
-    mod = ifnone(inspect.getmodule(stk[0]), sys.modules['__main__'])
+    if mod is None: mod = inspect.currentframe().f_back.f_locals
     res = get_class(nm, *fld_names, sup=sup, doc=doc, funcs=funcs, **flds)
-    setattr(mod, nm, res)
+    mod[nm] = res
 
 def wrap_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
     "Decorator: makes function a method of a new class `nm` passing parameters to `mk_class`"
     def _inner(f):
-        mk_class(nm, *fld_names, sup=sup, doc=doc, funcs=L(funcs)+f, **flds)
+        mod = inspect.currentframe().f_back.f_locals
+        mk_class(nm, *fld_names, sup=sup, doc=doc, funcs=L(funcs)+f, mod=mod, **flds)
         return f
     return _inner
 
