@@ -235,7 +235,8 @@ def mk_class(nm, *fld_names, sup=None, doc=None, funcs=None, mod=None, **flds):
 def wrap_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
     "Decorator: makes function a method of a new class `nm` passing parameters to `mk_class`"
     def _inner(f):
-        mod = inspect.currentframe().f_back.f_locals
+#         mod = inspect.currentframe().f_back.f_locals
+        mod = f.__globals__
         mk_class(nm, *fld_names, sup=sup, doc=doc, funcs=L(funcs)+f, mod=mod, **flds)
         return f
     return _inner
