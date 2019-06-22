@@ -4,6 +4,8 @@ file to edit: 04_callbacks.ipynb
 
 */
 
+
+
 import Path
 import TensorFlow
 
@@ -16,7 +18,7 @@ public struct BasicModel: Layer {
     }
     
     @differentiable
-    public func call(_ input: Tensor<Float>) -> Tensor<Float> {
+    public func callAsFunction(_ input: Tensor<Float>) -> Tensor<Float> {
         return layer2(layer1(input))
     }
 }
