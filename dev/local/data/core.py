@@ -142,7 +142,7 @@ class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfms=None, bs=16, is_tuple=True, shuffle=False,
+    def __init__(self, dataset, tfms=None, bs=16, shuffle=False,
                  sampler=None, batch_sampler=None, num_workers=1, **kwargs):
         self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers)
         if hasattr(dataset, 'tuple_tfms'): t = dataset.tuple_tfms.final_t
@@ -191,7 +191,7 @@ class ByteToFloatTensor(Transform):
 
 @docs
 class Normalize(Transform):
-    "Normalize/denorm batch"
+    "Normalize/denorm batch of `TensorImage`"
     order=99
     def __init__(self, mean, std): self.mean,self.std = mean,std
     def encodes(self, x:TensorImage): return (x-self.mean) / self.std
