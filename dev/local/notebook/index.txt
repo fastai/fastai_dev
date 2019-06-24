@@ -97,7 +97,6 @@
   "DataBunch": "04_data_core.ipynb",
   "all_union": "05_data_source.ipynb",
   "all_disjoint": "05_data_source.ipynb",
-  "LambdaItem": "05_data_source.ipynb",
   "DataSource": "05_data_source.ipynb",
   "DataSource.train,DataSource.valid": "05_data_source.ipynb",
   "DsrcSubset": "05_data_source.ipynb",

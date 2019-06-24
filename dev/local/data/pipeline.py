@@ -189,13 +189,15 @@ class TfmdDS(TfmdList):
         if do_setup: self.setup()
 
     def __getitem__(self, i, filt=None):  #TODO add filt
-        its = [it.__getitem__(i, filt=filt) for it in self.tfmd_its]
-        if is_iter(i): return L(zip(*L(its))).mapped(self.tuple_tfms, filt=filt)
+        its = _maybe_flat([it.__getitem__(i, filt=filt) for it in self.tfmd_its])
+        if is_iter(i):
+            if len(self.tfmd_its) > 1: its = zip(*L(its))
+            return L(its).mapped(self.tuple_tfms, filt=filt)
         return self.tuple_tfms(its, filt=filt)
 
     def decode(self, o, filt=None):
         o = self.tuple_tfms.decode(o, filt=filt)
-        return [it.decode(o_, filt=filt) for o_,it in zip(o,self.tfmd_its)]
+        return _maybe_flat([it.decode(o_, filt=filt) for o_,it in zip(o,self.tfmd_its)])
 
     def show(self, o, ctx=None, filt=None, **kwargs):
         if self.tuple_tfms.t_show is not None: return self.tuple_tfms.show(o, ctx=ctx, **kwargs)
