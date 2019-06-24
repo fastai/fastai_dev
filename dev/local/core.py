@@ -5,7 +5,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'PrePostInit', 'NewChkMeta', 'patch_to
            'wrap_class', 'noop', 'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of',
            'mask2idxs', 'apply', 'to_detach', 'to_half', 'to_float', 'to_device', 'to_cpu', 'item_find', 'find_device',
            'find_bs', 'compose', 'mapper', 'partialler', 'sort_by_run', 'num_cpus', 'add_props', 'make_cross_image',
-           'opt_call', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'PrettyString']
+           'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'PrettyString']
 
 from .test import *
 from .imports import *
@@ -235,9 +235,7 @@ def mk_class(nm, *fld_names, sup=None, doc=None, funcs=None, mod=None, **flds):
 def wrap_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
     "Decorator: makes function a method of a new class `nm` passing parameters to `mk_class`"
     def _inner(f):
-#         mod = inspect.currentframe().f_back.f_locals
-        mod = f.__globals__
-        mk_class(nm, *fld_names, sup=sup, doc=doc, funcs=L(funcs)+f, mod=mod, **flds)
+        mk_class(nm, *fld_names, sup=sup, doc=doc, funcs=L(funcs)+f, mod=f.__globals__, **flds)
         return f
     return _inner
 
@@ -396,11 +394,6 @@ def make_cross_image(bw=True):
         im[0,2,:] = 1.
         im[1,:,2] = 1.
     return im
-
-#Comes from 02_data_pipeline.ipynb.
-def opt_call(f, fname='__call__', *args, **kwargs):
-    "Call `f.{fname}(*args, **kwargs)`, or `noop` if not defined"
-    return getattr(f,fname,noop)(*args, **kwargs)
 
 #Comes from 05_data_source.ipynb.
 def all_union(sets):

@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_titled_image',
-           'show_image_batch', 'ImageItem', 'TitledImageItem', 'Categorize', 'TfmdDL', 'Cuda', 'ByteToFloatTensor',
-           'Normalize', 'DataBunch']
+           'show_image_batch', 'TensorImage', 'Categorize', 'String', 'mk_string', 'TfmdDL', 'Cuda',
+           'ByteToFloatTensor', 'Normalize', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -106,32 +106,31 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
     for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
-class ImageItem:
-    "An item that `show`s with `show_image`"
-    def __init__(self, **kwargs): self.kw = kwargs
-    def show(self, o, ctx=None, **kwargs): return show_image(o, ax=ctx, **{**kwargs,**self.kw})
-
-class TitledImageItem:
-    "An item that `show`s an (image,title) tuple with `show_titled_image`"
-    def __init__(self, **kwargs): self.kw = kwargs
-    def show(self, o, ctx=None, **kwargs): return show_titled_image(o, ax=ctx, **{**kwargs,**self.kw})
+class TensorImage():
+    @staticmethod
+    def show(o, ctx=None, **kwargs): return show_image(to_cpu(o), ctx=ctx, **kwargs)
 
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
-    order,assoc=1,Item
-    def __init__(self, vocab=None, train_attr="train", subset_idx=None, mask=None, is_tuple=None):
-        super().__init__(mask=mask,is_tuple=is_tuple)
+    order=1
+    def __init__(self, vocab=None, train_attr="train", subset_idx=None):
         self.vocab,self.train_attr,self.subset_idx = vocab,train_attr,subset_idx
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
-    def setups(self, dsrc):
+    def setup(self, dsrc):
         if not dsrc: return
         if self.subset_idx is not None: dsrc = dsrc.subset(self.subset_idx)
         elif self.train_attr: dsrc = getattr(dsrc,self.train_attr)
         self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)
 
-    def encodes(self, o): return self.o2i[o] if self.o2i else o
-    def decodes(self, o):  return self.vocab[o]
+    def encodes(self, o): return self.o2i[o]
+    def decodes(self, o): return self.vocab[o]
+
+class String():
+    @staticmethod
+    def show(o, ctx=None, **kwargs): return show_title(str(o), ctx=ctx)
+
+def mk_string(t)->String: return t
 
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
@@ -145,24 +144,23 @@ class TfmdDL(GetAttr):
 
     def __init__(self, dataset, tfms=None, bs=16, is_tuple=True, shuffle=False,
                  sampler=None, batch_sampler=None, num_workers=1, **kwargs):
-        tfm = Pipeline(tfms)
-        if is_tuple: tfm.set_tupled()
         self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers)
-        self.default,self.tfm = self.dl,tfm
+        if hasattr(dataset, 'tuple_tfms'): t = dataset.tuple_tfms.final_t
+        elif hasattr(dataset, 'tfms'):     t = dataset.tfms.final_t
+        else:                              t = None
+        self.default,self.tfms = self.dl,Pipeline(tfms, t=t)
         for k,v in kwargs.items(): setattr(self,k,v)
-        tfm.setup(self)
-        if len(tfm.tfms) > 0 and hasattr(self.dataset, 'tfm'):
-            tfm.tfms[0].assoc = getattr(self.dataset.tfm,'assoc',None)
+        self.tfms.setup(self)
 
     def __len__(self): return len(self.dl)
-    def __iter__(self): return map(self.tfm, self.dl)
+    def __iter__(self): return map(self.tfms, self.dl)
     def one_batch(self): return next(iter(self))
-    def decode(self, b): return getattr(self.dataset,'decode_batch',noop)(self.tfm.decode(b))
+    def decode(self, b): return getattr(self.dataset,'decode_batch',noop)(self.tfms.decode(b))
 
     def show_batch(self, b=None, max_rows=1000, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         if b is None: b=self.one_batch()
-        b = self.tfm.decode(b)
+        b = self.tfms.decode(b)
         rows = itertools.islice(zip(*L(b)), max_rows)
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
         for o,ctx in zip(rows,ctxs): self.dataset.show(o, ctx=ctx)
@@ -174,10 +172,7 @@ class TfmdDL(GetAttr):
 @docs
 class Cuda(Transform):
     "Move batch to `device` (defaults to `defaults.device`)"
-    def __init__(self,device=defaults.device):
-        super().__init__(is_tuple=False)
-        self.device=device
-
+    def __init__(self,device=defaults.device): self.device=device
     def encodes(self, b): return to_device(b, self.device)
     def decodes(self, b): return to_cpu(b)
 
@@ -187,12 +182,9 @@ class Cuda(Transform):
 class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order=20 #Need to run after CUDA if on the GPU
-    def __init__(self, div=True, mask=None, is_tuple=None):
-        super().__init__(mask=mask,is_tuple=is_tuple)
-        self.div = div
-
-    def encodes(self, o): return o.float().div_(255.) if self.div else o.float()
-    def decodes(self, o): return o.clamp(0., 1.) if self.div else o
+    def __init__(self, div=True): self.div = div
+    def encodes(self, o:TensorImage): return o.float().div_(255.) if self.div else o.float()
+    def decodes(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
 
     _docs=dict(encodes="Convert items matching `mask` to float and optionally divide by 255",
                decodes="Clamp to (0,1) items matching `mask`")
@@ -201,14 +193,11 @@ class ByteToFloatTensor(Transform):
 class Normalize(Transform):
     "Normalize/denorm batch"
     order=99
-    def __init__(self, mean, std, mask=None, is_tuple=None):
-        super().__init__(mask=mask,is_tuple=is_tuple)
-        self.mean,self.std = mean,std
+    def __init__(self, mean, std): self.mean,self.std = mean,std
+    def encodes(self, x:TensorImage): return (x-self.mean) / self.std
+    def decodes(self, x:TensorImage): return (x*self.std ) + self.mean
 
-    def encodes(self, x): return (x-self.mean) / self.std
-    def decodes(self, x):    return (x*self.std ) + self.mean
-
-    _docs=dict(encodes="Normalize batch matching `mask`", decodes="Denormalize batch matching `mask`")
+    _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
 
 @docs
 class DataBunch(GetAttr):

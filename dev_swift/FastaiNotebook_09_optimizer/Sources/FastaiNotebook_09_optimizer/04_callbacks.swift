@@ -4,6 +4,8 @@ file to edit: 04_callbacks.ipynb
 
 */
 
+
+
 import Path
 import TensorFlow
 
@@ -16,7 +18,7 @@ public struct BasicModel: Layer {
     }
     
     @differentiable
-    public func call(_ input: Tensor<Float>) -> Tensor<Float> {
+    public func callAsFunction(_ input: Tensor<Float>) -> Tensor<Float> {
         return layer2(layer1(input))
     }
 }
@@ -110,7 +112,7 @@ public final class Learner<Label: TensorGroup,
     
     public private(set) var epochCount = 0
     public private(set) var currentEpoch = 0
-    public private(set) var currentGradient = Model.CotangentVector.zero
+    public private(set) var currentGradient = Model.TangentVector.zero
     public private(set) var currentLoss = Loss.zero
     public private(set) var inTrain = false
     public private(set) var pctEpochs = Float.zero
