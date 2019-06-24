@@ -75,6 +75,7 @@ class Transform(metaclass=multimeta):
         return gs(*L(x))
 
     def _get_func(self,f,t):
+        if not hasattr(f,'__func__'): return f
         idx = (object,) + tuple(t) if is_listy(t) else (object,t)
         try: f = f.__func__[idx]
         except DispatchError: return noop
