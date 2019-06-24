@@ -180,6 +180,8 @@ class TfmdList(GetAttr):
                  show_at="Show item at `idx`",
                  subset="New `TfmdList` that only includes items at `idxs`")
 
+def _maybe_flat(t): return t[0] if len(t) == 1 else t
+
 class TfmdDS(TfmdList):
     def __init__(self, items, tfms=None, tuple_tfms=None, do_setup=True):
         if tfms is None: tfms = [None]
