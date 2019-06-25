@@ -4,18 +4,20 @@ file to edit: 01a_fastai_layers.ipynb
 
 */
 
+
+
 import Path
 import TensorFlow
 
 public extension Tensor where Scalar: TensorFlowFloatingPoint {
     init(kaimingNormal shape: TensorShape, negativeSlope: Double = 1.0) {
         // Assumes Leaky ReLU nonlinearity
-        let gain = Scalar(sqrt(2.0 / (1.0 + pow(negativeSlope, 2))))
+        let gain = Scalar.init(TensorFlow.sqrt(2.0 / (1.0 + TensorFlow.pow(negativeSlope, 2))))
         let spatialDimCount = shape.count - 2
         let receptiveField = shape[0..<spatialDimCount].contiguousSize
         let fanIn = shape[spatialDimCount] * receptiveField
         self.init(randomNormal: shape)
-        self *= Tensor<Scalar>(gain/sqrt(Scalar(fanIn)))
+        self *= Tensor<Scalar>(gain/TensorFlow.sqrt(Scalar(fanIn)))
     }
 }
 
@@ -44,7 +46,7 @@ public protocol FALayer: Layer {
 
 public extension FALayer {
     @differentiable(vjp: callGrad)
-    func call(_ input: Input) -> Output {
+    func callAsFunction(_ input: Input) -> Output {
         let activation = forward(input)
         for d in delegates { d(activation) }
         return activation
@@ -55,7 +57,7 @@ public extension FALayer {
     // NOTE: If we use `@differentiating`, then there is a linker error. So we use `@differentiable` instead.
     //    TF-476: https://bugs.swift.org/browse/TF-476
     func callGrad(_ input: Input) ->
-        (Output, (Self.Output.CotangentVector) -> (Self.CotangentVector, Self.Input.CotangentVector)) {
+        (Output, (Self.Output.TangentVector) -> (Self.TangentVector, Self.Input.TangentVector)) {
         return Swift.valueWithPullback(at: self, input) { (m, i) in m.forward(i) }
     }
     
@@ -71,7 +73,7 @@ public extension FALayer {
 
 
 
-@_fixed_layout
+@frozen
 public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer { 
     public var weight: Tensor<Scalar>
     public var bias: Tensor<Scalar>
@@ -96,14 +98,14 @@ public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
 
 public extension FADense {
     init(_ nIn: Int, _ nOut: Int, activation: @escaping Activation = identity) {
-        self.init(weight: Tensor(kaimingNormal: [nIn, nOut]),
+        self.init(weight: Tensor(kaimingNormal: [nIn, nOut], negativeSlope: 1.0),
                   bias: Tensor(zeros: [nOut]),
                   activation: activation)
     }
 }
 
 
-@_fixed_layout
+@frozen
 public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     public var filter: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
@@ -125,9 +127,9 @@ public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        return activation(input.convolved2D(withFilter: filter,
-                                            strides: (1, strides.0, strides.1, 1),
-                                            padding: padding))
+        return activation(conv2D(input, filter: filter,
+                                        strides: (1, strides.0, strides.1, 1),
+                                        padding: padding))
     }
 }
 
@@ -142,7 +144,7 @@ public extension FANoBiasConv2D {
             filterShape.0, filterShape.1,
             filterShape.2, filterShape.3])
         self.init(
-            filter: Tensor(kaimingNormal: filterTensorShape),
+            filter: Tensor(kaimingNormal: filterTensorShape, negativeSlope: 1.0),
             activation: activation,
             strides: strides,
             padding: padding)
@@ -160,7 +162,7 @@ public extension FANoBiasConv2D {
 }
 
 
-@_fixed_layout
+@frozen
 public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     public typealias Input = Tensor<Scalar>
     public typealias Output = Tensor<Scalar>
@@ -188,9 +190,9 @@ public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        return activation(input.convolved2D(withFilter: filter,
-                                            strides: (1, strides.0, strides.1, 1),
-                                            padding: padding) + bias)
+        return activation(conv2D(input, filter: filter,
+                                        strides: (1, strides.0, strides.1, 1),
+                                        padding: padding) + bias)
     }
 }
 
@@ -205,7 +207,7 @@ public extension FAConv2D {
             filterShape.0, filterShape.1,
             filterShape.2, filterShape.3])
         self.init(
-            filter: Tensor(kaimingNormal: filterTensorShape),
+            filter: Tensor(kaimingNormal: filterTensorShape, negativeSlope: 1.0),
             bias: Tensor(zeros: TensorShape([filterShape.3])),
             activation: activation,
             strides: strides,
@@ -224,7 +226,7 @@ public extension FAConv2D {
 }
 
 
-@_fixed_layout
+@frozen
 public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     @noDerivative let poolSize: (Int, Int, Int, Int)
     @noDerivative let strides: (Int, Int, Int, Int)
@@ -254,12 +256,12 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        return input.averagePooled(kernelSize: poolSize, strides: strides, padding: padding)
+        return avgPool2D(input, filterSize: poolSize, strides: strides, padding: padding)
     }
 }
 
 
-@_fixed_layout
+@frozen
 public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
     public init() {}
 
@@ -274,7 +276,7 @@ extension Array: Layer where Element: Layer, Element.Input == Element.Output {
     public typealias Output = Element.Output
     
     @differentiable(vjp: _vjpApplied)
-    public func call(_ input: Input) -> Output {
+    public func callAsFunction(_ input: Input) -> Output {
         var activation = input
         for layer in self {
             activation = layer(activation)
@@ -283,24 +285,24 @@ extension Array: Layer where Element: Layer, Element.Input == Element.Output {
     }
     
     public func _vjpApplied(_ input: Input)
-        -> (Output, (Output.CotangentVector) -> (Array.CotangentVector, Input.CotangentVector))
+        -> (Output, (Output.TangentVector) -> (Array.TangentVector, Input.TangentVector))
     {
         var activation = input
-        var pullbacks: [(Input.CotangentVector) -> (Element.CotangentVector, Input.CotangentVector)] = []
+        var pullbacks: [(Input.TangentVector) -> (Element.TangentVector, Input.TangentVector)] = []
         for layer in self {
             let (newActivation, newPullback) = layer.valueWithPullback(at: activation) { $0($1) }
             activation = newActivation
             pullbacks.append(newPullback)
         }
-        func pullback(_ v: Input.CotangentVector) -> (Array.CotangentVector, Input.CotangentVector) {
+        func pullback(_ v: Input.TangentVector) -> (Array.TangentVector, Input.TangentVector) {
             var activationGradient = v
-            var layerGradients: [Element.CotangentVector] = []
+            var layerGradients: [Element.TangentVector] = []
             for pullback in pullbacks.reversed() {
                 let (newLayerGradient, newActivationGradient) = pullback(activationGradient)
                 activationGradient = newActivationGradient
                 layerGradients.append(newLayerGradient)
             }
-            return (Array.CotangentVector(layerGradients.reversed()), activationGradient)
+            return (Array.TangentVector(layerGradients.reversed()), activationGradient)
         }
         return (activation, pullback)
     }
@@ -332,13 +334,13 @@ public func **<T : BinaryFloatingPoint>(_ x: T, _ y: T) -> T {
 }
 
 public func **<T>(_ x: Tensor<T>, _ y: Tensor<T>) -> Tensor<T>
-  where T : FloatingPoint { return pow(x, y)}
+  where T : TensorFlowFloatingPoint { return pow(x, y)}
 
 public func **<T>(_ x: T, _ y: Tensor<T>) -> Tensor<T>
-  where T : FloatingPoint { return pow(x, y)}
+  where T : TensorFlowFloatingPoint { return pow(x, y)}
 
 public func **<T>(_ x: Tensor<T>, _ y: T) -> Tensor<T>
-  where T : FloatingPoint { return pow(x, y)}
+  where T : TensorFlowFloatingPoint { return pow(x, y)}
 
 public extension Differentiable {
     @differentiable
