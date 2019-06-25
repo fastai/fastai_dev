@@ -2,7 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_titled_image',
-           'show_image_batch', 'TensorImage', 'Categorize', 'String', 'mk_string', 'TfmdDL', 'Cuda',
+           'show_image_batch', 'TensorImage', 'Categorize', 'String', 'mk_string', 'TfmdDL', 'Cuda', 'TensorMask',
            'ByteToFloatTensor', 'Normalize', 'DataBunch']
 
 from ..imports import *
@@ -113,14 +113,13 @@ class TensorImage():
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order=1
-    def __init__(self, vocab=None, train_attr="train", subset_idx=None):
-        self.vocab,self.train_attr,self.subset_idx = vocab,train_attr,subset_idx
+    def __init__(self, vocab=None, subset_idx=None):
+        self.vocab,self.subset_idx = vocab,subset_idx
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
     def setup(self, dsrc):
         if not dsrc: return
         if self.subset_idx is not None: dsrc = dsrc.subset(self.subset_idx)
-        elif self.train_attr: dsrc = getattr(dsrc,self.train_attr)
         self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)
 
     def encodes(self, o): return self.o2i[o]
@@ -178,13 +177,17 @@ class Cuda(Transform):
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
+class TensorMask(TensorImage): pass
+
 @docs
 class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order=20 #Need to run after CUDA if on the GPU
-    def __init__(self, div=True): self.div = div
+    def __init__(self, div=True, div_mask=False): self.div,self.div_mask = div,div_mask
     def encodes(self, o:TensorImage): return o.float().div_(255.) if self.div else o.float()
     def decodes(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
+    def encodes(self, o:TensorMask): return o.div_(255.).long() if self.div_mask else o.long()
+    def decodes(self, o:TensorMask): return o
 
     _docs=dict(encodes="Convert items matching `mask` to float and optionally divide by 255",
                decodes="Clamp to (0,1) items matching `mask`")
