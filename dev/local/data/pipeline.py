@@ -164,12 +164,17 @@ class TfmdList(GetAttr):
     def __getitem__(self, i, filt=None):
         "Transformed item(s) at `i`"
         its = self.items[i]
-        return its.mapped(self.tfms, filt=filt) if is_iter(i) else self.tfms(its, filt=filt)
+        if is_iter(i):
+            if not is_iter(filt): filt = L(filt for _ in i)
+            return L(self.tfms(it, filt=f) for it,f in zip(its,filt))
+        return self.tfms(its, filt=filt)
 
     def setup(self): self.tfms.setup(self)
     def subset(self, idxs): return self.__class__(self.items[idxs], self.tfms, do_setup=False)
-    def decode_at(self, idx, **kwargs): return self.decode(self[idx], **kwargs)
-    def show_at(self, idx, **kwargs): return self.show(self[idx], **kwargs)
+    def decode_at(self, idx, filt=None):
+        return self.decode(self.__getitem__(idx,filt=filt), filt=filt)
+    def show_at(self, idx, filt=None, **kwargs):
+        return self.show(self.__getitem__(idx,filt=filt), filt=filt, **kwargs)
     def __eq__(self, b): return all_equal(self, b)
     def __len__(self): return len(self.items)
     def __iter__(self): return (self[i] for i in range_of(self))
@@ -190,21 +195,24 @@ class TfmdDS(TfmdList):
         self.tuple_tfms = Pipeline(tuple_tfms, t=[it.tfms.final_t for it in self.tfmd_its])
         if do_setup: self.setup()
 
-    def __getitem__(self, i, filt=None):  #TODO add filt
+    def __getitem__(self, i, filt=None):
         its = _maybe_flat([it.__getitem__(i, filt=filt) for it in self.tfmd_its])
         if is_iter(i):
             if len(self.tfmd_its) > 1: its = zip(*L(its))
-            return L(its).mapped(self.tuple_tfms, filt=filt)
+            if not is_iter(filt): filt = L(filt for _ in i)
+            return L(self.tuple_tfms(it, filt=f) for it,f in zip(its,filt))
         return self.tuple_tfms(its, filt=filt)
 
     def decode(self, o, filt=None):
         o = self.tuple_tfms.decode(o, filt=filt)
+        if not is_iter(o): o = [o]
         return _maybe_flat([it.decode(o_, filt=filt) for o_,it in zip(o,self.tfmd_its)])
 
     def show(self, o, ctx=None, filt=None, **kwargs):
-        if self.tuple_tfms.t_show is not None: return self.tuple_tfms.show(o, ctx=ctx, **kwargs)
+        if self.tuple_tfms.t_show is not None: return self.tuple_tfms.show(o, ctx=ctx, filt=filt, **kwargs)
         o = self.tuple_tfms.decode(o, filt=filt)
-        for o_,it in zip(o,self.tfmd_its): ctx = it.show(o_, ctx=ctx, **kwargs)
+        if not is_iter(o): o = [o]
+        for o_,it in zip(o,self.tfmd_its): ctx = it.show(o_, ctx=ctx, filt=filt, **kwargs)
         return ctx
 
     def decode_batch(self, b, filt=None):

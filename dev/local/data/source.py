@@ -26,14 +26,8 @@ class DataSource(TfmdDS):
     def len(self,filt): return len(self.filts[filt])
     def subset(self, i): return DsrcSubset(self, i)
     def subsets(self): return map(self.subset, range(self.n_subsets))
-    def __repr__(self): return '\n'.join(map(str,self.subsets())) + f'\ntfm - {self.tfm}'
-
+    def __repr__(self): return '\n'.join(map(str,self.subsets())) + f'\ntfm - {self.tfms}'
     def __getitem__(self, i): return super().__getitem__(i,self.filt_idx[i])
-
-    @classmethod
-    def build(cls, items, tfms=None, filts=None, final_tfms=None):
-        "Create `DataSource` from `Pipeline` starting with `TfmOver` of `tfms` then transforms in `final_tfms`"
-        return cls(items, TfmOver.piped(tfms, final_tfms), filts=filts)
 
     _docs = dict(len="`len` of subset `filt`",
                  __getitem__="Transformed item(s) at `i`, using the appropriate filter",
@@ -47,14 +41,14 @@ DataSource.train,DataSource.valid = add_props(lambda i,x: x.subset(i), 2)
 class DsrcSubset():
     "A filtered subset of a `DataSource`"
     def __init__(self, dsrc, filt):
-        self.dsrc,self.filt,self.filts,self.tfm = dsrc,filt,dsrc.filts[filt],dsrc.tfm
-    def __getitem__(self,i): return self.dsrc[self.filts[i]]
-    def decode(self, o, **kwargs): return self.dsrc.decode(o, filt=self.filt, **kwargs)
+        self.dsrc,self.filt,self.filts,self.tfms = dsrc,filt,dsrc.filts[filt],dsrc.tfms
+    def __getitem__(self,i):             return self.dsrc[self.filts[i]]
+    def decode(self, o, **kwargs):       return self.dsrc.decode(o, filt=self.filt, **kwargs)
     def decode_batch(self, b, **kwargs): return self.dsrc.decode_batch(b, filt=self.filt, **kwargs)
-    def decode_at(self, i, **kwargs): return self.decode(self[i], **kwargs)
-    def show     (self, o, **kwargs): return self.dsrc.show(o, filt=self.filt, **kwargs)
-    def show_at  (self, i, **kwargs): return self.dsrc.show(self[i], filt=self.filt, **kwargs)
-    def __len__(self): return len(self.filts)
+    def decode_at(self, i, **kwargs):    return self.decode(self[i], **kwargs)
+    def show     (self, o, **kwargs):    return self.dsrc.show(o, filt=self.filt, **kwargs)
+    def show_at  (self, i, **kwargs):    return self.dsrc.show(self[i], filt=self.filt, **kwargs)
+    def __len__(self):  return len(self.filts)
     def __eq__(self,b): return all_equal(b,self)
     def __repr__(self): return coll_repr(self)
 
