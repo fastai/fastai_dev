@@ -4,6 +4,8 @@ file to edit: 02_fully_connected.ipynb
 
 */
 
+
+
 import Path
 import TensorFlow
 
