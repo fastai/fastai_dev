@@ -19,7 +19,11 @@ class DataSource(TfmdDS):
         assert all_disjoint(self.filts)
         self.filt_idx = L([None]*len(items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
-        super().__init__(items, tfms, tuple_tfms, do_setup=do_setup)
+        if tfms is None: tfms = [None]
+        self.items,self.tfms = items,tfms
+        self.tfmd_its = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup) for t in tfms]
+        self.tuple_tfms = Pipeline(tuple_tfms, t=[it.tfms.final_t for it in self.tfmd_its])
+        if do_setup: self.setup()
 
     @property
     def n_subsets(self): return len(self.filts)
@@ -42,7 +46,7 @@ class DsrcSubset():
     "A filtered subset of a `DataSource`"
     def __init__(self, dsrc, filt):
         self.dsrc,self.filt,self.filts = dsrc,filt,dsrc.filts[filt]
-        self.tfms,self.tuple_tfms = dsrc.tfms,dsrc.tuple_tfms
+        self.tfms,self.tuple_tfms = dsrc.tfms,getattr(dsrc, 'tuple_tfms', None)
     def __getitem__(self,i):             return self.dsrc[self.filts[i]]
     def decode(self, o, **kwargs):       return self.dsrc.decode(o, filt=self.filt, **kwargs)
     def decode_batch(self, b, **kwargs): return self.dsrc.decode_batch(b, filt=self.filt, **kwargs)
