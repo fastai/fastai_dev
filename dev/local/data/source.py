@@ -9,6 +9,23 @@ from .core import *
 from .pipeline import *
 from ..notebook.showdoc import show_doc
 
+class _FiltTfmdList(TfmdList):
+
+    def __init__(self, items, tfms, filts, filt_idx, do_setup=True):
+        self.filts,self.filt_idx = filts,filt_idx
+        super().__init__(items, tfms, do_setup=do_setup)
+
+    def __getitem__(self, i, filt=None):
+        return super().__getitem__(i,self.filt_idx[i] if filt is None else filt)
+
+    @property
+    def n_subsets(self): return len(self.filts)
+    def len(self,filt): return len(self.filts[filt])
+    def subset(self, i): return DsrcSubset(self, i)
+    def subsets(self): return map(self.subset, range(self.n_subsets))
+
+_FiltTfmdList.train,_FiltTfmdList.valid = add_props(lambda i,x: x.subset(i), 2)
+
 @docs
 class DataSource(TfmdDS):
     "Applies a `tfm` to filtered subsets of `items`"
