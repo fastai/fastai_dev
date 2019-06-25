@@ -56,6 +56,13 @@ def positional_annotations(f):
 
 from multimethod import multimeta,DispatchError
 
+def _get_ret(func):
+    "Get the return annotation of `func`"
+    ann = getattr(func,'__annotations__', None)
+    if not ann: return None
+    typ = ann.get('return')
+    return list(typ.__args__) if getattr(typ, '_name', '')=='Tuple' else typ
+
 class Transform(metaclass=multimeta):
     "A function that `encodes` if `filt` matches, and optionally `decodes`"
     order,add_before_setup,filt,t = 0,False,None,None
@@ -74,16 +81,22 @@ class Transform(metaclass=multimeta):
         if is_listy(gs): return tuple(f(x_) for f,x_ in zip(gs,x))
         return gs(*L(x))
 
-    def _get_func(self,f,t):
+    def _get_func(self,f,t,ret_partial=True):
         if not hasattr(f,'__func__'): return f
         idx = (object,) + tuple(t) if is_listy(t) else (object,t)
         try: f = f.__func__[idx]
         except DispatchError: return noop
-        return partial(f,self)
+        return partial(f,self) if ret_partial else f
 
     def accept_types(self, t): self.t = t
         # We can't create encodes/decodes here since patching might change things later
         # So we call _get_func in _apply instead
+
+    def return_type(self):
+        g = self._get_func(self.encodes, self.t, False)
+        if is_listy(self.t) and len(positional_annotations(g))-1 != len(self.t):
+            return [_get_ret(self._get_func(self.encodes,t_,False)) or t_ for t_ in self.t]
+        return _get_ret(g) or self.t
 
     def __call__(self, x, filt=None): return self._apply(self.encodes, x, filt)
     def decode  (self, x, filt=None): return self._apply(self.decodes, x, filt)
@@ -92,7 +105,8 @@ class Transform(metaclass=multimeta):
 add_docs(Transform,
          __call__="Dispatch and apply the proper encodes to `x` if `filt` matches",
          decode="Dispatch and apply the proper decodes to `x` if `filt` matches",
-         accept_types="Indicate the type of input received by the transform is `t`")
+         accept_types="Indicate the type of input received by the transform is `t`",
+         return_type="Indicate the type of output the tranform returns, depending on `self.t`")
 
 def compose_tfms(x, tfms, func_nm='__call__', reverse=False, **kwargs):
     "Apply all `func_nm` attribute of `tfms` on `x`, maybe in `reverse` order"
@@ -119,7 +133,7 @@ class Pipeline():
                 f.accept_types(t)
                 self.fs.append(f)
                 if self.t_show is None and hasattr(t, 'show'): self.t_idx,self.t_show = i,t
-                t = _get_ret(f.encodes) or t
+                t = f.return_type()
             if self.t_show is None and hasattr(t, 'show'): self.t_idx,self.t_show = i+1,t
             self.final_t = t
 

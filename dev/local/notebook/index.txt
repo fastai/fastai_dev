@@ -100,6 +100,7 @@
   "DataSource": "05_data_source.ipynb",
   "DataSource.train,DataSource.valid": "05_data_source.ipynb",
   "DsrcSubset": "05_data_source.ipynb",
+  "PILImage": "06_vision_core.ipynb",
   "Imagify": "06_vision_core.ipynb",
   "ImageConverter": "06_vision_core.ipynb",
   "image_resize": "06_vision_core.ipynb",
