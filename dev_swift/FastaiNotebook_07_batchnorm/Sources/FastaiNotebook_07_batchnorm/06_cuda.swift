@@ -4,6 +4,8 @@ file to edit: 06_cuda.ipynb
 
 */
 
+
+
 import Path
 import TensorFlow
 import Python
@@ -32,7 +34,7 @@ public struct CnnModel: Layer {
     }
     
     @differentiable
-    public func call(_ input: TF) -> TF {
-        return input.sequenced(through: convs, pool, linear)
+    public func callAsFunction(_ input: TF) -> TF {
+        return input.compose(convs, pool, linear)
     }
 }
