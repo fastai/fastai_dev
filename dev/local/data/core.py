@@ -112,14 +112,14 @@ class TensorImage():
 
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
-    order=1
+    order,state_args=1,'vocab'
     def __init__(self, vocab=None, subset_idx=None):
         self.vocab,self.subset_idx = vocab,subset_idx
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
     def setup(self, dsrc):
         if not dsrc: return
-        if self.subset_idx is not None: dsrc = dsrc.subset(self.subset_idx)
+        dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
         self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)
 
     def encodes(self, o): return self.o2i[o]
