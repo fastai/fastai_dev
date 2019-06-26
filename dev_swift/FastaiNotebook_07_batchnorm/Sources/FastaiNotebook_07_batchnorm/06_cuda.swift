@@ -35,6 +35,7 @@ public struct CnnModel: Layer {
     
     @differentiable
     public func callAsFunction(_ input: TF) -> TF {
-        return input.compose(convs, pool, linear)
+        // TODO: Work around https://bugs.swift.org/browse/TF-606
+        return linear.forward(pool.forward(convs(input)))
     }
 }
