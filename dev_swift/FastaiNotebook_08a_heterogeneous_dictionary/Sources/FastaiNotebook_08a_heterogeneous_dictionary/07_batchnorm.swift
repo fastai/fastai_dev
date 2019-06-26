@@ -4,6 +4,8 @@ file to edit: 07_batchnorm.ipynb
 
 */
 
+
+
 import Path
 import TensorFlow
 import Python
@@ -93,7 +95,7 @@ public struct FABatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
 }
 
 struct BatchNormResult<Scalar : TensorFlowFloatingPoint> : Differentiable{
-    let y, batchMean, batchVariance, reserveSpace1, reserveSpace2: Tensor<Scalar>
+    var y, batchMean, batchVariance, reserveSpace1, reserveSpace2: Tensor<Scalar>
 }
 
 public struct TFBatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm {
@@ -184,7 +186,8 @@ public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
 
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        return norm(conv(input))
+        // TODO: Work around https://bugs.swift.org/browse/TF-603
+        return norm.forward(conv.forward(input))
     }
 }
 
@@ -202,7 +205,8 @@ public struct CnnModelBN: Layer {
     }
     
     @differentiable
-    public func call(_ input: TF) -> TF {
-        return input.compose(convs, pool, linear)
+    public func callAsFunction(_ input: TF) -> TF {
+        // TODO: Work around https://bugs.swift.org/browse/TF-606
+        return linear.forward(pool.forward(convs(input)))
     }
 }

@@ -4,6 +4,8 @@ file to edit: 08_data_block.ipynb
 
 */
 
+
+
 import Path
 import TensorFlow
 import Python
@@ -194,10 +196,8 @@ public extension SplitLabeledData {
             elements: LabeledElement(xb: itemToTensor(train.items), yb: labelToTensor(train.labels)))
         let validDs = Dataset<LabeledElement<XB, YB>>(
             elements: LabeledElement(xb: itemToTensor(valid.items), yb: labelToTensor(valid.labels)))
-        return DataBunch(train: trainDs, 
-                         valid: validDs, 
-                         trainLen: train.items.count, 
-                         validLen: valid.items.count,
+        return DataBunch(train: trainDs, valid: validDs, 
+                         trainLen: train.items.count, validLen: valid.items.count,
                          bs: bs)
     }
 }
@@ -207,11 +207,12 @@ public func intsToTensor(_ items: [Int32]) -> Tensor<Int32> { return Tensor<Int3
 
 public func transformData<I,TI,L>(
     _ data: DataBunch<LabeledElement<I,L>>, 
+    nWorkers:Int=4,
     tfmItem: (I) -> TI
 ) -> DataBunch<DataBatch<TI,L>> 
 where I: TensorGroup, TI: TensorGroup & Differentiable, L: TensorGroup{
-    return DataBunch(train: data.train.innerDs.map(parallelCallCount: 10) { DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
-                     valid: data.valid.innerDs.map(parallelCallCount: 10) { DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
+    return DataBunch(train: data.train.innerDs.map(parallelCallCount: nWorkers){ DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
+                     valid: data.valid.innerDs.map(parallelCallCount: nWorkers){ DataBatch(xb: tfmItem($0.xb), yb: $0.yb) },
                      trainLen: data.train.dsCount, 
                      validLen: data.valid.dsCount,
                      bs: data.train.bs)
@@ -271,7 +272,8 @@ public struct CNNModel: Layer {
     }
     
     @differentiable
-    public func call(_ input: TF) -> TF {
-        return input.sequenced(through: convs, pool, linear)
+    public func callAsFunction(_ input: TF) -> TF {
+        // TODO: Work around https://bugs.swift.org/browse/TF-606
+        return linear.forward(pool.forward(convs(input)))
     }
 }

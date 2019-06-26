@@ -22,8 +22,9 @@ public struct ConvLayer: Layer {
     }
     
     @differentiable
-    public func call(_ input: TF) -> TF {
-        return bn(conv(input))
+    public func callAsFunction(_ input: TF) -> TF {
+        // TODO: Work around https://bugs.swift.org/browse/TF-606
+        return bn.forward(conv.forward(input))
     }
 }
 
@@ -36,11 +37,11 @@ public protocol SwitchableLayer: Layer {
 }
 
 public extension SwitchableLayer {
-    func call(_ input: Input) -> Input {
+    func callAsFunction(_ input: Input) -> Input {
         return isOn ? forward(input) : input
     }
 
-    @differentiating(call)
+    @differentiating(callAsFunction)
     func gradForward(_ input: Input) ->
            (value: Input,
             pullback: (Self.Input.CotangentVector) ->
@@ -97,7 +98,7 @@ public struct ResBlock: Layer {
     }
     
     @differentiable
-    public func call(_ inp: TF) -> TF {
+    public func callAsFunction(_ inp: TF) -> TF {
         return relu(convs(inp) + idConv(pool(inp)))
     }
     
@@ -125,7 +126,7 @@ public struct XResNet: Layer {
     }
     
     @differentiable
-    public func call(_ inp: TF) -> TF {
+    public func callAsFunction(_ inp: TF) -> TF {
         return inp.compose(stem, maxPool, blocks, pool, linear)
     }
 }
