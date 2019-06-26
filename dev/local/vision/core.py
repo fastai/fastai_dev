@@ -143,5 +143,5 @@ class BBoxCategorize(Transform):
         for b,c in dsrc: vals = vals.union(set(c))
         self.vocab,self.otoi = uniqueify(list(vals), sort=True, bidir=True, start='#bg')
 
-    def encodes(self, o): return (o[0],[self.otoi[o_] for o_ in o[1] if o_ in self.otoi])
+    def encodes(self, o): return (o[0],tensor([self.otoi[o_] for o_ in o[1] if o_ in self.otoi]))
     def decodes(self, i): return (i[0],[self.vocab[i_] for i_ in i[1]])

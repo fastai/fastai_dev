@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_titled_image',
-           'show_image_batch', 'TensorImage', 'Categorize', 'String', 'mk_string', 'TfmdDL', 'Cuda', 'TensorMask',
-           'ByteToFloatTensor', 'Normalize', 'DataBunch']
+           'show_image_batch', 'TensorImage', 'Categorize', 'String', 'mk_string', 'get_samples', 'TfmdDL', 'Cuda',
+           'TensorMask', 'ByteToFloatTensor', 'Normalize', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -136,6 +136,10 @@ def _DataLoader__getattr(self,k):
     except AttributeError: raise AttributeError(k) from None
 DataLoader.__getattr__ = _DataLoader__getattr
 
+def get_samples(b, max_rows):
+    if isinstance(b, Tensor): return b[:max_rows]
+    return zip(*L(get_samples(b_, max_rows) if not isinstance(b,Tensor) else b_[:max_rows] for b_ in b))
+
 @docs
 class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
@@ -160,9 +164,8 @@ class TfmdDL(GetAttr):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         if b is None: b=self.one_batch()
         b = self.tfms.decode(b)
-        rows = itertools.islice(zip(*L(b)), max_rows)
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
-        for o,ctx in zip(rows,ctxs): self.dataset.show(o, ctx=ctx)
+        for o,ctx in zip(get_samples(b, max_rows),ctxs): self.dataset.show(o, ctx=ctx)
 
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
                  show_batch="Show each item of `b`",

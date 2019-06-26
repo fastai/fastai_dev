@@ -274,10 +274,6 @@ class TfmdDS(TfmdList):
         for o_,it in zip(o,self.tfmd_its): ctx = it.show(o_, ctx=ctx, filt=filt, **kwargs)
         return ctx
 
-    def decode_batch(self, b, filt=None):
-        transp = L(zip(*L(b)))
-        return transp.mapped(self.decode, filt=filt).zipped()
-
     def setup(self): self.tuple_tfms.setup(self)
 
     def subset(self, idxs):
@@ -291,6 +287,5 @@ add_docs(TfmdDS,
          __getitem__="Call all `tfms` on `items[i]` then all `tuple_tfms` on the result",
          decode="Compose `decode` of all `tuple_tfms` then all `tfms` on `i`",
          show="Show item `o` in `ctx`",
-         decode_batch="Call `self.decode` on all elements of `b`",
          setup="Go through the transforms in order and call their potential setup on `items`",
          subset="New `TfmdDS` that only includes items at `idxs`")
