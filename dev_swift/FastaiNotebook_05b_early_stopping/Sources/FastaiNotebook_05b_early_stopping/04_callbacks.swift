@@ -19,8 +19,7 @@ public struct BasicModel: Layer {
     
     @differentiable
     public func callAsFunction(_ input: Tensor<Float>) -> Tensor<Float> {
-        // TODO: Work around https://bugs.swift.org/browse/TF-603
-        return layer2.forward(layer1.forward(input))
+        return layer2(layer1(input))
     }
 }
 
