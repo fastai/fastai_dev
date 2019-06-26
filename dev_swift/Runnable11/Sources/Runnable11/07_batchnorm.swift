@@ -35,8 +35,8 @@ public extension LearningPhaseDependent {
     }
 
     func gradForward(_ input: Input) ->
-        (Output, (Self.Output.CotangentVector) ->
-            (Self.CotangentVector, Self.Input.CotangentVector)) {
+        (Output, (Self.Output.TangentVector) ->
+            (Self.TangentVector, Self.Input.TangentVector)) {
         switch Context.local.learningPhase {
         case .training:
             return valueWithPullback(at: input) { $0.forwardTraining(to: $1) }

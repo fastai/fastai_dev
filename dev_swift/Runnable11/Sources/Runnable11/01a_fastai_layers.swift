@@ -52,7 +52,7 @@ public extension FALayer {
     }
     
     func callGrad(_ input: Input) ->
-        (Output, (Self.Output.CotangentVector) -> (Self.CotangentVector, Self.Input.CotangentVector)) {
+        (Output, (Self.Output.TangentVector) -> (Self.TangentVector, Self.Input.TangentVector)) {
         return Swift.valueWithPullback(at: self, input) { (m, i) in m.forward(i) }
     }
 }
@@ -288,24 +288,24 @@ extension Array: Layer where Element: Layer, Element.Input == Element.Output {
     }
     
     public func _vjpApplied(_ input: Input)
-        -> (Output, (Output.CotangentVector) -> (Array.CotangentVector, Input.CotangentVector))
+        -> (Output, (Output.TangentVector) -> (Array.TangentVector, Input.TangentVector))
     {
         var activation = input
-        var pullbacks: [(Input.CotangentVector) -> (Element.CotangentVector, Input.CotangentVector)] = []
+        var pullbacks: [(Input.TangentVector) -> (Element.TangentVector, Input.TangentVector)] = []
         for layer in self {
             let (newActivation, newPullback) = layer.valueWithPullback(at: activation) { $0($1) }
             activation = newActivation
             pullbacks.append(newPullback)
         }
-        func pullback(_ v: Input.CotangentVector) -> (Array.CotangentVector, Input.CotangentVector) {
+        func pullback(_ v: Input.TangentVector) -> (Array.TangentVector, Input.TangentVector) {
             var activationGradient = v
-            var layerGradients: [Element.CotangentVector] = []
+            var layerGradients: [Element.TangentVector] = []
             for pullback in pullbacks.reversed() {
                 let (newLayerGradient, newActivationGradient) = pullback(activationGradient)
                 activationGradient = newActivationGradient
                 layerGradients.append(newLayerGradient)
             }
-            return (Array.CotangentVector(layerGradients.reversed()), activationGradient)
+            return (Array.TangentVector(layerGradients.reversed()), activationGradient)
         }
         return (activation, pullback)
     }

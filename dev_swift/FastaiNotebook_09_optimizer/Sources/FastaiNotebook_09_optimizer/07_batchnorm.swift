@@ -38,8 +38,8 @@ extension LearningPhaseDependent {
 
     @differentiating(forward)
     func gradForward(_ input: Input) ->
-        (value: Output, pullback: (Self.Output.CotangentVector) ->
-            (Self.CotangentVector, Self.Input.CotangentVector)) {
+        (value: Output, pullback: (Self.Output.TangentVector) ->
+            (Self.TangentVector, Self.Input.TangentVector)) {
         switch Context.local.learningPhase {
         case .training:
             return valueWithPullback(at: input) { $0.forwardTraining ($1) }
@@ -154,9 +154,9 @@ public struct TFBatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
     static func _vjpFusedBatchNorm(
         _ x : Tensor<Scalar>, scale: Tensor<Scalar>, offset: Tensor<Scalar>, epsilon: Scalar
     ) -> (BatchNormResult<Scalar>, 
-          (BatchNormResult<Scalar>.CotangentVector) -> (Tensor<Scalar>.CotangentVector, 
-                                                        Tensor<Scalar>.CotangentVector, 
-                                                        Tensor<Scalar>.CotangentVector)) {
+          (BatchNormResult<Scalar>.TangentVector) -> (Tensor<Scalar>.TangentVector, 
+                                                        Tensor<Scalar>.TangentVector, 
+                                                        Tensor<Scalar>.TangentVector)) {
       let bnresult = fusedBatchNorm(x, scale: scale, offset: offset, epsilon: epsilon)
   
         return (
