@@ -66,6 +66,8 @@ open class LayerDelegate<Output> {
 
 @_fixed_layout
 public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer { 
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
     public var weight: Tensor<Scalar>
     public var bias: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
