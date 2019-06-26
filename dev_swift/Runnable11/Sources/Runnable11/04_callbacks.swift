@@ -115,7 +115,7 @@ public final class Learner<Label: TensorGroup,
     /// The current epoch.
     public private(set) var currentEpoch: Int = .zero
     /// The current gradient.
-    public private(set) var currentGradient: Model.CotangentVector = .zero
+    public private(set) var currentGradient: Model.TangentVector = .zero
     /// The current loss.
     public private(set) var currentLoss: Loss = .zero
     /// In training mode or not

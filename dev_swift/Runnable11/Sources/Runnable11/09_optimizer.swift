@@ -43,7 +43,7 @@ public extension Tensor where Scalar: Numeric {
 }
 
 public class StatefulOptimizer<Model: Layer>
-    where Model.AllDifferentiableVariables == Model.CotangentVector{
+    where Model.AllDifferentiableVariables == Model.TangentVector{
     public var configs: [HeterogeneousDictionary]
     public var splitFunc: (Int) -> Int
     public var states: [String: Model.AllDifferentiableVariables]
@@ -78,7 +78,7 @@ public class StatefulOptimizer<Model: Layer>
         
     public func update(
         _ model: inout Model.AllDifferentiableVariables,
-        along direction: Model.CotangentVector
+        along direction: Model.TangentVector
     ) {
         for (i,kp) in model.keyPaths.enumerated() {
             var grad = direction[keyPath: kp]

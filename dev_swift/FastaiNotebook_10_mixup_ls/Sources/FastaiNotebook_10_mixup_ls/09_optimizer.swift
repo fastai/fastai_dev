@@ -58,7 +58,7 @@ public func initState<Model: Layer>(for model: Model, names: [String])
 }
 
 public class StatefulOptimizer<Model: Layer>
-    where Model.AllDifferentiableVariables == Model.CotangentVector {
+    where Model.AllDifferentiableVariables == Model.TangentVector {
     public typealias ModelKeyPath = WritableKeyPath<Model.AllDifferentiableVariables, TF>
     public typealias SplitDict = [ModelKeyPath: Int]
     public var hpGroups: [[String:Float]]
@@ -85,7 +85,7 @@ public class StatefulOptimizer<Model: Layer>
         
     public func update(
         _ variables: inout Model.AllDifferentiableVariables,
-        along direction: Model.CotangentVector
+        along direction: Model.TangentVector
     ) {
         for kp in variables.keyPaths {
             var 𝛁p = direction[keyPath: kp]
@@ -273,7 +273,7 @@ public extension StatefulOptimizer {
 }
 
 extension Learner where Opt.Scalar: BinaryFloatingPoint, 
-    Opt.Model.AllDifferentiableVariables == Opt.Model.CotangentVector{
+    Opt.Model.AllDifferentiableVariables == Opt.Model.TangentVector{
     public class ParamScheduler: Delegate {
         public override var order: Int { return 1 }
         public typealias ScheduleFunc = (Float) -> Float
@@ -312,7 +312,7 @@ public func oneCycleSchedulers(_ lrMax: Float, pctStart:Float=0.25, divStart: Fl
 }
 
 extension Learner where Opt.Scalar: BinaryFloatingPoint, 
-    Opt.Model.AllDifferentiableVariables == Opt.Model.CotangentVector{
+    Opt.Model.AllDifferentiableVariables == Opt.Model.TangentVector{
 
     public func addOneCycleDelegates(_ lrMax: Float, pctStart:Float=0.25, divStart: Float = 10, divEnd: Float = 1e5, 
                                moms: (Float,Float,Float) = (0.95,0.85,0.95)) {

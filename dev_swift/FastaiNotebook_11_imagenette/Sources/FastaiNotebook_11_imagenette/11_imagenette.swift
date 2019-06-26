@@ -44,12 +44,12 @@ public extension SwitchableLayer {
     @differentiating(callAsFunction)
     func gradForward(_ input: Input) ->
            (value: Input,
-            pullback: (Self.Input.CotangentVector) ->
-                                  (Self.CotangentVector, Self.Input.CotangentVector)) {
+            pullback: (Self.Input.TangentVector) ->
+                                  (Self.TangentVector, Self.Input.TangentVector)) {
         if isOn {
             return valueWithPullback(at: input) { $0.forward($1) } 
         } else {
-            return (input, { (Self.CotangentVector.zero, $0) }) 
+            return (input, { (Self.TangentVector.zero, $0) }) 
         }
     }
 }
