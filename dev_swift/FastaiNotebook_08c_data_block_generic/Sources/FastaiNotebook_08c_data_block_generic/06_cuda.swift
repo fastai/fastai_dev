@@ -32,10 +32,12 @@ public struct CnnModel: Layer {
         }
         linear = FADense<Float>(filters.last!, nOut)
     }
+    // Workaround for TF-603
+    public typealias Input = TF
+    public typealias Output = TF
     
     @differentiable
     public func callAsFunction(_ input: TF) -> TF {
-        // TODO: Work around https://bugs.swift.org/browse/TF-606
-        return linear.forward(pool.forward(convs(input)))
+        return linear(pool(convs(input)))
     }
 }
