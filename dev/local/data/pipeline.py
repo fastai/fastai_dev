@@ -109,7 +109,7 @@ class Transform(metaclass=PrePostInitMultiMeta):
         if not hasattr(f,'__func__'): return f
         idx = (object,) + tuple(t) if is_listy(t) else (object,t)
         try: f = f.__func__[idx]
-        except DispatchError: return noop
+        except DispatchError: return noop_tfm
         return partial(f,self) if ret_partial else f
 
     def accept_types(self, t): self.t = t
