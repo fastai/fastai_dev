@@ -127,15 +127,14 @@ class PointScaler(Transform):
     def __init__(self, do_scale=True, y_first=True): self.do_scale,self.y_first = do_scale,y_first
 
     def encodes(self, x, y:TensorPoint):
+        if not self.y_first: y = y.flip(1)
         sz = x.shape[-2:] if isinstance(x, Tensor) else [x.size[1],x.size[0]]
         if self.do_scale: y = y * 2/tensor(sz).float() - 1
-        if self.y_first: y = y.flip(1)
         return (x,y)
 
     def decodes(self, x, y:TensorPoint):
-        y = y.flip(1)
         sz = x.shape[-2:] if isinstance(x, Tensor) else [x.size[1],x.size[0]]
-        y = (y+1) * tensor([x.shape[-2:]]).float()/2
+        y = (y+1) * tensor(sz).float()/2
         return (x,y)
 
 class BBoxScaler(PointScaler):
