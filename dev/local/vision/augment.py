@@ -11,8 +11,10 @@ from ..data.source import *
 from ..data.core import *
 from .core import *
 from ..data.external import *
+from ..notebook.showdoc import show_doc
 
 def clip_remove_empty(bbox, label):
+    "Clip bounding boxes with image border and label background the empty ones."
     bbox = torch.clamp(bbox, -1, 1)
     empty = ((bbox[...,2] - bbox[...,0])*(bbox[...,3] - bbox[...,1]) < 0.)
     if isinstance(label, torch.Tensor): label[empty] = 0

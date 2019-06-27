@@ -156,19 +156,17 @@ class TfmdDL(GetAttr):
         self.tfms.setup(self)
 
     def __len__(self): return len(self.dl)
-    def __iter__(self): return map(self.tfms, self.dl)
+    def __iter__(self): return (self.tfms(b, filt=getattr(self.dataset, 'filt', None)) for b in self.dl)
     def one_batch(self): return next(iter(self))
-    def decode(self, b): return getattr(self.dataset,'decode_batch',noop)(self.tfms.decode(b))
 
     def show_batch(self, b=None, max_rows=1000, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         if b is None: b=self.one_batch()
-        b = self.tfms.decode(b)
+        b = self.tfms.decode(b, filt=getattr(self.dataset, 'filt', None))
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
         for o,ctx in zip(get_samples(b, max_rows),ctxs): self.dataset.show(o, ctx=ctx)
 
-    _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
-                 show_batch="Show each item of `b`",
+    _docs = dict(show_batch="Show each item of `b`",
                  one_batch="Grab first batch of `dl`")
 
 @docs
