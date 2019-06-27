@@ -14,7 +14,7 @@ extension ShapedArray : ConvertibleFromCvMat {
         // Make sure that the array is contiguous in memory. This does a copy if
         // the array is not already contiguous in memory.
         let contiguousMat = cvMat.isContinuous ? cvMat : cvMat.clone()
-        let ptr = UnsafePointer<Scalar>(contiguousMat.dataPtr)
+        let ptr = UnsafeRawPointer(contiguousMat.dataPtr).assumingMemoryBound(to: Scalar.self)
 
         // This code avoids calling `init<S : Sequence>(shape: [Int], scalars: S)`,
         // which inefficiently copies scalars one by one. Instead,
@@ -46,7 +46,7 @@ extension Tensor : ConvertibleFromCvMat {
         // Make sure that the array is contiguous in memory. This does a copy if
         // the array is not already contiguous in memory.
         let contiguousMat = cvMat.isContinuous ? cvMat : cvMat.clone()
-        let ptr = UnsafePointer<Scalar>(contiguousMat.dataPtr)
+        let ptr = UnsafeRawPointer(contiguousMat.dataPtr).assumingMemoryBound(to: Scalar.self)
 
         let buffPtr = UnsafeBufferPointer(start: ptr,
                 count: Int(tensorShape.contiguousSize))

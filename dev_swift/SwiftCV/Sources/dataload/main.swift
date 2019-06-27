@@ -20,7 +20,7 @@ func readImage(_ path:String)->Mat {
 func readAndResize(_ name:String)->UInt8 {
   let cvImg = readImage(name)
   let rImg = resize(cvImg, nil, Size(224, 224), 0, 0, InterpolationFlag.INTER_LINEAR)
-  let ptr = UnsafeBufferPointer<UInt8>(start: UnsafePointer<UInt8>(rImg.dataPtr), count: rImg.count)
+  let ptr = UnsafeBufferPointer<UInt8>(start: UnsafeRawPointer(rImg.dataPtr).assumingMemoryBound(to: UInt8.self), count: rImg.count)
   return ptr[0]
 }
 
