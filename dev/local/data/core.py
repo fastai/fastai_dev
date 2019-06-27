@@ -88,6 +88,7 @@ def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
     if isinstance(im,Tensor):
         im = to_cpu(im)
         if im.shape[0]<5: im=im.permute(1,2,0)
+    elif not isinstance(im,np.ndarray): im=array(im)
     # Handle 1-channel images
     if im.shape[-1]==1: im=im[...,0]
     ax.imshow(im, **kwargs)
@@ -158,6 +159,8 @@ class TfmdDL(GetAttr):
     def __len__(self): return len(self.dl)
     def __iter__(self): return (self.tfms(b, filt=getattr(self.dataset, 'filt', None)) for b in self.dl)
     def one_batch(self): return next(iter(self))
+    def decode(self, b):
+        return getattr(self.dataset,'decode_batch',noop)(self.tfms.decode(b, filt=getattr(self.dataset, 'filt', None)))
 
     def show_batch(self, b=None, max_rows=1000, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
@@ -166,7 +169,8 @@ class TfmdDL(GetAttr):
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
         for o,ctx in zip(get_samples(b, max_rows),ctxs): self.dataset.show(o, ctx=ctx)
 
-    _docs = dict(show_batch="Show each item of `b`",
+    _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
+                 show_batch="Show each item of `b`",
                  one_batch="Grab first batch of `dl`")
 
 @docs
