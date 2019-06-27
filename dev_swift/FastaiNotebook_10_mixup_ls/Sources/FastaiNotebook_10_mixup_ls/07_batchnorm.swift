@@ -186,7 +186,7 @@ public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
 
     @differentiable
     public func forward(_ input: Tensor<Scalar>) -> Tensor<Scalar> {
-        return norm(conv(input))
+        return norm.forward(conv.forward(input))
     }
 }
 
