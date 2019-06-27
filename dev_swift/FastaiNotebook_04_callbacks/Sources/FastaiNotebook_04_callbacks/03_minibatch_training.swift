@@ -33,18 +33,4 @@ public struct DataBatch<Inputs: Differentiable & TensorGroup, Labels: TensorGrou
     public var yb: Labels
     
     public init(xb: Inputs, yb: Labels){ (self.xb,self.yb) = (xb,yb) }
-    
-    // TODO: REMOVE ME!
-    public var _tensorHandles: [_AnyTensorHandle] {
-        xb._tensorHandles + yb._tensorHandles
-    }
-    
-    public init<C>(_handles: C) where C: RandomAccessCollection, C.Element: _AnyTensorHandle {
-        precondition(_handles.count == 2, "Unexpected number of handles in \(_handles).")
-        xb = Inputs.init(_owning: nil)
-        yb = Labels.init(_owning: nil)
-        // TODO: FIX ME!
-//         xb = Inputs.init(_handles: [_handles[0]])
-//         yb = Labels.init(_handles: [_handles[1]])
-    }
 }
