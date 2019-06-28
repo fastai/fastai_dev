@@ -4,6 +4,8 @@ file to edit: 08c_data_block_generic.ipynb
 
 */
 
+
+
 import Path
 import TensorFlow
 import Python
@@ -92,7 +94,7 @@ public struct CategoryProcessor: Processor {
     public mutating func initState(_ items: [String]) {
         intToLabel = Array(Set(items)).sorted()
         labelToInt = Dictionary(uniqueKeysWithValues:
-            intToLabel.enumerated().map({ ($0.element, $0.offset) }))
+            intToLabel.enumerated().map{ ($0.element, $0.offset) })
     }
     
     public func process(_ item: String) -> Int { return labelToInt[item]! }
@@ -154,49 +156,55 @@ public func cvImgToTensor(_ img: Mat) -> Tensor<UInt8> {
 
 public func intTOTI(_ i: Int) -> TI { return TI(Int32(i)) } 
 
-public struct Batcher<ItemIn,LabelIn,ItemOut,LabelOut>: Sequence {
-    public let ds: [(ItemIn, LabelIn)]
-    public let fX: (ItemIn) -> ItemOut
-    public let fY: (LabelIn) -> LabelOut
-    public let collateFunc: ([ItemOut], [LabelOut]) -> DataBatch<TF, TI>
+public struct Batcher<Item,Label,ScalarI: TensorFlowScalar,ScalarL: TensorFlowScalar>: Sequence {
+    public let dataset: [(Item, Label)]
+    public let xToTensor: (Item) -> Tensor<ScalarI>
+    public let yToTensor: (Label) -> Tensor<ScalarL>
+    public let collateFunc: (Tensor<ScalarI>, Tensor<ScalarL>) -> DataBatch<TF, TI>
     public var bs: Int = 64
     public var numWorkers: Int = 4
     public var shuffle: Bool = false
     
-    public init(_ ds: [(x:ItemIn, y:LabelIn)], 
-         fX: @escaping (ItemIn) -> ItemOut, 
-         fY: @escaping (LabelIn) ->  LabelOut,
-         collateFunc: @escaping ([ItemOut], [LabelOut]) -> DataBatch<TF, TI>,
+    public init(_ ds: [(Item, Label)], 
+         xToTensor: @escaping (Item) -> Tensor<ScalarI>, 
+         yToTensor: @escaping (Label) ->  Tensor<ScalarL>,
+         collateFunc: @escaping (Tensor<ScalarI>, Tensor<ScalarL>) -> DataBatch<TF, TI>,
          bs: Int = 64, numWorkers: Int = 4, shuffle: Bool = false) {
-        (self.ds,self.fX,self.fY,self.collateFunc) = (ds,fX,fY,collateFunc)
+        (dataset,self.xToTensor,self.yToTensor,self.collateFunc) = (ds,xToTensor,yToTensor,collateFunc)
         (self.bs,self.numWorkers,self.shuffle) = (bs,numWorkers,shuffle)
     }
     
-    public func makeIterator() -> BatchIterator<ItemIn,LabelIn,ItemOut,LabelOut> { 
+    public func makeIterator() -> BatchIterator<Item,Label,ScalarI,ScalarL> { 
         return BatchIterator(self, numWorkers: numWorkers, shuffle: shuffle)
     }
 }
 
-public struct BatchIterator<ItemIn,LabelIn,ItemOut,LabelOut>: IteratorProtocol {
-    public let b: Batcher<ItemIn,LabelIn,ItemOut,LabelOut>
+public struct BatchIterator<Item,Label,ScalarI: TensorFlowScalar,ScalarL: TensorFlowScalar>: IteratorProtocol {
+    public let b: Batcher<Item,Label,ScalarI,ScalarL>
     public var numWorkers: Int = 4
     private var idx: Int = 0
-    private var ds: [(ItemIn, LabelIn)]
+    private var ds: [(Item, Label)]
     
-    public init(_ batcher: Batcher<ItemIn,LabelIn,ItemOut,LabelOut>, numWorkers: Int = 4, shuffle: Bool = false){ 
+    public init(_ batcher: Batcher<Item,Label,ScalarI,ScalarL>, numWorkers: Int = 4, shuffle: Bool = false){ 
         (b,self.numWorkers,idx) = (batcher,numWorkers,0) 
-        self.ds = shuffle ? b.ds.shuffled() : b.ds
+        self.ds = shuffle ? b.dataset.shuffled() : b.dataset
     }
     
     public mutating func next() -> DataBatch<TF,TI>? {
-        guard idx < b.ds.count else { return nil }
-        let end = idx + b.bs < b.ds.count ? idx + b.bs : b.ds.count 
+        guard idx < b.dataset.count else { return nil }
+        let end = idx + b.bs < b.dataset.count ? idx + b.bs : b.dataset.count 
         let samples = Array(ds[idx..<end])
         idx += b.bs
-        return b.collateFunc(samples.concurrentMap(nthreads: numWorkers) { self.b.fX($0.0) }, 
-                samples.concurrentMap(nthreads: numWorkers) { self.b.fY($0.1) })
+        return b.collateFunc(Tensor<ScalarI>(concatenating: samples.concurrentMap(nthreads: numWorkers) { 
+            self.b.xToTensor($0.0).expandingShape(at: 0) }), 
+                Tensor<ScalarL>(concatenating: samples.concurrentMap(nthreads: numWorkers) { 
+            self.b.yToTensor($0.1).expandingShape(at: 0) }))
     }
     
+}
+
+public func collateFunc(_ xb: Tensor<UInt8>, _ yb: TI) -> DataBatch<TF, TI> {
+    return DataBatch(xb: TF(xb)/255.0, yb: yb)
 }
 
 func showTensorImage(_ img: TF) {
@@ -205,4 +213,3 @@ func showTensorImage(_ img: TF) {
     plt.axis("off")
     plt.show()
 }
-
