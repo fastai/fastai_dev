@@ -82,12 +82,12 @@ def ls(self:Path):
     "Contents of path as a list"
     return list(self.iterdir())
 
-def tensor(x, *rest):
+def tensor(x, *rest, **kwargs):
     "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
     if len(rest): x = (x,)+rest
     # Pytorch bug in dataloader using num_workers>0
     if isinstance(x, (tuple,list)) and len(x)==0: return tensor(0)
-    res = torch.tensor(x) if isinstance(x, (tuple,list)) else as_tensor(x)
+    res = torch.tensor(x, **kwargs) if isinstance(x, (tuple,list)) else as_tensor(x, **kwargs)
     if res.dtype is torch.int32:
         warn('Tensor is int32: upgrading to int64; for better performance use int64 input')
         return res.long()
