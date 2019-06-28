@@ -41,7 +41,7 @@ class TensorPoint():
     @staticmethod
     def show(o, ctx=None, **kwargs):
         if 'figsize' in kwargs: del kwargs['figsize']
-        ctx.scatter(o[:, 1], o[:, 0], **{**TensorPoint.kwargs, **kwargs})
+        ctx.scatter(o[:, 0], o[:, 1], **{**TensorPoint.kwargs, **kwargs})
         return ctx
 
 class Pointify(Transform):
@@ -70,7 +70,7 @@ class TensorBBox(TensorPoint):
     def show(x, ctx=None, **kwargs):
         bbox,label = x
         for b,l in zip(bbox, label):
-            if l != '#bg': _draw_rect(ctx, b, hw=False, rev=True, text=l)
+            if l != '#bg': _draw_rect(ctx, b, hw=False, text=l)
         return ctx
 
 class BBoxify(Transform):
@@ -84,7 +84,7 @@ def get_annotations(fname, prefix=None):
     classes = {o['id']:o['name'] for o in annot_dict['categories']}
     for o in annot_dict['annotations']:
         bb = o['bbox']
-        id2bboxes[o['image_id']].append([bb[1],bb[0], bb[3]+bb[1], bb[2]+bb[0]])
+        id2bboxes[o['image_id']].append([bb[0],bb[1], bb[0]+bb[2], bb[1]+bb[3]])
         id2cats[o['image_id']].append(classes[o['category_id']])
     id2images = {o['id']:ifnone(prefix, '') + o['file_name'] for o in annot_dict['images'] if o['id'] in id2bboxes}
     ids = list(id2images.keys())
@@ -124,16 +124,16 @@ class ImageToByteTensor(Transform):
 
 class PointScaler(Transform):
     "Scale a tensor representing points"
-    def __init__(self, do_scale=True, y_first=True): self.do_scale,self.y_first = do_scale,y_first
+    def __init__(self, do_scale=True, y_first=False): self.do_scale,self.y_first = do_scale,y_first
 
     def encodes(self, x, y:TensorPoint):
-        if not self.y_first: y = y.flip(1)
-        sz = x.shape[-2:] if isinstance(x, Tensor) else [x.size[1],x.size[0]]
+        if self.y_first: y = y.flip(1)
+        sz = [x.shape[-1], x.shape[-2]] if isinstance(x, Tensor) else x.size
         if self.do_scale: y = y * 2/tensor(sz).float() - 1
         return (x,y)
 
     def decodes(self, x, y:TensorPoint):
-        sz = x.shape[-2:] if isinstance(x, Tensor) else [x.size[1],x.size[0]]
+        sz = [x.shape[-1], x.shape[-2]] if isinstance(x, Tensor) else x.size
         y = (y+1) * tensor(sz).float()/2
         return (x,y)
 

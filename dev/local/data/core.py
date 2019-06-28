@@ -3,7 +3,7 @@
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_titled_image',
            'show_image_batch', 'TensorImage', 'Categorize', 'String', 'mk_string', 'get_samples', 'TfmdDL', 'Cuda',
-           'TensorMask', 'ByteToFloatTensor', 'Normalize', 'DataBunch']
+           'TensorMask', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -206,6 +206,13 @@ class Normalize(Transform):
     def decodes(self, x:TensorImage): return (x*self.std ) + self.mean
 
     _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
+
+def broadcast_vec(dim, ndim, *t, cuda=True):
+    "Make a vector broadcastable over `dim` (out of `ndim` total) by prepending and appending unit axes"
+    v = [1]*ndim
+    v[dim] = -1
+    f = to_device if cuda else noop
+    return [f(tensor(o).view(*v)) for o in t]
 
 @docs
 class DataBunch(GetAttr):
