@@ -38,6 +38,6 @@ public struct CnnModel: Layer {
     
     @differentiable
     public func callAsFunction(_ input: TF) -> TF {
-        return linear(pool(convs(input)))
+        return linear.forward(pool.forward(convs(input)))
     }
 }
