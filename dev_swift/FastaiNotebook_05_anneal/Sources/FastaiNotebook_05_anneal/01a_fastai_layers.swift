@@ -58,7 +58,7 @@ public extension FALayer {
     //    TF-476: https://bugs.swift.org/browse/TF-476
     func callGrad(_ input: Input) ->
         (Output, (Self.Output.TangentVector) -> (Self.TangentVector, Self.Input.TangentVector)) {
-        return Swift.valueWithPullback(at: self, input) { (m, i) in m.forward(i) }
+        return Swift.valueWithPullback(at: self, input) { (m, i) in m(i) }
     }
     
     //We also add a default init to our `delegates` variable, so that we don't have to define it each time, as
@@ -74,7 +74,8 @@ public extension FALayer {
 
 
 @frozen
-public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer { 
+public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
+    // Note: remove the explicit typealiases after TF-603 is resolved.
     public typealias Input = Tensor<Scalar>
     public typealias Output = Tensor<Scalar>
     public var weight: Tensor<Scalar>
@@ -109,6 +110,10 @@ public extension FADense {
 
 @frozen
 public struct FANoBiasConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
+    // TF-603 workaround.
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
+    
     public var filter: Tensor<Scalar>
     public typealias Activation = @differentiable (Tensor<Scalar>) -> Tensor<Scalar>
     @noDerivative public let activation: Activation
@@ -166,6 +171,7 @@ public extension FANoBiasConv2D {
 
 @frozen
 public struct FAConv2D<Scalar: TensorFlowFloatingPoint>: FALayer {
+    // Note: remove the explicit typealiases after TF-603 is resolved.
     public typealias Input = Tensor<Scalar>
     public typealias Output = Tensor<Scalar>
     
@@ -230,6 +236,10 @@ public extension FAConv2D {
 
 @frozen
 public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
+    // TF-603 workaround.
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
+    
     @noDerivative let poolSize: (Int, Int, Int, Int)
     @noDerivative let strides: (Int, Int, Int, Int)
     @noDerivative let padding: Padding
@@ -265,6 +275,10 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 
 @frozen
 public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
+    // TF-603 workaround.
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
+    
     public init() {}
 
     @differentiable
@@ -274,6 +288,7 @@ public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer {
 }
 
 extension Array: Layer where Element: Layer, Element.Input == Element.Output {
+    // Note: remove the explicit typealiases after TF-603 is resolved.
     public typealias Input = Element.Input
     public typealias Output = Element.Output
     
