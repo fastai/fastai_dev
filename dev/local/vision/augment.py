@@ -105,7 +105,7 @@ class CropPad(RandTransform):
         return x
 
     def encodes(self, x:PILImage): return self._crop_pad(x, getattr(self, 'mode', Image.BILINEAR))
-    def encodes(self, x:PILMask):  return self._crop_pad(x, getattr(self, 'mode', Image.NEAREST))
+    def encodes(self, x:Mask):     return self._crop_pad(x, getattr(self, 'mode', Image.NEAREST))
 
     def encodes(self, x:TensorPoint):
         old_sz,new_sz,tl = map(lambda o: tensor(o).float(), (self.orig_size,self.size,self.tl))
@@ -127,9 +127,9 @@ class RandomCrop(CropPad):
 
 class RandomScaledCrop(RandomCrop):
     "Picks a rand scaled crop of an image (for `RandomResizedCrop`)"
-    def __init__(self, filt=0, scale=(0.08, 1.0), ratio=(3/4, 4/3)):
-        super().__init__([None,None], filt)
-        self.scale,self.ratio = scale,ratio
+    def __init__(self, size, filt=0, scale=(0.08, 1.0), ratio=(3/4, 4/3)):
+        super().__init__(size, filt)
+        self.final_sz,self.scale,self.ratio = self.size,scale,ratio
 
     def randomize(self, b):
         w,h = (b[0] if isinstance(b, tuple) else b).size

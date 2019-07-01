@@ -198,7 +198,7 @@ add_docs(Pipeline,
          show="Show item `o`",
          setup="Go through the transforms in order and call their potential setup on `items`")
 
-def get_samples(b, max_rows):
+def get_samples(b, max_rows=10):
     if isinstance(b, Tensor): return b[:max_rows]
     return zip(*L(get_samples(b_, max_rows) if not isinstance(b,Tensor) else b_[:max_rows] for b_ in b))
 
