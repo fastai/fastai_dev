@@ -84,16 +84,15 @@ class CropPad(RandTransform):
     "Center crop or pad an image to `size`"
     order = 5
     _pad_modes = {'zeros': 'constant', 'border': 'edge', 'reflection': 'reflect'}
-    def __init__(self, size, filt=None, pad_mode='zeros', mode='bilinear'):
+    def __init__(self, size, filt=None, pad_mode='zeros'):
         if isinstance(size,int): size=(size,size)
         self.filt,self.size,self.pad_mode = filt,(size[1],size[0]),self._pad_modes[pad_mode]
-        self.mode = mode
 
     def randomize(self, b):
         self.orig_size = (b[0] if isinstance(b, tuple) else b).size
         self.tl = ((self.orig_size[0]-self.size[0])//2, (self.orig_size[1]-self.size[1])//2)
 
-    def encodes(self, x:PILImage):
+    def _crop_pad(self, x, mode=Image.BILINEAR):
         if self.tl[0] > 0 or self.tl[1] > 0:
             cw,ch = max(self.tl[0],0),max(self.tl[1],0)
             fw, fh = min(cw+self.size[0], self.orig_size[0]),min(ch+self.size[1], self.orig_size[1])
@@ -102,7 +101,11 @@ class CropPad(RandTransform):
             pw,ph = max(-self.tl[0],0),max(-self.tl[1],0)
             fw, fh = max(self.size[0]-self.orig_size[0]-pw,0),max(self.size[1]-self.orig_size[1]-ph,0)
             x = tvpad(x, (pw, ph, fw, fh), padding_mode=self.pad_mode)
+        if getattr(self, 'final_sz', False): x = x.resize(self.final_sz, mode)
         return x
+
+    def encodes(self, x:PILImage): return self._crop_pad(x, getattr(self, 'mode', Image.BILINEAR))
+    def encodes(self, x:PILMask):  return self._crop_pad(x, getattr(self, 'mode', Image.NEAREST))
 
     def encodes(self, x:TensorPoint):
         old_sz,new_sz,tl = map(lambda o: tensor(o).float(), (self.orig_size,self.size,self.tl))
@@ -123,6 +126,7 @@ class RandomCrop(CropPad):
         self.tl = (random.randint(0,w-self.size[0]), random.randint(0,h-self.size[1]))
 
 class RandomScaledCrop(RandomCrop):
+    "Picks a rand scaled crop of an image (for `RandomResizedCrop`)"
     def __init__(self, filt=0, scale=(0.08, 1.0), ratio=(3/4, 4/3)):
         super().__init__([None,None], filt)
         self.scale,self.ratio = scale,ratio

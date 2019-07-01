@@ -104,7 +104,7 @@ class ImageResizer(Transform):
         self.size,self.resample = size,resample
 
     def encodes(self, o:PILImage): return o.resize(size=self.size, resample=self.resample)
-    def encodes(self, o:PILMask):  return o.resize(size=self.size, resample=Image.NEAREST)
+    def encodes(self, o:Mask):     return o.resize(size=self.size, resample=Image.NEAREST)
 
 def image2byte(img):
     "Transform image to byte tensor in `c*h*w` dim order."
