@@ -157,11 +157,11 @@ def _get_ret(func):
 class Pipeline():
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None, t=None):
-        if isinstance(funcs, Pipeline): funcs = funcs.raws
-        self.raws,self.fs,self.t_show = L(funcs),[],None
-        if len(self.raws) == 0: self.final_t = t
+        if isinstance(funcs, Pipeline): funcs = funcs.fs
+        self.fs,self.t_show = [],None
+        if len(L(funcs)) == 0: self.final_t = t
         else:
-            for i,f in enumerate(self.raws.sorted(key='order')):
+            for i,f in enumerate(L(funcs).sorted(key='order')):
                 if not isinstance(f,Transform): f = Transform(f)
                 f.accept_types(t)
                 self.fs.append(f)
@@ -174,11 +174,11 @@ class Pipeline():
     def __repr__(self): return f"Pipeline over {self.fs}"
 
     def setup(self, items=None):
-        tfms,raws,self.fs,self.raws = self.fs,self.raws,[],[]
-        for t,r in zip(tfms,raws.sorted(key='order')):
-            if t.add_before_setup:     self.fs.append(t) ; self.raws.append(r)
+        tfms,self.fs = self.fs,[]
+        for t in tfms:
+            if t.add_before_setup:     self.fs.append(t)
             if hasattr(t, 'setup'):    t.setup(items)
-            if not t.add_before_setup: self.fs.append(t) ; self.raws.append(r)
+            if not t.add_before_setup: self.fs.append(t)
 
     def __call__(self, o, filt=None): return compose_tfms(o, self.fs, filt=filt)
     def decode  (self, i, filt=None): return compose_tfms(i, self.fs, func_nm='decode', reverse=True, filt=filt)
