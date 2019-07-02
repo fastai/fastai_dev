@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_titled_image',
-           'show_image_batch', 'TensorImage', 'Categorize', 'String', 'mk_string', 'get_samples', 'TfmdDL', 'Cuda',
-           'TensorMask', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
+           'show_image_batch', 'TensorImage', 'String', 'Categorize', 'get_samples', 'TfmdDL', 'Cuda', 'TensorMask',
+           'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -111,6 +111,10 @@ class TensorImage():
     @staticmethod
     def show(o, ctx=None, **kwargs): return show_image(to_cpu(o), ctx=ctx, **kwargs)
 
+class String():
+    @staticmethod
+    def show(o, ctx=None, **kwargs): return show_title(str(o), ctx=ctx)
+
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order,state_args=1,'vocab'
@@ -123,14 +127,8 @@ class Categorize(Transform):
         dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
         self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)
 
-    def encodes(self, o): return self.o2i[o]
-    def decodes(self, o): return self.vocab[o]
-
-class String():
-    @staticmethod
-    def show(o, ctx=None, **kwargs): return show_title(str(o), ctx=ctx)
-
-def mk_string(t)->String: return t
+    def encodes(self, o)->String: return self.o2i[o]
+    def decodes(self, o):         return self.vocab[o]
 
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
@@ -148,7 +146,7 @@ class TfmdDL(GetAttr):
 
     def __init__(self, dataset, tfms=None, bs=16, shuffle=False,
                  sampler=None, batch_sampler=None, num_workers=1, **kwargs):
-        self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers)
+        self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers, **kwargs)
         if hasattr(dataset, 'tuple_tfms'): t = dataset.tuple_tfms.final_t
         elif hasattr(dataset, 'tfms'):     t = dataset.tfms.final_t
         else:                              t = None
