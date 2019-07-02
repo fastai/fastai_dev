@@ -146,6 +146,7 @@
   "logit": "08_vision_augment.ipynb",
   "LightingTfm": "08_vision_augment.ipynb",
   "Brightness": "08_vision_augment.ipynb",
+  "Contrast": "08_vision_augment.ipynb",
   "setup_aug_tfms": "08_vision_augment.ipynb",
   "aug_transforms": "08_vision_augment.ipynb",
   "Lambda": "10_layers.ipynb",

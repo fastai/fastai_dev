@@ -3,7 +3,7 @@
 __all__ = ['RandTransform', 'PILFlip', 'PILDihedral', 'clip_remove_empty', 'CropPad', 'RandomCrop', 'Resize',
            'RandomResizedCrop', 'AffineCoordTfm', 'affine_mat', 'mask_tensor', 'flip_mat', 'Flip', 'dihedral_mat',
            'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs', 'apply_perspective', 'Warp', 'logit',
-           'LightingTfm', 'Brightness', 'setup_aug_tfms', 'aug_transforms']
+           'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms', 'aug_transforms']
 
 from ..imports import *
 from ..test import *
@@ -410,6 +410,10 @@ class _ContrastLogit():
         self.change = _draw_mask(x, self._def_draw, draw=self.draw, p=self.p, neutral=1.)
 
     def __call__(self, x): return x.mul_(self.change[:,None,None,None])
+
+def Contrast(max_lighting=0.2, p=0.75, draw=None):
+    "Apply change in contrast of `max_lighting` to batch of images with probability `p`."
+    return LightingTfm(_ContrastLogit(max_lighting, p, draw))
 
 def _compose_same_tfms(tfms):
     tfms = L(tfms)
