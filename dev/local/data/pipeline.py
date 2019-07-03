@@ -230,6 +230,12 @@ class TfmdList(GetAttr):
     def __iter__(self): return (self[i] for i in range_of(self))
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms}"
 
+    def __getattr__(self,k):
+        if k in self._xtra: return getattr(self.default, k)
+        for f in self.tfms.fs:
+            if k in L(f.state_args): return getattr(f, k)
+        super().__getattr__(k)
+
     _docs = dict(setup="Transform setup with self",
                  decode_at="Decoded item at `idx`",
                  show_at="Show item at `idx`",
@@ -268,7 +274,7 @@ class TfmdDS(TfmdList):
 
     def decode(self, o, filt=None):
         o = self.tuple_tfms.decode(o, filt=filt)
-        if not is_iter(o): o = [o]
+        if not is_listy(o): o = [o]
         return _maybe_flat([it.decode(o_, filt=filt) for o_,it in zip(o,self.tfmd_its)])
 
     def decode_batch(self, b, filt=None): return [self.decode(b_, filt=filt) for b_ in get_samples(b)]
@@ -276,7 +282,7 @@ class TfmdDS(TfmdList):
     def show(self, o, ctx=None, filt=None, **kwargs):
         if self.tuple_tfms.t_show is not None: return self.tuple_tfms.show(o, ctx=ctx, filt=filt, **kwargs)
         o = self.tuple_tfms.decode(o, filt=filt)
-        if not is_iter(o): o = [o]
+        if not is_listy(o): o = [o]
         for o_,it in zip(o,self.tfmd_its): ctx = it.show(o_, ctx=ctx, filt=filt, **kwargs)
         return ctx
 
