@@ -124,7 +124,7 @@ class Categorize(Transform):
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
     def setup(self, dsrc):
-        if not dsrc: return
+        if not dsrc or self.vocab is not None: return
         dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
         self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)
         setattr_parent(dsrc, 'vocab', self.vocab)
@@ -139,7 +139,7 @@ class MultiCategory():
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
     def setup(self, dsrc):
-        if not dsrc: return
+        if not dsrc or self.vocab is not None: return
         dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
         vals = set()
         for b in dsrc: vals = vals.union(set(b))
