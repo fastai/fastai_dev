@@ -127,12 +127,6 @@ class Transform(metaclass=PrePostInitMultiMeta):
     def decode  (self, x, filt=None): return self._apply(self.decodes, x, filt)
     def __getitem__(self, x): return self(x) # So it can be used as a `Dataset`
 
-add_docs(Transform,
-         __call__="Dispatch and apply the proper encodes to `x` if `filt` matches",
-         decode="Dispatch and apply the proper decodes to `x` if `filt` matches",
-         accept_types="Indicate the type of input received by the transform is `t`",
-         return_type="Indicate the type of output the tranform returns, depending on `self.t`")
-
 def transform(cls):
     "Decorator for registering a new `encodes` or `decodes` function in a tranform `cls`"
     def _inner(f):
@@ -235,6 +229,8 @@ class TfmdList(GetAttr):
         for f in self.tfms.fs:
             if k in L(f.state_args): return getattr(f, k)
         super().__getattr__(k)
+
+    def __setstate__(self,data): self.__dict__.update(data) #For pickle issues
 
     _docs = dict(setup="Transform setup with self",
                  decode_at="Decoded item at `idx`",
