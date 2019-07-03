@@ -157,28 +157,27 @@ def _get_ret(func):
 class Pipeline():
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None, t=None):
-        if isinstance(funcs, Pipeline): funcs = funcs.raws
-        self.raws,self.fs,self.t_show = L(funcs),[],None
-        if len(self.raws) == 0: self.final_t = t
+        if isinstance(funcs, Pipeline): funcs = funcs.fs
+        self.fs,self.t_show = [],None
+        if len(L(funcs)) == 0: self.final_t = t
         else:
-            for i,f in enumerate(self.raws.sorted(key='order')):
+            for i,f in enumerate(L(funcs).sorted(key='order')):
                 if not isinstance(f,Transform): f = Transform(f)
                 f.accept_types(t)
                 self.fs.append(f)
-                if self.t_show is None and hasattr(t, 'show'): self.t_idx,self.t_show = i,t
                 t = f.return_type()
-            if self.t_show is None and hasattr(t, 'show'): self.t_idx,self.t_show = i+1,t
+                if self.t_show is None and hasattr(t, 'show'): self.t_idx,self.t_show = i,t
             self.final_t = t
 
     def new(self, t=None): return Pipeline(self, t)
     def __repr__(self): return f"Pipeline over {self.fs}"
 
     def setup(self, items=None):
-        tfms,raws,self.fs,self.raws = self.fs,self.raws,[],[]
-        for t,r in zip(tfms,raws.sorted(key='order')):
-            if t.add_before_setup:     self.fs.append(t) ; self.raws.append(r)
+        tfms,self.fs = self.fs,[]
+        for t in tfms:
+            if t.add_before_setup:     self.fs.append(t)
             if hasattr(t, 'setup'):    t.setup(items)
-            if not t.add_before_setup: self.fs.append(t) ; self.raws.append(r)
+            if not t.add_before_setup: self.fs.append(t)
 
     def __call__(self, o, filt=None): return compose_tfms(o, self.fs, filt=filt)
     def decode  (self, i, filt=None): return compose_tfms(i, self.fs, func_nm='decode', reverse=True, filt=filt)
@@ -198,7 +197,7 @@ add_docs(Pipeline,
          show="Show item `o`",
          setup="Go through the transforms in order and call their potential setup on `items`")
 
-def get_samples(b, max_rows):
+def get_samples(b, max_rows=10):
     if isinstance(b, Tensor): return b[:max_rows]
     return zip(*L(get_samples(b_, max_rows) if not isinstance(b,Tensor) else b_[:max_rows] for b_ in b))
 

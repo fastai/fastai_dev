@@ -51,11 +51,23 @@ class DataSource(TfmdDS):
     def __repr__(self): return '\n'.join(map(str,self.subsets())) + f'\ntfm - {self.tfms}'
     def __getitem__(self, i): return super().__getitem__(i,self.filt_idx[i])
 
+    def databunch(self, tfms=None, bs=16, val_bs=None, shuffle_train=True, sampler=None, batch_sampler=None,
+                  **kwargs):
+        n = self.n_subsets-1
+        bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
+        shuffles = [shuffle_train] + [False]*n
+        samplers = sampler if is_listy(sampler) else [sampler]*n
+        bsamplers = batch_sampler if is_listy(batch_sampler) else [batch_sampler]*n
+        dls = [TfmdDL(self.subset(i), tfms, b, shuffle=s, sampler=sa, batch_sampler=bsa, **kwargs)
+               for i,(b,s,sa,bsa) in enumerate(zip(bss, shuffles, samplers, bsamplers))]
+        return DataBunch(*dls)
+
     _docs = dict(len="`len` of subset `filt`",
                  __getitem__="Transformed item(s) at `i`, using the appropriate filter",
                  setup="Transform setup",
                  subset="Filtered `DsrcSubset` `i`",
-                 subsets="Iterator for all subsets")
+                 subsets="Iterator for all subsets",
+                 databunch="Create a `DataBunch` from self with `tfms` on dataloaders")
 
 DataSource.train,DataSource.valid = add_props(lambda i,x: x.subset(i), 2)
 
