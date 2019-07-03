@@ -11,9 +11,9 @@ from ..notebook.showdoc import show_doc
 
 class _FiltTfmdList(TfmdList):
     "Like `TfmdList` but with filters and train/valid attribute, for proper setup"
-    def __init__(self, items, tfms, filts, filt_idx, do_setup=True):
+    def __init__(self, items, tfms, filts, filt_idx, do_setup=True, parent=None):
         self.filts,self.filt_idx = filts,filt_idx
-        super().__init__(items, tfms, do_setup=do_setup)
+        super().__init__(items, tfms, do_setup=do_setup, parent=parent)
 
     def __getitem__(self, i, filt=None): #Has to accept filt because of DataSource.__getitem__ and super behavior
         return super().__getitem__(i,self.filt_idx[i] if filt is None else filt)
@@ -38,10 +38,8 @@ class DataSource(TfmdDS):
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
         if tfms is None: tfms = [None]
         self.items = items
-        self.tfmd_its = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup) for t in tfms]
-        self.tfms = [it.tfms for it in self.tfmd_its]
-        self.tuple_tfms = Pipeline(tuple_tfms, t=[it.tfms.final_t for it in self.tfmd_its])
-        if do_setup: self.setup()
+        self.tfmd_its = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup, parent=self) for t in tfms]
+        self.__post_init__(items, tuple_tfms, do_setup)
 
     @property
     def n_subsets(self): return len(self.filts)

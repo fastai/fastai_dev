@@ -101,7 +101,7 @@ class ImageResizer(Transform):
     "Resize image to `size` using `resample"
     def __init__(self, size, resample=Image.BILINEAR):
         if not is_listy(size): size=(size,size)
-        self.size,self.resample = size,resample
+        self.size,self.resample = (size[1],size[0]),resample
 
     def encodes(self, o:PILImage): return o.resize(size=self.size, resample=self.resample)
     def encodes(self, o:Mask):     return o.resize(size=self.size, resample=Image.NEAREST)

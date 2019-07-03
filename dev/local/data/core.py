@@ -118,7 +118,7 @@ class Category():
 
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
-    order,state_args=1,'vocab'
+    order=1
     def __init__(self, vocab=None, subset_idx=None):
         self.vocab,self.subset_idx = vocab,subset_idx
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
@@ -127,6 +127,7 @@ class Categorize(Transform):
         if not dsrc: return
         dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
         self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)
+        setattr_parent(dsrc, 'vocab', self.vocab)
 
     def encodes(self, o)->Category: return self.o2i[o]
     def decodes(self, o):           return self.vocab[o]
@@ -143,6 +144,7 @@ class MultiCategorize(Categorize):
         vals = set()
         for b in dsrc: vals = vals.union(set(b))
         self.vocab,self.otoi = uniqueify(list(vals), sort=True, bidir=True)
+        setattr_parent(dsrc, 'vocab', self.vocab)
 
     def encodes(self, o)->MultiCategory: return [self.otoi[o_] for o_ in o]
     def decodes(self, o):                return [self.vocab[o_] for o_ in o]
@@ -150,12 +152,12 @@ class MultiCategorize(Categorize):
 class OneHotEncode(Transform):
     "One-hot encodes targets and optionally decodes with `vocab`"
     order=2
-    def __init__(self, do_encode=True, vocab=None):
-        if vocab is not None: self.state_args='vocab'
-        self.do_encode,self.vocab = do_encode,vocab
+    def __init__(self, do_encode=True, vocab=None): self.do_encode,self.vocab = do_encode,vocab
 
     def setup(self, dsrc):
-        if self.vocab is not None: self.c = len(self.vocab)
+        if self.vocab is not None:
+            setattr_parent(dsrc, 'vocab', self.vocab)
+            self.c = len(self.vocab)
         else: self.c = len(L(getattr(dsrc, 'vocab', None)))
         if self.c==0: warn("Couldn't infer the number of classes, please pass a `vocab` at init")
 

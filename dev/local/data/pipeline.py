@@ -2,7 +2,7 @@
 
 __all__ = ['get_func', 'show_title', 'Func', 'Sig', 'SelfFunc', 'Self', 'positional_annotations', 'noop_tfm',
            'PrePostInitMultiMeta', 'Transform', 'transform', 'compose_tfms', 'Pipeline', 'get_samples', 'TfmdList',
-           'TfmdDS']
+           'TfmdDS', 'setattr_parent']
 
 from ..imports import *
 from ..test import *
@@ -200,8 +200,8 @@ class TfmdList(GetAttr):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
     _xtra = 'decode __call__ show'.split()
 
-    def __init__(self, items, tfms, do_setup=True):
-        self.items = L(items)
+    def __init__(self, items, tfms, do_setup=True, parent=None):
+        self.items,self.parent = L(items),parent
         self.default = self.tfms = Pipeline(tfms)
         if do_setup: self.setup()
 
@@ -214,7 +214,7 @@ class TfmdList(GetAttr):
         return self.tfms(its, filt=filt)
 
     def setup(self): self.tfms.setup(self)
-    def subset(self, idxs): return self.__class__(self.items[idxs], self.tfms, do_setup=False)
+    def subset(self, idxs): return self.__class__(self.items[idxs], self.tfms, do_setup=False, parent=self)
     def decode_at(self, idx, filt=None):
         return self.decode(self.__getitem__(idx,filt=filt), filt=filt)
     def show_at(self, idx, filt=None, **kwargs):
@@ -223,14 +223,6 @@ class TfmdList(GetAttr):
     def __len__(self): return len(self.items)
     def __iter__(self): return (self[i] for i in range_of(self))
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms}"
-
-    def __getattr__(self,k):
-        if k in self._xtra: return getattr(self.default, k)
-        for f in self.tfms.fs:
-            if k in L(f.state_args): return getattr(f, k)
-        super().__getattr__(k)
-
-    def __setstate__(self,data): self.__dict__.update(data) #For pickle issues
 
     _docs = dict(setup="Transform setup with self",
                  decode_at="Decoded item at `idx`",
@@ -242,12 +234,12 @@ def _maybe_flat(t): return t[0] if len(t) == 1 else tuple(t)
 class TfmdDS(TfmdList):
     def __init__(self, items, tfms=None, tuple_tfms=None, do_setup=True):
         if tfms is None: tfms = [None]
-        self.tfmd_its = [TfmdList(items, t, do_setup=do_setup) for t in tfms]
+        self.items = items
+        self.tfmd_its = [TfmdList(items, t, do_setup=do_setup, parent=self) for t in tfms]
         self.__post_init__(items, tuple_tfms, do_setup)
 
     def __post_init__(self, items, tuple_tfms, do_setup):
         #To avoid dupe code with DataSource
-        self.items = items
         self.tfms = [it.tfms for it in self.tfmd_its]
         self.tuple_tfms = Pipeline(tuple_tfms, t=[it.tfms.final_t for it in self.tfmd_its])
         if do_setup: self.setup()
@@ -259,14 +251,6 @@ class TfmdDS(TfmdList):
             if not is_iter(filt): filt = L(filt for _ in i)
             return L(self.tuple_tfms(it, filt=f) for it,f in zip(its,filt))
         return self.tuple_tfms(its, filt=filt)
-
-    def __getattr__(self,k):
-        for p in self.tfms+[self.tuple_tfms]:
-            for f in p.fs:
-                if k in L(f.state_args): return getattr(f, k)
-        super().__getattr__(k)
-
-    def __setstate__(self,data): self.__dict__.update(data) #For pickle issues
 
     def decode(self, o, filt=None):
         o = self.tuple_tfms.decode(o, filt=filt)
@@ -298,3 +282,8 @@ add_docs(TfmdDS,
          show="Show item `o` in `ctx`",
          setup="Go through the transforms in order and call their potential setup on `items`",
          subset="New `TfmdDS` that only includes items at `idxs`")
+
+def setattr_parent(o, k, v):
+    if getattr(o, 'parent', False): setattr_parent(o.parent, k, v)
+    if getattr(o, 'dsrc', False): setattr_parent(o.dsrc, k, v)
+    setattr(o, k, v)
