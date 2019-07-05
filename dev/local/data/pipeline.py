@@ -232,16 +232,16 @@ class TfmdList(GetAttr):
 def _maybe_flat(t): return t[0] if len(t) == 1 else tuple(t)
 
 class TfmdDS(TfmdList):
-    def __init__(self, items, tfms=None, tuple_tfms=None, do_setup=True):
-        if tfms is None: tfms = [None]
+    def __init__(self, items, type_tfms=None, ds_tfms=None, do_setup=True):
+        if type_tfms is None: type_tfms = [None]
         self.items = items
-        self.tfmd_its = [TfmdList(items, t, do_setup=do_setup, parent=self) for t in tfms]
-        self.__post_init__(items, tuple_tfms, do_setup)
+        self.tfmd_its = [TfmdList(items, t, do_setup=do_setup, parent=self) for t in type_tfms]
+        self.__post_init__(items, ds_tfms, do_setup)
 
-    def __post_init__(self, items, tuple_tfms, do_setup):
+    def __post_init__(self, items, ds_tfms, do_setup):
         #To avoid dupe code with DataSource
-        self.tfms = [it.tfms for it in self.tfmd_its]
-        self.tuple_tfms = Pipeline(tuple_tfms, t=[it.tfms.final_t for it in self.tfmd_its])
+        self.type_tfms = [it.tfms for it in self.tfmd_its]
+        self.ds_tfms = Pipeline(ds_tfms, t=[t_.final_t for t_ in self.type_tfms])
         if do_setup: self.setup()
 
     def __getitem__(self, i, filt=None):
@@ -249,30 +249,30 @@ class TfmdDS(TfmdList):
         if is_iter(i):
             if len(self.tfmd_its) > 1: its = zip(*L(its))
             if not is_iter(filt): filt = L(filt for _ in i)
-            return L(self.tuple_tfms(it, filt=f) for it,f in zip(its,filt))
-        return self.tuple_tfms(its, filt=filt)
+            return L(self.ds_tfms(it, filt=f) for it,f in zip(its,filt))
+        return self.ds_tfms(its, filt=filt)
 
     def decode(self, o, filt=None):
-        o = self.tuple_tfms.decode(o, filt=filt)
+        o = self.ds_tfms.decode(o, filt=filt)
         if not is_listy(o): o = [o]
         return _maybe_flat([it.decode(o_, filt=filt) for o_,it in zip(o,self.tfmd_its)])
 
     def decode_batch(self, b, filt=None): return [self.decode(b_, filt=filt) for b_ in get_samples(b)]
 
     def show(self, o, ctx=None, filt=None, **kwargs):
-        if self.tuple_tfms.t_show is not None: return self.tuple_tfms.show(o, ctx=ctx, filt=filt, **kwargs)
-        o = self.tuple_tfms.decode(o, filt=filt)
+        if self.ds_tfms.t_show is not None: return self.ds_tfms.show(o, ctx=ctx, filt=filt, **kwargs)
+        o = self.ds_tfms.decode(o, filt=filt)
         if not is_listy(o): o = [o]
         for o_,it in zip(o,self.tfmd_its): ctx = it.show(o_, ctx=ctx, filt=filt, **kwargs)
         return ctx
 
-    def setup(self): self.tuple_tfms.setup(self)
+    def setup(self): self.ds_tfms.setup(self)
 
     def subset(self, idxs):
-        return self.__class__(self.items[idxs], self.tfms, self.tuple_tfms, do_setup=False)
+        return self.__class__(self.items[idxs], self.type_tfms, self.ds_tfms, do_setup=False)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms}\ntuple tfms - {self.tuple_tfms}"
+        return f"{self.__class__.__name__}: {self.items}\ntype tfms - {self.type_tfms}\nds tfms - {self.ds_tfms}"
 
 add_docs(TfmdDS,
          "A `Dataset` created from raw `items` by calling each element of `tfms` on them",

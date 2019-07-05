@@ -16,22 +16,19 @@ class DataBlock():
     def splitter(self, items): pass
     def labeller(self, item): pass
 
-    def datasource(self, source, tfms=None, tuple_tfms=None):
+    def datasource(self, source, type_tfms=None, ds_tfms=None):
         items = self.get_items(source)
         splits = self.splitter(items)
-        if tfms is None: tfms = [L() for t in self.types]
-        tfms = L(getattr(t, 'default_tfms', L()) + L(tfm) for (t,tfm) in zip(self.types, tfms))
-        tfms = [tfms[0]] + [self.labeller + tfm for tfm in tfms[1:]]
-        tfms = L(L(t() if isinstance(t, type) else t for t in tfm) for tfm in tfms)
-        tuple_tfms = sum([getattr(t, 'default_tuple_tfms', L()) for t in self.types], L()) + L(tuple_tfms)
-        tuple_tfms = L(t() if isinstance(t, type) else t for t in tuple_tfms)
-        return DataSource(items, tfms=tfms, tuple_tfms=tuple_tfms, filts=splits)
+        if type_tfms is None: type_tfms = [L() for t in self.types]
+        type_tfms = L(mix_tfms(getattr(t, 'default_type_tfms', L()), tfm) for (t,tfm) in zip(self.types, type_tfms))
+        type_tfms = type_tfms[0] + L(self.labeller + tfm for tfm in type_tfms[1:])
+        ds_tfms = L(mix_tfms(*[getattr(t, 'default_ds_tfms', L()) for t in self.types], ds_tfms))
+        return DataSource(items, type_tfms=type_tfms, ds_tfms=ds_tfms, filts=splits)
 
-    def databunch(self, source, tfms=None, tuple_tfms=None, dl_tfms=None, bs=16, **kwargs):
-        dsrc = self.datasource(source, tfms=tfms, tuple_tfms=tuple_tfms)
-        dl_tfms = sum([getattr(t, 'default_dl_tfms', L()) for t in self+L(self.types)], L()) + L(dl_tfms)
-        dl_tfms = L(t() if isinstance(t, type) else t for t in dl_tfms)
-        return dsrc.databunch(tfms=tfms, bs=bs, **kwargs)
+    def databunch(self, source, type_tfms=None, ds_tfms=None, dl_tfms=None, bs=16, **kwargs):
+        dsrc = self.datasource(source, type_tfms=type_tfms, ds_tfms=ds_tfms)
+        dl_tfms = L(mix_tfms(*[getattr(t, 'default_dl_tfms', L()) for t in self+L(self.types)], dl_tfms))
+        return dsrc.databunch(tfms=dl_tfms, bs=bs, **kwargs)
 
     _docs = dict(get_items="Pass at init or implement how to get your raw items from a `source`",
                  splitter="Pass at init or implement how to split your `items`",
