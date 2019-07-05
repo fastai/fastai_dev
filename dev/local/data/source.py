@@ -29,24 +29,26 @@ _FiltTfmdList.train,_FiltTfmdList.valid = add_props(lambda i,x: x.subset(i), 2)
 @docs
 class DataSource(TfmdDS):
     "Applies a `tfm` to filtered subsets of `items`"
-    def __init__(self, items, tfms=None, tuple_tfms=None, filts=None, do_setup=True):
+    def __init__(self, items, type_tfms=None, ds_tfms=None, filts=None, do_setup=True):
         if filts is None: filts = [range_of(items)]
         self.filts = L(mask2idxs(filt) for filt in filts)
         # Create map from item id to filter id
         assert all_disjoint(self.filts)
         self.filt_idx = L([None]*len(items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
-        if tfms is None: tfms = [None]
+        if type_tfms is None: type_tfms = [None]
         self.items = items
-        self.tfmd_its = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup, parent=self) for t in tfms]
-        self.__post_init__(items, tuple_tfms, do_setup)
+        self.tfmd_its = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup, parent=self)
+                         for t in type_tfms]
+        self.__post_init__(items, ds_tfms, do_setup)
 
     @property
     def n_subsets(self): return len(self.filts)
     def len(self,filt): return len(self.filts[filt])
     def subset(self, i): return DsrcSubset(self, i)
     def subsets(self): return map(self.subset, range(self.n_subsets))
-    def __repr__(self): return '\n'.join(map(str,self.subsets())) + f'\ntfm - {self.tfms}'
+    def __repr__(self):
+        return '\n'.join(map(str,self.subsets())) + f'\ntype tfms - {self.type_tfms}\nds tfms - {self.ds_tfms}'
     def __getitem__(self, i): return super().__getitem__(i,self.filt_idx[i])
 
     def databunch(self, tfms=None, bs=16, val_bs=None, shuffle_train=True, sampler=None, batch_sampler=None,
@@ -74,7 +76,8 @@ class DsrcSubset():
     "A filtered subset of a `DataSource`"
     def __init__(self, dsrc, filt):
         self.dsrc,self.filt,self.filts = dsrc,filt,dsrc.filts[filt]
-        self.tfms,self.tuple_tfms = dsrc.tfms,getattr(dsrc, 'tuple_tfms', None)
+        self.tfms,self.type_tfms,self.ds_tfms = map(lambda x: getattr(dsrc, x, None), ['tfms', 'type_tfms', 'ds_tfms'])
+
     def __getitem__(self,i):             return self.dsrc[self.filts[i]]
     def decode(self, o, **kwargs):       return self.dsrc.decode(o, filt=self.filt, **kwargs)
     def decode_batch(self, b, **kwargs): return self.dsrc.decode_batch(b, filt=self.filt, **kwargs)

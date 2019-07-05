@@ -184,9 +184,9 @@ class TfmdDL(GetAttr):
     def __init__(self, dataset, tfms=None, bs=16, shuffle=False,
                  sampler=None, batch_sampler=None, num_workers=1, **kwargs):
         self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers, **kwargs)
-        if hasattr(dataset, 'tuple_tfms'): t = dataset.tuple_tfms.final_t
-        elif hasattr(dataset, 'tfms'):     t = dataset.tfms.final_t
-        else:                              t = None
+        if hasattr(dataset, 'ds_tfms'): t = dataset.ds_tfms.final_t
+        elif hasattr(dataset, 'tfms'):  t = dataset.tfms.final_t
+        else:                           t = None
         self.default,self.tfms = self.dl,Pipeline(tfms, t=t)
         for k,v in kwargs.items(): setattr(self,k,v)
         self.tfms.setup(self)

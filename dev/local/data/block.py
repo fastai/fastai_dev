@@ -20,10 +20,10 @@ class DataBlock():
         items = self.get_items(source)
         splits = self.splitter(items)
         if type_tfms is None: type_tfms = [L() for t in self.types]
-        tfms = L(mix_tfms(getattr(t, 'default_type_tfms', L()), tfm) for (t,tfm) in zip(self.types, type_tfms))
-        tfms = tfms[0] + L(self.labeller + tfm for tfm in tfms[1:])
-        tuple_tfms = L(mix_tfms(*[getattr(t, 'default_ds_tfms', L()) for t in self.types], ds_tfms))
-        return DataSource(items, tfms=tfms, tuple_tfms=tuple_tfms, filts=splits)
+        type_tfms = L(mix_tfms(getattr(t, 'default_type_tfms', L()), tfm) for (t,tfm) in zip(self.types, type_tfms))
+        type_tfms = type_tfms[0] + L(self.labeller + tfm for tfm in type_tfms[1:])
+        ds_tfms = L(mix_tfms(*[getattr(t, 'default_ds_tfms', L()) for t in self.types], ds_tfms))
+        return DataSource(items, type_tfms=type_tfms, ds_tfms=ds_tfms, filts=splits)
 
     def databunch(self, source, type_tfms=None, ds_tfms=None, dl_tfms=None, bs=16, **kwargs):
         dsrc = self.datasource(source, type_tfms=type_tfms, ds_tfms=ds_tfms)
