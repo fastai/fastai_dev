@@ -277,10 +277,10 @@ def dihedral_mat(x, p=0.5, draw=None):
     "Return a random dihedral matrix"
     def _def_draw(): return random.randint(0,7)
     idx = _draw_mask(x, _def_draw, draw=draw, p=p).long()
-    xs = tensor([1,-1,1,-1,-1,1,1,-1])[idx]
-    ys = tensor([1,1,-1,1,-1,-1,1,-1])[idx]
-    m0 = tensor([1,1,1,0,1,0,0,0])[idx]
-    m1 = tensor([0,0,0,1,0,1,1,1])[idx]
+    xs = tensor([1,-1,1,-1,-1,1,1,-1], device=x.device)[idx]
+    ys = tensor([1,1,-1,1,-1,-1,1,-1], device=x.device)[idx]
+    m0 = tensor([1,1,1,0,1,0,0,0], device=x.device)[idx]
+    m1 = tensor([0,0,0,1,0,1,1,1], device=x.device)[idx]
     return affine_mat(xs*m0,  xs*m1,  t0(xs),
                       ys*m1,  ys*m0,  t0(xs)).float()
     mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
