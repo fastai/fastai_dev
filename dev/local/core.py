@@ -5,8 +5,8 @@ __all__ = ['defaults', 'PrePostInitMeta', 'PrePostInit', 'NewChkMeta', 'patch_to
            'wrap_class', 'noop', 'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of',
            'mask2idxs', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu',
            'item_find', 'find_device', 'find_bs', 'compose', 'mapper', 'partialler', 'sort_by_run', 'num_cpus',
-           'add_props', 'make_cross_image', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params',
-           'PrettyString']
+           'add_props', 'make_cross_image', 'show_title', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
+           'trainable_params', 'PrettyString']
 
 from .test import *
 from .imports import *
@@ -404,6 +404,12 @@ def make_cross_image(bw=True):
         im[0,2,:] = 1.
         im[1,:,2] = 1.
     return im
+
+def show_title(o, ax=None, ctx=None):
+    "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
+    ax = ifnone(ax,ctx)
+    if ax is None: print(o)
+    else: ax.set_title(o)
 
 #Comes from 04_data_core.ipynb.
 def one_hot(x, c):
