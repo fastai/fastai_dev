@@ -108,6 +108,11 @@ def lowercase(t, add_bos=True, add_eos=False):
     "Converts `t` to lowercase"
     return (f'{BOS} ' if add_bos else '') + t.lower().strip() + (f' {EOS}' if add_eos else '')
 
+defaults.text_spec_tok = [UNK, PAD, BOS, EOS, FLD, TK_REP, TK_WREP, TK_UP, TK_MAJ]
+defaults.text_proc_rules = [fix_html, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces,
+                            replace_all_caps, replace_maj, lowercase]
+defaults.text_token_sep = '\u2581'
+
 class BaseTokenizer():
     "Basic tokenizer that just splits on spaces"
     def __init__(self, **kwargs): pass
