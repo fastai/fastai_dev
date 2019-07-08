@@ -85,6 +85,7 @@
   "TransformWhole": "02_transforms.ipynb",
   "TypeDispatch": "02_transforms.ipynb",
   "TfmMeta": "02_transforms.ipynb",
+  "batch_to_samples": "02a_pipeline.ipynb",
   "mk_transform": "02a_pipeline.ipynb",
   "download_url": "03_data_external.ipynb",
   "URLs": "03_data_external.ipynb",

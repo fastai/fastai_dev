@@ -54,12 +54,16 @@ class TransformBase():
         return typ_r(res) if (type(res) != typ_r) and typ_r!=NoneType else res
 
 class ShowTitle:
+    "Base class that adds a simple `show`"
     def show(self, ctx=None, **kwargs): return show_title(str(self), ctx=ctx)
+
 class Int(int, ShowTitle): pass
 class Float(float, ShowTitle): pass
 class Str(str, ShowTitle): pass
+add_docs(Int, "An `int` with `show`"); add_docs(Str, "An `str` with `show`"); add_docs(Float, "An `float` with `show`")
 
 class TransformWhole(TransformBase):
+    "A convenience for `TransformBase(whole_tuple=True)`"
     def __init__(self, filt=None): super().__init__(filt=filt, whole_tuple=True)
 
 class TypeDispatch:
@@ -77,7 +81,7 @@ class TypeDispatch:
         self.funcs[_p1_anno(f) or object] = f
         self._reset()
 
-    def __repr__(self): return str({getattr(k,'__name__',k):v.__name__ for k,v in self.funcs.items()})
+    def __repr__(self): return str({getattr(k,'__name__',str(k)):v.__name__ for k,v in self.funcs.items()})
     def __getitem__(self, k):
         "Find first matching type that is a super-class of `k`"
         if k in self.cache: return self.cache[k]
