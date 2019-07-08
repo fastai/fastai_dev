@@ -106,7 +106,6 @@
   "show_titled_image": "04_data_core.ipynb",
   "show_image_batch": "04_data_core.ipynb",
   "TensorImage": "04_data_core.ipynb",
-  "Category": "04_data_core.ipynb",
   "Categorize": "04_data_core.ipynb",
   "MultiCategory": "04_data_core.ipynb",
   "MultiCategorize": "04_data_core.ipynb",

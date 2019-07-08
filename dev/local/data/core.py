@@ -2,13 +2,14 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_titled_image',
-           'show_image_batch', 'TensorImage', 'Category', 'Categorize', 'MultiCategory', 'MultiCategorize',
-           'OneHotEncode', 'get_samples', 'TfmdDL', 'Cuda', 'TensorMask', 'ByteToFloatTensor', 'Normalize',
-           'broadcast_vec', 'DataBunch']
+           'show_image_batch', 'TensorImage', 'Categorize', 'MultiCategory', 'MultiCategorize', 'OneHotEncode',
+           'get_samples', 'TfmdDL', 'Cuda', 'TensorMask', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec',
+           'DataBunch']
 
 from ..imports import *
 from ..test import *
 from ..core import *
+from .transform import *
 from .pipeline import *
 from .external import *
 from ..notebook.showdoc import show_doc
@@ -112,11 +113,7 @@ class TensorImage():
     @staticmethod
     def show(o, ctx=None, **kwargs): return show_image(to_cpu(o), ctx=ctx, **kwargs)
 
-class Category():
-    @staticmethod
-    def show(o, ctx=None, **kwargs): return show_title(str(o), ctx=ctx)
-
-class Categorize(Transform):
+class Categorize(TransformBase):
     "Reversible transform of category string to `vocab` id"
     order=1
     def __init__(self, vocab=None, subset_idx=None):
@@ -128,14 +125,13 @@ class Categorize(Transform):
         if self.vocab is None:
             dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
             self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)
-        setattr_parent(dsrc, 'vocab', self.vocab)
+#         setattr_parent(dsrc, 'vocab', self.vocab)
 
-    def encodes(self, o)->Category: return self.o2i[o]
-    def decodes(self, o):           return self.vocab[o]
+    def encodes(self, o)->int: return self.o2i[o]
+    def decodes(self, o)->Str: return self.vocab[o]
 
-class MultiCategory():
-    @staticmethod
-    def show(o, ctx=None, sep=';', **kwargs): return show_title(sep.join(o), ctx=ctx)
+class MultiCategory(L):
+    def show(self, ctx=None, sep=';', **kwargs): return show_title(sep.join(self.mapped(str)), ctx=ctx)
 
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
@@ -145,11 +141,11 @@ class MultiCategorize(Categorize):
             dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
             vals = set()
             for b in dsrc: vals = vals.union(set(b))
-            self.vocab,self.otoi = uniqueify(list(vals), sort=True, bidir=True)
-        setattr_parent(dsrc, 'vocab', self.vocab)
+            self.vocab,self.o2i = uniqueify(list(vals), sort=True, bidir=True)
+        setattr(dsrc, 'vocab', self.vocab)
 
-    def encodes(self, o)->MultiCategory: return [self.otoi[o_] for o_ in o]
-    def decodes(self, o):                return [self.vocab[o_] for o_ in o]
+    #def encodes(self, o)->MultiCategory: return [self.otoi[o_] for o_ in o]
+    #def decodes(self, o):                return [self.vocab[o_] for o_ in o]
 
 class OneHotEncode(Transform):
     "One-hot encodes targets and optionally decodes with `vocab`"

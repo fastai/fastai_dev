@@ -44,8 +44,9 @@ class TransformBase():
         f = self.encodes if is_enc else self.decodes
         if self.whole_tuple: return f
         t = _p1_anno(f)
+        #if issubclass(t, (L, tuple, list)): return f
         f_ = lambda o: f if isinstance(o,t) else None
-        return [f_(x_) for x_ in x] if is_listy(x) else f_(x)
+        return [f_(x_) for x_ in x] if isinstance(x, tuple) else f_(x)
 
     def _do_call(self, f, x, *args, filt=None, **kwargs):
         if f is None: return x
@@ -121,6 +122,6 @@ class Transform(TransformBase, metaclass=TfmMeta):
     def func(self, is_enc, x, filt=None):
         if filt!=self.filt and self.filt is not None: return None
         f = partial(self.lookup, is_enc)
-        return [f(x_) for x_ in x] if is_listy(x) else f(x)
+        return [f(x_) for x_ in x] if isinstance(x, tuple) else f(x)
 
     def __repr__(self): return f'Tfm {self.fs}'
