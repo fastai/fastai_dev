@@ -155,9 +155,10 @@ class L(GetAttr, metaclass=NewChkMeta):
     _xtra =  [o for o in dir([]) if not o.startswith('_')]
 
     def __init__(self, items=None, *rest, use_list=False, match=None):
-        items = [] if items is None else items
+#         set_trace()
+        if rest: items = (items,)+rest
+        if items is None: items = []
         self.items = self.default = list(items) if use_list else _listify(items)
-        self.items += list(rest)
         if match is not None:
             if len(self.items)==1: self.items = self.items*len(match)
             else: assert len(self.items)==len(match), 'Match length mismatch'
@@ -178,7 +179,7 @@ class L(GetAttr, metaclass=NewChkMeta):
     def __getitem__(self, idx):
         "Retrieve `idx` (can be list of indices, or mask, or int) items"
         res = [self.items[i] for i in _mask2idxs(idx)] if is_iter(idx) else self.items[idx]
-        if isinstance(res,(tuple,list)) and not isinstance(res,L): res = L(res)
+#         if isinstance(res,(tuple,list)) and not isinstance(res,L): res = L(res)
         return res
 
     def __setitem__(self, idx, o):

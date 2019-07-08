@@ -2,9 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_titled_image',
-           'show_image_batch', 'TensorImage', 'Categorize', 'MultiCategory', 'MultiCategorize', 'OneHotEncode',
-           'get_samples', 'TfmdDL', 'Cuda', 'TensorMask', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec',
-           'DataBunch']
+           'show_image_batch', 'Categorize', 'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'get_samples',
+           'TfmdDL', 'Cuda', 'TensorMask', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -109,10 +108,6 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
     for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
-class TensorImage():
-    @staticmethod
-    def show(o, ctx=None, **kwargs): return show_image(to_cpu(o), ctx=ctx, **kwargs)
-
 class Categorize(TransformBase):
     "Reversible transform of category string to `vocab` id"
     order=1
@@ -123,9 +118,8 @@ class Categorize(TransformBase):
     def setup(self, dsrc):
         if not dsrc: return
         if self.vocab is None:
-            dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
+            dsrc = getattr(dsrc,'train',dsrc)
             self.vocab,self.o2i = uniqueify(dsrc, sort=True, bidir=True)
-#         setattr_parent(dsrc, 'vocab', self.vocab)
 
     def encodes(self, o)->int: return self.o2i[o]
     def decodes(self, o)->Str: return self.vocab[o]
@@ -138,30 +132,29 @@ class MultiCategorize(Categorize):
     def setup(self, dsrc):
         if not dsrc: return
         if self.vocab is None:
-            dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
+            dsrc1 = getattr(dsrc,'train',dsrc)
             vals = set()
-            for b in dsrc: vals = vals.union(set(b))
+            for b in dsrc1: vals = vals.union(set(b))
             self.vocab,self.o2i = uniqueify(list(vals), sort=True, bidir=True)
         setattr(dsrc, 'vocab', self.vocab)
 
-    #def encodes(self, o)->MultiCategory: return [self.otoi[o_] for o_ in o]
-    #def decodes(self, o):                return [self.vocab[o_] for o_ in o]
+    def encodes(self, o):                return [self.o2i  [o_] for o_ in o]
+    def decodes(self, o)->MultiCategory: return [self.vocab[o_] for o_ in o]
 
-class OneHotEncode(Transform):
+class OneHotEncode(TransformBase):
     "One-hot encodes targets and optionally decodes with `vocab`"
     order=2
     def __init__(self, do_encode=True, vocab=None): self.do_encode,self.vocab = do_encode,vocab
 
     def setup(self, dsrc):
-        if self.vocab is not None:
-            setattr_parent(dsrc, 'vocab', self.vocab)
-            self.c = len(self.vocab)
+        if self.vocab is not None:  self.c = len(self.vocab)
         else: self.c = len(L(getattr(dsrc, 'vocab', None)))
-        if self.c==0: warn("Couldn't infer the number of classes, please pass a `vocab` at init")
+        if not self.c: warn("Couldn't infer the number of classes, please pass a `vocab` at init")
 
-    def encodes(self, o)->Tensor: return one_hot(o, self.c) if self.do_encode else o
-    def decodes(self, o):
-        return [self.vocab[i] if self.vocab else i for i,o_ in enumerate(o) if o_==1]
+    def encodes(self, o)->Tensor: return one_hot(o, self.c) if self.do_encode else torch.ByteTensor(o)
+
+    def decodes(self, o)->L:
+        return L(self.vocab[i] if self.vocab else i for i,o_ in enumerate(o) if o_==1)
 
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
