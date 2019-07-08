@@ -152,7 +152,7 @@ def _listify(o):
 
 class L(GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
-    _xtra =  [o for o in dir(list) if not o.startswith('_')]
+    _xtra =  [o for o in dir([]) if not o.startswith('_')]
 
     def __init__(self, items=None, *rest, use_list=False, match=None):
         items = [] if items is None else items
