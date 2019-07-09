@@ -2,7 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Categorize', 'MultiCategory', 'MultiCategorize',
-           'OneHotEncode', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
+           'OneHotEncode', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'encode', 'decode', 'encode', 'decode', 'Normalize',
+           'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -138,14 +139,15 @@ class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfms=None, bs=16, shuffle=False,
-                 sampler=None, batch_sampler=None, num_workers=1, **kwargs):
+    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, sampler=None, batch_sampler=None,
+                 num_workers=1, **kwargs):
         self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers, **kwargs)
         self.default,self.tfms = self.dl,Pipeline(tfms, as_item=False)
         self.tfms.setup(self)
 
     def __len__(self): return len(self.dl)
-    def __iter__(self): return (self.tfms(b, filt=getattr(self.dataset, 'filt', None)) for b in self.dl)
+    def __iter__(self):
+        return (self.tfms(self._pass_cls(b), filt=getattr(self.dataset, 'filt', None)) for b in self.dl)
     def one_batch(self): return next(iter(self))
     def decode(self, b):
         return getattr(self.dataset,'decode_batch',noop)(self.tfms.decode(b, filt=getattr(self.dataset, 'filt', None)))
@@ -155,7 +157,13 @@ class TfmdDL(GetAttr):
         if b is None: b=self.one_batch()
         b = self.tfms.decode(b, filt=getattr(self.dataset, 'filt', None))
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
-        for o,ctx in zip(batch_to_samples(b, max_rows),ctxs): self.dataset.show(o, ctx=ctx)
+        for o,ctx in zip(batch_to_samples(b, max_rows),ctxs):
+            self.dataset.show(self._pass_cls(o), ctx=ctx)
+
+    def _pass_cls(self, b):
+        for (b_,s) in zip(L(b), L(self.dataset[0])):
+            if hasattr(s, '_cls'): b_._cls = s._cls
+        return b
 
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
                  show_batch="Show each item of `b`",
@@ -172,26 +180,29 @@ class Cuda(Transform):
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
-@docs
 class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
-    order=20 #Need to run after CUDA if on the GPU
-    def __init__(self, div=True, div_mask=False): self.div,self.div_mask = div,div_mask
-    def encodes(self, o:ByteTensorImage)->FloatTensorImage: return o.float().div_(255.) if self.div else o.float()
-    def decodes(self, o:FloatTensorImage): return o.clamp(0., 1.) if self.div else o
-    def encodes(self, o:ByteTensorMask)->LongTensorMask: return o.div_(255.).long() if self.div_mask else o.long()
-    def decodes(self, o:LongTensorMask): return o
+    order = 20 #Need to run after CUDA if on the GPU
+    def __init__(self, div=True, div_mask=False, filt=None, as_item=True):
+        super().__init__(filt=filt,as_item=as_item)
+        self.div,self.div_mask = div,div_mask
 
-    _docs=dict(encodes="Convert items matching `mask` to float and optionally divide by 255",
-               decodes="Clamp to (0,1) items matching `mask`")
+@ByteToFloatTensor
+def encode(self, o:ByteTensorImage)->FloatTensorImage: return o.float().div_(255.) if self.div else o.float()
+@ByteToFloatTensor
+def decode(self, o:FloatTensorImage): return o.clamp(0., 1.)*255. if self.div else o
+@ByteToFloatTensor
+def encode(self, o:ByteTensorMask)->LongTensorMask: return o.div_(255.).long() if self.div_mask else o.long()
+@ByteToFloatTensor
+def decode(self, o:LongTensorMask): return o
 
 @docs
 class Normalize(Transform):
     "Normalize/denorm batch of `TensorImage`"
     order=99
     def __init__(self, mean, std): self.mean,self.std = mean,std
-    def encodes(self, x:TensorImage): return (x-self.mean) / self.std
-    def decodes(self, x:TensorImage): return (x*self.std ) + self.mean
+    def encodes(self, x:FloatTensorImage): return (x-self.mean) / self.std
+    def decodes(self, x:FloatTensorImage): return (x*self.std ) + self.mean
 
     _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
 
