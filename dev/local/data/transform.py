@@ -113,7 +113,7 @@ class Transform(metaclass=TfmMeta):
     "Delegates (`__call__`,`decode`) to (`encodes`,`decodes`) if `filt` matches"
     filt,init_enc,as_item_force,as_item = None,False,None,True
     def __init__(self, enc=None, dec=None, filt=None, as_item=True):
-        self.filt,self.as_item = filt,as_item
+        self.filt,self.as_item = ifnone(filt, self.filt),as_item
         self.init_enc = enc or dec
         if not self.init_enc: return
         self.fs = (TypeDispatch(),TypeDispatch())

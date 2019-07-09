@@ -163,7 +163,7 @@ class TfmdDL(GetAttr):
     def _pass_cls(self, b):
         for (b_,s) in zip(L(b), L(self.dataset[0])):
             if hasattr(s, '_cls'): b_._cls = s._cls
-        return b
+        return bo
 
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
                  show_batch="Show each item of `b`",
@@ -190,11 +190,11 @@ class ByteToFloatTensor(Transform):
 @ByteToFloatTensor
 def encode(self, o:ByteTensorImage)->FloatTensorImage: return o.float().div_(255.) if self.div else o.float()
 @ByteToFloatTensor
-def decode(self, o:FloatTensorImage): return o.clamp(0., 1.)*255. if self.div else o
+def decode(self, o:FloatTensorImage): return o.clamp(0., 1.).mul_(255.) if self.div else o
 @ByteToFloatTensor
 def encode(self, o:ByteTensorMask)->LongTensorMask: return o.div_(255.).long() if self.div_mask else o.long()
 @ByteToFloatTensor
-def decode(self, o:LongTensorMask): return o
+def decode(self, o:LongTensorMask): return o.mul_(255) if self.div else o
 
 @docs
 class Normalize(Transform):
