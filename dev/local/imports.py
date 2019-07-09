@@ -27,11 +27,16 @@ from IPython.core.debugger import set_trace
 
 NoneType = type(None)
 
-def _is_listy(a): return isinstance(a, (typing.Iterable,Generator,Iterator))
+Tensor.ndim = property(lambda x: x.dim())
+
+def is_iter(o):
+    "Test whether `o` can be used in a `for` loop"
+    #Rank 0 tensors in PyTorch are not really iterable
+    return isinstance(o, (Iterable,Generator)) and getattr(o,'ndim',1)
 
 def all_equal(a,b):
     "Compares whether `a` and `b` are the same length and have the same contents"
-    if not _is_listy(b): return False
+    if not is_iter(b): return False
     return all(equals(a_,b_) for a_,b_ in itertools.zip_longest(a,b))
 
 def equals(a,b):
@@ -39,7 +44,7 @@ def equals(a,b):
     cmp = (torch.equal    if isinstance(a, Tensor  ) and a.dim() else
            np.array_equal if isinstance(a, ndarray ) else
            operator.eq    if isinstance(a, str     ) else
-           all_equal      if _is_listy(a) else
+           all_equal      if is_iter(a) else
            operator.eq)
     return cmp(a,b)
 

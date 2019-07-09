@@ -97,7 +97,7 @@ class Pipeline():
 
     def _show(self, o, ctx, **kwargs):
         o1 = [o] if self.as_item else o
-        if not hasattr(o1[0], 'show'): return
+        if not all(hasattr(o_, 'show') for o_ in o1): return
         for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
         return ctx or 1
 
@@ -140,29 +140,27 @@ class TfmdDS(TfmdList):
     def __init__(self, items, type_tfms=None, ds_tfms=None, do_setup=True):
         self.items = L(items)
         self.tls = [TfmdList(items, t, do_setup=do_setup) for t in L(type_tfms)]
-        self._mk_pipeline(ds_tfms, do_setup=do_setup)
+        self._mk_pipeline(ds_tfms, do_setup=do_setup, as_item=False)
 
     def get(self, i, filt=None):
-#         o = sum((it.get(i, filt=filt) for it in self.tls), ())
-        o = (it.get(i, filt=filt) for it in self.tls)
-        return self.tfms(*o, filt=filt)
+        o = tuple(it.get(i, filt=filt) for it in self.tls)
+        return self.tfms(o, filt=filt)
 
-    def decode(self, *o, filt=None):
+    def decode(self, o, filt=None):
+        o = self.tfms.decode(o, filt=filt)
+        return tuple(it.decode(o_, filt=filt) for o_,it in zip(o,self.tls))
+
+    def show(self, o, ctx=None, filt=None, **kwargs):
+#         res = self.tfms.show(o, ctx=None, filt=None, **kwargs)
+#         if res: return
 #         set_trace()
-        o = self.tfms.decode(*o, filt=filt)
-#         return sum((it.decode(*o_, filt=filt) for o_,it in zip(o,self.tls)), ())
-        return (it.decode(*o_, filt=filt) for o_,it in zip(o,self.tls))
-
-    def show(self, *o, ctx=None, filt=None, **kwargs):
-        o = self.tfms.decode(*o, filt=filt)
-        set_trace()
-        return super().show(*o, ctx=None, filt=None, **kwargs)
-#         for o_,it in zip(o,self.tls): ctx = it.show(o_, ctx=ctx, filt=filt, **kwargs)
-#         return ctx
+        o = super().decode(o, filt=filt, **kwargs)
+        for o_,it in zip(o,self.tls): ctx = it.show(o_, ctx=ctx, filt=filt, **kwargs)
+        return ctx
 
     def setup(self): self.tfms.setup(self)
     def subset(self, idxs): return self.__class__(self.items[idxs], self.tls, self.tfms, do_setup=False)
-    def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntype tfms - {self.tls}\nds tfms - {self.tfms}"
+    def __repr__(self): return f"{self.__class__.__name__}: tls - {self.tls}\nds tfms - {self.tfms}"
 
 add_docs(TfmdDS,
          "A `Dataset` created from raw `items` by calling each element of `tfms` on them",
