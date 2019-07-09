@@ -43,12 +43,12 @@ class _SelfFunc():
 
 Self = _SelfFunc()
 
-def compose_tfms(*x, tfms, is_enc=True, reverse=False, **kwargs):
+def compose_tfms(x, tfms, is_enc=True, reverse=False, **kwargs):
     "Apply all `func_nm` attribute of `tfms` on `x`, maybe in `reverse` order"
     if reverse: tfms = reversed(tfms)
     for f in tfms:
         if not is_enc: f = f.decode
-        x = f(*x, **kwargs)
+        x = f(x, **kwargs)
     return x
 
 def batch_to_samples(b, max_rows=10):
@@ -56,16 +56,21 @@ def batch_to_samples(b, max_rows=10):
     if isinstance(b, Tensor): return b[:max_rows]
     return zip(*L(batch_to_samples(b_, max_rows) for b_ in b))
 
-def mk_transform(f):
+def mk_transform(f, as_item=True):
     "Convert function `f` to `Transform` if it isn't already one"
-    return f if isinstance(f,TransformBase) else Transform(f)
+    return f if isinstance(f,Transform) else Transform(f, as_item=as_item)
 
-@docs
 class Pipeline():
     "A pipeline of composed (for encode/decode) transforms, setup with types"
-    def __init__(self, funcs=None):
+    def __init__(self, funcs=None, as_item=True):
+        if not funcs: funcs=[noop]
         if isinstance(funcs, Pipeline): funcs = funcs.fs
         self.fs = L(funcs).mapped(mk_transform).sorted(key='order')
+        self.set_as_item(as_item)
+
+    def set_as_item(self, as_item):
+        self.as_item = as_item
+        for f in self.fs: f.as_item = as_item
 
     def setup(self, items=None):
         tfms,self.fs = self.fs,[]
@@ -75,41 +80,37 @@ class Pipeline():
         getattr(t, 'setup', noop)(items)
         self.fs.append(t)
 
-    def __call__(self, *o, filt=None): return compose_tfms(*o, tfms=self.fs, filt=filt)
-    def decode  (self, *o, filt=None): return compose_tfms(*o, tfms=self.fs, is_enc=False, reverse=True, filt=filt)
+    def __call__(self, o, filt=None): return compose_tfms(o, tfms=self.fs, filt=filt)
+    def decode  (self, o, filt=None): return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, filt=filt)
     def __repr__(self): return f"Pipeline: {self.fs}"
     def __getitem__(self,i): return self.fs[i]
     def decode_batch(self, b, filt=None, max_rows=10):
-        return [self.decode(*b_, filt=filt) for b_ in batch_to_samples(b, max_rows=max_rows)]
+        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_rows=max_rows)]
 
     # TODO: move show_batch here of TfmDS?
-    def show(self, *o, ctx=None, **kwargs):
-        for o_ in o: ctx = self._show(o_, ctx=ctx, **kwargs)
-        return ctx
-
-    def _show(self, o, ctx=None, filt=None, **kwargs):
+    def show(self, o, ctx=None, filt=None, **kwargs):
         for f in reversed(self.fs):
-            if hasattr(o, 'show'): return o.show(ctx)
-            o,*_ = f.decode(o, filt=filt)
-        if hasattr(o, 'show'): return o.show(ctx)
+            res = self._show(o, ctx)
+            if res: return res
+            o = f.decode(o, filt=filt)
+        return self._show(o, ctx)
 
-    _docs = dict(__call__="Compose `__call__` of all `tfms` on `o`",
-                 decode="Compose `decode` of all `tfms` on `o`",
-                 show="Show `o`, a single item from a tuple, decoding as needed",
-                 add="Add transform `t`",
-                 decode_batch="`decode` all sample in a the batch `b`",
-                 setup="Call each tfm's `setup` in order")
+    def _show(self, o, ctx, **kwargs):
+        o1 = [o] if self.as_item else o
+        if not hasattr(o1[0], 'show'): return
+        for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
+        return ctx or 1
 
 class TfmdList():
     "A `Pipeline` of `tfms` applied to a collection of `items`"
-    def __init__(self, items, tfms, do_setup=True):
+    def __init__(self, items, tfms, do_setup=True, as_item=True):
         self.items = L(items)
-        self._mk_pipeline(tfms.tfms if isinstance(tfms,TfmdList) else tfms, do_setup=do_setup)
+        self._mk_pipeline(tfms.tfms if isinstance(tfms,TfmdList) else tfms, do_setup=do_setup, as_item=as_item)
 
-    def _mk_pipeline(self, tfms, do_setup=True):
+    def _mk_pipeline(self, tfms, do_setup, as_item):
         if isinstance(tfms,Pipeline): self.tfms = tfms
         else:
-            self.tfms = Pipeline(tfms)
+            self.tfms = Pipeline(tfms, as_item=as_item)
             if do_setup: self.setup()
 
     def __getitem__(self, i): return self.get(i)
@@ -119,9 +120,9 @@ class TfmdList():
         if is_iter(i): return L(self.tfms(it, filt=filt) for it in its)
         return self.tfms(its, filt=filt)
 
-    def subset(self, idxs): return self.__class__(self.items[idxs], self.tfms, do_setup=False) #, parent=self)
-    def decode_at(self, idx, filt=None): return self.decode(*self.get(idx,filt=filt), filt=filt)
-    def show_at(self, idx, filt=None, **kwargs): return self.show(*self.get(idx,filt=filt), filt=filt, **kwargs)
+    def subset(self, idxs): return self.__class__(self.items[idxs], self.tfms, do_setup=False)
+    def decode_at(self, idx, filt=None): return self.decode(self.get(idx,filt=filt), filt=filt)
+    def show_at(self, idx, filt=None, **kwargs): return self.show(self.get(idx,filt=filt), filt=filt, **kwargs)
 
     # Standard dunder magics
     def __eq__(self, b): return all_equal(self, b)
@@ -129,11 +130,11 @@ class TfmdList():
     def __iter__(self): return (self[i] for i in range_of(self))
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms.fs}"
 
-    # Below are delegating to `self.tfms`
-    def show(self, *o, **kwargs): self.tfms.show(*o, **kwargs)
+    # Delegating to `self.tfms`
+    def show(self, o, **kwargs): self.tfms.show(o, **kwargs)
     def setup(self): self.tfms.setup(self)
-    def decode(self, *x, **kwargs): return self.tfms.decode(*x, **kwargs)
-    def __call__(self, *x, **kwargs): return self.tfms.__call__(*x, **kwargs)
+    def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
+    def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
 
 class TfmdDS(TfmdList):
     def __init__(self, items, type_tfms=None, ds_tfms=None, do_setup=True):
