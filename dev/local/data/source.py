@@ -6,17 +6,17 @@ from ..imports import *
 from ..test import *
 from ..core import *
 from .core import *
+from .transform import *
 from .pipeline import *
 from ..notebook.showdoc import show_doc
 
 class _FiltTfmdList(TfmdList):
     "Like `TfmdList` but with filters and train/valid attribute, for proper setup"
-    def __init__(self, items, tfms, filts, filt_idx, do_setup=True, parent=None):
+    def __init__(self, items, tfms, filts, filt_idx, do_setup=True, as_item=True):
         self.filts,self.filt_idx = filts,filt_idx
-        super().__init__(items, tfms, do_setup=do_setup, parent=parent)
+        super().__init__(items, tfms, do_setup=do_setup, as_item=as_item)
 
-    def __getitem__(self, i, filt=None): #Has to accept filt because of DataSource.__getitem__ and super behavior
-        return super().__getitem__(i,self.filt_idx[i] if filt is None else filt)
+    def __getitem__(self, i): return self.get(i, self.filt_idx[i])
 
     @property
     def n_subsets(self): return len(self.filts)
@@ -36,11 +36,9 @@ class DataSource(TfmdDS):
         assert all_disjoint(self.filts)
         self.filt_idx = L([None]*len(items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
-        if type_tfms is None: type_tfms = [None]
-        self.items = items
-        self.tfmd_its = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup, parent=self)
-                         for t in type_tfms]
-        self.__post_init__(items, ds_tfms, do_setup)
+        self.items = L(items)
+        self.tls = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup) for t in L(type_tfms)]
+        self._mk_pipeline(ds_tfms, do_setup=do_setup, as_item=False)
 
     @property
     def n_subsets(self): return len(self.filts)
@@ -48,8 +46,8 @@ class DataSource(TfmdDS):
     def subset(self, i): return DsrcSubset(self, i)
     def subsets(self): return map(self.subset, range(self.n_subsets))
     def __repr__(self):
-        return '\n'.join(map(str,self.subsets())) + f'\ntype tfms - {self.type_tfms}\nds tfms - {self.ds_tfms}'
-    def __getitem__(self, i): return super().__getitem__(i,self.filt_idx[i])
+        return '\n'.join(map(str,self.subsets())) + f'\ntls - {self.tls}\nds tfms - {self.tfms}'
+    def __getitem__(self, i): return self.get(i,self.filt_idx[i])
 
     def databunch(self, tfms=None, bs=16, val_bs=None, shuffle_train=True, sampler=None, batch_sampler=None,
                   **kwargs):

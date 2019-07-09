@@ -5,7 +5,8 @@ __all__ = ['defaults', 'PrePostInitMeta', 'PrePostInit', 'NewChkMeta', 'patch_to
            'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'apply',
            'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device',
            'find_bs', 'compose', 'mapper', 'partialler', 'sort_by_run', 'num_cpus', 'add_props', 'make_cross_image',
-           'show_title', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'PrettyString']
+           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint',
+           'camel2snake', 'trainable_params', 'PrettyString']
 
 from .test import *
 from .imports import *
@@ -402,6 +403,34 @@ def show_title(o, ax=None, ctx=None):
     ax = ifnone(ax,ctx)
     if ax is None: print(o)
     else: ax.set_title(o)
+    return ax
+
+def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
+    "Show a PIL or PyTorch image on `ax`."
+    ax = ifnone(ax,ctx)
+    if ax is None: _,ax = plt.subplots(figsize=figsize)
+    # Handle pytorch axis order
+    if isinstance(im,Tensor):
+        im = to_cpu(im)
+        if im.shape[0]<5: im=im.permute(1,2,0)
+    elif not isinstance(im,np.ndarray): im=array(im)
+    # Handle 1-channel images
+    if im.shape[-1]==1: im=im[...,0]
+    ax.imshow(im, **kwargs)
+    if title is not None: ax.set_title(title)
+    ax.axis('off')
+    return ax
+
+def show_titled_image(o, **kwargs):
+    "Call `show_image` destructuring `o` to `(img,title)`"
+    show_image(o[0], title=str(o[1]), **kwargs)
+
+def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs):
+    "Display batch `b` in a grid of size `items` with `cols` width"
+    rows = (items+cols-1) // cols
+    if figsize is None: figsize = (cols*3, rows*3)
+    fig,axs = plt.subplots(rows, cols, figsize=figsize)
+    for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
 #Comes from 04_data_core.ipynb.
 def one_hot(x, c):

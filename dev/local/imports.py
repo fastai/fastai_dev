@@ -11,6 +11,7 @@ from warnings import warn
 from functools import partial,reduce
 from textwrap import TextWrapper
 from operator import itemgetter,attrgetter
+from PIL.ImageFile import ImageFile
 
 # External modules
 import torch,matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy
@@ -18,7 +19,7 @@ import PIL,requests,yaml
 from typeguard import typechecked
 from fastprogress import progress_bar,master_bar
 
-from torch import as_tensor,Tensor
+from torch import as_tensor,Tensor,ByteTensor,LongTensor,FloatTensor,HalfTensor,DoubleTensor
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader,SequentialSampler,RandomSampler
