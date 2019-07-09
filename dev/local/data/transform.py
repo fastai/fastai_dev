@@ -81,12 +81,12 @@ class Transform(metaclass=TfmMeta):
         self.init_enc = enc or dec
         if not self.init_enc: return
         self.fs = (TypeDispatch(),TypeDispatch())
-        if enc: self.fs[True].add(enc)
+        if enc: self.fs[True] .add(enc)
         if dec: self.fs[False].add(dec)
 
     @property
     def use_as_item(self): return ifnone(self.as_item_force, self.as_item)
-    def __call__(self, x, **kwargs): return self.call(True, x, **kwargs)
+    def __call__(self, x, **kwargs): return self.call(True,  x, **kwargs)
     def decode  (self, x, **kwargs): return self.call(False, x, **kwargs)
     def __repr__(self): return f'{self.use_as_item} {self.fs}'
 
