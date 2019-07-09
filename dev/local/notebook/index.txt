@@ -110,6 +110,7 @@
   "OneHotEncode": "04_data_core.ipynb",
   "TfmdDL": "04_data_core.ipynb",
   "Cuda": "04_data_core.ipynb",
+  "TensorImage": "04_data_core.ipynb",
   "TensorMask": "04_data_core.ipynb",
   "ByteToFloatTensor": "04_data_core.ipynb",
   "Normalize": "04_data_core.ipynb",

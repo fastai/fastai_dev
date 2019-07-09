@@ -3,7 +3,8 @@
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_titled_image',
            'show_image_batch', 'Categorize', 'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'get_samples',
-           'TfmdDL', 'Cuda', 'TensorMask', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
+           'TfmdDL', 'Cuda', 'TensorImage', 'TensorMask', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec',
+           'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -206,6 +207,7 @@ class Cuda(Transform):
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
+class TensorImage(): pass
 class TensorMask(TensorImage): pass
 
 @docs
