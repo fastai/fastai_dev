@@ -40,6 +40,7 @@ def load_image(fn, *args, **kwargs):
     return im._new(im.im)
 
 class PILBase(PIL.Image.Image):
+    _show_args = {'cmap':'viridis'}
     def __new__(cls, x, *args, **kwargs):
         if not isinstance(x,PIL.Image.Image): return super().__new__(cls)
         x.__class__ = cls
@@ -51,11 +52,16 @@ class PILBase(PIL.Image.Image):
     @classmethod
     def open(cls, fn, *args, **kwargs): return cls(load_image(fn, *args, **kwargs))
 
+    def show(self, ctx=None, **kwargs): return show_image(self, ctx=ctx, **{**self._show_args, **kwargs})
+
 class PILImage(PILBase): pass
 
-class PILMask(PILBase): pass
+class PILMask(PILBase):
+    _show_args = {'alpha':0.5, 'cmap':'tab20'}
 
 class TensorBase(Tensor):
+    _show_args = {'cmap':'viridis'}
+
     def __new__(cls, x, *args, **kwargs):
         if not isinstance(x,Tensor): return super().__new__(cls)
         x.__class__ = cls
@@ -64,9 +70,12 @@ class TensorBase(Tensor):
     def __init__(self, *args, **kwargs):
         if not (args and isinstance(args[0],Tensor)): return super().__init__(*args, **kwargs)
 
+    def show(self, ctx=None, **kwargs): return show_image(self, ctx=ctx, **{**self._show_args, **kwargs})
+
 class TensorImage(TensorBase): pass
 
-class TensorMask(TensorBase): pass
+class TensorMask(TensorBase):
+    _show_args = {'alpha':0.5, 'cmap':'tab20'}
 
 class TypeDispatch:
     "Dictionary-like object; `__getitem__` matches keys of types using `issubclass`"

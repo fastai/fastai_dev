@@ -161,9 +161,8 @@ class TfmdDL(GetAttr):
             self.dataset.show(self._pass_cls(o), ctx=ctx)
 
     def _pass_cls(self, b):
-        for (b_,s) in zip(L(b), L(self.dataset[0])):
-            if hasattr(s, '_cls'): b_._cls = s._cls
-        return bo
+        return tuple(type(s)(b_) if not isinstance(b_, type(s)) and issubclass(type(s), Tensor) else b_
+                     for (b_,s) in zip(L(b), L(self.dataset[0])))
 
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
                  show_batch="Show each item of `b`",
@@ -188,21 +187,21 @@ class ByteToFloatTensor(Transform):
         self.div,self.div_mask = div,div_mask
 
 @ByteToFloatTensor
-def encode(self, o:ByteTensorImage)->FloatTensorImage: return o.float().div_(255.) if self.div else o.float()
+def encode(self, o:TensorImage): return o.float().div_(255.) if self.div else o.float()
 @ByteToFloatTensor
-def decode(self, o:FloatTensorImage): return o.clamp(0., 1.).mul_(255.) if self.div else o
+def decode(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
 @ByteToFloatTensor
-def encode(self, o:ByteTensorMask)->LongTensorMask: return o.div_(255.).long() if self.div_mask else o.long()
+def encode(self, o:TensorMask)->TensorMask: return o.div_(255.).long() if self.div_mask else o.long()
 @ByteToFloatTensor
-def decode(self, o:LongTensorMask): return o.mul_(255) if self.div else o
+def decode(self, o:TensorMask): return o
 
 @docs
 class Normalize(Transform):
     "Normalize/denorm batch of `TensorImage`"
     order=99
     def __init__(self, mean, std): self.mean,self.std = mean,std
-    def encodes(self, x:FloatTensorImage): return (x-self.mean) / self.std
-    def decodes(self, x:FloatTensorImage): return (x*self.std ) + self.mean
+    def encodes(self, x:TensorImage): return (x-self.mean) / self.std
+    def decodes(self, x:TensorImage): return (x*self.std ) + self.mean
 
     _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
 
