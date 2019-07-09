@@ -2,9 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'show_image', 'show_titled_image',
-           'show_image_batch', 'Categorize', 'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'get_samples',
-           'TfmdDL', 'Cuda', 'TensorImage', 'TensorMask', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec',
-           'DataBunch']
+           'show_image_batch', 'Categorize', 'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'TfmdDL', 'Cuda',
+           'TensorImage', 'TensorMask', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -162,10 +161,6 @@ def _DataLoader__getattr(self,k):
     except AttributeError: raise AttributeError(k) from None
 DataLoader.__getattr__ = _DataLoader__getattr
 
-def get_samples(b, max_rows):
-    if isinstance(b, Tensor): return b[:max_rows]
-    return zip(*L(get_samples(b_, max_rows) if not isinstance(b,Tensor) else b_[:max_rows] for b_ in b))
-
 @docs
 class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
@@ -174,11 +169,7 @@ class TfmdDL(GetAttr):
     def __init__(self, dataset, tfms=None, bs=16, shuffle=False,
                  sampler=None, batch_sampler=None, num_workers=1, **kwargs):
         self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers, **kwargs)
-        if hasattr(dataset, 'ds_tfms'): t = dataset.ds_tfms.final_t
-        elif hasattr(dataset, 'tfms'):  t = dataset.tfms.final_t
-        else:                           t = None
-        self.default,self.tfms = self.dl,Pipeline(tfms, t=t)
-        for k,v in kwargs.items(): setattr(self,k,v)
+        self.default,self.tfms = self.dl,Pipeline(tfms, as_item=False)
         self.tfms.setup(self)
 
     def __len__(self): return len(self.dl)
@@ -192,7 +183,7 @@ class TfmdDL(GetAttr):
         if b is None: b=self.one_batch()
         b = self.tfms.decode(b, filt=getattr(self.dataset, 'filt', None))
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
-        for o,ctx in zip(get_samples(b, max_rows),ctxs): self.dataset.show(o, ctx=ctx)
+        for o,ctx in zip(batch_to_samples(b, max_rows),ctxs): self.dataset.show(o, ctx=ctx)
 
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
                  show_batch="Show each item of `b`",
@@ -201,7 +192,9 @@ class TfmdDL(GetAttr):
 @docs
 class Cuda(Transform):
     "Move batch to `device` (defaults to `defaults.device`)"
-    def __init__(self,device=None): self.device=default_device() if device is None else device
+    def __init__(self,device=None):
+        self.device=default_device() if device is None else device
+        super().__init__(filt=None, as_item=False)
     def encodes(self, b): return to_device(b, self.device)
     def decodes(self, b): return to_cpu(b)
 

@@ -69,7 +69,7 @@
   "transform": "02_data_pipeline.ipynb",
   "compose_tfms": "02a_pipeline.ipynb",
   "Pipeline": "02a_pipeline.ipynb",
-  "get_samples": "04_data_core.ipynb",
+  "get_samples": "02_data_pipeline.ipynb",
   "TfmdList": "02a_pipeline.ipynb",
   "TfmdDS": "02a_pipeline.ipynb",
   "setattr_parent": "02_data_pipeline.ipynb",
