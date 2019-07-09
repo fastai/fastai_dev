@@ -155,7 +155,6 @@ class L(GetAttr, metaclass=NewChkMeta):
     _xtra =  [o for o in dir([]) if not o.startswith('_')]
 
     def __init__(self, items=None, *rest, use_list=False, match=None):
-#         set_trace()
         if rest: items = (items,)+rest
         if items is None: items = []
         self.items = self.default = list(items) if use_list else _listify(items)
