@@ -108,7 +108,7 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
     for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
-class Categorize(TransformBase):
+class Categorize(ItemTransform):
     "Reversible transform of category string to `vocab` id"
     order=1
     def __init__(self, vocab=None, subset_idx=None):
@@ -141,7 +141,7 @@ class MultiCategorize(Categorize):
     def encodes(self, o):                return [self.o2i  [o_] for o_ in o]
     def decodes(self, o)->MultiCategory: return [self.vocab[o_] for o_ in o]
 
-class OneHotEncode(TransformBase):
+class OneHotEncode(Transform):
     "One-hot encodes targets and optionally decodes with `vocab`"
     order=2
     def __init__(self, do_encode=True, vocab=None): self.do_encode,self.vocab = do_encode,vocab

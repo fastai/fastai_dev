@@ -90,10 +90,10 @@ class Pipeline():
     # TODO: move show_batch here of TfmDS?
     def show(self, o, ctx=None, filt=None, **kwargs):
         for f in reversed(self.fs):
-            res = self._show(o, ctx)
+            res = self._show(o, ctx, **kwargs)
             if res: return res
             o = f.decode(o, filt=filt)
-        return self._show(o, ctx)
+        return self._show(o, ctx, **kwargs)
 
     def _show(self, o, ctx, **kwargs):
         o1 = [o] if self.as_item else o
@@ -117,8 +117,10 @@ class TfmdList():
     def get(self, i, filt=None):
         "Transformed item(s) at `i`"
         its = self.items[i]
-        if is_iter(i): return L(self.tfms(it, filt=filt) for it in its)
-        return self.tfms(its, filt=filt)
+        if is_iter(i): return L(self._get(it, filt=filt) for it in its)
+        return self._get(its, filt=filt)
+
+    def _get(self, it, filt=None): return self.tfms(it, filt=filt)
 
     def subset(self, idxs): return self.__class__(self.items[idxs], self.tfms, do_setup=False)
     def decode_at(self, idx, filt=None): return self.decode(self.get(idx,filt=filt), filt=filt)
@@ -131,7 +133,7 @@ class TfmdList():
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms.fs}"
 
     # Delegating to `self.tfms`
-    def show(self, o, **kwargs): self.tfms.show(o, **kwargs)
+    def show(self, o, **kwargs): return self.tfms.show(o, **kwargs)
     def setup(self): self.tfms.setup(self)
     def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
     def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
@@ -142,8 +144,8 @@ class TfmdDS(TfmdList):
         self.tls = [TfmdList(items, t, do_setup=do_setup) for t in L(type_tfms)]
         self._mk_pipeline(ds_tfms, do_setup=do_setup, as_item=False)
 
-    def get(self, i, filt=None):
-        o = tuple(it.get(i, filt=filt) for it in self.tls)
+    def _get(self, it, filt=None):
+        o = tuple(tl._get(it, filt=filt) for tl in self.tls)
         return self.tfms(o, filt=filt)
 
     def decode(self, o, filt=None):
@@ -154,7 +156,7 @@ class TfmdDS(TfmdList):
 #         res = self.tfms.show(o, ctx=None, filt=None, **kwargs)
 #         if res: return
 #         set_trace()
-        o = super().decode(o, filt=filt, **kwargs)
+        o = super().decode(o, filt=filt)
         for o_,it in zip(o,self.tls): ctx = it.show(o_, ctx=ctx, filt=filt, **kwargs)
         return ctx
 
