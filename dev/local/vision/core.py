@@ -24,7 +24,7 @@ class PILBase(Image.Image, metaclass=BypassNewMeta):
     _show_args = {'cmap':'viridis'}
     _open_args = {}
     @classmethod
-    def open(cls, fn, **kwargs)->None:
+    def create(cls, fn, **kwargs)->None:
         "Open an `Image` from path `fn`"
         return cls(load_image(fn, **merge(cls._open_args, kwargs)))
 

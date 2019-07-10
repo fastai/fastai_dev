@@ -205,14 +205,16 @@ def ifnone(a, b):
     return b if a is None else a
 
 def get_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
-    "Dynamically create a class containing `fld_names`"
-    for f in fld_names: flds[f] = None
-    for f in L(funcs): flds[f.__name__] = f
+    "Dynamically create a class, optionally inheriting from `sup`, containing `fld_names`"
+    attrs = {}
+    for f in fld_names: attrs[f] = None
+    for f in L(funcs): attrs[f.__name__] = f
+    for k,v in flds.items(): attrs[k] = v
     sup = ifnone(sup, ())
     if not isinstance(sup, tuple): sup=(sup,)
 
     def _init(self, *args, **kwargs):
-        for i,v in enumerate(args): setattr(self, fld_names[i], v)
+        for i,v in enumerate(args): setattr(self, list(attrs.keys())[i], v)
         for k,v in kwargs.items(): setattr(self,k,v)
 
     def _repr(self):
@@ -220,8 +222,8 @@ def get_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
                          if not o.startswith('_') and not isinstance(getattr(self,o), types.MethodType))
 
     if not sup: flds['__repr__'] = _repr
-    flds['__init__'] = _init
-    res = type(nm, sup, flds)
+    attrs['__init__'] = _init
+    res = type(nm, sup, attrs)
     if doc is not None: res.__doc__ = doc
     return res
 
@@ -282,7 +284,7 @@ def merge(*ds):
 
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"
-    if is_listy(x): return [apply(func, o, *args, **kwargs) for o in x]
+    if is_listy(x): return x.__class__(apply(func, o, *args, **kwargs) for o in x)
     if isinstance(x,dict):  return {k: apply(func, v, *args, **kwargs) for k,v in x.items()}
     return func(x, *args, **kwargs)
 

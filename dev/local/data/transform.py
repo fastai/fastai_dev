@@ -127,9 +127,9 @@ class Transform(metaclass=_TfmMeta):
 
     @property
     def use_as_item(self): return ifnone(self.as_item_force, self.as_item)
-    def __call__(self, x, **kwargs): return self.call('encodes',  x, **kwargs)
+    def __call__(self, x, **kwargs): return self.call('encodes', x, **kwargs)
     def decode  (self, x, **kwargs): return self.call('decodes', x, **kwargs)
-    def __repr__(self): return f'{self.use_as_item} {self.encodes} {self.decodes}'
+    def __repr__(self): return f'{self.__class__.__name__}: {self.use_as_item} {self.encodes} {self.decodes}'
 
     def call(self, fn, x, filt=None, **kwargs):
         if filt!=self.filt and self.filt is not None: return x
@@ -140,7 +140,10 @@ class Transform(metaclass=_TfmMeta):
     def _do_call(self, f, x, **kwargs):
         if f is None: return x
         res = f(x, **kwargs)
-        typ_r = ifnone(f.returns(x), type(x))
+        typ_r = f.returns(x)
+        if not typ_r:
+            if not isinstance(x, type(res)): return res
+            typ_r = type(x)
         return typ_r(res) if typ_r!=NoneType and not isinstance(res, typ_r) else res
 
 class TupleTransform(Transform):
