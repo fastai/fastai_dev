@@ -2,11 +2,11 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'PrePostInit', 'NewChkMeta', 'patch_to', 'patch', 'chk', 'tensor', 'add_docs',
            'docs', 'custom_dir', 'coll_repr', 'GetAttr', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'noop',
-           'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'apply',
-           'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device',
-           'find_bs', 'compose', 'mapper', 'partialler', 'sort_by_run', 'num_cpus', 'add_props', 'make_cross_image',
-           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint',
-           'camel2snake', 'trainable_params', 'PrettyString']
+           'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge',
+           'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find',
+           'find_device', 'find_bs', 'compose', 'mapper', 'partialler', 'sort_by_run', 'num_cpus', 'add_props',
+           'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot',
+           'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'PrettyString']
 
 from .test import *
 from .imports import *
@@ -275,6 +275,10 @@ def range_of(x):
 def mask2idxs(mask):
     "Convert bool mask or index list to index `L`"
     return L(_mask2idxs(mask))
+
+def merge(*ds):
+    "Merge all dictionaries in `ds`"
+    return {k:v for d in ds for k,v in d.items()}
 
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"

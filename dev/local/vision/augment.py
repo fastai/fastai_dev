@@ -8,6 +8,7 @@ __all__ = ['RandTransform', 'PILFlip', 'PILDihedral', 'clip_remove_empty', 'Crop
 from ..imports import *
 from ..test import *
 from ..core import *
+from ..data.transform import *
 from ..data.pipeline import *
 from ..data.source import *
 from ..data.core import *
@@ -43,7 +44,7 @@ def _minus_axis(x, axis):
 class PILFlip(RandTransform):
     "Randomly flip with probability `p`"
     def __init__(self, p=0.5): self.p = p
-    def encodes(self, x:PILImage):    return x.transpose(PIL.Image.FLIP_LEFT_RIGHT)
+    def encodes(self, x:PILImage):    return x.transpose(Image.FLIP_LEFT_RIGHT)
     def encodes(self, x:TensorPoint): return _minus_axis(x, 0)
     def encodes(self, x:TensorBBox):
         bb,lbl = x
@@ -76,7 +77,7 @@ def clip_remove_empty(bbox, label):
     empty = ((bbox[...,2] - bbox[...,0])*(bbox[...,3] - bbox[...,1]) < 0.)
     if isinstance(label, torch.Tensor): label[empty] = 0
     else: label = [0 if m else l for l,m in zip(label,empty)]
-    return [bbox, label]
+    return (bbox, label)
 
 from torchvision.transforms.functional import pad as tvpad
 
@@ -112,7 +113,7 @@ class CropPad(Transform):
         return x
 
     def encodes(self, x:PILImage): return self._crop_pad(x, getattr(self, 'mode', Image.BILINEAR))
-    def encodes(self, x:Mask):     return self._crop_pad(x, getattr(self, 'mode_mask', Image.NEAREST))
+    def encodes(self, x:PILMask):  return self._crop_pad(x, getattr(self, 'mode_mask', Image.NEAREST))
 
     def encodes(self, x:TensorPoint):
         old_sz,new_sz,tl = map(lambda o: tensor(o).float(), (self.orig_size,self.size,self.tl))
@@ -120,11 +121,11 @@ class CropPad(Transform):
 
     def encodes(self, x:TensorBBox):
         bbox,label = x
-        bbox = self._get_func(self.encodes, TensorPoint)(bbox.view(-1,2)).view(-1,4)
+        bbox = self.encodes(TensorPoint(bbox.view(-1,2))).view(-1,4)
         return clip_remove_empty(bbox, label)
 
 class RandomCrop(CropPad):
-    "Ramdomly crop an image to `size`"
+    "Randomly crop an image to `size`"
     def __init__(self, size): super().__init__(size)
 
     def randomize(self, b, filt):
@@ -149,14 +150,11 @@ class Resize(CropPad):
         w,h = (b[0] if isinstance(b, tuple) else b).size
         self.orig_size = (w,h)
         if self.method==resize_method.squish: self.tl,self.size = (0,0),(w,h)
-        elif self.method==resize_method.pad:
-            m = w/self.final_sz[0] if w/self.final_sz[0] > h/self.final_sz[1] else h/self.final_sz[1]
-            self.size = (m*self.final_sz[0],m*self.final_sz[1])
-            self.tl = ((w-self.size[0])//2, (h-self.size[1])//2)
         else:
-            m = w/self.final_sz[0] if w/self.final_sz[0] < h/self.final_sz[1] else h/self.final_sz[1]
+            op = (operator.lt,operator.gt)[self.method==resize_method.pad]
+            m = w/self.final_sz[0] if op(w/self.final_sz[0],h/self.final_sz[1]) else h/self.final_sz[1]
             self.size = (m*self.final_sz[0],m*self.final_sz[1])
-            if filt: self.tl = ((w-self.size[0])//2, (h-self.size[1])//2)
+            if self.method==resize_method.pad or filt: self.tl = ((w-self.size[0])//2, (h-self.size[1])//2)
             else: self.tl = (random.randint(0,w-self.size[0]), random.randint(0,h-self.size[1]))
 
 class RandomResizedCrop(CropPad):
@@ -220,7 +218,7 @@ class AffineCoordTfm(RandTransform):
 
     def encodes(self, x:TensorMask):
         old_mode = self.mode
-        res = self._get_func(self.encodes, TensorImage)(x.float()[:,None]).long()[:,0]
+        res = self.encodes(TensorImage(x.float()[:,None])).long()[:,0]
         self.mode = old_mode
         return res
 
@@ -233,7 +231,7 @@ class AffineCoordTfm(RandTransform):
         bs,n = bbox.shape[:2]
         pnts = stack([bbox[...,:2], stack([bbox[...,0],bbox[...,3]],dim=2),
                       stack([bbox[...,2],bbox[...,1]],dim=2), bbox[...,2:]], dim=2)
-        pnts = self._get_func(self.encodes, TensorPoint)(pnts.view(bs, 4*n, 2))
+        pnts = self.encodes(TensorPoint(pnts.view(bs, 4*n, 2)))
         pnts = pnts.view(bs, n, 4, 2)
         tl,dr = pnts.min(dim=2)[0],pnts.max(dim=2)[0]
         return clip_remove_empty(torch.cat([tl, dr], dim=2), label)
@@ -382,7 +380,6 @@ class LightingTfm(RandTransform):
         self.fs += tfm.fs
 
     def encodes(self,x:TensorImage): return torch.sigmoid(compose_tfms(logit(x), self.fs))
-    def encodes(self,x:TensorMask):  return x
 
 class _BrightnessLogit():
     def __init__(self, max_lighting=0.2, p=0.75, draw=None):

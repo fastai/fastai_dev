@@ -11,6 +11,7 @@ from ..notebook.showdoc import show_doc
 
 def anno_ret(func):
     "Get the return annotation of `func`"
+    if not func: return None
     ann = typing.get_type_hints(func)
     if not ann: return None
     typ = ann.get('return')
@@ -35,7 +36,7 @@ add_docs(Int, "An `int` with `show`"); add_docs(Str, "An `str` with `show`"); ad
 class BypassNewMeta(type):
     def __call__(cls, x, *args, **kwargs):
         if hasattr(cls, '_new_meta'): x = cls._new_meta(x, *args, **kwargs)
-        x.__class__ = cls
+        if cls!=x.__class__: x.__class__ = cls
         return x
 
 class TensorBase(Tensor, metaclass=BypassNewMeta):
@@ -55,6 +56,7 @@ class TypeDispatch:
     def __init__(self, *funcs):
         self.funcs,self.cache = {},{}
         for f in funcs: self.add(f)
+        self.inst = None
 
     def _reset(self):
         self.funcs = {k:self.funcs[k] for k in sorted(self.funcs, key=cmp_instance, reverse=True)}
@@ -65,7 +67,20 @@ class TypeDispatch:
         self.funcs[_p1_anno(f) or object] = f
         self._reset()
 
+    def returns(self, x): return anno_ret(self[type(x)])
+
     def __repr__(self): return str({getattr(k,'__name__',str(k)):v.__name__ for k,v in self.funcs.items()})
+
+    def __call__(self, x, *args, **kwargs):
+        f = self[type(x)]
+        if not f: return x
+        if self.inst: f = types.MethodType(f, self.inst)
+        return f(x, *args, **kwargs)
+
+    def __get__(self, inst, owner):
+        self.inst = inst
+        return self
+
     def __getitem__(self, k):
         "Find first matching type that is a super-class of `k`"
         if k in self.cache: return self.cache[k]
@@ -75,21 +90,19 @@ class TypeDispatch:
         return res
 
 class _TfmDict(dict):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        super().__setitem__('encodes', TypeDispatch())
-        super().__setitem__('decodes', TypeDispatch())
-
     def __setitem__(self,k,v):
         if k=='_': k='encodes'
-        if k not in ('encodes','decodes'): return super().__setitem__(k,v)
-        res = super().__getitem__(k)
+        if k not in ('encodes','decodes') or not isinstance(v,Callable): return super().__setitem__(k,v)
+        if k not in self: super().__setitem__(k,TypeDispatch())
+        res = self[k]
         res.add(v)
 
 class _TfmMeta(type):
     def __call__(cls, *args, **kwargs):
         f = args[0] if args else None
         n = getattr(f,'__name__',None)
+        if not hasattr(cls,'encodes'): cls.encodes=TypeDispatch()
+        if not hasattr(cls,'decodes'): cls.decodes=TypeDispatch()
         if isinstance(f,Callable) and n in ('decodes','encodes','_'):
             getattr(cls,'encodes' if n=='_' else n).add(f)
             return f
@@ -105,6 +118,9 @@ class Transform(metaclass=_TfmMeta):
         self.filt,self.as_item = ifnone(filt, self.filt),as_item
         self.init_enc = enc or dec
         if not self.init_enc: return
+
+        # Passing enc/dec, so need to remove (base) class level enc/dec
+        del(self.__class__.encodes,self.__class__.decodes)
         self.encodes,self.decodes = (TypeDispatch(),TypeDispatch())
         if enc: self.encodes.add(enc)
         if dec: self.decodes.add(dec)
@@ -117,22 +133,14 @@ class Transform(metaclass=_TfmMeta):
 
     def call(self, fn, x, filt=None, **kwargs):
         if filt!=self.filt and self.filt is not None: return x
-        f = self.func(fn, x)
+        f = getattr(self, fn)
         if self.use_as_item: return self._do_call(f, x, **kwargs)
-        return tuple(self._do_call(f_, x_, **kwargs) for f_,x_ in zip(f,x))
-
-    def lookup(self, fn, x):
-        f = getattr(self, fn)[type(x)]
-        return (f or noop) if self.init_enc else types.MethodType(f or noops, self)
-
-    def func(self, fn, x, filt=None):
-        if self.use_as_item: return self.lookup(fn,x)
-        return [self.lookup(fn,x_) for x_ in x]
+        return tuple(self._do_call(f, x_, **kwargs) for x_ in x)
 
     def _do_call(self, f, x, **kwargs):
         if f is None: return x
         res = f(x, **kwargs)
-        typ_r = ifnone(anno_ret(f), type(x))
+        typ_r = ifnone(f.returns(x), type(x))
         return typ_r(res) if typ_r!=NoneType and not isinstance(res, typ_r) else res
 
 class TupleTransform(Transform):

@@ -136,7 +136,12 @@ def _DataLoader__getattr(self,k):
 DataLoader.__getattr__ = _DataLoader__getattr
 
 # If `x` isn't of type `t`, then cast it
-def _cast_tensor(x, t): return t(x) if not isinstance(x, t) and issubclass(t, Tensor) else x
+def _cast_tensor(x, t):
+    if isinstance(x, Tensor) and issubclass(t, Tensor):
+        return t(x) if not isinstance(x, t) else x
+    elif isinstance(x, (tuple,list)) and issubclass(t, tuple):
+        return t(tuple(x)) if not isinstance(x, t) else x
+    else: return x
 
 @docs
 class TfmdDL(GetAttr):
@@ -153,17 +158,19 @@ class TfmdDL(GetAttr):
     def __iter__(self):
         return (self._save_cls(self.tfms(self._retain_cls(b), filt=self.filt)) for b in self.dl)
 
-    def decode(self, b):
-        f = getattr(self.dataset,'decode_batch',noop)
-        return f(self.tfms.decode(self._retain_cls(b, ds=False), filt=self.filt))
+    def decode(self, b): return self.tfms.decode(self._retain_cls(b, ds=False), filt=self.filt)
+    def decode_batch(self, b, max_rows=10):
+        b = batch_to_samples(self.decode(b), max_rows=max_rows)
+        f = getattr(self.dataset,'decode',noop)
+        return L(f(self._retain_cls(s)) for s in b)
 
-    def show_batch(self, b=None, max_rows=1000, ctxs=None, **kwargs):
+    def show_batch(self, b=None, max_rows=10, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
-        b = self.one_batch() if b is None else self._retain_cls(b, ds=False)
-        b = self.tfms.decode(b, filt=self.filt)
+        if b is None: b = self.one_batch()
+        b = self.decode(b)
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
         for o,ctx in zip(batch_to_samples(b, max_rows),ctxs):
-            self.dataset.show(self._retain_cls(o), ctx=ctx)
+            self.dataset.show(self._retain_cls(o), ctx=ctx, **kwargs)
 
     @property
     def filt(self): return getattr(self.dataset, 'filt', None)
@@ -176,7 +183,8 @@ class TfmdDL(GetAttr):
         if not getattr(self, '_dl_types', False): self._dl_types = L(b).mapped(type)
         return b
 
-    _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
+    _docs = dict(decode="Decode `b` using `tfms`",
+                 decode_batch="Decode `b` entirely",
                  show_batch="Show each item of `b`",
                  one_batch="Grab first batch of `dl`")
 
