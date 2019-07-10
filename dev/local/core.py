@@ -437,36 +437,36 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
     for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
-#Comes from 04_data_core.ipynb.
+#Comes from 05_data_core.ipynb.
 def one_hot(x, c):
     "One-hot encode `x` with `c` classes."
     res = torch.zeros(c, dtype=torch.uint8)
     res[L(x)] = 1.
     return res
 
-#Comes from 05_data_source.ipynb.
+#Comes from 06_data_source.ipynb.
 def all_union(sets):
     "Set of union of all `sets` (each `setified` if needed)"
     return set().union(*(map(setify,sets)))
 
-#Comes from 05_data_source.ipynb.
+#Comes from 06_data_source.ipynb.
 def all_disjoint(sets):
     "`True` iif no element appears in more than one item of `sets`"
     return sum(map(len,sets))==len(all_union(sets))
 
-#Comes from 12_learner.ipynb.
+#Comes from 13_learner.ipynb.
 _camel_re1 = re.compile('(.)([A-Z][a-z]+)')
 _camel_re2 = re.compile('([a-z0-9])([A-Z])')
 def camel2snake(name):
     s1 = re.sub(_camel_re1, r'\1_\2', name)
     return re.sub(_camel_re2, r'\1_\2', s1).lower()
 
-#Comes from 12_learner.ipynb.
+#Comes from 13_learner.ipynb.
 def trainable_params(m):
     "Return all trainable parameters of `m`"
     return [p for p in m.parameters() if p.requires_grad]
 
-#Comes from 14_callback_hook.ipynb.
+#Comes from 15_callback_hook.ipynb.
 class PrettyString(str):
     "Little hack to get strings to show properly in Jupyter."
     def __repr__(self): return self
