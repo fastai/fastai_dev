@@ -138,7 +138,9 @@ class TfmdList():
     def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
     def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
 
+@docs
 class TfmdDS(TfmdList):
+    "A dataset that creates a tuple from each `type_tfms`, passed thru `ds_tfms`"
     def __init__(self, items, type_tfms=None, ds_tfms=None, do_setup=True):
         self.items = L(items)
         self.tls = [TfmdList(items, t, do_setup=do_setup) for t in L(type_tfms)]
@@ -153,9 +155,7 @@ class TfmdDS(TfmdList):
         return tuple(it.decode(o_, filt=filt) for o_,it in zip(o,self.tls))
 
     def show(self, o, ctx=None, filt=None, **kwargs):
-#         res = self.tfms.show(o, ctx=None, filt=None, **kwargs)
-#         if res: return
-#         set_trace()
+        # Currently we don't support showing at tuple level, so we just decode all tfms at once
         o = super().decode(o, filt=filt)
         for o_,it in zip(o,self.tls): ctx = it.show(o_, ctx=ctx, filt=filt, **kwargs)
         return ctx
@@ -164,10 +164,9 @@ class TfmdDS(TfmdList):
     def subset(self, idxs): return self.__class__(self.items[idxs], self.tls, self.tfms, do_setup=False)
     def __repr__(self): return f"{self.__class__.__name__}: tls - {self.tls}\nds tfms - {self.tfms}"
 
-add_docs(TfmdDS,
-         "A `Dataset` created from raw `items` by calling each element of `tfms` on them",
-         get="Call all `tfms` on `items[i]` then all `tuple_tfms` on the result",
-         decode="Compose `decode` of all `tuple_tfms` then all `tfms` on `i`",
-         show="Show item `o` in `ctx`",
-         subset="New `TfmdDS` that only includes items at `idxs`",
-         setup="Go through the transforms in order and call their potential setup on `items`")
+    _docs=dict(
+        get="Call all `tfms` on `items[i]` then all `tuple_tfms` on the result",
+        decode="Compose `decode` of all `tuple_tfms` then all `tfms` on `i`",
+        show="Show item `o` in `ctx`",
+        subset="New `TfmdDS` that only includes items at `idxs`",
+        setup="Go through the transforms in order and call their potential setup on `items`")

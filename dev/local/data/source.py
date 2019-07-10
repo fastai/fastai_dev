@@ -36,8 +36,10 @@ class DataSource(TfmdDS):
         assert all_disjoint(self.filts)
         self.filt_idx = L([None]*len(items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
+
         self.items = L(items)
-        self.tls = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup) for t in L(type_tfms)]
+        self.tls = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup)
+                    for t in L(type_tfms)]
         self._mk_pipeline(ds_tfms, do_setup=do_setup, as_item=False)
 
     @property
@@ -45,19 +47,17 @@ class DataSource(TfmdDS):
     def len(self,filt): return len(self.filts[filt])
     def subset(self, i): return DsrcSubset(self, i)
     def subsets(self): return map(self.subset, range(self.n_subsets))
+    def __getitem__(self, i): return self.get(i,self.filt_idx[i])
     def __repr__(self):
         return '\n'.join(map(str,self.subsets())) + f'\ntls - {self.tls}\nds tfms - {self.tfms}'
-    def __getitem__(self, i): return self.get(i,self.filt_idx[i])
 
-    def databunch(self, tfms=None, bs=16, val_bs=None, shuffle_train=True, sampler=None, batch_sampler=None,
-                  **kwargs):
+    def databunch(self, tfms=None, bs=16, val_bs=None, shuffle_train=True,
+                  sampler=None, batch_sampler=None,  **kwargs):
         n = self.n_subsets-1
         bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
         shuffles = [shuffle_train] + [False]*n
-        samplers = sampler if is_listy(sampler) else [sampler]*n
-        bsamplers = batch_sampler if is_listy(batch_sampler) else [batch_sampler]*n
         dls = [TfmdDL(self.subset(i), tfms, b, shuffle=s, sampler=sa, batch_sampler=bsa, **kwargs)
-               for i,(b,s,sa,bsa) in enumerate(zip(bss, shuffles, samplers, bsamplers))]
+               for i,(b,s,sa,bsa) in enumerate(zip(bss, shuffles, L(sampler).cycle(), L(batch_sampler).cycle()))]
         return DataBunch(*dls)
 
     _docs = dict(len="`len` of subset `filt`",

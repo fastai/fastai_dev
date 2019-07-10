@@ -11,11 +11,10 @@ from warnings import warn
 from functools import partial,reduce
 from textwrap import TextWrapper
 from operator import itemgetter,attrgetter
-from PIL.ImageFile import ImageFile
 
 # External modules
 import torch,matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy
-import PIL,requests,yaml
+import requests,yaml
 from typeguard import typechecked
 from fastprogress import progress_bar,master_bar
 

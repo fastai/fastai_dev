@@ -12,6 +12,8 @@ from .test import *
 from .imports import *
 from .notebook.showdoc import show_doc
 
+torch.cuda.set_device(int(os.environ.get('DEFAULT_GPU') or 0))
+
 defaults = SimpleNamespace()
 
 class PrePostInitMeta(type):
@@ -188,12 +190,13 @@ class L(GetAttr, metaclass=NewChkMeta):
         return L(sorted(self.items, key=k, reverse=reverse))
 
     def mapped(self, f, *args, **kwargs): return L(map(partial(f,*args,**kwargs), self))
-    def zipped(self):       return L(zip(*self))
+    def zipped(self, *rest):       return L(zip(*self, *rest))
     def itemgot(self, idx): return self.mapped(itemgetter(idx))
     def attrgot(self, k):   return self.mapped(lambda o:getattr(o,k,0))
     def tensored(self):     return self.mapped(tensor)
     def stack(self, dim=0): return torch.stack(list(self.tensored()), dim=dim)
     def cat  (self, dim=0): return torch.cat  (list(self.tensored()), dim=dim)
+    def cycle(self):        return itertools.cycle(self)
 
 def ifnone(a, b):
     "`b` if `a` is None else `a`"

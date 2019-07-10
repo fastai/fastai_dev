@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Categorize', 'MultiCategory', 'MultiCategorize',
-           'OneHotEncode', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'encode', 'decode', 'encode', 'decode', 'Normalize',
-           'broadcast_vec', 'DataBunch']
+           'one_hot_decode', 'OneHotEncode', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'encode', 'decode', 'encode',
+           'decode', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -114,6 +114,9 @@ class MultiCategorize(Categorize):
     def encodes(self, o):                return [self.o2i  [o_] for o_ in o]
     def decodes(self, o)->MultiCategory: return [self.vocab[o_] for o_ in o]
 
+def one_hot_decode(x, vocab=None):
+    return L(vocab[i] if vocab else i for i,x_ in enumerate(x) if x_==1)
+
 class OneHotEncode(Transform):
     "One-hot encodes targets and optionally decodes with `vocab`"
     order=2
@@ -124,10 +127,8 @@ class OneHotEncode(Transform):
         else: self.c = len(L(getattr(dsrc, 'vocab', None)))
         if not self.c: warn("Couldn't infer the number of classes, please pass a `vocab` at init")
 
-    def encodes(self, o)->Tensor: return one_hot(o, self.c) if self.do_encode else torch.ByteTensor(o)
-
-    def decodes(self, o)->L:
-        return L(self.vocab[i] if self.vocab else i for i,o_ in enumerate(o) if o_==1)
+    def encodes(self, o)->Tensor: return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
+    def decodes(self, o)->L: return one_hot_decode(o, self.vocab)
 
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
@@ -139,18 +140,19 @@ class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, sampler=None, batch_sampler=None,
-                 num_workers=1, **kwargs):
-        self.dl = DataLoader(dataset, bs, shuffle, sampler, batch_sampler, num_workers=num_workers, **kwargs)
+    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1, **kwargs):
+        self.dl = DataLoader(dataset, bs, shuffle, num_workers=num_workers, **kwargs)
         self.default,self.tfms = self.dl,Pipeline(tfms, as_item=False)
         self.tfms.setup(self)
 
     def __len__(self): return len(self.dl)
-    def __iter__(self):
-        return (self.tfms(self._pass_cls(b), filt=getattr(self.dataset, 'filt', None)) for b in self.dl)
     def one_batch(self): return next(iter(self))
+    def __iter__(self):
+        return (self.tfms(self._retain_cls(b), filt=getattr(self.dataset, 'filt', None)) for b in self.dl)
+
     def decode(self, b):
-        return getattr(self.dataset,'decode_batch',noop)(self.tfms.decode(b, filt=getattr(self.dataset, 'filt', None)))
+        f = getattr(self.dataset,'decode_batch',noop)
+        return f(self.tfms.decode(b, filt=getattr(self.dataset, 'filt', None)))
 
     def show_batch(self, b=None, max_rows=1000, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
@@ -158,11 +160,11 @@ class TfmdDL(GetAttr):
         b = self.tfms.decode(b, filt=getattr(self.dataset, 'filt', None))
         if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
         for o,ctx in zip(batch_to_samples(b, max_rows),ctxs):
-            self.dataset.show(self._pass_cls(o), ctx=ctx)
+            self.dataset.show(self._retain_cls(o), ctx=ctx)
 
-    def _pass_cls(self, b):
-        return tuple(type(s)(b_) if not isinstance(b_, type(s)) and issubclass(type(s), Tensor) else b_
-                     for (b_,s) in zip(L(b), L(self.dataset[0])))
+    @functools.lru_cache()
+    def _ds_types(self): return L(self.dataset[0]).mapped(type)
+    def _retain_cls(self, b): return tuple(_cast_tensor(*o) for o in L(b,self._ds_types()).zipped())
 
     _docs = dict(decode="Decode `b` using `ds_tfm` and `tfm`",
                  show_batch="Show each item of `b`",
