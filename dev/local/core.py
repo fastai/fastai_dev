@@ -90,7 +90,9 @@ def tensor(x, *rest, **kwargs):
     if len(rest): x = (x,)+rest
     # Pytorch bug in dataloader using num_workers>0
     if isinstance(x, (tuple,list)) and len(x)==0: return tensor(0)
-    res = torch.tensor(x, **kwargs) if isinstance(x, (tuple,list)) else as_tensor(x, **kwargs)
+    res = (torch.tensor(x, **kwargs) if isinstance(x, (tuple,list))
+           else as_tensor(x, **kwargs) if hasattr(x, '__array__')
+           else as_tensor(array(x), **kwargs))
     if res.dtype is torch.int32:
         warn('Tensor is int32: upgrading to int64; for better performance use int64 input')
         return res.long()

@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Categorize', 'MultiCategory', 'MultiCategorize',
-           'one_hot_decode', 'OneHotEncode', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'encode', 'decode', 'encode',
-           'decode', 'Normalize', 'broadcast_vec', 'DataBunch']
+           'one_hot_decode', 'OneHotEncode', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec',
+           'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -188,14 +188,10 @@ class ByteToFloatTensor(Transform):
         super().__init__(filt=filt,as_item=as_item)
         self.div,self.div_mask = div,div_mask
 
-@ByteToFloatTensor
-def encode(self, o:TensorImage): return o.float().div_(255.) if self.div else o.float()
-@ByteToFloatTensor
-def decode(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
-@ByteToFloatTensor
-def encode(self, o:TensorMask)->TensorMask: return o.div_(255.).long() if self.div_mask else o.long()
-@ByteToFloatTensor
-def decode(self, o:TensorMask): return o
+    def encodes(self, o:TensorImage): return o.float().div_(255.) if self.div else o.float()
+    def decodes(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
+    def encodes(self, o:TensorMask)->TensorMask: return o.div_(255.).long() if self.div_mask else o.long()
+    def decodes(self, o:TensorMask): return o
 
 @docs
 class Normalize(Transform):
