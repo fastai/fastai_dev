@@ -126,6 +126,9 @@ class TfmdList():
     def decode_at(self, idx, filt=None): return self.decode(self.get(idx,filt=filt), filt=filt)
     def show_at(self, idx, filt=None, **kwargs): return self.show(self.get(idx,filt=filt), filt=filt, **kwargs)
 
+    def decode_batch(self, b, filt=None, max_rows=10):
+        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_rows=max_rows)]
+
     # Standard dunder magics
     def __eq__(self, b): return all_equal(self, b)
     def __len__(self): return len(self.items)
@@ -137,6 +140,7 @@ class TfmdList():
     def setup(self): self.tfms.setup(self)
     def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
     def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
+
 
 @docs
 class TfmdDS(TfmdList):

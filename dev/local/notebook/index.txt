@@ -131,6 +131,7 @@
   "PILImage": "06_vision_core.ipynb",
   "PILMask": "06_vision_core.ipynb",
   "TensorPoint": "06_vision_core.ipynb",
+  "BBox": "06_vision_core.ipynb",
   "TensorBBox": "06_vision_core.ipynb",
   "get_annotations": "06_vision_core.ipynb",
   "ImageConverter": "06_vision_core.ipynb",
