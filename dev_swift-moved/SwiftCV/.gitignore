@@ -1,6 +1,0 @@
-.DS_Store
-/.build
-/Packages
-/*.xcodeproj
-.idea
-.ipynb_checkpoints

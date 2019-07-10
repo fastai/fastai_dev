@@ -1,7 +1,0 @@
-module opencv4 [system] {
-//    header "shim.h"
-    link "opencv_core"
-    link "opencv_imgcodecs"
-    link "opencv_imgproc"
-    export *
-}

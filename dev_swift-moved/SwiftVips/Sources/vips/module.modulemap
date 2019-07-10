@@ -1,6 +1,0 @@
-module vips [system] {
-    umbrella header "shim.h"
-    link "vips"
-    export *
-}
-
