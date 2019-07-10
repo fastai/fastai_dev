@@ -198,7 +198,7 @@ class L(GetAttr, metaclass=NewChkMeta):
     def tensored(self):     return self.mapped(tensor)
     def stack(self, dim=0): return torch.stack(list(self.tensored()), dim=dim)
     def cat  (self, dim=0): return torch.cat  (list(self.tensored()), dim=dim)
-    def cycle(self):        return itertools.cycle(self)
+    def cycle(self):        return itertools.cycle(self) if len(self) > 0 else itertools.cycle([None])
 
 def ifnone(a, b):
     "`b` if `a` is None else `a`"

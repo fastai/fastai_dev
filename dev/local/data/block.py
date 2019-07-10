@@ -21,7 +21,7 @@ class DataBlock():
         splits = self.splitter(items)
         if type_tfms is None: type_tfms = [L() for t in self.types]
         type_tfms = L(mix_tfms(getattr(t, 'default_type_tfms', L()), tfm) for (t,tfm) in zip(self.types, type_tfms))
-        type_tfms = type_tfms[0] + L(self.labeller + tfm for tfm in type_tfms[1:])
+        type_tfms = type_tfms[0] + L(self.labeller + L(tfm) for tfm in type_tfms[1:])
         ds_tfms = L(mix_tfms(*[getattr(t, 'default_ds_tfms', L()) for t in self.types], ds_tfms))
         return DataSource(items, type_tfms=type_tfms, ds_tfms=ds_tfms, filts=splits)
 
