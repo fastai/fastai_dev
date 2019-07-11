@@ -2,6 +2,16 @@
 
 __all__ = ['DataBlock']
 
+from ..imports import *
+from ..test import *
+from ..core import *
+from .transform import *
+from .pipeline import *
+from .source import *
+from .core import *
+from .external import *
+from ..notebook.showdoc import show_doc
+
 @docs
 class DataBlock():
     "Generic container to quickly build `DataSource` and `DataBunch`"

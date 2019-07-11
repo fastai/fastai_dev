@@ -84,6 +84,8 @@ class BBox(tuple):
         for b,l in zip(self.bbox, self.lbl):
             if l != '#bg': _draw_rect(ctx, b, hw=False, text=l)
         return ctx
+    @classmethod
+    def create(cls, x): return cls(x)
 
     bbox,lbl = add_props(lambda i,self: self[i])
 

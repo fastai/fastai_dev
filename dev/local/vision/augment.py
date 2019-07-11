@@ -217,7 +217,7 @@ class AffineCoordTfm(RandTransform):
         return F.grid_sample(x, coords, mode=self.mode, padding_mode=self.pad_mode)
 
     def encodes(self, x:TensorMask):
-        old_mode = self.mode
+        self.mode,old_mode = 'nearest',self.mode
         res = self.encodes(TensorImage(x.float()[:,None])).long()[:,0]
         self.mode = old_mode
         return res
