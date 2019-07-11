@@ -16,11 +16,12 @@ from ..notebook.showdoc import show_doc
 class DataBlock():
     "Generic container to quickly build `DataSource` and `DataBunch`"
     default_dl_tfms = Cuda
-    def __init__(self, types=None, get_items=None, splitter=None, labeller=None):
-        if types is not None:     self.types = types
+    def __init__(self, ts=None, get_items=None, splitter=None, labeller=None):
+        if ts is not None:     self.types = ts
         if get_items is not None: self.get_items = get_items
         if splitter is not None:  self.splitter = splitter
-        if labeller is not None:  self.labeller = labeller
+        if labeller is not None:
+            self.labeller = labeller if isinstance(labeller, Callable) else [types.MethodType(l, self) for l in labeller]
 
     def get_items(self, source): pass
     def splitter(self, items): pass
@@ -32,12 +33,14 @@ class DataBlock():
 
     # TODO: method to replace defaults
     def datasource(self, source, type_tfms=None, ds_tfms=None):
+        self.source = source
         items = self.get_items(source)
         splits = self.splitter(items)
         if type_tfms is None: type_tfms = [L() for t in self.types]
         type_tfms = L(merge_tfms(self._def_tfm(t), tfm) for (t,tfm) in zip(self.types, type_tfms))
-        type_tfms = type_tfms[0] + L(self.labeller + L(tfm) for tfm in type_tfms[1:])
-        ds_tfms = L(merge_tfms(*[getattr(t, 'default_ds_tfms', L()) for t in self.types], ds_tfms))
+        labellers = [None,self.labeller] if isinstance(self.labeller, Callable) else self.labeller
+        type_tfms = L(L(l) + L(tfm) for l,tfm in zip(labellers, type_tfms))
+        ds_tfms = L(merge_tfms(*[getattr(t, 'default_ds_tfms', L()) for t in self+L(self.types)], ds_tfms))
         return DataSource(items, type_tfms=type_tfms, ds_tfms=ds_tfms, filts=splits)
 
     def databunch(self, source, type_tfms=None, ds_tfms=None, dl_tfms=None, bs=16, **kwargs):
