@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Category', 'Categorize', 'MultiCategory',
-           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize',
-           'broadcast_vec', 'DataBunch']
+           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'ToTensor', 'retain_types', 'DefaultCollate', 'TfmdDL',
+           'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -136,6 +136,28 @@ class OneHotEncode(Transform):
     def encodes(self, o)->Tensor: return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
     def decodes(self, o)->L: return one_hot_decode(o, self.vocab)
 
+from torch.utils.data.dataloader import default_collate
+
+class ToTensor(Transform):
+    "Convert item to appropriate tensor class"
+    order = 15
+
+def retain_types(new, old):
+    "Cast each item of `new` to type of matching item in `old` if it's a superclass"
+    res = []
+    for n,o in zip(new,old):
+        if isinstance(n, list): n = tuple(n)
+        if not isinstance(o, type(n)): res.append(n)
+        else: res.append(type(o)(n) if not isinstance(n, type(o)) else n)
+    return tuple(res)
+
+class DefaultCollate():
+    def __init__(self, tfms=None): self.tfms = ToTensor(as_item=False) if tfms is None else Pipeline(tfms, as_item=False)
+    def __call__(self, samples):
+        x = tuple(self.tfms(o) for o in samples)
+        res = default_collate(x)
+        return retain_types(res, x[0])
+
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
     except AttributeError: raise AttributeError(k) from None
@@ -149,14 +171,14 @@ def _cast_tensor(x, t):
         return t(tuple(x)) if not isinstance(x, t) else x
     else: return x
 
-@docs
 class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1, **kwargs):
-        self.dl = DataLoader(dataset, bs, shuffle, num_workers=num_workers, **kwargs)
-        self.default,self.tfms = self.dl,Pipeline(tfms, as_item=False)
+    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1, collate_fn=None, **kwargs):
+        if not collate_fn: collate_fn = DefaultCollate()
+        self.dl = DataLoader(dataset, bs, shuffle, num_workers=num_workers, collate_fn=collate_fn, **kwargs)
+        self.collate_fn,self.default,self.tfms = collate_fn,self.dl,Pipeline(tfms, as_item=False)
         self.tfms.setup(self)
 
     def __len__(self): return len(self.dl)
@@ -181,18 +203,13 @@ class TfmdDL(GetAttr):
     @property
     def filt(self): return getattr(self.dataset, 'filt', None)
     @functools.lru_cache()
-    def _ds_types(self): return L(self.dataset[0]).mapped(type)
+    def _ds_types(self): return L(self.collate_fn((self.dataset[0],))).mapped(type)
 
     def _retain_cls(self, b, ds=True):
         return tuple(_cast_tensor(*o) for o in L(b,self._ds_types() if ds else self._dl_types).zipped())
     def _save_cls(self, b):
         if not getattr(self, '_dl_types', False): self._dl_types = L(b).mapped(type)
         return b
-
-    _docs = dict(decode="Decode `b` using `tfms`",
-                 decode_batch="Decode `b` entirely",
-                 show_batch="Show each item of `b`",
-                 one_batch="Grab first batch of `dl`")
 
 @docs
 class Cuda(Transform):

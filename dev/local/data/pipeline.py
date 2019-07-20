@@ -86,6 +86,9 @@ class Pipeline():
     def __getitem__(self,i): return self.fs[i]
     def decode_batch(self, b, filt=None, max_rows=10):
         return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_rows=max_rows)]
+    def update_state(self, **d):
+        for f in self.fs:
+            if hasattr(f,'update_state'): f.update_state(**d)
 
     # TODO: move show_batch here of TfmDS?
     def show(self, o, ctx=None, filt=None, **kwargs):

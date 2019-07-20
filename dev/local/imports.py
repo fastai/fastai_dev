@@ -21,7 +21,7 @@ from fastprogress import progress_bar,master_bar
 from torch import as_tensor,Tensor,ByteTensor,LongTensor,FloatTensor,HalfTensor,DoubleTensor
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import DataLoader,SequentialSampler,RandomSampler
+from torch.utils.data import DataLoader,SequentialSampler,RandomSampler,Sampler,BatchSampler
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace
 
@@ -33,6 +33,11 @@ def is_iter(o):
     "Test whether `o` can be used in a `for` loop"
     #Rank 0 tensors in PyTorch are not really iterable
     return isinstance(o, (Iterable,Generator)) and getattr(o,'ndim',1)
+
+def is_coll(o):
+    "Test whether `o` is a collection (i.e. has a usable `len`)"
+    #Rank 0 tensors in PyTorch do not have working `len`
+    return hasattr(o, '__len__') and getattr(o,'ndim',1)
 
 def all_equal(a,b):
     "Compares whether `a` and `b` are the same length and have the same contents"

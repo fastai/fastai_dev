@@ -98,6 +98,7 @@ class _TfmDict(dict):
         res.add(v)
 
 class _TfmMeta(type):
+    #TODO: avoid overriding signature
     def __call__(cls, *args, **kwargs):
         f = args[0] if args else None
         n = getattr(f,'__name__',None)
@@ -127,11 +128,11 @@ class Transform(metaclass=_TfmMeta):
 
     @property
     def use_as_item(self): return ifnone(self.as_item_force, self.as_item)
-    def __call__(self, x, **kwargs): return self.call('encodes', x, **kwargs)
-    def decode  (self, x, **kwargs): return self.call('decodes', x, **kwargs)
+    def __call__(self, x, **kwargs): return self._call('encodes', x, **kwargs)
+    def decode  (self, x, **kwargs): return self._call('decodes', x, **kwargs)
     def __repr__(self): return f'{self.__class__.__name__}: {self.use_as_item} {self.encodes} {self.decodes}'
 
-    def call(self, fn, x, filt=None, **kwargs):
+    def _call(self, fn, x, filt=None, **kwargs):
         if filt!=self.filt and self.filt is not None: return x
         f = getattr(self, fn)
         if self.use_as_item: return self._do_call(f, x, **kwargs)
@@ -145,6 +146,9 @@ class Transform(metaclass=_TfmMeta):
             if not isinstance(x, type(res)): return res
             typ_r = type(x)
         return typ_r(res) if typ_r!=NoneType and not isinstance(res, typ_r) else res
+
+add_docs(Transform,
+         decode="Delegate to `decodes` to undo transform")
 
 class TupleTransform(Transform):
     "`Transform` that always treats `as_item` as `False`"
