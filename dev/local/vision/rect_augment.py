@@ -48,22 +48,18 @@ class ResizeCollate(DefaultCollate):
         self.round_mult,self.is_fixed_px,self.max_px = round_mult,is_fixed_px,max_px
         self.is_rand = rand_min_scale or rand_ratio_pct
         if self.is_rand:
-            self.rand_min_scale = ifnone(rand_min_scale, 0.25)
-            self.rand_ratio_pct = ifnone(rand_ratio_pct, 0.10)
-            self.resize = RandomResizedCrop(1, as_item=False)
+            self.inv_ratio = 1-ifnone(rand_ratio_pct, 0.10)
+            self.resize = RandomResizedCrop(1, min_scale=ifnone(rand_min_scale, 0.25), as_item=False)
         else: self.resize = Resize(1, as_item=False)
         self.sz = None if sz is None else (sz, sz) if isinstance(sz, int) else sz
 
     def __call__(self, samples):
-        if self.sz is not None: sz,ar = self.sz,self.sz[1]/self.sz[0]
-        else:
+        if self.sz is None:
             if self.is_fixed_px: px = self.max_px
             else: px = min(self.max_px, max(L(o[0].shape[0]*o[0].shape[1] for o in samples)))
             ar = np.median(L(o[0].aspect for o in samples))
             sz = int(math.sqrt(px*ar)),int(math.sqrt(px/ar))
+        else: sz,ar = self.sz,self.sz[1]/self.sz[0]
         if self.round_mult is not None: sz = round_multiple(sz, self.round_mult, round_down=True)
-        if self.is_rand:
-            tfm = self.resize
-            tfm.rand_min_scale = self.rand_min_scale
-            tfm.ratio = ((1-self.rand_ratio_pct)*ar, (1+self.rand_ratio_pct)*ar)
+        if self.is_rand: self.resize.ratio = (ar*self.inv_ratio, ar/self.inv_ratio)
         return super().__call__(self.resize(o,size=sz) for o in samples)
