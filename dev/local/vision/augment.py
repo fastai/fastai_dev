@@ -81,14 +81,14 @@ def clip_remove_empty(bbox, label):
 
 from torchvision.transforms.functional import pad as tvpad
 
-mk_class('pad_mode', **{o:o for o in ['zeros', 'border', 'reflection']},
+mk_class('PadMode', **{o:o.lower() for o in ['Zeros', 'Border', 'Reflection']},
          doc="All possible padding mode as attributes to get tab-completion and typo-proofing")
 
 class CropPad(Transform):
     "Center crop or pad an image to `size`"
     order = 5
     _pad_modes = {'zeros': 'constant', 'border': 'edge', 'reflection': 'reflect'}
-    def __init__(self, size, pad_mode=pad_mode.zeros, **kwargs):
+    def __init__(self, size, pad_mode=PadMode.Zeros, **kwargs):
         super().__init__(**kwargs)
         if isinstance(size,int): size=(size,size)
         self.size,self.pad_mode = (size[1],size[0]),self._pad_modes[pad_mode]
@@ -136,13 +136,13 @@ class RandomCrop(CropPad):
         if filt: self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
         else: self.tl = (random.randint(0,w-self.cp_size[0]), random.randint(0,h-self.cp_size[1]))
 
-mk_class('resize_method', **{o:o for o in ['squish', 'crop', 'pad']},
+mk_class('ResizeMethod', **{o:o.lower() for o in ['Squish', 'Crop', 'Pad']},
          doc="All possible resize method as attributes to get tab-completion and typo-proofing")
 
 class Resize(CropPad):
     order=10
     "Resize image to `size` using `method`"
-    def __init__(self, size, method=resize_method.squish, pad_mode=pad_mode.reflection,
+    def __init__(self, size, method=ResizeMethod.Squish, pad_mode=PadMode.Reflection,
                  resamples=(Image.BILINEAR, Image.NEAREST), **kwargs):
         super().__init__(size, pad_mode=pad_mode, **kwargs)
         (self.mode,self.mode_mask),self.method = resamples,method
@@ -151,14 +151,14 @@ class Resize(CropPad):
         self.final_sz = self.cp_size
         w,h = (b[0] if isinstance(b, tuple) else b).size
         self.orig_size = (w,h)
-        if self.method==resize_method.squish:
+        if self.method==ResizeMethod.Squish:
             self.tl,self.cp_size = (0,0),(w,h)
             return
 
-        op = (operator.lt,operator.gt)[self.method==resize_method.pad]
+        op = (operator.lt,operator.gt)[self.method==ResizeMethod.Pad]
         m = w/self.final_sz[0] if op(w/self.final_sz[0],h/self.final_sz[1]) else h/self.final_sz[1]
         self.cp_size = (m*self.final_sz[0],m*self.final_sz[1])
-        if self.method==resize_method.pad or filt: self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
+        if self.method==ResizeMethod.Pad or filt: self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
         else: self.tl = (random.randint(0,w-self.cp_size[0]), random.randint(0,h-self.cp_size[1]))
 
 class RandomResizedCrop(CropPad):
@@ -190,7 +190,7 @@ class RandomResizedCrop(CropPad):
 class AffineCoordTfm(RandTransform):
     "Combine and apply affine and coord transforms"
     order = 30
-    def __init__(self, aff_fs=None, coord_fs=None, size=None, mode='bilinear', pad_mode='reflection'):
+    def __init__(self, aff_fs=None, coord_fs=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
         self.aff_fs,self.coord_fs,self.mode,self.pad_mode = L(aff_fs),L(coord_fs),mode,pad_mode
         self.cp_size = None if size is None else (size,size) if isinstance(size, int) else tuple(size)
 
@@ -261,7 +261,7 @@ def flip_mat(x, p=0.5):
     return affine_mat(mask,     t0(mask), t0(mask),
                       t0(mask), t1(mask), t0(mask))
 
-def Flip(p=0.5, size=None, mode='bilinear', pad_mode='reflection'):
+def Flip(p=0.5, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Randomly flip a batch of images with a probability `p`"
     return AffineCoordTfm(aff_fs=partial(flip_mat, p=p), size=size, mode=mode, pad_mode=pad_mode)
 
@@ -288,7 +288,7 @@ def dihedral_mat(x, p=0.5, draw=None):
                       ys*m1,  ys*m0,  t0(xs)).float()
     mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
 
-def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode='reflection'):
+def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Apply a random dihedral transformation to a batch of images with a probability `p`"
     return AffineCoordTfm(aff_fs=partial(dihedral_mat, p=p, draw=draw), size=size, mode=mode, pad_mode=pad_mode)
 
@@ -299,7 +299,7 @@ def rotate_mat(x, max_deg=10, p=0.5, draw=None):
     return affine_mat(thetas.cos(), thetas.sin(), t0(thetas),
                      -thetas.sin(), thetas.cos(), t0(thetas))
 
-def Rotate(max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode='reflection'):
+def Rotate(max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Apply a random rotation of at most `max_deg` with probability `p` to a batch of images"
     return AffineCoordTfm(partial(rotate_mat, max_deg=max_deg, p=p, draw=draw),
                           size=size, mode=mode, pad_mode=pad_mode)
@@ -316,7 +316,8 @@ def zoom_mat(x, max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None):
     return affine_mat(s,     t0(s), col_c,
                       t0(s), s,     row_c)
 
-def Zoom(max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None, size=None, mode='bilinear', pad_mode='reflection'):
+def Zoom(max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None, size=None, mode='bilinear',
+         pad_mode=PadMode.Reflection):
     "Apply a random zoom of at most `max_zoom` with probability `p` to a batch of images"
     return AffineCoordTfm(partial(zoom_mat, max_zoom=max_zoom, p=p, draw=draw, draw_x=draw_x, draw_y=draw_y),
                           size=size, mode=mode, pad_mode=pad_mode)
@@ -361,7 +362,7 @@ class _WarpCoord():
         coeffs = find_coeffs(self.targ_pts, self.orig_pts) if invert else find_coeffs(self.orig_pts, self.targ_pts)
         return apply_perspective(x, coeffs)
 
-def Warp(magnitude=0.2, p=0.5, draw_x=None, draw_y=None,size=None, mode='bilinear', pad_mode='reflection'):
+def Warp(magnitude=0.2, p=0.5, draw_x=None, draw_y=None,size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Apply perspective warping with `magnitude` and `p` on a batch of matrices"
     return AffineCoordTfm(coord_fs=_WarpCoord(magnitude=magnitude, p=p, draw_x=draw_x, draw_y=draw_y),
                           size=size, mode=mode, pad_mode=pad_mode)
@@ -436,7 +437,7 @@ def setup_aug_tfms(tfms):
 
 def aug_transforms(do_flip=True, flip_vert=False, max_rotate=10., max_zoom=1.1, max_lighting=0.2,
                    max_warp=0.2, p_affine=0.75, p_lighting=0.75, xtra_tfms=None,
-                   size=None, mode='bilinear', pad_mode='reflection'):
+                   size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Utility func to easily create a list of flip, rotate, zoom, warp, lighting transforms."
     res,tkw = [],dict(size=size, mode=mode, pad_mode=pad_mode)
     if do_flip:    res.append(Dihedral(p=0.5, **tkw) if flip_vert else Flip(p=0.5, **tkw))
