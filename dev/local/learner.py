@@ -143,7 +143,10 @@ class Learner():
     def create_opt(self, lr=None):
         opt = self.opt_func(self.splitter(self.model), lr=self.lr if lr is None else lr)
         if not self.wd_bn_bias:
-            for p in bn_bias_params(self.model): opt.state[p] = opt.state.get(p, {})['do_wd'] = False
+            for p in bn_bias_params(self.model):
+                p_state = opt.state.get(p, {})
+                p_state['do_wd'] = False
+                opt.state[p] = p_state
         return opt
 
     def one_batch(self, xb, yb, i=None):
