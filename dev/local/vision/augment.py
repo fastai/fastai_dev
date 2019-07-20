@@ -163,17 +163,18 @@ class Resize(CropPad):
 
 class RandomResizedCrop(CropPad):
     "Picks a random scaled crop of an image and resize it to `size`"
-    def __init__(self, size, scale=(0.08, 1.0), ratio=(3/4, 4/3), resamples=(Image.BILINEAR, Image.NEAREST)):
-        super().__init__(size)
-        self.final_sz,self.scale,self.ratio = self.size,scale,ratio
+    def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), resamples=(Image.BILINEAR, Image.NEAREST), **kwargs):
+        super().__init__(size, **kwargs)
+        self.min_scale,self.ratio = min_scale,ratio
         self.mode,self.mode_mask = resamples
 
     def randomize(self, b, filt):
+        self.final_sz = self.cp_size
         w,h = (b[0] if isinstance(b, tuple) else b).size
         self.orig_size = w,h
         for attempt in range(10):
             if filt: break
-            area = random.uniform(*self.scale) * w * h
+            area = random.uniform(self.min_scale,1.) * w * h
             ratio = math.exp(random.uniform(math.log(self.ratio[0]), math.log(self.ratio[1])))
             nw = int(round(math.sqrt(area * ratio)))
             nh = int(round(math.sqrt(area / ratio)))
@@ -181,7 +182,7 @@ class RandomResizedCrop(CropPad):
                 self.cp_size = (nw,nh)
                 self.tl = random.randint(0,w-nw), random.randint(0,h - nh)
                 return
-        if w/h < self.ratio[0]:   self.cp_size = (w, int(w/self.ratio[0]))
+        if   w/h < self.ratio[0]: self.cp_size = (w, int(w/self.ratio[0]))
         elif w/h > self.ratio[1]: self.cp_size = (int(h*self.ratio[1]), h)
         else:                     self.cp_size = (w, h)
         self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
