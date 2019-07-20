@@ -2,12 +2,12 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'PrePostInit', 'NewChkMeta', 'patch_to', 'patch', 'patch_property', 'chk',
            'tensor', 'add_docs', 'docs', 'custom_dir', 'coll_repr', 'GetAttr', 'L', 'ifnone', 'get_class', 'mk_class',
-           'wrap_class', 'noop', 'noops', 'round_multiple', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy',
-           'range_of', 'mask2idxs', 'merge', 'shufflish', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
+           'wrap_class', 'noop', 'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of',
+           'mask2idxs', 'merge', 'shufflish', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
            'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'mapper', 'partialler',
-           'sort_by_run', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image', 'show_titled_image',
-           'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params',
-           'PrettyString']
+           'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
+           'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
+           'trainable_params', 'PrettyString']
 
 from .test import *
 from .imports import *
@@ -261,10 +261,6 @@ def noops(self, x, *args, **kwargs):
     "Do nothing (method)"
     return x
 
-def round_multiple(x, mult, round_down=False):
-    "Round `x` to nearest multiple of `mult`"
-    return (int if round_down else round)(x/mult)*mult
-
 def tuplify(o, use_list=False, match=None):
     "Make `o` a tuple"
     return tuple(L(o, use_list=use_list, match=match))
@@ -407,6 +403,12 @@ def sort_by_run(fs):
                 break
         else: raise Exception("Impossible to sort")
     return res
+
+def round_multiple(x, mult, round_down=False):
+    "Round `x` to nearest multiple of `mult`"
+    def _f(x_): return (int if round_down else round)(x_/mult)*mult
+    res = L(x).mapped(_f)
+    return res if is_listy(x) else res[0]
 
 def num_cpus():
     "Get number of cpus"
