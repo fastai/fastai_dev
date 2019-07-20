@@ -37,15 +37,15 @@ def sgd_step(p, lr, **kwargs):
     p.data.add_(-lr, p.grad.data)
     return p
 
-def weight_decay(p, lr, wd, **kwargs):
+def weight_decay(p, lr, wd, do_wd=True, **kwargs):
     "Weight decay as decaying `p` with `lr*wd`"
-    p.data.mul_(1 - lr*wd)
+    if do_wd: p.data.mul_(1 - lr*wd)
     return p
 weight_decay.defaults = dict(wd=0.)
 
-def l2_reg(p, lr, wd, **kwargs):
+def l2_reg(p, lr, wd, do_wd=True, **kwargs):
     "L2 regularization as adding `wd*p` to `p.grad`"
-    p.grad.data.add_(wd, p.data)
+    if do_wd: p.grad.data.add_(wd, p.data)
     return p
 l2_reg.defaults = dict(wd=0.)
 
@@ -62,7 +62,7 @@ class StatefulOptimizer(Optimizer):
         for p,hyper in self.grad_params():
             state = self.state.get(p, {})
             for stat in self.stats: state = stat(state, p, **hyper)
-            self.step_func(p, **state, **hyper)
+            self.step_func(p, **{**state, **hyper})
             self.state[p] = state
 
     def _init_state(self, p):
@@ -97,7 +97,7 @@ def SGD(params, lr, mom=0., wd=0., true_wd=True):
     "A `StatefulOptimizer` for SGD with `lr` and `mom` and `params`"
     steppers = [] if wd==0. else [weight_decay] if true_wd else [l2_reg]
     steppers.append(sgd_step if mom==0 else momentum_step)
-    if mom == 0.: return Optimizer(params, steppers, lr=lr, wd=wd)
+    if mom == 0.: return StatefulOptimizer(params, steppers, lr=lr, wd=wd)
     else: return StatefulOptimizer(params, steppers, stats=average_grad, lr=lr, mom=mom, wd=wd)
 
 def rms_prop_step(p, lr, sqr_avg, eps, grad_avg=None, **kwargs):
