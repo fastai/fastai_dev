@@ -2,7 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Category', 'Categorize', 'MultiCategory',
-           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'ToTensor', 'retain_types', 'DefaultCollate', 'TfmdDL',
+           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'retain_types', 'ToTensor', 'DefaultCollate', 'TfmdDL',
            'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
@@ -138,10 +138,6 @@ class OneHotEncode(Transform):
 
 from torch.utils.data.dataloader import default_collate
 
-class ToTensor(Transform):
-    "Convert item to appropriate tensor class"
-    order = 15
-
 def retain_types(new, old):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
     res = []
@@ -150,6 +146,10 @@ def retain_types(new, old):
         if not isinstance(o, type(n)): res.append(n)
         else: res.append(type(o)(n) if not isinstance(n, type(o)) else n)
     return tuple(res)
+
+class ToTensor(Transform):
+    "Convert item to appropriate tensor class"
+    order = 15
 
 class DefaultCollate():
     def __init__(self, tfms=None): self.tfms = ToTensor(as_item=False) if tfms is None else Pipeline(tfms, as_item=False)
