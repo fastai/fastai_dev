@@ -140,12 +140,7 @@ from torch.utils.data.dataloader import default_collate
 
 def retain_types(new, old):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
-    res = []
-    for n,o in zip(new,old):
-        if isinstance(n, list): n = tuple(n)
-        if not isinstance(o, type(n)): res.append(n)
-        else: res.append(type(o)(n) if not isinstance(n, type(o)) else n)
-    return tuple(res)
+    return tuple(retain_type(tuple(n) if isinstance(n, list) else n, o) for n,o in zip(new,old))
 
 class ToTensor(Transform):
     "Convert item to appropriate tensor class"
@@ -153,18 +148,18 @@ class ToTensor(Transform):
 
 class DefaultCollate():
     def __init__(self, tfms=None): self.tfms = ToTensor(as_item=False) if tfms is None else Pipeline(tfms, as_item=False)
+
     def __call__(self, samples):
         x = tuple(self.tfms(o) for o in samples)
-        res = default_collate(x)
-        return retain_types(res, x[0])
+        return retain_types(default_collate(x), x[0])
 
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
     except AttributeError: raise AttributeError(k) from None
 DataLoader.__getattr__ = _DataLoader__getattr
 
-# If `x` isn't of type `t`, then cast it
 def _cast_tensor(x, t):
+    "If `x` isn't of type `t`, then cast it"
     if isinstance(x, Tensor) and issubclass(t, Tensor):
         return t(x) if not isinstance(x, t) else x
     elif isinstance(x, (tuple,list)) and issubclass(t, tuple):
@@ -175,16 +170,22 @@ class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1, collate_fn=None, **kwargs):
+    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1,
+                 collate_fn=None, batch_sampler=None, **kwargs):
         if not collate_fn: collate_fn = DefaultCollate()
-        self.dl = DataLoader(dataset, bs, shuffle, num_workers=num_workers, collate_fn=collate_fn, **kwargs)
-        self.collate_fn,self.default,self.tfms = collate_fn,self.dl,Pipeline(tfms, as_item=False)
+        if batch_sampler: bs=1
+        self.dl = DataLoader(dataset, bs, shuffle, num_workers=num_workers,
+                             collate_fn=collate_fn, batch_sampler=batch_sampler, **kwargs)
+        self._dl_types,self.collate_fn,self.default,self.tfms = None,collate_fn,self.dl,Pipeline(tfms, as_item=False)
         self.tfms.setup(self)
 
     def __len__(self): return len(self.dl)
     def one_batch(self): return next(iter(self))
-    def __iter__(self):
-        return (self._save_cls(self.tfms(self._retain_cls(b), filt=self.filt)) for b in self.dl)
+    def __iter__(self): return map(self._encode_batch,self.dl)
+    def _encode_batch(self, b):
+        b = self.tfms(self._retain_cls(b), filt=self.filt)
+        if not self._dl_types: self._dl_types = L(b).mapped(type)
+        return b
 
     def decode(self, b): return self.tfms.decode(self._retain_cls(b, ds=False), filt=self.filt)
     def decode_batch(self, b, max_rows=10):
@@ -206,10 +207,9 @@ class TfmdDL(GetAttr):
     def _ds_types(self): return L(self.collate_fn((self.dataset[0],))).mapped(type)
 
     def _retain_cls(self, b, ds=True):
-        return tuple(_cast_tensor(*o) for o in L(b,self._ds_types() if ds else self._dl_types).zipped())
-    def _save_cls(self, b):
-        if not getattr(self, '_dl_types', False): self._dl_types = L(b).mapped(type)
-        return b
+        "Cast items of `b` to ds or dl types as appropriate"
+        types = self._ds_types() if ds else self._dl_types
+        return tuple(itertools.starmap(_cast_tensor, zip(b,types)))
 
 @docs
 class Cuda(Transform):
