@@ -62,6 +62,7 @@ class StatefulOptimizer(Optimizer):
         for p,hyper in self.grad_params():
             state = self.state.get(p, {})
             for stat in self.stats: state = stat(state, p, **hyper)
+            print(state)
             self.step_func(p, **{**state, **hyper})
             self.state[p] = state
 
