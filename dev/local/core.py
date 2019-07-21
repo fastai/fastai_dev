@@ -7,7 +7,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'PrePostInit', 'NewChkMeta', 'patch_to
            'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'mapper', 'partialler',
            'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
            'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
-           'trainable_params', 'PrettyString']
+           'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check']
 
 from .test import *
 from .imports import *
@@ -98,8 +98,12 @@ def tensor(x, *rest, **kwargs):
     if isinstance(x, (tuple,list)) and len(x)==0: return tensor(0)
     res = (torch.tensor(x, **kwargs) if isinstance(x, (tuple,list))
            else as_tensor(x, **kwargs) if hasattr(x, '__array__')
-           else as_tensor(array(x), **kwargs) if is_iter(x)
-           else as_tensor(x, **kwargs))
+           else as_tensor(x, **kwargs) if is_listy(x)
+           else as_tensor(x, **kwargs) if is_iter(x)
+           else None)
+    if res is None:
+        res = as_tensor(array(x), **kwargs)
+        if res.dtype is torch.float64: return res.float()
     if res.dtype is torch.int32:
         warn('Tensor is int32: upgrading to int64; for better performance use int64 input')
         return res.long()
@@ -282,7 +286,7 @@ def setify(o): return o if isinstance(o,set) else set(L(o))
 
 def is_listy(x):
     "`isinstance(x, (tuple,list,L))`"
-    return isinstance(x, (tuple,list,L,slice))
+    return isinstance(x, (tuple,list,L,slice,Generator))
 
 def range_of(x):
     "All indices of collection `x` (i.e. `list(range(len(x)))`)"
@@ -488,8 +492,9 @@ def all_disjoint(sets):
 #Comes from 13_learner.ipynb.
 _camel_re1 = re.compile('(.)([A-Z][a-z]+)')
 _camel_re2 = re.compile('([a-z0-9])([A-Z])')
+
 def camel2snake(name):
-    s1 = re.sub(_camel_re1, r'\1_\2', name)
+    s1   = re.sub(_camel_re1, r'\1_\2', name)
     return re.sub(_camel_re2, r'\1_\2', s1).lower()
 
 #Comes from 13_learner.ipynb.
@@ -497,7 +502,23 @@ def trainable_params(m):
     "Return all trainable parameters of `m`"
     return [p for p in m.parameters() if p.requires_grad]
 
+#Comes from 13_learner.ipynb.
+def bn_bias_params(m):
+    "Return all bias and BatchNorm parameters"
+    if isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)):
+        return list(m.parameters())
+    res = sum([bn_bias_params(c) for c in m.children()], [])
+    if hasattr(m, 'bias'): res.append(m.bias)
+    return res
+
 #Comes from 15_callback_hook.ipynb.
 class PrettyString(str):
     "Little hack to get strings to show properly in Jupyter."
     def __repr__(self): return self
+
+#Comes from 20_metrics.ipynb.
+def flatten_check(inp, targ, detach=True):
+    "Check that `out` and `targ` have the same number of elements and flatten them."
+    inp,targ = to_detach(inp.contiguous().view(-1)),to_detach(targ.contiguous().view(-1))
+    test_eq(len(inp), len(targ))
+    return inp,targ
