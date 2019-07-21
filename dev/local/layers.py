@@ -296,8 +296,9 @@ class ResBlock(nn.Module):
         self.convs = nn.Sequential(*layers)
         self.idconv = noop if ni==nf else ConvLayer(ni, nf, 1, act_cls=None, **kwargs)
         self.pool = noop if stride==1 else nn.AvgPool2d(2, ceil_mode=True)
+        self.act = defaults.activation(inplace=True)
 
-    def forward(self, x): return act_fn(self.convs(x) + self.idconv(self.pool(x)))
+    def forward(self, x): return self.act(self.convs(x) + self.idconv(self.pool(x)))
 
 class ParameterModule(Module):
     "Register a lone parameter `p` in a module."
