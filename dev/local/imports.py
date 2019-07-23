@@ -48,7 +48,9 @@ def equals(a,b):
     "Compares `a` and `b` for equality; supports sublists, tensors and arrays too"
     cmp = (torch.equal    if isinstance(a, Tensor    ) and a.dim() else
            np.array_equal if isinstance(a, ndarray   ) else
-           operator.eq    if isinstance(a, (str,dict,set)) else
+           all_equal      if isinstance(a, (list,tuple,Generator,map)) else
+           operator.eq    if a.__eq__ != object.__eq__ else
+           #operator.eq    if isinstance(a, (str,dict,set)) else
            all_equal      if is_iter(a) else
            operator.eq)
     return cmp(a,b)

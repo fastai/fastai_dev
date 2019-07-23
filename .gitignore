@@ -4,6 +4,7 @@
 *~
 .pypirc
 ~*
+_tmp*
 tmp*
 tags
 
