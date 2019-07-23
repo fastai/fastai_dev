@@ -172,7 +172,7 @@ class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfms=None, collate_tfms=None, bs=16, shuffle=False, num_workers=1,
+    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1, collate_tfms=None,
                  collate_fn=None, batch_sampler=None, **kwargs):
         if collate_fn is None: collate_fn = TfmdCollate(collate_tfms, default_collate)
         if batch_sampler: bs=1
