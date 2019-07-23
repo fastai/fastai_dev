@@ -22,6 +22,7 @@ from torch import as_tensor,Tensor,ByteTensor,LongTensor,FloatTensor,HalfTensor,
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader,SequentialSampler,RandomSampler,Sampler,BatchSampler
+from torch.utils.data.dataloader import default_collate
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace
 
