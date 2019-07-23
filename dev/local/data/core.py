@@ -136,8 +136,6 @@ class OneHotEncode(Transform):
     def encodes(self, o)->Tensor: return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
     def decodes(self, o)->L: return one_hot_decode(o, self.vocab)
 
-from torch.utils.data.dataloader import default_collate
-
 def retain_types(new, old):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
     return tuple(retain_type(tuple(n) if isinstance(n, list) else n, o) for n,o in zip(new,old))
