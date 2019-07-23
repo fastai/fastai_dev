@@ -41,8 +41,6 @@ class SortARSampler(BatchSampler):
 
     def __len__(self): return (len(self.ds) if self.drop_last else (len(self.ds)+self.bs-1)) // self.bs
 
-from torch.utils.data.dataloader import default_collate
-
 class ResizeCollate(TfmdCollate):
     def __init__(self, tfms=None, collate_fn=default_collate, sz=None, is_fixed_px=False, max_px=512*512, round_mult=None,
                 rand_min_scale=None, rand_ratio_pct=None):
