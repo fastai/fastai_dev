@@ -166,13 +166,13 @@ class BBoxScaler(PointScaler):
 class BBoxCategorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order,state_args=1,'vocab'
-    def __init__(self, vocab=None, subset_idx=None):
-        self.vocab,self.subset_idx = vocab,subset_idx
+    def __init__(self, vocab=None):
+        self.vocab = vocab
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
     def setup(self, dsrc):
         if not dsrc: return
-        dsrc = dsrc.train if self.subset_idx is None else dsrc.subset(self.subset_idx)
+        dsrc = getattr(dsrc,'train',dsrc)
         vals = set()
         for bb in dsrc: vals = vals.union(set(bb.lbl))
         self.vocab,self.otoi = uniqueify(list(vals), sort=True, bidir=True, start='#bg')
