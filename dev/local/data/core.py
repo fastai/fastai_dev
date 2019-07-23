@@ -2,7 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Category', 'Categorize', 'MultiCategory',
-           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'retain_types', 'ToTensor', 'DefaultCollate', 'TfmdDL',
+           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'retain_types', 'ToTensor', 'TfmdCollate', 'TfmdDL',
            'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
@@ -146,8 +146,10 @@ class ToTensor(Transform):
     "Convert item to appropriate tensor class"
     order = 15
 
-class DefaultCollate():
-    def __init__(self, tfms=None): self.tfms = ToTensor(as_item=False) if tfms is None else Pipeline(tfms, as_item=False)
+class TfmdCollate():
+    def __init__(self, tfms=None, collate_fn=default_collate):
+        self.collate_fn = collate_fn
+        self.tfms = ToTensor(as_item=False) if tfms is None else Pipeline(tfms, as_item=False)
 
     def __call__(self, samples):
         x = tuple(self.tfms(o) for o in samples)
@@ -170,9 +172,9 @@ class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1,
+    def __init__(self, dataset, tfms=None, collate_tfms=None, bs=16, shuffle=False, num_workers=1,
                  collate_fn=None, batch_sampler=None, **kwargs):
-        if not collate_fn: collate_fn = DefaultCollate()
+        if collate_fn is None: collate_fn = TfmdCollate(collate_tfms, default_collate)
         if batch_sampler: bs=1
         self.dl = DataLoader(dataset, bs, shuffle, num_workers=num_workers,
                              collate_fn=collate_fn, batch_sampler=batch_sampler, **kwargs)
