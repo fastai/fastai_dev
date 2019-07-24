@@ -24,5 +24,6 @@ def main(path:Param("Path to notebooks",str)=".", max_num:Param("Max numbered no
          fn:Param("Filename glob",str)=None):
     "Executes notebooks in `path` and shows any exceptions. Useful for testing"
     fns = get_fns(path,max_num,fn)
+    os.environ['IN_TEST']='1'
     for f in sorted(fns): run_nb(f)
 
