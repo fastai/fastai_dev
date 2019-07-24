@@ -99,7 +99,7 @@ class Pipeline():
         o1 = [o] if self.as_item else o
         if not all(hasattr(o_, 'show') for o_ in o1): return
         for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
-        return ctx or 1
+        return 1 if ctx is None else ctx
 
 class TfmdList():
     "A `Pipeline` of `tfms` applied to a collection of `items`"

@@ -44,7 +44,7 @@ class SortARSampler(BatchSampler):
 class ResizeCollate(TfmdCollate):
     def __init__(self, tfms=None, collate_fn=default_collate, sz=None, is_fixed_px=False, max_px=512*512, round_mult=None,
                 rand_min_scale=None, rand_ratio_pct=None):
-        super().__init__(tfms, default_collate)
+        super().__init__(tfms, collate_fn)
         self.round_mult,self.is_fixed_px,self.max_px = round_mult,is_fixed_px,max_px
         self.is_rand = rand_min_scale or rand_ratio_pct
         if self.is_rand:
