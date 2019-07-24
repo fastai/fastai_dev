@@ -151,7 +151,7 @@ class TfmdCollate():
 
     def __call__(self, samples):
         x = tuple(self.tfms(o) for o in samples)
-        return retain_types(default_collate(x), x[0])
+        return retain_types(self.collate_fn(x), x[0])
 
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
