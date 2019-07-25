@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Category', 'Categorize', 'MultiCategory',
-           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'retain_types', 'ToTensor', 'TfmdCollate', 'BatchDS',
-           'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
+           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'BatchDS', 'dataloader', 'retain_types', 'ToTensor',
+           'TfmdCollate', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -136,6 +136,44 @@ class OneHotEncode(Transform):
     def encodes(self, o)->Tensor: return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
     def decodes(self, o)->L: return one_hot_decode(o, self.vocab)
 
+@patch
+def __len__(self:DataLoader):
+    return len((self._index_sampler, self.dataset)[isinstance(self.dataset, IterableDataset)])
+
+class BatchDS(GetAttr, IterableDataset):
+    _xtra = ['show', 'decode', 'show_at', 'decode_at', 'decode_batch']
+    def __init__(self, ds ,bs=1, shuffle=False, sampler=None, batch_sampler=None, drop_last=False,
+                sampler_cls=None, batch_sampler_cls=BatchSampler, get_batch=None, reset=None):
+        self.default,self.ds,self.samp,self.rng,self.nw,self.offs = ds,ds,batch_sampler,random.Random(),1,0
+        if get_batch: self.get_batch = types.MethodType(get_batch,self)
+        if reset: self.reset = types.MethodType(reset,self)
+        if self.samp: return
+        if not sampler: sampler = ifnone(sampler_cls, (SequentialSampler,RandomSampler)[shuffle])(ds)
+        self.samp = batch_sampler_cls(sampler, bs, drop_last)
+
+    def __iter__(self):
+        self.reset()
+        torch.manual_seed(self.rng.randint(0,sys.maxsize))
+        samps = list(enumerate(self.samp))
+        idxs = (b for i,b in samps if i%self.nw==self.offs)
+        return self.get_batches(idxs)
+
+    def get_batch(self, b): return [self.ds[j] for j in b]
+    def get_batches(self, idxs): return map(self.get_batch, idxs)
+    def __len__(self): return len(self.samp)
+    def reset(self): pass
+
+def _wif(worker_id):
+    info = get_worker_info()
+    ds = info.dataset
+    ds.nw,ds.offs = info.num_workers,info.id
+    ds.samp.sampler = copy.copy(ds.samp.sampler)
+
+def dataloader(ds, bs=1, num_workers=0, collate_fn=default_collate, **kwargs):
+    if not isinstance(ds, BatchDS): ds = BatchDS(ds, bs, **kwargs)
+    return DataLoader(ds, num_workers=num_workers, batch_size=None,
+                      worker_init_fn=_wif, collate_fn=collate_fn)
+
 def retain_types(new, old):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
     return tuple(retain_type(tuple(n) if isinstance(n, list) else n, o) for n,o in zip(new,old))
@@ -152,37 +190,6 @@ class TfmdCollate():
     def __call__(self, samples):
         x = tuple(self.tfms(o) for o in samples)
         return retain_types(self.collate_fn(x), x[0])
-
-@patch
-def __len__(self:DataLoader):
-    return len((self._index_sampler, self.dataset)[isinstance(self.dataset, IterableDataset)])
-
-class BatchDS(IterableDataset):
-    def __init__(self, ds ,bs=1, shuffle=False, sampler=None, batch_sampler=None, drop_last=False,
-                sampler_cls=None, batch_sampler_cls=BatchSampler, get_batch=None, reset=None):
-        self.ds,self.samp,self.rng,self.nw,self.offs = ds,batch_sampler,random.Random(),1,0
-        if self.samp: return
-        if not sampler: sampler = ifnone(sampler_cls, (SequentialSampler,RandomSampler)[shuffle])(ds)
-        self.samp = batch_sampler_cls(sampler, bs, drop_last)
-        if get_batch: self.get_batch = types.MethodType(get_batch,self)
-        if reset: self.reset = types.MethodType(reset,self)
-
-    def __len__(self): return len(self.samp)
-    def reset(self): pass
-    def get_batch(self, b): return [self.ds[j] for j in b]
-    def get_batches(self, idxs): return map(self.get_batch, idxs)
-    def __iter__(self):
-        self.reset()
-        torch.manual_seed(self.rng.randint(0,sys.maxsize))
-        samps = list(enumerate(self.samp))
-        idxs = (b for i,b in samps if i%self.nw==self.offs)
-        return self.get_batches(idxs)
-
-def _wif(worker_id):
-    info = get_worker_info()
-    ds = info.dataset
-    ds.nw,ds.offs = info.num_workers,info.id
-    ds.samp.sampler = copy.copy(ds.samp.sampler)
 
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
