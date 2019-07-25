@@ -188,17 +188,18 @@ class TfmdDL(GetAttr):
         return b
 
     def decode(self, b): return self.tfms.decode(self._retain_cls(b, ds=False), filt=self.filt)
-    def decode_batch(self, b, max_rows=10):
-        b = batch_to_samples(self.decode(b), max_rows=max_rows)
+    def decode_batch(self, b, max_samples=10):
+        b = batch_to_samples(self.decode(b), max_samples=max_samples)
         f = getattr(self.dataset,'decode',noop)
         return L(f(self._retain_cls(s)) for s in b)
 
-    def show_batch(self, b=None, max_rows=10, ctxs=None, **kwargs):
+    def show_batch(self, b=None, max_samples=10, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         if b is None: b = self.one_batch()
         b = self.decode(b)
-        if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
-        for o,ctx in zip(batch_to_samples(b, max_rows),ctxs):
+        if ctxs is None:
+            ctxs = b[0].get_ctxs(max_samples=max_samples, **kwargs) if hasattr(b[0], 'get_ctxs') else [None] * len(b[0] if is_iter(b[0]) else b)
+        for o,ctx in zip(batch_to_samples(b, max_samples),ctxs):
             self.dataset.show(self._retain_cls(o), ctx=ctx, **kwargs)
 
     @property

@@ -442,7 +442,7 @@ def show_title(o, ax=None, ctx=None):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
     if ax is None: print(o)
-    else: ax.set_title(o)
+    elif hasattr(ax, 'set_title'): ax.set_title(o)
     return ax
 
 def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
