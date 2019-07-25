@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Category', 'Categorize', 'MultiCategory',
-           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'retain_types', 'ToTensor', 'TfmdCollate', 'TfmdDL',
-           'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
+           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'retain_types', 'ToTensor', 'TfmdCollate', 'BatchDS',
+           'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -152,6 +152,37 @@ class TfmdCollate():
     def __call__(self, samples):
         x = tuple(self.tfms(o) for o in samples)
         return retain_types(self.collate_fn(x), x[0])
+
+@patch
+def __len__(self:DataLoader):
+    return len((self._index_sampler, self.dataset)[isinstance(self.dataset, IterableDataset)])
+
+class BatchDS(IterableDataset):
+    def __init__(self, ds ,bs=1, shuffle=False, sampler=None, batch_sampler=None, drop_last=False,
+                sampler_cls=None, batch_sampler_cls=BatchSampler, get_batch=None, reset=None):
+        self.ds,self.samp,self.rng,self.nw,self.offs = ds,batch_sampler,random.Random(),1,0
+        if self.samp: return
+        if not sampler: sampler = ifnone(sampler_cls, (SequentialSampler,RandomSampler)[shuffle])(ds)
+        self.samp = batch_sampler_cls(sampler, bs, drop_last)
+        if get_batch: self.get_batch = types.MethodType(get_batch,self)
+        if reset: self.reset = types.MethodType(reset,self)
+
+    def __len__(self): return len(self.samp)
+    def reset(self): pass
+    def get_batch(self, b): return [self.ds[j] for j in b]
+    def get_batches(self, idxs): return map(self.get_batch, idxs)
+    def __iter__(self):
+        self.reset()
+        torch.manual_seed(self.rng.randint(0,sys.maxsize))
+        samps = list(enumerate(self.samp))
+        idxs = (b for i,b in samps if i%self.nw==self.offs)
+        return self.get_batches(idxs)
+
+def _wif(worker_id):
+    info = get_worker_info()
+    ds = info.dataset
+    ds.nw,ds.offs = info.num_workers,info.id
+    ds.samp.sampler = copy.copy(ds.samp.sampler)
 
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
