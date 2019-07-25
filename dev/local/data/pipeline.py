@@ -91,7 +91,7 @@ class Pipeline():
     def show(self, o, ctx=None, filt=None, **kwargs):
         for f in reversed(self.fs):
             res = self._show(o, ctx, **kwargs)
-            if res: return res
+            if res is not None: return res
             o = f.decode(o, filt=filt)
         return self._show(o, ctx, **kwargs)
 

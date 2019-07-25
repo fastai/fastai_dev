@@ -26,7 +26,8 @@ def _p1_anno(f):
 
 class ShowTitle:
     "Base class that adds a simple `show`"
-    def show(self, ctx=None, **kwargs): return show_title(str(self), ctx=ctx)
+    _show_args = {'label': 'text'}
+    def show(self, ctx=None, **kwargs): return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class Int(int, ShowTitle): pass
 class Float(float, ShowTitle): pass
