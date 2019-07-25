@@ -123,6 +123,7 @@
   "retain_types": "05_data_core.ipynb",
   "ToTensor": "05_data_core.ipynb",
   "TfmdCollate": "05_data_core.ipynb",
+  "BatchDS": "05_data_core.ipynb",
   "TfmdDL": "05_data_core.ipynb",
   "Cuda": "05_data_core.ipynb",
   "ByteToFloatTensor": "05_data_core.ipynb",
