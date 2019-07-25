@@ -26,7 +26,8 @@ def _p1_anno(f):
 
 class ShowTitle:
     "Base class that adds a simple `show`"
-    def show(self, ctx=None, **kwargs): return show_title(str(self), ctx=ctx)
+    _show_args = {'label': 'text'}
+    def show(self, ctx=None, **kwargs): return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class Int(int, ShowTitle): pass
 class Float(float, ShowTitle): pass
@@ -46,6 +47,14 @@ class TensorImageBase(TensorBase):
     _show_args = {'cmap':'viridis'}
     def show(self, ctx=None, **kwargs):
         return show_image(self, ctx=ctx, **{**self._show_args, **kwargs})
+
+    def get_ctxs(self, max_samples=10, rows=None, cols=None, figsize=None, **kwargs):
+        n_samples = min(self.shape[0], max_samples)
+        rows = rows or int(np.ceil(math.sqrt(n_samples)))
+        cols = cols or int(np.ceil(math.sqrt(n_samples)))
+        figsize = (cols*3, rows*3) if figsize is None else figsize
+        _,axs = plt.subplots(rows, cols, figsize=figsize)
+        return axs.flatten()
 
 class TensorImage(TensorImageBase): pass
 
