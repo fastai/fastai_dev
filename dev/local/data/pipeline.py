@@ -51,10 +51,10 @@ def compose_tfms(x, tfms, is_enc=True, reverse=False, **kwargs):
         x = f(x, **kwargs)
     return x
 
-def batch_to_samples(b, max_rows=10):
-    "'Transposes' a batch to (at most `max_rows`) samples"
-    if isinstance(b, Tensor): return b[:max_rows]
-    return zip(*L(batch_to_samples(b_, max_rows) for b_ in b))
+def batch_to_samples(b, max_samples=10):
+    "'Transposes' a batch to (at most `max_samples`) samples"
+    if isinstance(b, Tensor): return b[:max_samples]
+    return zip(*L(batch_to_samples(b_, max_samples) for b_ in b))
 
 def mk_transform(f, as_item=True):
     "Convert function `f` to `Transform` if it isn't already one"
@@ -84,8 +84,8 @@ class Pipeline():
     def decode  (self, o, filt=None): return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, filt=filt)
     def __repr__(self): return f"Pipeline: {self.fs}"
     def __getitem__(self,i): return self.fs[i]
-    def decode_batch(self, b, filt=None, max_rows=10):
-        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_rows=max_rows)]
+    def decode_batch(self, b, filt=None, max_samples=10):
+        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_samples=max_samples)]
 
     # TODO: move show_batch here of TfmDS?
     def show(self, o, ctx=None, filt=None, **kwargs):
@@ -126,8 +126,8 @@ class TfmdList():
     def decode_at(self, idx, filt=None): return self.decode(self.get(idx,filt=filt), filt=filt)
     def show_at(self, idx, filt=None, **kwargs): return self.show(self.get(idx,filt=filt), filt=filt, **kwargs)
 
-    def decode_batch(self, b, filt=None, max_rows=10):
-        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_rows=max_rows)]
+    def decode_batch(self, b, filt=None, max_samples=10):
+        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_samples=max_samples)]
 
     # Standard dunder magics
     def __eq__(self, b): return all_equal(self, b)

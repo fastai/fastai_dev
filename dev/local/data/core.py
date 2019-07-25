@@ -199,8 +199,8 @@ class TfmdDL(GetAttr):
         b = self.decode(b)
         if ctxs is None:
             ctxs = b[0].get_ctxs(max_samples=max_samples, **kwargs) if hasattr(b[0], 'get_ctxs') else [None] * len(b[0] if is_iter(b[0]) else b)
-        for o,ctx in zip(batch_to_samples(b, max_samples),ctxs):
-            self.dataset.show(self._retain_cls(o), ctx=ctx, **kwargs)
+        ctxs = [self.dataset.show(self._retain_cls(o), ctx=ctx, **kwargs) for o,ctx in zip(batch_to_samples(b, max_samples),ctxs)]
+        if hasattr(b[0], 'display'): b[0].display(ctxs)
 
     @property
     def filt(self): return getattr(self.dataset, 'filt', None)
