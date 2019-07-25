@@ -438,7 +438,7 @@ def make_cross_image(bw=True):
         im[1,:,2] = 1.
     return im
 
-def show_title(o, ax=None, ctx=None, label=None):
+def show_title(o, ax=None, ctx=None, label=None, **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
     if ax is None: print(o)
