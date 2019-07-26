@@ -1,1 +1,1 @@
-import .xresnet
+from . import xresnet
