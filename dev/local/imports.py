@@ -1,6 +1,7 @@
 import io,operator,sys,os,re,os,mimetypes,csv,itertools,json,shutil,glob,pickle,tarfile,collections
-import hashlib,itertools,types,random,inspect,functools,random,time,math,copy,bz2,types,typing,numbers,string
+import hashlib,itertools,types,random,inspect,functools,random,time,math,bz2,types,typing,numbers,string
 
+from copy import copy,deepcopy
 from contextlib import redirect_stdout,contextmanager
 from typing import Iterable,Iterator,Generator,Callable,Sequence,List,Tuple,Union,Optional
 from types import SimpleNamespace
@@ -27,6 +28,7 @@ from torch.utils.data.dataloader import default_collate
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace
 
+pd.options.display.max_colwidth = 600
 NoneType = type(None)
 
 Tensor.ndim = property(lambda x: x.dim())
