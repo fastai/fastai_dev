@@ -3,10 +3,10 @@
 __all__ = ['defaults', 'PrePostInitMeta', 'PrePostInit', 'NewChkMeta', 'patch_to', 'patch', 'patch_property', 'chk',
            'tensor', 'add_docs', 'docs', 'custom_dir', 'coll_repr', 'GetAttr', 'L', 'ifnone', 'get_class', 'mk_class',
            'wrap_class', 'noop', 'noops', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of',
-           'mask2idxs', 'merge', 'shufflish', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
-           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'mapper', 'partialler',
-           'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
-           'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
+           'mask2idxs', 'merge', 'shufflish', 'ReindexCollection', 'apply', 'to_detach', 'to_half', 'to_float',
+           'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'mapper',
+           'partialler', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title',
+           'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
            'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check']
 
 from .test import *
@@ -123,7 +123,7 @@ def add_docs(cls, cls_doc=None, **docs):
     assert cls.__doc__ is not None, f"Missing class docs: {cls}"
 
 def docs(cls):
-    "Decorator version of `add_docs"
+    "Decorator version of `add_docs`, using `_docs` dict"
     add_docs(cls, **cls._docs)
     return cls
 
@@ -138,7 +138,8 @@ def coll_repr(c, max=1000):
 
 class GetAttr:
     "Inherit from this to have all attr accesses in `self._xtra` passed down to `self.default`"
-    _xtra=[]
+    @property
+    def _xtra(self): return [o for o in dir(self.default) if not o.startswith('_')]
     def __getattr__(self,k):
         assert self._xtra, "Inherited from `GetAttr` but no `_xtra` attrs listed"
         if k in self._xtra: return getattr(self.default, k)
@@ -304,6 +305,25 @@ def shufflish(x, pct=0.04):
     "Randomly relocate items of `x` up to `pct` of `len(x)` from their starting location"
     n = len(x)
     return L(x[i] for i in sorted(range_of(x), key=lambda o: o+n*(1+random.random()*pct)))
+
+@docs
+class ReindexCollection(GetAttr):
+    "Reindexes collection `coll` with indices `idxs` and optional LRU cache of size `cache`"
+    def __init__(self, coll, idxs=None, cache=None):
+        self.default,self.coll,self.idxs,self.cache = coll,coll,ifnone(idxs,L.range(coll)),cache
+        def _get(self, i): return self.coll[i]
+        self._get = types.MethodType(_get,self)
+        if cache is not None: self._get = functools.lru_cache(maxsize=cache)(self._get)
+
+    def __getitem__(self, i): return self._get(self.idxs[i])
+    def __len__(self): return len(self.coll)
+    def reindex(self, idxs): self.idxs = idxs
+    def shuffle(self): random.shuffle(self.idxs)
+    def cache_clear(self): self._get.cache_clear()
+
+    _docs = dict(reindex="Replace `self.idxs` with idxs",
+                shuffle="Randomly shuffle indices",
+                cache_clear="Clear LRU cache")
 
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"

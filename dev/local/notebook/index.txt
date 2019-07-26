@@ -42,6 +42,7 @@
   "mask2idxs": "01_core.ipynb",
   "merge": "01_core.ipynb",
   "shufflish": "01_core.ipynb",
+  "ReindexCollection": "01_core.ipynb",
   "apply": "01_core.ipynb",
   "to_detach": "01_core.ipynb",
   "to_half": "01_core.ipynb",
