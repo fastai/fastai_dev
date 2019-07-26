@@ -167,7 +167,7 @@ def _wif(worker_id):
     info = get_worker_info()
     ds = info.dataset
     ds.nw,ds.offs = info.num_workers,info.id
-    ds.samp.sampler = copy.copy(ds.samp.sampler)
+    ds.samp.sampler = copy(ds.samp.sampler)
 
 def dataloader(ds, bs=1, num_workers=0, collate_fn=default_collate, **kwargs):
     if not isinstance(ds, BatchDS): ds = BatchDS(ds, bs, **kwargs)

@@ -64,7 +64,7 @@ class NewChkMeta(PrePostInitMeta):
 def patch_to(cls, as_prop=False):
     "Decorator: add `f` to `cls`"
     def _inner(f):
-        nf = copy.copy(f)
+        nf = copy(f)
         # `functools.update_wrapper` when passing patched function to `Pipeline`, so we do it manually
         for o in functools.WRAPPER_ASSIGNMENTS: setattr(nf, o, getattr(f,o))
         nf.__qualname__ = f"{cls.__name__}.{f.__name__}"
