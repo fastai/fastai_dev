@@ -349,6 +349,7 @@
   "foreground_acc": "20_metrics.ipynb",
   "Dice": "20_metrics.ipynb",
   "JaccardCoeff": "20_metrics.ipynb",
+  "ProcessPoolExecutor": "30_text_core.ipynb",
   "parallel": "30_text_core.ipynb",
   "ProcessFunc": "30_text_core.ipynb",
   "parallel_by_batch": "30_text_core.ipynb",
