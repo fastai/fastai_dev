@@ -87,6 +87,9 @@ class DsrcSubset():
     def __eq__(self,b): return all_equal(b,self)
     def __repr__(self): return coll_repr(self)
 
+    @property
+    def items(self): return L(self.dsrc.items[i] for i in self.filts)
+
     _docs = dict(decode="Transform decode",
                  show="Transform show",
                  decode_batch="Transform decode batch",
