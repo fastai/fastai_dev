@@ -2,7 +2,7 @@
 
 __all__ = ['Image', 'n_px', 'shape', 'aspect', 'load_image', 'PILBase', 'PILImage', 'PILImageBW', 'PILMask',
            'TensorPoint', 'get_annotations', 'BBox', 'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes',
-           'PointScaler', 'BBoxScaler', 'BBoxCategorize']
+           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad_collate']
 
 from ..imports import *
 from ..test import *
@@ -181,3 +181,29 @@ class BBoxCategorize(Transform):
         return TensorBBox.create((o.bbox,tensor([self.otoi[o_] for o_ in o.lbl if o_ in self.otoi])))
     def decodes(self, o:TensorBBox)->BBox:
         return BBox((o.bbox,[self.vocab[i_] for i_ in o.lbl]))
+
+#Comes from 10_data_block.ipynb.
+PILBase.default_dl_tfms = ByteToFloatTensor
+
+#Comes from 10_data_block.ipynb.
+TensorPoint.default_ds_tfms = PointScaler
+
+#Comes from 10_data_block.ipynb.
+BBox.default_type_tfms = BBoxCategorize
+BBox.default_ds_tfms = BBoxScaler
+
+#Comes from 10_data_block.ipynb.
+def bb_pad_collate(samples, pad_idx=0):
+    "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
+    if isinstance(samples[0][1], int): return data_collate(samples)
+    max_len = max([len(s[1][1]) for s in samples])
+    bboxes = torch.zeros(len(samples), max_len, 4)
+    labels = torch.zeros(len(samples), max_len).long() + pad_idx
+    imgs = []
+    for i,s in enumerate(samples):
+        imgs.append(s[0][None])
+        bbs, lbls = s[1]
+        if not (bbs.nelement() == 0):
+            bboxes[i,-len(lbls):] = bbs
+            labels[i,-len(lbls):] = tensor(lbls)
+    return torch.cat(imgs,0), (bboxes,labels)

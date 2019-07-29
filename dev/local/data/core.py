@@ -211,7 +211,7 @@ class TfmdDL(GetAttr):
     def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1, collate_tfms=None,
                  collate_fn=None, batch_sampler=None, **kwargs):
         if collate_fn is None: collate_fn = TfmdCollate(collate_tfms, default_collate)
-        if batch_sampler: bs=1
+        if batch_sampler is not None: bs=1
         self.dl = DataLoader(dataset, bs, shuffle, num_workers=num_workers,
                              collate_fn=collate_fn, batch_sampler=batch_sampler, **kwargs)
         self._dl_types,self.collate_fn,self.default,self.tfms = None,collate_fn,self.dl,Pipeline(tfms, as_item=False)
