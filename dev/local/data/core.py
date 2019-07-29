@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Category', 'Categorize', 'MultiCategory',
-           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'BatchDS', 'dataloader', 'retain_types', 'ToTensor',
-           'TfmdCollate', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
+           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'BaseDS', 'BatchDS', 'dataloader', 'retain_types',
+           'ToTensor', 'TfmdCollate', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -140,7 +140,11 @@ class OneHotEncode(Transform):
 def __len__(self:DataLoader):
     return len((self._index_sampler, self.dataset)[isinstance(self.dataset, IterableDataset)])
 
-class BatchDS(GetAttr, IterableDataset):
+class BaseDS(GetAttr):
+    _xtra = ['show', 'decode', 'show_at', 'decode_at', 'decode_batch']
+    def __init__(self, ds): self.default = self.ds = ds
+
+class BatchDS(BaseDS, IterableDataset):
     _xtra = ['show', 'decode', 'show_at', 'decode_at', 'decode_batch']
     def __init__(self, ds ,bs=1, shuffle=False, sampler=None, batch_sampler=None, drop_last=False,
                 sampler_cls=None, batch_sampler_cls=BatchSampler, get_batch=None, reset=None):
@@ -152,6 +156,7 @@ class BatchDS(GetAttr, IterableDataset):
         self.samp = batch_sampler_cls(sampler, bs, drop_last)
 
     def __iter__(self):
+        self.reset()
         torch.manual_seed(self.rng.randint(0,sys.maxsize))
         samps = list(enumerate(self.samp))
         idxs = (b for i,b in samps if i%self.nw==self.offs)
@@ -160,7 +165,7 @@ class BatchDS(GetAttr, IterableDataset):
     def get_batch(self, b): return [self.ds[j] for j in b]
     def get_batches(self, idxs): return map(self.get_batch, idxs)
     def __len__(self): return len(self.samp)
-    def reset(self): getattr(self.ds, "reset", noop)()
+    def reset(self): pass
 
 def _wif(worker_id):
     info = get_worker_info()

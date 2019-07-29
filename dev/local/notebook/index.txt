@@ -121,6 +121,7 @@
   "one_hot": "05_data_core.ipynb",
   "one_hot_decode": "05_data_core.ipynb",
   "OneHotEncode": "05_data_core.ipynb",
+  "BaseDS": "05_data_core.ipynb",
   "BatchDS": "05_data_core.ipynb",
   "dataloader": "05_data_core.ipynb",
   "retain_types": "05_data_core.ipynb",
