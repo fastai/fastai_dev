@@ -2,8 +2,8 @@
 
 __all__ = ['ProcessPoolExecutor', 'parallel', 'parallel_gen', 'UNK', 'PAD', 'BOS', 'EOS', 'FLD', 'TK_REP', 'TK_WREP',
            'TK_UP', 'TK_MAJ', 'spec_add_spaces', 'rm_useless_spaces', 'replace_rep', 'replace_wrep', 'fix_html',
-           'replace_all_caps', 'replace_maj', 'lowercase', 'BaseTokenizer', 'SpacyTokenizer', 'apply_rules',
-           'tokenize1', 'TokenizeBatch', 'parallel_tokenize', 'read_text', 'tokenize_folder', 'tokenize_df',
+           'replace_all_caps', 'replace_maj', 'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer',
+           'apply_rules', 'tokenize1', 'TokenizeBatch', 'parallel_tokenize', 'tokenize_folder', 'tokenize_df',
            'tokenize_csv', 'SentencePieceTokenizer']
 
 from ..imports import *
@@ -61,7 +61,7 @@ def rm_useless_spaces(t):
     "Remove multiple spaces"
     return _re_space.sub(' ', t)
 
-_re_rep = re.compile(r'(\S)(\1{3,})')
+_re_rep = re.compile(r'(\S)(\1{2,})')
 
 def replace_rep(t):
     "Replace repetitions at the character level: cccc -> TK_REP 4 c"
@@ -70,7 +70,7 @@ def replace_rep(t):
         return f' {TK_REP} {len(cc)+1} {c} '
     return _re_rep.sub(_replace_rep, t)
 
-_re_wrep = re.compile(r'(?:\s|^)(\w+)\s+((?:\1\s+){2,})\1(\s|\W|$)')
+_re_wrep = re.compile(r'(?:\s|^)(\w+)\s+((?:\1\s+)+)\1(\s|\W|$)')
 
 def replace_wrep(t):
     "Replace word repetitions: word word word word -> TK_WREP 4 word"
@@ -83,7 +83,7 @@ def fix_html(x):
     "Various messy things we've seen in documents"
     x = x.replace('#39;', "'").replace('amp;', '&').replace('#146;', "'").replace('nbsp;', ' ').replace(
         '#36;', '$').replace('\\n', "\n").replace('quot;', "'").replace('<br />', "\n").replace(
-        '\\"', '"').replace('<unk>',UNK).replace(' @.@ ','.').replace(' @-@ ','-')
+        '\\"', '"').replace('<unk>',UNK).replace(' @.@ ','.').replace(' @-@ ','-').replace('...',' …')
     return html.unescape(x)
 
 _re_all_caps = re.compile(r'(\s|^)([A-Z]+[^a-z\s]*)(?=(\s|$))')
@@ -108,15 +108,19 @@ def lowercase(t, add_bos=True, add_eos=False):
     "Converts `t` to lowercase"
     return (f'{BOS} ' if add_bos else '') + t.lower().strip() + (f' {EOS}' if add_eos else '')
 
+def replace_space(t):
+    "Replace embedded spaces in a token with unicode line char to allow for split/join"
+    return t.replace(' ', '▁')
+
 defaults.text_spec_tok = [UNK, PAD, BOS, EOS, FLD, TK_REP, TK_WREP, TK_UP, TK_MAJ]
 defaults.text_proc_rules = [fix_html, replace_rep, replace_wrep, spec_add_spaces, rm_useless_spaces,
                             replace_all_caps, replace_maj, lowercase]
-defaults.text_token_sep = '▁'
+defaults.text_postproc_rules = [replace_space]
 
 class BaseTokenizer():
     "Basic tokenizer that just splits on spaces"
-    def __init__(self, **kwargs): pass
-    def pipe(self, items): return (t.split() for t in items)
+    def __init__(self, split_char=' ', **kwargs): self.split_char=split_char
+    def pipe(self, items): return (t.split(self.split_char) for t in items)
 
 class SpacyTokenizer():
     "Spacy tokenizer for `lang`"
@@ -134,25 +138,29 @@ def apply_rules(items, rules):
     "Returns a generator that apply `rules`  to `items`"
     return map(compose(*rules), items)
 
-def tokenize1(text, tok_func=SpacyTokenizer, rules=None, **tok_kwargs):
+def tokenize1(text, tok_func=SpacyTokenizer, rules=None, post_rules=None, **tok_kwargs):
     "Tokenize one `text` with an instance of `tok_func` and some `rules`"
-    rules = L(ifnone(rules, defaults.text_proc_rules))
-    tokenizer = tok_func(**tok_kwargs)
-    for tok in tokenizer.pipe(apply_rules([text], rules)): return tok
+    return next(iter(TokenizeBatch(tok_func, rules, post_rules, **tok_kwargs)([text])))
 
 class TokenizeBatch:
     "A wrapper around `tok_func` to apply `rules` and tokenize in parallel"
-    def __init__(self, tok_func, rules, **tok_kwargs ): self.tok,self.rules = tok_func(**tok_kwargs),L(rules)
-    def __call__(self, batch): return self.tok.pipe(apply_rules(batch, self.rules))
+    def __init__(self, tok_func=SpacyTokenizer, rules=None, post_rules=None, **tok_kwargs ):
+        self.rules = L(ifnone(rules, defaults.text_proc_rules))
+        self.post_f = compose(*L(ifnone(post_rules, defaults.text_postproc_rules)))
+        self.tok = tok_func(**tok_kwargs)
+
+    def __call__(self, batch):
+        for o in self.tok.pipe(apply_rules(batch, self.rules)): yield L(o).mapped(self.post_f)
 
 def parallel_tokenize(items, tok_func, rules, as_gen=False, **tok_kwargs):
     "Calls a potential setup on `tok_func` before launching `TokenizeBatch` in parallel"
     if hasattr(tok_func, 'setup'): tok_kwargs = tok_func(**tok_kwargs).setup(items, rules)
     return parallel_gen(TokenizeBatch, items, as_gen=as_gen, tok_func=tok_func, rules=rules, **tok_kwargs)
 
-def read_text(fname):
+@patch
+def read(self:Path):
     "Read the content of `fname`"
-    with open(fname, 'r') as f: return f.read()
+    with self.open() as f: return f.read()
 
 @patch
 def write(self:Path, txt):
@@ -166,12 +174,12 @@ def tokenize_folder(path, extensions=None, include=None, output_dir=None, n_cpus
     path,extensions = Path(path),ifnone(extensions, ['.txt'])
     fnames = get_files(path, extensions=extensions, recurse=True, include=include)
     output_dir = Path(ifnone(output_dir, path.parent/f'{path.name}_tok'))
-    rules = read_text + L(ifnone(rules, defaults.text_proc_rules.copy()))
+    rules = Path.read + L(ifnone(rules, defaults.text_proc_rules.copy()))
 
     counter = Counter()
     for i,tok in parallel_tokenize(fnames, tok_func, rules, as_gen=True, **tok_kwargs):
         out = output_dir/fnames[i].relative_to(path)
-        out.write(defaults.text_token_sep.join(tok))
+        out.write(' '.join(tok))
         out.with_suffix('.len').write(str(len(tok)))
         counter.update(tok)
 
@@ -195,7 +203,7 @@ def tokenize_df(df, text_cols, n_workers=defaults.cpus, rules=None, mark_fields=
 
     for tok in parallel_tokenize(texts, tok_func, rules, **tok_kwargs):
         lengths.append(len(tok))
-        outputs.append(defaults.text_token_sep.join(tok))
+        outputs.append(' '.join(tok))
         counter.update(tok)
 
     other_cols = [c for c in df.columns if c not in text_cols]

@@ -152,7 +152,6 @@ class BatchDS(GetAttr, IterableDataset):
         self.samp = batch_sampler_cls(sampler, bs, drop_last)
 
     def __iter__(self):
-        self.reset()
         torch.manual_seed(self.rng.randint(0,sys.maxsize))
         samps = list(enumerate(self.samp))
         idxs = (b for i,b in samps if i%self.nw==self.offs)
@@ -161,7 +160,7 @@ class BatchDS(GetAttr, IterableDataset):
     def get_batch(self, b): return [self.ds[j] for j in b]
     def get_batches(self, idxs): return map(self.get_batch, idxs)
     def __len__(self): return len(self.samp)
-    def reset(self): pass
+    def reset(self): getattr(self.ds, "reset", noop)()
 
 def _wif(worker_id):
     info = get_worker_info()
@@ -219,7 +218,10 @@ class TfmdDL(GetAttr):
 
     def __len__(self): return len(self.dl)
     def one_batch(self): return next(iter(self))
-    def __iter__(self): return map(self._encode_batch,self.dl)
+    def __iter__(self):
+        getattr(self.dl.dataset, "reset", noop)()
+        return map(self._encode_batch,self.dl)
+
     def _encode_batch(self, b):
         b = self.tfms(self._retain_cls(b), filt=self.filt)
         if not self._dl_types: self._dl_types = L(b).mapped(type)
