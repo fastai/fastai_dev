@@ -3,7 +3,7 @@
 __all__ = ['ProcessPoolExecutor', 'parallel', 'parallel_gen', 'UNK', 'PAD', 'BOS', 'EOS', 'FLD', 'TK_REP', 'TK_WREP',
            'TK_UP', 'TK_MAJ', 'spec_add_spaces', 'rm_useless_spaces', 'replace_rep', 'replace_wrep', 'fix_html',
            'replace_all_caps', 'replace_maj', 'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer',
-           'apply_rules', 'tokenize1', 'TokenizeBatch', 'parallel_tokenize', 'tokenize_folder', 'tokenize_df',
+           'apply_rules', 'TokenizeBatch', 'tokenize1', 'parallel_tokenize', 'tokenize_folder', 'tokenize_df',
            'tokenize_csv', 'SentencePieceTokenizer']
 
 from ..imports import *
@@ -15,7 +15,7 @@ from ..notebook.showdoc import show_doc
 
 import concurrent.futures
 from concurrent.futures import as_completed
-from multiprocessing import Process, Pipe
+from multiprocessing import Process, Queue
 import spacy,html
 from spacy.symbols import ORTH
 
@@ -28,23 +28,25 @@ class ProcessPoolExecutor(concurrent.futures.ProcessPoolExecutor):
     def map(self, f, items):
         return [f(o) for o in items] if self.no_workers else super().map(f, items)
 
-def parallel(func, items, n_cpus=defaults.cpus):
-    "Applies `func` in parallel to `items`, using `n_cpus`"
-    with ProcessPoolExecutor(max_workers=n_cpus) as ex:
+def parallel(func, items, n_workers=defaults.cpus):
+    "Applies `func` in parallel to `items`, using `n_workers`"
+    with ProcessPoolExecutor(max_workers=n_workers) as ex:
         return [x for x in progress_bar(ex.map(func,items), total=len(items), leave=False)]
 
-def parallel_gen(cls, items, n_cpus=defaults.cpus, as_gen=False, **kwargs):
-    "Instantiate `cls` in `n_cpus` procs & call each on a subset of `items` in parallel."
-    recv_end, send_end = Pipe(False)
-    batches = np.array_split(items, n_cpus)
+def parallel_gen(cls, items, n_workers=defaults.cpus, as_gen=False, **kwargs):
+    "Instantiate `cls` in `n_workers` procs & call each on a subset of `items` in parallel."
+    queue = Queue()
+    batches = np.array_split(items, n_workers)
     idx = np.cumsum(0 + L(batches).mapped(len))
     def _f(batch, start_idx):
         f = cls(**kwargs)
-        for i,b in enumerate(f(batch)): send_end.send((start_idx+i,b))
+        for i,b in enumerate(f(batch)): queue.put((start_idx+i,b))
     processes = [Process(target=_f, args=o) for o in zip(batches,idx)]
     for p in processes: p.start()
-    res = (recv_end.recv() for _ in progress_bar(items, leave=False))
-    return res if as_gen else [o[1] for o in sorted(res)]
+    res = (queue.get() for _ in progress_bar(items, leave=False))
+    try: return res if as_gen else [o[1] for o in sorted(res)]
+    finally:
+        for p in processes: p.join()
 
 #special tokens
 UNK, PAD, BOS, EOS, FLD, TK_REP, TK_WREP, TK_UP, TK_MAJ = "xxunk xxpad xxbos xxeos xxfld xxrep xxwrep xxup xxmaj".split()
@@ -138,10 +140,6 @@ def apply_rules(items, rules):
     "Returns a generator that apply `rules`  to `items`"
     return map(compose(*rules), items)
 
-def tokenize1(text, tok_func=SpacyTokenizer, rules=None, post_rules=None, **tok_kwargs):
-    "Tokenize one `text` with an instance of `tok_func` and some `rules`"
-    return next(iter(TokenizeBatch(tok_func, rules, post_rules, **tok_kwargs)([text])))
-
 class TokenizeBatch:
     "A wrapper around `tok_func` to apply `rules` and tokenize in parallel"
     def __init__(self, tok_func=SpacyTokenizer, rules=None, post_rules=None, **tok_kwargs ):
@@ -152,10 +150,15 @@ class TokenizeBatch:
     def __call__(self, batch):
         for o in self.tok.pipe(apply_rules(batch, self.rules)): yield L(o).mapped(self.post_f)
 
-def parallel_tokenize(items, tok_func, rules, as_gen=False, **tok_kwargs):
+def tokenize1(text, tok_func=SpacyTokenizer, rules=None, post_rules=None, **tok_kwargs):
+    "Tokenize one `text` with an instance of `tok_func` and some `rules`"
+    return next(iter(TokenizeBatch(tok_func, rules, post_rules, **tok_kwargs)([text])))
+
+def parallel_tokenize(items, tok_func, rules, as_gen=False, n_workers=defaults.cpus, **tok_kwargs):
     "Calls a potential setup on `tok_func` before launching `TokenizeBatch` in parallel"
     if hasattr(tok_func, 'setup'): tok_kwargs = tok_func(**tok_kwargs).setup(items, rules)
-    return parallel_gen(TokenizeBatch, items, as_gen=as_gen, tok_func=tok_func, rules=rules, **tok_kwargs)
+    return parallel_gen(TokenizeBatch, items, as_gen=as_gen, tok_func=tok_func,
+                        rules=rules, n_workers=n_workers, **tok_kwargs)
 
 @patch
 def read(self:Path):
@@ -168,7 +171,7 @@ def write(self:Path, txt):
     self.parent.mkdir(parents=True,exist_ok=True)
     with self.open('w') as f: f.write(txt)
 
-def tokenize_folder(path, extensions=None, include=None, output_dir=None, n_cpus=defaults.cpus,
+def tokenize_folder(path, extensions=None, include=None, output_dir=None, n_workers=defaults.cpus,
                     rules=None, tok_func=SpacyTokenizer, **tok_kwargs):
     "Tokenize text files in `path` in parallel using `n_workers`"
     path,extensions = Path(path),ifnone(extensions, ['.txt'])
@@ -177,7 +180,7 @@ def tokenize_folder(path, extensions=None, include=None, output_dir=None, n_cpus
     rules = Path.read + L(ifnone(rules, defaults.text_proc_rules.copy()))
 
     counter = Counter()
-    for i,tok in parallel_tokenize(fnames, tok_func, rules, as_gen=True, **tok_kwargs):
+    for i,tok in parallel_tokenize(fnames, tok_func, rules, as_gen=True, n_workers=n_workers, **tok_kwargs):
         out = output_dir/fnames[i].relative_to(path)
         out.write(' '.join(tok))
         out.with_suffix('.len').write(str(len(tok)))
@@ -201,7 +204,7 @@ def tokenize_df(df, text_cols, n_workers=defaults.cpus, rules=None, mark_fields=
     texts = _join_texts(df[text_cols], mark_fields=mark_fields)
     lengths,outputs,counter = [],[],Counter()
 
-    for tok in parallel_tokenize(texts, tok_func, rules, **tok_kwargs):
+    for tok in parallel_tokenize(texts, tok_func, rules, n_workers=n_workers, **tok_kwargs):
         lengths.append(len(tok))
         outputs.append(' '.join(tok))
         counter.update(tok)
