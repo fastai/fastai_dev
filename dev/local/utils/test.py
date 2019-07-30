@@ -16,8 +16,8 @@ from torch.utils.data import TensorDataset
 
 def synth_data(a=2, b=3, bs=16, n_train=10, n_valid=2, cuda=False):
     def get_data(n):
-        x = torch.randn(bs*n)
-        return TensorDataset(x, a*x + b + 0.1*torch.randn(bs*n))
+        x = torch.randn(bs*n, 1)
+        return TensorDataset(x, a*x + b + 0.1*torch.randn(bs*n, 1))
     train_ds = get_data(n_train)
     valid_ds = get_data(n_valid)
     tfms = [Cuda()] if cuda else None
