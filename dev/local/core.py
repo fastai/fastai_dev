@@ -7,7 +7,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'patch_to', '
            'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'mapper',
            'partialler', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title',
            'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
-           'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check']
+           'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'one_param']
 
 from .test import *
 from .imports import *
@@ -543,3 +543,6 @@ def flatten_check(inp, targ, detach=True):
     inp,targ = to_detach(inp.contiguous().view(-1)),to_detach(targ.contiguous().view(-1))
     test_eq(len(inp), len(targ))
     return inp,targ
+
+#Comes from 32_text_models_awdlstm.ipynb.
+def one_param(m): return next(iter(m.parameters()))
