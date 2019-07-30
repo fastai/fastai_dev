@@ -109,9 +109,8 @@ class URLs():
 
     #Pretrained models
     OPENAI_TRANSFORMER = f'{S3_MODEL}transformer.tgz'
-    WT103              = f'{S3_MODEL}wt103.tgz'
-    #TODO: remove this last one and make sure the mosr recent is up
-    WT103_1            = f'{S3_MODEL}wt103-1.tgz'
+    WT103_FWD          = f'{S3_MODEL}wt103-fwd'
+    WT103_BWD          = f'{S3_MODEL}wt103-bwd'
 
 def _get_config():
     config_path = Path(os.getenv('FASTAI_HOME', '~/.fastai')).expanduser()
