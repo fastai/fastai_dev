@@ -26,6 +26,7 @@ class RNNTrainer(Callback):
         self.learn.pred = self.pred[0]
 
     def after_loss(self):
+        if not self.training: return
         if self.alpha != 0.:  self.learn.loss += self.alpha * self.out[-1].float().pow(2).mean()
         if self.beta != 0.:
             h = self.raw_out[-1]
