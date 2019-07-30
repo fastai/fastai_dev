@@ -69,6 +69,7 @@
   "show_image_batch": "01_core.ipynb",
   "anno_parser": "01a_script.ipynb",
   "call_parse": "01a_script.ipynb",
+  "type_hints": "02_transforms.ipynb",
   "anno_ret": "02_transforms.ipynb",
   "cmp_instance": "02_transforms.ipynb",
   "ShowTitle": "02_transforms.ipynb",

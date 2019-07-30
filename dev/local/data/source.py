@@ -34,11 +34,12 @@ class DataSource(TfmdDS):
         self.filts = L(mask2idxs(filt) for filt in filts)
         # Create map from item id to filter id
         assert all_disjoint(self.filts)
-        self.filt_idx = L([None]*len(items))
-        for i,f in enumerate(self.filts): self.filt_idx[f] = i
 
         self.items = L(items)
-        self.tls = [_FiltTfmdList(items, t, self.filts, self.filt_idx, do_setup=do_setup)
+        self.filt_idx = L([None]*len(self.items))
+        for i,f in enumerate(self.filts): self.filt_idx[f] = i
+
+        self.tls = [_FiltTfmdList(self.items, t, self.filts, self.filt_idx, do_setup=do_setup)
                     for t in L(type_tfms)]
         self._mk_pipeline(ds_tfms, do_setup=do_setup, as_item=False)
 
