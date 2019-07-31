@@ -186,9 +186,7 @@ class L(GetAttr, metaclass=NewChkMeta):
 
     def __getitem__(self, idx):
         "Retrieve `idx` (can be list of indices, or mask, or int) items"
-        res = [self.items[i] for i in _mask2idxs(idx)] if is_iter(idx) else self.items[idx]
-#         if isinstance(res,(tuple,list)) and not isinstance(res,L): res = L(res)
-        return res
+        return L(self.items[i] for i in _mask2idxs(idx)) if is_iter(idx) else self.items[idx]
 
     def __setitem__(self, idx, o):
         "Set `idx` (can be list of indices, or mask, or int) items to `o` (which is broadcast if not iterable)"
@@ -462,8 +460,10 @@ def show_title(o, ax=None, ctx=None, label=None, **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
     if ax is None: print(o)
-    elif isinstance(ax, pd.Series): ax = ax.append(pd.Series({label: o}))
     elif hasattr(ax, 'set_title'): ax.set_title(o)
+    elif isinstance(ax, pd.Series):
+        while label in ax: label += '_'
+        ax = ax.append(pd.Series({label: o}))
     return ax
 
 def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):

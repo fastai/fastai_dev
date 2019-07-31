@@ -142,21 +142,28 @@ def __len__(self:DataLoader):
 
 class BaseDS(GetAttr):
     _xtra = ['show', 'decode', 'show_at', 'decode_at', 'decode_batch']
-    def __init__(self, ds): self.default = self.ds = ds
+    def __init__(self, ds):
+        self.default = self.ds = ds
+        ds.wrapper = self
+        self._delegate_ds("reset")
+
+    def _delegate_ds(self, attr):
+        if hasattr(self.ds,attr): setattr(self, attr, getattr(self.ds, attr))
+
+    def reset(self): pass
 
 class BatchDS(BaseDS, IterableDataset):
     _xtra = ['show', 'decode', 'show_at', 'decode_at', 'decode_batch']
     def __init__(self, ds ,bs=1, shuffle=False, sampler=None, batch_sampler=None, drop_last=False,
-                sampler_cls=None, batch_sampler_cls=BatchSampler, get_batch=None, reset=None):
-        self.default,self.ds,self.samp,self.rng,self.nw,self.offs = ds,ds,batch_sampler,random.Random(),1,0
-        if get_batch: self.get_batch = types.MethodType(get_batch,self)
-        if reset: self.reset = types.MethodType(reset,self)
+                 collate_fn=default_collate, sampler_cls=None, batch_sampler_cls=BatchSampler):
+        self.default,self.ds,self.samp,self.collate_fn = ds,ds,batch_sampler,collate_fn
+        self.rng,self.nw,self.offs,self.is_iterable = random.Random(),1,0,True
+        for o in ("get_batches","get_batch","collate"): self._delegate_ds(o)
         if self.samp: return
         if not sampler: sampler = ifnone(sampler_cls, (SequentialSampler,RandomSampler)[shuffle])(ds)
         self.samp = batch_sampler_cls(sampler, bs, drop_last)
 
     def __iter__(self):
-        self.reset()
         torch.manual_seed(self.rng.randint(0,sys.maxsize))
         samps = list(enumerate(self.samp))
         idxs = (b for i,b in samps if i%self.nw==self.offs)
@@ -164,8 +171,8 @@ class BatchDS(BaseDS, IterableDataset):
 
     def get_batch(self, b): return [self.ds[j] for j in b]
     def get_batches(self, idxs): return map(self.get_batch, idxs)
+    def collate(self, idxs): return self.collate_fn(self.get_batches(idxs))
     def __len__(self): return len(self.samp)
-    def reset(self): pass
 
 def _wif(worker_id):
     info = get_worker_info()
@@ -174,9 +181,9 @@ def _wif(worker_id):
     ds.samp.sampler = copy(ds.samp.sampler)
 
 def dataloader(ds, bs=1, num_workers=0, collate_fn=default_collate, **kwargs):
-    if not isinstance(ds, BatchDS): ds = BatchDS(ds, bs, **kwargs)
+    if not isinstance(ds, IterableDataset): ds = BatchDS(ds, bs, **kwargs)
     return DataLoader(ds, num_workers=num_workers, batch_size=None,
-                      worker_init_fn=_wif, collate_fn=collate_fn)
+                      worker_init_fn=_wif, collate_fn=noop)
 
 def retain_types(new, old):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"

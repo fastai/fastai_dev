@@ -103,8 +103,8 @@ class Pipeline():
 
 class TfmdList():
     "A `Pipeline` of `tfms` applied to a collection of `items`"
-    def __init__(self, items, tfms, do_setup=True, as_item=True):
-        self.items = L(items)
+    def __init__(self, items, tfms, do_setup=True, as_item=True, wrap_l=True):
+        self.items = L(items) if wrap_l else items
         self._mk_pipeline(tfms.tfms if isinstance(tfms,TfmdList) else tfms, do_setup=do_setup, as_item=as_item)
 
     def _mk_pipeline(self, tfms, do_setup, as_item):
@@ -113,19 +113,17 @@ class TfmdList():
             self.tfms = Pipeline(tfms, as_item=as_item)
             if do_setup: self.setup()
 
-    def __getitem__(self, i): return self.get(i)
     def get(self, i, filt=None):
         "Transformed item(s) at `i`"
         its = self.items[i]
         if is_iter(i): return L(self._get(it, filt=filt) for it in its)
         return self._get(its, filt=filt)
 
+    def __getitem__(self, i): return self.get(i)
     def _get(self, it, filt=None): return self.tfms(it, filt=filt)
-
     def subset(self, idxs): return self.__class__(self.items[idxs], self.tfms, do_setup=False)
     def decode_at(self, idx, filt=None): return self.decode(self.get(idx,filt=filt), filt=filt)
     def show_at(self, idx, filt=None, **kwargs): return self.show(self.get(idx,filt=filt), filt=filt, **kwargs)
-
     def decode_batch(self, b, filt=None, max_samples=10):
         return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_samples=max_samples)]
 
@@ -140,7 +138,6 @@ class TfmdList():
     def setup(self): self.tfms.setup(self)
     def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
     def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
-
 
 @docs
 class TfmdDS(TfmdList):

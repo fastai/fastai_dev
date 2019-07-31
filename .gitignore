@@ -1,4 +1,4 @@
-mnist_sample.tgz
+*.tgz
 .last_checked
 *.bak
 *.log

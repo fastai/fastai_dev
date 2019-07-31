@@ -202,12 +202,10 @@ def tokenize_df(df, text_cols, n_workers=defaults.cpus, rules=None, mark_fields=
     mark_fields = ifnone(mark_fields, len(text_cols) > 1)
     rules = L(ifnone(rules, defaults.text_proc_rules.copy()))
     texts = _join_texts(df[text_cols], mark_fields=mark_fields)
-    lengths,outputs,counter = [],[],Counter()
-
-    for tok in parallel_tokenize(texts, tok_func, rules, n_workers=n_workers, **tok_kwargs):
-        lengths.append(len(tok))
-        outputs.append(' '.join(tok))
-        counter.update(tok)
+    outputs = L(parallel_tokenize(texts, tok_func, rules, n_workers=n_workers, **tok_kwargs))
+    lengths = outputs.mapped(len)
+    counter = Counter()
+    for o in outputs: counter.update(o)
 
     other_cols = [c for c in df.columns if c not in text_cols]
     res = df[other_cols].copy()
