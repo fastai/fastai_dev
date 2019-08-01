@@ -24,7 +24,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import (DataLoader,SequentialSampler,RandomSampler,Sampler,BatchSampler,
                               IterableDataset,get_worker_info)
-from torch.utils.data.dataloader import default_collate
+from torch.utils.data._utils.collate import default_collate,default_convert
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace
 

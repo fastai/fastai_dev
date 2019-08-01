@@ -85,29 +85,37 @@ def patch_property(f):
 
 def _mk_param(n): return inspect.Parameter(n, inspect.Parameter.POSITIONAL_OR_KEYWORD, default=None)
 
-def kwargs(names):
+def kwargs(names, keep=False):
     "Decorator: replace `**kwargs` in signature with `names.split()` params"
     names = names.split()
     def _f(f):
         sig = inspect.signature(f)
         sigd = dict(sig.parameters)
-        sigd.pop('kwargs')
+        k = sigd.pop('kwargs')
         s2 = {n:_mk_param(n) for n in names if n not in sigd}
         sigd.update(s2)
+        if keep: sigd['kwargs'] = k
         f.__signature__ = sig.replace(parameters=sigd.values())
         return f
     return _f
 
-def delegates(to):
+def delegates(to=None, keep=False):
     "Decorator: replace `**kwargs` in signature with params from `to`"
     def _f(f):
-        sig = inspect.signature(f)
+        if to is None:
+            to_f = f.__base__.__init__
+            from_f = f.__init__
+        else:
+            to_f = to
+            from_f = f
+        sig = inspect.signature(from_f)
         sigd = dict(sig.parameters)
-        sigd.pop('kwargs')
-        s2 = {k:v for k,v in inspect.signature(to).parameters.items()
+        k = sigd.pop('kwargs')
+        s2 = {k:v for k,v in inspect.signature(to_f).parameters.items()
               if v.default != inspect.Parameter.empty and k not in sigd}
         sigd.update(s2)
-        f.__signature__ = sig.replace(parameters=sigd.values())
+        if keep: sigd['kwargs'] = k
+        from_f.__signature__ = sig.replace(parameters=sigd.values())
         return f
     return _f
 
