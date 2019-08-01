@@ -34,14 +34,16 @@ class BaseDataset():
     def create(cls, items, **kwargs): return IndexedDataset(items, **kwargs)
 
     def __len__(self): return len(self.sampler)
-    def mk_sampler(self): return IterSampler(self.items)
+    def mk_sampler(self, **kwargs): return Sampler(self.items, **kwargs)
     def collate_fn(self, b): return default_convert(b)
     def batch(self, s):
         if not is_iter(s): return self.item(s)
         res = []
         try:
             for s_ in s: res.append(self.item(s_))
-        except StopIteration: self.done=True
+        except StopIteration as e:
+            if res: self.done=True
+            else: raise e
         return res
 
     def item(self, s): return next(self.it)
@@ -59,9 +61,9 @@ class BaseDataset():
             self.done=False
             return
 
-# TODO: drop_incomplete
 class BaseBatchDataset(BaseDataset):
-    def mk_sampler(self,bs): return BatchIterSampler(self, bs)
+    def __init__(self, items=None, bs=4, **kwargs): super().__init__(items, bs=bs, **kwargs)
+    def mk_sampler(self, bs, **kwargs): return BatchIterSampler(self.items, bs, **kwargs)
     def collate_fn(self, b): return default_collate(b)
 
 class DataLoader:
