@@ -51,10 +51,10 @@ def compose_tfms(x, tfms, is_enc=True, reverse=False, **kwargs):
         x = f(x, **kwargs)
     return x
 
-def batch_to_samples(b, max_rows=10):
-    "'Transposes' a batch to (at most `max_rows`) samples"
-    if isinstance(b, Tensor): return b[:max_rows]
-    return zip(*L(batch_to_samples(b_, max_rows) for b_ in b))
+def batch_to_samples(b, max_samples=10):
+    "'Transposes' a batch to (at most `max_samples`) samples"
+    if isinstance(b, Tensor): return b[:max_samples]
+    return zip(*L(batch_to_samples(b_, max_samples) for b_ in b))
 
 def mk_transform(f, as_item=True):
     "Convert function `f` to `Transform` if it isn't already one"
@@ -84,14 +84,14 @@ class Pipeline():
     def decode  (self, o, filt=None): return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, filt=filt)
     def __repr__(self): return f"Pipeline: {self.fs}"
     def __getitem__(self,i): return self.fs[i]
-    def decode_batch(self, b, filt=None, max_rows=10):
-        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_rows=max_rows)]
+    def decode_batch(self, b, filt=None, max_samples=10):
+        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_samples=max_samples)]
 
     # TODO: move show_batch here of TfmDS?
     def show(self, o, ctx=None, filt=None, **kwargs):
         for f in reversed(self.fs):
             res = self._show(o, ctx, **kwargs)
-            if res: return res
+            if res is not None: return res
             o = f.decode(o, filt=filt)
         return self._show(o, ctx, **kwargs)
 
@@ -99,12 +99,12 @@ class Pipeline():
         o1 = [o] if self.as_item else o
         if not all(hasattr(o_, 'show') for o_ in o1): return
         for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
-        return ctx or 1
+        return 1 if ctx is None else ctx
 
 class TfmdList():
     "A `Pipeline` of `tfms` applied to a collection of `items`"
-    def __init__(self, items, tfms, do_setup=True, as_item=True):
-        self.items = L(items)
+    def __init__(self, items, tfms, do_setup=True, as_item=True, wrap_l=True):
+        self.items = L(items) if wrap_l else items
         self._mk_pipeline(tfms.tfms if isinstance(tfms,TfmdList) else tfms, do_setup=do_setup, as_item=as_item)
 
     def _mk_pipeline(self, tfms, do_setup, as_item):
@@ -113,21 +113,19 @@ class TfmdList():
             self.tfms = Pipeline(tfms, as_item=as_item)
             if do_setup: self.setup()
 
-    def __getitem__(self, i): return self.get(i)
     def get(self, i, filt=None):
         "Transformed item(s) at `i`"
         its = self.items[i]
         if is_iter(i): return L(self._get(it, filt=filt) for it in its)
         return self._get(its, filt=filt)
 
+    def __getitem__(self, i): return self.get(i)
     def _get(self, it, filt=None): return self.tfms(it, filt=filt)
-
     def subset(self, idxs): return self.__class__(self.items[idxs], self.tfms, do_setup=False)
     def decode_at(self, idx, filt=None): return self.decode(self.get(idx,filt=filt), filt=filt)
     def show_at(self, idx, filt=None, **kwargs): return self.show(self.get(idx,filt=filt), filt=filt, **kwargs)
-
-    def decode_batch(self, b, filt=None, max_rows=10):
-        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_rows=max_rows)]
+    def decode_batch(self, b, filt=None, max_samples=10):
+        return [self.decode(b_, filt=filt) for b_ in batch_to_samples(b, max_samples=max_samples)]
 
     # Standard dunder magics
     def __eq__(self, b): return all_equal(self, b)
@@ -140,7 +138,6 @@ class TfmdList():
     def setup(self): self.tfms.setup(self)
     def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
     def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
-
 
 @docs
 class TfmdDS(TfmdList):

@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'Category', 'Categorize', 'MultiCategory',
-           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize',
-           'broadcast_vec', 'DataBunch']
+           'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'BaseDS', 'BatchDS', 'dataloader', 'retain_types',
+           'ToTensor', 'TfmdCollate', 'TfmdDL', 'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 from ..imports import *
 from ..test import *
@@ -81,7 +81,7 @@ def RegexLabeller(pat):
         return res.group(1)
     return _inner
 
-class Category(str, ShowTitle): pass
+class Category(str, ShowTitle): _show_args = {'label': 'category'}
 
 class Categorize(ItemTransform):
     "Reversible transform of category string to `vocab` id"
@@ -136,63 +136,134 @@ class OneHotEncode(Transform):
     def encodes(self, o)->Tensor: return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
     def decodes(self, o)->L: return one_hot_decode(o, self.vocab)
 
+@patch
+def __len__(self:DataLoader):
+    return len((self._index_sampler, self.dataset)[isinstance(self.dataset, IterableDataset)])
+
+class BaseDS(GetAttr):
+    _xtra = ['show', 'decode', 'show_at', 'decode_at', 'decode_batch']
+    def __init__(self, ds):
+        self.default = self.ds = ds
+        ds.wrapper = self
+        self._delegate_ds("reset")
+
+    def _delegate_ds(self, attr):
+        if hasattr(self.ds,attr): setattr(self, attr, getattr(self.ds, attr))
+
+    def reset(self): pass
+
+class BatchDS(BaseDS, IterableDataset):
+    _xtra = ['show', 'decode', 'show_at', 'decode_at', 'decode_batch']
+    def __init__(self, ds ,bs=1, shuffle=False, sampler=None, batch_sampler=None, drop_last=False,
+                 collate_fn=default_collate, sampler_cls=None, batch_sampler_cls=BatchSampler):
+        self.default,self.ds,self.samp,self.collate_fn = ds,ds,batch_sampler,collate_fn
+        self.rng,self.nw,self.offs,self.is_iterable = random.Random(),1,0,True
+        for o in ("get_batches","get_batch","collate"): self._delegate_ds(o)
+        if self.samp: return
+        if not sampler: sampler = ifnone(sampler_cls, (SequentialSampler,RandomSampler)[shuffle])(ds)
+        self.samp = batch_sampler_cls(sampler, bs, drop_last)
+
+    def __iter__(self):
+        torch.manual_seed(self.rng.randint(0,sys.maxsize))
+        samps = list(enumerate(self.samp))
+        idxs = (b for i,b in samps if i%self.nw==self.offs)
+        return self.get_batches(idxs)
+
+    def get_batch(self, b): return [self.ds[j] for j in b]
+    def get_batches(self, idxs): return map(self.get_batch, idxs)
+    def collate(self, idxs): return self.collate_fn(self.get_batches(idxs))
+    def __len__(self): return len(self.samp)
+
+def _wif(worker_id):
+    info = get_worker_info()
+    ds = info.dataset
+    ds.nw,ds.offs = info.num_workers,info.id
+    ds.samp.sampler = copy(ds.samp.sampler)
+
+def dataloader(ds, bs=1, num_workers=0, collate_fn=default_collate, **kwargs):
+    if not isinstance(ds, IterableDataset): ds = BatchDS(ds, bs, **kwargs)
+    return DataLoader(ds, num_workers=num_workers, batch_size=None,
+                      worker_init_fn=_wif, collate_fn=noop)
+
+def retain_types(new, old):
+    "Cast each item of `new` to type of matching item in `old` if it's a superclass"
+    return tuple(retain_type(tuple(n) if isinstance(n, list) else n, o) for n,o in zip(new,old))
+
+class ToTensor(Transform):
+    "Convert item to appropriate tensor class"
+    order = 15
+
+class TfmdCollate():
+    def __init__(self, tfms=None, collate_fn=default_collate):
+        self.collate_fn = collate_fn
+        self.tfms = ToTensor(as_item=False) if tfms is None else Pipeline(tfms, as_item=False)
+
+    def __call__(self, samples):
+        x = tuple(self.tfms(o) for o in samples)
+        return retain_types(self.collate_fn(x), x[0])
+
 def _DataLoader__getattr(self,k):
     try: return getattr(self.dataset, k)
     except AttributeError: raise AttributeError(k) from None
 DataLoader.__getattr__ = _DataLoader__getattr
 
-# If `x` isn't of type `t`, then cast it
 def _cast_tensor(x, t):
+    "If `x` isn't of type `t`, then cast it"
     if isinstance(x, Tensor) and issubclass(t, Tensor):
         return t(x) if not isinstance(x, t) else x
     elif isinstance(x, (tuple,list)) and issubclass(t, tuple):
         return t(tuple(x)) if not isinstance(x, t) else x
     else: return x
 
-@docs
 class TfmdDL(GetAttr):
     "Transformed `DataLoader` using a `Pipeline` of `tfm`"
     _xtra = 'batch_size num_workers dataset sampler pin_memory'.split()
 
-    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1, **kwargs):
-        self.dl = DataLoader(dataset, bs, shuffle, num_workers=num_workers, **kwargs)
-        self.default,self.tfms = self.dl,Pipeline(tfms, as_item=False)
+    def __init__(self, dataset, tfms=None, bs=16, shuffle=False, num_workers=1, collate_tfms=None,
+                 collate_fn=None, batch_sampler=None, **kwargs):
+        if collate_fn is None: collate_fn = TfmdCollate(collate_tfms, default_collate)
+        if batch_sampler is not None: bs=1
+        self.dl = DataLoader(dataset, bs, shuffle, num_workers=num_workers,
+                             collate_fn=collate_fn, batch_sampler=batch_sampler, **kwargs)
+        self._dl_types,self.collate_fn,self.default,self.tfms = None,collate_fn,self.dl,Pipeline(tfms, as_item=False)
         self.tfms.setup(self)
 
     def __len__(self): return len(self.dl)
     def one_batch(self): return next(iter(self))
     def __iter__(self):
-        return (self._save_cls(self.tfms(self._retain_cls(b), filt=self.filt)) for b in self.dl)
+        getattr(self.dl.dataset, "reset", noop)()
+        return map(self._encode_batch,self.dl)
+
+    def _encode_batch(self, b):
+        b = self.tfms(self._retain_cls(b), filt=self.filt)
+        if not self._dl_types: self._dl_types = L(b).mapped(type)
+        return b
 
     def decode(self, b): return self.tfms.decode(self._retain_cls(b, ds=False), filt=self.filt)
-    def decode_batch(self, b, max_rows=10):
-        b = batch_to_samples(self.decode(b), max_rows=max_rows)
+    def decode_batch(self, b, max_samples=10):
+        b = batch_to_samples(self.decode(b), max_samples=max_samples)
         f = getattr(self.dataset,'decode',noop)
         return L(f(self._retain_cls(s)) for s in b)
 
-    def show_batch(self, b=None, max_rows=10, ctxs=None, **kwargs):
+    def show_batch(self, b=None, max_samples=10, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         if b is None: b = self.one_batch()
         b = self.decode(b)
-        if ctxs is None: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
-        for o,ctx in zip(batch_to_samples(b, max_rows),ctxs):
-            self.dataset.show(self._retain_cls(o), ctx=ctx, **kwargs)
+        if ctxs is None:
+            ctxs = b[0].get_ctxs(max_samples=max_samples, **kwargs) if hasattr(
+                b[0], 'get_ctxs') else [None] * len(b[0] if is_iter(b[0]) else b)
+        ctxs = [self.dataset.show(self._retain_cls(o), ctx=ctx, **kwargs) for o,ctx in zip(batch_to_samples(b, max_samples),ctxs)]
+        if hasattr(b[0], 'display'): b[0].display(ctxs)
 
     @property
     def filt(self): return getattr(self.dataset, 'filt', None)
     @functools.lru_cache()
-    def _ds_types(self): return L(self.dataset[0]).mapped(type)
+    def _ds_types(self): return L(self.collate_fn((self.dataset[0],))).mapped(type)
 
     def _retain_cls(self, b, ds=True):
-        return tuple(_cast_tensor(*o) for o in L(b,self._ds_types() if ds else self._dl_types).zipped())
-    def _save_cls(self, b):
-        if not getattr(self, '_dl_types', False): self._dl_types = L(b).mapped(type)
-        return b
-
-    _docs = dict(decode="Decode `b` using `tfms`",
-                 decode_batch="Decode `b` entirely",
-                 show_batch="Show each item of `b`",
-                 one_batch="Grab first batch of `dl`")
+        "Cast items of `b` to ds or dl types as appropriate"
+        types = self._ds_types() if ds else self._dl_types
+        return tuple(itertools.starmap(_cast_tensor, zip(b,types)))
 
 @docs
 class Cuda(Transform):

@@ -119,6 +119,7 @@ def _reset_index():
 
 def _notebook2script(fname):
     "Finds cells starting with `#export` and puts them into a new module"
+    if os.environ.get('IN_TEST',0): return  # don't export if running tests
     fname = Path(fname)
     nb = read_nb(fname)
     default = find_default_export(nb['cells'])
@@ -154,6 +155,7 @@ def _get_sorted_files(all_fs: Union[bool,str], up_to=None):
 def notebook2script(fname=None, all_fs=None, up_to=None):
     "Convert `fname` or all the notebook satisfying `all_fs`."
     # initial checks
+    if os.environ.get('IN_TEST',0): return  # don't export if running tests
     assert fname or all_fs
     if all_fs: _reset_index()
     if (all_fs is None) and (up_to is not None): all_fs=True # Enable allFiles if upTo is present

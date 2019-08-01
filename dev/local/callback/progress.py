@@ -31,7 +31,9 @@ class ProgressCallback(Callback):
     def begin_validate(self): self._launch_pbar()
     def after_train(self):    self.pbar.on_iter_end()
     def after_validate(self): self.pbar.on_iter_end()
-    def after_batch(self):    self.pbar.update(self.iter+1)
+    def after_batch(self):
+        self.pbar.update(self.iter+1)
+        self.pbar.comment = f'{self.smooth_loss:.4f}'
 
     def _launch_pbar(self):
         self.pbar = progress_bar(self.dl, parent=self.mbar)
