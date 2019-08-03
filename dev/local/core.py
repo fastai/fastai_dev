@@ -3,12 +3,12 @@
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'patch_to', 'patch', 'patch_property', 'kwargs',
            'delegates', 'chk', 'tensor', 'add_docs', 'docs', 'custom_dir', 'coll_repr', 'GetAttr', 'L', 'ifnone',
            'get_class', 'mk_class', 'wrap_class', 'noop', 'noops', 'tuplify', 'replicate', 'uniqueify', 'setify',
-           'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish', 'ReindexCollection', 'apply', 'to_detach',
-           'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs',
-           'compose', 'mapper', 'partialler', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props',
-           'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot',
-           'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString',
-           'flatten_check', 'one_param']
+           'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq',
+           'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'genl', 'apply', 'to_detach', 'to_half',
+           'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose',
+           'mapper', 'partialler', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image',
+           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint',
+           'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'one_param']
 
 from .test import *
 from .imports import *
@@ -359,6 +359,49 @@ class ReindexCollection(GetAttr):
     _docs = dict(reindex="Replace `self.idxs` with idxs",
                 shuffle="Randomly shuffle indices",
                 cache_clear="Clear LRU cache")
+
+def _oper(op,a,b=None): return (lambda o:op(o,a)) if b is None else op(a,b)
+
+def _mk_op(nm, mod=None):
+    "Create an operator using `oper` and add to the caller's module"
+    if mod is None: mod = inspect.currentframe().f_back.f_locals
+    op = getattr(operator,nm)
+    def _inner(a,b=None): return _oper(op, a,b)
+    _inner.__name__ = _inner.__qualname__ = nm
+    _inner.__doc__ = f'Same as `operator.{nm}`, or returns partial if 1 arg'
+    mod[nm] = _inner
+
+for op in 'lt gt le ge eq ne add sub mul truediv'.split(): _mk_op(op)
+
+class _InfMeta(type):
+    @property
+    def count(self): return itertools.count()
+    @property
+    def zeros(self): return itertools.cycle([0])
+    @property
+    def ones(self):  return itertools.cycle([1])
+    @property
+    def nones(self): return itertools.cycle([None])
+
+class Inf(metaclass=_InfMeta):
+    "Infinite lists"
+    pass
+
+def true(*args, **kwargs):
+    "Predicate: always `True`"
+    return True
+
+def stop(e=StopIteration):
+    "Raises exception `e` (by default `StopException`) even if in an expression"
+    raise e
+
+def gen(func, seq, cond=true):
+    "Like `(func(o) for o in seq if cond(func(o)))` but handles `StopIteration`"
+    return itertools.takewhile(cond, map(func,seq))
+
+def genl(func, seq, cond=true):
+    "Same as `gen`, but returns a list instead of a generator"
+    return list(gen(func, seq, cond=cond))
 
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"

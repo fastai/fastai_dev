@@ -19,51 +19,39 @@ def _wif(worker_id):
 class BaseDataset():
     _methods = 'collate_fn indexes batches reset wif'
     @kwargs(_methods, keep=True)
-    def __init__(self, items=None, **kwargs):
-        self.items = items
+    def __init__(self, items=None, shuffle=False, indexed=False, **kwargs):
+        self.items,self.shuffle,self.indexed,self.rng = items,shuffle,indexed,random.Random()
         for k in [k for k in kwargs if k in self._methods.split()]:
             setattr(self, k, types.MethodType(kwargs.pop(k),self))
-        self.rng,self.sampler = random.Random(),self.mk_sampler(**kwargs)
 
     def __iter__(self):
+        self.sampler = self.mk_sampler()
         torch.manual_seed(self.rng.randint(0,sys.maxsize))
+        self.it = iter(self.items) if self.items else None
         self.reset()
         return map(self.collate_fn, self.batches())
 
-    @classmethod
-    def create(cls, items, **kwargs): return IndexedDataset(items, **kwargs)
-
+    def mk_sampler(self): return Sampler(self.items, shuffle=self.shuffle, indexed=self.indexed)
     def __len__(self): return len(self.sampler)
-    def mk_sampler(self, **kwargs): return Sampler(self.items, **kwargs)
     def collate_fn(self, b): return default_convert(b)
-    def batch(self, s):
-        if not is_iter(s): return self.item(s)
-        res = []
-        try:
-            for s_ in s: res.append(self.item(s_))
-        except StopIteration as e:
-            if res: self.done=True
-            else: raise e
-        return res
-
-    def item(self, s): return next(self.it)
+    def item(self, s): return next(self.it) if s is None else self.items[s]
+    def batches(self): return map(self.batch, self.sampler)
+    def batch(self, s): return (list(map(self.item, s)) or stop()) if is_iter(s) else self.item(s)
+    def reset(self): pass
     def wif(self): pass
-    def reset(self):
-        self.done=False
-        if self.items: self.it = iter(self.items)
 
-    def batches(self):
-        try:
-            for s in self.sampler:
-                yield self.batch(s)
-                if self.done: raise StopIteration
-        except StopIteration:
-            self.done=False
-            return
+    @classmethod
+    def create(cls, items, bs=None, **kwargs):
+        return BaseBatchDataset(items, bs=bs, **kwargs) if bs else BaseDataset(items, **kwargs)
 
+@delegates()
 class BaseBatchDataset(BaseDataset):
-    def __init__(self, items=None, bs=4, **kwargs): super().__init__(items, bs=bs, **kwargs)
-    def mk_sampler(self, bs, **kwargs): return BatchIterSampler(self.items, bs, **kwargs)
+    def __init__(self, items=None, bs=4, drop_last=False, **kwargs):
+        super().__init__(items, **kwargs)
+        self.bs,self.drop_last = bs,drop_last
+
+    def mk_sampler(self): return BatchSampler(self.items, bs, drop_last=self.drop_last,
+                                              indexed=self.indexed, shuffle=self.shuffle)
     def collate_fn(self, b): return default_collate(b)
 
 class DataLoader:
