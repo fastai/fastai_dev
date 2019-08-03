@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/saeta/Just",
         "state": {
           "branch": null,
-          "revision": "2b4aec55d7808a43526bef89341f8c3f962be89a",
-          "version": "0.7.2"
+          "revision": "35dbe6823bf5f9b9bb996c1fe6c9ad9a4c59d821",
+          "version": "0.7.3"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mxcl/Path.swift",
         "state": {
           "branch": null,
-          "revision": "f324b4a562ca421fd2905414a10fb0fc91d58b67",
-          "version": "0.16.2"
+          "revision": "dac007e907a4f4c565cfdc55a9ce148a761a11d5",
+          "version": "0.16.3"
         }
       }
     ]

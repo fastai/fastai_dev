@@ -84,14 +84,15 @@ public class StatefulOptimizer<Model: Layer>
     }
         
     public func update(
-        _ variables: inout Model.AllDifferentiableVariables,
+        _ variables: inout Model,
         along direction: Model.TangentVector
     ) {
-        for kp in variables.keyPaths {
+        //Quick and dirty fix, TODO: try to simplify ans stop using keyPaths
+        for kp in variables.variables.keyPaths {
             var 𝛁p = direction[keyPath: kp]
             var hps = hpGroups[splitDict[kp]!]
-            stats.forEach() { $0.update(&states[kp]!, p: variables[keyPath: kp], 𝛁p: 𝛁p, hps: &hps) }
-            steppers.forEach() { $0.update(&variables[keyPath: kp], 𝛁p: &𝛁p, state: states[kp]!, hps: &hps) }
+            stats.forEach() { $0.update(&states[kp]!, p: variables.variables[keyPath: kp], 𝛁p: 𝛁p, hps: &hps) }
+            steppers.forEach() { $0.update(&variables.variables[keyPath: kp], 𝛁p: &𝛁p, state: states[kp]!, hps: &hps) }
             hpGroups[splitDict[kp]!] = hps
         }
     }

@@ -45,7 +45,7 @@ public extension SwitchableLayer {
     func gradForward(_ input: Input) ->
            (value: Input,
             pullback: (Self.Input.TangentVector) ->
-                                  (Self.TangentVector, Self.Input.TangentVector)) {
+                                  (Self.AllDifferentiableVariables, Self.Input.TangentVector)) {
         if isOn {
             return valueWithPullback(at: input) { $0.forward($1) } 
         } else {
