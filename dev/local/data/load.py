@@ -16,13 +16,14 @@ class Dataset():
     def __init__(self, items=None, bs=None, drop_last=False, shuffle=False, indexed=None, **kwargs):
         if indexed is None: indexed = items is not None and hasattr(items,'__getitem__')
         self.items,self.bs,self.drop_last,self.shuffle,self.indexed = items,bs,drop_last,shuffle,indexed
-        self.rng,self.nw,self.offs = random.Random(),1,0
+        self.seed,self.rng,self.nw,self.offs = None,random.Random(),1,0
         replace_methods(self, kwargs)
         try: self.n = len(self.items)
         except TypeError: self.n = None
         assert not kwargs or not (bs is None and drop_last)
 
     def __iter__(self):
+        if self.seed is not None: set_seed(self.seed)
         self.it = iter(self.items) if self.items else None
         idxs = (b for i,b in enumerate(self.sampler()) if i%self.nw==self.offs)
         self.reset()
@@ -41,7 +42,7 @@ class Dataset():
         res = Inf.count if self.indexed else Inf.nones
         if self.n is None: return res
         res = list(itertools.islice(res, self.n))
-        return rng.sample(res,len(res)) if self.shuffle else res
+        return self.rng.sample(res,len(res)) if self.shuffle else res
 
     reset = wif = noop
     def collate_fn(self, b): return (default_collate,default_convert)[self.bs is None](b)
