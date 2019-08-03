@@ -83,11 +83,10 @@ def patch_property(f):
     cls = next(iter(f.__annotations__.values()))
     return patch_to(cls, as_prop=True)(f)
 
-def _mk_param(n): return inspect.Parameter(n, inspect.Parameter.POSITIONAL_OR_KEYWORD, default=None)
+def _mk_param(n,d=None): return inspect.Parameter(n, inspect.Parameter.POSITIONAL_OR_KEYWORD, default=d)
 
 def kwargs(names, keep=False):
-    "Decorator: replace `**kwargs` in signature with `names.split()` params"
-    names = names.split()
+    "Decorator: replace `**namesargs` in signature with `names.split()` params"
     def _f(f):
         sig = inspect.signature(f)
         sigd = dict(sig.parameters)
