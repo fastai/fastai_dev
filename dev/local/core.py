@@ -2,10 +2,10 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'patch_to', 'patch', 'patch_property', 'kwargs',
            'delegates', 'chk', 'tensor', 'add_docs', 'docs', 'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'L',
-           'ifnone', 'get_class', 'mk_class', 'wrap_class', 'noop', 'noops', 'replace_methods', 'set_seed', 'tuplify',
-           'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish',
-           'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
-           'stop', 'gen', 'chunked', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device',
+           'ifnone', 'get_class', 'mk_class', 'wrap_class', 'noop', 'noops', 'replace_methods', 'set_seed',
+           'store_attr', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge',
+           'shufflish', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
+           'true', 'stop', 'gen', 'chunked', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device',
            'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'mapper', 'partialler', 'sort_by_run',
            'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
            'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
@@ -84,7 +84,7 @@ def patch_property(f):
     cls = next(iter(f.__annotations__.values()))
     return patch_to(cls, as_prop=True)(f)
 
-def _mk_param(n,d=None): return inspect.Parameter(n, inspect.Parameter.POSITIONAL_OR_KEYWORD, default=d)
+def _mk_param(n,d=None): return inspect.Parameter(n, inspect.Parameter.KEYWORD_ONLY, default=d)
 
 def kwargs(names, keep=False):
     "Decorator: replace `**kwargs` in signature with `names` params"
@@ -326,6 +326,11 @@ def set_seed(s):
     except NameError: pass
     random.seed(s)
 
+def store_attr(self, nms):
+    "Store params named in comma-separated `nms` from calling context into attrs in `self`"
+    mod = inspect.currentframe().f_back.f_locals
+    for n in nms.split(','): setattr(self,n,mod[n])
+
 def tuplify(o, use_list=False, match=None):
     "Make `o` a tuple"
     return tuple(L(o, use_list=use_list, match=match))
@@ -427,8 +432,8 @@ def chunked(it, cs, drop_last=False):
     if not isinstance(it, Iterator): it = iter(it)
     while True:
         res = list(itertools.islice(it, cs))
-        if not res or (len(res)<cs and drop_last): return
-        yield res
+        if res and (len(res)==cs or not drop_last): yield res
+        if len(res)<cs: return
 
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"
