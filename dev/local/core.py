@@ -6,7 +6,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'patch_to', '
            'store_attr', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge',
            'shufflish', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
            'true', 'stop', 'gen', 'chunked', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device',
-           'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'mapper', 'partialler', 'sort_by_run',
+           'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler', 'sort_by_run',
            'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
            'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
            'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'one_param']
@@ -308,7 +308,7 @@ def noop (x=None, *args, **kwargs):
     "Do nothing"
     return x
 
-def noops(self, x, *args, **kwargs):
+def noops(self, x=None, *args, **kwargs):
     "Do nothing (method)"
     return x
 
@@ -493,8 +493,7 @@ def find_bs(b):
     "Recursively search the batch size of `b`."
     return item_find(b).shape[0]
 
-@chk
-def compose(*funcs: Callable, order=None):
+def compose(*funcs, order=None):
     "Create a function that composes all functions in `funcs`, passing along remaining `*args` and `**kwargs` to all"
     funcs = L(funcs)
     if order is not None: funcs = funcs.sorted(order)
@@ -502,6 +501,10 @@ def compose(*funcs: Callable, order=None):
         for f in L(funcs): x = f(x, *args, **kwargs)
         return x
     return _inner
+
+def maps(*args):
+    "Like `map`, except funcs are composed first"
+    return map(compose(*args[:-1]), args[-1])
 
 def mapper(f):
     "Create a function that maps `f` over an input collection"
