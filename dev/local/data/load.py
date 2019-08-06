@@ -42,9 +42,8 @@ class DataLoader():
     def _iter(self):
         self.it = iter(self.items) if self.items else None
         self.reset()
-        # TODO: have each process handle contiguous set
-        idxs = (b for i,b in enumerate(self.sampler()) if i%self.nw==self.offs)
-        return maps(self.collate_fn, self.batch_tfm, self.batches(idxs))
+        batches = self.batches(self.sampler())
+        return maps(self.collate_fn, self.batch_tfm, batches)
 
     def __len__(self):
         if self.n is None: raise TypeError
@@ -57,9 +56,10 @@ class DataLoader():
 
     def sampler(self):
         res = Inf.count if self.indexed else Inf.nones
-        if self.n is None: return res
-        res = list(itertools.islice(res, self.n))
-        return self.rng.sample(res,len(res)) if self.shuffle else res
+        if self.n is not None:
+            res = list(itertools.islice(res, self.n))
+            res = self.rng.sample(res,len(res)) if self.shuffle else res
+        return (b for i,b in enumerate(res) if i//(self.bs or 1)%self.nw==self.offs)
 
     def collate_fn(self, b): return (default_collate,default_convert)[self.bs is None](b)
     def item(self, s): return next(self.it) if s is None else self.items[s]
