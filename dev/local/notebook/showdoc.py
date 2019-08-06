@@ -86,13 +86,12 @@ def get_function_source(func):
 
 _re_header = re.compile(r"""
 # Catches any header in markdown with the title in group 1
-
 ^\s*  # Beginning of text followed by any number of whitespace
 \#+   # One # or more
 \s*   # Any number of whitespace
 (.*)  # Catching group with anything
 $     # End of text
-""")
+""", re.VERBOSE)
 
 FASTAI_NB_DEV = 'https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/'
 
