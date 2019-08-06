@@ -23,13 +23,12 @@ class _FakeLoader(GetAttr):
         store_attr(self, 'd,pin_memory,num_workers,timeout')
     def __iter__(self): return iter(self.d._iter())
 
+@methods_kwargs
 class DataLoader():
     reset=item_tfm=batch_tfm=wif = noops
     _methods = 'collate_fn batches reset wif sampler item batch_tfm item_tfm'.split()
-    @kwargs(_methods)
     def __init__(self, items=None, bs=None, drop_last=False, shuffle=False, indexed=None,
                  num_workers=0, pin_memory=False, timeout=0, **kwargs):
-        replace_methods(self, kwargs)
         if indexed is None: indexed = items is not None and hasattr(items,'__getitem__')
         store_attr(self, 'items,bs,drop_last,shuffle,indexed')
         self.fake_l = _FakeLoader(self, pin_memory, num_workers, timeout)
