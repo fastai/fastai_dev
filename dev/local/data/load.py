@@ -13,7 +13,8 @@ _loaders = (_MultiProcessingDataLoaderIter,_SingleProcessDataLoaderIter)
 def _wif(worker_id):
     info = get_worker_info()
     ds = info.dataset.d
-    ds.nw,ds.offs,ds.seed = info.num_workers,info.id,info.seed
+    ds.nw,ds.offs = info.num_workers,info.id
+    set_seed(info.seed)
     ds.wif()
 
 class _FakeLoader(GetAttr):
@@ -32,16 +33,16 @@ class DataLoader():
         if indexed is None: indexed = items is not None and hasattr(items,'__getitem__')
         store_attr(self, 'items,bs,drop_last,shuffle,indexed')
         self.fake_l = _FakeLoader(self, pin_memory, num_workers, timeout)
-        self.lock,self.seed,self.rng,self.nw,self.offs = Lock(),None,random.Random(),1,0
+        self.lock,self.rng,self.nw,self.offs = Lock(),random.Random(),1,0
         try: self.n = len(self.items)
         except TypeError: self.n = None
         assert not kwargs or not (bs is None and drop_last)
 
     def __iter__(self): return _loaders[self.fake_l.num_workers==0](self.fake_l)
     def _iter(self):
-        if self.seed is not None: set_seed(self.seed)
         self.it = iter(self.items) if self.items else None
         self.reset()
+        # TODO: have each process handle contiguous set
         idxs = (b for i,b in enumerate(self.sampler()) if i%self.nw==self.offs)
         return maps(self.collate_fn, self.batch_tfm, self.batches(idxs))
 

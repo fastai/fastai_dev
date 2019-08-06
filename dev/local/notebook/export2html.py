@@ -3,15 +3,16 @@
 __all__ = ['remove_widget_state', 'hide_cells', 'clean_exports', 'treat_backticks', 'convert_links', 'add_jekyll_notes',
            'copy_images', 'remove_hidden', 'find_default_level', 'add_show_docs', 'remove_fake_headers', 'remove_empty',
            'get_metadata', 'ExecuteShowDocPreprocessor', 'execute_nb', 'process_cells', 'process_cell', 'convert_nb',
-           'convert_all']
+           'convert_all', 'convert_post']
 
 from ..imports import *
 from ..core import compose
+from ..test import *
 from .export import *
 from .showdoc import *
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor, Preprocessor
-from nbconvert import HTMLExporter
+from nbconvert import HTMLExporter,MarkdownExporter
 from nbformat.sign import NotebookNotary
 from traitlets.config import Config
 
@@ -26,8 +27,7 @@ _re_cell_to_hide = r's*show_doc\(|^\s*#\s*export\s+'
 
 def hide_cells(cell):
     "Hide `cell` that need to be hidden"
-    if check_re(cell, _re_cell_to_hide):
-        cell['metadata'] = {'hide_input': True}
+    if check_re(cell, _re_cell_to_hide):  cell['metadata'] = {'hide_input': True}
     return cell
 
 _re_exports = re.compile(r'^#\s*exports[^\n]*\n')
@@ -123,19 +123,21 @@ def remove_empty(cells):
     "Remove in `cells` the empty cells"
     return [c for c in cells if len(c['source']) >0]
 
-_re_title_summary = re.compile('^\s*#\s+([^\n]*)\n+>\s*([^\n]*)')
+_re_title_summary = re.compile(r'^\s*#\s+([^\n]*)\n+>\s*([^\n]*)')
+_re_properties = re.compile(r'^-\s+(.*?)\s*:\s*(.*?)$', re.MULTILINE)
 
 def get_metadata(cells):
     "Find the cell with title and summary in `cells`."
-    pat = re.compile('^\s*#\s*([^\n]*)\n*>\s*([^\n]*)')
     for i,cell in enumerate(cells):
         if cell['cell_type'] == 'markdown':
-            match = re.match(pat, cell['source'])
+            match = _re_title_summary.match(cell['source'])
             if match:
                 cells.pop(i)
+                attrs = {k:v for k,v in _re_properties.findall(cell['source'])}
                 return {'keywords': 'fastai',
                         'summary' : match.groups()[1],
-                        'title'   : match.groups()[0]}
+                        'title'   : match.groups()[0],
+                        **attrs}
     return {'keywords': 'fastai',
             'summary' : 'summary',
             'title'   : 'Title'}
@@ -170,16 +172,17 @@ def execute_nb(nb, metadata=None, show_doc_only=True, name=None):
     ep.preprocess(pnb, metadata)
     return pnb
 
-def _exporter():
-    exporter = HTMLExporter(Config())
+def _exporter(markdown=False):
+    cfg = Config()
+    exporter = (HTMLExporter,MarkdownExporter)[markdown](cfg)
     exporter.exclude_input_prompt=True
     exporter.exclude_output_prompt=True
-    exporter.template_file = 'jekyll.tpl'
+    exporter.template_file = ('jekyll.tpl','jekyll-md.tpl')[markdown]
     exporter.template_path.append(str(Path(__file__).parent))
     return exporter
 
 process_cells = [remove_fake_headers, remove_hidden, remove_empty]
-process_cell  = [hide_cells, remove_widget_state, treat_backticks, add_jekyll_notes, convert_links]
+process_cell  = [hide_cells, remove_widget_state, add_jekyll_notes, convert_links]
 
 _re_file = re.compile(r'^__file__\s*=\s*(\S*)\s*$', re.MULTILINE)
 
@@ -196,7 +199,7 @@ def convert_nb(fname, dest_path='docs'):
     cls_lvl = find_default_level(nb['cells'])
     _name = _find_file(nb['cells'])
     nb['cells'] = compose(*process_cells,partial(add_show_docs, cls_lvl=cls_lvl))(nb['cells'])
-    nb['cells'] = [compose(partial(copy_images, fname=fname, dest=dest_path), *process_cell)(c)
+    nb['cells'] = [compose(partial(copy_images, fname=fname, dest=dest_path), *process_cell, treat_backticks)(c)
                     for c in nb['cells']]
     fname = Path(fname).absolute()
     dest_name = '.'.join(fname.with_suffix('.html').name.split('_')[1:])
@@ -222,3 +225,16 @@ def convert_all(path='.', dest_path='docs', force_all=False):
         try: convert_nb(fname, dest_path=dest_path)
         except: print("Failed")
     if changed_cnt==0: print("No notebooks were modified")
+
+def convert_post(fname, dest_path='md_out'):
+    "Convert a notebook `fname` to blog post markdown in `dest_path`."
+    fname = Path(fname).absolute()
+    nb = read_nb(fname)
+    meta_jekyll = get_metadata(nb['cells'])
+    nb['cells'] = compose(*process_cells)(nb['cells'])
+    nb['cells'] = [compose(*process_cell)(c) for c in nb['cells']]
+    fname = Path(fname).absolute()
+    dest_name = fname.with_suffix('.md').name
+    exp = _exporter(markdown=True)
+    with open(f'{dest_path}/{dest_name}','w') as f:
+        f.write(exp.from_notebook_node(nb, resources=meta_jekyll)[0])
