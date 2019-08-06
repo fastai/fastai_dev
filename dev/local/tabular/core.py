@@ -6,10 +6,7 @@ __all__ = ['TabularProc', 'Categorify', 'Normalize', 'FillStrategy', 'FillMissin
 from ..imports import *
 from ..test import *
 from ..core import *
-from ..data.transform import *
-from ..data.pipeline import *
-from ..data.core import *
-from ..data.external import *
+from ..data.all import *
 from ..notebook.showdoc import show_doc
 
 @docs
@@ -110,10 +107,9 @@ class TabularPreprocessor():
                 if isinstance(p, Normalize): self.means,self.stds = p.means,p.stds
         return df
 
-def process_df(df, splitter, procs, cat_names=None, cont_names=None, inplace=True):
+def process_df(df, splits, procs, cat_names=None, cont_names=None, inplace=True):
     "Process `df` with `procs` and returns the processed dataframe and the `TabularProcessor` associated"
     proc = TabularPreprocessor(procs, cat_names, cont_names, inplace=inplace)
-    splits = splitter(df)
     res = proc(df, trn_idx=splits[0])
     return res,proc
 
@@ -138,11 +134,11 @@ class TensorTabular(tuple):
             display(HTML(df.to_html(index=False)))
 
 class ReadTabLine(ItemTransform):
-    def __init__(self, df, proc): self.df,self.proc = df,proc
+    def __init__(self, proc): self.proc = proc
 
-    def encodes(self, i):
-        cats = [self.df.loc[[i], n].cat.codes[i]+1 for n in self.proc.cat_names]
-        conts = self.df.loc[i,self.proc.cont_names].values.astype(np.float32)
+    def encodes(self, row):
+        cats = [row[n].cat.codes.values[0]+1 for n in self.proc.cat_names]
+        conts = row[self.proc.cont_names].values[0].astype(np.float32)
         return TensorTabular((tensor(cats).long(),tensor(conts).float()))
 
     def decodes(self, o) -> TabularLine:

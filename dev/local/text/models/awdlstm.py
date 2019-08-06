@@ -26,8 +26,7 @@ class RNNDropout(Module):
 
     def forward(self, x):
         if not self.training or self.p == 0.: return x
-        m = dropout_mask(x.data, (x.size(0), 1, x.size(2)), self.p)
-        return x * m
+        return x * dropout_mask(x.data, (x.size(0), 1, x.size(2)), self.p)
 
 import warnings
 

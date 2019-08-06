@@ -54,7 +54,21 @@ def doc_link(name, include_bt:bool=True):
     #Leave as is
     return cname
 
-_re_backticks = re.compile(r'\[`([^`]*)`\](?:\([^)]*\))|`([^`]*)`')
+_re_backticks = re.compile(r"""
+# Catches any link of the form \[`obj`\](old_link) or just `obj` to either update old links or add the link to the docs of obj
+\[`      #     Opening [ and `
+([^`]*)  #     Catching group with anything but a `
+`\]      #     ` then closing ]
+(?:      #     Beginning of non-catching group
+\(       #       Opening (
+[^)]*    #       Anything but a closing )
+\)       #       Closing )
+)        #     End of non-catching group
+|        # OR
+`        #     Opening `
+([^`]*)  #       Antyhing but a `
+`        #     Closing `
+""", re.VERBOSE)
 
 def add_doc_links(text):
     "Search for doc links for any item between backticks in `text`."
@@ -70,7 +84,14 @@ def get_function_source(func):
     module = inspect.getmodule(func).__name__.replace('.', '/') + '.py'
     return f"{SOURCE_URL}{module}#L{line}"
 
-_re_header = re.compile(r'^\s*#+\s*(.*)$')
+_re_header = re.compile(r"""
+# Catches any header in markdown with the title in group 1
+^\s*  # Beginning of text followed by any number of whitespace
+\#+   # One # or more
+\s*   # Any number of whitespace
+(.*)  # Catching group with anything
+$     # End of text
+""", re.VERBOSE)
 
 FASTAI_NB_DEV = 'https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/'
 
