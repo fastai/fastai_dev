@@ -102,12 +102,8 @@ def use_kwargs(names, keep=False):
 def delegates(to=None, keep=False):
     "Decorator: replace `**kwargs` in signature with params from `to`"
     def _f(f):
-        if to is None:
-            to_f = f.__base__.__init__
-            from_f = f.__init__
-        else:
-            to_f = to
-            from_f = f
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__
+        else:          to_f,from_f = to,f
         sig = inspect.signature(from_f)
         sigd = dict(sig.parameters)
         k = sigd.pop('kwargs')

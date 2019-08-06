@@ -13,7 +13,8 @@ _loaders = (_MultiProcessingDataLoaderIter,_SingleProcessDataLoaderIter)
 def _wif(worker_id):
     info = get_worker_info()
     ds = info.dataset.d
-    ds.nw,ds.offs,ds.seed = info.num_workers,info.id,info.seed
+    ds.nw,ds.offs = info.num_workers,info.id
+    set_seed(info.seed)
     ds.wif()
 
 class _FakeLoader(GetAttr):
@@ -23,28 +24,26 @@ class _FakeLoader(GetAttr):
         store_attr(self, 'd,pin_memory,num_workers,timeout')
     def __iter__(self): return iter(self.d._iter())
 
+@methods_kwargs
 class DataLoader():
     reset=item_tfm=batch_tfm=wif = noops
     _methods = 'collate_fn batches reset wif sampler item batch_tfm item_tfm'.split()
-    @kwargs(_methods)
     def __init__(self, items=None, bs=None, drop_last=False, shuffle=False, indexed=None,
                  num_workers=0, pin_memory=False, timeout=0, **kwargs):
-        replace_methods(self, kwargs)
         if indexed is None: indexed = items is not None and hasattr(items,'__getitem__')
         store_attr(self, 'items,bs,drop_last,shuffle,indexed')
         self.fake_l = _FakeLoader(self, pin_memory, num_workers, timeout)
-        self.lock,self.seed,self.rng,self.nw,self.offs = Lock(),None,random.Random(),1,0
+        self.lock,self.rng,self.nw,self.offs = Lock(),random.Random(),1,0
         try: self.n = len(self.items)
         except TypeError: self.n = None
         assert not kwargs or not (bs is None and drop_last)
 
     def __iter__(self): return _loaders[self.fake_l.num_workers==0](self.fake_l)
     def _iter(self):
-        if self.seed is not None: set_seed(self.seed)
         self.it = iter(self.items) if self.items else None
         self.reset()
-        idxs = (b for i,b in enumerate(self.sampler()) if i%self.nw==self.offs)
-        return maps(self.collate_fn, self.batch_tfm, self.batches(idxs))
+        batches = self.batches(self.sampler())
+        return maps(self.collate_fn, self.batch_tfm, batches)
 
     def __len__(self):
         if self.n is None: raise TypeError
@@ -57,9 +56,10 @@ class DataLoader():
 
     def sampler(self):
         res = Inf.count if self.indexed else Inf.nones
-        if self.n is None: return res
-        res = list(itertools.islice(res, self.n))
-        return self.rng.sample(res,len(res)) if self.shuffle else res
+        if self.n is not None:
+            res = list(itertools.islice(res, self.n))
+            res = self.rng.sample(res,len(res)) if self.shuffle else res
+        return (b for i,b in enumerate(res) if i//(self.bs or 1)%self.nw==self.offs)
 
     def collate_fn(self, b): return (default_collate,default_convert)[self.bs is None](b)
     def item(self, s): return next(self.it) if s is None else self.items[s]
