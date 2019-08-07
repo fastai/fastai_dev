@@ -1,6 +1,6 @@
 import io,operator,sys,os,re,os,mimetypes,csv,itertools,json,shutil,glob,pickle,tarfile,collections
 import hashlib,itertools,types,random,inspect,functools,random,time,math,bz2,types,typing,numbers,string
-import multiprocessing,threading
+import multiprocessing,threading,urllib,ipykernel
 
 from copy import copy,deepcopy
 from multiprocessing import Lock,Process,Queue,queues
@@ -15,6 +15,8 @@ from warnings import warn
 from functools import partial,reduce
 from textwrap import TextWrapper
 from operator import itemgetter,attrgetter
+from notebook import notebookapp
+from urllib.request import urlopen
 
 # External modules
 import torch,matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy

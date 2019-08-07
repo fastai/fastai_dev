@@ -174,7 +174,6 @@ class GetAttr(BaseObj):
     @property
     def _xtra(self): return [o for o in dir(self.default) if not o.startswith('_')]
     def __getattr__(self,k):
-        assert self._xtra, "Inherited from `GetAttr` but no `_xtra` attrs listed"
         if k in self._xtra: return getattr(self.default, k)
         raise AttributeError(k)
     def __dir__(self): return custom_dir(self, self._xtra)
