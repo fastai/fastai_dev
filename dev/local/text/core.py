@@ -4,7 +4,7 @@ __all__ = ['ProcessPoolExecutor', 'parallel', 'parallel_gen', 'UNK', 'PAD', 'BOS
            'TK_UP', 'TK_MAJ', 'spec_add_spaces', 'rm_useless_spaces', 'replace_rep', 'replace_wrep', 'fix_html',
            'replace_all_caps', 'replace_maj', 'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer',
            'apply_rules', 'TokenizeBatch', 'tokenize1', 'parallel_tokenize', 'tokenize_folder', 'tokenize_df',
-           'tokenize_csv', 'SentencePieceTokenizer']
+           'tokenize_csv', 'SentencePieceTokenizer', 'Chunks']
 
 from ..imports import *
 from ..test import *
@@ -281,3 +281,30 @@ class SentencePieceTokenizer():#TODO: pass the special tokens symbol to sp
 
     def pipe(self, items):
         for t in items: yield self.tok.EncodeAsPieces(t)
+
+class Chunks:
+    "Slice and int indexing into a list of lists"
+    def __init__(self, chunks, lens=None):
+        self.chunks = chunks
+        self.lens = L(map(len,self.chunks) if lens is None else lens)
+        self.cumlens = np.cumsum(0+self.lens)
+        self.totlen = self.cumlens[-1]
+
+    def __getitem__(self,i):
+        if isinstance(i,slice): return self.getslice(i)
+        di,idx = self.doc_idx(i)
+        return self.chunks[di][idx]
+
+    def getslice(self, i):
+        st_d,st_i = self.doc_idx(ifnone(i.start,0))
+        en_d,en_i = self.doc_idx(ifnone(i.stop,self.totlen+1))
+        res = L(self.chunks[st_d][st_i:])
+        for b in self.chunks[st_d+1:en_d]: res += b
+        if st_d!=en_d and en_d<len(self.chunks): res += self.chunks[en_d][:en_i]
+        return res
+
+    def doc_idx(self, i):
+        if i<0: i=self.totlen+i # count from end
+        docidx = np.searchsorted(self.cumlens, i+1)-1
+        cl = self.cumlens[docidx]
+        return docidx,i-cl
