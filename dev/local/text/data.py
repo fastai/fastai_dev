@@ -23,15 +23,13 @@ def make_vocab(count, min_freq=3, max_vocab=60000):
     vocab = vocab[:max_vocab]
     return vocab + ['xxfake' for _ in range(0, 8-len(vocab)%8)]
 
-from IPython.display import display, HTML
-
 class TensorText(TensorBase):
     def get_ctxs(self, max_samples=10, **kwargs):
         n_samples = min(self.shape[0], max_samples)
-        df = pd.DataFrame({'index': range(n_samples)})
+        df = pd.DataFrame(index = range(n_samples))
         return [df.iloc[i] for i in range(n_samples)]
 
-    def display(self, ctxs): display(HTML(pd.DataFrame(ctxs).to_html(index=False)))
+    def display(self, ctxs): display_df(pd.DataFrame(ctxs))
 
 class Numericalize(Transform):
     "Reversible transform of tokenized texts to numericalized ids"

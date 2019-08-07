@@ -57,7 +57,7 @@ class DataSource(TfmdDS):
         n = self.n_subsets-1
         bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
         shuffles = [shuffle_train] + [False]*n
-        dls = [TfmdDL(self.subset(i), tfms, b, shuffle=s, sampler=sa, batch_sampler=bsa, **kwargs)
+        dls = [TfmdDL(self.subset(i), tfms, b, shuffle=s, drop_last=s, sampler=sa, batch_sampler=bsa, **kwargs)
                for i,(b,s,sa,bsa) in enumerate(zip(bss, shuffles, L(sampler).cycle(), L(batch_sampler).cycle()))]
         return DataBunch(*dls)
 
