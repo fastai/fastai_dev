@@ -495,6 +495,7 @@
   "execute_nb": "93_notebook_export2html.ipynb",
   "process_cells": "93_notebook_export2html.ipynb",
   "process_cell": "93_notebook_export2html.ipynb",
+  "notebook_path": "93_notebook_export2html.ipynb",
   "convert_nb": "93_notebook_export2html.ipynb",
   "convert_all": "93_notebook_export2html.ipynb",
   "convert_post": "93_notebook_export2html.ipynb",

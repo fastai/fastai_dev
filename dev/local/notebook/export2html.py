@@ -2,11 +2,12 @@
 
 __all__ = ['remove_widget_state', 'hide_cells', 'clean_exports', 'treat_backticks', 'convert_links', 'add_jekyll_notes',
            'copy_images', 'remove_hidden', 'find_default_level', 'add_show_docs', 'remove_fake_headers', 'remove_empty',
-           'get_metadata', 'ExecuteShowDocPreprocessor', 'execute_nb', 'process_cells', 'process_cell', 'convert_nb',
-           'convert_all', 'convert_post']
+           'get_metadata', 'ExecuteShowDocPreprocessor', 'execute_nb', 'process_cells', 'process_cell', 'notebook_path',
+           'convert_nb', 'convert_all', 'convert_post']
 
 from ..imports import *
 from ..core import compose
+from ..test import *
 from .export import *
 from .showdoc import *
 import nbformat
@@ -22,6 +23,7 @@ def remove_widget_state(cell):
                            if not ('data' in l and 'application/vnd.jupyter.widget-view+json' in l.data)]
     return cell
 
+# Matches any cell that has a `show_doc` or an `#export` in it
 _re_cell_to_hide = r's*show_doc\(|^\s*#\s*export\s+'
 
 def hide_cells(cell):
@@ -29,6 +31,7 @@ def hide_cells(cell):
     if check_re(cell, _re_cell_to_hide):  cell['metadata'] = {'hide_input': True}
     return cell
 
+# Matches any line containing an #exports
 _re_exports = re.compile(r'^#\s*exports[^\n]*\n')
 
 def clean_exports(cell):
@@ -41,7 +44,15 @@ def treat_backticks(cell):
     if cell['cell_type'] == 'markdown': cell['source'] = add_doc_links(cell['source'])
     return cell
 
-_re_nb_link = re.compile(r'\[([^\]]*)\]\(([^http][^\)]*).ipynb\)')
+_re_nb_link = re.compile(r"""
+# Catches any link to a local notebook and keeps the title in group 1, the link without .ipynb in group 2
+\[          # Opening [
+([^\]]*)    # Catching group for any character except ]
+\]\(        # Closing ], opening (
+([^http]    # Catching group that must not begin by html (local notebook)
+[^\)]*)     # and containing anything but )
+.ipynb\)    # .ipynb and closing )
+""", re.VERBOSE)
 
 def convert_links(cell):
     "Convert the .ipynb links to .html"
@@ -49,7 +60,14 @@ def convert_links(cell):
         cell['source'] = _re_nb_link.sub(r'[\1](\2.html)', cell['source'])
     return cell
 
-_re_block_notes = re.compile(r'>\s*([^:]*):\s*([^\n]*)(?:\n|$)')
+_re_block_notes = re.compile(r"""
+# Catches any pattern > Title: content with title in group 1 and content in group 2
+^>\s*      # > followed by any number of whitespace
+([^:]*)   # Catching group for any character but :
+:\s*      # : then any number of whitespace
+([^\n]*)  # Catching group for anything but a new line character
+(?:\n|$)  # Non-catching group for either a new line or the end of the text
+""", re.VERBOSE)
 
 def add_jekyll_notes(cell):
     "Convert block quotes to jekyll notes in `cell`"
@@ -57,14 +75,25 @@ def add_jekyll_notes(cell):
     def _inner(m):
         title,text = m.groups()
         style = t2style.get(title, None)
-        if style is None: return f"> {m.groups()[0]}: m.groups()[1]"
+        if style is None: return f"> {m.groups()[0]}: {m.groups()[1]}"
         res = f'<div markdown="span" class="alert alert-{style}" role="alert">'
         return res + f'<i class="fa fa-{style}-circle"></i> <b>{title}: </b>{text}</div>'
     if cell['cell_type'] == 'markdown':
         cell['source'] = _re_block_notes.sub(_inner, cell['source'])
     return cell
 
-_re_image = re.compile(r'^!\[[^\]]*\]\(([^\)]*)\)|<img src="([^"]*)"', re.MULTILINE)
+_re_image = re.compile(r"""
+# Catches any image file used, either with `![alt](image_file)` or `<img src="image_file">`
+^!\[        #   Beginning of line (since re.MULTILINE is passed) followed by ![
+[^\]]*      #   Anything but ]
+\]\(        #   Closing ] and opening (
+([^\)]*)    #   Catching block with any character but )
+\)          #   Closing )
+|           # OR
+<img\ src="  #   <img src="
+([^"]*)     #   Catching block with any character except "
+"           #   Closing
+""", re.MULTILINE | re.VERBOSE)
 
 def copy_images(cell, fname, dest):
     if cell['cell_type'] == 'markdown' and _re_image.search(cell['source']):
@@ -74,13 +103,21 @@ def copy_images(cell, fname, dest):
         shutil.copy(Path(fname).parent/src, Path(dest)/src)
     return cell
 
+#Matches any cell with #hide or #default_exp or #default_cls_lvl
 _re_cell_to_remove = re.compile(r'^\s*#\s*(hide|default_exp|default_cls_lvl)\s+')
 
 def remove_hidden(cells):
     "Remove in `cells` the ones with a flag `#hide` or `#default_exp`"
     return [c for c in cells if _re_cell_to_remove.search(c['source']) is None]
 
-_re_default_cls_lvl = re.compile(r'^\s*#\s*default_cls_lvl\s*(\d*)\s*$', re.IGNORECASE | re.MULTILINE)
+_re_default_cls_lvl = re.compile(r"""
+^               # Beginning of line (since re.MULTILINE is passed)
+\s*\#\s*        # Any number of whitespace, #, any number of whitespace
+default_cls_lvl # default_cls_lvl
+\s*             # Any number of whitespace
+(\d*)           # Catching group for any number of digits
+\s*$            # Any number of whitespace and end of line (since re.MULTILINE is passed)
+""", re.IGNORECASE | re.MULTILINE | re.VERBOSE)
 
 def find_default_level(cells):
     "Find in `cells` the default export module."
@@ -89,8 +126,15 @@ def find_default_level(cells):
         if tst: return int(tst.groups()[0])
     return 2
 
+#Find a cell with #export(s)
 _re_export = re.compile(r'^\s*#\s*exports?\s*', re.IGNORECASE | re.MULTILINE)
-_re_show_doc = re.compile(r'show_doc\s*\(\s*([^,\)\s]*)[,\)\s]', re.MULTILINE)
+_re_show_doc = re.compile(r"""
+# First one catches any cell with a #export or #exports, second one catches any show_doc and get the first argument in group 1
+show_doc     # show_doc
+\s*\(\s*     # Any number of whitespace, opening (, any number of whitespace
+([^,\)\s]*)  # Catching group for any character but a comma, a closing ) or a whitespace
+[,\)\s]      # A comma, a closing ) or a whitespace
+""", re.MULTILINE | re.VERBOSE)
 
 def _show_doc_cell(name, cls_lvl=None):
     return {'cell_type': 'code',
@@ -112,7 +156,14 @@ def add_show_docs(cells, cls_lvl=None):
                 if n not in documented: res.append(_show_doc_cell(n, cls_lvl=cls_lvl))
     return res
 
-_re_fake_header = re.compile(r'#+\s+.*-\s*$')
+_re_fake_header = re.compile(r"""
+# Matches any fake header (one that ends with -)
+\#+    # One or more #
+\s+    # One or more of whitespace
+.*     # Any char
+-\s*   # A dash followed by any number of white space
+$      # End of text
+""", re.VERBOSE)
 
 def remove_fake_headers(cells):
     "Remove in `cells` the fake header"
@@ -122,8 +173,22 @@ def remove_empty(cells):
     "Remove in `cells` the empty cells"
     return [c for c in cells if len(c['source']) >0]
 
-_re_title_summary = re.compile(r'^\s*#\s+([^\n]*)\n+>\s*([^\n]*)')
-_re_properties = re.compile(r'^-\s+(.*?)\s*:\s*(.*?)$', re.MULTILINE)
+_re_title_summary = re.compile(r"""
+# Catches the title and summary of the notebook, presented as # Title > summary, with title in group 1 and summary in group 2
+^\s*       # Beginning of text followe by any number of whitespace
+\#\s+      # # followed by one or more of whitespace
+([^\n]*)   # Catching group for any character except a new line
+\n+        # One or more new lines
+>\s*       # > followed by any number of whitespace
+([^\n]*)   # Catching group for any character except a new line
+""", re.VERBOSE)
+
+_re_properties = re.compile(r"""
+^-\s+      # Beginnig of a line followed by - and at least one space
+(.*?)      # Any pattern (shortest possible)
+\s*:\s*    # Any number of whitespace, :, any number of whitespace
+(.*?)$     # Any pattern (shortest possible) then end of line
+""", re.MULTILINE | re.VERBOSE)
 
 def get_metadata(cells):
     "Find the cell with title and summary in `cells`."
@@ -141,6 +206,7 @@ def get_metadata(cells):
             'summary' : 'summary',
             'title'   : 'Title'}
 
+#Catches any cell with a show_doc or an export/exports hashtag
 _re_cell_to_execute = re.compile(r"^\s*show_doc\(([^\)]*)\)|^\s*#\s*exports?\s*", re.MULTILINE)
 
 class ExecuteShowDocPreprocessor(ExecutePreprocessor):
@@ -183,13 +249,29 @@ def _exporter(markdown=False):
 process_cells = [remove_fake_headers, remove_hidden, remove_empty]
 process_cell  = [hide_cells, remove_widget_state, add_jekyll_notes, convert_links]
 
-_re_file = re.compile(r'^__file__\s*=\s*(\S*)\s*$', re.MULTILINE)
+_re_file = re.compile(r"""
+^__file__   # __file__ at the beginning of a line (since re.MULTILINE is passed)
+\s*=\s*   # Any number of whitespace, =, any number of whitespace
+(\S*)     # Catching group for any non-whitespace characters
+\s*$      # Any number of whitespace then the end of line
+""", re.MULTILINE | re.VERBOSE)
 
 def _find_file(cells):
     "Find in `cells` if a __file__ is defined."
     for cell in cells:
         if cell['cell_type']=='code' and _re_file.search(cell['source']):
             return _re_file.search(cell['source']).groups()[0]
+
+def notebook_path():
+    "Returns the absolute path of the Notebook or None if it cannot be determined"
+    #NOTE: works only when the security is token-based or there is no password
+    kernel_id = Path(ipykernel.get_connection_file()).stem.split('-', 1)[1]
+    for srv in notebookapp.list_running_servers():
+        try:
+            sessions = json.load(urlopen(f"{srv['url']}api/sessions{srv['token']}"))
+            return next(Path(srv['notebook_dir'])/sess['notebook']['path']
+                        for sess in sessions if sess['kernel']['id']==kernel_id)
+        except: pass  # There may be stale entries in the runtime directory
 
 def convert_nb(fname, dest_path='docs'):
     "Convert a notebook `fname` to html file in `dest_path`."
@@ -225,7 +307,7 @@ def convert_all(path='.', dest_path='docs', force_all=False):
         except: print("Failed")
     if changed_cnt==0: print("No notebooks were modified")
 
-def convert_post(fname, dest_path='md_out'):
+def convert_post(fname, dest_path='posts'):
     "Convert a notebook `fname` to blog post markdown in `dest_path`."
     fname = Path(fname).absolute()
     nb = read_nb(fname)
@@ -235,5 +317,5 @@ def convert_post(fname, dest_path='md_out'):
     fname = Path(fname).absolute()
     dest_name = fname.with_suffix('.md').name
     exp = _exporter(markdown=True)
-    with open(f'{dest_path}/{dest_name}','w') as f:
+    with (Path(dest_path)/dest_name).open('w') as f:
         f.write(exp.from_notebook_node(nb, resources=meta_jekyll)[0])
