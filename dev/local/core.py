@@ -5,9 +5,9 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'patch_to', '
            'ifnone', 'get_class', 'mk_class', 'wrap_class', 'noop', 'noops', 'methods_kwargs', 'set_seed', 'store_attr',
            'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish',
            'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
-           'true', 'stop', 'gen', 'chunked', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device',
-           'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler', 'sort_by_run',
-           'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
+           'true', 'stop', 'gen', 'chunked', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
+           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler',
+           'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
            'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
            'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
 
@@ -438,6 +438,33 @@ def chunked(it, cs, drop_last=False):
         res = list(itertools.islice(it, cs))
         if res and (len(res)==cs or not drop_last): yield res
         if len(res)<cs: return
+
+class Chunks:
+    "Slice and int indexing into a list of lists"
+    def __init__(self, chunks, lens=None):
+        self.chunks = chunks
+        self.lens = L(map(len,self.chunks) if lens is None else lens)
+        self.cumlens = np.cumsum(0+self.lens)
+        self.totlen = self.cumlens[-1]
+
+    def __getitem__(self,i):
+        if isinstance(i,slice): return self.getslice(i)
+        di,idx = self.doc_idx(i)
+        return self.chunks[di][idx]
+
+    def getslice(self, i):
+        st_d,st_i = self.doc_idx(ifnone(i.start,0))
+        en_d,en_i = self.doc_idx(ifnone(i.stop,self.totlen+1))
+        res = [self.chunks[st_d][st_i:(en_i if st_d==en_d else sys.maxsize)]]
+        for b in range(st_d+1,en_d): res.append(self.chunks[b])
+        if st_d!=en_d and en_d<len(self.chunks): res.append(self.chunks[en_d][:en_i])
+        return concat(*res)
+
+    def doc_idx(self, i):
+        if i<0: i=self.totlen+i # count from end
+        docidx = np.searchsorted(self.cumlens, i+1)-1
+        cl = self.cumlens[docidx]
+        return docidx,i-cl
 
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"
