@@ -129,11 +129,14 @@ class TensorTabular(tuple):
     def display(self, ctxs): display_df(pd.DataFrame(ctxs))
 
 class ReadTabLine(ItemTransform):
-    def __init__(self, proc): self.proc = proc
+    def __init__(self, proc, cols):
+        self.proc = proc
+        self.col2idx = {c:i+1 for i,c in enumerate(cols)}
+        self.o2is = {n: defaultdict(int, {v:i for i,v in enumerate(proc.classes[n])}) for n in proc.cat_names}
 
     def encodes(self, row):
-        cats = [row[n].cat.codes.values[0]+1 for n in self.proc.cat_names]
-        conts = row[self.proc.cont_names].values[0].astype(np.float32)
+        cats = [self.o2is[n][row[self.col2idx[n]]] for n in self.proc.cat_names]
+        conts = [row[self.col2idx[n]] for n in self.proc.cont_names]
         return TensorTabular((tensor(cats).long(),tensor(conts).float()))
 
     def decodes(self, o) -> TabularLine:
