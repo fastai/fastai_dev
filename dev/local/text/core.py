@@ -298,8 +298,8 @@ class Chunks:
     def getslice(self, i):
         st_d,st_i = self.doc_idx(ifnone(i.start,0))
         en_d,en_i = self.doc_idx(ifnone(i.stop,self.totlen+1))
-        res = L(self.chunks[st_d][st_i:])
-        for b in self.chunks[st_d+1:en_d]: res += b
+        res = L(self.chunks[st_d][st_i:(en_i if st_d==en_d else sys.maxsize)])
+        for b in range(st_d+1,en_d): res += self.chunks[b]
         if st_d!=en_d and en_d<len(self.chunks): res += self.chunks[en_d][:en_i]
         return res
 

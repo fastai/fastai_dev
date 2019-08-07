@@ -119,11 +119,10 @@ def export_names(code, func_only=False):
 
 _re_all_def   = re.compile(r"""
 # Catches a cell with defines \_all\_ = [\*\*] and get that \*\* in group 1
-^        #  Beginning of line (since re.MULTILINE is passed)
-_all_    #  _all_
+^_all_   #  Beginning of line (since re.MULTILINE is passed)
 \s*=\s*  #  Any number of whitespace, =, any number of whitespace
 \[       #  Opening [
-([^\]]*) #  Catching group with anything except a ]
+([^\n\]]*) #  Catching group with anything except a ] or newline
 \]       #  Closing ]
 """, re.MULTILINE | re.VERBOSE)
 

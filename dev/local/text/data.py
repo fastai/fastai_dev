@@ -82,9 +82,9 @@ class LM_Dataset(BaseDS):
             return self.ds[docidx][tokidx-cum]
         return tuple([_f(xy,it) for it in range(self.seq_len)] for xy in range(2))
 
-class LM_Dataset(BaseDS):
+class LM_Dataset:
     def __init__(self, ds, lens=None, bs=64, seq_len=72, shuffle=False, cache=2):
-        super().__init__(ReindexCollection(ds, cache=cache))
+        self.ds = ReindexCollection(ds, cache=cache)
         self.bs,self.seq_len,self.shuffle = bs,seq_len,shuffle
         if lens is None: lens = [len(o) for o in ds]
         self.lens = ReindexCollection(lens, idxs=self.ds.idxs)
@@ -99,12 +99,11 @@ class LM_Dataset(BaseDS):
 
     def __getitem__(self, seq):
         if seq>=len(self): raise IndexError
-        def _f(xy,it):
-            tokidx = seq*self.seq_len + xy + it
-            docidx = np.searchsorted(self.cum_lens, tokidx+1)
-            cum = 0 if docidx==0 else self.cum_lens[docidx-1]
-            return self.ds[docidx][tokidx-cum]
-        return tuple([_f(xy,it) for it in range(self.seq_len)] for xy in range(2))
+        st = seq*self.seq_len
+        set_trace()
+        txt = self.chunks[st : st+self.seq_len+1]
+        print(txt)
+        return txt[:-1],txt[1:]
 
 def pad_collate(samples, pad_idx=1, pad_first=True, backwards=False):
     "Function that collect samples and adds padding. Flips token order if needed"
