@@ -6,6 +6,7 @@ __all__ = ['is_enum', 'add_pytorch_index', 'is_fastai_module', 'FASTAI_DOCS', 'd
 
 from ..imports import *
 from .core import *
+from .export import *
 import inspect,enum,nbconvert
 from IPython.display import Markdown,display
 from IPython.core import page
