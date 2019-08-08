@@ -46,6 +46,7 @@ public protocol FALayer: Layer {
 
 public extension FALayer {
     @differentiable(vjp: callGrad)
+    @differentiable(wrt: (self))
     func callAsFunction(_ input: Input) -> Output {
         let activation = forward(input)
         for d in delegates { d(activation) }
