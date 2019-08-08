@@ -28,22 +28,21 @@ class _FakeLoader(GetAttr):
 class DataLoader():
     reset=item_tfm=batch_tfm=wif = noops
     _methods = 'collate_fn batches reset wif sampler item batch_tfm item_tfm'.split()
-    def __init__(self, items=None, bs=None, drop_last=False, shuffle=False, indexed=None,
+    def __init__(self, dataset=None, bs=None, drop_last=False, shuffle=False, indexed=None,
                  num_workers=0, pin_memory=False, timeout=0, **kwargs):
-        if indexed is None: indexed = items is not None and hasattr(items,'__getitem__')
-        store_attr(self, 'items,bs,drop_last,shuffle,indexed')
+        if indexed is None: indexed = dataset is not None and hasattr(dataset,'__getitem__')
+        store_attr(self, 'dataset,bs,drop_last,shuffle,indexed')
         self.fake_l = _FakeLoader(self, pin_memory, num_workers, timeout)
         self.lock,self.rng,self.nw,self.offs = Lock(),random.Random(),1,0
-        try: self.n = len(self.items)
+        try: self.n = len(self.dataset)
         except TypeError: self.n = None
-        assert not kwargs or not (bs is None and drop_last)
+        assert not kwargs and not (bs is None and drop_last)
 
     def __iter__(self): return _loaders[self.fake_l.num_workers==0](self.fake_l)
     def _iter(self):
-        self.it = iter(self.items) if self.items else None
+        self.it = iter(self.dataset) if self.dataset else None
         self.reset()
-        batches = self.batches(self.sampler())
-        return maps(self.collate_fn, self.batch_tfm, batches)
+        yield from self.batches(self.sampler())
 
     def __len__(self):
         if self.n is None: raise TypeError
@@ -52,14 +51,18 @@ class DataLoader():
 
     def batches(self, idxs):
         res = maps(self.item, self.item_tfm, idxs)
-        return res if self.bs is None else chunked(res, self.bs, self.drop_last)
+        if self.bs is None: yield from res
+        else:
+            for b in chunked(res, self.bs, self.drop_last):
+                yield self.batch_tfm(self.collate_fn(tuple(b)))
 
+    def shuffle_fn(self, idxs): return self.rng.sample(idxs, len(idxs))
     def sampler(self):
-        res = Inf.count if self.indexed else Inf.nones
+        idxs = Inf.count if self.indexed else Inf.nones
         if self.n is not None:
-            res = list(itertools.islice(res, self.n))
-            res = self.rng.sample(res,len(res)) if self.shuffle else res
-        return (b for i,b in enumerate(res) if i//(self.bs or 1)%self.nw==self.offs)
+            idxs = list(itertools.islice(idxs, self.n))
+            idxs = self.shuffle_fn(idxs) if self.shuffle else idxs
+        return (b for i,b in enumerate(idxs) if i//(self.bs or 1)%self.nw==self.offs)
 
     def collate_fn(self, b): return (default_collate,default_convert)[self.bs is None](b)
-    def item(self, s): return next(self.it) if s is None else self.items[s]
+    def item(self, s): return next(self.it) if s is None else self.dataset[s]
