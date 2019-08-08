@@ -52,21 +52,10 @@ public extension FALayer {
         return activation
     }
        
-    // NOTE: AutoDiff synthesizes a leaking VJP for this, so we define a custom VJP.
-    //    TF-475: https://bugs.swift.org/browse/TF-475
-    // NOTE: If we use `@differentiating`, then there is a linker error. So we use `@differentiable` instead.
-    //    TF-476: https://bugs.swift.org/browse/TF-476
     func callGrad(_ input: Input) ->
         (Output, (Self.Output.TangentVector) -> (Self.TangentVector, Self.Input.TangentVector)) {
         return Swift.valueWithPullback(at: self, input) { (m, i) in m.forward(i) }
     }
-    
-    //We also add a default init to our `delegates` variable, so that we don't have to define it each time, as
-    //well as a function to easily add a delegate.
-    //var delegates: [(Output) -> ()] { 
-    //    get { return [] }
-    //    set {}
-    //}
     
     mutating func addDelegate(_ d: @escaping (Output) -> ()) { delegates.append(d) }
 }
@@ -292,7 +281,7 @@ public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer,Parame
     }
 }
 
-extension Array: Layer where Element: Layer, Element.Input == Element.Output {
+extension Array: Layer&Module where Element: Layer, Element.Input == Element.Output {
     // Note: remove the explicit typealiases after TF-603 is resolved.
     public typealias Input = Element.Input
     public typealias Output = Element.Output
