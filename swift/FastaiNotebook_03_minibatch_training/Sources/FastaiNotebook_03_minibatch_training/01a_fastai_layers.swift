@@ -61,7 +61,6 @@ public extension FALayer {
 }
 
 
-
 @frozen
 public struct FADense<Scalar: TensorFlowFloatingPoint>: FALayer {
     // Note: remove the explicit typealiases after TF-603 is resolved.
@@ -298,12 +297,12 @@ extension KeyPathIterable {
     }
 }
 
-extension Layer {
-    public var variables: AllDifferentiableVariables {
-        get { return allDifferentiableVariables }
-        set { allDifferentiableVariables = newValue }
-    }
-}
+//extension Layer {
+//    public var variables: AllDifferentiableVariables {
+//        get { return allDifferentiableVariables }
+//        set { allDifferentiableVariables = newValue }
+//    }
+//}
 
 public func ** (lhs: Int, rhs: Int) -> Int {
     return Int(pow(Double(lhs), Double(rhs)))

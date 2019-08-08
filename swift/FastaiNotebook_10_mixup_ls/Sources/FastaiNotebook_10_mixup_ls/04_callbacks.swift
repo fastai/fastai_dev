@@ -90,7 +90,6 @@ public final class Learner<Label: TensorGroup,
     public typealias Data = DataBunch<DataBatch<Input, Label>>
     public typealias Loss = TF
     public typealias Optimizer = Opt
-    public typealias Variables = Model.AllDifferentiableVariables
     public typealias EventHandler = (Learner) throws -> Void
     
     /// A wrapper class to hold the loss function, to work around

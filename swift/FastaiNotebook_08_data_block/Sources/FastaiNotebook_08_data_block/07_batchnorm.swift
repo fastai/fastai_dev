@@ -39,7 +39,7 @@ extension LearningPhaseDependent {
     @differentiating(forward)
     func gradForward(_ input: Input) ->
         (value: Output, pullback: (Self.Output.TangentVector) ->
-            (Self.AllDifferentiableVariables, Self.Input.TangentVector)) {
+            (Self.TangentVector, Self.Input.TangentVector)) {
         switch Context.local.learningPhase {
         case .training:
             return valueWithPullback(at: input) { $0.forwardTraining ($1) }

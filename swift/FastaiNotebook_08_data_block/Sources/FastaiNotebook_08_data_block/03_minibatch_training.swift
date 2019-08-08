@@ -34,3 +34,8 @@ public struct DataBatch<Inputs: Differentiable & TensorGroup, Labels: TensorGrou
     
     public init(xb: Inputs, yb: Labels){ (self.xb,self.yb) = (xb,yb) }
 }
+
+@differentiable(wrt: logits)
+public func crossEntropy(_ logits: TF, _ labels: TI) -> TF {
+    return softmaxCrossEntropy(logits: logits, labels: labels)
+}
