@@ -2,6 +2,8 @@ import io,operator,sys,os,re,os,mimetypes,csv,itertools,json,shutil,glob,pickle,
 import hashlib,itertools,types,random,inspect,functools,random,time,math,bz2,types,typing,numbers,string
 import multiprocessing,threading,urllib,ipykernel
 
+from functools import partial,reduce
+from itertools import starmap,dropwhile,takewhile,zip_longest
 from copy import copy,deepcopy
 from multiprocessing import Lock,Process,Queue,queues
 from datetime import datetime
@@ -12,7 +14,6 @@ from pathlib import Path
 from collections import OrderedDict,defaultdict,Counter,namedtuple
 from enum import Enum,IntEnum
 from warnings import warn
-from functools import partial,reduce
 from textwrap import TextWrapper
 from operator import itemgetter,attrgetter
 from notebook import notebookapp

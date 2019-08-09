@@ -9,7 +9,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'patch_to', '
            'retain_type', 'retain_types', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device',
            'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler', 'sort_by_run',
            'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
-           'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
+           'show_titled_image', 'show_image_batch', 'one_hot', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
            'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
 
 from .test import *
@@ -488,17 +488,20 @@ class TensorBase(Tensor, metaclass=BypassNewMeta):
 def retain_type(new, old, typ=None):
     "Cast `new` to type of `old` if it's a superclass"
     if not typ:
+        # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
         if not isinstance(old, type(new)): return new
         typ = type(old)
+    # Do nothing the new type is already an instance of requested type (i.e. same type)
     return typ(new) if typ!=NoneType and not isinstance(new, typ) else new
 
 def retain_types(new, old):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
-    return tuple(retain_type(tuple(n) if isinstance(n, list) else n, o) for n,o in zip(new,old))
+    if not is_listy(old): old = itertools.cycle([old])
+    return tuple(itertools.starmap(retain_type, zip(new,old)))
 
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"
-    if is_listy(x): return x.__class__(apply(func, o, *args, **kwargs) for o in x)
+    if is_listy(x): return type(x)(apply(func, o, *args, **kwargs) for o in x)
     if isinstance(x,dict):  return {k: apply(func, v, *args, **kwargs) for k,v in x.items()}
     return func(x, *args, **kwargs)
 
@@ -512,11 +515,11 @@ def to_detach(b, cpu=True):
 
 def to_half(b):
     "Recursively map lists of tensors in `b ` to FP16."
-    return apply(lambda x: x.half() if x.dtype not in [torch.int64, torch.int32, torch.int16] else x, b)
+    return apply(lambda x: x.half() if torch.is_floating_point(x) else x, b)
 
 def to_float(b):
     "Recursively map lists of int tensors in `b ` to float."
-    return apply(lambda x: x.float() if x.dtype not in [torch.int64, torch.int32, torch.int16] else x, b)
+    return apply(lambda x: x.float() if torch.is_floating_point(x) else x, b)
 
 # None: True if available; True: error if not availabe; False: use CPU
 defaults.use_cuda = None
@@ -670,6 +673,13 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
 #Comes from 05_data_core.ipynb.
+def one_hot(x, c):
+    "One-hot encode `x` with `c` classes."
+    res = torch.zeros(c, dtype=torch.uint8)
+    res[L(x)] = 1.
+    return res
+
+#Comes from 05_data_core2.ipynb.
 def one_hot(x, c):
     "One-hot encode `x` with `c` classes."
     res = torch.zeros(c, dtype=torch.uint8)
