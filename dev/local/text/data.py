@@ -50,11 +50,11 @@ class Numericalize(Transform):
 
 @delegates()
 class LMDataLoader(DataLoader):
-    def __init__(self, items, lens=None, cache=2, bs=64, seq_len=72, **kwargs):
-        super().__init__(items=items, bs=bs, **kwargs)
-        self.items = ReindexCollection(items, cache=cache)
+    def __init__(self, dataset, lens=None, cache=2, bs=64, seq_len=72, **kwargs):
+        super().__init__(dataset=dataset, bs=bs, **kwargs)
+        self.items = ReindexCollection([(o[0] if isinstance(o, tuple) else o) for o in dataset], cache=cache)
         self.seq_len = seq_len
-        if lens is None: lens = [len(o) for o in items]
+        if lens is None: lens = [len(o) for o in self.items]
         self.lens = ReindexCollection(lens, idxs=self.items.idxs)
         # The "-1" is to allow for final label
         self.m = round_multiple(sum(lens)-1, bs*seq_len, round_down=True)
@@ -70,7 +70,9 @@ class LMDataLoader(DataLoader):
         if seq>=self.n: raise IndexError
         st = ((seq%self.bs)*self.spb + (seq//self.bs)) * self.seq_len
         txt = self.chunks[st : st+self.seq_len+1]
+        set_trace()
         return txt[:-1],txt[1:]
+        return TensorText(txt[:-1]),TensorText(txt[1:])
 
 def pad_collate(samples, pad_idx=1, pad_first=True, backwards=False):
     "Function that collect samples and adds padding. Flips token order if needed"

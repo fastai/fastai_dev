@@ -3,13 +3,13 @@
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'patch_to', 'patch', 'patch_property', 'use_kwargs',
            'delegates', 'methods_kwargs', 'chk', 'tensor', 'add_docs', 'docs', 'custom_dir', 'coll_repr', 'GetAttr',
            'delegate_attr', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'noop', 'noops', 'set_seed',
-           'store_attr', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge',
-           'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul',
-           'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'concat', 'Chunks', 'BypassNewMeta', 'TensorBase',
-           'retain_type', 'retain_types', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device',
-           'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler', 'sort_by_run',
-           'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
-           'show_titled_image', 'show_image_batch', 'one_hot', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
+           'store_attr', 'BypassNewMeta', 'TensorBase', 'retain_type', 'retain_types', 'tuplify', 'replicate',
+           'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish', 'IterLen',
+           'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
+           'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
+           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler',
+           'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
+           'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
            'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
 
 from .test import *
@@ -331,6 +331,30 @@ def store_attr(self, nms):
     mod = inspect.currentframe().f_back.f_locals
     for n in nms.split(','): setattr(self,n,mod[n])
 
+class BypassNewMeta(type):
+    def __call__(cls, x, *args, **kwargs):
+        if hasattr(cls, '_new_meta'): x = cls._new_meta(x, *args, **kwargs)
+        if cls!=x.__class__: x.__class__ = cls
+        return x
+
+class TensorBase(Tensor, metaclass=BypassNewMeta):
+    def _new_meta(self, *args, **kwargs): return tensor(self)
+    def __getitem__(self, idx): return self.__class__(super().__getitem__(idx))
+
+def retain_type(new, old, typ=None):
+    "Cast `new` to type of `old` if it's a superclass"
+    if not typ:
+        # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
+        if not isinstance(old, type(new)): return new
+        typ = type(old)
+    # Do nothing the new type is already an instance of requested type (i.e. same type)
+    return typ(new) if typ!=NoneType and not isinstance(new, typ) else new
+
+def retain_types(new, old):
+    "Cast each item of `new` to type of matching item in `old` if it's a superclass"
+    if not is_listy(old): old = itertools.cycle([old])
+    return tuple(itertools.starmap(retain_type, zip(new,old)))
+
 def tuplify(o, use_list=False, match=None):
     "Make `o` a tuple"
     return tuple(L(o, use_list=use_list, match=match))
@@ -443,11 +467,11 @@ def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"
     if not len(ls): return []
     it = ls[0]
-    return (torch.cat(ls) if isinstance(it,torch.Tensor)
+    return retain_type(torch.cat(ls) if isinstance(it,torch.Tensor)
             else np.concatenate(ls) if isinstance(it,ndarray)
             else sum(ls,[]) if isinstance(it,list)
             else sum(ls,()) if isinstance(it,tuple)
-            else stop(TypeError))
+            else stop(TypeError), it)
 
 class Chunks:
     "Slice and int indexing into a list of lists"
@@ -475,29 +499,6 @@ class Chunks:
         docidx = np.searchsorted(self.cumlens, i+1)-1
         cl = self.cumlens[docidx]
         return docidx,i-cl
-
-class BypassNewMeta(type):
-    def __call__(cls, x, *args, **kwargs):
-        if hasattr(cls, '_new_meta'): x = cls._new_meta(x, *args, **kwargs)
-        if cls!=x.__class__: x.__class__ = cls
-        return x
-
-class TensorBase(Tensor, metaclass=BypassNewMeta):
-    def _new_meta(self, *args, **kwargs): return tensor(self)
-
-def retain_type(new, old, typ=None):
-    "Cast `new` to type of `old` if it's a superclass"
-    if not typ:
-        # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
-        if not isinstance(old, type(new)): return new
-        typ = type(old)
-    # Do nothing the new type is already an instance of requested type (i.e. same type)
-    return typ(new) if typ!=NoneType and not isinstance(new, typ) else new
-
-def retain_types(new, old):
-    "Cast each item of `new` to type of matching item in `old` if it's a superclass"
-    if not is_listy(old): old = itertools.cycle([old])
-    return tuple(itertools.starmap(retain_type, zip(new,old)))
 
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"
@@ -673,13 +674,6 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
 #Comes from 05_data_core.ipynb.
-def one_hot(x, c):
-    "One-hot encode `x` with `c` classes."
-    res = torch.zeros(c, dtype=torch.uint8)
-    res[L(x)] = 1.
-    return res
-
-#Comes from 05_data_core2.ipynb.
 def one_hot(x, c):
     "One-hot encode `x` with `c` classes."
     res = torch.zeros(c, dtype=torch.uint8)
