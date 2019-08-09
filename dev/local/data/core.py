@@ -235,8 +235,8 @@ class TfmdDL(GetAttr):
         return map(self._encode_batch,self.dl)
 
     def _encode_batch(self, b):
-        #b = self.tfms(self._retain_cls(b), filt=self.filt)
-        b = self.tfms(b, filt=self.filt)
+        b = self.tfms(self._retain_cls(b), filt=self.filt)
+        #b = self.tfms(b, filt=self.filt)
         if not self._dl_types: self._dl_types = L(b).mapped(type)
         return b
 

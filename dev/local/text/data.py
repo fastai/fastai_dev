@@ -70,7 +70,6 @@ class LMDataLoader(DataLoader):
         if seq>=self.n: raise IndexError
         st = ((seq%self.bs)*self.spb + (seq//self.bs)) * self.seq_len
         txt = self.chunks[st : st+self.seq_len+1]
-        set_trace()
         return txt[:-1],txt[1:]
         return TensorText(txt[:-1]),TensorText(txt[1:])
 
