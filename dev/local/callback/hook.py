@@ -146,7 +146,7 @@ def summary(self:Learner):
     "Print a summary of the model, optimizer and loss function."
     infos = layer_info(self)
     xb,_ = self.data.train_dl.one_batch()
-    n,bs = 63,find_bs(xb)
+    n,bs = 64,find_bs(xb)
     inp_sz = _print_shapes(apply(lambda x:x.shape, xb), bs)
     res = f"{self.model.__class__.__name__} (Input shape: {inp_sz})\n"
     res += "=" * n + "\n"

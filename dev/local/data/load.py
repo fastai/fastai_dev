@@ -79,6 +79,5 @@ class DataLoader():
     def item(self, s): return next(self.it) if s is None else self.dataset[s]
     def collate_fn(self, b):
         res = (fa_collate,fa_convert)[self.bs is None](b)
-        print(res,b[0])
-#         if self.retain: res = retain_types(res, b[0])
+        if self.retain and is_iter(b[0]): res = retain_types(res, b[0])
         return res
