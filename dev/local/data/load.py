@@ -19,10 +19,11 @@ def _wif(worker_id):
 
 class _FakeLoader(GetAttr):
     _auto_collation,collate_fn,drop_last,dataset_kind,_index_sampler = False,noops,False,_DatasetKind.Iterable,Inf.count
+    multiprocessing_context = None
     def __init__(self, d, pin_memory, num_workers, timeout):
         self.dataset,self.default,self.worker_init_fn = self,d,_wif
         store_attr(self, 'd,pin_memory,num_workers,timeout')
-    def __iter__(self): return iter(self.d._iter())
+    def __iter__(self): return iter(self.d.create_batches())
 
 _collate_types = (ndarray, Tensor, typing.Mapping, str)
 
@@ -39,12 +40,12 @@ def fa_convert(t):
 
 @methods_kwargs
 class DataLoader():
-    reset=item_tfm=batch_tfm=wif = noops
-    _methods = 'collate_fn batches reset wif sampler item batch_tfm item_tfm'.split()
+    wif=before_iter=after_item=before_batch=after_batch=after_iter = noops
+    _methods = 'wif before_iter create_batches sampler create_item after_item before_batch create_batch retain after_batch after_iter'.split()
     def __init__(self, dataset=None, bs=None, drop_last=False, shuffle=False, indexed=None,
-                 num_workers=0, pin_memory=False, timeout=0, retain=True, **kwargs):
+                 num_workers=0, pin_memory=False, timeout=0, **kwargs):
         if indexed is None: indexed = dataset is not None and hasattr(dataset,'__getitem__')
-        store_attr(self, 'dataset,bs,drop_last,shuffle,indexed,retain')
+        store_attr(self, 'dataset,bs,drop_last,shuffle,indexed')
         self.fake_l = _FakeLoader(self, pin_memory, num_workers, timeout)
         self.lock,self.rng,self.nw,self.offs = Lock(),random.Random(),1,0
         try: self.n = len(self.dataset)
@@ -52,21 +53,21 @@ class DataLoader():
         assert not kwargs and not (bs is None and drop_last)
 
     def __iter__(self): return _loaders[self.fake_l.num_workers==0](self.fake_l)
-    def _iter(self):
-        self.it = iter(self.dataset) if self.dataset else None
-        self.reset()
-        return self.batches()
 
     def __len__(self):
         if self.n is None: raise TypeError
         if self.bs is None: return self.n
         return self.n//self.bs + (0 if self.drop_last or self.n%self.bs==0 else 1)
 
-    def batches(self):
-        res = maps(self.item, self.item_tfm, self.sampler())
-        if self.bs is None: return res
-        else: return (self.batch_tfm(self.collate_fn(b))
-                      for b in chunked(res, self.bs, self.drop_last))
+    def create_batches(self):
+        self.it = iter(self.dataset) if self.dataset else None
+        self.before_iter()
+        res = maps(self.create_item, self.after_item, self.sampler())
+        if self.bs is None: yield from res
+        else:
+            chunks = chunked(res, self.bs, self.drop_last)
+            yield from map(self.after_batch, maps(self.before_batch, self.create_batch, chunks, retain=self.retain))
+        self.after_iter()
 
     def shuffle_fn(self, idxs): return self.rng.sample(idxs, len(idxs))
     def sampler(self):
@@ -76,8 +77,6 @@ class DataLoader():
             idxs = self.shuffle_fn(idxs) if self.shuffle else idxs
         return (b for i,b in enumerate(idxs) if i//(self.bs or 1)%self.nw==self.offs)
 
-    def item(self, s): return next(self.it) if s is None else self.dataset[s]
-    def collate_fn(self, b):
-        res = (fa_collate,fa_convert)[self.bs is None](b)
-        if self.retain and is_iter(b[0]): res = retain_types(res, b[0])
-        return res
+    def create_item(self, s):  return next(self.it) if s is None else self.dataset[s]
+    def retain(self, res, b):  return retain_types(res, b[0]) if is_iter(b[0]) else res
+    def create_batch(self, b): return (fa_collate,fa_convert)[self.bs is None](b)

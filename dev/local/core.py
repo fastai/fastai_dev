@@ -587,9 +587,11 @@ def compose(*funcs, order=None):
         return x
     return _inner
 
-def maps(*args):
+def maps(*args, retain=noop):
     "Like `map`, except funcs are composed first"
-    return map(compose(*args[:-1]), args[-1])
+    f = compose(*args[:-1])
+    def _f(b): return retain(f(b), b)
+    return map(_f, args[-1])
 
 def mapper(f):
     "Create a function that maps `f` over an input collection"
