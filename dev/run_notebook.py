@@ -11,7 +11,10 @@ def run_nb(fn):
     nb = nbformat.read(open(fn), as_version=nbformat.NO_CONVERT)
     # TODO: filter out export cells
     print(f"Doing {fn}")
-    ExecutePreprocessor(timeout=600).preprocess(nb, {})
+    try: ExecutePreprocessor(timeout=600).preprocess(nb, {})
+    except Exception as e:
+        print(f"Exception in {fn}")
+        raise e from None
 
 def get_fns(path,max_num,fn):
     path = Path(path)
