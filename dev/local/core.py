@@ -3,13 +3,13 @@
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'methods_kwargs', 'chk', 'tensor', 'add_docs', 'docs',
            'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class',
-           'noop', 'noops', 'set_seed', 'store_attr', 'TensorBase', 't', 'skips', 'retain_type', 'retain_types',
-           'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish',
-           'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
-           'true', 'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float',
-           'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper',
-           'partialler', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title',
-           'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
+           'noop', 'noops', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify',
+           'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish', 'IterLen',
+           'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
+           'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
+           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler',
+           'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
+           'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
            'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
 
 from .test import *
@@ -338,27 +338,28 @@ def store_attr(self, nms):
     mod = inspect.currentframe().f_back.f_locals
     for n in nms.split(','): setattr(self,n,mod[n])
 
-def _cast_super(self, nm, *args, **kwargs):
-    cls = self.__class__
-    res = getattr(super(TensorBase, self), nm)(*args, **kwargs)
-    return cls(res) if isinstance(res,Tensor) else res
-
 class TensorBase(Tensor, metaclass=BypassNewMeta):
     def _new_meta(self, *args, **kwargs): return tensor(self)
 
-def _set_m(cls, f):
-    def _f(self, *args, **kwargs): return _cast_super(self, f, *args, **kwargs)
-    return _f
+def _patch_tb():
+    def get_f(fn):
+        def _f(self, *args, **kwargs):
+            cls = self.__class__
+            res = getattr(super(TensorBase, self), fn)(*args, **kwargs)
+            return cls(res) if isinstance(res,Tensor) else res
+        return _f
 
-t = tensor([1])
-skips = '__class__ __deepcopy__ __delattr__ __dir__ __doc__ __getattribute__ __hash__ __init__ \
-    __init_subclass__ __new__ __reduce__ __module__ __setstate__'.split()
+    t = tensor([1])
+    skips = '__class__ __deepcopy__ __delattr__ __dir__ __doc__ __getattribute__ __hash__ __init__ \
+        __init_subclass__ __new__ __reduce__ __module__ __setstate__'.split()
 
-for fn in dir(t):
-    if fn in skips: continue
-    f = getattr(t, fn)
-    if isinstance(f, (types.MethodWrapperType, types.BuiltinFunctionType, types.BuiltinMethodType, types.MethodType, types.FunctionType)):
-        setattr(TensorBase, fn, _set_m(TensorBase, fn))
+    for fn in dir(t):
+        if fn in skips: continue
+        f = getattr(t, fn)
+        if isinstance(f, (types.MethodWrapperType, types.BuiltinFunctionType, types.BuiltinMethodType, types.MethodType, types.FunctionType)):
+            setattr(TensorBase, fn, get_f(fn))
+
+_patch_tb()
 
 def retain_type(new, old, typ=None):
     "Cast `new` to type of `old` if it's a superclass"

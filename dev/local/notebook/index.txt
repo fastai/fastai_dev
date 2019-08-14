@@ -42,8 +42,6 @@
   "set_seed": "01_core.ipynb",
   "store_attr": "01_core.ipynb",
   "TensorBase": "01_core.ipynb",
-  "t": "01_core.ipynb",
-  "skips": "01_core.ipynb",
   "retain_type": "01_core.ipynb",
   "retain_types": "05_data_core.ipynb",
   "tuplify": "01_core.ipynb",
