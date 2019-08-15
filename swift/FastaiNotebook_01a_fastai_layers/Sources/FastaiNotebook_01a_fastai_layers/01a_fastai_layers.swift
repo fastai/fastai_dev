@@ -281,29 +281,23 @@ public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer,Parame
     }
 }
 
-extension Array: Layer&Module where Element: Layer, Element.Input == Element.Output {
-    // Note: remove the explicit typealiases after TF-603 is resolved.
-    public typealias Input = Element.Input
-    public typealias Output = Element.Output
-
-    @differentiable
-    public func callAsFunction(_ input: Input) -> Output {
-          return self.differentiableReduce(input) { $1($0) }
-    }
-}
+//TODO: uncomment once https://github.com/tensorflow/swift-apis/issues/411 is fixed
+//extension Array: Layer & Module where Element: Module, Element.Input == Element.Output {
+//    // Note: remove the explicit typealiases after TF-603 is resolved.
+//    public typealias Input = Element.Input
+//    public typealias Output = Element.Output
+//
+//    @differentiable
+//    public func callAsFunction(_ input: Input) -> Output {
+//          return self.differentiableReduce(input) { $1($0) }
+//    }
+//}
 
 extension KeyPathIterable {
     public var keyPaths: [WritableKeyPath<Self, Tensor<Float>>] {
         return recursivelyAllWritableKeyPaths(to: Tensor<Float>.self)
     }
 }
-
-//extension Layer {
-//    public var variables: AllDifferentiableVariables {
-//        get { return allDifferentiableVariables }
-//        set { allDifferentiableVariables = newValue }
-//    }
-//}
 
 public func ** (lhs: Int, rhs: Int) -> Int {
     return Int(pow(Double(lhs), Double(rhs)))
