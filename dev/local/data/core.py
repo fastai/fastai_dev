@@ -141,24 +141,32 @@ class ToTensor(Transform):
     "Convert item to appropriate tensor class"
     order = 15
 
+_dl_tfms = ('after_item','before_batch','after_batch')
+
 @delegates()
 class TfmdDL(DataLoader):
     "Transformed `DataLoader`"
     def __init__(self, dataset, bs=16, shuffle=False, **kwargs):
-        for nm in ('after_item','before_batch','after_batch'):
+        for nm in _dl_tfms:
             kwargs[nm] = Pipeline(kwargs.get(nm,None), as_item=False)
             kwargs[nm].setup(self)
         super().__init__(dataset, bs=bs, shuffle=shuffle, **kwargs)
         it  = self.do_item(0)
         its = self.do_batch([it])
+        #TODO do we still need?
         self._retain_ds = partial(retain_types, old=L(it ).mapped(type))
         self._retain_dl = partial(retain_types, old=L(its).mapped(type))
 
-    def decode(self, b):
-        return self.after_batch.decode(self._retain_dl(b), filt=getattr(self.dataset, 'filt', None))
+    def before_iter(self):
+        super().before_iter()
+        filt = getattr(self.dataset, 'filt', None)
+        for nm in _dl_tfms:
+            f = getattr(self,nm)
+            if isinstance(f,Pipeline): f.filt=filt
 
+    def decode(self, b): return self.before_batch.decode(self.after_batch.decode(self._retain_dl(b)))
     def decode_batch(self, b, max_samples=10):
-        f = compose(self._retain_ds, getattr(self.dataset,'decode',noop))
+        f = compose(self._retain_ds, self.after_item.decode, getattr(self.dataset,'decode',noop))
         return L(batch_to_samples(self.decode(b), max_samples=max_samples)).mapped(f)
 
     def show_batch(self, b=None, max_samples=10, ctxs=None, **kwargs):

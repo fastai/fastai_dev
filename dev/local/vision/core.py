@@ -2,7 +2,7 @@
 
 __all__ = ['Image', 'n_px', 'shape', 'aspect', 'load_image', 'PILBase', 'PILImage', 'PILImageBW', 'PILMask',
            'TensorPoint', 'get_annotations', 'BBox', 'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes',
-           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad_collate']
+           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad_collate', 'ToTensor']
 
 from ..imports import *
 from ..test import *
