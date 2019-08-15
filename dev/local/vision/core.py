@@ -2,7 +2,7 @@
 
 __all__ = ['Image', 'n_px', 'shape', 'aspect', 'load_image', 'PILBase', 'PILImage', 'PILImageBW', 'PILMask',
            'TensorPoint', 'get_annotations', 'BBox', 'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes',
-           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad_collate', 'ToTensor']
+           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad_collate']
 
 from ..imports import *
 from ..test import *
@@ -14,6 +14,9 @@ from ..data.external import *
 from ..notebook.showdoc import show_doc
 
 from PIL import Image
+
+
+#It didn't use to be necessary to add ToTensor in all but we don't have the encodes methods defined here otherwise. TODO: investigate
 
 @patch_property
 def n_px(x: Image.Image): return x.size[0] * x.size[1]

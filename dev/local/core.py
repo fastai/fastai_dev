@@ -2,14 +2,14 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'methods_kwargs', 'chk', 'tensor', 'add_docs', 'docs',
-           'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class',
-           'noop', 'noops', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify',
-           'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish', 'IterLen',
-           'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
-           'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
-           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler',
-           'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
-           'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
+           'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'CollBase', 'L', 'ifnone', 'get_class', 'mk_class',
+           'wrap_class', 'noop', 'noops', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types',
+           'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish',
+           'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
+           'true', 'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float',
+           'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper',
+           'partialler', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title',
+           'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
            'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
 
 from .test import *
@@ -135,6 +135,7 @@ def methods_kwargs(cls):
                         arg = types.MethodType(arg, self)
                     setattr(self, k, arg)
         old_init(self, *args, **kwargs)
+    functools.update_wrapper(_init, old_init)
     cls.__init__ = use_kwargs(cls._methods)(_init)
     return cls
 
@@ -220,7 +221,39 @@ def _listify(o):
     if is_iter(o): return list(o)
     return [o]
 
-class L(GetAttr, metaclass=NewChkMeta):
+class CollBase(GetAttr, metaclass=NewChkMeta):
+    "Base class for things that compose a list of `items` but can also index with list of indices or masks"
+    _xtra =  [o for o in dir([]) if not o.startswith('_')]
+
+    def __len__(self): return len(self.items)
+    def __delitem__(self, i): del(self.items[i])
+    def __repr__(self): return coll_repr(self)
+    def __eq__(self,b): return all_equal(b,self)
+    def __iter__(self): return (self[i] for i in range(len(self)))
+
+    def _get(self, i): return self.items[i]
+    def __getitem__(self, idx):
+        "Retrieve `idx` (can be list of indices, or mask, or int) items"
+        return L(self._get(i) for i in _mask2idxs(idx)) if is_iter(idx) else self._get(idx)
+
+    def itemgot(self, idx):   return self.mapped(itemgetter(idx))
+    def attrgot(self, k):     return self.mapped(lambda o:getattr(o,k,0))
+    def tensored(self):       return self.mapped(tensor)
+    def stack(self, dim=0):   return torch.stack(list(self.tensored()), dim=dim)
+    def cat  (self, dim=0):   return torch.cat  (list(self.tensored()), dim=dim)
+    def cycle(self):          return itertools.cycle(self) if len(self) > 0 else itertools.cycle([None])
+    def mapped(self, f, *args, **kwargs): return self.__class__(map(partial(f,*args,**kwargs), self))
+
+add_docs(CollBase,
+         mapped="Create new `L` with `f` applied to all `items`, passing `args` and `kwargs` to `f`",
+         itemgot="Create new `L` with item `idx` of all `items`",
+         attrgot="Create new `L` with attr `k` of all `items`",
+         tensored="`mapped(tensor)`",
+         cycle="Same as `itertools.cycle`",
+         stack="Same as `torch.stack`",
+         cat="Same as `torch.cat`")
+
+class L(CollBase):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     _xtra =  [o for o in dir([]) if not o.startswith('_')]
 
@@ -232,11 +265,6 @@ class L(GetAttr, metaclass=NewChkMeta):
             if len(self.items)==1: self.items = self.items*len(match)
             else: assert len(self.items)==len(match), 'Match length mismatch'
 
-    def __len__(self): return len(self.items)
-    def __delitem__(self, i): del(self.items[i])
-    def __repr__(self): return f'{coll_repr(self)}'
-    def __eq__(self,b): return all_equal(b,self)
-    def __iter__(self): return (self[i] for i in range(len(self)))
     def __invert__(self): return L(not i for i in self)
     def __mul__ (a,b): return L(a.items*b)
     def __add__ (a,b): return L(a.items+_listify(b))
@@ -244,10 +272,6 @@ class L(GetAttr, metaclass=NewChkMeta):
     def __addi__(a,b):
         a.items += list(b)
         return a
-
-    def __getitem__(self, idx):
-        "Retrieve `idx` (can be list of indices, or mask, or int) items"
-        return L(self.items[i] for i in _mask2idxs(idx)) if is_iter(idx) else self.items[idx]
 
     def __setitem__(self, idx, o):
         "Set `idx` (can be list of indices, or mask, or int) items to `o` (which is broadcast if not iterable)"
@@ -270,17 +294,15 @@ class L(GetAttr, metaclass=NewChkMeta):
 
     def zipped(self):         return L(zip(*self))
     def zipwith(self, *rest): return L(zip(self, *rest))
-    def itemgot(self, idx):   return self.mapped(itemgetter(idx))
-    def attrgot(self, k):     return self.mapped(lambda o:getattr(o,k,0))
-    def tensored(self):       return self.mapped(tensor)
-    def stack(self, dim=0):   return torch.stack(list(self.tensored()), dim=dim)
-    def cat  (self, dim=0):   return torch.cat  (list(self.tensored()), dim=dim)
-    def cycle(self):          return itertools.cycle(self) if len(self) > 0 else itertools.cycle([None])
-    def mapped(self, f, *args, **kwargs): return L(map(partial(f,*args,**kwargs), self))
     def shuffled(self):
         it = copy(self.items)
         random.shuffle(it)
         return L(it)
+
+add_docs(L,
+         zipped="Create new `L` with `zip(*items)`",
+         zipwith="Create new `L` with `self` zipped with each of `*rest`",
+         shuffled="Same as `random.shuffle`, but not inplace")
 
 def ifnone(a, b):
     "`b` if `a` is None else `a`"
