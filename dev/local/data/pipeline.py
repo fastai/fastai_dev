@@ -138,21 +138,12 @@ class TfmdDS(TfmdBase):
         self.tls = [TfmdList(items, t, do_setup=do_setup, filt=filt) for t in L(tfms)]
 
     def _get(self, it): return tuple(tl._get(it) for tl in self.tls)
-    def subset(self, idxs): return self.__class__(self.items[idxs], self.tls, do_setup=False)
-    def __repr__(self): return f"{super().__repr__()}: \nds tls - {self.tls}"
+    def __repr__(self): return coll_repr(self)
     def decode(self, o): return tuple(it.decode(o_) for o_,it in zip(o,self.tls))
-
     def show(self, o, ctx=None, **kwargs):
         for o_,it in zip(o,self.tls): ctx = it.show(o_, ctx=ctx, **kwargs)
         return ctx
 
-    @property
-    def filt(self): return self.tls[0].tfms.filt
-    @filt.setter
-    def filt(self,v):
-        for tl in self.tls: tl.filt = v
-
     _docs=dict(
         decode="Compose `decode` of all `tuple_tfms` then all `tfms` on `i`",
-        show="Show item `o` in `ctx`",
-        subset="New `TfmdDS` that only includes items at `idxs`")
+        show="Show item `o` in `ctx`")

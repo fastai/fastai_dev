@@ -156,7 +156,6 @@
   "all_disjoint": "06_data_source.ipynb",
   "DataSource": "06_data_source.ipynb",
   "DataSource.train,DataSource.valid": "06_data_source.ipynb",
-  "DsrcSubset": "06_data_source.ipynb",
   "n_px": "07_vision_core.ipynb",
   "shape": "07_vision_core.ipynb",
   "aspect": "07_vision_core.ipynb",
