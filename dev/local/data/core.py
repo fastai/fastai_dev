@@ -165,9 +165,12 @@ class TfmdDL(DataLoader):
             if isinstance(f,Pipeline): f.filt=filt
 
     def decode(self, b): return self.before_batch.decode(self.after_batch.decode(self._retain_dl(b)))
-    def decode_batch(self, b, max_samples=10):
-        f = compose(self._retain_ds, self.after_item.decode, getattr(self.dataset,'decode',noop))
-        return L(batch_to_samples(self.decode(b), max_samples=max_samples)).mapped(f)
+    def decode_batch(self, b, max_samples=10, ds_decode=True): return self._decode_batch(self.decode(b), max_samples, ds_decode)
+
+    def _decode_batch(self, b, max_samples=10, ds_decode=True):
+        f = compose(self._retain_ds, self.after_item.decode)
+        if ds_decode: f = compose(f, getattr(self.dataset,'decode',noop))
+        return L(batch_to_samples(b, max_samples=max_samples)).mapped(f)
 
     def show_batch(self, b=None, max_samples=10, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
@@ -176,8 +179,8 @@ class TfmdDL(DataLoader):
         if ctxs is None:
             if hasattr(b[0], 'get_ctxs'): ctxs = b[0].get_ctxs(max_samples=max_samples, **kwargs)
             else: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
-        ss = batch_to_samples(b, max_samples)
-        ctxs = [self.dataset.show(self._retain_ds(o), ctx=ctx, **kwargs) for o,ctx in zip(ss,ctxs)]
+        db = self._decode_batch(b, max_samples, False)
+        ctxs = [self.dataset.show(o, ctx=ctx, **kwargs) for o,ctx in zip(db, ctxs)]
         if hasattr(b[0], 'display'): b[0].display(ctxs)
 
 @docs
