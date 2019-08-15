@@ -144,41 +144,33 @@ class ToTensor(Transform):
 @delegates()
 class TfmdDL(DataLoader):
     "Transformed `DataLoader`"
-    def __init__(self, dataset, bs=16, shuffle=False,
-                 after_item=None, before_batch=None, after_batch=None, **kwargs):
-        super().__init__(dataset, bs=bs, shuffle=shuffle, **kwargs,
-                         after_item   = Pipeline(after_item  , as_item=False),
-                         before_batch = Pipeline(before_batch, as_item=False),
-                         after_batch  = Pipeline(after_batch , as_item=False))
-        for tfm in (self.after_item,self.before_batch,self.after_batch): tfm.setup(self)
-        it = self.do_item(0)
-        self._ds_types = L(it).mapped(type)
-        self._dl_types = L(self.do_batch([it])).mapped(type)
+    def __init__(self, dataset, bs=16, shuffle=False, **kwargs):
+        for nm in ('after_item','before_batch','after_batch'):
+            kwargs[nm] = Pipeline(kwargs.get(nm,None), as_item=False)
+            kwargs[nm].setup(self)
+        super().__init__(dataset, bs=bs, shuffle=shuffle, **kwargs)
+        it  = self.do_item(0)
+        its = self.do_batch([it])
+        self._retain_ds = partial(retain_types, old=L(it ).mapped(type))
+        self._retain_dl = partial(retain_types, old=L(its).mapped(type))
 
-#     def retain(self, res, b):
-#         res = super().retain(res, b)
-#         if not self._dl_types: self._dl_types = L(res).mapped(type)
-#         return res
+    def decode(self, b):
+        return self.after_batch.decode(self._retain_dl(b), filt=getattr(self.dataset, 'filt', None))
 
-    def decode(self, b): return self.after_batch.decode(retain_types(b, self._dl_types), filt=self.filt)
     def decode_batch(self, b, max_samples=10):
-        b = batch_to_samples(self.decode(b), max_samples=max_samples)
-        f = getattr(self.dataset,'decode',noop)
-        return L(f(retain_types(s, self._ds_types)) for s in b)
+        f = compose(self._retain_ds, getattr(self.dataset,'decode',noop))
+        return L(batch_to_samples(self.decode(b), max_samples=max_samples)).mapped(f)
 
     def show_batch(self, b=None, max_samples=10, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         if b is None: b = self.one_batch()
         b = self.decode(b)
         if ctxs is None:
-            ctxs = b[0].get_ctxs(max_samples=max_samples, **kwargs) if hasattr(
-                b[0], 'get_ctxs') else [None] * len(b[0] if is_iter(b[0]) else b)
-        ctxs = [self.dataset.show(retain_types(o, self._ds_types), ctx=ctx, **kwargs)
-                                  for o,ctx in zip(batch_to_samples(b, max_samples),ctxs)]
+            if hasattr(b[0], 'get_ctxs'): ctxs = b[0].get_ctxs(max_samples=max_samples, **kwargs)
+            else: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)
+        ss = batch_to_samples(b, max_samples)
+        ctxs = [self.dataset.show(self._retain_ds(o), ctx=ctx, **kwargs) for o,ctx in zip(ss,ctxs)]
         if hasattr(b[0], 'display'): b[0].display(ctxs)
-
-    @property
-    def filt(self): return getattr(self.dataset, 'filt', None)
 
 @docs
 class Cuda(Transform):
