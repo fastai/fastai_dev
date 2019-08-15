@@ -128,7 +128,12 @@ def methods_kwargs(cls):
     old_init = cls.__init__
     def _init(self, *args, **kwargs):
         for k in cls._methods:
-            if k in kwargs: setattr(self, k, types.MethodType(kwargs.pop(k), self))
+            if k in kwargs:
+                arg = kwargs.pop(k)
+                if arg is not None:
+                    if not (getattr(arg,'__dict__',None) or getattr(arg,'__slots__',None)):
+                        arg = types.MethodType(arg, self)
+                    setattr(self, k, arg)
         old_init(self, *args, **kwargs)
     cls.__init__ = use_kwargs(cls._methods)(_init)
     return cls
@@ -363,6 +368,7 @@ _patch_tb()
 
 def retain_type(new, old, typ=None):
     "Cast `new` to type of `old` if it's a superclass"
+    if isinstance(old,type): typ=old # Use `old` directly if it's already a `type`
     if not typ:
         # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
         if not isinstance(old, type(new)): return new

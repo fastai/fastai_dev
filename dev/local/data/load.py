@@ -42,7 +42,7 @@ def fa_convert(t):
 class DataLoader():
     wif=before_iter=after_item=before_batch=after_batch=after_iter = noops
     _methods = 'wif before_iter create_batches sampler create_item after_item before_batch create_batch retain after_batch after_iter'.split()
-    def __init__(self, dataset=None, bs=None, drop_last=False, shuffle=False, indexed=None,
+    def __init__(self, dataset=None, bs=None, shuffle=False, drop_last=False, indexed=None,
                  num_workers=0, pin_memory=False, timeout=0, **kwargs):
         if indexed is None: indexed = dataset is not None and hasattr(dataset,'__getitem__')
         store_attr(self, 'dataset,bs,drop_last,shuffle,indexed')
@@ -62,11 +62,8 @@ class DataLoader():
     def create_batches(self):
         self.it = iter(self.dataset) if self.dataset else None
         self.before_iter()
-        res = maps(self.create_item, self.after_item, self.sampler())
-        if self.bs is None: yield from res
-        else:
-            chunks = chunked(res, self.bs, self.drop_last)
-            yield from map(self.after_batch, maps(self.before_batch, self.create_batch, chunks, retain=self.retain))
+        res = map(self.do_item, self.sampler())
+        yield from res if self.bs is None else map(self.do_batch, chunked(res, self.bs, self.drop_last))
         self.after_iter()
 
     def shuffle_fn(self, idxs): return self.rng.sample(idxs, len(idxs))
@@ -80,3 +77,6 @@ class DataLoader():
     def create_item(self, s):  return next(self.it) if s is None else self.dataset[s]
     def retain(self, res, b):  return retain_types(res, b[0]) if is_iter(b[0]) else res
     def create_batch(self, b): return (fa_collate,fa_convert)[self.bs is None](b)
+    def one_batch(self):   return next(iter(self))
+    def do_item(self, s):  return self.after_item(self.create_item(s))
+    def do_batch(self, b): return self.after_batch(self.retain(self.create_batch(self.before_batch(b)), b))

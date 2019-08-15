@@ -62,16 +62,15 @@ class LMDataLoader(DataLoader):
         self.spb = self.n//self.bs
 
     def shuffle_fn(self,idxs): return idxs
-    def reset(self):
+    def before_iter(self):
         if self.shuffle: self.items.shuffle()
         self.chunks = Chunks(self.items, self.lens)
 
-    def item(self, seq):
+    def create_item(self, seq):
         if seq>=self.n: raise IndexError
         st = ((seq%self.bs)*self.spb + (seq//self.bs)) * self.seq_len
         txt = self.chunks[st : st+self.seq_len+1]
         return txt[:-1],txt[1:]
-        return TensorText(txt[:-1]),TensorText(txt[1:])
 
 def pad_collate(samples, pad_idx=1, pad_first=True, backwards=False):
     "Function that collect samples and adds padding. Flips token order if needed"
