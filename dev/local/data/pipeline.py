@@ -105,7 +105,6 @@ class TfmdBase(CollBase):
     "Base class for transformed lists"
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx, **kwargs): return self.show(self[idx], **kwargs)
-    def decode_batch(self, b, max_samples=10): return batch_to_samples(b, max_samples=max_samples).mapped(self.decode)
 
 class TfmdList(TfmdBase):
     "A `Pipeline` of `tfms` applied to a collection of `items`"

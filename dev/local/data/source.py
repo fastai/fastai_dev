@@ -20,11 +20,7 @@ class _FiltTfmdList(TfmdList):
         self.filt = self.filt_idx[i]
         return super()._get(i)
 
-#     @property
-#     def len(self,filt): return len(self.filts[filt])
     def subset(self, i): return DsrcSubset(self, i)
-#     def n_subsets(self): return len(self.filts)
-#     def subsets(self): return map(self.subset, range(self.n_subsets))
 
 _FiltTfmdList.train,_FiltTfmdList.valid = add_props(lambda i,x: x.subset(i), 2)
 
@@ -39,13 +35,11 @@ class DataSource(TfmdDS):
         self.items = L(items)
         self.filt_idx = L([None]*len(self.items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
-
         self.tls = [_FiltTfmdList(self.items, t, self.filts, self.filt_idx, do_setup=do_setup)
                     for t in L(tfms)]
 
     @property
     def n_subsets(self): return len(self.filts)
-#     def len(self,filt): return len(self.filts[filt])
     def subset(self, i): return DsrcSubset(self, i)
     def subsets(self): return map(self.subset, range(self.n_subsets))
     def __repr__(self):
