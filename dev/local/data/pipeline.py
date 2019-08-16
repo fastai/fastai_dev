@@ -144,6 +144,12 @@ class TfmdDS(TfmdBase):
         for o_,it in zip(o,self.tls): ctx = it.show(o_, ctx=ctx, **kwargs)
         return ctx
 
+    @property
+    def filt(self): return self.tls[0].filt
+    @filt.setter
+    def filt(self,v):
+        for tl in self.tls: tl.filt = v
+
     _docs=dict(
         decode="Compose `decode` of all `tuple_tfms` then all `tfms` on `i`",
         show="Show item `o` in `ctx`")
