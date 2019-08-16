@@ -25,39 +25,35 @@ def merge_tfms(*tfms):
                 types = [t_ for t_ in types if t_ != cls]
                 res.append(t() if isinstance(t, type) else t)
                 types.append(cls)
-    return res
+    return L(res)
 
 @docs
 @funcs_kwargs
 class DataBlock():
     "Generic container to quickly build `DataSource` and `DataBunch`"
     get_items=splitter=labeller = noops
-    types = int,int
     _methods = 'get_items splitter labeller'.split()
     def __init__(self, ts=None, **kwargs):
-        self.types = L(self.types if ts is None else ts)
-        self.default_type_tfms = self.types.mapped_dict(self._def_tfm)
-        self.default_ds_tfms = L(merge_tfms(*self.types.attrgot('default_ds_tfms', L()), ToTensor))
-        self.default_dl_tfms = L(merge_tfms(*self.types.attrgot('default_dl_tfms', L()), Cuda))
-
-    def _def_tfm(self, t):
-        r = L(t.create if hasattr(t, 'create') else None)
-        return r + L(getattr(t, 'default_type_tfms', None))
+        types = L(getattr(self,'types',(float,float)) if ts is None else ts)
+        self.default_type_tfms = types.mapped(
+            lambda t: L(getattr(t,'create',None)) + L(getattr(t,'default_type_tfms',None)))
+        self.default_ds_tfms = merge_tfms(*types.attrgot('default_ds_tfms', L()), ToTensor)
+        self.default_dl_tfms = merge_tfms(*types.attrgot('default_dl_tfms', L()), Cuda)
 
     def datasource(self, source, type_tfms=None):
         self.source = source
         items = self.get_items(source)
         splits = self.splitter(items)
-        if type_tfms is None: type_tfms = [L() for t in self.types]
-        type_tfms = L(merge_tfms(self.default_type_tfms[t], tfm) for t,tfm in zip(self.types, type_tfms))
         labellers = [None,self.labeller] if isinstance(self.labeller, Callable) else self.labeller
-        type_tfms = L(L(l) + L(tfm) for l,tfm in zip(labellers, type_tfms))
+        if type_tfms is None: type_tfms = [L() for t in self.default_type_tfms]
+        type_tfms = L([self.default_type_tfms, type_tfms, labellers]).mapped_zip(
+            lambda tt,tfm,l: L(l) + merge_tfms(tt, tfm))
         return DataSource(items, tfms=type_tfms, filts=splits)
 
     def databunch(self, source, type_tfms=None, ds_tfms=None, dl_tfms=None, bs=16, **kwargs):
         dsrc = self.datasource(source, type_tfms=type_tfms)
-        ds_tfms = L(merge_tfms(self.default_ds_tfms, ds_tfms))
-        dl_tfms = L(merge_tfms(self.default_dl_tfms, dl_tfms))
+        ds_tfms = merge_tfms(self.default_ds_tfms, ds_tfms)
+        dl_tfms = merge_tfms(self.default_dl_tfms, dl_tfms)
         return dsrc.databunch(bs=bs, after_item=ds_tfms, after_batch=dl_tfms, **kwargs)
 
     _docs = dict(get_items="Pass at init or implement how to get your raw items from a `source`",
