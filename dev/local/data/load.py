@@ -23,7 +23,7 @@ class _FakeLoader(GetAttr):
     def __init__(self, d, pin_memory, num_workers, timeout):
         self.dataset,self.default,self.worker_init_fn = self,d,_wif
         store_attr(self, 'd,pin_memory,num_workers,timeout')
-    def __iter__(self): return iter(self.d.create_batches())
+    def __iter__(self): return iter(self.d.create_batches(self.d.sampler()))
 
 _collate_types = (ndarray, Tensor, typing.Mapping, str)
 
@@ -38,7 +38,7 @@ def fa_convert(t):
             else type(t)([fa_convert(s) for s in t]) if isinstance(t, Sequence)
             else default_convert(t))
 
-@methods_kwargs
+@funcs_kwargs
 class DataLoader():
     wif=before_iter=after_item=before_batch=after_batch=after_iter = noops
     _methods = 'wif before_iter create_batches sampler create_item after_item before_batch create_batch retain after_batch after_iter'.split()
@@ -59,10 +59,10 @@ class DataLoader():
         if self.bs is None: return self.n
         return self.n//self.bs + (0 if self.drop_last or self.n%self.bs==0 else 1)
 
-    def create_batches(self):
+    def create_batches(self, samps):
         self.it = iter(self.dataset) if self.dataset else None
         self.before_iter()
-        res = map(self.do_item, self.sampler())
+        res = map(self.do_item, samps)
         yield from res if self.bs is None else map(self.do_batch, chunked(res, self.bs, self.drop_last))
         self.after_iter()
 

@@ -28,28 +28,22 @@ def merge_tfms(*tfms):
     return res
 
 @docs
+@funcs_kwargs
 class DataBlock():
     "Generic container to quickly build `DataSource` and `DataBunch`"
-    def __init__(self, ts=None, get_items=None, splitter=None, labeller=None):
-        if ts is not None:        self.types = ts
-        if get_items is not None: self.get_items = get_items
-        if splitter is not None:  self.splitter = splitter
-        if labeller is not None:
-            self.labeller = labeller if isinstance(labeller, Callable) else [
-                l if isinstance(l, Transform) else types.MethodType(l, self) for l in labeller]
+    get_items=splitter=labeller = noops
+    _methods = 'get_items splitter labeller'.split()
+    def __init__(self, ts=None, **kwargs):
+        if ts is not None: self.types = ts
         self.default_type_tfms = {t: self._def_tfm(t) for t in self.types}
-        self.default_ds_tfms = L(merge_tfms(*[getattr(t, 'default_ds_tfms', L()) for t in L(self.types)]))
+        self.default_ds_tfms = L(merge_tfms(*[getattr(t, 'default_ds_tfms', L()) for t in L(self.types)], ToTensor))
         self.default_dl_tfms = L(merge_tfms(*[getattr(t, 'default_dl_tfms', L()) for t in L(self.types)], Cuda))
-
-    def get_items(self, source): pass
-    def splitter(self, items): pass
-    def labeller(self, item): pass
 
     def _def_tfm(self, t):
         r = L(t.create if hasattr(t, 'create') else None)
         return r + L(getattr(t, 'default_type_tfms', None))
 
-    def datasource(self, source, type_tfms=None, ds_tfms=None):
+    def datasource(self, source, type_tfms=None):
         self.source = source
         items = self.get_items(source)
         splits = self.splitter(items)
@@ -57,13 +51,13 @@ class DataBlock():
         type_tfms = L(merge_tfms(self.default_type_tfms[t], tfm) for (t,tfm) in zip(self.types, type_tfms))
         labellers = [None,self.labeller] if isinstance(self.labeller, Callable) else self.labeller
         type_tfms = L(L(l) + L(tfm) for l,tfm in zip(labellers, type_tfms))
-        ds_tfms = L(merge_tfms(self.default_ds_tfms, ds_tfms))
-        return DataSource(items, type_tfms=type_tfms, ds_tfms=ds_tfms, filts=splits)
+        return DataSource(items, tfms=type_tfms, filts=splits)
 
     def databunch(self, source, type_tfms=None, ds_tfms=None, dl_tfms=None, bs=16, **kwargs):
-        dsrc = self.datasource(source, type_tfms=type_tfms, ds_tfms=ds_tfms)
+        dsrc = self.datasource(source, type_tfms=type_tfms)
+        ds_tfms = L(merge_tfms(self.default_ds_tfms, ds_tfms))
         dl_tfms = L(merge_tfms(self.default_dl_tfms, dl_tfms))
-        return dsrc.databunch(tfms=dl_tfms, bs=bs, **kwargs)
+        return dsrc.databunch(bs=bs, after_item=ds_tfms, after_batch=dl_tfms, **kwargs)
 
     _docs = dict(get_items="Pass at init or implement how to get your raw items from a `source`",
                  splitter="Pass at init or implement how to split your `items`",

@@ -148,7 +148,7 @@ class TfmdDL(DataLoader):
     "Transformed `DataLoader`"
     def __init__(self, dataset, bs=16, shuffle=False, **kwargs):
         for nm in _dl_tfms:
-            kwargs[nm] = Pipeline(kwargs.get(nm,None), as_item=False)
+            kwargs[nm] = Pipeline(kwargs.get(nm,None), as_item=(nm=='before_batch'))
             kwargs[nm].setup(self)
         super().__init__(dataset, bs=bs, shuffle=shuffle, **kwargs)
         it  = self.do_item(0)
