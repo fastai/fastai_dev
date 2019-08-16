@@ -48,7 +48,7 @@ public struct DataBatch<Inputs: Differentiable & TensorGroup, Labels: TensorGrou
             xStart, offsetBy: Int(Inputs._tensorHandleCount))
         self.xb = Inputs.init(_handles: _handles[xStart..<xEnd])
         self.yb = Labels.init(_handles: _handles[xEnd..<_handles.endIndex])
-    }                                            
+    }
 }
 
 @differentiable(wrt: logits)
