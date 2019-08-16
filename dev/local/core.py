@@ -232,15 +232,19 @@ class CollBase(GetAttr, metaclass=NewChkMeta):
         return L(self._get(i) for i in _mask2idxs(idx)) if is_iter(idx) else self._get(idx)
 
     def itemgot(self, idx):   return self.mapped(itemgetter(idx))
-    def attrgot(self, k):     return self.mapped(lambda o:getattr(o,k,0))
-    def tensored(self):       return self.mapped(tensor)
-    def stack(self, dim=0):   return torch.stack(list(self.tensored()), dim=dim)
-    def cat  (self, dim=0):   return torch.cat  (list(self.tensored()), dim=dim)
-    def cycle(self):          return itertools.cycle(self) if len(self) > 0 else itertools.cycle([None])
+    def attrgot(self, k, default=None): return self.mapped(lambda o:getattr(o,k,default))
+    def tensored(self): return self.mapped(tensor)
+    def stack(self, dim=0): return torch.stack(list(self.tensored()), dim=dim)
+    def cat  (self, dim=0): return torch.cat  (list(self.tensored()), dim=dim)
+    def cycle(self): return itertools.cycle(self) if len(self) > 0 else itertools.cycle([None])
     def mapped(self, f, *args, **kwargs): return self.__class__(map(partial(f,*args,**kwargs), self))
+    def mapped_dict(self, f, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
+    def starmapped(self, f, *args, **kwargs): return self.__class__(itertools.starmap(partial(f,*args,**kwargs), self))
 
 add_docs(CollBase,
          mapped="Create new `L` with `f` applied to all `items`, passing `args` and `kwargs` to `f`",
+         mapped_dict="Like `mapped`, but creates a dict from `items` to function results",
+         starmapped="Like `mapped`, but use `itertools.starmap`",
          itemgot="Create new `L` with item `idx` of all `items`",
          attrgot="Create new `L` with attr `k` of all `items`",
          tensored="`mapped(tensor)`",
@@ -287,8 +291,10 @@ class L(CollBase):
         if is_coll(a): a = len(a)
         return L(range(a,b,step)) if step is not None else L(range(a,b)) if b is not None else L(range(a))
 
-    def zipped(self):         return L(zip(*self))
+    def zipped(self): return L(zip(*self))
     def zipwith(self, *rest): return L(zip(self, *rest))
+    def mapped_zip(self, f): return self.zipped().starmapped(f)
+    def mapped_zipwith(self, f, *rest): return self.zipwith(*rest).starmapped(f)
     def shuffled(self):
         it = copy(self.items)
         random.shuffle(it)
@@ -297,6 +303,8 @@ class L(CollBase):
 add_docs(L,
          zipped="Create new `L` with `zip(*items)`",
          zipwith="Create new `L` with `self` zipped with each of `*rest`",
+         mapped_zip="Combine `zipped` and `starmapped`",
+         mapped_zipwith="Combine `zipwith` and `starmapped`",
          shuffled="Same as `random.shuffle`, but not inplace")
 
 def ifnone(a, b):
@@ -510,11 +518,13 @@ def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"
     if not len(ls): return []
     it = ls[0]
-    return retain_type(torch.cat(ls) if isinstance(it,torch.Tensor)
-            else np.concatenate(ls) if isinstance(it,ndarray)
-            else sum(ls,[]) if isinstance(it,list)
-            else sum(ls,()) if isinstance(it,tuple)
-            else stop(TypeError), it)
+    return retain_type(
+        torch.cat(ls) if isinstance(it,torch.Tensor)
+        else np.concatenate(ls) if isinstance(it,ndarray)
+        else sum(ls,[]) if isinstance(it,list)
+        else sum(ls,()) if isinstance(it,tuple)
+        else sum(L(ls).mapped(L),L())
+        , it)
 
 class Chunks:
     "Slice and int indexing into a list of lists"

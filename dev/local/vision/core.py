@@ -192,29 +192,14 @@ PILBase.default_dl_tfms = ByteToFloatTensor
 TensorPoint.default_ds_tfms = PointScaler
 
 #Comes from 10_data_block.ipynb.
-BBox.default_type_tfms = BBoxCategorize
-BBox.default_ds_tfms = BBoxScaler
+BBox.default_type_tfms,BBox.default_ds_tfms = BBoxCategorize,BBoxScaler
 
 #Comes from 10_data_block.ipynb.
 def bb_pad(samples, pad_idx=0):
     "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
-    if isinstance(samples[0][1], int):
-        set_trace()
-        return samples
     max_len = max([len(s[1][1]) for s in samples])
-    res = []
-    for img,(bbox,lbl) in samples:
-        bbox = torch.cat([bbox,torch.zeros(max_len-bbox.shape[0], 4)])
-        lbl  = torch.cat([lbl, torch.zeros(max_len-lbl .shape[0])+pad_idx])
-        res.append((img,TensorBBox((bbox,lbl))))
-    return res
-#     bboxes = torch.zeros(len(samples), max_len, 4)
-#     labels = torch.zeros(len(samples), max_len).long() + pad_idx
-#     imgs = []
-#     for i,s in enumerate(samples):
-#         imgs.append(s[0][None])
-#         bbs, lbls = s[1]
-#         if not (bbs.nelement() == 0):
-#             bboxes[i,-len(lbls):] = bbs
-#             labels[i,-len(lbls):] = tensor(lbls)
-#     return torch.cat(imgs,0), (bboxes,labels)
+    def _f(img,bbox,lbl):
+        bbox = torch.cat([bbox,bbox.new_zeros(max_len-bbox.shape[0], 4)])
+        lbl  = torch.cat([lbl, lbl .new_zeros(max_len-lbl .shape[0])+pad_idx])
+        return img,TensorBBox((bbox,lbl))
+    return [_f(x,*y) for x,y in samples]

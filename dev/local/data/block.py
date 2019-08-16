@@ -32,12 +32,13 @@ def merge_tfms(*tfms):
 class DataBlock():
     "Generic container to quickly build `DataSource` and `DataBunch`"
     get_items=splitter=labeller = noops
+    types = int,int
     _methods = 'get_items splitter labeller'.split()
     def __init__(self, ts=None, **kwargs):
-        if ts is not None: self.types = ts
-        self.default_type_tfms = {t: self._def_tfm(t) for t in self.types}
-        self.default_ds_tfms = L(merge_tfms(*[getattr(t, 'default_ds_tfms', L()) for t in L(self.types)], ToTensor))
-        self.default_dl_tfms = L(merge_tfms(*[getattr(t, 'default_dl_tfms', L()) for t in L(self.types)], Cuda))
+        self.types = L(self.types if ts is None else ts)
+        self.default_type_tfms = self.types.mapped_dict(self._def_tfm)
+        self.default_ds_tfms = L(merge_tfms(*self.types.attrgot('default_ds_tfms', L()), ToTensor))
+        self.default_dl_tfms = L(merge_tfms(*self.types.attrgot('default_dl_tfms', L()), Cuda))
 
     def _def_tfm(self, t):
         r = L(t.create if hasattr(t, 'create') else None)
@@ -48,7 +49,7 @@ class DataBlock():
         items = self.get_items(source)
         splits = self.splitter(items)
         if type_tfms is None: type_tfms = [L() for t in self.types]
-        type_tfms = L(merge_tfms(self.default_type_tfms[t], tfm) for (t,tfm) in zip(self.types, type_tfms))
+        type_tfms = L(merge_tfms(self.default_type_tfms[t], tfm) for t,tfm in zip(self.types, type_tfms))
         labellers = [None,self.labeller] if isinstance(self.labeller, Callable) else self.labeller
         type_tfms = L(L(l) + L(tfm) for l,tfm in zip(labellers, type_tfms))
         return DataSource(items, tfms=type_tfms, filts=splits)
