@@ -394,9 +394,10 @@ _patch_tb()
 
 def retain_type(new, old, typ=None):
     "Cast `new` to type of `old` if it's a superclass"
-    if not typ: typ = old if isinstance(old,type) else type(old)
     # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
-    if not issubclass(typ, type(new)): return new
+    if typ is None:
+        if not isinstance(old, type(new)): return new
+        typ = old if isinstance(old,type) else type(old)
     # Do nothing the new type is already an instance of requested type (i.e. same type)
     return typ(new) if typ!=NoneType and not isinstance(new, typ) else new
 
@@ -523,12 +524,13 @@ def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"
     if not len(ls): return []
     it = ls[0]
-    return retain_type(
-        torch.cat(ls) if isinstance(it,torch.Tensor)
-        else np.concatenate(ls) if isinstance(it,ndarray)
-        else tuple(o for x in ls for o in L(x)) if isinstance(it,tuple)
-        else [o for x in ls for o in L(x)]
-        , it)
+    if isinstance(it,torch.Tensor): res = torch.cat(ls)
+    elif isinstance(it,ndarray): res = np.concatenate(ls)
+    else:
+        res = [o for x in ls for o in L(x)]
+        if isinstance(it,(tuple,list)): res = type(it)(res)
+        else: res = L(res)
+    return retain_type(res, it)
 
 class Chunks:
     "Slice and int indexing into a list of lists"
