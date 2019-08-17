@@ -185,16 +185,16 @@ class BBoxCategorize(Transform):
     def decodes(self, o:TensorBBox)->BBox:
         return BBox((o.bbox,[self.vocab[i_] for i_ in o.lbl]))
 
-#Comes from 10_data_block.ipynb.
+#Comes from 50_data_block.ipynb.
 PILBase.default_dl_tfms = ByteToFloatTensor
 
-#Comes from 10_data_block.ipynb.
+#Comes from 50_data_block.ipynb.
 TensorPoint.default_ds_tfms = PointScaler
 
-#Comes from 10_data_block.ipynb.
+#Comes from 50_data_block.ipynb.
 BBox.default_type_tfms,BBox.default_ds_tfms = BBoxCategorize,BBoxScaler
 
-#Comes from 10_data_block.ipynb.
+#Comes from 50_data_block.ipynb.
 def bb_pad(samples, pad_idx=0):
     "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
     max_len = max([len(s[1][1]) for s in samples])
