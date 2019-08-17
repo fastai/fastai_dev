@@ -4,13 +4,14 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'chk', 'tensor', 'add_docs', 'docs',
            'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'CollBase', 'L', 'ifnone', 'get_class', 'mk_class',
            'wrap_class', 'noop', 'noops', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types',
-           'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'mask2idxs', 'merge', 'shufflish',
-           'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
-           'true', 'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float',
-           'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper',
-           'partialler', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title',
-           'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
-           'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
+           'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'mask2idxs', 'merge',
+           'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul',
+           'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half',
+           'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose',
+           'maps', 'mapper', 'partialler', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image',
+           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint',
+           'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df',
+           'one_param']
 
 from .test import *
 from .imports import *
@@ -328,7 +329,7 @@ def get_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
         return '\n'.join(f'{o}: {getattr(self,o)}' for o in set(dir(self))
                          if not o.startswith('_') and not isinstance(getattr(self,o), types.MethodType))
 
-    if not sup: flds['__repr__'] = _repr
+    if not sup: attrs['__repr__'] = _repr
     attrs['__init__'] = _init
     res = type(nm, sup, attrs)
     if doc is not None: res.__doc__ = doc
@@ -393,11 +394,9 @@ _patch_tb()
 
 def retain_type(new, old, typ=None):
     "Cast `new` to type of `old` if it's a superclass"
-    if isinstance(old,type): typ=old # Use `old` directly if it's already a `type`
-    if not typ:
-        # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
-        if not isinstance(old, type(new)): return new
-        typ = type(old)
+    if not typ: typ = old if isinstance(old,type) else type(old)
+    # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
+    if not issubclass(typ, type(new)): return new
     # Do nothing the new type is already an instance of requested type (i.e. same type)
     return typ(new) if typ!=NoneType and not isinstance(new, typ) else new
 
@@ -431,6 +430,12 @@ def is_listy(x):
 def range_of(x):
     "All indices of collection `x` (i.e. `list(range(len(x)))`)"
     return list(range(len(x)))
+
+def groupby(x, key):
+    "Like `itertools.groupby` but doesn't need to be sorted, and isn't lazy"
+    res = {}
+    for o in x: res.setdefault(key(o), []).append(o)
+    return res
 
 def mask2idxs(mask):
     "Convert bool mask or index list to index `L`"
@@ -521,9 +526,8 @@ def concat(*ls):
     return retain_type(
         torch.cat(ls) if isinstance(it,torch.Tensor)
         else np.concatenate(ls) if isinstance(it,ndarray)
-        else sum(ls,[]) if isinstance(it,list)
-        else sum(ls,()) if isinstance(it,tuple)
-        else sum(L(ls).mapped(L),L())
+        else tuple(o for x in ls for o in L(x)) if isinstance(it,tuple)
+        else [o for x in ls for o in L(x)]
         , it)
 
 class Chunks:
