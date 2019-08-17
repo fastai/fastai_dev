@@ -15,7 +15,7 @@ from collections import OrderedDict,defaultdict,Counter,namedtuple
 from enum import Enum,IntEnum
 from warnings import warn
 from textwrap import TextWrapper
-from operator import itemgetter,attrgetter
+from operator import itemgetter,attrgetter,methodcaller
 from notebook import notebookapp
 from urllib.request import urlopen
 

@@ -79,6 +79,8 @@
   "maps": "01_core.ipynb",
   "mapper": "01_core.ipynb",
   "partialler": "01_core.ipynb",
+  "instantiate": "01_core.ipynb",
+  "bind": "01_core.ipynb",
   "sort_by_run": "01_core.ipynb",
   "round_multiple": "01_core.ipynb",
   "num_cpus": "01_core.ipynb",

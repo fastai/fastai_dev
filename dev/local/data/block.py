@@ -15,23 +15,10 @@ from ..notebook.showdoc import show_doc
 from inspect import isfunction,ismethod
 
 def _merge_tfms(*tfms):
+    "Group the `tfms` in a single list, removing duplicates (from the same class) and instantiating"
     g = groupby(concat(*tfms), lambda o:
         o if isinstance(o, type) else o.__qualname__ if (isfunction(o) or ismethod(o)) else o.__class__)
-    res = [sorted(v, key=lambda o: isinstance(o,type))[0] for k,v in g.items()]
-    return [t() if isinstance(t, type) else t for t in res]
-
-def _merge_tfms(*tfms):
-    "Group the `tfms` in a single list, removing duplicates (from the same class) and instantiating"
-    res,types = [],[]
-    for ts in tfms:
-        for t in L(ts):
-            cls = t if isinstance(t, type) else t.__qualname__ if (isfunction(t) or ismethod(t)) else t.__class__
-            if cls not in types or not isinstance(t, type):
-                res = [f for f,t_ in zip(res,types) if t_ != cls]
-                types = [t_ for t_ in types if t_ != cls]
-                res.append(t() if isinstance(t, type) else t)
-                types.append(cls)
-    return L(res)
+    return L(sorted(v, key=lambda o: isinstance(o,type))[0] for k,v in g.items()).mapped(instantiate)
 
 @docs
 @funcs_kwargs

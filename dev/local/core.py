@@ -8,10 +8,10 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul',
            'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half',
            'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose',
-           'maps', 'mapper', 'partialler', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image',
-           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint',
-           'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df',
-           'one_param']
+           'maps', 'mapper', 'partialler', 'instantiate', 'bind', 'sort_by_run', 'round_multiple', 'num_cpus',
+           'add_props', 'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch',
+           'one_hot', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString',
+           'flatten_check', 'display_df', 'one_param']
 
 from .test import *
 from .imports import *
@@ -641,6 +641,23 @@ def partialler(f, *args, order=None, **kwargs):
     if order is not None: fnew.order=order
     elif hasattr(f,'order'): fnew.order=f.order
     return fnew
+
+def instantiate(t):
+    "Instantiate `t` if it's a type, otherwise do nothing"
+    return t() if isinstance(t, type) else t
+
+mk_class('_Arg', 'i')
+_0,_1,_2,_3,_4 = _Arg(0),_Arg(1),_Arg(2),_Arg(3),_Arg(4)
+
+class bind:
+    "Same as `partial`, except you can use `_0` `_1` etc param placeholders"
+    def __init__(self, fn, *pargs, **pkwargs):
+        store_attr(self, 'fn,pargs,pkwargs')
+        self.maxi = max((x.i for x in pargs if isinstance(x, _Arg)), default=-1)
+
+    def __call__(self, *args, **kwargs):
+        fargs = L(args[x.i] if isinstance(x, _Arg) else x for x in self.pargs) + args[self.maxi+1:]
+        return self.fn(*fargs, **{**self.pkwargs, **kwargs})
 
 def _is_instance(f, gs):
     tst = [g if type(g) in [type, 'function'] else g.__class__ for g in gs]
