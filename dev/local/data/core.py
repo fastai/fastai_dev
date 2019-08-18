@@ -154,8 +154,8 @@ class TfmdDL(DataLoader):
         it  = self.do_item(0)
         its = self.do_batch([it])
         #TODO do we still need?
-        self._retain_ds = partial(retain_types, old=L(it ).mapped(type))
-        self._retain_dl = partial(retain_types, old=L(its).mapped(type))
+        self._retain_ds = partial(retain_types, typs=L(it ).mapped(type))
+        self._retain_dl = partial(retain_types, typs=L(its).mapped(type))
 
     def before_iter(self):
         super().before_iter()

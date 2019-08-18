@@ -292,10 +292,10 @@ class L(CollBase):
         if is_coll(a): a = len(a)
         return L(range(a,b,step)) if step is not None else L(range(a,b)) if b is not None else L(range(a))
 
-    def zipped(self): return L(zip(*self))
-    def zipwith(self, *rest): return L(zip(self, *rest))
-    def mapped_zip(self, f): return self.zipped().starmapped(f)
-    def mapped_zipwith(self, f, *rest): return self.zipwith(*rest).starmapped(f)
+    def zipped(self, longest=False): return L((zip_longest if longest else zip)(*self))
+    def zipwith(self, *rest, longest=False): return L(self, *rest).zipped(longest=longest)
+    def mapped_zip(self, f, longest=False): return self.zipped(longest=longest).starmapped(f)
+    def mapped_zipwith(self, f, *rest, longest=False): return self.zipwith(*rest, longest=longest).starmapped(f)
     def shuffled(self):
         it = copy(self.items)
         random.shuffle(it)
@@ -392,18 +392,20 @@ def _patch_tb():
 
 _patch_tb()
 
-def retain_type(new, old, typ=None):
+def retain_type(new, old=None, typ=None):
     "Cast `new` to type of `old` if it's a superclass"
-    if not typ: typ = old if isinstance(old,type) else type(old)
     # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
-    if not issubclass(typ, type(new)): return new
+    assert old is not None or typ is not None
+    if typ is None:
+        if not isinstance(old, type(new)): return new
+        typ = old if isinstance(old,type) else type(old)
     # Do nothing the new type is already an instance of requested type (i.e. same type)
     return typ(new) if typ!=NoneType and not isinstance(new, typ) else new
 
-def retain_types(new, old):
+def retain_types(new, old=None, typs=None):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
-    if not is_listy(old): old = itertools.cycle([old])
-    return tuple(itertools.starmap(retain_type, zip(new,old)))
+    assert old is not None or typs is not None
+    return tuple(L(new,L(old),L(typs)).mapped_zip(retain_type, longest=True))
 
 def tuplify(o, use_list=False, match=None):
     "Make `o` a tuple"
@@ -523,12 +525,13 @@ def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"
     if not len(ls): return []
     it = ls[0]
-    return retain_type(
-        torch.cat(ls) if isinstance(it,torch.Tensor)
-        else np.concatenate(ls) if isinstance(it,ndarray)
-        else tuple(o for x in ls for o in L(x)) if isinstance(it,tuple)
-        else [o for x in ls for o in L(x)]
-        , it)
+    if isinstance(it,torch.Tensor): res = torch.cat(ls)
+    elif isinstance(it,ndarray): res = np.concatenate(ls)
+    else:
+        res = [o for x in ls for o in L(x)]
+        if isinstance(it,(tuple,list)): res = type(it)(res)
+        else: res = L(res)
+    return retain_type(res, it)
 
 class Chunks:
     "Slice and int indexing into a list of lists"
