@@ -24,8 +24,8 @@ def _merge_tfms(*tfms):
 @funcs_kwargs
 class DataBlock():
     "Generic container to quickly build `DataSource` and `DataBunch`"
-    get_items=splitter=labeller = noops
-    _methods = 'get_items splitter labeller'.split()
+    item_func=get_items=splitter=labeller = noops
+    _methods = 'get_items splitter labeller item_func'.split()
     def __init__(self, ts=None, **kwargs):
         types = L(getattr(self,'types',(float,float)) if ts is None else ts)
         self.default_type_tfms = types.mapped(
@@ -37,7 +37,7 @@ class DataBlock():
         self.source = source
         items = self.get_items(source)
         splits = self.splitter(items)
-        labellers = [None,self.labeller] if isinstance(self.labeller, Callable) else self.labeller
+        labellers = [self.item_func,self.labeller]
         if type_tfms is None: type_tfms = [L() for t in self.default_type_tfms]
         type_tfms = L([self.default_type_tfms, type_tfms, labellers]).mapped_zip(
             lambda tt,tfm,l: L(l) + _merge_tfms(tt, tfm))
