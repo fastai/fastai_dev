@@ -103,10 +103,8 @@ class Pipeline():
 
 class TfmdBase(L):
     "Base class for transformed lists"
-#     def __init__(self, items, wrap_l):
-#         if wrap_l is None: wrap_l = not isinstance(items,(Tensor,ndarray,pd.DataFrame,pd.Series))
-#         self.items = L(items) if wrap_l else items
-
+    def _gets(self, i): return L(self._get(i_) for i_ in mask2idxs(i))
+    def subset(self, idxs): return self._new(super()._gets(idxs))
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx, **kwargs): return self.show(self[idx], **kwargs)
 
@@ -121,8 +119,6 @@ class TfmdList(TfmdBase):
 
     def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, use_list=None, filt=self.filt)
     def _get (self, i): return self.tfms(super()._get(i))
-    def _gets(self, i): return super()._gets(i).mapped(self.tfms)
-    def subset(self, idxs): return self._new(super()._gets(idxs))
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms.fs}"
 
     # Delegating to `self.tfms`
@@ -139,9 +135,9 @@ class TfmdList(TfmdBase):
 @docs
 class TfmdDS(TfmdBase):
     "A dataset that creates a tuple from each `tfms`, passed thru `ds_tfms`"
-    def __init__(self, items, tfms=None, do_setup=True, wrap_l=None, filt=None):
-        super().__init__(items, wrap_l)
-        self.tls = [TfmdList(items, t, do_setup=do_setup, filt=filt, wrap_l=wrap_l) for t in L(tfms)]
+    def __init__(self, items, tfms=None, do_setup=True, use_list=None, filt=None):
+        super().__init__(items, use_list=use_list)
+        self.tls = [TfmdList(items, t, do_setup=do_setup, filt=filt, use_list=use_list) for t in L(tfms)]
 
     def _get(self, it): return tuple(tl._get(it) for tl in self.tls)
     def __repr__(self): return coll_repr(self)

@@ -2,9 +2,9 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'chk', 'tensor', 'add_docs', 'docs',
-           'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class',
-           'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify', 'replicate', 'uniqueify',
-           'setify', 'is_listy', 'range_of', 'groupby', 'mask2idxs', 'merge', 'shufflish', 'IterLen',
+           'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'mask2idxs', 'L', 'ifnone', 'get_class', 'mk_class',
+           'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify', 'replicate',
+           'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
            'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
            'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler',
@@ -212,7 +212,8 @@ def delegate_attr(self, k, to):
     try: return getattr(getattr(self,to), k)
     except AttributeError: raise AttributeError(k) from None
 
-def _mask2idxs(mask):
+def mask2idxs(mask):
+    "Convert bool mask or index list to index `L`"
     mask = list(mask)
     if len(mask)==0: return []
     if isinstance(mask[0],bool): return [i for i,m in enumerate(mask) if m]
@@ -232,18 +233,20 @@ class L(GetAttr, metaclass=NewChkMeta):
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
         if items is None: items = []
-        if use_list is not None: items = list(items) if use_list else _listify(items)
+        if (use_list is not None) or not isinstance(items,(Tensor,ndarray,pd.DataFrame,pd.Series)):
+            items = list(items) if use_list else _listify(items)
         self.items = self.default = items
         if match is not None:
             if len(self.items)==1: self.items = self.items*len(match)
             else: assert len(self.items)==len(match), 'Match length mismatch'
 
-    def __getitem__(self, idx): return self._gets(idx) if is_iter(idx) else self._get(idx)
+    def __getitem__(self, idx): return L(self._gets(idx), use_list=None) if is_iter(idx) else self._get(idx)
     def _get(self, i): return getattr(self.items,'iloc',self.items)[i]
     def _gets(self, i):
-        if hasattr(self.items,'iloc'): return self._new(self.items.iloc[list(i)], use_list=None)
-        if hasattr(self.items,'__array__'): return self._new(self.items.__array__()[(i,)], use_list=None)
-        return self._new([self.items[i_] for i_ in _mask2idxs(i)])
+        i = mask2idxs(i)
+        return (self.items.iloc[list(i)] if hasattr(self.items,'iloc')
+                else self.items.__array__()[(i,)] if hasattr(self.items,'__array__')
+                else [self.items[i_] for i_ in i])
 
     def _new(self, items, *args, **kwargs): return self.__class__(items, *args, **kwargs)
     def __len__(self): return len(self.items)
@@ -279,7 +282,7 @@ class L(GetAttr, metaclass=NewChkMeta):
         if is_coll(a): a = len(a)
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
-    def itemgot(self, idx):   return self.mapped(itemgetter(idx))
+    def itemgot(self, idx): return self.mapped(itemgetter(idx))
     def attrgot(self, k, default=None): return self.mapped(lambda o:getattr(o,k,default))
     def tensored(self): return self.mapped(tensor)
     def stack(self, dim=0): return torch.stack(list(self.tensored()), dim=dim)
@@ -436,10 +439,6 @@ def groupby(x, key):
     res = {}
     for o in x: res.setdefault(key(o), []).append(o)
     return res
-
-def mask2idxs(mask):
-    "Convert bool mask or index list to index `L`"
-    return L(_mask2idxs(mask))
 
 def merge(*ds):
     "Merge all dictionaries in `ds`"

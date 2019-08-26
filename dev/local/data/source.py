@@ -12,13 +12,13 @@ from ..notebook.showdoc import show_doc
 
 def _mk_subset(self, i):
     tfms = [o.tfms for o in self.tls]
-    return TfmdDS(self.items[self.filts[i]], tfms=tfms, do_setup=False, filt=i)
+    return TfmdDS(L._gets(self, self.filts[i]), tfms=tfms, do_setup=False, filt=i)
 
 class _FiltTfmdList(TfmdList):
     "Like `TfmdList` but with filters and train/valid attribute, for proper setup"
     def __init__(self, dsrc, tfms, do_setup=True):
         self.filt_idx = dsrc.filt_idx
-        super().__init__(dsrc.items, tfms, do_setup=do_setup, as_item=True, filt=None, wrap_l=False)
+        super().__init__(dsrc.items, tfms, do_setup=do_setup, as_item=True, filt=None)
 
     def subset(self, i): return _mk_subset(self, i)
     def _get(self, i):
@@ -29,8 +29,8 @@ _FiltTfmdList.train,_FiltTfmdList.valid = add_props(lambda i,x: x.subset(i), 2)
 
 class DataSource(TfmdDS):
     "Applies a `tfm` to filtered subsets of `items`"
-    def __init__(self, items, tfms=None, filts=None, do_setup=True, wrap_l=None):
-        super(TfmdDS,self).__init__(items, wrap_l=wrap_l)
+    def __init__(self, items, tfms=None, filts=None, do_setup=True):
+        super(TfmdDS,self).__init__(items, use_list=None)
         if filts is None: filts = [range_of(items)]
         self.filts = L(mask2idxs(filt) for filt in filts)
 

@@ -126,7 +126,7 @@ class _TfmMeta(type):
 
 class Transform(metaclass=_TfmMeta):
     "Delegates (`__call__`,`decode`) to (`encodes`,`decodes`) if `filt` matches"
-    filt,init_enc,as_item_force,as_item = None,False,None,True
+    filt,init_enc,as_item_force,as_item,order = None,False,None,True,0
     def __init__(self, enc=None, dec=None, filt=None, as_item=True):
         self.filt,self.as_item = ifnone(filt, self.filt),as_item
         self.init_enc = enc or dec
@@ -135,7 +135,9 @@ class Transform(metaclass=_TfmMeta):
         # Passing enc/dec, so need to remove (base) class level enc/dec
         del(self.__class__.encodes,self.__class__.decodes)
         self.encodes,self.decodes = (TypeDispatch(),TypeDispatch())
-        if enc: self.encodes.add(enc)
+        if enc:
+            self.encodes.add(enc)
+            self.order = getattr(self.encodes,'order',self.order)
         if dec: self.decodes.add(dec)
 
     @property
