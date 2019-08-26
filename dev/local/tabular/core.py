@@ -131,7 +131,7 @@ class TensorTabular(tuple):
 class ReadTabLine(ItemTransform):
     def __init__(self, proc, cols):
         self.proc = proc
-        self.col2idx = {c:i+1 for i,c in enumerate(cols)}
+        self.col2idx = {c:i for i,c in enumerate(cols)}
         self.o2is = {n: defaultdict(int, {v:i for i,v in enumerate(proc.classes[n])}) for n in proc.cat_names}
 
     def encodes(self, row):

@@ -18,7 +18,7 @@ class _FiltTfmdList(TfmdList):
     "Like `TfmdList` but with filters and train/valid attribute, for proper setup"
     def __init__(self, dsrc, tfms, do_setup=True):
         self.filt_idx = dsrc.filt_idx
-        super().__init__(dsrc.items, tfms, do_setup=do_setup, as_item=True, filt=None)
+        super().__init__(dsrc.items, tfms, do_setup=do_setup, as_item=True, filt=None, wrap_l=False)
 
     def subset(self, i): return _mk_subset(self, i)
     def _get(self, i):
@@ -29,13 +29,13 @@ _FiltTfmdList.train,_FiltTfmdList.valid = add_props(lambda i,x: x.subset(i), 2)
 
 class DataSource(TfmdDS):
     "Applies a `tfm` to filtered subsets of `items`"
-    def __init__(self, items, tfms=None, filts=None, do_setup=True):
+    def __init__(self, items, tfms=None, filts=None, do_setup=True, wrap_l=None):
+        super(TfmdDS,self).__init__(items, wrap_l=wrap_l)
         if filts is None: filts = [range_of(items)]
         self.filts = L(mask2idxs(filt) for filt in filts)
 
         # Create map from item id to filter id
         assert all_disjoint(self.filts)
-        self.items = L(items)
         self.filt_idx = L([None]*len(self.items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
         self.tls = [_FiltTfmdList(self, t, do_setup=do_setup) for t in L(tfms)]
