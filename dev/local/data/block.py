@@ -24,8 +24,8 @@ def _merge_tfms(*tfms):
 @funcs_kwargs
 class DataBlock():
     "Generic container to quickly build `DataSource` and `DataBunch`"
-    item_func=get_items=splitter=labeller = noops
-    _methods = 'get_items splitter labeller item_func'.split()
+    get_x=get_items=splitter=get_y = None
+    _methods = 'get_items splitter get_y get_x'.split()
     def __init__(self, ts=None, **kwargs):
         types = L(getattr(self,'types',(float,float)) if ts is None else ts)
         self.default_type_tfms = types.mapped(
@@ -35,9 +35,13 @@ class DataBlock():
 
     def datasource(self, source, type_tfms=None):
         self.source = source
-        items = self.get_items(source)
-        splits = self.splitter(items)
-        labellers = [self.item_func,self.labeller]
+        items = (self.get_items or noop)(source)
+        if isinstance(items,tuple): items = L(items).zipped()
+        elif not self.get_x: self.get_x = noop
+        splits = (self.splitter or noop)(items)
+        labellers = [itemgetter(i) for i in range_of(self.default_type_tfms)]
+        if self.get_x: labellers[0] = self.get_x
+        if self.get_y: labellers[1] = self.get_y
         if type_tfms is None: type_tfms = [L() for t in self.default_type_tfms]
         type_tfms = L([self.default_type_tfms, type_tfms, labellers]).mapped_zip(
             lambda tt,tfm,l: L(l) + _merge_tfms(tt, tfm))
@@ -49,10 +53,7 @@ class DataBlock():
         dl_tfms = _merge_tfms(self.default_dl_tfms, dl_tfms)
         return dsrc.databunch(bs=bs, after_item=ds_tfms, after_batch=dl_tfms, **kwargs)
 
-    _docs = dict(get_items="Pass at init or implement how to get your raw items from a `source`",
-                 splitter="Pass at init or implement how to split your `items`",
-                 labeller="Pass at init or implement how to label a raw `item`",
-                 datasource="Create a `Datasource` from `source` with `tfms` and `tuple_tfms`",
+    _docs = dict(datasource="Create a `Datasource` from `source` with `tfms` and `tuple_tfms`",
                  databunch="Create a `DataBunch` from `source` with `tfms`")
 
 def col_labeler(item, df, col, pref='', suff='', label_delim=None):
@@ -62,7 +63,7 @@ def col_labeler(item, df, col, pref='', suff='', label_delim=None):
     return res
 
 def ColLabeler(col, pref='', suff='', label_delim=None):
-    "Retun a labeller for `col` when the `source` is a dataframe"
+    "Retun a get_y for `col` when the `source` is a dataframe"
     def _inner(self, item): return col_labeler(item, self.source, col=col, pref=pref, suff=suff, label_delim=label_delim)
     return _inner
 

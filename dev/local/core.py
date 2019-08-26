@@ -2,16 +2,16 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'chk', 'tensor', 'add_docs', 'docs',
-           'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'CollBase', 'L', 'ifnone', 'get_class', 'mk_class',
-           'wrap_class', 'noop', 'noops', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types',
-           'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'mask2idxs', 'merge',
-           'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul',
-           'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half',
-           'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose',
-           'maps', 'mapper', 'partialler', 'instantiate', 'bind', 'sort_by_run', 'round_multiple', 'num_cpus',
-           'add_props', 'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch',
-           'one_hot', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString',
-           'flatten_check', 'display_df', 'one_param']
+           'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class',
+           'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify', 'replicate', 'uniqueify',
+           'setify', 'is_listy', 'range_of', 'groupby', 'mask2idxs', 'merge', 'shufflish', 'IterLen',
+           'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
+           'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
+           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler',
+           'instantiate', 'bind', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image',
+           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint',
+           'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df',
+           'one_param']
 
 from .test import *
 from .imports import *
@@ -225,58 +225,37 @@ def _listify(o):
     if is_iter(o): return list(o)
     return [o]
 
-class CollBase(GetAttr, metaclass=NewChkMeta):
-    "Base class for things that compose a list of `items` but can also index with list of indices or masks"
-    _xtra =  [o for o in dir([]) if not o.startswith('_')]
-
-    def __len__(self): return len(self.items)
-    def __delitem__(self, i): del(self.items[i])
-    def __repr__(self): return coll_repr(self)
-    def __eq__(self,b): return all_equal(b,self)
-    def __iter__(self): return (self[i] for i in range(len(self)))
-
-    def _get(self, i): return self.items[i]
-    def __getitem__(self, idx):
-        "Retrieve `idx` (can be list of indices, or mask, or int) items"
-        return L(self._get(i) for i in _mask2idxs(idx)) if is_iter(idx) else self._get(idx)
-
-    def itemgot(self, idx):   return self.mapped(itemgetter(idx))
-    def attrgot(self, k, default=None): return self.mapped(lambda o:getattr(o,k,default))
-    def tensored(self): return self.mapped(tensor)
-    def stack(self, dim=0): return torch.stack(list(self.tensored()), dim=dim)
-    def cat  (self, dim=0): return torch.cat  (list(self.tensored()), dim=dim)
-    def cycle(self): return itertools.cycle(self) if len(self) > 0 else itertools.cycle([None])
-    def mapped(self, f, *args, **kwargs): return self.__class__(map(partial(f,*args,**kwargs), self))
-    def mapped_dict(self, f, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
-    def starmapped(self, f, *args, **kwargs): return self.__class__(itertools.starmap(partial(f,*args,**kwargs), self))
-
-add_docs(CollBase,
-         mapped="Create new `L` with `f` applied to all `items`, passing `args` and `kwargs` to `f`",
-         mapped_dict="Like `mapped`, but creates a dict from `items` to function results",
-         starmapped="Like `mapped`, but use `itertools.starmap`",
-         itemgot="Create new `L` with item `idx` of all `items`",
-         attrgot="Create new `L` with attr `k` of all `items`",
-         tensored="`mapped(tensor)`",
-         cycle="Same as `itertools.cycle`",
-         stack="Same as `torch.stack`",
-         cat="Same as `torch.cat`")
-
-class L(CollBase):
+class L(GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     _xtra =  [o for o in dir([]) if not o.startswith('_')]
 
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
         if items is None: items = []
-        self.items = self.default = list(items) if use_list else _listify(items)
+        if use_list is not None: items = list(items) if use_list else _listify(items)
+        self.items = self.default = items
         if match is not None:
             if len(self.items)==1: self.items = self.items*len(match)
             else: assert len(self.items)==len(match), 'Match length mismatch'
 
-    def __invert__(self): return L(not i for i in self)
-    def __mul__ (a,b): return L(a.items*b)
-    def __add__ (a,b): return L(a.items+_listify(b))
-    def __radd__(a,b): return L(b)+a
+    def __getitem__(self, idx): return self._gets(idx) if is_iter(idx) else self._get(idx)
+    def _get(self, i): return getattr(self.items,'iloc',self.items)[i]
+    def _gets(self, i):
+        if hasattr(self.items,'iloc'): return self._new(self.items.iloc[list(i)], use_list=None)
+        if hasattr(self.items,'__array__'): return self._new(self.items.__array__()[(i,)], use_list=None)
+        return self._new([self.items[i_] for i_ in _mask2idxs(i)])
+
+    def _new(self, items, *args, **kwargs): return self.__class__(items, *args, **kwargs)
+    def __len__(self): return len(self.items)
+    def __delitem__(self, i): del(self.items[i])
+    def __repr__(self): return coll_repr(self)
+    def __eq__(self,b): return all_equal(b,self)
+    def __iter__(self): return (self[i] for i in range(len(self)))
+
+    def __invert__(self): return self._new(not i for i in self)
+    def __mul__ (a,b): return a._new(a.items*b)
+    def __add__ (a,b): return a._new(a.items+_listify(b))
+    def __radd__(a,b): return a._new(b)+a
     def __addi__(a,b):
         a.items += list(b)
         return a
@@ -292,24 +271,43 @@ class L(CollBase):
         if isinstance(key,str):   k=lambda o:getattr(o,key,0)
         elif isinstance(key,int): k=itemgetter(key)
         else: k=key
-        return L(sorted(self.items, key=k, reverse=reverse))
+        return self._new(sorted(self.items, key=k, reverse=reverse))
 
     @classmethod
-    def range(self, a, b=None, step=None):
+    def range(cls, a, b=None, step=None):
         "Same as builtin `range`, but returns an `L`. Can pass a collection for `a`, to use `len(a)`"
         if is_coll(a): a = len(a)
-        return L(range(a,b,step)) if step is not None else L(range(a,b)) if b is not None else L(range(a))
+        return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
-    def zipped(self, longest=False): return L((zip_longest if longest else zip)(*self))
-    def zipwith(self, *rest, longest=False): return L([self, *rest]).zipped(longest=longest)
+    def itemgot(self, idx):   return self.mapped(itemgetter(idx))
+    def attrgot(self, k, default=None): return self.mapped(lambda o:getattr(o,k,default))
+    def tensored(self): return self.mapped(tensor)
+    def stack(self, dim=0): return torch.stack(list(self.tensored()), dim=dim)
+    def cat  (self, dim=0): return torch.cat  (list(self.tensored()), dim=dim)
+    def cycle(self): return itertools.cycle(self) if len(self) > 0 else itertools.cycle([None])
+    def mapped(self, f, *args, **kwargs): return self._new(map(partial(f,*args,**kwargs), self))
+    def mapped_dict(self, f, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
+    def starmapped(self, f, *args, **kwargs): return self._new(itertools.starmap(partial(f,*args,**kwargs), self))
+    def zipped(self, longest=False): return self._new((zip_longest if longest else zip)(*self))
+    def zipwith(self, *rest, longest=False): return self._new([self, *rest]).zipped(longest=longest)
     def mapped_zip(self, f, longest=False): return self.zipped(longest=longest).starmapped(f)
     def mapped_zipwith(self, f, *rest, longest=False): return self.zipwith(*rest, longest=longest).starmapped(f)
     def shuffled(self):
         it = copy(self.items)
         random.shuffle(it)
-        return L(it)
+        return self._new(it)
 
 add_docs(L,
+         __getitem__="Retrieve `idx` (can be list of indices, or mask, or int) items",
+         mapped="Create new `L` with `f` applied to all `items`, passing `args` and `kwargs` to `f`",
+         mapped_dict="Like `mapped`, but creates a dict from `items` to function results",
+         starmapped="Like `mapped`, but use `itertools.starmap`",
+         itemgot="Create new `L` with item `idx` of all `items`",
+         attrgot="Create new `L` with attr `k` of all `items`",
+         tensored="`mapped(tensor)`",
+         cycle="Same as `itertools.cycle`",
+         stack="Same as `torch.stack`",
+         cat="Same as `torch.cat`",
          zipped="Create new `L` with `zip(*items)`",
          zipwith="Create new `L` with `self` zipped with each of `*rest`",
          mapped_zip="Combine `zipped` and `starmapped`",
@@ -355,14 +353,6 @@ def wrap_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
         mk_class(nm, *fld_names, sup=sup, doc=doc, funcs=L(funcs)+f, mod=f.__globals__, **flds)
         return f
     return _inner
-
-def noop (x=None, *args, **kwargs):
-    "Do nothing"
-    return x
-
-def noops(self, x=None, *args, **kwargs):
-    "Do nothing (method)"
-    return x
 
 def set_seed(s):
     "Set random seed for `random`, `torch`, and `numpy` (where available)"

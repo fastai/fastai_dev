@@ -84,7 +84,7 @@ def RegexLabeller(pat):
 
 class Category(str, ShowTitle): _show_args = {'label': 'category'}
 
-class Categorize(ItemTransform):
+class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order=1
     def __init__(self, vocab=None):

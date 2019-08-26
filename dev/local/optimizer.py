@@ -148,7 +148,7 @@ def lamb_step(p, lr, mom, step, sqr_mom, grad_avg, sqr_avg, eps, **kwargs):
     "Step for LAMB with `lr` on `p`"
     debias1 = _debias(mom,     1-mom,     step)
     debias2 = _debias(sqr_mom, 1-sqr_mom, step)
-    r1 = p.data.pow(2).mean().sqrt() #More stable numerically than taking the norm and we'll make a quotient
+    r1 = p.data.pow(2).mean().sqrt()
     step = (grad_avg/debias1) / ((sqr_avg/debias2).sqrt()+eps)
     r2 = step.pow(2).mean().sqrt()
     q = 1 if r1 == 0 or r2 == 0 else min(r1/r2,10)

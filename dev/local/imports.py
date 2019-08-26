@@ -64,3 +64,11 @@ def equals(a,b):
            operator.eq)
     return cmp(a,b)
 
+def noop (x=None, *args, **kwargs):
+    "Do nothing"
+    return x
+
+def noops(self, x=None, *args, **kwargs):
+    "Do nothing (method)"
+    return x
+

@@ -101,26 +101,28 @@ class Pipeline():
         for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
         return 1 if ctx is None else ctx
 
-class TfmdBase(CollBase):
+class TfmdBase(L):
     "Base class for transformed lists"
-    def __init__(self, items, wrap_l):
-        if wrap_l is None: wrap_l = not isinstance(items,(Tensor,ndarray,pd.DataFrame,pd.Series))
-        self.items = L(items) if wrap_l else items
+#     def __init__(self, items, wrap_l):
+#         if wrap_l is None: wrap_l = not isinstance(items,(Tensor,ndarray,pd.DataFrame,pd.Series))
+#         self.items = L(items) if wrap_l else items
 
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx, **kwargs): return self.show(self[idx], **kwargs)
 
 class TfmdList(TfmdBase):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
-    def __init__(self, items, tfms, do_setup=True, as_item=True, wrap_l=None, filt=None):
-        super().__init__(items, wrap_l)
+    def __init__(self, items, tfms, do_setup=True, as_item=True, use_list=None, filt=None):
+        super().__init__(items, use_list=use_list)
         if isinstance(tfms,TfmdList): tfms = tfms.tfms
         if isinstance(tfms,Pipeline): do_setup=False
         self.tfms = Pipeline(tfms, as_item=as_item, filt=filt)
         if do_setup: self.setup()
 
-    def _get(self, i): return self.tfms(self.items[i])
-    def subset(self, idxs): return self.__class__(self.items[idxs], self.tfms, do_setup=False)
+    def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, use_list=None, filt=self.filt)
+    def _get (self, i): return self.tfms(super()._get(i))
+    def _gets(self, i): return super()._gets(i).mapped(self.tfms)
+    def subset(self, idxs): return self._new(super()._gets(idxs))
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms.fs}"
 
     # Delegating to `self.tfms`
