@@ -73,6 +73,7 @@
   "item_find": "01_core.ipynb",
   "find_device": "01_core.ipynb",
   "find_bs": "01_core.ipynb",
+  "trace": "01_core.ipynb",
   "compose": "01_core.ipynb",
   "maps": "01_core.ipynb",
   "mapper": "01_core.ipynb",

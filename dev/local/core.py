@@ -7,11 +7,11 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
            'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
-           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'compose', 'maps', 'mapper', 'partialler',
-           'instantiate', 'bind', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image',
-           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint',
-           'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df',
-           'one_param']
+           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'trace', 'compose', 'maps', 'mapper',
+           'partialler', 'instantiate', 'bind', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props',
+           'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot',
+           'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString',
+           'flatten_check', 'display_df', 'one_param']
 
 from .test import *
 from .imports import *
@@ -614,6 +614,13 @@ def find_device(b):
 def find_bs(b):
     "Recursively search the batch size of `b`."
     return item_find(b).shape[0]
+
+def trace(f):
+    "Add `set_trace` to an existing function `f`"
+    def _inner(*args,**kwargs):
+        set_trace()
+        return f(*args,**kwargs)
+    return _inner
 
 def compose(*funcs, order=None):
     "Create a function that composes all functions in `funcs`, passing along remaining `*args` and `**kwargs` to all"
