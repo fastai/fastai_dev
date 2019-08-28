@@ -368,7 +368,7 @@ def set_seed(s):
 def store_attr(self, nms):
     "Store params named in comma-separated `nms` from calling context into attrs in `self`"
     mod = inspect.currentframe().f_back.f_locals
-    for n in nms.split(','): setattr(self,n,mod[n])
+    for n in re.split(', *', nms): setattr(self,n,mod[n])
 
 class TensorBase(Tensor, metaclass=BypassNewMeta):
     def _new_meta(self, *args, **kwargs): return tensor(self)
