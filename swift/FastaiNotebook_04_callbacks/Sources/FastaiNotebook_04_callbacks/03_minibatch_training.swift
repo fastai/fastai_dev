@@ -33,16 +33,12 @@ public struct DataBatch<Inputs: Differentiable & TensorGroup, Labels: TensorGrou
     public var yb: Labels
     
     public init(xb: Inputs, yb: Labels){ (self.xb,self.yb) = (xb,yb) }
-
-    // Explicit implementation to make this struct work well with LazyTensor.
-    // These will be derived automatically in the future.
-    public var  _tensorHandles: [_AnyTensorHandle] {
+    
+    public var _tensorHandles: [_AnyTensorHandle] {
         xb._tensorHandles + yb._tensorHandles
     }
     
-    public init<C: RandomAccessCollection>(
-        _handles: C
-    ) where C.Element: _AnyTensorHandle {
+    public init<C: RandomAccessCollection>(_handles: C) where C.Element: _AnyTensorHandle {
         let xStart = _handles.startIndex
         let xEnd = _handles.index(
             xStart, offsetBy: Int(Inputs._tensorHandleCount))
