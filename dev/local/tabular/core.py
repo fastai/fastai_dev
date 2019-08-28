@@ -15,7 +15,7 @@ class TabularProc():
     order = 0
     def __init__(self, cat_names=None, cont_names=None, func=None):
         self.cat_names,self.cont_names = L(cat_names),L(cont_names)
-        if func is not None: self.setup,self.__call__ = func,func
+        if func is not None: self.setup,self.__call__ = noop,func
 
     def setup(self, df, trn_idx=None): pass
     def __call__(self, df):  pass
@@ -46,8 +46,8 @@ class Normalize(TabularProc):
         for n in self.cont_names:
             assert is_numeric_dtype(df[n]), (f"""Cannot normalize '{n}' column as it isn't numerical.
                 Are you sure it doesn't belong in the categorical set of columns?""")
-            col = (df[n] if trn_idx is None else df.loc[trn_idx,n]).values
-            self.means[n],self.stds[n] = col.mean(),col.std()
+            col = (df[n] if trn_idx is None else df.loc[trn_idx,n])
+            self.means[n],self.stds[n] = col.mean(),col.std(ddof=0)
 
     def __call__(self, df):
         for n in self.cont_names: df[n] = (df[n]-self.means[n]) / (1e-7 + self.stds[n])
