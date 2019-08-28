@@ -16,7 +16,7 @@ public func normalize(_ x:TF, mean:TF, std:TF) -> TF {
 }
 
 public func testNearZero(_ a: TF, tolerance: Float = 1e-3) {
-    assert(abs(a) < tolerance, "Near zero: \(a)")
+    assert((abs(a) .< tolerance).all(), "Near zero: \(a)")
 }
 
 public func testSame(_ a: TF, _ b: TF) {

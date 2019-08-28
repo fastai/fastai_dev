@@ -50,16 +50,15 @@ extension Dictionary {
     }
 }
 
-public func initState<Model: Layer>(for model: Model, names: [String]) 
--> [WritableKeyPath<Model.AllDifferentiableVariables, TF>: [String:TF]] {
-    return [WritableKeyPath<Model.AllDifferentiableVariables, TF>: [String:TF]](
+public func initializeState<Model: Layer>(for model: Model, names: [String]) 
+-> [WritableKeyPath<Model.TangentVector, TF>: [String:TF]] {
+    return [WritableKeyPath<Model.TangentVector, TF>: [String:TF]](
         constant: [String: TF](constant: TF(0), keys: names),
-        keys: model.variables.keyPaths)
+        keys: model.differentiableVectorView.keyPaths)
 }
 
-public class StatefulOptimizer<Model: Layer>
-    where Model.AllDifferentiableVariables == Model.TangentVector {
-    public typealias ModelKeyPath = WritableKeyPath<Model.AllDifferentiableVariables, TF>
+public class StatefulOptimizer<Model: Layer> {
+    public typealias ModelKeyPath = WritableKeyPath<Model.TangentVector, TF>
     public typealias SplitDict = [ModelKeyPath: Int]
     public var hpGroups: [[String:Float]]
     public var splitDict: SplitDict
@@ -79,22 +78,29 @@ public class StatefulOptimizer<Model: Layer>
         states = [:]
         steppers.forEach { mergeDicts(&self.hpGroups, with: $0.defaultHPs) }
         stats.forEach    { mergeDicts(&self.hpGroups, with: $0.defaultHPs) }
-        states = initState(for: model, names: stats.map { $0.name })
+        states = initializeState(for: model, names: stats.map { $0.name })
         mergeDicts(&self.hpGroups, with: hpGroups)
     }
         
     public func update(
-        _ variables: inout Model,
+        _ model: inout Model,
         along direction: Model.TangentVector
     ) {
-        //Quick and dirty fix, TODO: try to simplify ans stop using keyPaths
-        for kp in variables.variables.keyPaths {
+        var params = model.differentiableVectorView
+        for kp in model.differentiableVectorView.keyPaths {
             var 𝛁p = direction[keyPath: kp]
             var hps = hpGroups[splitDict[kp]!]
-            stats.forEach() { $0.update(&states[kp]!, p: variables.variables[keyPath: kp], 𝛁p: 𝛁p, hps: &hps) }
-            steppers.forEach() { $0.update(&variables.variables[keyPath: kp], 𝛁p: &𝛁p, state: states[kp]!, hps: &hps) }
+            stats.forEach() { $0.update(&states[kp]!, 
+                              p: params[keyPath: kp], 
+                              𝛁p: 𝛁p, 
+                              hps: &hps) }
+            steppers.forEach() { $0.update(&params[keyPath: kp], 
+                                           𝛁p: &𝛁p, 
+                                           state: states[kp]!, 
+                                           hps: &hps) }
             hpGroups[splitDict[kp]!] = hps
         }
+        model.move(along: params-model.differentiableVectorView)
     }
 }
 
@@ -123,7 +129,7 @@ extension StatefulOptimizer{
                   steppers: steppers,
                   stats: stats,
                   hpGroups: [hps],
-                  splitArray: [model.variables.keyPaths])
+                  splitArray: [model.differentiableVectorView.keyPaths])
     }
 }
 
@@ -273,8 +279,7 @@ public extension StatefulOptimizer {
     }
 }
 
-extension Learner where Opt.Scalar: BinaryFloatingPoint, 
-    Opt.Model.AllDifferentiableVariables == Opt.Model.TangentVector{
+extension Learner where Opt.Scalar: BinaryFloatingPoint {
     public class ParamScheduler: Delegate {
         public override var order: Int { return 1 }
         public typealias ScheduleFunc = (Float) -> Float
@@ -312,8 +317,7 @@ public func oneCycleSchedulers(_ lrMax: Float, pctStart:Float=0.25, divStart: Fl
     return (lrSched, momSched)
 }
 
-extension Learner where Opt.Scalar: BinaryFloatingPoint, 
-    Opt.Model.AllDifferentiableVariables == Opt.Model.TangentVector{
+extension Learner where Opt.Scalar: BinaryFloatingPoint {
 
     public func addOneCycleDelegates(_ lrMax: Float, pctStart:Float=0.25, divStart: Float = 10, divEnd: Float = 1e5, 
                                moms: (Float,Float,Float) = (0.95,0.85,0.95)) {

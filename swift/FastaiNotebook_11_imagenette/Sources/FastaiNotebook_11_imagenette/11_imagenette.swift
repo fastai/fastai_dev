@@ -45,7 +45,7 @@ public extension SwitchableLayer {
     func gradForward(_ input: Input) ->
            (value: Input,
             pullback: (Self.Input.TangentVector) ->
-                                  (Self.AllDifferentiableVariables, Self.Input.TangentVector)) {
+                                  (Self.TangentVector, Self.Input.TangentVector)) {
         if isOn {
             return valueWithPullback(at: input) { $0.forward($1) } 
         } else {
@@ -54,23 +54,31 @@ public extension SwitchableLayer {
     }
 }
 
-public struct MaybeAvgPool2D: SwitchableLayer {
-    var pool: FAAvgPool2D<Float>
+public struct MaybeAvgPool2D: ParameterlessLayer {
+    @noDerivative let poolSize: (Int, Int, Int, Int)
+    @noDerivative let strides: (Int, Int, Int, Int)
+    @noDerivative let padding: Padding
     @noDerivative public var isOn: Bool
     
-    @differentiable public func forward(_ input: TF) -> TF { return pool(input) }
+    @differentiable public func callAsFunction(_ input: TF) -> TF { 
+        return isOn ? avgPool2D(input, filterSize: poolSize, strides: strides, padding: padding) : input
+    }
     
-    public init(_ sz: Int) {
-        isOn = (sz > 1)
-        pool = FAAvgPool2D<Float>(sz)
+    public init(_ sz: Int, padding: Padding = .valid) {
+        isOn = (sz>1)
+        poolSize = (1, sz, sz, 1)
+        strides = (1, sz, sz, 1)
+        self.padding = padding
     }
 }
 
-public struct MaybeConv: SwitchableLayer {
+public struct MaybeConv: Layer {
     var conv: ConvLayer
     @noDerivative public var isOn: Bool
     
-    @differentiable public func forward(_ input: TF) -> TF { return conv(input) }
+    @differentiable public func callAsFunction(_ input: TF) -> TF { 
+        return isOn ? conv(input) : input
+    }
     
     public init(_ cIn: Int, _ cOut: Int) {
         isOn = (cIn > 1) || (cOut > 1)

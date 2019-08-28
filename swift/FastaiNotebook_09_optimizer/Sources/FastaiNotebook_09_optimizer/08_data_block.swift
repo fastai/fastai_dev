@@ -289,10 +289,6 @@ public struct CNNModel: Layer {
     
     @differentiable
     public func callAsFunction(_ input: TF) -> TF {
-        //TODO: uncomment when https://github.com/tensorflow/swift-apis/issues/411 is solved 
-        //and array of Layer conform to Layer again
-        //return linear(pool(convs(input)))
-        let y = convs.differentiableReduce(input) { $1($0) }
-        return linear(pool(y))
+        return linear(pool(convs(input)))
     }
 }
