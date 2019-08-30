@@ -2,9 +2,9 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'chk', 'tensor', 'add_docs', 'docs',
-           'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'mask2idxs', 'L', 'ifnone', 'get_class', 'mk_class',
-           'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify', 'replicate',
-           'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
+           'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'mask2idxs', 'CollBase', 'L', 'ifnone', 'get_class',
+           'mk_class', 'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify',
+           'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
            'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
            'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'trace', 'compose', 'maps', 'mapper',
@@ -226,19 +226,32 @@ def _listify(o):
     if is_iter(o): return list(o)
     return [o]
 
-class L(GetAttr, metaclass=NewChkMeta):
-    "Behaves like a list of `items` but can also index with list of indices or masks"
+class CollBase(GetAttr, metaclass=NewChkMeta):
+    "Base class for composing a list of `items`"
     _xtra =  [o for o in dir([]) if not o.startswith('_')]
 
+    def __init__(self, items): self.items = items
+    def __len__(self): return len(self.items)
+    def __getitem__(self, k): return self.items[k]
+    def __setitem__(self, k, v): self.items[k] = v
+    def __delitem__(self, i): del(self.items[i])
+    def __repr__(self): return self.items.__repr__()
+    def __iter__(self): return self.items.__iter__()
+    def _new(self, items, *args, **kwargs): return self.__class__(items, *args, **kwargs)
+    @property
+    def default(self): return self.items
+
+class L(CollBase):
+    "Behaves like a list of `items` but can also index with list of indices or masks"
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
         if items is None: items = []
         if (use_list is not None) or not isinstance(items,(Tensor,ndarray,pd.DataFrame,pd.Series)):
             items = list(items) if use_list else _listify(items)
-        self.items = self.default = items
         if match is not None:
-            if len(self.items)==1: self.items = self.items*len(match)
-            else: assert len(self.items)==len(match), 'Match length mismatch'
+            if len(items)==1: items = items*len(match)
+            else: assert len(items)==len(match), 'Match length mismatch'
+        super().__init__(items)
 
     def __getitem__(self, idx): return L(self._gets(idx), use_list=None) if is_iter(idx) else self._get(idx)
     def _get(self, i): return getattr(self.items,'iloc',self.items)[i]
@@ -248,9 +261,12 @@ class L(GetAttr, metaclass=NewChkMeta):
                 else self.items.__array__()[(i,)] if hasattr(self.items,'__array__')
                 else [self.items[i_] for i_ in i])
 
-    def _new(self, items, *args, **kwargs): return self.__class__(items, *args, **kwargs)
-    def __len__(self): return len(self.items)
-    def __delitem__(self, i): del(self.items[i])
+    def __setitem__(self, idx, o):
+        "Set `idx` (can be list of indices, or mask, or int) items to `o` (which is broadcast if not iterable)"
+        idx = idx if isinstance(idx,L) else _listify(idx)
+        if not is_iter(o): o = [o]*len(idx)
+        for i,o_ in zip(idx,o): self.items[i] = o_
+
     def __repr__(self): return coll_repr(self)
     def __eq__(self,b): return all_equal(b,self)
     def __iter__(self): return (self[i] for i in range(len(self)))
@@ -262,12 +278,6 @@ class L(GetAttr, metaclass=NewChkMeta):
     def __addi__(a,b):
         a.items += list(b)
         return a
-
-    def __setitem__(self, idx, o):
-        "Set `idx` (can be list of indices, or mask, or int) items to `o` (which is broadcast if not iterable)"
-        idx = idx if isinstance(idx,L) else _listify(idx)
-        if not is_iter(o): o = [o]*len(idx)
-        for i,o_ in zip(idx,o): self.items[i] = o_
 
     def sorted(self, key=None, reverse=False):
         "New `L` sorted by `key`. If key is str then use `attrgetter`. If key is int then use `itemgetter`."
