@@ -2,7 +2,7 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'chk', 'tensor', 'add_docs', 'docs',
-           'custom_dir', 'coll_repr', 'GetAttr', 'delegate_attr', 'mask2idxs', 'CollBase', 'L', 'ifnone', 'get_class',
+           'custom_dir', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'CollBase', 'L', 'ifnone', 'get_class',
            'mk_class', 'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify',
            'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
@@ -186,11 +186,6 @@ def custom_dir(c, add:List):
     "Implement custom `__dir__`, adding `add` to `cls`"
     return dir(type(c)) + list(c.__dict__.keys()) + add
 
-def coll_repr(c, max=1000):
-    "String repr of up to `max` items of (possibly lazy) collection `c`"
-    return f'(#{len(c)}) [' + ','.join(itertools.islice(map(str,c), 10)) + ('...'
-            if len(c)>10 else '') + ']'
-
 class GetAttr(BaseObj):
     "Inherit from this to have all attr accesses in `self._xtra` passed down to `self.default`"
     @property
@@ -205,6 +200,11 @@ def delegate_attr(self, k, to):
     if k.startswith('_') or k==to: raise AttributeError(k)
     try: return getattr(getattr(self,to), k)
     except AttributeError: raise AttributeError(k) from None
+
+def coll_repr(c, max_n=10):
+    "String repr of up to `max_n` items of (possibly lazy) collection `c`"
+    return f'(#{len(c)}) [' + ','.join(itertools.islice(map(str,c), max_n)) + ('...'
+            if len(c)>10 else '') + ']'
 
 def mask2idxs(mask):
     "Convert bool mask or index list to index `L`"
