@@ -425,6 +425,7 @@
   "QRNNLayer": "36_text_models_qrnn.ipynb",
   "QRNN": "36_text_models_qrnn.ipynb",
   "TabularProc": "40_tabular_core.ipynb",
+  "Tabular": "40_tabular_core.ipynb",
   "Categorify": "40_tabular_core.ipynb",
   "FillMissing": "40_tabular_core.ipynb",
   "TabularPreprocessor": "40_tabular_core.ipynb",

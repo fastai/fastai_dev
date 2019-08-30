@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from local.notebook.export import notebook2script
 from os import environ
-from fastai.script import *
+from local.script import *
 
 @call_parse
 def main(
