@@ -3,11 +3,9 @@ channels:
 - fastai
 - pytorch
 - defaults
-- conda-forge
 dependencies:
 - jupyter
-- typeguard
-- pytorch
+- pytorch>=1.2.0
 - matplotlib
 - pandas
 - requests
@@ -15,5 +13,7 @@ dependencies:
 - fastprogress
 - pillow
 - python=3.7
-- fastai
-- jupyter_nbextensions_configurator
+- pip
+- pip:
+  - typeguard
+  - jupyter_nbextensions_configurator
