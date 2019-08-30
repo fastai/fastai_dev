@@ -1,0 +1,17 @@
+name: fastai_dev
+channels:
+- fastai
+- pytorch
+- defaults
+- conda-forge
+dependencies:
+- jupyter
+- typeguard
+- pytorch
+- matplotlib
+- pandas
+- requests
+- pyyaml
+- fastprogress
+- pillow
+- python=3.7
