@@ -6,9 +6,9 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'mk_class', 'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify',
            'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
-           'stop', 'gen', 'chunked', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
-           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'trace', 'compose', 'maps', 'mapper',
-           'partialler', 'instantiate', 'bind', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props',
+           'stop', 'gen', 'chunked', 'concat', 'Chunks', 'trace', 'compose', 'maps', 'mapper', 'partialler',
+           'instantiate', 'bind', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu',
+           'item_find', 'find_device', 'find_bs', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props',
            'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot',
            'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString',
            'flatten_check', 'display_df', 'one_param']
@@ -145,12 +145,6 @@ def method(f):
 
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 def chk(f): return typechecked(always=True)(f)
-
-#NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
-@patch
-def ls(self:Path):
-    "Contents of path as a list"
-    return list(self.iterdir())
 
 def tensor(x, *rest, **kwargs):
     "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
@@ -298,6 +292,7 @@ class L(CollBase):
     def stack(self, dim=0): return torch.stack(list(self.tensored()), dim=dim)
     def cat  (self, dim=0): return torch.cat  (list(self.tensored()), dim=dim)
     def cycle(self): return itertools.cycle(self) if len(self) > 0 else itertools.cycle([None])
+    def filtered(self, f, *args, **kwargs): return self._new(filter(partial(f,*args,**kwargs), self))
     def mapped(self, f, *args, **kwargs): return self._new(map(partial(f,*args,**kwargs), self))
     def mapped_dict(self, f, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
     def starmapped(self, f, *args, **kwargs): return self._new(itertools.starmap(partial(f,*args,**kwargs), self))
@@ -312,6 +307,7 @@ class L(CollBase):
 
 add_docs(L,
          __getitem__="Retrieve `idx` (can be list of indices, or mask, or int) items",
+         filtered="Create new `L` filtered by predicate `f`, passing `args` and `kwargs` to `f`",
          mapped="Create new `L` with `f` applied to all `items`, passing `args` and `kwargs` to `f`",
          mapped_dict="Like `mapped`, but creates a dict from `items` to function results",
          starmapped="Like `mapped`, but use `itertools.starmap`",
@@ -567,6 +563,65 @@ class Chunks:
         cl = self.cumlens[docidx]
         return docidx,i-cl
 
+def trace(f):
+    "Add `set_trace` to an existing function `f`"
+    def _inner(*args,**kwargs):
+        set_trace()
+        return f(*args,**kwargs)
+    return _inner
+
+def compose(*funcs, order=None):
+    "Create a function that composes all functions in `funcs`, passing along remaining `*args` and `**kwargs` to all"
+    funcs = L(funcs)
+    if order is not None: funcs = funcs.sorted(order)
+    def _inner(x, *args, **kwargs):
+        for f in L(funcs): x = f(x, *args, **kwargs)
+        return x
+    return _inner
+
+def maps(*args, retain=noop):
+    "Like `map`, except funcs are composed first"
+    f = compose(*args[:-1])
+    def _f(b): return retain(f(b), b)
+    return map(_f, args[-1])
+
+def mapper(f):
+    "Create a function that maps `f` over an input collection"
+    return lambda o: [f(o_) for o_ in o]
+
+def partialler(f, *args, order=None, **kwargs):
+    "Like `functools.partial` but also copies over docstring"
+    fnew = partial(f,*args,**kwargs)
+    fnew.__doc__ = f.__doc__
+    if order is not None: fnew.order=order
+    elif hasattr(f,'order'): fnew.order=f.order
+    return fnew
+
+def instantiate(t):
+    "Instantiate `t` if it's a type, otherwise do nothing"
+    return t() if isinstance(t, type) else t
+
+mk_class('_Arg', 'i')
+_0,_1,_2,_3,_4 = _Arg(0),_Arg(1),_Arg(2),_Arg(3),_Arg(4)
+
+class bind:
+    "Same as `partial`, except you can use `_0` `_1` etc param placeholders"
+    def __init__(self, fn, *pargs, **pkwargs):
+        store_attr(self, 'fn,pargs,pkwargs')
+        self.maxi = max((x.i for x in pargs if isinstance(x, _Arg)), default=-1)
+
+    def __call__(self, *args, **kwargs):
+        fargs = L(args[x.i] if isinstance(x, _Arg) else x for x in self.pargs) + args[self.maxi+1:]
+        return self.fn(*fargs, **{**self.pkwargs, **kwargs})
+
+#NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
+@patch
+def ls(self:Path, file_type=None, file_exts=None):
+    "Contents of path as a list"
+    extns=L(file_exts)
+    if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type))
+    return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
+
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"
     if is_listy(x): return type(x)(apply(func, o, *args, **kwargs) for o in x)
@@ -624,57 +679,6 @@ def find_device(b):
 def find_bs(b):
     "Recursively search the batch size of `b`."
     return item_find(b).shape[0]
-
-def trace(f):
-    "Add `set_trace` to an existing function `f`"
-    def _inner(*args,**kwargs):
-        set_trace()
-        return f(*args,**kwargs)
-    return _inner
-
-def compose(*funcs, order=None):
-    "Create a function that composes all functions in `funcs`, passing along remaining `*args` and `**kwargs` to all"
-    funcs = L(funcs)
-    if order is not None: funcs = funcs.sorted(order)
-    def _inner(x, *args, **kwargs):
-        for f in L(funcs): x = f(x, *args, **kwargs)
-        return x
-    return _inner
-
-def maps(*args, retain=noop):
-    "Like `map`, except funcs are composed first"
-    f = compose(*args[:-1])
-    def _f(b): return retain(f(b), b)
-    return map(_f, args[-1])
-
-def mapper(f):
-    "Create a function that maps `f` over an input collection"
-    return lambda o: [f(o_) for o_ in o]
-
-def partialler(f, *args, order=None, **kwargs):
-    "Like `functools.partial` but also copies over docstring"
-    fnew = partial(f,*args,**kwargs)
-    fnew.__doc__ = f.__doc__
-    if order is not None: fnew.order=order
-    elif hasattr(f,'order'): fnew.order=f.order
-    return fnew
-
-def instantiate(t):
-    "Instantiate `t` if it's a type, otherwise do nothing"
-    return t() if isinstance(t, type) else t
-
-mk_class('_Arg', 'i')
-_0,_1,_2,_3,_4 = _Arg(0),_Arg(1),_Arg(2),_Arg(3),_Arg(4)
-
-class bind:
-    "Same as `partial`, except you can use `_0` `_1` etc param placeholders"
-    def __init__(self, fn, *pargs, **pkwargs):
-        store_attr(self, 'fn,pargs,pkwargs')
-        self.maxi = max((x.i for x in pargs if isinstance(x, _Arg)), default=-1)
-
-    def __call__(self, *args, **kwargs):
-        fargs = L(args[x.i] if isinstance(x, _Arg) else x for x in self.pargs) + args[self.maxi+1:]
-        return self.fn(*fargs, **{**self.pkwargs, **kwargs})
 
 def _is_instance(f, gs):
     tst = [g if type(g) in [type, 'function'] else g.__class__ for g in gs]
