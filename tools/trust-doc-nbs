@@ -19,12 +19,15 @@ if (cur_dir == "tools"): os.chdir("..")
 stealth = True if "post-merge" in __file__ else False
 end = "\r" if stealth else "\n"
 
-print("Attention! Signing notebooks as *trusted*", end=end)
-for path in [Path('dev_nb'), Path('dev')]:
+
+def trust_nbs(dirname):
+    print(f"Attention! Signing notebooks under {dirname} as *trusted*", end=end)
+    path = Path(dirname)
     fname_last_checked = path/".last_checked"
     last_checked = os.path.getmtime(fname_last_checked) if fname_last_checked.exists() else None
 
     for fname in path.glob("*.ipynb"):
+
         # speed up things by skipping the if-not-signed test if the nb hasn't changed since the last signing attempt
         if last_checked:
             last_changed = os.path.getmtime(fname)
@@ -37,6 +40,9 @@ for path in [Path('dev_nb'), Path('dev')]:
                 nbformat.sign.NotebookNotary().sign(nb)
 
     fname_last_checked.touch(exist_ok=True)
+
+trust_nbs('dev')
+trust_nbs('dev_nb')
 
 # clear the temporary output
 if stealth: sys.stdout.write("\033[K")
