@@ -75,7 +75,7 @@ class DataLoader():
         return (b for i,b in enumerate(idxs) if i//(self.bs or 1)%self.nw==self.offs)
 
     def create_item(self, s):  return next(self.it) if s is None else self.dataset[s]
-    def retain(self, res, b):  return retain_types(res, b[0]) if is_iter(b[0]) else res
+    def retain(self, res, b):  return retain_types(res, b[0]) if is_listy(b[0]) else res
     def create_batch(self, b): return (fa_collate,fa_convert)[self.bs is None](b)
     def one_batch(self):   return next(iter(self))
     def do_item(self, s):  return self.after_item(self.create_item(s))

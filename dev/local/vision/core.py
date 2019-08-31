@@ -2,7 +2,7 @@
 
 __all__ = ['Image', 'n_px', 'shape', 'aspect', 'load_image', 'PILBase', 'PILImage', 'PILImageBW', 'PILMask',
            'TensorPoint', 'get_annotations', 'BBox', 'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes',
-           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad', 'bb_pad']
+           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad']
 
 from ..imports import *
 from ..test import *
@@ -191,16 +191,6 @@ class BBoxCategorize(Transform):
 BBox.default_type_tfms,BBox.default_ds_tfms = BBoxCategorize,BBoxScaler
 
 #TODO tests
-def bb_pad(samples, pad_idx=0):
-    "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
-    max_len = max([len(s[1][1]) for s in samples])
-    def _f(img,bbox,lbl):
-        bbox = torch.cat([bbox,bbox.new_zeros(max_len-bbox.shape[0], 4)])
-        lbl  = torch.cat([lbl, lbl .new_zeros(max_len-lbl .shape[0])+pad_idx])
-        return img,TensorBBox((bbox,lbl))
-    return [_f(x,*y) for x,y in samples]
-
-#Comes from 50_data_block.ipynb.
 def bb_pad(samples, pad_idx=0):
     "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
     max_len = max([len(s[1][1]) for s in samples])

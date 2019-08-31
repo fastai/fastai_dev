@@ -28,8 +28,8 @@ from fastprogress import progress_bar,master_bar
 from torch import as_tensor,Tensor,ByteTensor,LongTensor,FloatTensor,HalfTensor,DoubleTensor
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import (DataLoader,SequentialSampler,RandomSampler,Sampler,BatchSampler,
-                              IterableDataset,get_worker_info)
+from torch.utils.data import SequentialSampler,RandomSampler,Sampler,BatchSampler
+from torch.utils.data import DataLoader,IterableDataset,get_worker_info
 from torch.utils.data._utils.collate import default_collate,default_convert
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace

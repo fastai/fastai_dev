@@ -3,10 +3,10 @@
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'chk', 'tensor', 'add_docs', 'docs',
            'custom_dir', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'CollBase', 'L', 'ifnone', 'get_class',
-           'mk_class', 'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify',
-           'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
-           'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
-           'stop', 'gen', 'chunked', 'concat', 'Chunks', 'trace', 'compose', 'maps', 'partialler', 'instantiate',
+           'mk_class', 'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'tuplify', 'replicate', 'uniqueify',
+           'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt',
+           'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked',
+           'retain_type', 'retain_types', 'concat', 'Chunks', 'trace', 'compose', 'maps', 'partialler', 'instantiate',
            'bind', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find',
            'find_device', 'find_bs', 'Module', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props',
            'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot',
@@ -394,25 +394,10 @@ def _patch_tb():
     for fn in dir(t):
         if fn in skips: continue
         f = getattr(t, fn)
-        if isinstance(f, (types.MethodWrapperType, types.BuiltinFunctionType, types.BuiltinMethodType, types.MethodType, types.FunctionType)):
+        if isinstance(f, (MethodWrapperType, types.BuiltinFunctionType, types.BuiltinMethodType, types.MethodType, types.FunctionType)):
             setattr(TensorBase, fn, get_f(fn))
 
 _patch_tb()
-
-def retain_type(new, old=None, typ=None):
-    "Cast `new` to type of `old` if it's a superclass"
-    # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
-    assert old is not None or typ is not None
-    if typ is None:
-        if not isinstance(old, type(new)): return new
-        typ = old if isinstance(old,type) else type(old)
-    # Do nothing the new type is already an instance of requested type (i.e. same type)
-    return typ(new) if typ!=NoneType and not isinstance(new, typ) else new
-
-def retain_types(new, old=None, typs=None):
-    "Cast each item of `new` to type of matching item in `old` if it's a superclass"
-    assert old is not None or typs is not None
-    return tuple(L(new,L(old),L(typs)).mapped_zip(retain_type, longest=True))
 
 def tuplify(o, use_list=False, match=None):
     "Make `o` a tuple"
@@ -523,6 +508,21 @@ def chunked(it, cs, drop_last=False):
         res = list(itertools.islice(it, cs))
         if res and (len(res)==cs or not drop_last): yield res
         if len(res)<cs: return
+
+def retain_type(new, old=None, typ=None):
+    "Cast `new` to type of `old` if it's a superclass"
+    # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
+    assert old is not None or typ is not None
+    if typ is None:
+        if not isinstance(old, type(new)): return new
+        typ = old if isinstance(old,type) else type(old)
+    # Do nothing the new type is already an instance of requested type (i.e. same type)
+    return typ(new) if typ!=NoneType and not isinstance(new, typ) else new
+
+def retain_types(new, old=None, typs=None):
+    "Cast each item of `new` to type of matching item in `old` if it's a superclass"
+    assert old is not None or typs is not None
+    return tuple(L(new,L(old),L(typs)).mapped_zip(retain_type, longest=True))
 
 def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"

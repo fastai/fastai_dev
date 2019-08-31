@@ -60,7 +60,7 @@ def mk_transform(f, as_item=True):
     "Convert function `f` to `Transform` if it isn't already one"
     return f if isinstance(f,Transform) else Transform(f, as_item=as_item)
 
-class Pipeline(GetAttr):
+class Pipeline:
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None, as_item=True, filt=None):
         if not funcs: funcs=[noop]
@@ -102,7 +102,6 @@ class Pipeline(GetAttr):
         if not all(hasattr(o_, 'show') for o_ in o1): return
         for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
         return 1 if ctx is None else ctx
-
 
 class TfmdBase(L):
     "Base class for transformed lists"
