@@ -174,24 +174,6 @@ summary: "The functions that transform the dev notebooks in the documentation of
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_re_nb_link</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"># Catches any link to a local notebook and keeps the title in group 1, the link without .ipynb in group 2</span>
-<span class="s2">\[          # Opening [</span>
-<span class="s2">([^\]]*)    # Catching group for any character except ]</span>
-<span class="s2">\]\(        # Closing ], opening (</span>
-<span class="s2">([^http]    # Catching group that must not begin by html (local notebook)</span>
-<span class="s2">[^\)]*)     # and containing anything but )</span>
-<span class="s2">.ipynb\)    # .ipynb and closing )</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -267,9 +249,11 @@ summary: "The functions that transform the dev notebooks in the documentation of
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Supported styles are <code>Warning</code>, <code>Note</code> and <code>Important</code>:</p>
-<div markdown="span" class="alert alert-danger" role="alert"><i class="fa fa-danger-circle"></i> <b>Warning: </b>There will be no second warning!</div>
-<div markdown="span" class="alert alert-warning" role="alert"><i class="fa fa-warning-circle"></i> <b>Important: </b>Pay attention! This is important.</div>
-<div markdown="span" class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note: </b>Take note of this.</div>
+<blockquote><p>Warning: There will be no second warning!</p>
+<p>Important: Pay attention! This is important.</p>
+<p>Note: Take note of this.</p>
+</blockquote>
+
 </div>
 </div>
 </div>
@@ -670,7 +654,7 @@ summary: "The functions that transform the dev notebooks in the documentation of
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>notebook_path</code>" class="doc_header"><code>notebook_path</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>notebook_path</code>()</p>
+<h4 id="<code>notebook_path</code>" class="doc_header"><code>notebook_path</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/93_notebook_export2html.ipynb#Conversion" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>notebook_path</code>()</p>
 </blockquote>
 <p>Returns the absolute path of the Notebook or None if it cannot be determined</p>
 
@@ -774,19 +758,6 @@ summary: "The functions that transform the dev notebooks in the documentation of
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">convert_post</span><span class="p">(</span><span class="s1">&#39;posts/2019-08-06-delegation.ipynb&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>

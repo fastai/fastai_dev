@@ -8,16 +8,16 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
            'stop', 'gen', 'chunked', 'concat', 'Chunks', 'trace', 'compose', 'maps', 'partialler', 'instantiate',
            'bind', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find',
-           'find_device', 'find_bs', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image',
-           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint',
-           'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df',
-           'one_param']
+           'find_device', 'find_bs', 'Module', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props',
+           'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot',
+           'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString',
+           'flatten_check', 'display_df', 'one_param']
 
 from .test import *
 from .imports import *
 from .notebook.showdoc import show_doc
 
-torch.cuda.set_device(int(os.environ.get('DEFAULT_GPU') or 0))
+if torch.cuda.is_available(): torch.cuda.set_device(int(os.environ.get('DEFAULT_GPU') or 0))
 
 defaults = SimpleNamespace()
 
@@ -675,6 +675,11 @@ def find_device(b):
 def find_bs(b):
     "Recursively search the batch size of `b`."
     return item_find(b).shape[0]
+
+class Module(nn.Module, metaclass=PrePostInitMeta):
+    "Same as `nn.Module`, but no need for subclasses to call `super().__init__`"
+    def __pre_init__(self): super().__init__()
+    def __init__(self): pass
 
 def _is_instance(f, gs):
     tst = [g if type(g) in [type, 'function'] else g.__class__ for g in gs]

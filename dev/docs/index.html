@@ -233,12 +233,12 @@ Total time: 00:09 <p><table style='width:300px; margin-bottom:10px'>
 </ul>
 <p>From <code>basic_data</code> we can split on one of the four main <em>applications</em>, which each has their own module: <code>vision</code>, <code>text</code> <code>collab</code>, or <code>tabular</code>. Each of those submodules is built in the same way with:</p>
 <ul>
-<li>a submodule named <code> transform</code> that handles the transformations of our data (data augmentation for computer vision, numericalizing and tokenizing for text and preprocessing for tabular)</li>
+<li>a submodule named <code>transform</code> that handles the transformations of our data (data augmentation for computer vision, numericalizing and tokenizing for text and preprocessing for tabular)</li>
 <li>a submodule named <code>data</code> that contains the class that will create datasets specific to this application and the helper functions to create <a href="/data.core.html#DataBunch"><code>DataBunch</code></a> objects.</li>
 <li>a submodule named <code>models</code> that contains the models specific to this application.</li>
 <li>optionally, a submodule named <code>{application}.learner</code> that will contain <a href="/learner.html#Learner"><code>Learner</code></a> specific to the application.</li>
 </ul>
-<p>Here is a graph of the key module dependencies: m.groups()[1]</p>
+<p>Here is a graph of the key module dependencies:</p>
 
 </div>
 </div>

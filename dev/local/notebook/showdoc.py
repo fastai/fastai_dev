@@ -14,7 +14,7 @@ from nbconvert import HTMLExporter
 
 def is_enum(cls):
     "Check if `cls` is an enum or another type of class"
-    return cls.__class__ == enum.Enum or cls.__class__ == enum.EnumMeta
+    return type(cls) in (enum.Enum, enum.EnumMeta)
 
 def _get_pytorch_index():
     if not (Path(__file__).parent/'index_pytorch.txt').exists(): return {}

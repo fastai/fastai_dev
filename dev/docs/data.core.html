@@ -73,8 +73,8 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[PosixPath(&#39;/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3&#39;),
- PosixPath(&#39;/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/7&#39;)]</pre>
+<pre>[PosixPath(&#39;/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3&#39;),
+ PosixPath(&#39;/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/7&#39;)]</pre>
 </div>
 
 </div>
@@ -98,7 +98,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>get_files</code>" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>get_files</code>" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get all the files in <code>path</code> with optional <code>extensions</code>, optionally with <code>recurse</code>.</p>
 
@@ -143,7 +143,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#709) [/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/8055.png,/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/9466.png,/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/7778.png,/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/8824.png,/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/8228.png,/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/9620.png,/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/8790.png,/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/7497.png,/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/7383.png,/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/9324.png...]</pre>
+<pre>(#709) [/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/8055.png,/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/9466.png,/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/7778.png,/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/8824.png,/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/8228.png,/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/9620.png,/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/8790.png,/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/7497.png,/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/7383.png,/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/9324.png...]</pre>
 </div>
 
 </div>
@@ -171,7 +171,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>FileGetter</code>" class="doc_header"><code>FileGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FileGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>FileGetter</code>" class="doc_header"><code>FileGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FileGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create <a href="/data.core.html#get_files"><code>get_files</code></a> partial function that searches path suffix <code>suf</code> and passes along args</p>
 
@@ -215,7 +215,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>get_image_files</code>" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>get_image_files</code>" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get image files in <code>path</code> recursively.</p>
 
@@ -259,7 +259,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>ImageGetter</code>" class="doc_header"><code>ImageGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ImageGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>ImageGetter</code>" class="doc_header"><code>ImageGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ImageGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create <a href="/data.core.html#get_image_files"><code>get_image_files</code></a> partial function that searches path suffix <code>suf</code> and passes along <code>kwargs</code></p>
 
@@ -317,7 +317,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>RandomSplitter</code>" class="doc_header"><code>RandomSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RandomSplitter</code>(<strong><code>valid_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>RandomSplitter</code>" class="doc_header"><code>RandomSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RandomSplitter</code>(<strong><code>valid_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create function that splits <code>items</code> between train/val with <code>valid_pct</code> randomly.</p>
 
@@ -364,7 +364,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>GrandparentSplitter</code>" class="doc_header"><code>GrandparentSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GrandparentSplitter</code>(<strong><code>train_name</code></strong>=<em><code>'train'</code></em>, <strong><code>valid_name</code></strong>=<em><code>'valid'</code></em>)</p>
+<h4 id="<code>GrandparentSplitter</code>" class="doc_header"><code>GrandparentSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GrandparentSplitter</code>(<strong><code>train_name</code></strong>=<em><code>'train'</code></em>, <strong><code>valid_name</code></strong>=<em><code>'valid'</code></em>)</p>
 </blockquote>
 <p>Split <code>items</code> from the grand parent folder names (<code>train_name</code> and <code>valid_name</code>).</p>
 
@@ -419,7 +419,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>parent_label</code>" class="doc_header"><code>parent_label</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parent_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>parent_label</code>" class="doc_header"><code>parent_label</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parent_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Label <code>item</code> with the parent folder name.</p>
 
@@ -480,7 +480,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>RegexLabeller</code>" class="doc_header"><code>RegexLabeller</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RegexLabeller</code>(<strong><code>pat</code></strong>)</p>
+<h4 id="<code>RegexLabeller</code>" class="doc_header"><code>RegexLabeller</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RegexLabeller</code>(<strong><code>pat</code></strong>)</p>
 </blockquote>
 <p>Label <code>item</code> with regex <code>pat</code>.</p>
 
@@ -542,7 +542,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Category</code>" class="doc_header"><code>class</code> <code>Category</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Category</code>() :: <code>str</code></p>
+<h2 id="<code>class</code> <code>Category</code>" class="doc_header"><code>class</code> <code>Category</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Categorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Category</code>() :: <code>str</code></p>
 </blockquote>
 <p>str(object='') -&gt; str
 str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
@@ -574,7 +574,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Categorize</code>" class="doc_header"><code>class</code> <code>Categorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Categorize</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transforms.html#ItemTransform"><code>ItemTransform</code></a></p>
+<h2 id="<code>class</code> <code>Categorize</code>" class="doc_header"><code>class</code> <code>Categorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Categorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Categorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Reversible transform of category string to <code>vocab</code> id</p>
 
@@ -595,7 +595,25 @@ errors defaults to 'strict'.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cat</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
-<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">],</span> <span class="n">type_tfms</span><span class="o">=</span><span class="p">[</span><span class="n">cat</span><span class="p">])</span>
+<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">],</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span><span class="n">cat</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;dog&#39;</span><span class="p">)</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">tds</span><span class="o">.</span><span class="n">show_at</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;cat&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cat</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">]),</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span><span class="n">cat</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;dog&#39;</span><span class="p">)</span>
@@ -619,7 +637,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>MultiCategory</code>" class="doc_header"><code>class</code> <code>MultiCategory</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategory</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#L"><code>L</code></a></p>
+<h2 id="<code>class</code> <code>MultiCategory</code>" class="doc_header"><code>class</code> <code>MultiCategory</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategory</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#L"><code>L</code></a></p>
 </blockquote>
 <p>Behaves like a list of <code>items</code> but can also index with list of indices or masks</p>
 
@@ -643,7 +661,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>MultiCategorize</code>" class="doc_header"><code>class</code> <code>MultiCategorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategorize</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/data.core.html#Categorize"><code>Categorize</code></a></p>
+<h2 id="<code>class</code> <code>MultiCategorize</code>" class="doc_header"><code>class</code> <code>MultiCategorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/data.core.html#Categorize"><code>Categorize</code></a></p>
 </blockquote>
 <p>Reversible transform of multi-category strings to <code>vocab</code> id</p>
 
@@ -664,7 +682,7 @@ errors defaults to 'strict'.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cat</span> <span class="o">=</span> <span class="n">MultiCategorize</span><span class="p">()</span>
-<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]],</span> <span class="n">type_tfms</span><span class="o">=</span><span class="p">[</span><span class="n">cat</span><span class="p">])</span>
+<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]],</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span><span class="n">cat</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="p">([]),</span> <span class="p">[])</span>
@@ -689,7 +707,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>one_hot</code>" class="doc_header"><code>one_hot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_hot</code>(<strong><code>x</code></strong>, <strong><code>c</code></strong>)</p>
+<h4 id="<code>one_hot</code>" class="doc_header"><code>one_hot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_hot</code>(<strong><code>x</code></strong>, <strong><code>c</code></strong>)</p>
 </blockquote>
 <p>One-hot encode <code>x</code> with <code>c</code> classes.</p>
 
@@ -728,7 +746,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>one_hot_decode</code>" class="doc_header"><code>one_hot_decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_hot_decode</code>(<strong><code>x</code></strong>, <strong><code>vocab</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>one_hot_decode</code>" class="doc_header"><code>one_hot_decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_hot_decode</code>(<strong><code>x</code></strong>, <strong><code>vocab</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -766,7 +784,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>OneHotEncode</code>" class="doc_header"><code>class</code> <code>OneHotEncode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>OneHotEncode</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="<code>class</code> <code>OneHotEncode</code>" class="doc_header"><code>class</code> <code>OneHotEncode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>OneHotEncode</code>(<strong><code>do_encode</code></strong>=<em><code>True</code></em>, <strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>One-hot encodes targets and optionally decodes with <code>vocab</code></p>
 
@@ -791,7 +809,7 @@ errors defaults to 'strict'.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">_tfm</span> <span class="o">=</span> <span class="n">OneHotEncode</span><span class="p">(</span><span class="n">vocab</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
-<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">type_tfms</span><span class="o">=</span><span class="p">[</span><span class="n">_tfm</span><span class="p">])</span>
+<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span><span class="n">_tfm</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">_tfm</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">byte</span><span class="p">())</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">_tfm</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])),</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">])</span>
 </pre></div>
@@ -807,7 +825,7 @@ errors defaults to 'strict'.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">_tfm</span> <span class="o">=</span> <span class="n">OneHotEncode</span><span class="p">(</span><span class="n">vocab</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">do_encode</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span> <span class="n">type_tfms</span><span class="o">=</span><span class="p">[</span><span class="n">_tfm</span><span class="p">])</span>
+<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span><span class="n">_tfm</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">_tfm</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">byte</span><span class="p">())</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">_tfm</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])),</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">])</span>
 </pre></div>
@@ -862,12 +880,12 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>([PosixPath(&#39;/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/8055.png&#39;),
-  PosixPath(&#39;/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/9466.png&#39;),
-  PosixPath(&#39;/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/train/3/7778.png&#39;)],
- [PosixPath(&#39;/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/valid/3/957.png&#39;),
-  PosixPath(&#39;/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/valid/3/9073.png&#39;),
-  PosixPath(&#39;/home/jhoward/git/fastai_dev/dev/data/mnist_tiny/valid/3/8939.png&#39;)])</pre>
+<pre>([PosixPath(&#39;/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/8055.png&#39;),
+  PosixPath(&#39;/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/9466.png&#39;),
+  PosixPath(&#39;/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/train/3/7778.png&#39;)],
+ [PosixPath(&#39;/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/valid/3/957.png&#39;),
+  PosixPath(&#39;/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/valid/3/9073.png&#39;),
+  PosixPath(&#39;/home/sgugger/git/fastai_dev/dev/data/mnist_tiny/valid/3/8939.png&#39;)])</pre>
 </div>
 
 </div>
@@ -887,10 +905,7 @@ errors defaults to 'strict'.</p>
 
 <span class="n">tfms</span> <span class="o">=</span> <span class="p">[[</span><span class="n">open_img</span><span class="p">,</span> <span class="n">img2tensor</span><span class="p">],</span>
         <span class="p">[</span><span class="n">parent_label</span><span class="p">,</span> <span class="n">Categorize</span><span class="p">()]]</span>
-<span class="n">datasets</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">tfms</span><span class="p">)</span>
-
-<span class="c1"># NB: `DataSource` is an easier way to handle this common case</span>
-<span class="n">train_ds</span><span class="p">,</span><span class="n">valid_ds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">datasets</span><span class="o">.</span><span class="n">subset</span><span class="p">,</span> <span class="n">splits</span><span class="p">)</span>
+<span class="n">train_ds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">tfms</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -934,7 +949,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABUCAYAAAA7xZEpAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADh0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uMy4xLjAsIGh0dHA6Ly9tYXRwbG90bGliLm9yZy+17YcXAAAEeUlEQVR4nO3bX4iNeRzH8dfPUNQQZUZpUDY1tWVTwlJMLuzFElLaDRfKjVwgN1yIGtSUq73YG4mylCxJoVxoL5a4WDdM1rZhS4iQKeTPevZi9pkz85vDnDHnzHPW/t51Ouc5v/M8z7fP+Tzf3+/3/T1PyLJMosSIogOoN5IgEUmQiCRIRBIkIgkSkQSJKFyQEMJPIYQHIYSuEMIfIYQNhcZT9MAshPAl/syy7HUIoRW/4Nssy34rIp7CHZJlWWeWZa/zzX9fXxQVT+GCQAjhxxDCS/yOBzhXWCxFXzI5IYQGfI02dGRZ9raIOOrCIZBl2d9Zlv2KFmwsKo66EaQXI/1fc0gIoTmE8F0IoTGE0BBC+Abf42JhMRWZQ0IITfgZX+n+c/7CD1mWHSgspnpJqvVCPeaQQkmCRCRBIpIgESMHaP+cM24o92VySEQSJCIJEpEEiUiCRCRBIpIgEQONQ4aNFy9egIMHD4LNmzeD1atXg2PHjoGGhoaaxpEcEjHQ9L+mI9VLly6BV69e6ejoABcvlq8NdXZ2gtbW1mqdPo1UK2FYc8jjx4/BkSNHwI4dO8C7d+8G3PfGjRuoqkPKkhwSMSw55OjRo2DXrl3gzp07fdonTJjQ8/nZs2d92qZNmwZu3boFRo0aVY2QSDmkMoYlhzx58gT9nbF+/XqwdetW27dvB+fO9V3F3LZtG6rqjI+SHBIxLA7ZtGkTuH79Oli2bBlYsmQJaG9v7+eMsWPHgqVLlw5HiD0kh0QUMlK9ffs22LdvHzh06FBP2/jx48G1a9dQ6mVqQOplKqEQhzQ2NqJ7DhOTz2UWLVpUi1P3JjmkEgpxyJgxY8CbN2/6tU2cOBFs3Nh9z8zixYvBggULUNV6SHJIJdSdQz7EnDlzwP79+0FLSwuG1AuVdUghgty8eROcPn0aLF++vKft8OHD4OrVq332uXfvHrh79y5YsWIFOHny5KeGkS6ZSii0hDgYnj59Ctra2lCaMOZOyi+hQZAcUgk1cUh+zPx9xIjq6Z47Yv78+dBTNti7d+9gD5UcUglVnf6fOXMG3L9/H6xcuRJMmjSpauc4e/Zsn+0LFy7gkxxSluSQiKrmkNmzZ4OmpiZw/vz5T42rHw8fPgSzZs0Cjx49ApcvXwZz584d7CFTDqmEquSQK1euoLTcmI8VhsL79+/B7t27wYED3Xd7587I89LkyZOHfK7eJIdEVMUhM2fOBFOnTkXJMevWrQM7d+7s8/sZM2agNC95+7b0rFC+zJkf40OL32vXrgVTpkwZcvy9SQ6JqGovs2rVKpRmsR9izZo14NSpUyhfSozJC0fHjx8H8+bNA6NHjx5MiL1JvUwlVNUhXV1dKN3+1N7eDp4/f47KnJDPe5qbm1Fy3ZYtW8D06dMHE9LHSA6phGGph+Q3u+zZswecOHECLFy4EGzYUHq6fdy4cSgtd9aQ5JBK+M9UzGpAckglJEEikiARSZCIJEhEEiQiCRIxUD2kbF/9OZMcEpEEiUiCRCRBIpIgEUmQiH8AXEReOybNeDQAAAAASUVORK5CYII=
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABUCAYAAAA7xZEpAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADh0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uMy4xLjEsIGh0dHA6Ly9tYXRwbG90bGliLm9yZy8QZhcZAAAEd0lEQVR4nO3bX4iNeRzH8dfPUNQQZUZpUDY1tWVTwlJMLuzFElLaDRfKjVwgN1yIGtSUq73YG4mylCxJodRqL5a4WDdM1rZhS4iQKSt/1rMXs8+cmd8Mc8acc56z9veu05xzfuc8z6fPfJ7v799zQpZlEiVGFC2g3kiGRCRDIpIhEcmQiGRIRDIkonBDQgg/hBAehBC6Qgi/hxA2FKqn6IFZCOFz/JFl2asQQit+xtdZlv1ahJ7CE5JlWWeWZa/yl/8+PitKT+GGQAjh+xDCX/gND3CuMC1FXzI5IYQGfIk2dGRZ9qYIHXWREMiy7O8sy35BCzYWpaNuDOnFSP/XGhJCaA4hfBNCaAwhNIQQvsK3+KkwTUXWkBBCE37EF7r/OX/iuyzLDhSmqV6Kar1QjzWkUJIhEcmQiGRIxMhB2j/lihsGejMlJCIZEpEMiUiGRCRDIpIhEcmQiMHGITXjxYsX4ODBg2Dz5s1g9erV4NixY6ChoaGqOlJCIgab/ld1pHrp0iXw8uVLHR0d4OLFiwN+trOzE7S2tlbq9GmkWg41rSGPHz8GR44cATt27ABv374d9Ls3btxARRMyICkhETWpIUePHgW7du0Cd+7c6dM+YcKEnufPnj3r0zZt2jRw69YtMGrUqEpIItWQ8qhJDXny5An6J2P9+vVg69attm/fDs6d67uLuW3bNlQ0GR8kJSSiJgnZtGkTuH79Oli2bBlYsmQJaG9v75eMsWPHgqVLl9ZCYg8pIRGFjFRv374N9u3bBw4dOtTTNn78eHDt2jWUepkqkHqZcigkIY2Njeiew8Tkc5lFixZV49S9SQkph0ISMmbMGPD69et+bRMnTgQbN3bfM7N48WKwYMECVHQ9JCWkHOouIe9jzpw5YP/+/aClpQXD6oUGTEghhty8eROcPn0aLF++vKft8OHD4OrVq32+c+/ePXD37l2wYsUKcPLkyY+VkS6Zcih0CXEoPH36FLS1taE0YcyTlF9CQyAlpByqkpD8mPnfESMq53ueiPnz50PPssHevXuHeqiUkHKo6PT/zJkz4P79+2DlypVg0qRJFTvH2bNn+7y+cOECPiohA5ISElHRGjJ79mzQ1NQEzp8//7G6+vHw4UMwa9Ys8OjRI3D58mUwd+7coR4y1ZByqEgNuXLlCkrbjflYYTi8e/cO7N69Gxw40H23d56MvC5Nnjx52OfqTUpIREUSMnPmTDB16lSUErNu3Tqwc+fOPp+fMWMGSvOSN29KvxXKtznzY7xv83vt2rVgypQpw9bfm5SQiIr2MqtWrUJpFvs+1qxZA06dOoWBlxJj8oWj48ePg3nz5oHRo0cPRWJvUi9TDhVNSFdXF0q3P7W3t4Pnz5+jvCTk857m5maUUrdlyxYwffr0oUj6ECkh5VCT9ZD8Zpc9e/aAEydOgIULF4ING0q/bh83bhxK251VJCWkHP4zK2ZVICWkHJIhEcmQiGRIRDIkIhkSkQyJGGw9ZMC++lMmJSQiGRKRDIlIhkQkQyKSIRH/ABNHXjoEJ5spAAAAAElFTkSuQmCC
 "
 >
 </div>
@@ -959,15 +974,6 @@ errors defaults to 'strict'.</p>
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="BatchDS">BatchDS<a class="anchor-link" href="#BatchDS">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
@@ -980,461 +986,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>BaseDS</code>" class="doc_header"><code>class</code> <code>BaseDS</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BaseDS</code>(<strong><code>ds</code></strong>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
-</blockquote>
-<p>Inherit from this to have all attr accesses in <code>self._xtra</code> passed down to <code>self.default</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>BatchDS</code>" class="doc_header"><code>class</code> <code>BatchDS</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BatchDS</code>(<strong><code>ds</code></strong>, <strong><code>bs</code></strong>=<em><code>1</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>batch_sampler</code></strong>=<em><code>None</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>collate_fn</code></strong>=<em><code>'default_collate'</code></em>, <strong><code>sampler_cls</code></strong>=<em><code>None</code></em>, <strong><code>batch_sampler_cls</code></strong>=<em><code>'BatchSampler'</code></em>) :: <a href="/data.core.html#BaseDS"><code>BaseDS</code></a></p>
-</blockquote>
-<p>Inherit from this to have all attr accesses in <code>self._xtra</code> passed down to <code>self.default</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">SleepyDS</span><span class="p">():</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">coll</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">coll</span><span class="o">=</span><span class="n">coll</span>
-    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coll</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">i</span><span class="p">):</span> <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.02</span><span class="p">);</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coll</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">letters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">twoepochs</span><span class="p">(</span><span class="n">d</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">d</span><span class="p">))</span>
-<span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>dataloader</code>" class="doc_header"><code>dataloader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dataloader</code>(<strong><code>ds</code></strong>, <strong><code>bs</code></strong>=<em><code>1</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>collate_fn</code></strong>=<em><code>'default_collate'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_dl</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">default_collate</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">dataloader</span><span class="p">(</span><span class="n">SleepyDS</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">),</span> <span class="n">bs</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">collate_fn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dl</span> <span class="o">=</span> <span class="n">get_dl</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">twoepochs</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">dl</span><span class="p">,[]))),</span> <span class="mi">26</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>bfnu xoja esrq wzmg iydc hvlt kp bfnu xoja esrq wzmg iydc hvlt kp
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dl</span> <span class="o">=</span> <span class="n">get_dl</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="o">%</span><span class="k">time</span> twoepochs(dl)
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">dl</span><span class="p">,[]))),</span> <span class="mi">26</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>abcd efgh ijkl mnop qrst uvwx yz abcd efgh ijkl mnop qrst uvwx yz
-CPU times: user 21.6 ms, sys: 54.6 ms, total: 76.3 ms
-Wall time: 404 ms
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dl</span> <span class="o">=</span> <span class="n">get_dl</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">%</span><span class="k">time</span> twoepochs(dl)
-<span class="nb">len</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>abcd efgh ijkl mnop qrst uvwx yz abcd efgh ijkl mnop qrst uvwx yz
-CPU times: user 2.78 ms, sys: 2.33 ms, total: 5.11 ms
-Wall time: 1.05 s
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>7</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dl</span> <span class="o">=</span> <span class="n">get_dl</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">twoepochs</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>abcd efgh ijkl mnop qrst uvwx abcd efgh ijkl mnop qrst uvwx
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>6</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dl</span> <span class="o">=</span> <span class="n">get_dl</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">twoepochs</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">dl</span><span class="p">,[]))),</span> <span class="mi">26</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>euzv kygn rosf whtq ixpm cbdj al lamu eksz fxbn irdp woyg tqcj hv
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">SleepyDS</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span>
-<span class="n">dl</span> <span class="o">=</span> <span class="n">get_dl</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">SequentialSampler</span><span class="p">(</span><span class="n">ds</span><span class="p">))</span>
-<span class="n">twoepochs</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>abcd efgh ijkl mnop qrst uvwx yz abcd efgh ijkl mnop qrst uvwx yz
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dl</span> <span class="o">=</span> <span class="n">get_dl</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">batch_sampler</span><span class="o">=</span><span class="n">BatchSampler</span><span class="p">(</span><span class="n">RandomSampler</span><span class="p">(</span><span class="n">ds</span><span class="p">),</span> <span class="mi">8</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
-<span class="n">twoepochs</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">dl</span><span class="p">,[]))),</span> <span class="mi">26</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>qfhlzbta udpwjyxn orcvmgek si qfhlzbta udpwjyxn orcvmgek si
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">rev_collate</span><span class="p">(</span><span class="n">s</span><span class="p">):</span> <span class="k">return</span> <span class="n">default_collate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
-<span class="n">dl</span> <span class="o">=</span> <span class="n">get_dl</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">rev_collate</span><span class="p">)</span>
-<span class="n">twoepochs</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>abcd efgh ijkl mnop qrst uvwx yz abcd efgh ijkl mnop qrst uvwx yz
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">SleepyDS2</span><span class="p">(</span><span class="n">SleepyDS</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">b</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
-
-<span class="n">dl</span> <span class="o">=</span> <span class="n">dataloader</span><span class="p">(</span><span class="n">SleepyDS2</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">twoepochs</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>abcd/ efgh/ ijkl/ mnop/ qrst/ uvwx/ yz/ abcd/ efgh/ ijkl/ mnop/ qrst/ uvwx/ yz/
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Collation">Collation<a class="anchor-link" href="#Collation">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>retain_types</code>" class="doc_header"><code>retain_types</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>retain_types</code>(<strong><code>new</code></strong>, <strong><code>old</code></strong>)</p>
-</blockquote>
-<p>Cast each item of <code>new</code> to type of matching item in <code>old</code> if it's a superclass</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">T</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span> <span class="k">pass</span>
-
-<span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">,</span><span class="n">t3</span> <span class="o">=</span> <span class="n">retain_types</span><span class="p">((</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">),[</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)]),</span> <span class="p">(</span><span class="n">TensorImage</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Category</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">T</span><span class="p">((</span><span class="mi">2</span><span class="p">,))))</span>
-<span class="n">test_eq_type</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">TensorImage</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-<span class="n">test_eq_type</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-<span class="n">test_eq_type</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="n">T</span><span class="p">((</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">),)))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>ToTensor</code>" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="<code>class</code> <code>ToTensor</code>" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Convert item to appropriate tensor class</p>
 
@@ -1451,43 +1003,6 @@ Wall time: 1.05 s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>TfmdCollate</code>" class="doc_header"><code>class</code> <code>TfmdCollate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TfmdCollate</code>(<strong><code>tfms</code></strong>=<em><code>None</code></em>, <strong><code>collate_fn</code></strong>=<em><code>'default_collate'</code></em>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ol>
-<li>reorder indices (Sampler; <code>__iter__</code> handles reset)</li>
-<li>for each batch, get median AR and handle size (collate_fn)</li>
-<li>for each item in batch, resize based on that  (collate_fn)</li>
-</ol>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -1498,9 +1013,9 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>TfmdDL</code>" class="doc_header"><code>class</code> <code>TfmdDL</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TfmdDL</code>(<strong><code>dataset</code></strong>, <strong><code>tfms</code></strong>=<em><code>None</code></em>, <strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>num_workers</code></strong>=<em><code>1</code></em>, <strong><code>collate_tfms</code></strong>=<em><code>None</code></em>, <strong><code>collate_fn</code></strong>=<em><code>None</code></em>, <strong><code>batch_sampler</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
+<h2 id="<code>class</code> <code>TfmdDL</code>" class="doc_header"><code>class</code> <code>TfmdDL</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TfmdDL</code>(<strong><code>dataset</code></strong>, <strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>) :: <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
 </blockquote>
-<p>Transformed <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a> using a <a href="/pipeline.html#Pipeline"><code>Pipeline</code></a> of <code>tfm</code></p>
+<p>Transformed <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
 
 </div>
 
@@ -1519,7 +1034,7 @@ Wall time: 1.05 s
          <span class="n">decode</span><span class="o">=</span><span class="s2">&quot;Decode `b` using `tfms`&quot;</span><span class="p">,</span>
          <span class="n">decode_batch</span><span class="o">=</span><span class="s2">&quot;Decode `b` entirely&quot;</span><span class="p">,</span>
          <span class="n">show_batch</span><span class="o">=</span><span class="s2">&quot;Show each item of `b`&quot;</span><span class="p">,</span>
-         <span class="n">one_batch</span><span class="o">=</span><span class="s2">&quot;Grab first batch of `dl`&quot;</span><span class="p">)</span>
+         <span class="n">before_iter</span><span class="o">=</span><span class="s2">&quot;override&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1534,7 +1049,7 @@ Wall time: 1.05 s
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfms</span> <span class="o">=</span> <span class="p">[[</span><span class="n">open_img</span><span class="p">],</span> <span class="p">[</span><span class="n">parent_label</span><span class="p">,</span> <span class="n">Categorize</span><span class="p">()]]</span>
 <span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">tfms</span><span class="p">)</span>
-<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">tds</span><span class="p">,</span> <span class="n">collate_tfms</span><span class="o">=</span><span class="n">img2tensor</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">tds</span><span class="p">,</span> <span class="n">after_item</span><span class="o">=</span><span class="n">img2tensor</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">tdl</span><span class="o">.</span><span class="n">decode_batch</span><span class="p">(</span><span class="n">b</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">(</span><span class="n">TensorImage</span><span class="p">,</span><span class="n">Category</span><span class="p">))</span>
 </pre></div>
@@ -1553,9 +1068,27 @@ Wall time: 1.05 s
     <span class="k">def</span> <span class="nf">encodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="o">-</span><span class="n">x</span>
     <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="o">-</span><span class="n">x</span>
     
-<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">NegTfm</span><span class="p">(),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="n">NegTfm</span><span class="p">(),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tdl</span><span class="p">))</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">TensorImage</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">T</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span> <span class="k">pass</span>
+
+<span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">,</span><span class="n">t3</span> <span class="o">=</span> <span class="n">retain_types</span><span class="p">((</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">),(</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">),)),</span> <span class="p">(</span><span class="n">TensorImage</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Category</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">T</span><span class="p">((</span><span class="mi">2</span><span class="p">,))))</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">TensorImage</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="n">T</span><span class="p">((</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">),)))</span>
 </pre></div>
 
     </div>
@@ -1608,11 +1141,49 @@ Wall time: 1.05 s
 
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfm</span> <span class="o">=</span> <span class="n">NegTfm</span><span class="p">(</span><span class="n">filt</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="p">[</span><span class="n">A</span><span class="p">()])</span>
+<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">tds</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="n">tfm</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">tds</span><span class="o">.</span><span class="n">filt</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">tds</span><span class="o">.</span><span class="n">filt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="p">[</span><span class="n">A</span><span class="p">()])</span>
-<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">tds</span><span class="p">,</span> <span class="n">NegTfm</span><span class="p">(),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">tds</span><span class="p">,</span> <span class="n">after_item</span><span class="o">=</span><span class="n">NegTfm</span><span class="p">(),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">test_stdout</span><span class="p">(</span><span class="n">tdl</span><span class="o">.</span><span class="n">show_batch</span><span class="p">,</span> <span class="s2">&quot;0</span><span class="se">\n</span><span class="s2">1</span><span class="se">\n</span><span class="s2">2</span><span class="se">\n</span><span class="s2">3&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="p">[</span><span class="n">A</span><span class="p">()])</span>
+<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">tds</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="n">NegTfm</span><span class="p">(),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="o">*</span><span class="n">tdl</span><span class="o">.</span><span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tdl</span><span class="p">),</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tds</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">tdl</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">tdl</span><span class="o">.</span><span class="n">bs</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1635,7 +1206,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdDL.one_batch</code>" class="doc_header"><code>TfmdDL.one_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.one_batch</code>()</p>
+<h4 id="<code>DataLoader.one_batch</code>" class="doc_header"><code>DataLoader.one_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01a_dataloader.ipynb#DataLoader" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataLoader.one_batch</code>()</p>
 </blockquote>
 
 </div>
@@ -1669,7 +1240,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdDL.decode</code>" class="doc_header"><code>TfmdDL.decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.decode</code>(<strong><code>b</code></strong>)</p>
+<h4 id="<code>TfmdDL.decode</code>" class="doc_header"><code>TfmdDL.decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.decode</code>(<strong><code>b</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -1702,7 +1273,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdDL.decode_batch</code>" class="doc_header"><code>TfmdDL.decode_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.decode_batch</code>(<strong><code>b</code></strong>, <strong><code>max_samples</code></strong>=<em><code>10</code></em>)</p>
+<h4 id="<code>TfmdDL.decode_batch</code>" class="doc_header"><code>TfmdDL.decode_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.decode_batch</code>(<strong><code>b</code></strong>, <strong><code>max_samples</code></strong>=<em><code>10</code></em>, <strong><code>ds_decode</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 
 </div>
@@ -1735,7 +1306,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdDL.show_batch</code>" class="doc_header"><code>TfmdDL.show_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.show_batch</code>(<strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>max_samples</code></strong>=<em><code>10</code></em>, <strong><code>ctxs</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="<code>TfmdDL.show_batch</code>" class="doc_header"><code>TfmdDL.show_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.show_batch</code>(<strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>max_samples</code></strong>=<em><code>10</code></em>, <strong><code>ctxs</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Show <code>b</code> (defaults to <code>one_batch</code>), a list of lists of pipeline outputs (i.e. output of a <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a>)</p>
 
@@ -1772,7 +1343,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Cuda</code>" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="<code>class</code> <code>Cuda</code>" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Cuda--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Move batch to <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a> (defaults to <a href="/core.html#defaults.device"><code>defaults.device</code></a>)</p>
 
@@ -1876,7 +1447,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>ByteToFloatTensor</code>" class="doc_header"><code>class</code> <code>ByteToFloatTensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ByteToFloatTensor</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="<code>class</code> <code>ByteToFloatTensor</code>" class="doc_header"><code>class</code> <code>ByteToFloatTensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#ByteToFloatTensor--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ByteToFloatTensor</code>(<strong><code>div</code></strong>=<em><code>True</code></em>, <strong><code>div_mask</code></strong>=<em><code>False</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Transform image to float tensor, optionally dividing by 255 (e.g. for images).</p>
 
@@ -1921,7 +1492,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Normalize</code>" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="<code>class</code> <code>Normalize</code>" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Normalize/denorm batch of <a href="/transforms.html#TensorImage"><code>TensorImage</code></a></p>
 
@@ -1945,7 +1516,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>broadcast_vec</code>" class="doc_header"><code>broadcast_vec</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>broadcast_vec</code>(<strong><code>dim</code></strong>, <strong><code>ndim</code></strong>, <strong>*<code>t</code></strong>, <strong><code>cuda</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="<code>broadcast_vec</code>" class="doc_header"><code>broadcast_vec</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Normalization--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>broadcast_vec</code>(<strong><code>dim</code></strong>, <strong><code>ndim</code></strong>, <strong>*<code>t</code></strong>, <strong><code>cuda</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Make a vector broadcastable over <code>dim</code> (out of <code>ndim</code> total) by prepending and appending unit axes</p>
 
@@ -1965,7 +1536,7 @@ Wall time: 1.05 s
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">mean</span><span class="p">,</span><span class="n">std</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,[</span><span class="mf">0.5</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
 <span class="n">mean</span><span class="p">,</span><span class="n">std</span> <span class="o">=</span> <span class="n">broadcast_vec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
 <span class="n">dl_tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">Cuda</span><span class="p">(),</span> <span class="n">ByteToFloatTensor</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span><span class="n">std</span><span class="p">)]</span>
-<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">dl_tfms</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="n">dl_tfms</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1979,7 +1550,7 @@ Wall time: 1.05 s
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span>  <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
-<span class="n">xd</span><span class="p">,</span><span class="n">yd</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">tfms</span><span class="o">.</span><span class="n">decode</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+<span class="n">xd</span><span class="p">,</span><span class="n">yd</span> <span class="o">=</span> <span class="n">tdl</span><span class="o">.</span><span class="n">after_batch</span><span class="o">.</span><span class="n">decode</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -2025,7 +1596,7 @@ Wall time: 1.05 s
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -2041,7 +1612,7 @@ Wall time: 1.05 s
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">clone</span><span class="p">(),</span><span class="n">y</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span> <span class="c1">#Lose type of tensors (to emulate predictions)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="n">torch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Lose type of tensors (to emulate predictions)</span>
 <span class="n">test_ne</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">TensorImage</span><span class="p">)</span>
 <span class="n">tdl</span><span class="o">.</span><span class="n">show_batch</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span> <span class="c1">#Check that types are put back by dl.</span>
 </pre></div>
@@ -2058,13 +1629,26 @@ Wall time: 1.05 s
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#TODO: make the above check a proper test</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -2081,7 +1665,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>DataBunch</code>" class="doc_header"><code>class</code> <code>DataBunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
+<h2 id="<code>class</code> <code>DataBunch</code>" class="doc_header"><code>class</code> <code>DataBunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
 </blockquote>
 <p>Basic wrapper around several <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a>s.</p>
 
@@ -2120,7 +1704,7 @@ Wall time: 1.05 s
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>DataBunch.__getitem__</code>" class="doc_header"><code>DataBunch.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataBunch.__getitem__</code>(<strong><code>i</code></strong>)</p>
+<h4 id="<code>DataBunch.__getitem__</code>" class="doc_header"><code>DataBunch.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataBunch.__getitem__</code>(<strong><code>i</code></strong>)</p>
 </blockquote>
 <p>Retrieve <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a> at <code>i</code> (<code>0</code> is training, <code>1</code> is validation)</p>
 

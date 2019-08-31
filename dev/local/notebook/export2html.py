@@ -304,7 +304,7 @@ def convert_all(path='.', dest_path='docs', force_all=False):
         print(f"converting: {fname} => {fname_out}")
         changed_cnt += 1
         try: convert_nb(fname, dest_path=dest_path)
-        except: print("Failed")
+        except Exception as e: print(e)
     if changed_cnt==0: print("No notebooks were modified")
 
 def convert_post(fname, dest_path='posts'):

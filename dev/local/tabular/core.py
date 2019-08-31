@@ -47,7 +47,8 @@ _add_prop(Tabular, 'all_col')
 class TabularProc(Transform):
     "Base class to write a tabular processor for dataframes"
     process = NotImplemented
-    def __call__(self, to, **kwargs):
+    def __init__(self): super().__init__()
+    def encodes(self, to, **kwargs):
         self.process(to)
         return to
 
@@ -83,7 +84,7 @@ class Normalize(TabularProc):
         return to
 
 class FillStrategy:
-    "Namespace containing the various filling strategies"
+    "Namespace containing the various filling strategies."
     def median  (c,fill): return c.median()
     def constant(c,fill): return fill
     def mode    (c,fill): return c.dropna().value_counts().idxmax()
@@ -97,7 +98,7 @@ class FillMissing(TabularProc):
     def setup(self, to):
         df = to.loc[ifnone(to.splits[0],slice(None)), to.cont_names]
         self.na_dict = {n:self.fill_strategy(df[n], self.fill_vals[n])
-                        for n,b in pd.isnull(to.conts).any().items() if b}
+                        for n in pd.isnull(to.conts).any().keys()}
 
     def process(self, to):
         missing = pd.isnull(to.conts)

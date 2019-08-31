@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from local.notebook.export2html import convert_all
-from fastai.script import *
+from local.script import *
 import yaml, os, sys
 from pathlib import Path
 
@@ -40,7 +40,7 @@ def _make_sidebar():
 
 @call_parse
 def main(
-    force_all:Param("A notebook name to convert", bool)=False
+    force_all:Param("Rebuild even notebooks that haven't changed", bool)=False
 ):
     convert_all(force_all=force_all)
     _make_sidebar()

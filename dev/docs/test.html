@@ -63,7 +63,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test_fail</code>" class="doc_header"><code>test_fail</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_fail</code>(<strong><code>f</code></strong>, <strong><code>msg</code></strong>=<em><code>''</code></em>, <strong><code>contains</code></strong>=<em><code>''</code></em>)</p>
+<h4 id="<code>test_fail</code>" class="doc_header"><code>test_fail</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#Simple-test-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_fail</code>(<strong><code>f</code></strong>, <strong><code>msg</code></strong>=<em><code>''</code></em>, <strong><code>contains</code></strong>=<em><code>''</code></em>)</p>
 </blockquote>
 <p>Fails with <code>msg</code> unless <code>f()</code> raises an exception and (optionally) has <code>contains</code> in <code>e.args</code></p>
 
@@ -104,7 +104,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test</code>" class="doc_header"><code>test</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>cmp</code></strong>, <strong><code>cname</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>test</code>" class="doc_header"><code>test</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#Simple-test-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>cmp</code></strong>, <strong><code>cname</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p><code>assert</code> that <code>cmp(a,b)</code>; display inputs and <code>cname or cmp.__name__</code> if it fails</p>
 
@@ -141,7 +141,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>all_equal</code>" class="doc_header"><code>all_equal</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/local/imports.py#L49" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>all_equal</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="<code>all_equal</code>" class="doc_header"><code>all_equal</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/local/imports.py#L52" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>all_equal</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p>Compares whether <code>a</code> and <code>b</code> are the same length and have the same contents</p>
 
@@ -175,7 +175,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>equals</code>" class="doc_header"><code>equals</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/local/imports.py#L54" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>equals</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="<code>equals</code>" class="doc_header"><code>equals</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/local/imports.py#L57" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>equals</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p>Compares <code>a</code> and <code>b</code> for equality; supports sublists, tensors and arrays too</p>
 
@@ -212,7 +212,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>nequals</code>" class="doc_header"><code>nequals</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nequals</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="<code>nequals</code>" class="doc_header"><code>nequals</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#Simple-test-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nequals</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p>Compares <code>a</code> and <code>b</code> for <code>not equals</code></p>
 
@@ -262,7 +262,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test_eq</code>" class="doc_header"><code>test_eq</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_eq</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="<code>test_eq</code>" class="doc_header"><code>test_eq</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_eq</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p><a href="/test.html"><code>test</code></a> that <code>a==b</code></p>
 
@@ -327,7 +327,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test_eq_type</code>" class="doc_header"><code>test_eq_type</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_eq_type</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="<code>test_eq_type</code>" class="doc_header"><code>test_eq_type</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_eq_type</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p><a href="/test.html"><code>test</code></a> that <code>a==b</code> and are same type</p>
 
@@ -368,7 +368,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test_ne</code>" class="doc_header"><code>test_ne</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_ne</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="<code>test_ne</code>" class="doc_header"><code>test_ne</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_ne</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p><a href="/test.html"><code>test</code></a> that <code>a!=b</code></p>
 
@@ -411,7 +411,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>is_close</code>" class="doc_header"><code>is_close</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_close</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>eps</code></strong>=<em><code>1e-05</code></em>)</p>
+<h4 id="<code>is_close</code>" class="doc_header"><code>is_close</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_close</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>eps</code></strong>=<em><code>1e-05</code></em>)</p>
 </blockquote>
 <p>Is <code>a</code> within <code>eps</code> of <code>b</code></p>
 
@@ -435,7 +435,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test_close</code>" class="doc_header"><code>test_close</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_close</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>eps</code></strong>=<em><code>1e-05</code></em>)</p>
+<h4 id="<code>test_close</code>" class="doc_header"><code>test_close</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_close</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>eps</code></strong>=<em><code>1e-05</code></em>)</p>
 </blockquote>
 <p><a href="/test.html"><code>test</code></a> that <code>a</code> is within <code>eps</code> of <code>b</code></p>
 
@@ -476,7 +476,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test_is</code>" class="doc_header"><code>test_is</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_is</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="<code>test_is</code>" class="doc_header"><code>test_is</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_is</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p><a href="/test.html"><code>test</code></a> that <code>a is b</code></p>
 
@@ -515,7 +515,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test_shuffled</code>" class="doc_header"><code>test_shuffled</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_shuffled</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="<code>test_shuffled</code>" class="doc_header"><code>test_shuffled</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_shuffled</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p><a href="/test.html"><code>test</code></a> that <code>a</code> and <code>b</code> are shuffled versions of the same set of items</p>
 
@@ -556,7 +556,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test_stdout</code>" class="doc_header"><code>test_stdout</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_stdout</code>(<strong><code>f</code></strong>, <strong><code>exp</code></strong>, <strong><code>regex</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="<code>test_stdout</code>" class="doc_header"><code>test_stdout</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_stdout</code>(<strong><code>f</code></strong>, <strong><code>exp</code></strong>, <strong><code>regex</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Test that <code>f</code> prints <code>exp</code> to stdout, optionally checking as <code>regex</code></p>
 
@@ -631,7 +631,7 @@ summary: "Helper functions to quickly write tests in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>test_fig_exists</code>" class="doc_header"><code>test_fig_exists</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_fig_exists</code>(<strong><code>ax</code></strong>)</p>
+<h4 id="<code>test_fig_exists</code>" class="doc_header"><code>test_fig_exists</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/00_test.ipynb#test_eq-test_ne,-etc..." class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_fig_exists</code>(<strong><code>ax</code></strong>)</p>
 </blockquote>
 
 </div>

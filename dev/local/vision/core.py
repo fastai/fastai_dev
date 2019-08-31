@@ -2,7 +2,7 @@
 
 __all__ = ['Image', 'n_px', 'shape', 'aspect', 'load_image', 'PILBase', 'PILImage', 'PILImageBW', 'PILMask',
            'TensorPoint', 'get_annotations', 'BBox', 'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes',
-           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad']
+           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad', 'bb_pad']
 
 from ..imports import *
 from ..test import *
@@ -48,6 +48,7 @@ def load_image(fn, mode=None, **kwargs):
     return im.convert(mode) if mode else im
 
 class PILBase(Image.Image, metaclass=BypassNewMeta):
+    default_dl_tfms = ByteToFloatTensor
     _show_args = {'cmap':'viridis'}
     _open_args = {'mode': 'RGB'}
     @classmethod
@@ -154,6 +155,8 @@ class PointScaler(ItemTransform):
     def encodes(self, o): return (o[0],TensorPoint(_scale_pnts(*o, self.do_scale, self.y_first)))
     def decodes(self, o): return (o[0],TensorPoint(_unscale_pnts(*o)))
 
+TensorPoint.default_ds_tfms = PointScaler
+
 class BBoxScaler(PointScaler):
     "Scale a tensor representing bounding boxes"
     def encodes(self, o):
@@ -185,14 +188,17 @@ class BBoxCategorize(Transform):
     def decodes(self, o:TensorBBox)->BBox:
         return BBox((o.bbox,[self.vocab[i_] for i_ in o.lbl]))
 
-#Comes from 50_data_block.ipynb.
-PILBase.default_dl_tfms = ByteToFloatTensor
-
-#Comes from 50_data_block.ipynb.
-TensorPoint.default_ds_tfms = PointScaler
-
-#Comes from 50_data_block.ipynb.
 BBox.default_type_tfms,BBox.default_ds_tfms = BBoxCategorize,BBoxScaler
+
+#TODO tests
+def bb_pad(samples, pad_idx=0):
+    "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
+    max_len = max([len(s[1][1]) for s in samples])
+    def _f(img,bbox,lbl):
+        bbox = torch.cat([bbox,bbox.new_zeros(max_len-bbox.shape[0], 4)])
+        lbl  = torch.cat([lbl, lbl .new_zeros(max_len-lbl .shape[0])+pad_idx])
+        return img,TensorBBox((bbox,lbl))
+    return [_f(x,*y) for x,y in samples]
 
 #Comes from 50_data_block.ipynb.
 def bb_pad(samples, pad_idx=0):

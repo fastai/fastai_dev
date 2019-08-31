@@ -33,8 +33,7 @@ summary: "summary"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">twoepochs</span><span class="p">(</span><span class="n">d</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">d</span><span class="p">)</span>
-<span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">letters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span>
 </pre></div>
 
@@ -57,6 +56,9 @@ summary: "summary"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -64,7 +66,91 @@ summary: "summary"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>DataLoader</code>" class="doc_header"><code>class</code> <code>DataLoader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01a_dataloader.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataLoader</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong><code>bs</code></strong>=<em><code>None</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>collate_fn</code></strong>=<em><code>None</code></em>, <strong><code>batches</code></strong>=<em><code>None</code></em>, <strong><code>reset</code></strong>=<em><code>None</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>item</code></strong>=<em><code>None</code></em>, <strong><code>batch_tfm</code></strong>=<em><code>None</code></em>, <strong><code>item_tfm</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>fa_collate</code>" class="doc_header"><code>fa_collate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01a_dataloader.ipynb#DataLoader" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_collate</code>(<strong><code>t</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#e.g. x is int, y is tuple</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)),(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))]</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">default_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">2</span><span class="p">,(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))),(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">2</span><span class="p">,(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)))]</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">default_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>fa_convert</code>" class="doc_header"><code>fa_convert</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01a_dataloader.ipynb#DataLoader" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_convert</code>(<strong><code>t</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t0</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">[</span><span class="n">t0</span><span class="p">,(</span><span class="n">t0</span><span class="p">,</span><span class="n">t0</span><span class="p">)]</span>
+
+<span class="n">test_eq</span><span class="p">(</span><span class="n">fa_convert</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">default_convert</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_convert</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="<code>class</code> <code>DataLoader</code>" class="doc_header"><code>class</code> <code>DataLoader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01a_dataloader.ipynb#DataLoader" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataLoader</code>(<strong><code>dataset</code></strong>=<em><code>None</code></em>, <strong><code>bs</code></strong>=<em><code>None</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -88,7 +174,7 @@ summary: "summary"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">LettersDL</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">batches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idxs</span><span class="p">):</span> <span class="k">return</span> <span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">create_batches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samps</span><span class="p">):</span> <span class="k">return</span> <span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
 
 <span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">LettersDL</span><span class="p">()),</span> <span class="s1">&#39;abcd,efgh,ijkl,mnop,qrst,uvwx,yz&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
 </pre></div>
@@ -100,7 +186,7 @@ summary: "summary"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Use <code>idxs</code> to get indexes of samples of this batch, if needed.</p>
+<p><code>samps</code> contains indexes of samples, if needed. If you didn't pass a <code>dataset</code>  then it is just a list of <code>None</code>s of appropriate length.</p>
 
 </div>
 </div>
@@ -111,7 +197,7 @@ summary: "summary"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">RandDL</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">batches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idxs</span><span class="p">):</span> <span class="k">return</span> <span class="n">gen</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(),</span> <span class="n">idxs</span><span class="p">,</span> <span class="n">lt</span><span class="p">(</span><span class="mf">0.95</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">create_batches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samps</span><span class="p">):</span> <span class="k">return</span> <span class="n">gen</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(),</span> <span class="n">samps</span><span class="p">,</span> <span class="n">lt</span><span class="p">(</span><span class="mf">0.95</span><span class="p">))</span>
 
 <span class="n">L</span><span class="p">(</span><span class="n">RandDL</span><span class="p">())</span>
 </pre></div>
@@ -128,7 +214,7 @@ summary: "summary"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#5) [0.012900173870534992,0.7641857959951943,0.24835812181866102,0.8851575124172167,0.2852152957608809]</pre>
+<pre>(#10) [0.5811262718616304,0.22946507920712,0.19386203909615007,0.7211348408285316,0.659393233909156,0.40285246563123134,0.36845442233068093,0.9297670013474593,0.6956903617524153,0.7157582532623401]</pre>
 </div>
 
 </div>
@@ -149,8 +235,8 @@ summary: "summary"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_batches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idxs</span><span class="p">):</span> <span class="k">return</span> <span class="n">gen</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(),</span> <span class="n">idxs</span><span class="p">,</span> <span class="n">lt</span><span class="p">(</span><span class="mf">0.95</span><span class="p">))</span>
-<span class="n">L</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">batches</span><span class="o">=</span><span class="n">_batches</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_batches</span><span class="p">(</span><span class="n">samps</span><span class="p">):</span> <span class="k">return</span> <span class="n">gen</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(),</span> <span class="n">samps</span><span class="p">,</span> <span class="n">lt</span><span class="p">(</span><span class="mf">0.95</span><span class="p">))</span>
+<span class="n">L</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">create_batches</span><span class="o">=</span><span class="n">_batches</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -165,7 +251,7 @@ summary: "summary"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#4) [0.05048193143968538,0.18635228742384258,0.20498027275679098,0.22106993695692057]</pre>
+<pre>(#0) []</pre>
 </div>
 
 </div>
@@ -176,7 +262,7 @@ summary: "summary"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Override <code>batch</code> and use the default infinite sampler to get a stream of unknown length (<code>raise StopIteration</code> when you want to stop the stream).</p>
+<p>Override <code>item</code> and use the default infinite sampler to get a stream of unknown length (<code>stop()</code> when you want to stop the stream).</p>
 
 </div>
 </div>
@@ -187,7 +273,7 @@ summary: "summary"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">RandDL</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">r</span> <span class="k">if</span> <span class="n">r</span><span class="o">&lt;</span><span class="mf">0.95</span> <span class="k">else</span> <span class="n">stop</span><span class="p">()</span>
 
@@ -206,7 +292,65 @@ summary: "summary"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#2) [0.2523020276105191,0.3275924132530966]</pre>
+<pre>(#21) [0.9082596655410176,0.5915065872954605,0.508266425309501,0.9249272112025835,0.1986144679886922,0.19191918998584545,0.6774651630309424,0.8465852065361831,0.34332630034355627,0.42369631618794357...]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span><span class="p">(</span><span class="n">RandDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#3) [4,4,4]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span><span class="p">(</span><span class="n">RandDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#15) [4,4,4,4,4,4,4,4,4,4...]</pre>
 </div>
 
 </div>
@@ -217,7 +361,7 @@ summary: "summary"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>items</code> is assumed to have a <code>__next__</code> that returns a batch.</p>
+<p>If you don't set <code>bs</code>, then <code>dataset</code> is assumed to provide an iterator or a <code>__getitem__</code> that returns a batch.</p>
 
 </div>
 </div>
@@ -228,13 +372,13 @@ summary: "summary"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">letters</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">ds1</span><span class="p">,</span> <span class="n">letters</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="n">letters</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="mi">26</span><span class="p">)</span>
 
 <span class="n">test_shuffled</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span> <span class="n">letters</span><span class="p">)</span>
 
 <span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span> <span class="n">indexed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">ds1</span><span class="p">,</span> <span class="n">letters</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="n">letters</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="mi">26</span><span class="p">)</span>
 
 <span class="n">t2</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]))</span>
@@ -245,8 +389,29 @@ summary: "summary"
 <span class="n">ds3</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">t3</span><span class="p">)</span>
 <span class="n">test_eq_type</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">ds3</span><span class="p">),</span> <span class="n">t2</span><span class="p">)</span>
 
-<span class="n">ds4</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">noops</span><span class="p">)</span>
+<span class="n">ds4</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="n">create_batch</span><span class="o">=</span><span class="n">noops</span><span class="p">,</span> <span class="n">after_iter</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">setattr</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="n">test_eq_type</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">ds4</span><span class="p">),</span> <span class="n">t3</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t3</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you do set <code>bs</code>, then <code>dataset</code> is assumed to provide an iterator or a <code>__getitem__</code> that returns a single item of a batch.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">twoepochs</span><span class="p">(</span><span class="n">d</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">d</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -259,84 +424,24 @@ summary: "summary"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">twoepochs</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="s1">&#39;abcd efgh ijkl mnop qrst uvwx abcd efgh ijkl mnop qrst uvwx&#39;</span><span class="p">)</span>
 
-<span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">twoepochs</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="s1">&#39;abcd efgh ijkl mnop qrst uvwx yz abcd efgh ijkl mnop qrst uvwx yz&#39;</span><span class="p">)</span>
+
+<span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">test_eq_type</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="n">L</span><span class="p">(</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="n">tensor</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]),</span><span class="n">tensor</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">])))</span>
 
-<span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)],</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)],</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">after_iter</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">setattr</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="n">test_eq_type</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="n">L</span><span class="p">([</span><span class="s1">&#39;0&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">],[</span><span class="s1">&#39;4&#39;</span><span class="p">,</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="s1">&#39;6&#39;</span><span class="p">,</span><span class="s1">&#39;7&#39;</span><span class="p">],[</span><span class="s1">&#39;8&#39;</span><span class="p">,</span><span class="s1">&#39;9&#39;</span><span class="p">,</span><span class="s1">&#39;10&#39;</span><span class="p">]))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t3</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-<span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">noop</span><span class="p">,</span><span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">noop</span><span class="p">,</span><span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">test_eq_type</span><span class="p">([</span><span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span> <span class="p">[</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="n">tensor</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]),</span><span class="n">tensor</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">])])</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">RandBatchDL</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">r</span><span class="o">&gt;</span><span class="mf">0.9</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">StopIteration</span>
-        <span class="k">return</span> <span class="n">r</span>
-
-<span class="n">L</span><span class="p">(</span><span class="n">RandBatchDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(#7) [4,4,4,4,4,4,2]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span><span class="p">(</span><span class="n">RandBatchDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(#1) [4]</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -369,12 +474,12 @@ summary: "summary"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 2.8 ms, sys: 1.8 ms, total: 4.6 ms
-Wall time: 291 ms
-CPU times: user 6.17 ms, sys: 15.5 ms, total: 21.6 ms
-Wall time: 164 ms
-CPU times: user 15.3 ms, sys: 20 ms, total: 35.3 ms
-Wall time: 107 ms
+<pre>CPU times: user 0 ns, sys: 3.69 ms, total: 3.69 ms
+Wall time: 230 ms
+CPU times: user 8.01 ms, sys: 12 ms, total: 20.1 ms
+Wall time: 150 ms
+CPU times: user 16.4 ms, sys: 17.2 ms, total: 33.6 ms
+Wall time: 128 ms
 </pre>
 </div>
 </div>
@@ -398,10 +503,10 @@ Wall time: 107 ms
             <span class="k">except</span> <span class="n">queues</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span> <span class="k">return</span>
 
 <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span> <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span> <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
 <span class="n">it</span> <span class="o">=</span> <span class="n">SleepyQueue</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 
-<span class="o">%</span><span class="k">time</span> L(DataLoader(it, num_workers=4))
+<span class="o">%</span><span class="k">time</span> test_shuffled(L(DataLoader(it, num_workers=4)), range(30))
 </pre></div>
 
     </div>
@@ -414,20 +519,10 @@ Wall time: 107 ms
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 11.3 ms, sys: 16.8 ms, total: 28.1 ms
-Wall time: 52 ms
+<pre>CPU times: user 4.01 ms, sys: 28.2 ms, total: 32.2 ms
+Wall time: 88 ms
 </pre>
 </div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(#10) [0,2,1,3,4,7,5,6,8,9]</pre>
-</div>
-
 </div>
 
 </div>
