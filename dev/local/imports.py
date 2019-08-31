@@ -34,6 +34,13 @@ from torch.utils.data._utils.collate import default_collate,default_convert
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace
 
+try:
+    from types import WrapperDescriptorType,MethodWrapperType,MethodDescriptorType
+except ImportError:
+    WrapperDescriptorType = type(object.__init__)
+    MethodWrapperType = type(object().__str__)
+    MethodDescriptorType = type(str.join)
+
 pd.options.display.max_colwidth = 600
 NoneType = type(None)
 
