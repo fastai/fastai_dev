@@ -620,9 +620,10 @@ def ls(self:Path, file_type=None, file_exts=None):
 
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"
-    if is_listy(x): return type(x)(apply(func, o, *args, **kwargs) for o in x)
+    if is_listy(x): return type(x)([apply(func, o, *args, **kwargs) for o in x])
     if isinstance(x,dict):  return {k: apply(func, v, *args, **kwargs) for k,v in x.items()}
-    return retain_type(func(x, *args, **kwargs), x)
+    res = func(x, *args, **kwargs)
+    return res if x is None else retain_type(res, x)
 
 def to_detach(b, cpu=True):
     "Recursively detach lists of tensors in `b `; put them on the CPU if `cpu=True`."
