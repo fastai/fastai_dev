@@ -169,7 +169,7 @@ def _get_config():
     config_path = Path(os.getenv('FASTAI_HOME', '~/.fastai')).expanduser()
     config_file = config_path/'config.yml'
     if not config_file.exists():
-        Config.create()
+        Config.create(config_file)
     with open(config_file, 'r') as yaml_file:
             config = yaml.safe_load(yaml_file)
             if 'version' in config and config['version'] == 1: return config
