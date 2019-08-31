@@ -110,7 +110,11 @@ class _TfmDict(dict):
         res.add(v)
 
 class _TfmMeta(type):
-    #TODO: avoid overriding signature
+    def __new__(cls, name, bases, dict):
+        res = super().__new__(cls, name, bases, dict)
+        res.__signature__ = inspect.signature(res.__init__)
+        return res
+
     def __call__(cls, *args, **kwargs):
         f = args[0] if args else None
         n = getattr(f,'__name__',None)
@@ -155,8 +159,7 @@ class Transform(metaclass=_TfmMeta):
     def _do_call(self, f, x, **kwargs):
         return x if f is None else retain_type(f(x, **kwargs), x, f.returns(x))
 
-add_docs(Transform,
-         decode="Delegate to `decodes` to undo transform")
+add_docs(Transform, decode="Delegate to `decodes` to undo transform")
 
 class TupleTransform(Transform):
     "`Transform` that always treats `as_item` as `False`"

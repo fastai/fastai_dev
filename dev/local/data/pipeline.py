@@ -60,7 +60,7 @@ def mk_transform(f, as_item=True):
     "Convert function `f` to `Transform` if it isn't already one"
     return f if isinstance(f,Transform) else Transform(f, as_item=as_item)
 
-class Pipeline():
+class Pipeline(GetAttr):
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None, as_item=True, filt=None):
         if not funcs: funcs=[noop]
@@ -74,11 +74,13 @@ class Pipeline():
         for f in self.fs: f.as_item = as_item
 
     def setup(self, items=None):
+        self.default = self.items = items
         tfms,self.fs = self.fs,[]
         for t in tfms: self.add(t,items)
 
     def add(self,t, items=None):
         getattr(t, 'setup', noop)(items)
+        getattr(t, 'process', noop)(items)
         self.fs.append(t)
 
     def __call__(self, o): return compose_tfms(o, tfms=self.fs, filt=self.filt)
@@ -100,6 +102,7 @@ class Pipeline():
         if not all(hasattr(o_, 'show') for o_ in o1): return
         for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
         return 1 if ctx is None else ctx
+
 
 class TfmdBase(L):
     "Base class for transformed lists"

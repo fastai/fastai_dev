@@ -6,12 +6,12 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'mk_class', 'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'retain_type', 'retain_types', 'tuplify',
            'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
-           'stop', 'gen', 'chunked', 'concat', 'Chunks', 'trace', 'compose', 'maps', 'mapper', 'partialler',
-           'instantiate', 'bind', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu',
-           'item_find', 'find_device', 'find_bs', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props',
-           'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot',
-           'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString',
-           'flatten_check', 'display_df', 'one_param']
+           'stop', 'gen', 'chunked', 'concat', 'Chunks', 'trace', 'compose', 'maps', 'partialler', 'instantiate',
+           'bind', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find',
+           'find_device', 'find_bs', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image',
+           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint',
+           'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df',
+           'one_param']
 
 from .test import *
 from .imports import *
@@ -585,10 +585,6 @@ def maps(*args, retain=noop):
     def _f(b): return retain(f(b), b)
     return map(_f, args[-1])
 
-def mapper(f):
-    "Create a function that maps `f` over an input collection"
-    return lambda o: [f(o_) for o_ in o]
-
 def partialler(f, *args, order=None, **kwargs):
     "Like `functools.partial` but also copies over docstring"
     fnew = partial(f,*args,**kwargs)
@@ -619,7 +615,7 @@ class bind:
 def ls(self:Path, file_type=None, file_exts=None):
     "Contents of path as a list"
     extns=L(file_exts)
-    if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type))
+    if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
     return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
 
 def apply(func, x, *args, **kwargs):
