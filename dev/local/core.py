@@ -512,6 +512,7 @@ def chunked(it, cs, drop_last=False):
 def retain_type(new, old=None, typ=None):
     "Cast `new` to type of `old` if it's a superclass"
     # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
+    if new is None: return new
     assert old is not None or typ is not None
     if typ is None:
         if not isinstance(old, type(new)): return new

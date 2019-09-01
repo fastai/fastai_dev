@@ -6,14 +6,12 @@ from ..imports import *
 from ..test import *
 from ..core import *
 from ..layers import *
-from ..data.pipeline import *
-from ..data.source import *
-from ..data.core import *
-from ..data.external import *
+from ..data.all import *
 from ..notebook.showdoc import show_doc
 from ..optimizer import *
 from ..learner import *
 from .progress import *
+from ..vision.core import *
 
 def reduce_loss(loss, reduction='mean'):
     return loss.mean() if reduction=='mean' else loss.sum() if reduction=='sum' else loss
