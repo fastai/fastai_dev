@@ -1,8 +1,11 @@
+*.tgz
+.last_checked
 *.bak
 *.log
 *~
 .pypirc
 ~*
+_tmp*
 tmp*
 tags
 

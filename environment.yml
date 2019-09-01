@@ -1,0 +1,21 @@
+name: fastai_dev
+channels:
+- fastai
+- pytorch
+- defaults
+dependencies:
+- jupyter
+- pytorch>=1.2.0
+- torchvision
+- matplotlib
+- pandas
+- requests
+- pyyaml
+- fastprogress
+- pillow
+- python>=3.6
+- pip
+- scipy
+- pip:
+  - typeguard
+  - jupyter_nbextensions_configurator
