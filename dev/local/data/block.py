@@ -36,10 +36,11 @@ class DataBlock():
     def datasource(self, source, type_tfms=None):
         self.source = source
         items = (self.get_items or noop)(source)
-        if isinstance(items,tuple): items = L(items).zipped()
-        elif not self.get_x: self.get_x = noop
+        if isinstance(items,tuple):
+            items = L(items).zipped()
+            labellers = [itemgetter(i) for i in range_of(self.default_type_tfms)]
+        else: labellers = [noop] * len(self.default_type_tfms)
         splits = (self.splitter or noop)(items)
-        labellers = [itemgetter(i) for i in range_of(self.default_type_tfms)]
         if self.get_x: labellers[0] = self.get_x
         if self.get_y: labellers[1] = self.get_y
         if type_tfms is None: type_tfms = [L() for t in self.default_type_tfms]
