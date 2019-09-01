@@ -114,7 +114,7 @@ class URLs():
 
 def _get_config():
     config_path = Path(os.getenv('FASTAI_HOME', '~/.fastai')).expanduser()
-    if not config_path.exists(): os.mkdir(config_path)
+    config_path.mkdir(parents=True, exist_ok=True)
     config_file = config_path/'config.yml'
     if config_file.exists():
         with open(config_file, 'r') as yaml_file:
