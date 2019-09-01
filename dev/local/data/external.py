@@ -126,7 +126,7 @@ def _get_config():
               'archive_path': str(config_path/'archive'),
               'model_path':   str(config_path/'models'),
               'version':      1}
-    with open(config_file, 'w+') as yaml_file:
+    with open(config_file, 'w') as yaml_file:
         yaml.dump(config, yaml_file, default_flow_style=False)
     return config
 
