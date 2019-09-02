@@ -16,6 +16,7 @@ dependencies:
 - python>=3.6
 - pip
 - scipy
+- spacy
 - pip:
   - typeguard
   - jupyter_nbextensions_configurator
