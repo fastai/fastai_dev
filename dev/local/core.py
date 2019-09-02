@@ -220,7 +220,7 @@ def _listify(o):
     if is_iter(o): return list(o)
     return [o]
 
-class CollBase(GetAttr, metaclass=NewChkMeta):
+class CollBase:
     "Base class for composing a list of `items`"
     _xtra =  [o for o in dir([]) if not o.startswith('_')]
 
@@ -232,10 +232,8 @@ class CollBase(GetAttr, metaclass=NewChkMeta):
     def __repr__(self): return self.items.__repr__()
     def __iter__(self): return self.items.__iter__()
     def _new(self, items, *args, **kwargs): return self.__class__(items, *args, **kwargs)
-    @property
-    def default(self): return self.items
 
-class L(CollBase):
+class L(CollBase, GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
@@ -264,6 +262,8 @@ class L(CollBase):
     def __repr__(self): return coll_repr(self)
     def __eq__(self,b): return all_equal(b,self)
     def __iter__(self): return (self[i] for i in range(len(self)))
+    @property
+    def default(self): return self.items
 
     def __invert__(self): return self._new(not i for i in self)
     def __mul__ (a,b): return a._new(a.items*b)

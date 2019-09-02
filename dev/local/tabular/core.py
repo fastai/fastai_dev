@@ -52,20 +52,20 @@ class TabularProc(Transform):
         self.process(to)
         return to
 
-class Categorify(TabularProc):
+class Categorify(TabularProc, CollBase, metaclass=_TfmMeta):
     "Transform the categorical variables to that type."
     order = 1
     def setup(self, to):
-        self.categories = {}
+        self.items = {}
         for n in to.all_cat_names:
             col = to.loc[ifnone(to.splits[0], slice(None)),n]
-            self.categories[n] = pd.Categorical(col, ordered=True).categories
+            self[n] = L(col).unique()
 
     def process(self, to):
-        to.transform(to.all_cat_names, lambda c: pd.Categorical(c, categories=self.categories[c.name], ordered=True))
+        to.transform(to.all_cat_names, lambda c: pd.Categorical(c, categories=self[c.name], ordered=True))
 
     def decodes(self, to):
-        cats = [self.categories[c][v-1] if v > 0 else '#na' for v,c in zip(to.items[0], to.cat_names)]
+        cats = [self[c][v-1] if v > 0 else '#na' for v,c in zip(to.items[0], to.cat_names)]
         to.items = (cats, to.items[1])
         return to
 
