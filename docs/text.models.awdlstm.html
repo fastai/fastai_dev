@@ -4,7 +4,7 @@ title: AWD-LSTM
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
+summary: "AWD LSTM from [Smerity et al.](https://arxiv.org/pdf/1708.02182.pdf) "
 ---
 <!--
 
@@ -50,7 +50,7 @@ summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>dropout_mask</code>" class="doc_header"><code>dropout_mask</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dropout_mask</code>(<strong><code>x</code></strong>, <strong><code>sz</code></strong>, <strong><code>p</code></strong>)</p>
+<h4 id="<code>dropout_mask</code>" class="doc_header"><code>dropout_mask</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb#Basic-NLP-modules" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dropout_mask</code>(<strong><code>x</code></strong>, <strong><code>sz</code></strong>, <strong><code>p</code></strong>)</p>
 </blockquote>
 <p>Return a dropout mask of the same type as <code>x</code>, size <code>sz</code>, with probability <code>p</code> to cancel an element.</p>
 
@@ -89,7 +89,7 @@ summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>RNNDropout</code>" class="doc_header"><code>class</code> <code>RNNDropout</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>RNNDropout</code>(<strong><code>p</code></strong>=<em><code>0.5</code></em>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
+<h3 id="<code>class</code> <code>RNNDropout</code>" class="doc_header"><code>class</code> <code>RNNDropout</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb#Basic-NLP-modules" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>RNNDropout</code>(<strong><code>p</code></strong>=<em><code>0.5</code></em>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
 </blockquote>
 <p>Dropout with probability <code>p</code> that is consistent on the seq_len dimension.</p>
 
@@ -135,7 +135,7 @@ summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>WeightDropout</code>" class="doc_header"><code>class</code> <code>WeightDropout</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>WeightDropout</code>(<strong><code>module</code></strong>, <strong><code>weight_p</code></strong>, <strong><code>layer_names</code></strong>=<em><code>'weight_hh_l0'</code></em>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
+<h3 id="<code>class</code> <code>WeightDropout</code>" class="doc_header"><code>class</code> <code>WeightDropout</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb#Basic-NLP-modules" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>WeightDropout</code>(<strong><code>module</code></strong>, <strong><code>weight_p</code></strong>, <strong><code>layer_names</code></strong>=<em><code>'weight_hh_l0'</code></em>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
 </blockquote>
 <p>A module that warps another layer in which some weights will be replaced by 0 during training.</p>
 
@@ -180,7 +180,7 @@ summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>EmbeddingDropout</code>" class="doc_header"><code>class</code> <code>EmbeddingDropout</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>EmbeddingDropout</code>(<strong><code>emb</code></strong>, <strong><code>embed_p</code></strong>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
+<h3 id="<code>class</code> <code>EmbeddingDropout</code>" class="doc_header"><code>class</code> <code>EmbeddingDropout</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb#Basic-NLP-modules" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>EmbeddingDropout</code>(<strong><code>emb</code></strong>, <strong><code>embed_p</code></strong>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
 </blockquote>
 <p>Apply dropout with probabily <code>embed_p</code> to an embedding layer <code>emb</code>.</p>
 
@@ -222,7 +222,7 @@ summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>one_param</code>" class="doc_header"><code>one_param</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_param</code>(<strong><code>m</code></strong>)</p>
+<h4 id="<code>one_param</code>" class="doc_header"><code>one_param</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb#Basic-NLP-modules" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_param</code>(<strong><code>m</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -245,7 +245,7 @@ summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>AWD_LSTM</code>" class="doc_header"><code>class</code> <code>AWD_LSTM</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AWD_LSTM</code>(<strong><code>vocab_sz</code></strong>, <strong><code>emb_sz</code></strong>, <strong><code>n_hid</code></strong>, <strong><code>n_layers</code></strong>, <strong><code>pad_token</code></strong>=<em><code>1</code></em>, <strong><code>hidden_p</code></strong>=<em><code>0.2</code></em>, <strong><code>input_p</code></strong>=<em><code>0.6</code></em>, <strong><code>embed_p</code></strong>=<em><code>0.1</code></em>, <strong><code>weight_p</code></strong>=<em><code>0.5</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
+<h3 id="<code>class</code> <code>AWD_LSTM</code>" class="doc_header"><code>class</code> <code>AWD_LSTM</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb#Basic-NLP-modules" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AWD_LSTM</code>(<strong><code>vocab_sz</code></strong>, <strong><code>emb_sz</code></strong>, <strong><code>n_hid</code></strong>, <strong><code>n_layers</code></strong>, <strong><code>pad_token</code></strong>=<em><code>1</code></em>, <strong><code>hidden_p</code></strong>=<em><code>0.2</code></em>, <strong><code>input_p</code></strong>=<em><code>0.6</code></em>, <strong><code>embed_p</code></strong>=<em><code>0.1</code></em>, <strong><code>weight_p</code></strong>=<em><code>0.5</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
 </blockquote>
 <p>AWD-LSTM inspired by <a href="https://arxiv.org/abs/1708.02182">https://arxiv.org/abs/1708.02182</a></p>
 
@@ -306,7 +306,7 @@ summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>awd_lstm_lm_split</code>" class="doc_header"><code>awd_lstm_lm_split</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>awd_lstm_lm_split</code>(<strong><code>model</code></strong>)</p>
+<h4 id="<code>awd_lstm_lm_split</code>" class="doc_header"><code>awd_lstm_lm_split</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb#Basic-NLP-modules" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>awd_lstm_lm_split</code>(<strong><code>model</code></strong>)</p>
 </blockquote>
 <p>Split a RNN <code>model</code> in groups for differential learning rates.</p>
 
@@ -333,7 +333,7 @@ summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>awd_lstm_clas_split</code>" class="doc_header"><code>awd_lstm_clas_split</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>awd_lstm_clas_split</code>(<strong><code>model</code></strong>)</p>
+<h4 id="<code>awd_lstm_clas_split</code>" class="doc_header"><code>awd_lstm_clas_split</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb#Basic-NLP-modules" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>awd_lstm_clas_split</code>(<strong><code>model</code></strong>)</p>
 </blockquote>
 <p>Split a RNN <code>model</code> in groups for differential learning rates.</p>
 
@@ -366,7 +366,7 @@ summary: "AWD LSTM from [Smerity et al.](https: m.groups()[1]"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>AWD_QRNN</code>" class="doc_header"><code>class</code> <code>AWD_QRNN</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AWD_QRNN</code>(<strong><code>vocab_sz</code></strong>, <strong><code>emb_sz</code></strong>, <strong><code>n_hid</code></strong>, <strong><code>n_layers</code></strong>, <strong><code>pad_token</code></strong>=<em><code>1</code></em>, <strong><code>hidden_p</code></strong>=<em><code>0.2</code></em>, <strong><code>input_p</code></strong>=<em><code>0.6</code></em>, <strong><code>embed_p</code></strong>=<em><code>0.1</code></em>, <strong><code>weight_p</code></strong>=<em><code>0.5</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>) :: <a href="/text.models.awdlstm.html#AWD_LSTM"><code>AWD_LSTM</code></a></p>
+<h3 id="<code>class</code> <code>AWD_QRNN</code>" class="doc_header"><code>class</code> <code>AWD_QRNN</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/32_text_models_awdlstm.ipynb#QRNN" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AWD_QRNN</code>(<strong><code>vocab_sz</code></strong>, <strong><code>emb_sz</code></strong>, <strong><code>n_hid</code></strong>, <strong><code>n_layers</code></strong>, <strong><code>pad_token</code></strong>=<em><code>1</code></em>, <strong><code>hidden_p</code></strong>=<em><code>0.2</code></em>, <strong><code>input_p</code></strong>=<em><code>0.6</code></em>, <strong><code>embed_p</code></strong>=<em><code>0.1</code></em>, <strong><code>weight_p</code></strong>=<em><code>0.5</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>) :: <a href="/text.models.awdlstm.html#AWD_LSTM"><code>AWD_LSTM</code></a></p>
 </blockquote>
 <p>Same as an AWD-LSTM, but using QRNNs instead of LSTMs</p>
 
