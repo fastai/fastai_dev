@@ -30,8 +30,6 @@ class Tabular(CollBase):
     def all_cat_names(self): return self.cat_names + self.cat_y
     @property
     def all_col_names(self): return self.cont_names + self.all_cat_names
-    @property
-    def classes(self): return {n:'#na#'+L(c.cat.categories) for n,c in self.all_cats.items()}
 
 def _add_prop(cls, nm):
     prop = property(lambda o: o.items[list(getattr(o,nm+'_names'))])
@@ -52,20 +50,21 @@ class TabularProc(Transform):
         self.process(to)
         return to
 
-class Categorify(TabularProc, CollBase, metaclass=_TfmMeta):
+class Categorify(TabularProc):
     "Transform the categorical variables to that type."
     order = 1
     def setup(self, to):
-        self.items = {}
+        self.classes = {}
         for n in to.all_cat_names:
             col = to.loc[ifnone(to.splits[0], slice(None)),n]
-            self[n] = 0 + L(o+1 for o in L(col).unique())
+            self.classes[n] = '#na#' + L(o for o in L(col).unique() if o == o).sorted()
+        to.classes = self.classes
 
     def process(self, to):
-        to.transform(to.all_cat_names, lambda c: c.map(defaultdict(int, self[c.name].val2idx())))
+        to.transform(to.all_cat_names, lambda c: c.map(defaultdict(int, self.classes[c.name].val2idx())) - 1)
 
     def decodes(self, to):
-        cats = [self[c][v-1] if v > 0 else '#na' for v,c in zip(to.items[0], to.cat_names)]
+        cats = [self.classes[c][v] for v,c in zip(to.items[0], to.cat_names)]
         to.items = (cats, to.items[1])
         return to
 
@@ -134,10 +133,9 @@ class TensorTabular(tuple):
 class ReadTabLine(ItemTransform):
     def __init__(self, proc):
         self.proc = proc
-        self.o2is = {n: defaultdict(int, {v:i for i,v in enumerate(proc.classes[n])}) for n in proc.cat_names}
 
     def encodes(self, row):
-        cats = [self.o2is[n][row[n]] for n in self.proc.cat_names]
+        cats = [row[n]+1 for n in self.proc.cat_names]
         conts = [row[n] for n in self.proc.cont_names]
         return TensorTabular((tensor(cats).long(),tensor(conts).float()))
 
@@ -146,10 +144,11 @@ class ReadTabLine(ItemTransform):
         to = self.proc.decode(to)
         return pd.Series({c: v for v,c in zip(to.items[0]+to.items[1], self.proc.cat_names+self.proc.cont_names)})
 
+import numpy as np
+
 class ReadTabTarget(ItemTransform):
     def __init__(self, proc):
         self.proc = proc
-        self.o2i = defaultdict(int, {v:i for i,v in enumerate(proc.classes[proc.cat_y])})
 
-    def encodes(self, row): return self.o2i[row[self.proc.cat_y]]-1
+    def encodes(self, row): return row[self.proc.cat_y].astype(np.int64)
     def decodes(self, o) -> Category: return self.proc.classes[self.proc.cat_y][o+1]
