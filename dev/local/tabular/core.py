@@ -59,10 +59,10 @@ class Categorify(TabularProc, CollBase, metaclass=_TfmMeta):
         self.items = {}
         for n in to.all_cat_names:
             col = to.loc[ifnone(to.splits[0], slice(None)),n]
-            self[n] = L(col).unique()
+            self[n] = 0 + L(o+1 for o in L(col).unique())
 
     def process(self, to):
-        to.transform(to.all_cat_names, lambda c: pd.Categorical(c, categories=self[c.name], ordered=True))
+        to.transform(to.all_cat_names, lambda c: c.map(defaultdict(int, self[c.name].val2idx())))
 
     def decodes(self, to):
         cats = [self[c][v-1] if v > 0 else '#na' for v,c in zip(to.items[0], to.cat_names)]
