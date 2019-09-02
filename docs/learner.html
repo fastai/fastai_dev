@@ -48,9 +48,9 @@ summary: "Basic class for handling the training loop"
         <span class="k">return</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="o">*</span><span class="n">n</span><span class="p">))</span>
     <span class="n">train_ds</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">n_train</span><span class="p">)</span>
     <span class="n">valid_ds</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">n_valid</span><span class="p">)</span>
-    <span class="n">tfms</span> <span class="o">=</span> <span class="p">[</span><span class="n">Cuda</span><span class="p">()]</span> <span class="k">if</span> <span class="n">cuda</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">train_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">)</span>
-    <span class="n">valid_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">valid_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms</span><span class="p">)</span>
+    <span class="n">tfms</span> <span class="o">=</span> <span class="n">Cuda</span><span class="p">()</span> <span class="k">if</span> <span class="n">cuda</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">train_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="n">tfms</span><span class="p">)</span>
+    <span class="n">valid_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">valid_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="n">tfms</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">DataBunch</span><span class="p">(</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">valid_dl</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">RegModel</span><span class="p">(</span><span class="n">Module</span><span class="p">):</span>
@@ -75,7 +75,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>camel2snake</code>" class="doc_header"><code>camel2snake</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>camel2snake</code>(<strong><code>name</code></strong>)</p>
+<h4 id="<code>camel2snake</code>" class="doc_header"><code>camel2snake</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Callback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>camel2snake</code>(<strong><code>name</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -111,7 +111,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>class2attr</code>" class="doc_header"><code>class2attr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>class2attr</code>(<strong><code>cls_name</code></strong>)</p>
+<h4 id="<code>class2attr</code>" class="doc_header"><code>class2attr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Callback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>class2attr</code>(<strong><code>cls_name</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -134,7 +134,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Callback</code>" class="doc_header"><code>class</code> <code>Callback</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Callback</code>()</p>
+<h2 id="<code>class</code> <code>Callback</code>" class="doc_header"><code>class</code> <code>Callback</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Callback--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Callback</code>()</p>
 </blockquote>
 <p>Basic class handling tweaks of the training loop by changing a <a href="/learner.html#Learner"><code>Learner</code></a> in various events</p>
 
@@ -186,7 +186,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Callback.__call__</code>" class="doc_header"><code>Callback.__call__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Callback.__call__</code>(<strong><code>event_name</code></strong>)</p>
+<h4 id="<code>Callback.__call__</code>" class="doc_header"><code>Callback.__call__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Callback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Callback.__call__</code>(<strong><code>event_name</code></strong>)</p>
 </blockquote>
 <p>Call <code>self.{event_name}</code> if it's defined</p>
 
@@ -222,7 +222,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Callback.__getattr__</code>" class="doc_header"><code>Callback.__getattr__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Callback.__getattr__</code>(<strong><code>k</code></strong>)</p>
+<h4 id="<code>Callback.__getattr__</code>" class="doc_header"><code>Callback.__getattr__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Callback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Callback.__getattr__</code>(<strong><code>k</code></strong>)</p>
 </blockquote>
 <p>Passthrough to get the attributes of <code>self.learn</code></p>
 
@@ -360,7 +360,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>TrainEvalCallback</code>" class="doc_header"><code>class</code> <code>TrainEvalCallback</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TrainEvalCallback</code>() :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+<h3 id="<code>class</code> <code>TrainEvalCallback</code>" class="doc_header"><code>class</code> <code>TrainEvalCallback</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#TrainEvalCallback--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TrainEvalCallback</code>() :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 <p><a href="/learner.html#Callback"><code>Callback</code></a> that tracks the number of iterations done and properly sets training/eval mode</p>
 
@@ -388,7 +388,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TrainEvalCallback.begin_fit</code>" class="doc_header"><code>TrainEvalCallback.begin_fit</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_fit</code>()</p>
+<h4 id="<code>TrainEvalCallback.begin_fit</code>" class="doc_header"><code>TrainEvalCallback.begin_fit</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#TrainEvalCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_fit</code>()</p>
 </blockquote>
 <p>Set the iter and epoch counters to 0</p>
 
@@ -409,7 +409,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TrainEvalCallback.begin_batch</code>" class="doc_header"><code>TrainEvalCallback.begin_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_batch</code>()</p>
+<h4 id="<code>TrainEvalCallback.begin_batch</code>" class="doc_header"><code>TrainEvalCallback.begin_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#TrainEvalCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_batch</code>()</p>
 </blockquote>
 <p>On the first batch, put the model on the right device</p>
 
@@ -430,7 +430,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TrainEvalCallback.after_batch</code>" class="doc_header"><code>TrainEvalCallback.after_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.after_batch</code>()</p>
+<h4 id="<code>TrainEvalCallback.after_batch</code>" class="doc_header"><code>TrainEvalCallback.after_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#TrainEvalCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.after_batch</code>()</p>
 </blockquote>
 <p>Update the iter counter (in training mode)</p>
 
@@ -451,7 +451,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TrainEvalCallback.begin_train</code>" class="doc_header"><code>TrainEvalCallback.begin_train</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_train</code>()</p>
+<h4 id="<code>TrainEvalCallback.begin_train</code>" class="doc_header"><code>TrainEvalCallback.begin_train</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#TrainEvalCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_train</code>()</p>
 </blockquote>
 <p>Set the model in training mode</p>
 
@@ -472,7 +472,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TrainEvalCallback.begin_validate</code>" class="doc_header"><code>TrainEvalCallback.begin_validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_validate</code>()</p>
+<h4 id="<code>TrainEvalCallback.begin_validate</code>" class="doc_header"><code>TrainEvalCallback.begin_validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#TrainEvalCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TrainEvalCallback.begin_validate</code>()</p>
 </blockquote>
 <p>Set the model in validation mode</p>
 
@@ -496,7 +496,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>GatherPredsCallback</code>" class="doc_header"><code>class</code> <code>GatherPredsCallback</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>GatherPredsCallback</code>(<strong><code>with_loss</code></strong>=<em><code>False</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+<h3 id="<code>class</code> <code>GatherPredsCallback</code>" class="doc_header"><code>class</code> <code>GatherPredsCallback</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#GatherPredsCallback--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>GatherPredsCallback</code>(<strong><code>with_loss</code></strong>=<em><code>False</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 <p><a href="/learner.html#Callback"><code>Callback</code></a> that saves the predictions and targets, optionally <code>with_loss</code></p>
 
@@ -517,7 +517,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>GatherPredsCallback.begin_validate</code>" class="doc_header"><code>GatherPredsCallback.begin_validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GatherPredsCallback.begin_validate</code>()</p>
+<h4 id="<code>GatherPredsCallback.begin_validate</code>" class="doc_header"><code>GatherPredsCallback.begin_validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#GatherPredsCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GatherPredsCallback.begin_validate</code>()</p>
 </blockquote>
 <p>Initialize containers</p>
 
@@ -538,7 +538,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>GatherPredsCallback.after_batch</code>" class="doc_header"><code>GatherPredsCallback.after_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GatherPredsCallback.after_batch</code>()</p>
+<h4 id="<code>GatherPredsCallback.after_batch</code>" class="doc_header"><code>GatherPredsCallback.after_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#GatherPredsCallback--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GatherPredsCallback.after_batch</code>()</p>
 </blockquote>
 <p>Save predictions, targets and potentially losses</p>
 
@@ -764,7 +764,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>trainable_params</code>" class="doc_header"><code>trainable_params</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>trainable_params</code>(<strong><code>m</code></strong>)</p>
+<h4 id="<code>trainable_params</code>" class="doc_header"><code>trainable_params</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Helper-functions-to-grab-certain-parameters" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>trainable_params</code>(<strong><code>m</code></strong>)</p>
 </blockquote>
 <p>Return all trainable parameters of <code>m</code></p>
 
@@ -804,7 +804,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>bn_bias_params</code>" class="doc_header"><code>bn_bias_params</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bn_bias_params</code>(<strong><code>m</code></strong>)</p>
+<h4 id="<code>bn_bias_params</code>" class="doc_header"><code>bn_bias_params</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Helper-functions-to-grab-certain-parameters" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bn_bias_params</code>(<strong><code>m</code></strong>)</p>
 </blockquote>
 <p>Return all bias and BatchNorm parameters</p>
 
@@ -844,7 +844,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Learner</code>" class="doc_header"><code>class</code> <code>Learner</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Learner</code>(<strong><code>model</code></strong>, <strong><code>data</code></strong>, <strong><code>loss_func</code></strong>, <strong><code>opt_func</code></strong>=<em><code>'SGD'</code></em>, <strong><code>lr</code></strong>=<em><code>0.01</code></em>, <strong><code>splitter</code></strong>=<em><code>'trainable_params'</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>, <strong><code>cb_funcs</code></strong>=<em><code>None</code></em>, <strong><code>metrics</code></strong>=<em><code>None</code></em>, <strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>wd_bn_bias</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="<code>class</code> <code>Learner</code>" class="doc_header"><code>class</code> <code>Learner</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Learner</code>(<strong><code>model</code></strong>, <strong><code>data</code></strong>, <strong><code>loss_func</code></strong>, <strong><code>opt_func</code></strong>=<em><code>'SGD'</code></em>, <strong><code>lr</code></strong>=<em><code>0.01</code></em>, <strong><code>splitter</code></strong>=<em><code>'trainable_params'</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>, <strong><code>cb_funcs</code></strong>=<em><code>None</code></em>, <strong><code>metrics</code></strong>=<em><code>None</code></em>, <strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>wd_bn_bias</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Group together a <code>model</code>, some <code>data</code> and a <code>loss_func</code> to handle training</p>
 
@@ -914,7 +914,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.fit</code>" class="doc_header"><code>Learner.fit</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.fit</code>(<strong><code>n_epoch</code></strong>, <strong><code>lr</code></strong>=<em><code>None</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>, <strong><code>reset_opt</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="<code>Learner.fit</code>" class="doc_header"><code>Learner.fit</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.fit</code>(<strong><code>n_epoch</code></strong>, <strong><code>lr</code></strong>=<em><code>None</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>, <strong><code>reset_opt</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Fit <code>self.model</code> for <code>n_epoch</code> using <code>cbs</code>. Optionally <code>reset_opt</code>.</p>
 
@@ -953,7 +953,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.one_batch</code>" class="doc_header"><code>Learner.one_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.one_batch</code>(<strong><code>xb</code></strong>, <strong><code>yb</code></strong>, <strong><code>i</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>Learner.one_batch</code>" class="doc_header"><code>Learner.one_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.one_batch</code>(<strong><code>xb</code></strong>, <strong><code>yb</code></strong>, <strong><code>i</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Train or evaluate <code>self.model</code> on batch <code>(xb,yb)</code></p>
 
@@ -984,7 +984,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>VerboseCallback</code>" class="doc_header"><code>class</code> <code>VerboseCallback</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>VerboseCallback</code>() :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+<h2 id="<code>class</code> <code>VerboseCallback</code>" class="doc_header"><code>class</code> <code>VerboseCallback</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Training-loop" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>VerboseCallback</code>() :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 <p>Callback that prints the name of each event called</p>
 
@@ -1005,7 +1005,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.all_batches</code>" class="doc_header"><code>Learner.all_batches</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.all_batches</code>()</p>
+<h4 id="<code>Learner.all_batches</code>" class="doc_header"><code>Learner.all_batches</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.all_batches</code>()</p>
 </blockquote>
 <p>Train or evaluate <code>self.model</code> on all batches of <code>self.dl</code></p>
 
@@ -1032,7 +1032,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.__call__</code>" class="doc_header"><code>Learner.__call__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.__call__</code>(<strong><code>event_name</code></strong>)</p>
+<h4 id="<code>Learner.__call__</code>" class="doc_header"><code>Learner.__call__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.__call__</code>(<strong><code>event_name</code></strong>)</p>
 </blockquote>
 <p>Call <code>event_name</code> (one or a list) for all callbacks</p>
 
@@ -1053,7 +1053,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.add_cb</code>" class="doc_header"><code>Learner.add_cb</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.add_cb</code>(<strong><code>cb</code></strong>)</p>
+<h4 id="<code>Learner.add_cb</code>" class="doc_header"><code>Learner.add_cb</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.add_cb</code>(<strong><code>cb</code></strong>)</p>
 </blockquote>
 <p>Add <code>cb</code> to the list of <a href="/learner.html#Callback"><code>Callback</code></a> and register <code>self</code> as their learner</p>
 
@@ -1091,7 +1091,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.add_cbs</code>" class="doc_header"><code>Learner.add_cbs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.add_cbs</code>(<strong><code>cbs</code></strong>)</p>
+<h4 id="<code>Learner.add_cbs</code>" class="doc_header"><code>Learner.add_cbs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.add_cbs</code>(<strong><code>cbs</code></strong>)</p>
 </blockquote>
 <p>Add <code>cbs</code> to the list of <a href="/learner.html#Callback"><code>Callback</code></a> and register <code>self</code> as their learner</p>
 
@@ -1126,7 +1126,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.remove_cb</code>" class="doc_header"><code>Learner.remove_cb</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.remove_cb</code>(<strong><code>cb</code></strong>)</p>
+<h4 id="<code>Learner.remove_cb</code>" class="doc_header"><code>Learner.remove_cb</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.remove_cb</code>(<strong><code>cb</code></strong>)</p>
 </blockquote>
 <p>Add <code>cb</code> from the list of <a href="/learner.html#Callback"><code>Callback</code></a> and deregister <code>self</code> as their learner</p>
 
@@ -1164,7 +1164,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.remove_cbs</code>" class="doc_header"><code>Learner.remove_cbs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.remove_cbs</code>(<strong><code>cbs</code></strong>)</p>
+<h4 id="<code>Learner.remove_cbs</code>" class="doc_header"><code>Learner.remove_cbs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.remove_cbs</code>(<strong><code>cbs</code></strong>)</p>
 </blockquote>
 <p>Remove <code>cbs</code> from the list of <a href="/learner.html#Callback"><code>Callback</code></a> and deregister <code>self</code> as their learner</p>
 
@@ -1243,7 +1243,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>Metric</code>" class="doc_header"><code>class</code> <code>Metric</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Metric</code>()</p>
+<h3 id="<code>class</code> <code>Metric</code>" class="doc_header"><code>class</code> <code>Metric</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Metrics--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Metric</code>()</p>
 </blockquote>
 <p>Blueprint for defining a metric</p>
 
@@ -1258,7 +1258,9 @@ summary: "Basic class for handling the training loop"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Metrics can be simple averages (like accuracy) but sometimes their computation is a little bit more complex and can't be averaged over batches (like precision or recall), which is why we need a special class for them. For simple functions that can be computed as averages over batches, we can use the class <a href="/learner.html#AvgMetric"><code>AvgMetric</code></a>, otherwise you'll need to implement the following methods.</p>
-<div markdown="span" class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note: </b>If your [`Metric`](/learner.html#Metric) has state depending on tensors, don't forget to store it on the CPU to avoid any potential memory leaks.</div>
+<blockquote><p>Note: If your <a href="/learner.html#Metric"><code>Metric</code></a> has state depending on tensors, don't forget to store it on the CPU to avoid any potential memory leaks.</p>
+</blockquote>
+
 </div>
 </div>
 </div>
@@ -1271,7 +1273,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Metric.reset</code>" class="doc_header"><code>Metric.reset</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Metric.reset</code>()</p>
+<h4 id="<code>Metric.reset</code>" class="doc_header"><code>Metric.reset</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Metrics--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Metric.reset</code>()</p>
 </blockquote>
 <p>Reset inner state to prepare for new computation</p>
 
@@ -1292,7 +1294,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Metric.accumulate</code>" class="doc_header"><code>Metric.accumulate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Metric.accumulate</code>(<strong><code>learn</code></strong>)</p>
+<h4 id="<code>Metric.accumulate</code>" class="doc_header"><code>Metric.accumulate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Metrics--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Metric.accumulate</code>(<strong><code>learn</code></strong>)</p>
 </blockquote>
 <p>Use <code>learn</code> to update the state with new results</p>
 
@@ -1354,7 +1356,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>AvgMetric</code>" class="doc_header"><code>class</code> <code>AvgMetric</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AvgMetric</code>(<strong><code>func</code></strong>) :: <a href="/learner.html#Metric"><code>Metric</code></a></p>
+<h3 id="<code>class</code> <code>AvgMetric</code>" class="doc_header"><code>class</code> <code>AvgMetric</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Metrics--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AvgMetric</code>(<strong><code>func</code></strong>) :: <a href="/learner.html#Metric"><code>Metric</code></a></p>
 </blockquote>
 <p>Average the values of <code>func</code> taking into account potential different batch sizes</p>
 
@@ -1398,7 +1400,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>AvgLoss</code>" class="doc_header"><code>class</code> <code>AvgLoss</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AvgLoss</code>() :: <a href="/learner.html#Metric"><code>Metric</code></a></p>
+<h3 id="<code>class</code> <code>AvgLoss</code>" class="doc_header"><code>class</code> <code>AvgLoss</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Metrics--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AvgLoss</code>() :: <a href="/learner.html#Metric"><code>Metric</code></a></p>
 </blockquote>
 <p>Average the losses taking into account potential different batch sizes</p>
 
@@ -1441,7 +1443,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>AvgSmoothLoss</code>" class="doc_header"><code>class</code> <code>AvgSmoothLoss</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AvgSmoothLoss</code>(<strong><code>beta</code></strong>=<em><code>0.98</code></em>) :: <a href="/learner.html#Metric"><code>Metric</code></a></p>
+<h3 id="<code>class</code> <code>AvgSmoothLoss</code>" class="doc_header"><code>class</code> <code>AvgSmoothLoss</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Metrics--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>AvgSmoothLoss</code>(<strong><code>beta</code></strong>=<em><code>0.98</code></em>) :: <a href="/learner.html#Metric"><code>Metric</code></a></p>
 </blockquote>
 <p>Smooth average of the losses (exponentially weighted with <code>beta</code>)</p>
 
@@ -1486,7 +1488,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Recorder</code>" class="doc_header"><code>class</code> <code>Recorder</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Recorder</code>(<strong><code>add_time</code></strong>=<em><code>True</code></em>, <strong><code>train_metrics</code></strong>=<em><code>False</code></em>, <strong><code>beta</code></strong>=<em><code>0.98</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+<h2 id="<code>class</code> <code>Recorder</code>" class="doc_header"><code>class</code> <code>Recorder</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Recorder</code>(<strong><code>add_time</code></strong>=<em><code>True</code></em>, <strong><code>train_metrics</code></strong>=<em><code>False</code></em>, <strong><code>beta</code></strong>=<em><code>0.98</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 <p>Callback that registers statistics (lr, loss and metrics) during training</p>
 
@@ -1540,7 +1542,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Recorder.begin_fit</code>" class="doc_header"><code>Recorder.begin_fit</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.begin_fit</code>()</p>
+<h4 id="<code>Recorder.begin_fit</code>" class="doc_header"><code>Recorder.begin_fit</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.begin_fit</code>()</p>
 </blockquote>
 <p>Prepare state for training</p>
 
@@ -1561,7 +1563,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Recorder.begin_epoch</code>" class="doc_header"><code>Recorder.begin_epoch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.begin_epoch</code>()</p>
+<h4 id="<code>Recorder.begin_epoch</code>" class="doc_header"><code>Recorder.begin_epoch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.begin_epoch</code>()</p>
 </blockquote>
 <p>Set timer if <code>self.add_time=True</code></p>
 
@@ -1582,7 +1584,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Recorder.begin_validate</code>" class="doc_header"><code>Recorder.begin_validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.begin_validate</code>()</p>
+<h4 id="<code>Recorder.begin_validate</code>" class="doc_header"><code>Recorder.begin_validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.begin_validate</code>()</p>
 </blockquote>
 <p>Reset loss and metrics state</p>
 
@@ -1603,7 +1605,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Recorder.after_batch</code>" class="doc_header"><code>Recorder.after_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.after_batch</code>()</p>
+<h4 id="<code>Recorder.after_batch</code>" class="doc_header"><code>Recorder.after_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.after_batch</code>()</p>
 </blockquote>
 <p>Update all metrics and records lr and smooth loss in training</p>
 
@@ -1624,7 +1626,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Recorder.after_epoch</code>" class="doc_header"><code>Recorder.after_epoch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.after_epoch</code>()</p>
+<h4 id="<code>Recorder.after_epoch</code>" class="doc_header"><code>Recorder.after_epoch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.after_epoch</code>()</p>
 </blockquote>
 <p>Store and log the loss/metric values</p>
 
@@ -1651,7 +1653,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Recorder.plot_loss</code>" class="doc_header"><code>Recorder.plot_loss</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.plot_loss</code>()</p>
+<h4 id="<code>Recorder.plot_loss</code>" class="doc_header"><code>Recorder.plot_loss</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Recorder---" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Recorder.plot_loss</code>()</p>
 </blockquote>
 <p>Plot the losses</p>
 
@@ -1678,7 +1680,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.no_logging</code>" class="doc_header"><code>Learner.no_logging</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.no_logging</code>()</p>
+<h4 id="<code>Learner.no_logging</code>" class="doc_header"><code>Learner.no_logging</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.no_logging</code>()</p>
 </blockquote>
 <p>Context manager to temporarily remove <code>logger</code></p>
 
@@ -1715,7 +1717,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.validate</code>" class="doc_header"><code>Learner.validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.validate</code>(<strong><code>dl</code></strong>=<em><code>None</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="<code>Learner.validate</code>" class="doc_header"><code>Learner.validate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.validate</code>(<strong><code>dl</code></strong>=<em><code>None</code></em>, <strong><code>cbs</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Validate on <code>dl</code> with potential new <code>cbs</code>.</p>
 
@@ -1754,7 +1756,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.loss_not_reduced</code>" class="doc_header"><code>Learner.loss_not_reduced</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.loss_not_reduced</code>()</p>
+<h4 id="<code>Learner.loss_not_reduced</code>" class="doc_header"><code>Learner.loss_not_reduced</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.loss_not_reduced</code>()</p>
 </blockquote>
 <p>A context manager to evaluate <code>loss_func</code> with reduction set to none.</p>
 
@@ -1775,7 +1777,7 @@ summary: "Basic class for handling the training loop"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Learner.get_preds</code>" class="doc_header"><code>Learner.get_preds</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.get_preds</code>(<strong><code>ds_idx</code></strong>=<em><code>1</code></em>, <strong><code>with_loss</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="<code>Learner.get_preds</code>" class="doc_header"><code>Learner.get_preds</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/13_learner.ipynb#Learner--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.get_preds</code>(<strong><code>ds_idx</code></strong>=<em><code>1</code></em>, <strong><code>with_loss</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Get the predictions and targets on the <code>ds_idx</code>-th dataset, optionally <code>with_loss</code></p>
 
@@ -1789,8 +1791,10 @@ summary: "Basic class for handling the training loop"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div markdown="span" class="alert alert-danger" role="alert"><i class="fa fa-danger-circle"></i> <b>Warning: </b>If your dataset is unlabelled, the targets will all be 0s.</div>
-<div markdown="span" class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note: </b>If you want to use the option `with_loss=True` on a custom loss function, make sure you have implemented a `reduction` attribute that supports 'none' </div>
+<p><div markdown="span" class="alert alert-danger" role="alert"><i class="fa fa-danger-circle"></i> <b>Warning: </b>If your dataset is unlabelled, the targets will all be 0s.</div></p>
+<blockquote><p>Note: If you want to use the option <code>with_loss=True</code> on a custom loss function, make sure you have implemented a <code>reduction</code> attribute that supports 'none'</p>
+</blockquote>
+
 </div>
 </div>
 </div>

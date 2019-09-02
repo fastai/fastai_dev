@@ -279,6 +279,12 @@ summary: "Helper functions to download the fastai datasets"
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Extract">Extract<a class="anchor-link" href="#Extract">&#182;</a></h3>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
@@ -291,7 +297,38 @@ summary: "Helper functions to download the fastai datasets"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>untar_data</code>" class="doc_header"><code>untar_data</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_external.ipynb#Check-datasets--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>untar_data</code>(<strong><code>url</code></strong>, <strong><code>fname</code></strong>=<em><code>None</code></em>, <strong><code>dest</code></strong>=<em><code>None</code></em>, <strong><code>c_key</code></strong>=<em><code>ConfigKey.Data</code></em>, <strong><code>force_download</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="<code>tar_extract</code>" class="doc_header"><code>tar_extract</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_external.ipynb#Extract" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tar_extract</code>(<strong><code>fname</code></strong>, <strong><code>dest</code></strong>)</p>
+</blockquote>
+<p>Extract <code>fname</code> to <code>dest</code> using <code>tarfile</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/data.external.html#tar_extract"><code>tar_extract</code></a> is used by default in <a href="/data.external.html#untar_data"><code>untar_data</code></a> to decompress the downloaded file.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="<code>untar_data</code>" class="doc_header"><code>untar_data</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/04_data_external.ipynb#Extract" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>untar_data</code>(<strong><code>url</code></strong>, <strong><code>fname</code></strong>=<em><code>None</code></em>, <strong><code>dest</code></strong>=<em><code>None</code></em>, <strong><code>c_key</code></strong>=<em><code>ConfigKey.Data</code></em>, <strong><code>force_download</code></strong>=<em><code>False</code></em>, <strong><code>extract_func</code></strong>=<em><code>'tar_extract'</code></em>)</p>
 </blockquote>
 <p>Download <code>url</code> to <code>fname</code> if <code>dest</code> doesn't exist, and un-tgz to folder <code>dest</code>.</p>
 
@@ -314,6 +351,7 @@ summary: "Helper functions to download the fastai datasets"
 <li>otherwise decompress <code>fname</code> to <code>dest</code> if <code>fname</code> exists</li>
 <li>otherwise download then decompress <code>fname</code> to <code>dest</code></li>
 </ul>
+<p>You can pass any function that takes <code>fname</code> and <code>dest</code> arguments as <code>extract_func</code>. By default, <a href="/data.external.html#tar_extract"><code>tar_extract</code></a> is used, which extracts the file using <code>tarfile</code>.</p>
 
 </div>
 </div>

@@ -76,13 +76,13 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([[-0.5560,  0.2873,  0.4420, -0.9506,  1.8087],
-        [ 1.0379,  1.9755, -1.6575,  1.1984, -0.5101],
-        [-0.0882, -0.5368, -0.1455,  1.1288, -1.1805],
-        [ 0.5031, -0.7513,  0.2236,  2.3844,  0.0967]]),) tensor([[-0.0588,  0.7741, -0.0070],
-        [ 0.2992,  0.2674, -0.3973],
-        [-0.1329, -0.7094,  0.5132],
-        [-1.2890, -0.4385, -0.2505]], grad_fn=&lt;AddmmBackward&gt;)
+<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([[ 0.8686,  0.7311,  2.4489,  0.8700, -0.1670],
+        [ 0.6731,  1.0484,  1.9074,  0.6036,  0.2924],
+        [ 1.8885, -0.7867, -0.1672,  0.6644,  0.0809],
+        [ 0.2057, -0.7538,  0.7381, -1.3444, -0.7304]]),) tensor([[-1.6029,  0.3864, -0.6523],
+        [-1.5455,  0.2899, -0.3769],
+        [-0.2761, -0.7362, -1.2814],
+        [ 0.3392, -0.5898, -0.3673]], grad_fn=&lt;AddmmBackward&gt;)
 </pre>
 </div>
 </div>
@@ -123,14 +123,14 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([0.2054, 0.1253, 0.6833]), None, tensor([[ 0.0211,  0.1502,  0.3077],
-        [ 0.2327,  0.1886,  0.1574],
-        [ 0.2122,  0.1933,  0.3161],
-        [-0.9215, -0.5911, -1.5224],
-        [-0.1622, -0.0941, -0.2906]])) (tensor([[-0.0144, -0.0448,  0.1218],
-        [-0.0931,  0.0122,  0.0658],
-        [ 0.1138,  0.0016,  0.1171],
-        [ 0.1992,  0.1562,  0.3786]]),)
+<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([ 0.0678, -0.3397, -0.0614]), None, tensor([[ 0.1027, -0.1562, -0.1236],
+        [-0.4457,  0.3023,  0.1885],
+        [ 0.0831,  0.1418,  0.1246],
+        [-0.6508,  0.6550, -0.0966],
+        [-0.2673, -0.0194, -0.0025]])) (tensor([[ 0.0574, -0.1234, -0.1313],
+        [-0.1468,  0.0679,  0.0180],
+        [ 0.1980, -0.1640,  0.0177],
+        [-0.0408, -0.1202,  0.0341]]),)
 </pre>
 </div>
 </div>
@@ -743,7 +743,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 9.609393119812012, 6.61131477355957, &#39;00:00&#39;]
+<pre>[0, 9.737648010253906, 6.20616340637207, &#39;00:00&#39;]
 </pre>
 </div>
 </div>
@@ -779,7 +779,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 18.69093894958496, 13.720285415649414, &#39;00:00&#39;]
+<pre>[0, 10.041898727416992, 6.416956901550293, &#39;00:00&#39;]
 </pre>
 </div>
 </div>
@@ -910,7 +910,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 1.3136615753173828, 0.5665456056594849, &#39;00:00&#39;]
+<pre>[0, 16.44314956665039, 9.00023078918457, &#39;00:00&#39;]
 </pre>
 </div>
 </div>
@@ -939,9 +939,9 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>tensor([[[2.3166, 1.8301, 1.8124, 1.9964, 2.7814]],
+<pre>tensor([[[-0.8830, -0.8196, -0.3148, -0.3958, -0.3666]],
 
-        [[1.5442, 1.2040, 1.8229, 1.4405, 2.3371]]])</pre>
+        [[ 0.6630,  0.6767,  0.5763,  0.6836,  1.0421]]])</pre>
 </div>
 
 </div>
@@ -1139,23 +1139,23 @@ summary: "Callback and helper function to add hooks in models"
 
 <div class="output_text output_subarea output_execute_result">
 <pre>Sequential (Input shape: 16 x 1)
-===============================================================
+================================================================
 Layer (type)         Output Shape         Param #    Trainable 
-===============================================================
+================================================================
 Linear               16 x 50              100        False     
-_______________________________________________________________
+________________________________________________________________
 ReLU                 16 x 50              0          False     
-_______________________________________________________________
+________________________________________________________________
 BatchNorm1d          16 x 50              100        True      
-_______________________________________________________________
+________________________________________________________________
 Linear               16 x 1               51         True      
-_______________________________________________________________
+________________________________________________________________
 
 Total params: 251
 Total trainable params: 151
 Total non-trainable params: 100
 
-Optimizer used: functools.partial(&lt;function SGD at 0x7fbd4c4e3378&gt;, mom=0.9)
+Optimizer used: functools.partial(&lt;function SGD at 0x7fdb1e2caf28&gt;, mom=0.9)
 Loss function: FlattenedLoss of MSELoss()
 
 Callbacks:

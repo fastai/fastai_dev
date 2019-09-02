@@ -92,6 +92,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#TODO: Should Categorify handle .cat.codes+1?</span>
+<span class="c1"># %timeit _=df.workclass.map(o2i)</span>
 </pre></div>
 
     </div>
@@ -345,7 +346,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">m</span><span class="p">,</span><span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">]})</span>
+<span class="c1"># test_eq(proc.classes, {&#39;a&#39;: [&#39;#na#&#39;,0,1,2], &#39;b_na&#39;: [&#39;#na#&#39;,False,True]})</span>
 </pre></div>
 
     </div>
@@ -362,7 +363,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]})</span>
 <span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
 <span class="n">proc</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">]})</span>
+<span class="c1"># test_eq(proc.classes, {&#39;a&#39;: [&#39;#na#&#39;,0,1,2], &#39;b_na&#39;: [&#39;#na#&#39;,False,True]})</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;b_na&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
@@ -393,7 +394,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">m</span><span class="p">,</span><span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">]})</span>
+<span class="c1"># test_eq(proc.classes, {&#39;a&#39;: [&#39;#na#&#39;,0,1,2], &#39;b_na&#39;: [&#39;#na#&#39;,False,True], &#39;c&#39;: [&#39;#na#&#39;,&#39;a&#39;,&#39;b&#39;]})</span>
 </pre></div>
 
     </div>
@@ -575,6 +576,39 @@ If iterable is specified the tuple is initialized from iterable's items.</p>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-32-144aaaac54e1&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>tds <span class="ansi-blue-fg">=</span> TfmdDS<span class="ansi-blue-fg">(</span>to<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">,</span> tfms<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">[</span>ReadTabLine<span class="ansi-blue-fg">(</span>proc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> ReadTabTarget<span class="ansi-blue-fg">(</span>proc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> use_list<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/git/fastai_dev/dev/local/data/transform.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(cls, *args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    124</span>             getattr<span class="ansi-blue-fg">(</span>cls<span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;encodes&#39;</span> <span class="ansi-green-fg">if</span> n<span class="ansi-blue-fg">==</span><span class="ansi-blue-fg">&#39;_&#39;</span> <span class="ansi-green-fg">else</span> n<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>add<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    125</span>             <span class="ansi-green-fg">return</span> f
+<span class="ansi-green-fg">--&gt; 126</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> super<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>__call__<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    127</span> 
+<span class="ansi-green-intense-fg ansi-bold">    128</span>     <span class="ansi-blue-fg">@</span>classmethod
+
+<span class="ansi-green-fg">&lt;ipython-input-30-530c79097796&gt;</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, proc)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span>     <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> proc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span>         self<span class="ansi-blue-fg">.</span>proc <span class="ansi-blue-fg">=</span> proc
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>o2is <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span>n<span class="ansi-blue-fg">:</span> defaultdict<span class="ansi-blue-fg">(</span>int<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">{</span>v<span class="ansi-blue-fg">:</span>i <span class="ansi-green-fg">for</span> i<span class="ansi-blue-fg">,</span>v <span class="ansi-green-fg">in</span> enumerate<span class="ansi-blue-fg">(</span>proc<span class="ansi-blue-fg">.</span>classes<span class="ansi-blue-fg">[</span>n<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">}</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> n <span class="ansi-green-fg">in</span> proc<span class="ansi-blue-fg">.</span>cat_names<span class="ansi-blue-fg">}</span>
+<span class="ansi-green-intense-fg ansi-bold">      6</span> 
+<span class="ansi-green-intense-fg ansi-bold">      7</span>     <span class="ansi-green-fg">def</span> encodes<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> row<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">AttributeError</span>: &#39;Pipeline&#39; object has no attribute &#39;cat_names&#39;</pre>
+</div>
+</div>
+
 </div>
 </div>
 

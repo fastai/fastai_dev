@@ -97,7 +97,7 @@ summary: "Training a Language Model on WT2"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Then we put our list of tokenized texts together in an <a href="/text.data.html#LM_Dataset"><code>LM_Dataset</code></a>. It will return tuples of sequences of <code>seq_len</code>, with the second sequence between the first one shifted by one on the right.</p>
+<p>Then we put our list of tokenized texts together in an <code>LM_Dataset</code>. It will return tuples of sequences of <code>seq_len</code>, with the second sequence between the first one shifted by one on the right.</p>
 
 </div>
 </div>
@@ -146,7 +146,7 @@ summary: "Training a Language Model on WT2"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can then wrap our <a href="/text.data.html#LM_Dataset"><code>LM_Dataset</code></a>s in a <a href="/pipeline.html#TfmdList"><code>TfmdList</code></a> to apply the <a href="/text.data.html#Numericalize"><code>Numericalize</code></a> transform. We can't use a <a href="/pipeline.html#TfmdDS"><code>TfmdDS</code></a> because our elements are already tuples and <a href="/pipeline.html#TfmdDS"><code>TfmdDS</code></a> is there to create such tuples from individual items. Since we already have tuples, we specify <code>as_item=False</code>.</p>
+<p>We can then wrap our <code>LM_Dataset</code>s in a <a href="/pipeline.html#TfmdList"><code>TfmdList</code></a> to apply the <a href="/text.data.html#Numericalize"><code>Numericalize</code></a> transform. We can't use a <a href="/pipeline.html#TfmdDS"><code>TfmdDS</code></a> because our elements are already tuples and <a href="/pipeline.html#TfmdDS"><code>TfmdDS</code></a> is there to create such tuples from individual items. Since we already have tuples, we specify <code>as_item=False</code>.</p>
 
 </div>
 </div>
