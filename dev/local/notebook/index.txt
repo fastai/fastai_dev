@@ -129,6 +129,7 @@
   "get_path": "04_data_external.ipynb",
   "ConfigKey": "04_data_external.ipynb",
   "download_data": "04_data_external.ipynb",
+  "tar_extract": "04_data_external.ipynb",
   "untar_data": "04_data_external.ipynb",
   "get_files": "05_data_core.ipynb",
   "FileGetter": "05_data_core.ipynb",
