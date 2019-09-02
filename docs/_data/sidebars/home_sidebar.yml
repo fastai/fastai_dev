@@ -28,6 +28,9 @@ entries:
     title: Training
   - folderitems:
     - output: web,pdf
+      title: Data Transforms
+      url: /data.transforms.html
+    - output: web,pdf
       title: Data Pipeline
       url: /data.pipeline.html
     - output: web,pdf

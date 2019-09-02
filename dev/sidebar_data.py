@@ -21,6 +21,7 @@ sidebar_d = {
         'Training loop': '/learner',
     },
     'Data': {
+        'Data Transforms': '/data.transforms',
         'Data Pipeline': '/data.pipeline',
         'Data Source': '/data.source',
         'Data External': '/data.external',

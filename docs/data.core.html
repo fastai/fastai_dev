@@ -97,7 +97,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>get_files</code>" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_files" class="doc_header"><code>get_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files</code>(<strong><code>path</code></strong>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get all the files in <code>path</code> with optional <code>extensions</code>, optionally with <code>recurse</code>.</p>
 
@@ -170,7 +170,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>FileGetter</code>" class="doc_header"><code>FileGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FileGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="FileGetter" class="doc_header"><code>FileGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FileGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>extensions</code></strong>=<em><code>None</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create <a href="/data.core.html#get_files"><code>get_files</code></a> partial function that searches path suffix <code>suf</code> and passes along args</p>
 
@@ -214,7 +214,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>get_image_files</code>" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_image_files" class="doc_header"><code>get_image_files</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_image_files</code>(<strong><code>path</code></strong>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get image files in <code>path</code> recursively.</p>
 
@@ -258,7 +258,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>ImageGetter</code>" class="doc_header"><code>ImageGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ImageGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="ImageGetter" class="doc_header"><code>ImageGetter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Get" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ImageGetter</code>(<strong><code>suf</code></strong>=<em><code>''</code></em>, <strong><code>recurse</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create <a href="/data.core.html#get_image_files"><code>get_image_files</code></a> partial function that searches path suffix <code>suf</code> and passes along <code>kwargs</code></p>
 
@@ -316,7 +316,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>RandomSplitter</code>" class="doc_header"><code>RandomSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RandomSplitter</code>(<strong><code>valid_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="RandomSplitter" class="doc_header"><code>RandomSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RandomSplitter</code>(<strong><code>valid_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create function that splits <code>items</code> between train/val with <code>valid_pct</code> randomly.</p>
 
@@ -363,7 +363,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>GrandparentSplitter</code>" class="doc_header"><code>GrandparentSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GrandparentSplitter</code>(<strong><code>train_name</code></strong>=<em><code>'train'</code></em>, <strong><code>valid_name</code></strong>=<em><code>'valid'</code></em>)</p>
+<h4 id="GrandparentSplitter" class="doc_header"><code>GrandparentSplitter</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Split" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GrandparentSplitter</code>(<strong><code>train_name</code></strong>=<em><code>'train'</code></em>, <strong><code>valid_name</code></strong>=<em><code>'valid'</code></em>)</p>
 </blockquote>
 <p>Split <code>items</code> from the grand parent folder names (<code>train_name</code> and <code>valid_name</code>).</p>
 
@@ -418,7 +418,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>parent_label</code>" class="doc_header"><code>parent_label</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parent_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="parent_label" class="doc_header"><code>parent_label</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parent_label</code>(<strong><code>o</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Label <code>item</code> with the parent folder name.</p>
 
@@ -479,7 +479,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>RegexLabeller</code>" class="doc_header"><code>RegexLabeller</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RegexLabeller</code>(<strong><code>pat</code></strong>)</p>
+<h4 id="RegexLabeller" class="doc_header"><code>RegexLabeller</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Label" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>RegexLabeller</code>(<strong><code>pat</code></strong>)</p>
 </blockquote>
 <p>Label <code>item</code> with regex <code>pat</code>.</p>
 
@@ -541,7 +541,7 @@ summary: "Functions for getting, splitting, and labeling data, etc"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Category</code>" class="doc_header"><code>class</code> <code>Category</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Categorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Category</code>() :: <code>str</code></p>
+<h2 id="Category" class="doc_header"><code>class</code> <code>Category</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Categorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Category</code>() :: <code>str</code></p>
 </blockquote>
 <p>str(object='') -&gt; str
 str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
@@ -573,7 +573,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Categorize</code>" class="doc_header"><code>class</code> <code>Categorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Categorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Categorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="Categorize" class="doc_header"><code>class</code> <code>Categorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Categorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Categorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Reversible transform of category string to <code>vocab</code> id</p>
 
@@ -636,7 +636,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>MultiCategory</code>" class="doc_header"><code>class</code> <code>MultiCategory</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategory</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#L"><code>L</code></a></p>
+<h2 id="MultiCategory" class="doc_header"><code>class</code> <code>MultiCategory</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategory</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#L"><code>L</code></a></p>
 </blockquote>
 <p>Behaves like a list of <code>items</code> but can also index with list of indices or masks</p>
 
@@ -660,7 +660,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>MultiCategorize</code>" class="doc_header"><code>class</code> <code>MultiCategorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/data.core.html#Categorize"><code>Categorize</code></a></p>
+<h2 id="MultiCategorize" class="doc_header"><code>class</code> <code>MultiCategorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/data.core.html#Categorize"><code>Categorize</code></a></p>
 </blockquote>
 <p>Reversible transform of multi-category strings to <code>vocab</code> id</p>
 
@@ -706,7 +706,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>one_hot</code>" class="doc_header"><code>one_hot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_hot</code>(<strong><code>x</code></strong>, <strong><code>c</code></strong>)</p>
+<h4 id="one_hot" class="doc_header"><code>one_hot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_hot</code>(<strong><code>x</code></strong>, <strong><code>c</code></strong>)</p>
 </blockquote>
 <p>One-hot encode <code>x</code> with <code>c</code> classes.</p>
 
@@ -745,7 +745,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>one_hot_decode</code>" class="doc_header"><code>one_hot_decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_hot_decode</code>(<strong><code>x</code></strong>, <strong><code>vocab</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="one_hot_decode" class="doc_header"><code>one_hot_decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>one_hot_decode</code>(<strong><code>x</code></strong>, <strong><code>vocab</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -783,7 +783,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>OneHotEncode</code>" class="doc_header"><code>class</code> <code>OneHotEncode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>OneHotEncode</code>(<strong><code>do_encode</code></strong>=<em><code>True</code></em>, <strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="OneHotEncode" class="doc_header"><code>class</code> <code>OneHotEncode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Multicategorize--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>OneHotEncode</code>(<strong><code>do_encode</code></strong>=<em><code>True</code></em>, <strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>One-hot encodes targets and optionally decodes with <code>vocab</code></p>
 
@@ -985,7 +985,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>ToTensor</code>" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="ToTensor" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Convert item to appropriate tensor class</p>
 
@@ -1012,7 +1012,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>TfmdDL</code>" class="doc_header"><code>class</code> <code>TfmdDL</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TfmdDL</code>(<strong><code>dataset</code></strong>, <strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>) :: <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
+<h2 id="TfmdDL" class="doc_header"><code>class</code> <code>TfmdDL</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TfmdDL</code>(<strong><code>dataset</code></strong>, <strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>) :: <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
 </blockquote>
 <p>Transformed <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
 
@@ -1205,7 +1205,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>DataLoader.one_batch</code>" class="doc_header"><code>DataLoader.one_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01a_dataloader.ipynb#DataLoader" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataLoader.one_batch</code>()</p>
+<h4 id="DataLoader.one_batch" class="doc_header"><code>DataLoader.one_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01a_dataloader.ipynb#DataLoader" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataLoader.one_batch</code>()</p>
 </blockquote>
 
 </div>
@@ -1239,7 +1239,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdDL.decode</code>" class="doc_header"><code>TfmdDL.decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.decode</code>(<strong><code>b</code></strong>)</p>
+<h4 id="TfmdDL.decode" class="doc_header"><code>TfmdDL.decode</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.decode</code>(<strong><code>b</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -1272,7 +1272,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdDL.decode_batch</code>" class="doc_header"><code>TfmdDL.decode_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.decode_batch</code>(<strong><code>b</code></strong>, <strong><code>max_samples</code></strong>=<em><code>10</code></em>, <strong><code>ds_decode</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="TfmdDL.decode_batch" class="doc_header"><code>TfmdDL.decode_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.decode_batch</code>(<strong><code>b</code></strong>, <strong><code>max_samples</code></strong>=<em><code>10</code></em>, <strong><code>ds_decode</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 
 </div>
@@ -1305,7 +1305,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>TfmdDL.show_batch</code>" class="doc_header"><code>TfmdDL.show_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.show_batch</code>(<strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>max_samples</code></strong>=<em><code>10</code></em>, <strong><code>ctxs</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="TfmdDL.show_batch" class="doc_header"><code>TfmdDL.show_batch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#TfmdDL--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TfmdDL.show_batch</code>(<strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>max_samples</code></strong>=<em><code>10</code></em>, <strong><code>ctxs</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Show <code>b</code> (defaults to <code>one_batch</code>), a list of lists of pipeline outputs (i.e. output of a <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a>)</p>
 
@@ -1342,7 +1342,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Cuda</code>" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Cuda--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="Cuda" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Cuda--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Move batch to <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a> (defaults to <a href="/core.html#defaults.device"><code>defaults.device</code></a>)</p>
 
@@ -1363,7 +1363,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Cuda.encodes</code>" class="doc_header"><code>Cuda.encodes</code><a href="" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.encodes</code>()</p>
+<h4 id="Cuda.encodes" class="doc_header"><code>Cuda.encodes</code><a href="" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.encodes</code>()</p>
 </blockquote>
 <p>Return batch to CPU</p>
 
@@ -1407,7 +1407,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>Cuda.decodes</code>" class="doc_header"><code>Cuda.decodes</code><a href="" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.decodes</code>()</p>
+<h4 id="Cuda.decodes" class="doc_header"><code>Cuda.decodes</code><a href="" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.decodes</code>()</p>
 </blockquote>
 <p>Return batch to CPU</p>
 
@@ -1446,7 +1446,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>ByteToFloatTensor</code>" class="doc_header"><code>class</code> <code>ByteToFloatTensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#ByteToFloatTensor--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ByteToFloatTensor</code>(<strong><code>div</code></strong>=<em><code>True</code></em>, <strong><code>div_mask</code></strong>=<em><code>False</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="ByteToFloatTensor" class="doc_header"><code>class</code> <code>ByteToFloatTensor</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#ByteToFloatTensor--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ByteToFloatTensor</code>(<strong><code>div</code></strong>=<em><code>True</code></em>, <strong><code>div_mask</code></strong>=<em><code>False</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Transform image to float tensor, optionally dividing by 255 (e.g. for images).</p>
 
@@ -1491,7 +1491,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Normalize</code>" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Normalize/denorm batch of <a href="/transforms.html#TensorImage"><code>TensorImage</code></a></p>
 
@@ -1515,7 +1515,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>broadcast_vec</code>" class="doc_header"><code>broadcast_vec</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Normalization--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>broadcast_vec</code>(<strong><code>dim</code></strong>, <strong><code>ndim</code></strong>, <strong>*<code>t</code></strong>, <strong><code>cuda</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="broadcast_vec" class="doc_header"><code>broadcast_vec</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#Normalization--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>broadcast_vec</code>(<strong><code>dim</code></strong>, <strong><code>ndim</code></strong>, <strong>*<code>t</code></strong>, <strong><code>cuda</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Make a vector broadcastable over <code>dim</code> (out of <code>ndim</code> total) by prepending and appending unit axes</p>
 
@@ -1664,7 +1664,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>DataBunch</code>" class="doc_header"><code>class</code> <code>DataBunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
+<h2 id="DataBunch" class="doc_header"><code>class</code> <code>DataBunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataBunch</code>(<strong>*<code>dls</code></strong>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
 </blockquote>
 <p>Basic wrapper around several <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a>s.</p>
 
@@ -1703,7 +1703,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>DataBunch.__getitem__</code>" class="doc_header"><code>DataBunch.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataBunch.__getitem__</code>(<strong><code>i</code></strong>)</p>
+<h4 id="DataBunch.__getitem__" class="doc_header"><code>DataBunch.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/05_data_core.ipynb#DataBunch--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataBunch.__getitem__</code>(<strong><code>i</code></strong>)</p>
 </blockquote>
 <p>Retrieve <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a> at <code>i</code> (<code>0</code> is training, <code>1</code> is validation)</p>
 
@@ -1744,7 +1744,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>train_dl</code>" class="doc_header"><code>train_dl</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
+<h4 id="train_dl" class="doc_header"><code>train_dl</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
 
 </div>
 
@@ -1763,7 +1763,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>valid_dl</code>" class="doc_header"><code>valid_dl</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
+<h4 id="valid_dl" class="doc_header"><code>valid_dl</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
 
 </div>
 
@@ -1782,7 +1782,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>train_ds</code>" class="doc_header"><code>train_ds</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <code>Dataset</code></p>
+<h4 id="train_ds" class="doc_header"><code>train_ds</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Training <code>Dataset</code></p>
 
 </div>
 
@@ -1801,7 +1801,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>valid_ds</code>" class="doc_header"><code>valid_ds</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <code>Dataset</code></p>
+<h4 id="valid_ds" class="doc_header"><code>valid_ds</code><a href="" class="source_link" style="float:right">[source]</a></h4><p>Validation <code>Dataset</code></p>
 
 </div>
 
