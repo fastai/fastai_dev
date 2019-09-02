@@ -47,7 +47,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>Tabular</code>" class="doc_header"><code>class</code> <code>Tabular</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Tabular</code>(<strong><code>df</code></strong>, <strong><code>cat_names</code></strong>=<em><code>None</code></em>, <strong><code>cont_names</code></strong>=<em><code>None</code></em>, <strong><code>cat_y</code></strong>=<em><code>None</code></em>, <strong><code>splits</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
+<h2 id="Tabular" class="doc_header"><code>class</code> <code>Tabular</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Tabular</code>(<strong><code>df</code></strong>, <strong><code>cat_names</code></strong>=<em><code>None</code></em>, <strong><code>cont_names</code></strong>=<em><code>None</code></em>, <strong><code>cat_y</code></strong>=<em><code>None</code></em>, <strong><code>splits</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
 </blockquote>
 <p>Base class for composing a list of <code>items</code></p>
 
@@ -74,7 +74,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>TabularProc</code>" class="doc_header"><code>class</code> <code>TabularProc</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TabularProc</code>() :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h2 id="TabularProc" class="doc_header"><code>class</code> <code>TabularProc</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TabularProc</code>() :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Base class to write a tabular processor for dataframes</p>
 
@@ -92,6 +92,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#TODO: Should Categorify handle .cat.codes+1?</span>
+<span class="c1"># %timeit _=df.workclass.map(o2i)</span>
 </pre></div>
 
     </div>
@@ -111,7 +112,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>Categorify</code>" class="doc_header"><code>class</code> <code>Categorify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Categorify</code>() :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
+<h3 id="Categorify" class="doc_header"><code>class</code> <code>Categorify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Categorify</code>() :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
 </blockquote>
 <p>Transform the categorical variables to that type.</p>
 
@@ -179,7 +180,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>Normalize</code>" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Normalize</code>() :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
+<h3 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Normalize</code>() :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
 </blockquote>
 <p>Normalize the continuous variables.</p>
 
@@ -251,7 +252,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>FillStrategy</code>" class="doc_header"><code>class</code> <code>FillStrategy</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Export--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FillStrategy</code>()</p>
+<h2 id="FillStrategy" class="doc_header"><code>class</code> <code>FillStrategy</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Export--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FillStrategy</code>()</p>
 </blockquote>
 <p>Namespace containing the various filling strategies.</p>
 
@@ -275,7 +276,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>FillMissing</code>" class="doc_header"><code>class</code> <code>FillMissing</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>FillMissing</code>(<strong><code>fill_strategy</code></strong>=<em><code>'median'</code></em>, <strong><code>add_col</code></strong>=<em><code>True</code></em>, <strong><code>fill_vals</code></strong>=<em><code>None</code></em>) :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
+<h3 id="FillMissing" class="doc_header"><code>class</code> <code>FillMissing</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#TabularProc--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>FillMissing</code>(<strong><code>fill_strategy</code></strong>=<em><code>'median'</code></em>, <strong><code>add_col</code></strong>=<em><code>True</code></em>, <strong><code>fill_vals</code></strong>=<em><code>None</code></em>) :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
 </blockquote>
 <p>Fill the missing values in continuous columns.</p>
 
@@ -345,7 +346,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">m</span><span class="p">,</span><span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">]})</span>
+<span class="c1"># test_eq(proc.classes, {&#39;a&#39;: [&#39;#na#&#39;,0,1,2], &#39;b_na&#39;: [&#39;#na#&#39;,False,True]})</span>
 </pre></div>
 
     </div>
@@ -362,7 +363,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]})</span>
 <span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
 <span class="n">proc</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">]})</span>
+<span class="c1"># test_eq(proc.classes, {&#39;a&#39;: [&#39;#na#&#39;,0,1,2], &#39;b_na&#39;: [&#39;#na#&#39;,False,True]})</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;b_na&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
@@ -393,7 +394,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">m</span><span class="p">,</span><span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">]})</span>
+<span class="c1"># test_eq(proc.classes, {&#39;a&#39;: [&#39;#na#&#39;,0,1,2], &#39;b_na&#39;: [&#39;#na#&#39;,False,True], &#39;c&#39;: [&#39;#na#&#39;,&#39;a&#39;,&#39;b&#39;]})</span>
 </pre></div>
 
     </div>
@@ -413,7 +414,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>process_df</code>" class="doc_header"><code>process_df</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>process_df</code>(<strong><code>df</code></strong>, <strong><code>procs</code></strong>, <strong><code>splits</code></strong>=<em><code>None</code></em>, <strong><code>cat_names</code></strong>=<em><code>None</code></em>, <strong><code>cont_names</code></strong>=<em><code>None</code></em>, <strong><code>cat_y</code></strong>=<em><code>None</code></em>, <strong><code>inplace</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="process_df" class="doc_header"><code>process_df</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>process_df</code>(<strong><code>df</code></strong>, <strong><code>procs</code></strong>, <strong><code>splits</code></strong>=<em><code>None</code></em>, <strong><code>cat_names</code></strong>=<em><code>None</code></em>, <strong><code>cont_names</code></strong>=<em><code>None</code></em>, <strong><code>cat_y</code></strong>=<em><code>None</code></em>, <strong><code>inplace</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Process <code>df</code> with <code>procs</code> and returns the processed dataframe and the <code>TabularProcessor</code> associated</p>
 
@@ -479,7 +480,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>TabularLine</code>" class="doc_header"><code>class</code> <code>TabularLine</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TabularLine</code>(<strong><code>data</code></strong>=<em><code>None</code></em>, <strong><code>index</code></strong>=<em><code>None</code></em>, <strong><code>dtype</code></strong>=<em><code>None</code></em>, <strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>copy</code></strong>=<em><code>False</code></em>, <strong><code>fastpath</code></strong>=<em><code>False</code></em>) :: <code>Series</code></p>
+<h2 id="TabularLine" class="doc_header"><code>class</code> <code>TabularLine</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TabularLine</code>(<strong><code>data</code></strong>=<em><code>None</code></em>, <strong><code>index</code></strong>=<em><code>None</code></em>, <strong><code>dtype</code></strong>=<em><code>None</code></em>, <strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>copy</code></strong>=<em><code>False</code></em>, <strong><code>fastpath</code></strong>=<em><code>False</code></em>) :: <code>Series</code></p>
 </blockquote>
 <p>A line of a dataframe that knows how to show itself</p>
 
@@ -503,7 +504,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>TensorTabular</code>" class="doc_header"><code>class</code> <code>TensorTabular</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorTabular</code>(<strong><code>iterable</code></strong>=<em><code>()</code></em>) :: <code>tuple</code></p>
+<h2 id="TensorTabular" class="doc_header"><code>class</code> <code>TensorTabular</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorTabular</code>(<strong><code>iterable</code></strong>=<em><code>()</code></em>) :: <code>tuple</code></p>
 </blockquote>
 <p>Built-in immutable sequence.</p>
 <p>If no argument is given, the constructor returns an empty tuple.
@@ -530,7 +531,7 @@ If iterable is specified the tuple is initialized from iterable's items.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>ReadTabLine</code>" class="doc_header"><code>class</code> <code>ReadTabLine</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReadTabLine</code>(<strong><code>proc</code></strong>) :: <a href="/transforms.html#ItemTransform"><code>ItemTransform</code></a></p>
+<h2 id="ReadTabLine" class="doc_header"><code>class</code> <code>ReadTabLine</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReadTabLine</code>(<strong><code>proc</code></strong>) :: <a href="/transforms.html#ItemTransform"><code>ItemTransform</code></a></p>
 </blockquote>
 <p><a href="/transforms.html#Transform"><code>Transform</code></a> that always treats <code>as_item</code> as <code>True</code></p>
 
@@ -554,7 +555,7 @@ If iterable is specified the tuple is initialized from iterable's items.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="<code>class</code> <code>ReadTabTarget</code>" class="doc_header"><code>class</code> <code>ReadTabTarget</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReadTabTarget</code>(<strong><code>proc</code></strong>) :: <a href="/transforms.html#ItemTransform"><code>ItemTransform</code></a></p>
+<h2 id="ReadTabTarget" class="doc_header"><code>class</code> <code>ReadTabTarget</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/40_tabular_core.ipynb#Tabular-Pipelines--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReadTabTarget</code>(<strong><code>proc</code></strong>) :: <a href="/transforms.html#ItemTransform"><code>ItemTransform</code></a></p>
 </blockquote>
 <p><a href="/transforms.html#Transform"><code>Transform</code></a> that always treats <code>as_item</code> as <code>True</code></p>
 
@@ -575,6 +576,39 @@ If iterable is specified the tuple is initialized from iterable's items.</p>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-32-144aaaac54e1&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>tds <span class="ansi-blue-fg">=</span> TfmdDS<span class="ansi-blue-fg">(</span>to<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">,</span> tfms<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">[</span>ReadTabLine<span class="ansi-blue-fg">(</span>proc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> ReadTabTarget<span class="ansi-blue-fg">(</span>proc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> use_list<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/git/fastai_dev/dev/local/data/transform.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(cls, *args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    124</span>             getattr<span class="ansi-blue-fg">(</span>cls<span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;encodes&#39;</span> <span class="ansi-green-fg">if</span> n<span class="ansi-blue-fg">==</span><span class="ansi-blue-fg">&#39;_&#39;</span> <span class="ansi-green-fg">else</span> n<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>add<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    125</span>             <span class="ansi-green-fg">return</span> f
+<span class="ansi-green-fg">--&gt; 126</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> super<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>__call__<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    127</span> 
+<span class="ansi-green-intense-fg ansi-bold">    128</span>     <span class="ansi-blue-fg">@</span>classmethod
+
+<span class="ansi-green-fg">&lt;ipython-input-30-530c79097796&gt;</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, proc)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span>     <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> proc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span>         self<span class="ansi-blue-fg">.</span>proc <span class="ansi-blue-fg">=</span> proc
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>o2is <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span>n<span class="ansi-blue-fg">:</span> defaultdict<span class="ansi-blue-fg">(</span>int<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">{</span>v<span class="ansi-blue-fg">:</span>i <span class="ansi-green-fg">for</span> i<span class="ansi-blue-fg">,</span>v <span class="ansi-green-fg">in</span> enumerate<span class="ansi-blue-fg">(</span>proc<span class="ansi-blue-fg">.</span>classes<span class="ansi-blue-fg">[</span>n<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">}</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> n <span class="ansi-green-fg">in</span> proc<span class="ansi-blue-fg">.</span>cat_names<span class="ansi-blue-fg">}</span>
+<span class="ansi-green-intense-fg ansi-bold">      6</span> 
+<span class="ansi-green-intense-fg ansi-bold">      7</span>     <span class="ansi-green-fg">def</span> encodes<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> row<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">AttributeError</span>: &#39;Pipeline&#39; object has no attribute &#39;cat_names&#39;</pre>
+</div>
+</div>
+
 </div>
 </div>
 

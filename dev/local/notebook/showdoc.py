@@ -187,16 +187,16 @@ def _format_cls_doc(cls, full_name):
 def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, default_cls_level=2):
     "Show documentation for element `elt`. Supported types: class, function, and enum."
     elt = getattr(elt, '__func__', elt)
-    name = name or qual_name(elt)
+    qname = name or qual_name(elt)
     if inspect.isclass(elt):
-        if is_enum(elt.__class__):   name,args = _format_enum_doc(elt, name)
-        else:                        name,args = _format_cls_doc (elt, name)
-    elif isinstance(elt, Callable):  name,args = _format_func_doc(elt, name)
-    else:                            name,args = f"<code>{name}</code>", ''
+        if is_enum(elt.__class__):   name,args = _format_enum_doc(elt, qname)
+        else:                        name,args = _format_cls_doc (elt, qname)
+    elif isinstance(elt, Callable):  name,args = _format_func_doc(elt, qname)
+    else:                            name,args = f"<code>{qname}</code>", ''
     link = get_source_link(elt)
     source_link = f'<a href="{link}" class="source_link" style="float:right">[source]</a>'
     title_level = title_level or (default_cls_level if inspect.isclass(elt) else 4)
-    doc =  f'<h{title_level} id="{name}" class="doc_header">{name}{source_link}</h{title_level}>'
+    doc =  f'<h{title_level} id="{qname}" class="doc_header">{name}{source_link}</h{title_level}>'
     doc += f'\n\n> {args}\n\n' if len(args) > 0 else '\n\n'
     if doc_string and inspect.getdoc(elt): doc += add_doc_links(inspect.getdoc(elt))
     if disp: display(Markdown(doc))

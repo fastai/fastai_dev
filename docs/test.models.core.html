@@ -46,7 +46,7 @@ summary: "Contain the modules common between different architectures and the gen
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>LinearDecoder</code>" class="doc_header"><code>class</code> <code>LinearDecoder</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/33_test_models_core.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>LinearDecoder</code>(<strong><code>n_out</code></strong>, <strong><code>n_hid</code></strong>, <strong><code>output_p</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_encoder</code></strong>=<em><code>None</code></em>, <strong><code>bias</code></strong>=<em><code>True</code></em>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
+<h3 id="LinearDecoder" class="doc_header"><code>class</code> <code>LinearDecoder</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/33_test_models_core.ipynb#Language-models" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>LinearDecoder</code>(<strong><code>n_out</code></strong>, <strong><code>n_hid</code></strong>, <strong><code>output_p</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_encoder</code></strong>=<em><code>None</code></em>, <strong><code>bias</code></strong>=<em><code>True</code></em>) :: <a href="/layers.html#Module"><code>Module</code></a></p>
 </blockquote>
 <p>To go on top of a RNNCore module and create a Language Model.</p>
 
@@ -95,7 +95,7 @@ summary: "Contain the modules common between different architectures and the gen
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="<code>class</code> <code>SequentialRNN</code>" class="doc_header"><code>class</code> <code>SequentialRNN</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/33_test_models_core.ipynb" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>SequentialRNN</code>(<strong>*<code>args</code></strong>) :: <code>Sequential</code></p>
+<h3 id="SequentialRNN" class="doc_header"><code>class</code> <code>SequentialRNN</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/33_test_models_core.ipynb#Language-models" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>SequentialRNN</code>(<strong>*<code>args</code></strong>) :: <code>Sequential</code></p>
 </blockquote>
 <p>A sequential module that passes the reset call to its children.</p>
 
@@ -136,7 +136,7 @@ summary: "Contain the modules common between different architectures and the gen
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="<code>get_language_model</code>" class="doc_header"><code>get_language_model</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/33_test_models_core.ipynb" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_language_model</code>(<strong><code>arch</code></strong>, <strong><code>vocab_sz</code></strong>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>drop_mult</code></strong>=<em><code>1.0</code></em>)</p>
+<h4 id="get_language_model" class="doc_header"><code>get_language_model</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/33_test_models_core.ipynb#Language-models" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_language_model</code>(<strong><code>arch</code></strong>, <strong><code>vocab_sz</code></strong>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>drop_mult</code></strong>=<em><code>1.0</code></em>)</p>
 </blockquote>
 <p>Create a language model from <code>arch</code> and its <code>config</code>.</p>
 

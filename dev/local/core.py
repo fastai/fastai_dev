@@ -7,11 +7,11 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt',
            'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked',
            'retain_type', 'retain_types', 'concat', 'Chunks', 'trace', 'compose', 'maps', 'partialler', 'instantiate',
-           'bind', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find',
-           'find_device', 'find_bs', 'Module', 'sort_by_run', 'round_multiple', 'num_cpus', 'add_props',
-           'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'one_hot',
-           'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params', 'PrettyString',
-           'flatten_check', 'display_df', 'one_param']
+           '_0', '_1', '_2', '_3', '_4', 'bind', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
+           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'Module', 'sort_by_run', 'round_multiple',
+           'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image', 'show_titled_image',
+           'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params',
+           'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
 
 from .test import *
 from .imports import *
@@ -220,7 +220,7 @@ def _listify(o):
     if is_iter(o): return list(o)
     return [o]
 
-class CollBase(GetAttr, metaclass=NewChkMeta):
+class CollBase:
     "Base class for composing a list of `items`"
     _xtra =  [o for o in dir([]) if not o.startswith('_')]
 
@@ -232,10 +232,8 @@ class CollBase(GetAttr, metaclass=NewChkMeta):
     def __repr__(self): return self.items.__repr__()
     def __iter__(self): return self.items.__iter__()
     def _new(self, items, *args, **kwargs): return self.__class__(items, *args, **kwargs)
-    @property
-    def default(self): return self.items
 
-class L(CollBase):
+class L(CollBase, GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
@@ -264,6 +262,8 @@ class L(CollBase):
     def __repr__(self): return coll_repr(self)
     def __eq__(self,b): return all_equal(b,self)
     def __iter__(self): return (self[i] for i in range(len(self)))
+    @property
+    def default(self): return self.items
 
     def __invert__(self): return self._new(not i for i in self)
     def __mul__ (a,b): return a._new(a.items*b)
@@ -286,6 +286,8 @@ class L(CollBase):
         if is_coll(a): a = len(a)
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
+    def unique(self): return self._new(dict.fromkeys(self).keys())
+    def val2idx(self): return {v:k for k,v in enumerate(self)}
     def itemgot(self, idx): return self.mapped(itemgetter(idx))
     def attrgot(self, k, default=None): return self.mapped(lambda o:getattr(o,k,default))
     def tensored(self): return self.mapped(tensor)
@@ -307,6 +309,8 @@ class L(CollBase):
 
 add_docs(L,
          __getitem__="Retrieve `idx` (can be list of indices, or mask, or int) items",
+         unique="Unique items, in stable order",
+         val2idx="Dict from value to index",
          filtered="Create new `L` filtered by predicate `f`, passing `args` and `kwargs` to `f`",
          mapped="Create new `L` with `f` applied to all `items`, passing `args` and `kwargs` to `f`",
          mapped_dict="Like `mapped`, but creates a dict from `items` to function results",
@@ -409,10 +413,10 @@ def replicate(item,match):
 
 def uniqueify(x, sort=False, bidir=False, start=None):
     "Return the unique elements in `x`, optionally `sort`-ed, optionally return the reverse correspondance."
-    res = list(OrderedDict.fromkeys(x).keys())
-    if start is not None: res = L(start)+res
+    res = L(x).unique()
+    if start is not None: res = start+res
     if sort: res.sort()
-    if bidir: return res, {v:k for k,v in enumerate(res)}
+    if bidir: return res, res.val2idx()
     return res
 
 def setify(o): return o if isinstance(o,set) else set(L(o))
