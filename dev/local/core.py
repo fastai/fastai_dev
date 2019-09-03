@@ -383,6 +383,42 @@ def store_attr(self, nms):
 class TensorBase(Tensor, metaclass=BypassNewMeta):
     def _new_meta(self, *args, **kwargs): return tensor(self)
 
+from torch._utils import _rebuild_tensor_v2, _rebuild_qtensor
+
+def _fa_rebuild_tensor(cls, *args, **kwargs):
+    res = _rebuild_tensor_v2(*args, **kwargs)
+    if issubclass(cls, TensorBase): res = cls(res)
+    return res
+
+def _fa_rebuild_qtensor(cls, *args, **kwargs):
+    res = _rebuild_qtensor(*args, **kwargs)
+    if issubclass(cls, TensorBase): res = cls(res)
+    return res
+
+def _tensor_reduce_ex(self, proto):
+    # See Note [Don't serialize hooks]
+    torch.utils.hooks.warn_if_has_hooks(self)
+    if self.is_quantized:
+        args = (type(self), self.storage(),
+                self.storage_offset(),
+                tuple(self.size()),
+                self.stride(),
+                self.q_scale(),
+                self.q_zero_point(),
+                self.requires_grad,
+                OrderedDict())  # TODO: self.qscheme()
+        return (_fa_rebuild_qtensor, args)
+    else:
+        args = (type(self), self.storage(),
+                self.storage_offset(),
+                tuple(self.size()),
+                self.stride(),
+                self.requires_grad,
+                OrderedDict())  # previously was self._backward_hooks
+        return (_fa_rebuild_tensor, args)
+
+torch.Tensor.__reduce_ex__ = _tensor_reduce_ex
+
 def _patch_tb():
     def get_f(fn):
         def _f(self, *args, **kwargs):
@@ -527,7 +563,10 @@ def retain_type(new, old=None, typ=None):
 def retain_types(new, old=None, typs=None):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
     assert old is not None or typs is not None
-    return tuple(L(new,L(old),L(typs)).mapped_zip(retain_type, longest=True))
+    if not is_listy(new): return retain_type(new, old, typs)
+    if not is_listy(old): old = [old]*len(new)
+    if not is_listy(typs): typs = [typs]*len(new)
+    return tuple(retain_type(*o) for o in zip(new,old,typs))
 
 def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"

@@ -52,7 +52,7 @@ class DataLoader():
         except TypeError: self.n = None
         assert not kwargs and not (bs is None and drop_last)
 
-    def __iter__(self): return _loaders[self.fake_l.num_workers==0](self.fake_l)
+    def __iter__(self): return iter(_loaders[self.fake_l.num_workers==0](self.fake_l))
 
     def __len__(self):
         if self.n is None: raise TypeError
@@ -74,8 +74,8 @@ class DataLoader():
             idxs = self.shuffle_fn(idxs) if self.shuffle else idxs
         return (b for i,b in enumerate(idxs) if i//(self.bs or 1)%self.nw==self.offs)
 
+    def retain(self, res, b):  return retain_types(res, b[0] if is_listy(b) else b)
     def create_item(self, s):  return next(self.it) if s is None else self.dataset[s]
-    def retain(self, res, b):  return retain_types(res, b[0]) if is_listy(b[0]) else res
     def create_batch(self, b): return (fa_collate,fa_convert)[self.bs is None](b)
     def one_batch(self):   return next(iter(self))
     def do_item(self, s):  return self.after_item(self.create_item(s))

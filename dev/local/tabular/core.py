@@ -14,7 +14,7 @@ pd.set_option('mode.chained_assignment','raise')
 class Tabular(CollBase):
     def __init__(self, df, cat_names=None, cont_names=None, y_names=None, is_y_cat=True, splits=None):
         super().__init__(df)
-        self.splits = L(ifnone(splits,[None]))
+        self.splits = L(ifnone(splits,slice(None)))
         self.cat_names,self.cont_names,self.y_names = L(cat_names),L(cont_names),y_names
         self.cat_y  = None if not is_y_cat else y_names
         self.cont_y = None if     is_y_cat else y_names
@@ -46,23 +46,19 @@ _add_prop(Tabular, 'cont')
 _add_prop(Tabular, 'all_cont')
 _add_prop(Tabular, 'all_col')
 
-class TabularProc(Transform):
+class TabularProc(InplaceTransform):
     "Base class to write a tabular processor for dataframes"
-    process = NotImplemented
-    def encodes(self, to, **kwargs):
-        self.process(to)
-        return to
+    def process(self, *args,**kwargs): return self(*args,**kwargs)
 
 class Categorify(TabularProc, CollBase):
     "Transform the categorical variables to that type."
     order = 1
     def setup(self, to):
-        to.classes = self.items = {n:CategoryMap(to.loc[ifnone(to.splits[0], slice(None)),n])
+        to.classes = self.items = {n:CategoryMap(to.loc[to.splits[0],n])
                                    for n in to.all_cat_names}
 
     def _apply_cats(self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
-    def process(self, to): to.transform(to.all_cat_names, self._apply_cats)
-
+    def encodes(self, to): to.transform(to.all_cat_names, self._apply_cats)
     def decodes(self, to):
         cats = [self[c][v] for v,c in zip(to.items[0], to.cat_names)]
         to.items = (cats, to.items[1])
@@ -72,11 +68,10 @@ class Normalize(TabularProc):
     "Normalize the continuous variables."
     order = 2
     def setup(self, to):
-        df = to.loc[ifnone(to.splits[0],slice(None)), to.cont_names]
+        df = to.loc[to.splits[0], to.cont_names]
         self.means,self.stds = df.mean(),df.std(ddof=0)
 
-    def process(self, to): to.conts = (to.conts-self.means) / (self.stds+1e-7)
-
+    def encodes(self, to): to.conts = (to.conts-self.means) / (self.stds+1e-7)
     def decodes(self, to):
         conts = [(v*self.stds[c] + self.means[c]).item() for v,c in zip(to.items[1], to.cont_names)]
         to.items = (to.items[0], conts)
@@ -95,11 +90,11 @@ class FillMissing(TabularProc):
         store_attr(self, 'fill_strategy,add_col,fill_vals')
 
     def setup(self, to):
-        df = to.loc[ifnone(to.splits[0],slice(None)), to.cont_names]
+        df = to.loc[to.splits[0], to.cont_names]
         self.na_dict = {n:self.fill_strategy(df[n], self.fill_vals[n])
                         for n in pd.isnull(to.conts).any().keys()}
 
-    def process(self, to):
+    def encodes(self, to):
         missing = pd.isnull(to.conts)
         for n in missing.any().keys():
             assert n in self.na_dict, f"nan values in `{n}` but not in setup training set"
