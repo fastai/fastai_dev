@@ -722,7 +722,7 @@ def num_cpus():
     try:                   return len(os.sched_getaffinity(0))
     except AttributeError: return os.cpu_count()
 
-defaults.cpus = min(16, num_cpus())
+defaults.cpus = num_cpus()
 
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"

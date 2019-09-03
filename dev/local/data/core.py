@@ -12,7 +12,7 @@ from .load import *
 from .transform import *
 from .pipeline import *
 from .external import *
-from ..notebook.showdoc import show_doc
+from ..notebook.showdoc import *
 
 def _get_files(p, fs, extensions=None):
     p = Path(p)
@@ -152,11 +152,12 @@ _dl_tfms = ('after_item','before_batch','after_batch')
 @delegates()
 class TfmdDL(DataLoader):
     "Transformed `DataLoader`"
-    def __init__(self, dataset, bs=16, shuffle=False, **kwargs):
+    def __init__(self, dataset, bs=16, shuffle=False, num_workers=None, **kwargs):
+        if num_workers is None: num_workers = min(16, defaults.cpus)
         for nm in _dl_tfms:
             kwargs[nm] = Pipeline(kwargs.get(nm,None), as_item=(nm=='before_batch'))
             kwargs[nm].setup(self)
-        super().__init__(dataset, bs=bs, shuffle=shuffle, **kwargs)
+        super().__init__(dataset, bs=bs, shuffle=shuffle, num_workers=num_workers, **kwargs)
         it  = self.do_item(0)
         its = self.do_batch([it])
         #TODO do we still need?
