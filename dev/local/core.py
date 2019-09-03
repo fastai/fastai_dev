@@ -399,7 +399,7 @@ def _tensor_reduce_ex(self, proto):
     # See Note [Don't serialize hooks]
     torch.utils.hooks.warn_if_has_hooks(self)
     if self.is_quantized:
-        args = (type(self), self.storage(),
+        args = (self.storage(),
                 self.storage_offset(),
                 tuple(self.size()),
                 self.stride(),
@@ -407,15 +407,17 @@ def _tensor_reduce_ex(self, proto):
                 self.q_zero_point(),
                 self.requires_grad,
                 OrderedDict())  # TODO: self.qscheme()
-        return (_fa_rebuild_qtensor, args)
+        if isinstance(self, TensorBase): return (_fa_rebuild_qtensor, (type(self),)+args)
+        else: return (_rebuild_qtensor, args)
     else:
-        args = (type(self), self.storage(),
+        args = (self.storage(),
                 self.storage_offset(),
                 tuple(self.size()),
                 self.stride(),
                 self.requires_grad,
                 OrderedDict())  # previously was self._backward_hooks
-        return (_fa_rebuild_tensor, args)
+        if isinstance(self, TensorBase): return (_fa_rebuild_tensor, (type(self),)+args)
+        else: return (_rebuild_tensor_v2, args)
 
 torch.Tensor.__reduce_ex__ = _tensor_reduce_ex
 
