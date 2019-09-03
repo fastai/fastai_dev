@@ -24,6 +24,7 @@ import torch,matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy
 import requests,yaml
 from typeguard import typechecked
 from fastprogress import progress_bar,master_bar
+from pandas.api.types import is_categorical_dtype,is_numeric_dtype
 
 from torch import as_tensor,Tensor,ByteTensor,LongTensor,FloatTensor,HalfTensor,DoubleTensor
 import torch.nn as nn

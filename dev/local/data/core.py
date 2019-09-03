@@ -84,9 +84,11 @@ def RegexLabeller(pat):
 
 class CategoryMap(CollBase):
     def __init__(self, col, sort=True):
-        # `o==o` is the generalized definition of non-NaN used by Pandas
-        items = L(o for o in L(col).unique() if o==o)
-        if sort: items = items.sorted()
+        if is_categorical_dtype(col): items = L(col.cat.categories)
+        else:
+            # `o==o` is the generalized definition of non-NaN used by Pandas
+            items = L(o for o in L(col).unique() if o==o)
+            if sort: items = items.sorted()
         self.items = '#na#' + items
         self.o2i = defaultdict(int, self.items.val2idx())
     def __eq__(self,b): return all_equal(b,self)

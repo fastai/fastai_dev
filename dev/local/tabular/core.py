@@ -9,7 +9,6 @@ from ..core import *
 from ..data.all import *
 from ..notebook.showdoc import show_doc
 
-from pandas.api.types import is_numeric_dtype
 pd.set_option('mode.chained_assignment','raise')
 
 class Tabular(CollBase):
@@ -57,7 +56,8 @@ class Categorify(TabularProc, CollBase):
         to.classes = self.items = {n:CategoryMap(to.loc[ifnone(to.splits[0], slice(None)),n])
                                    for n in to.all_cat_names}
 
-    def process(self, to): to.transform(to.all_cat_names, lambda c: c.map(self[c.name].o2i))
+    def _apply_cats(self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
+    def process(self, to): to.transform(to.all_cat_names, self._apply_cats)
 
     def decodes(self, to):
         cats = [self[c][v] for v,c in zip(to.items[0], to.cat_names)]
