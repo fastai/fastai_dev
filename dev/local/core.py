@@ -191,9 +191,10 @@ class GetAttr(BaseObj):
     @property
     def _xtra(self): return [o for o in dir(self.default) if not o.startswith('_')]
     def __getattr__(self,k):
-        if k in self._xtra: return getattr(self.default, k)
+        if k not in ('_xtra','default') and k in self._xtra: return getattr(self.default, k)
         raise AttributeError(k)
     def __dir__(self): return custom_dir(self, self._xtra)
+    def __setstate__(self,data): self.__dict__.update(data)
 
 def delegate_attr(self, k, to):
     "Use in `__getattr__` to delegate to attr `to` without inheriting from `GetAttr`"
@@ -203,8 +204,8 @@ def delegate_attr(self, k, to):
 
 def coll_repr(c, max_n=10):
     "String repr of up to `max_n` items of (possibly lazy) collection `c`"
-    return f'(#{len(c)}) [' + ','.join(itertools.islice(map(str,c), max_n)) + ('...'
-            if len(c)>10 else '') + ']'
+    return f'(#{len(c)}) [' + ','.join(itertools.islice(map(str,c), max_n)) + (
+        '...' if len(c)>10 else '') + ']'
 
 def mask2idxs(mask):
     "Convert bool mask or index list to index `L`"
@@ -259,12 +260,11 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if not is_iter(o): o = [o]*len(idx)
         for i,o_ in zip(idx,o): self.items[i] = o_
 
-    def __repr__(self): return coll_repr(self)
-    def __eq__(self,b): return all_equal(b,self)
-    def __iter__(self): return (self[i] for i in range(len(self)))
     @property
     def default(self): return self.items
-
+    def __iter__(self): return (self[i] for i in range(len(self)))
+    def __repr__(self): return coll_repr(self)
+    def __eq__(self,b): return all_equal(b,self)
     def __invert__(self): return self._new(not i for i in self)
     def __mul__ (a,b): return a._new(a.items*b)
     def __add__ (a,b): return a._new(a.items+_listify(b))

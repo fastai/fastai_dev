@@ -50,21 +50,16 @@ class TabularProc(Transform):
         self.process(to)
         return to
 
-class Categorify(TabularProc):
+class Categorify(TabularProc, CollBase):
     "Transform the categorical variables to that type."
     order = 1
     def setup(self, to):
-        self.classes = {}
-        for n in to.all_cat_names:
-            col = to.loc[ifnone(to.splits[0], slice(None)),n]
-            self.classes[n] = '#na#' + L(o for o in L(col).unique() if o == o).sorted()
-        to.classes = self.classes
+        to.classes = self.items = {n:_CategoryMap(to.loc[ifnone(to.splits[0], slice(None)),n]) for n in to.all_cat_names}
 
-    def process(self, to):
-        to.transform(to.all_cat_names, lambda c: c.map(defaultdict(int, self.classes[c.name].val2idx())) - 1)
+    def process(self, to): to.transform(to.all_cat_names, lambda c: c.map(self[c.name].o2i))
 
     def decodes(self, to):
-        cats = [self.classes[c][v] for v,c in zip(to.items[0], to.cat_names)]
+        cats = [self[c][v] for v,c in zip(to.items[0], to.cat_names)]
         to.items = (cats, to.items[1])
         return to
 
@@ -117,26 +112,21 @@ def process_df(df, procs, splits=None, cat_names=None, cont_names=None, cat_y=No
 
 class TabularLine(pd.Series):
     "A line of a dataframe that knows how to show itself"
-    def show(self, ctx=None, **kwargs):
-        if ctx is None: return self
-        else: return ctx.append(self)
+    def show(self, ctx=None, **kwargs): return self if ctx is None else ctx.append(self)
 
 class TensorTabular(tuple):
-
-    def get_ctxs(self, max_samples=10, **kwargs):
-        n_samples = min(self[0].shape[0], max_samples)
+    def get_ctxs(self, max_n=10, **kwargs):
+        n_samples = min(self[0].shape[0], max_n)
         df = pd.DataFrame(index = range(n_samples))
         return [df.iloc[i] for i in range(n_samples)]
 
     def display(self, ctxs): display_df(pd.DataFrame(ctxs))
 
 class ReadTabLine(ItemTransform):
-    def __init__(self, proc):
-        self.proc = proc
+    def __init__(self, proc): self.proc = proc
 
     def encodes(self, row):
-        cats = [row[n]+1 for n in self.proc.cat_names]
-        conts = [row[n] for n in self.proc.cont_names]
+        cats,conts = (o.mapped(row.__getitem__) for o in (self.proc.cat_names,self.proc.cont_names))
         return TensorTabular((tensor(cats).long(),tensor(conts).float()))
 
     def decodes(self, o) -> TabularLine:
@@ -144,11 +134,7 @@ class ReadTabLine(ItemTransform):
         to = self.proc.decode(to)
         return pd.Series({c: v for v,c in zip(to.items[0]+to.items[1], self.proc.cat_names+self.proc.cont_names)})
 
-import numpy as np
-
 class ReadTabTarget(ItemTransform):
-    def __init__(self, proc):
-        self.proc = proc
-
+    def __init__(self, proc): self.proc = proc
     def encodes(self, row): return row[self.proc.cat_y].astype(np.int64)
-    def decodes(self, o) -> Category: return self.proc.classes[self.proc.cat_y][o+1]
+    def decodes(self, o) -> Category: return self.proc.classes[self.proc.cat_y][o]

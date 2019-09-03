@@ -24,8 +24,8 @@ def make_vocab(count, min_freq=3, max_vocab=60000):
     return vocab + ['xxfake' for _ in range(0, 8-len(vocab)%8)]
 
 class TensorText(TensorBase):
-    def get_ctxs(self, max_samples=10, **kwargs):
-        n_samples = min(self.shape[0], max_samples)
+    def get_ctxs(self, max_n=10, **kwargs):
+        n_samples = min(self.shape[0], max_n)
         df = pd.DataFrame(index = range(n_samples))
         return [df.iloc[i] for i in range(n_samples)]
 
