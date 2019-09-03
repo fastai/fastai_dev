@@ -140,6 +140,7 @@
   "GrandparentSplitter": "05_data_core.ipynb",
   "parent_label": "05_data_core.ipynb",
   "RegexLabeller": "05_data_core.ipynb",
+  "CategoryMap": "05_data_core.ipynb",
   "Category": "05_data_core.ipynb",
   "Categorize": "05_data_core.ipynb",
   "Category.create": "05_data_core.ipynb",
