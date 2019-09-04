@@ -83,13 +83,13 @@ def RegexLabeller(pat):
     return _inner
 
 class CategoryMap(CollBase):
-    def __init__(self, col, sort=True):
+    def __init__(self, col, sort=True, add_na=False):
         if is_categorical_dtype(col): items = L(col.cat.categories)
         else:
             # `o==o` is the generalized definition of non-NaN used by Pandas
             items = L(o for o in L(col).unique() if o==o)
             if sort: items = items.sorted()
-        self.items = '#na#' + items
+        self.items = '#na#' + items if add_na else items
         self.o2i = defaultdict(int, self.items.val2idx())
     def __eq__(self,b): return all_equal(b,self)
 
@@ -98,10 +98,12 @@ class Category(str, ShowTitle): _show_args = {'label': 'category'}
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order=1
-    def __init__(self, vocab=None): self.vocab = None if vocab is None else CategoryMap(vocab)
+    def __init__(self, vocab=None, add_na=False):
+        self.add_na = add_na
+        self.vocab = None if vocab is None else CategoryMap(vocab, add_na=add_na)
 
     def setup(self, dsrc):
-        if self.vocab is None and dsrc: self.vocab = CategoryMap(getattr(dsrc,'train',dsrc))
+        if self.vocab is None and dsrc: self.vocab = CategoryMap(getattr(dsrc,'train',dsrc), add_na=self.add_na)
 
     def encodes(self, o): return self.vocab.o2i[o]
     def decodes(self, o)->Category: return self.vocab[o]

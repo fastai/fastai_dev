@@ -54,7 +54,7 @@ class Categorify(TabularProc, CollBase):
     "Transform the categorical variables to that type."
     order = 1
     def setup(self, to):
-        to.classes = self.items = {n:CategoryMap(to.loc[to.splits[0],n])
+        to.classes = self.items = {n:CategoryMap(to.loc[to.splits[0],n], add_na=True)
                                    for n in to.all_cat_names}
 
     def _apply_cats(self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
