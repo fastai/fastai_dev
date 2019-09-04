@@ -2,16 +2,16 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'chk', 'tensor', 'add_docs', 'docs',
-           'custom_dir', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'CollBase', 'L', 'ifnone', 'get_class',
-           'mk_class', 'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'tuplify', 'replicate', 'uniqueify',
-           'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt',
-           'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked',
-           'retain_type', 'retain_types', 'concat', 'Chunks', 'trace', 'compose', 'maps', 'partialler', 'instantiate',
-           '_0', '_1', '_2', '_3', '_4', 'bind', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device',
-           'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'Module', 'sort_by_run', 'round_multiple',
-           'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image', 'show_titled_image',
-           'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params',
-           'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
+           'custom_dir', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'CollBase', 'cycle', 'zip_cycle', 'L',
+           'ifnone', 'get_class', 'mk_class', 'wrap_class', 'set_seed', 'store_attr', 'TensorBase', 'tuplify',
+           'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
+           'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
+           'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'concat', 'Chunks', 'trace', 'compose', 'maps',
+           'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'apply', 'to_detach', 'to_half',
+           'to_float', 'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'Module',
+           'sort_by_run', 'round_multiple', 'num_cpus', 'add_props', 'make_cross_image', 'show_title', 'show_image',
+           'show_titled_image', 'show_image_batch', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake',
+           'trainable_params', 'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
 
 from .test import *
 from .imports import *
@@ -234,6 +234,14 @@ class CollBase:
     def __iter__(self): return self.items.__iter__()
     def _new(self, items, *args, **kwargs): return self.__class__(items, *args, **kwargs)
 
+def cycle(o):
+    "Like `itertools.cycle` except creates list of `None`s if `o` is empty"
+    return itertools.cycle(o) if o is not None and len(o) > 0 else itertools.cycle([None])
+
+def zip_cycle(x, *args):
+    "Like `itertools.zip_longest` but `cycle`s through elements of all but first argument"
+    return zip(x, *map(cycle,args))
+
 class L(CollBase, GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     def __init__(self, items=None, *rest, use_list=False, match=None):
@@ -286,22 +294,22 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if is_coll(a): a = len(a)
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
-    def unique(self): return L(dict.fromkeys(self).keys())#self._new(dict.fromkeys(self).keys())
+    def unique(self): return L(dict.fromkeys(self).keys())
     def val2idx(self): return {v:k for k,v in enumerate(self)}
     def itemgot(self, idx): return self.mapped(itemgetter(idx))
     def attrgot(self, k, default=None): return self.mapped(lambda o:getattr(o,k,default))
     def tensored(self): return self.mapped(tensor)
     def stack(self, dim=0): return torch.stack(list(self.tensored()), dim=dim)
     def cat  (self, dim=0): return torch.cat  (list(self.tensored()), dim=dim)
-    def cycle(self): return itertools.cycle(self) if len(self) > 0 else itertools.cycle([None])
+    def cycle(self): return cycle(self)
     def filtered(self, f, *args, **kwargs): return self._new(filter(partial(f,*args,**kwargs), self))
     def mapped(self, f, *args, **kwargs): return self._new(map(partial(f,*args,**kwargs), self))
     def mapped_dict(self, f, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
     def starmapped(self, f, *args, **kwargs): return self._new(itertools.starmap(partial(f,*args,**kwargs), self))
-    def zipped(self, longest=False): return self._new((zip_longest if longest else zip)(*self))
-    def zipwith(self, *rest, longest=False): return self._new([self, *rest]).zipped(longest=longest)
-    def mapped_zip(self, f, longest=False): return self.zipped(longest=longest).starmapped(f)
-    def mapped_zipwith(self, f, *rest, longest=False): return self.zipwith(*rest, longest=longest).starmapped(f)
+    def zipped(self, cycled=False): return self._new((zip_cycle if cycled else zip)(*self))
+    def zipwith(self, *rest, cycled=False): return self._new([self, *rest]).zipped(cycled=cycled)
+    def mapped_zip(self, f, cycled=False): return self.zipped(cycled=cycled).starmapped(f)
+    def mapped_zipwith(self, f, *rest, cycled=False): return self.zipwith(*rest, cycled=cycled).starmapped(f)
     def shuffled(self):
         it = copy(self.items)
         random.shuffle(it)
@@ -536,11 +544,8 @@ def retain_type(new, old=None, typ=None):
 
 def retain_types(new, old=None, typs=None):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
-    assert old is not None or typs is not None
     if not is_listy(new): return retain_type(new, old, typs)
-    if not is_listy(old): old = [old]*len(new)
-    if not is_listy(typs): typs = [typs]*len(new)
-    return tuple(retain_type(*o) for o in zip(new,old,typs))
+    return tuple(L(new, old, typs).mapped_zip(retain_type, cycled=True))
 
 def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"

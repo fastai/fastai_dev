@@ -19,10 +19,11 @@ def _wif(worker_id):
 
 class _FakeLoader(GetAttr):
     _auto_collation,collate_fn,drop_last,dataset_kind,_index_sampler = False,noops,False,_DatasetKind.Iterable,Inf.count
-    multiprocessing_context = None
     def __init__(self, d, pin_memory, num_workers, timeout):
         self.dataset,self.default,self.worker_init_fn = self,d,_wif
         store_attr(self, 'd,pin_memory,num_workers,timeout')
+        self.multiprocessing_context = (None,multiprocessing)[num_workers>0]
+
     def __iter__(self): return iter(self.d.create_batches(self.d.sampler()))
 
 _collate_types = (ndarray, Tensor, typing.Mapping, str)
@@ -52,7 +53,10 @@ class DataLoader():
         except TypeError: self.n = None
         assert not kwargs and not (bs is None and drop_last)
 
-    def __iter__(self): return iter(_loaders[self.fake_l.num_workers==0](self.fake_l))
+    def __iter__(self):
+        self.before_iter()
+        for b in _loaders[self.fake_l.num_workers==0](self.fake_l): yield self.after_batch(b)
+        self.after_iter()
 
     def __len__(self):
         if self.n is None: raise TypeError
@@ -61,10 +65,8 @@ class DataLoader():
 
     def create_batches(self, samps):
         self.it = iter(self.dataset) if self.dataset else None
-        self.before_iter()
         res = map(self.do_item, samps)
         yield from res if self.bs is None else map(self.do_batch, chunked(res, self.bs, self.drop_last))
-        self.after_iter()
 
     def shuffle_fn(self, idxs): return self.rng.sample(idxs, len(idxs))
     def sampler(self):
@@ -79,4 +81,4 @@ class DataLoader():
     def create_batch(self, b): return (fa_collate,fa_convert)[self.bs is None](b)
     def one_batch(self):   return next(iter(self))
     def do_item(self, s):  return self.after_item(self.create_item(s))
-    def do_batch(self, b): return self.after_batch(self.retain(self.create_batch(self.before_batch(b)), b))
+    def do_batch(self, b): return self.retain(self.create_batch(self.before_batch(b)), b)

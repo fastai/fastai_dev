@@ -34,6 +34,8 @@
   "coll_repr": "01_core.ipynb",
   "mask2idxs": "01_core.ipynb",
   "CollBase": "01_core.ipynb",
+  "cycle": "01_core.ipynb",
+  "zip_cycle": "01_core.ipynb",
   "L": "01_core.ipynb",
   "ifnone": "01_core.ipynb",
   "get_class": "01_core.ipynb",

@@ -45,6 +45,7 @@ from types import BuiltinFunctionType,BuiltinMethodType,MethodType,FunctionType
 
 pd.options.display.max_colwidth = 600
 NoneType = type(None)
+string_classes = (str,bytes)
 
 def is_iter(o):
     "Test whether `o` can be used in a `for` loop"
