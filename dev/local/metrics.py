@@ -136,7 +136,7 @@ def accuracy_multi(inp, targ, thresh=0.5, sigmoid=True):
     "Compute accuracy when `inp` and `targ` are the same size."
     inp,targ = flatten_check(inp,targ)
     if sigmoid: inp = inp.sigmoid()
-    return ((inp>thresh)==targ.byte()).float().mean()
+    return ((inp>thresh)==targ.bool()).float().mean()
 
 def APScoreMulti(thresh=0.5, sigmoid=True, average='macro', pos_label=1, sample_weight=None):
     "Average Precision for multi-label classification problems"
