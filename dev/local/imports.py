@@ -41,6 +41,7 @@ except ImportError:
     WrapperDescriptorType = type(object.__init__)
     MethodWrapperType = type(object().__str__)
     MethodDescriptorType = type(str.join)
+from types import BuiltinFunctionType,BuiltinMethodType,MethodType,FunctionType
 
 pd.options.display.max_colwidth = 600
 NoneType = type(None)
