@@ -286,7 +286,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if is_coll(a): a = len(a)
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
-    def unique(self): return self._new(dict.fromkeys(self).keys())
+    def unique(self): return L(dict.fromkeys(self).keys())#self._new(dict.fromkeys(self).keys())
     def val2idx(self): return {v:k for k,v in enumerate(self)}
     def itemgot(self, idx): return self.mapped(itemgetter(idx))
     def attrgot(self, k, default=None): return self.mapped(lambda o:getattr(o,k,default))
@@ -380,46 +380,18 @@ def store_attr(self, nms):
     mod = inspect.currentframe().f_back.f_locals
     for n in re.split(', *', nms): setattr(self,n,mod[n])
 
+def _fa_rebuild_tensor (cls, *args, **kwargs): return cls(torch._utils._rebuild_tensor_v2(*args, **kwargs))
+def _fa_rebuild_qtensor(cls, *args, **kwargs): return cls(torch._utils._rebuild_qtensor  (*args, **kwargs))
+
 class TensorBase(Tensor, metaclass=BypassNewMeta):
     def _new_meta(self, *args, **kwargs): return tensor(self)
 
-from torch._utils import _rebuild_tensor_v2, _rebuild_qtensor
-
-def _fa_rebuild_tensor(cls, *args, **kwargs):
-    res = _rebuild_tensor_v2(*args, **kwargs)
-    if issubclass(cls, TensorBase): res = cls(res)
-    return res
-
-def _fa_rebuild_qtensor(cls, *args, **kwargs):
-    res = _rebuild_qtensor(*args, **kwargs)
-    if issubclass(cls, TensorBase): res = cls(res)
-    return res
-
-def _tensor_reduce_ex(self, proto):
-    # See Note [Don't serialize hooks]
-    torch.utils.hooks.warn_if_has_hooks(self)
-    if self.is_quantized:
-        args = (self.storage(),
-                self.storage_offset(),
-                tuple(self.size()),
-                self.stride(),
-                self.q_scale(),
-                self.q_zero_point(),
-                self.requires_grad,
-                OrderedDict())  # TODO: self.qscheme()
-        if isinstance(self, TensorBase): return (_fa_rebuild_qtensor, (type(self),)+args)
-        else: return (_rebuild_qtensor, args)
-    else:
-        args = (self.storage(),
-                self.storage_offset(),
-                tuple(self.size()),
-                self.stride(),
-                self.requires_grad,
-                OrderedDict())  # previously was self._backward_hooks
-        if isinstance(self, TensorBase): return (_fa_rebuild_tensor, (type(self),)+args)
-        else: return (_rebuild_tensor_v2, args)
-
-torch.Tensor.__reduce_ex__ = _tensor_reduce_ex
+    def __reduce_ex__(self,proto):
+        torch.utils.hooks.warn_if_has_hooks(self)
+        args = (type(self), self.storage(), self.storage_offset(), tuple(self.size()), self.stride())
+        if self.is_quantized: args = args + (self.q_scale(), self.q_zero_point())
+        f = _fa_rebuild_qtensor if self.is_quantized else  _fa_rebuild_tensor
+        return (f, args + (self.requires_grad, OrderedDict()))
 
 def _patch_tb():
     def get_f(fn):
@@ -431,12 +403,12 @@ def _patch_tb():
 
     t = tensor([1])
     skips = '__class__ __deepcopy__ __delattr__ __dir__ __doc__ __getattribute__ __hash__ __init__ \
-        __init_subclass__ __new__ __reduce__ __module__ __setstate__'.split()
+        __init_subclass__ __new__ __reduce__ __reduce_ex__ __module__ __setstate__'.split()
 
     for fn in dir(t):
         if fn in skips: continue
         f = getattr(t, fn)
-        if isinstance(f, (MethodWrapperType, types.BuiltinFunctionType, types.BuiltinMethodType, types.MethodType, types.FunctionType)):
+        if isinstance(f, (MethodWrapperType, BuiltinFunctionType, BuiltinMethodType, MethodType, FunctionType)):
             setattr(TensorBase, fn, get_f(fn))
 
 _patch_tb()

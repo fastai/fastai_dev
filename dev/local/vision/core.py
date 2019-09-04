@@ -7,10 +7,7 @@ __all__ = ['Image', 'n_px', 'shape', 'aspect', 'load_image', 'PILBase', 'PILImag
 from ..imports import *
 from ..test import *
 from ..core import *
-from ..data.transform import *
-from ..data.pipeline import *
-from ..data.core import *
-from ..data.external import *
+from ..data.all import *
 from ..notebook.showdoc import show_doc
 
 from PIL import Image

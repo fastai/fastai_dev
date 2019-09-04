@@ -16,10 +16,11 @@ def _mk_subset(self, i):
 
 class _FiltTfmdList(TfmdList):
     "Like `TfmdList` but with filters and train/valid attribute, for proper setup"
-    def __init__(self, dsrc, tfms, do_setup=True):
-        self.filt_idx = dsrc.filt_idx
-        super().__init__(dsrc.items, tfms, do_setup=do_setup, as_item=True, filt=None)
+    def __init__(self, items, tfms, filt_idx, do_setup=True, use_list=None):
+        self.filt_idx = filt_idx
+        super().__init__(items, tfms, do_setup=do_setup, as_item=True, use_list=use_list, filt=None)
 
+    def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, filt_idx=self.filt_idx, do_setup=False, use_list=None)
     def subset(self, i): return _mk_subset(self, i)
     def _get(self, i):
         self.filt = self.filt_idx[i]
@@ -38,7 +39,7 @@ class DataSource(TfmdDS):
         assert all_disjoint(self.filts)
         self.filt_idx = L([None]*len(self.items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
-        self.tls = [_FiltTfmdList(self, t, do_setup=do_setup) for t in L(tfms)]
+        self.tls = [_FiltTfmdList(self.items, t, self.filt_idx, do_setup=do_setup) for t in L(tfms)]
 
     def __repr__(self): return '\n'.join(map(str,self.subsets())) + f'\ntls - {self.tls}'
     def subsets(self): return map(self.subset, range_of(self.filts))
