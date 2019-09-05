@@ -158,7 +158,7 @@ def download_data(url, fname=None, c_key=ConfigKey.Archive, force_download=False
 
 #Cell 22
 def _get_check(url):
-    checks = json.load(open(Path(__file__).parent/'checks.txt', 'r'))
+    checks = json.load(open(Path(___file___).parent/'checks.txt', 'r'))
     return checks.get(url, None)
 
 def _check_file(fname):
@@ -170,9 +170,9 @@ def _check_file(fname):
 #Cell 24
 def _add_check(url, fname):
     "Internal function to update the internal check file with `url` and check on `fname`."
-    checks = json.load(open(Path(__file__).parent/'checks.txt', 'r'))
+    checks = json.load(open(Path(___file___).parent/'checks.txt', 'r'))
     checks[url] = _check_file(fname)
-    json.dump(checks, open(Path(__file__).parent/'checks.txt', 'w'), indent=2)
+    json.dump(checks, open(Path(___file___).parent/'checks.txt', 'w'), indent=2)
 
 #Cell 26
 def tar_extract(fname, dest):

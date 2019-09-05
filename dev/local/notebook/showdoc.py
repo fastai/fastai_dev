@@ -20,8 +20,8 @@ def is_enum(cls):
 
 #Cell 11
 def _get_pytorch_index():
-    if not (Path(__file__).parent/'index_pytorch.txt').exists(): return {}
-    return json.load(open(Path(__file__).parent/'index_pytorch.txt', 'r'))
+    if not (Path(___file___).parent/'index_pytorch.txt').exists(): return {}
+    return json.load(open(Path(___file___).parent/'index_pytorch.txt', 'r'))
 
 def add_pytorch_index(func_name, url):
     "Add `func_name` in the PyTorch index for automatic links."
@@ -29,13 +29,13 @@ def add_pytorch_index(func_name, url):
     if not url.startswith("https://pytorch.org/docs/stable/"):
         url = "https://pytorch.org/docs/stable/" + url
     index[func_name] = url
-    json.dump(index, open(Path(__file__).parent/'index_pytorch.txt', 'w'), indent=2)
+    json.dump(index, open(Path(___file___).parent/'index_pytorch.txt', 'w'), indent=2)
 
 #Cell 15
 def is_fastai_module(name):
     "Test if `name` is a fastai module."
     dir_name = os.path.sep.join(name.split('.'))
-    return (Path(__file__).parent.parent/f"{dir_name}.py").exists()
+    return (Path(___file___).parent.parent/f"{dir_name}.py").exists()
 
 #Cell 17
 #Might change once the library is renamed fastai.
