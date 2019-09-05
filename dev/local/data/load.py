@@ -2,13 +2,16 @@
 
 __all__ = ['fa_collate', 'fa_convert', 'DataLoader']
 
+#Cell 1
 from ..torch_basics import *
 from ..test import *
 from ..notebook.showdoc import show_doc
 
+#Cell 2
 from torch.utils.data.dataloader import _MultiProcessingDataLoaderIter,_SingleProcessDataLoaderIter,_DatasetKind
 _loaders = (_MultiProcessingDataLoaderIter,_SingleProcessDataLoaderIter)
 
+#Cell 5
 def _wif(worker_id):
     info = get_worker_info()
     ds = info.dataset.d
@@ -25,19 +28,23 @@ class _FakeLoader(GetAttr):
 
     def __iter__(self): return iter(self.d.create_batches(self.d.sampler()))
 
+#Cell 6
 _collate_types = (ndarray, Tensor, typing.Mapping, str)
 
+#Cell 7
 def fa_collate(t):
     b = t[0]
     return (default_collate(t) if isinstance(b, _collate_types)
             else type(t[0])([fa_collate(s) for s in zip(*t)]) if isinstance(b, Sequence)
             else default_collate(t))
 
+#Cell 9
 def fa_convert(t):
     return (default_collate(t) if isinstance(t, _collate_types)
             else type(t)([fa_convert(s) for s in t]) if isinstance(t, Sequence)
             else default_convert(t))
 
+#Cell 11
 @funcs_kwargs
 class DataLoader():
     wif=before_iter=after_item=before_batch=after_batch=after_iter = noops

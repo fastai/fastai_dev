@@ -2,6 +2,7 @@
 
 __all__ = ['reduce_loss', 'MixUp']
 
+#Cell 0
 from ..imports import *
 from ..test import *
 from ..core import *
@@ -13,9 +14,11 @@ from ..learner import *
 from .progress import *
 from ..vision.core import *
 
+#Cell 5
 def reduce_loss(loss, reduction='mean'):
     return loss.mean() if reduction=='mean' else loss.sum() if reduction=='sum' else loss
 
+#Cell 6
 from torch.distributions.beta import Beta
 
 class MixUp(Callback):

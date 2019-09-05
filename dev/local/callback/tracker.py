@@ -3,6 +3,7 @@
 __all__ = ['TerminateOnNaNCallback', 'TrackerCallback', 'EarlyStoppingCallback', 'SaveModelCallback',
            'ReduceLROnPlateau']
 
+#Cell 0
 from ..imports import *
 from ..test import *
 from ..core import *
@@ -16,6 +17,7 @@ from ..optimizer import *
 from ..learner import *
 from .progress import *
 
+#Cell 5
 class TerminateOnNaNCallback(Callback):
     "A `Callback` that terminates training if loss is NaN."
     run_before=Recorder
@@ -24,6 +26,7 @@ class TerminateOnNaNCallback(Callback):
         "Test if `last_loss` is NaN and interrupts training."
         if torch.isinf(self.loss) or torch.isnan(self.loss): raise CancelFitException
 
+#Cell 9
 class TrackerCallback(Callback):
     "A `Callback` that keeps track of the best value in `monitor`."
     run_after=Recorder
@@ -45,6 +48,7 @@ class TrackerCallback(Callback):
         if self.comp(val - self.min_delta, self.best): self.best,self.new_best = val,True
         else: self.new_best = False
 
+#Cell 15
 class EarlyStoppingCallback(TrackerCallback):
     "A `TrackerCallback` that terminates training when monitored quantity stops improving."
     def __init__(self, monitor='valid_loss', comp=None, min_delta=0., patience=1):
@@ -62,6 +66,7 @@ class EarlyStoppingCallback(TrackerCallback):
                 print(f'No improvement since epoch {self.epoch-self.wait}: early stopping')
                 raise CancelFitException()
 
+#Cell 20
 class SaveModelCallback(TrackerCallback):
     "A `TrackerCallback` that terminates training when monitored quantity stops improving."
     def __init__(self, monitor='valid_loss', comp=None, min_delta=0., name='model', every_epoch=False):
@@ -80,6 +85,7 @@ class SaveModelCallback(TrackerCallback):
         if not self.every_epoch and (self.learn.path/f'{self.learn.model_dir}/{self.name}.pth').is_file():
             self.learn.load(f'{self.name}')
 
+#Cell 24
 class ReduceLROnPlateau(TrackerCallback):
     "A `TrackerCallback` that reduces learning rate when a metric has stopped improving."
     def __init__(self, monitor='valid_loss', comp=None, min_delta=0., patience=1, factor=10.):

@@ -5,6 +5,7 @@ __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'Im
            'MultiCategory', 'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda',
            'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
+#Cell 1
 from ..torch_basics import *
 from ..test import *
 from .load import *
@@ -13,12 +14,14 @@ from .pipeline import *
 from .external import *
 from ..notebook.showdoc import *
 
+#Cell 8
 def _get_files(p, fs, extensions=None):
     p = Path(p)
     res = [p/f for f in fs if not f.startswith('.')
            and ((not extensions) or f'.{f.split(".")[-1].lower()}' in extensions)]
     return res
 
+#Cell 9
 def get_files(path, extensions=None, recurse=True, include=None):
     "Get all the files in `path` with optional `extensions`, optionally with `recurse`."
     path = Path(path)
@@ -35,23 +38,28 @@ def get_files(path, extensions=None, recurse=True, include=None):
         res = _get_files(path, f, extensions)
     return L(res)
 
+#Cell 14
 def FileGetter(suf='', extensions=None, recurse=True, include=None):
     "Create `get_files` partial function that searches path suffix `suf` and passes along args"
     def _inner(o, extensions=extensions, recurse=recurse, include=include):
         return get_files(o/suf, extensions, recurse, include)
     return _inner
 
+#Cell 16
 image_extensions = set(k for k,v in mimetypes.types_map.items() if v.startswith('image/'))
 
+#Cell 17
 def get_image_files(path, recurse=True, include=None):
     "Get image files in `path` recursively."
     return get_files(path, extensions=image_extensions, recurse=recurse, include=include)
 
+#Cell 20
 def ImageGetter(suf='', recurse=True, include=None):
     "Create `get_image_files` partial function that searches path suffix `suf` and passes along `kwargs`"
     def _inner(o, recurse=recurse, include=include): return get_image_files(o/suf, recurse, include)
     return _inner
 
+#Cell 25
 def RandomSplitter(valid_pct=0.2, seed=None, **kwargs):
     "Create function that splits `items` between train/val with `valid_pct` randomly."
     def _inner(o, **kwargs):
@@ -61,18 +69,22 @@ def RandomSplitter(valid_pct=0.2, seed=None, **kwargs):
         return rand_idx[cut:],rand_idx[:cut]
     return _inner
 
+#Cell 27
 def _grandparent_idxs(items, name): return mask2idxs(Path(o).parent.parent.name == name for o in items)
 
+#Cell 28
 def GrandparentSplitter(train_name='train', valid_name='valid'):
     "Split `items` from the grand parent folder names (`train_name` and `valid_name`)."
     def _inner(o, **kwargs):
         return _grandparent_idxs(o, train_name),_grandparent_idxs(o, valid_name)
     return _inner
 
+#Cell 32
 def parent_label(o, **kwargs):
     "Label `item` with the parent folder name."
     return o.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-1]
 
+#Cell 35
 def RegexLabeller(pat):
     "Label `item` with regex `pat`."
     pat = re.compile(pat)
@@ -82,6 +94,7 @@ def RegexLabeller(pat):
         return res.group(1)
     return _inner
 
+#Cell 39
 class CategoryMap(CollBase):
     def __init__(self, col, sort=True, add_na=False):
         if is_categorical_dtype(col): items = L(col.cat.categories, use_list=True)
@@ -93,8 +106,10 @@ class CategoryMap(CollBase):
         self.o2i = defaultdict(int, self.items.val2idx())
     def __eq__(self,b): return all_equal(b,self)
 
+#Cell 44
 class Category(str, ShowTitle): _show_args = {'label': 'category'}
 
+#Cell 45
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order=1
@@ -108,11 +123,14 @@ class Categorize(Transform):
     def encodes(self, o): return self.vocab.o2i[o]
     def decodes(self, o)->Category: return self.vocab[o]
 
+#Cell 46
 Category.create = Categorize
 
+#Cell 50
 class MultiCategory(L):
     def show(self, ctx=None, sep=';', **kwargs): return show_title(sep.join(self.mapped(str)), ctx=ctx)
 
+#Cell 51
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
     def setup(self, dsrc):
@@ -127,11 +145,14 @@ class MultiCategorize(Categorize):
     def encodes(self, o):                return [self.o2i  [o_] for o_ in o]
     def decodes(self, o)->MultiCategory: return [self.vocab[o_] for o_ in o]
 
+#Cell 52
 MultiCategory.create = MultiCategorize
 
+#Cell 56
 def one_hot_decode(x, vocab=None):
     return L(vocab[i] if vocab else i for i,x_ in enumerate(x) if x_==1)
 
+#Cell 58
 class OneHotEncode(Transform):
     "One-hot encodes targets and optionally decodes with `vocab`"
     order=2
@@ -145,12 +166,15 @@ class OneHotEncode(Transform):
     def encodes(self, o): return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
     def decodes(self, o): return one_hot_decode(o, self.vocab)
 
+#Cell 70
 class ToTensor(Transform):
     "Convert item to appropriate tensor class"
     order = 15
 
+#Cell 71
 _dl_tfms = ('after_item','before_batch','after_batch')
 
+#Cell 72
 @delegates()
 class TfmdDL(DataLoader):
     "Transformed `DataLoader`"
@@ -192,6 +216,7 @@ class TfmdDL(DataLoader):
         ctxs = [self.dataset.show(o, ctx=ctx, **kwargs) for o,ctx in zip(db, ctxs)]
         if hasattr(b[0], 'display'): b[0].display(ctxs)
 
+#Cell 91
 @docs
 class Cuda(Transform):
     "Move batch to `device` (defaults to `defaults.device`)"
@@ -203,6 +228,7 @@ class Cuda(Transform):
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
+#Cell 98
 class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order = 20 #Need to run after CUDA if on the GPU
@@ -215,6 +241,7 @@ class ByteToFloatTensor(Transform):
     def encodes(self, o:TensorMask)->TensorMask: return o.div_(255.).long() if self.div_mask else o.long()
     def decodes(self, o:TensorMask): return o
 
+#Cell 101
 @docs
 class Normalize(Transform):
     "Normalize/denorm batch of `TensorImage`"
@@ -225,6 +252,7 @@ class Normalize(Transform):
 
     _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
 
+#Cell 102
 def broadcast_vec(dim, ndim, *t, cuda=True):
     "Make a vector broadcastable over `dim` (out of `ndim` total) by prepending and appending unit axes"
     v = [1]*ndim
@@ -232,6 +260,7 @@ def broadcast_vec(dim, ndim, *t, cuda=True):
     f = to_device if cuda else noop
     return [f(tensor(o).view(*v)) for o in t]
 
+#Cell 110
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."

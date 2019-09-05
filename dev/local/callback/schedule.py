@@ -3,6 +3,7 @@
 __all__ = ['annealer', 'SchedLin', 'SchedCos', 'SchedNo', 'SchedExp', 'SchedPoly', 'combine_scheds', 'combined_cos',
            'ParamScheduler', 'LRFinder']
 
+#Cell 0
 from ..imports import *
 from ..test import *
 from ..core import *
@@ -15,12 +16,14 @@ from ..notebook.showdoc import show_doc
 from ..optimizer import *
 from ..learner import *
 
+#Cell 5
 def annealer(f):
     "Decorator to make `f` return itself partially applied."
     @functools.wraps(f)
     def _inner(start, end): return partial(f, start, end)
     return _inner
 
+#Cell 7
 @annealer
 def SchedLin(start, end, pos): return start + pos*(end-start)
 @annealer
@@ -35,11 +38,13 @@ SchedCos.__doc__ = "Cosine schedule function from `start` to `end`"
 SchedNo .__doc__ = "Constant schedule function with `start` value"
 SchedExp.__doc__ = "Exponential schedule function from `start` to `end`"
 
+#Cell 8
 def SchedPoly(start, end, power):
     "Polynomial schedule (of `power`) function from `start` to `end`"
     def _inner(pos): return start + (end - start) * pos ** power
     return _inner
 
+#Cell 21
 def combine_scheds(pcts, scheds):
     "Combine `scheds` according to `pcts` in one function"
     assert sum(pcts) == 1.
@@ -53,6 +58,7 @@ def combine_scheds(pcts, scheds):
         return scheds[idx](actual_pos)
     return _inner
 
+#Cell 25
 def combined_cos(pct, start, middle, end):
     "Return a combined scheduler with cosine annealing from `start` to `middle` then `middle` to `end`"
     if is_listy(start):
@@ -60,6 +66,7 @@ def combined_cos(pct, start, middle, end):
                 for s,m,e in zip(start,middle,end)]
     return combine_scheds([pct,1-pct], [SchedCos(start, middle), SchedCos(middle, end)])
 
+#Cell 30
 @docs
 class ParamScheduler(Callback):
     "Schedule hyper-parameters according to `scheds`"
@@ -91,6 +98,7 @@ class ParamScheduler(Callback):
              "after_batch": "Record hyper-parameters of this batch",
              "after_fit": "Save the hyper-parameters in the recorder if there is one"}
 
+#Cell 37
 @patch
 def fit_one_cycle(self:Learner, n_epoch, lr_max=None, div=25., div_final=1e5, pct_start=0.25,
                   moms=(0.95,0.85,0.95), cbs=None, reset_opt=False):
@@ -100,6 +108,7 @@ def fit_one_cycle(self:Learner, n_epoch, lr_max=None, div=25., div_final=1e5, pc
               'mom': combined_cos(pct_start, *moms)}
     self.fit(n_epoch, cbs=ParamScheduler(scheds)+L(cbs), reset_opt=reset_opt)
 
+#Cell 41
 @patch
 def plot_sched(self:Recorder, figsize=None):
     rows,cols = (len(self.hps)+1)//2, min(2, len(self.hps))
@@ -110,6 +119,7 @@ def plot_sched(self:Recorder, figsize=None):
         ax.plot(self.hps[p])
         ax.set_ylabel(p)
 
+#Cell 44
 @patch
 def fit_sgdr(self:Learner, n_cycles, cycle_len, lr_max=None, cycle_mult=2, cbs=None, reset_opt=False):
     "Fit `self.model` for `n_cycles` of `cycle_len` using SGDR."
@@ -120,6 +130,7 @@ def fit_sgdr(self:Learner, n_cycles, cycle_len, lr_max=None, cycle_mult=2, cbs=N
     scheds = {'lr': combine_scheds(pcts, scheds)}
     self.fit(n_epoch, cbs=ParamScheduler(scheds)+L(cbs), reset_opt=reset_opt)
 
+#Cell 48
 @docs
 class LRFinder(ParamScheduler):
     "Training with exponentially growing learning rate"
@@ -153,6 +164,7 @@ class LRFinder(ParamScheduler):
              "after_fit": "Save the hyper-parameters in the recorder if there is one",
              "begin_validate": "Skip the validation part of training"}
 
+#Cell 54
 @patch
 def plot_lr_find(self:Recorder, skip_end=0):
     "Plot the result of an LR Finder test (won't work if you didn't do `learn.lr_find()` before)"
@@ -165,6 +177,7 @@ def plot_lr_find(self:Recorder, skip_end=0):
     ax.set_xscale('log')
     return fig
 
+#Cell 55
 @patch
 def lr_find(self:Learner, start_lr=1e-7, end_lr=10, num_it=100, stop_div=True):
     "Launch a mock training to find a good learning rate"

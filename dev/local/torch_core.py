@@ -4,18 +4,22 @@ __all__ = ['tensor', 'set_seed', 'TensorBase', 'concat', 'Chunks', 'apply', 'to_
            'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'Module', 'make_cross_image',
            'show_title', 'show_image', 'show_titled_image', 'show_image_batch']
 
+#Cell 1
 from .test import *
 from .imports import *
 from .torch_imports import *
 from .core import *
 from .notebook.showdoc import show_doc
 
+#Cell 2
 if torch.cuda.is_available(): torch.cuda.set_device(int(os.environ.get('DEFAULT_GPU') or 0))
 
+#Cell 5
 @patch
 def __array_eq__(self:Tensor,b):
     return torch.equal(self,b) if self.dim() else self==b
 
+#Cell 6
 def tensor(x, *rest, **kwargs):
     "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
     if len(rest): x = (x,)+rest
@@ -34,6 +38,7 @@ def tensor(x, *rest, **kwargs):
         return res.long()
     return res
 
+#Cell 8
 def set_seed(s):
     "Set random seed for `random`, `torch`, and `numpy` (where available)"
     try: torch.manual_seed(s)
@@ -42,9 +47,11 @@ def set_seed(s):
     except NameError: pass
     random.seed(s)
 
+#Cell 10
 def _fa_rebuild_tensor (cls, *args, **kwargs): return cls(torch._utils._rebuild_tensor_v2(*args, **kwargs))
 def _fa_rebuild_qtensor(cls, *args, **kwargs): return cls(torch._utils._rebuild_qtensor  (*args, **kwargs))
 
+#Cell 11
 class TensorBase(Tensor, metaclass=BypassNewMeta):
     def _new_meta(self, *args, **kwargs): return tensor(self)
 
@@ -55,6 +62,7 @@ class TensorBase(Tensor, metaclass=BypassNewMeta):
         f = _fa_rebuild_qtensor if self.is_quantized else  _fa_rebuild_tensor
         return (f, args + (self.requires_grad, OrderedDict()))
 
+#Cell 12
 def _patch_tb():
     def get_f(fn):
         def _f(self, *args, **kwargs):
@@ -75,6 +83,7 @@ def _patch_tb():
 
 _patch_tb()
 
+#Cell 15
 @patch
 def tensored(self:L):
     "`mapped(tensor)`"
@@ -88,6 +97,7 @@ def cat  (self:L, dim=0):
     "Same as `torch.cat`"
     return torch.cat  (list(self.tensored()), dim=dim)
 
+#Cell 24
 def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"
     if not len(ls): return []
@@ -100,6 +110,7 @@ def concat(*ls):
         else: res = L(res)
     return retain_type(res, it)
 
+#Cell 26
 class Chunks:
     "Slice and int indexing into a list of lists"
     def __init__(self, chunks, lens=None):
@@ -127,6 +138,7 @@ class Chunks:
         cl = self.cumlens[docidx]
         return docidx,i-cl
 
+#Cell 31
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"
     if is_listy(x): return type(x)([apply(func, o, *args, **kwargs) for o in x])
@@ -134,6 +146,7 @@ def apply(func, x, *args, **kwargs):
     res = func(x, *args, **kwargs)
     return res if x is None else retain_type(res, x)
 
+#Cell 32
 def to_detach(b, cpu=True):
     "Recursively detach lists of tensors in `b `; put them on the CPU if `cpu=True`."
     def _inner(x, cpu=True):
@@ -142,17 +155,21 @@ def to_detach(b, cpu=True):
         return x.cpu() if cpu else x
     return apply(_inner, b, cpu=cpu)
 
+#Cell 33
 def to_half(b):
     "Recursively map lists of tensors in `b ` to FP16."
     return apply(lambda x: x.half() if torch.is_floating_point(x) else x, b)
 
+#Cell 34
 def to_float(b):
     "Recursively map lists of int tensors in `b ` to float."
     return apply(lambda x: x.float() if torch.is_floating_point(x) else x, b)
 
+#Cell 35
 # None: True if available; True: error if not availabe; False: use CPU
 defaults.use_cuda = None
 
+#Cell 36
 def default_device(use_cuda=-1):
     "Return or set default device; `use_cuda`: None - CUDA if available; True - error if not availabe; False - CPU"
     if use_cuda != -1: defaults.use_cuda=use_cuda
@@ -160,16 +177,19 @@ def default_device(use_cuda=-1):
     assert torch.cuda.is_available() or not use
     return torch.device(torch.cuda.current_device()) if use else torch.device('cpu')
 
+#Cell 38
 def to_device(b, device=None):
     "Recursively put `b` on `device`."
     if device is None: device=default_device()
     def _inner(o): return o.to(device, non_blocking=True) if isinstance(o,Tensor) else o
     return apply(_inner, b)
 
+#Cell 40
 def to_cpu(b):
     "Recursively map lists of tensors in `b ` to the cpu."
     return to_device(b,'cpu')
 
+#Cell 44
 def item_find(x, idx=0):
     "Recursively takes the `idx`-th element of `x`"
     if is_listy(x): return item_find(x[idx])
@@ -178,19 +198,23 @@ def item_find(x, idx=0):
         return item_find(x[key])
     return x
 
+#Cell 45
 def find_device(b):
     "Recursively search the device of `b`."
     return item_find(b).device
 
+#Cell 47
 def find_bs(b):
     "Recursively search the batch size of `b`."
     return item_find(b).shape[0]
 
+#Cell 52
 class Module(nn.Module, metaclass=PrePostInitMeta):
     "Same as `nn.Module`, but no need for subclasses to call `super().__init__`"
     def __pre_init__(self): super().__init__()
     def __init__(self): pass
 
+#Cell 56
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:
@@ -203,6 +227,7 @@ def make_cross_image(bw=True):
         im[1,:,2] = 1.
     return im
 
+#Cell 59
 def show_title(o, ax=None, ctx=None, label=None, **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
@@ -213,6 +238,7 @@ def show_title(o, ax=None, ctx=None, label=None, **kwargs):
         ax = ax.append(pd.Series({label: o}))
     return ax
 
+#Cell 61
 def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
     "Show a PIL or PyTorch image on `ax`."
     ax = ifnone(ax,ctx)
@@ -229,10 +255,12 @@ def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
     ax.axis('off')
     return ax
 
+#Cell 69
 def show_titled_image(o, **kwargs):
     "Call `show_image` destructuring `o` to `(img,title)`"
     show_image(o[0], title=str(o[1]), **kwargs)
 
+#Cell 70
 def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs):
     "Display batch `b` in a grid of size `items` with `cols` width"
     rows = (items+cols-1) // cols
