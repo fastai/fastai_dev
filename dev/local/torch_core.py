@@ -2,7 +2,8 @@
 
 __all__ = ['tensor', 'set_seed', 'TensorBase', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float',
            'default_device', 'to_device', 'to_cpu', 'item_find', 'find_device', 'find_bs', 'Module', 'one_hot',
-           'one_hot_decode', 'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch']
+           'one_hot_decode', 'trainable_params', 'bn_bias_params', 'make_cross_image', 'show_title', 'show_image',
+           'show_titled_image', 'show_image_batch']
 
 #Cell 1
 from .test import *
@@ -225,7 +226,20 @@ def one_hot(x, c):
 def one_hot_decode(x, vocab=None):
     return L(vocab[i] if vocab else i for i,x_ in enumerate(x) if x_==1)
 
-#Cell 60
+#Cell 59
+def trainable_params(m):
+    "Return all trainable parameters of `m`"
+    return [p for p in m.parameters() if p.requires_grad]
+
+#Cell 61
+def bn_bias_params(m):
+    "Return all bias and BatchNorm parameters"
+    if isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)): return list(m.parameters())
+    res = sum([bn_bias_params(c) for c in m.children()], [])
+    if hasattr(m, 'bias'): res.append(m.bias)
+    return res
+
+#Cell 64
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:
@@ -238,7 +252,7 @@ def make_cross_image(bw=True):
         im[1,:,2] = 1.
     return im
 
-#Cell 63
+#Cell 67
 def show_title(o, ax=None, ctx=None, label=None, **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
@@ -249,7 +263,7 @@ def show_title(o, ax=None, ctx=None, label=None, **kwargs):
         ax = ax.append(pd.Series({label: o}))
     return ax
 
-#Cell 65
+#Cell 69
 def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
     "Show a PIL or PyTorch image on `ax`."
     ax = ifnone(ax,ctx)
@@ -266,12 +280,12 @@ def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
     ax.axis('off')
     return ax
 
-#Cell 73
+#Cell 77
 def show_titled_image(o, **kwargs):
     "Call `show_image` destructuring `o` to `(img,title)`"
     show_image(o[0], title=str(o[1]), **kwargs)
 
-#Cell 74
+#Cell 78
 def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs):
     "Display batch `b` in a grid of size `items` with `cols` width"
     rows = (items+cols-1) // cols

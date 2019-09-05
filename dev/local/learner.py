@@ -9,20 +9,23 @@ from .torch_basics import *
 from .test import *
 from .layers import *
 from .data.all import *
-from .notebook.showdoc import show_doc
+from .notebook.showdoc import *
 from .optimizer import *
 
-#Cell 9
+#Cell 10
 def class2attr(self, cls_name):
     return camel2snake(re.sub(rf'{cls_name}$', '', self.__class__.__name__) or cls_name.lower())
 
-#Cell 10
+#Cell 11
 @docs
 class Callback():
     "Basic class handling tweaks of the training loop by changing a `Learner` in various events"
     def __call__(self, event_name): getattr(self, event_name, noop)()
     def __repr__(self): return self.__class__.__name__
-    def __getattr__(self, k): return getattr(self.learn, k)
+    def __getattr__(self, k):
+        if k=='learn': raise AttributeError
+        if not hasattr(self,'learn'): raise AttributeError
+        return getattr(self.learn, k)
 
     @property
     def name(self):
@@ -32,7 +35,7 @@ class Callback():
     _docs=dict(__call__="Call `self.{event_name}` if it's defined",
                __getattr__="Passthrough to get the attributes of `self.learn`")
 
-#Cell 24
+#Cell 25
 class TrainEvalCallback(Callback):
     "`Callback` that tracks the number of iterations done and properly sets training/eval mode"
     def begin_fit(self):
@@ -60,7 +63,7 @@ class TrainEvalCallback(Callback):
         self.model.eval()
         self.learn.training=False
 
-#Cell 34
+#Cell 35
 class GatherPredsCallback(Callback):
     "`Callback` that saves the predictions and targets, optionally `with_loss`"
     def __init__(self, with_loss=False): self.with_loss = with_loss
@@ -76,7 +79,7 @@ class GatherPredsCallback(Callback):
         self.targets.append(to_detach(self.yb))
         if self.with_loss: self.losses.append(to_detach(self.loss))
 
-#Cell 40
+#Cell 41
 _ex_docs = dict(
     CancelFitException="Skip the rest of this batch and go to `after_batch`",
     CancelEpochException="Skip the rest of the training part of the epoch and go to `after_train`",
@@ -86,7 +89,7 @@ _ex_docs = dict(
 
 for c,d in _ex_docs.items(): mk_class(c,sup=Exception,doc=d)
 
-#Cell 47
+#Cell 48
 _events = 'begin_fit begin_epoch begin_train begin_batch after_pred after_loss \
     after_backward after_step after_cancel_batch after_batch after_cancel_train \
     after_train begin_validate after_cancel_validate after_validate after_cancel_epoch \
@@ -95,7 +98,7 @@ _events = 'begin_fit begin_epoch begin_train begin_batch after_pred after_loss \
 mk_class('event', **{o:o for o in _events},
          doc="All possible events as attributes to get tab-completion and typo-proofing")
 
-#Cell 58
+#Cell 54
 defaults.callbacks = [TrainEvalCallback]
 
 class Learner():
@@ -262,14 +265,14 @@ class Learner():
             yield
             self.loss_func = old_loss_func
 
-#Cell 69
+#Cell 65
 class VerboseCallback(Callback):
     "Callback that prints the name of each event called"
     def __call__(self, event_name):
         print(event_name)
         super().__call__(event_name)
 
-#Cell 98
+#Cell 94
 @docs
 class Metric():
     "Blueprint for defining a metric"
@@ -286,7 +289,7 @@ class Metric():
             'accumulate': "Use `learn` to update the state with new results",
             'value': "The value of the metric"}
 
-#Cell 105
+#Cell 101
 class AvgMetric(Metric):
     "Average the values of `func` taking into account potential different batch sizes"
     def __init__(self, func):  self.func = func
@@ -300,7 +303,7 @@ class AvgMetric(Metric):
     @property
     def name(self):  return self.func.__name__
 
-#Cell 109
+#Cell 105
 class AvgLoss(Metric):
     "Average the losses taking into account potential different batch sizes"
     def reset(self):           self.total,self.count = 0.,0
@@ -313,7 +316,7 @@ class AvgLoss(Metric):
     @property
     def name(self):  return "loss"
 
-#Cell 113
+#Cell 109
 class AvgSmoothLoss(Metric):
     "Smooth average of the losses (exponentially weighted with `beta`)"
     def __init__(self, beta=0.98): self.beta = beta
@@ -324,7 +327,7 @@ class AvgSmoothLoss(Metric):
     @property
     def value(self): return self.val/(1-self.beta**self.count)
 
-#Cell 117
+#Cell 113
 from fastprogress.fastprogress import format_time
 
 def _maybe_item(t):
@@ -388,7 +391,7 @@ class Recorder(Callback):
 
     def plot_loss(self): plt.plot(self.losses)
 
-#Cell 118
+#Cell 114
 add_docs(Recorder,
          begin_train = "Reset loss and metrics state",
          after_train = "Log loss and metric values on the training set (if `self.training_metrics=True`)",

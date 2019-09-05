@@ -23,8 +23,8 @@ def synth_data(a=2, b=3, bs=16, n_train=10, n_valid=2, cuda=False):
     train_ds = get_data(n_train)
     valid_ds = get_data(n_valid)
     tfms = Cuda() if cuda else None
-    train_dl = TfmdDL(train_ds, bs=bs, shuffle=True, after_batch=tfms)
-    valid_dl = TfmdDL(valid_ds, bs=bs, after_batch=tfms)
+    train_dl = TfmdDL(train_ds, bs=bs, shuffle=True, after_batch=tfms, num_workers=0)
+    valid_dl = TfmdDL(valid_ds, bs=bs, after_batch=tfms, num_workers=0)
     return DataBunch(train_dl, valid_dl)
 
 #Cell 4

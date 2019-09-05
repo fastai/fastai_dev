@@ -20,8 +20,8 @@ def is_enum(cls):
 
 #Cell 11
 def _get_pytorch_index():
-    if not (Path(___file___).parent/'index_pytorch.txt').exists(): return {}
-    return json.load(open(Path(___file___).parent/'index_pytorch.txt', 'r'))
+    if not (Path(__file__).parent/'index_pytorch.txt').exists(): return {}
+    return json.load(open(Path(__file__).parent/'index_pytorch.txt', 'r'))
 
 def add_pytorch_index(func_name, url):
     "Add `func_name` in the PyTorch index for automatic links."
@@ -29,13 +29,13 @@ def add_pytorch_index(func_name, url):
     if not url.startswith("https://pytorch.org/docs/stable/"):
         url = "https://pytorch.org/docs/stable/" + url
     index[func_name] = url
-    json.dump(index, open(Path(___file___).parent/'index_pytorch.txt', 'w'), indent=2)
+    json.dump(index, open(Path(__file__).parent/'index_pytorch.txt', 'w'), indent=2)
 
 #Cell 15
 def is_fastai_module(name):
     "Test if `name` is a fastai module."
     dir_name = os.path.sep.join(name.split('.'))
-    return (Path(___file___).parent.parent/f"{dir_name}.py").exists()
+    return (Path(__file__).parent.parent/f"{dir_name}.py").exists()
 
 #Cell 17
 #Might change once the library is renamed fastai.
@@ -155,7 +155,7 @@ def type_repr(t):
         return f'{doc_link(get_name(t))}\[{reprs}\]'
     else: return doc_link(get_name(t))
 
-#Cell 40
+#Cell 41
 _arg_prefixes = {inspect._VAR_POSITIONAL: '\*', inspect._VAR_KEYWORD:'\*\*'}
 
 def format_param(p):
@@ -171,13 +171,13 @@ def format_param(p):
         else: res += f'=*`{repr(default)}`*'
     return res
 
-#Cell 42
+#Cell 43
 def _format_enum_doc(enum, full_name):
     "Formatted `enum` definition to show in documentation"
     vals = ', '.join(enum.__members__.keys())
     return f'<code>{full_name}</code>',f'<code>Enum</code> = [{vals}]'
 
-#Cell 44
+#Cell 45
 def _escape_chars(s):
     return s.replace('_', '\_')
 
@@ -193,7 +193,7 @@ def _format_func_doc(func, full_name=None):
     f_name = f"<code>class</code> {name}" if inspect.isclass(func) else name
     return f'{f_name}',f'{name}{arg_str}'
 
-#Cell 46
+#Cell 47
 def _format_cls_doc(cls, full_name):
     "Formatted `cls` definition to show in documentation"
     parent_class = inspect.getclasstree([cls])[-1][0][1][0]
@@ -201,7 +201,7 @@ def _format_cls_doc(cls, full_name):
     if parent_class != object: args += f' :: {doc_link(get_name(parent_class))}'
     return name,args
 
-#Cell 48
+#Cell 49
 def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, default_cls_level=2):
     "Show documentation for element `elt`. Supported types: class, function, and enum."
     elt = getattr(elt, '__func__', elt)
@@ -220,13 +220,13 @@ def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, defau
     if disp: display(Markdown(doc))
     else: return doc
 
-#Cell 62
+#Cell 63
 def md2html(md):
     "Convert markdown `md` to HTML code"
     if nbconvert.__version__ < '5.5.0': return HTMLExporter().markdown2html(md)
     else: return HTMLExporter().markdown2html(defaultdict(lambda: defaultdict(dict)), md)
 
-#Cell 63
+#Cell 64
 def doc(elt):
     "Show `show_doc` info in preview window"
     md = show_doc(elt, disp=False)

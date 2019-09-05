@@ -291,7 +291,7 @@ class SentencePieceTokenizer():#TODO: pass the special tokens symbol to sp
 
     def train(self, raw_text_path):
         "Train a sentencepiece tokenizer on `texts` and save it in `path/tmp_dir`"
-        from sentencepiece import SentencePieceTrainer
+from sentencepiece import SentencePieceTrainer
         vocab_sz = self._get_vocab_sz(raw_text_path) if self.vocab_sz is None else self.vocab_sz
         spec_tokens = ['\u2581'+s for s in self.special_toks]
         SentencePieceTrainer.Train(" ".join([

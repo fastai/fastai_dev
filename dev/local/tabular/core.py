@@ -4,7 +4,7 @@ __all__ = ['Tabular', 'TabularProc', 'Categorify', 'Normalize', 'FillStrategy', 
            'TabularLine', 'TensorTabular', 'ReadTabLine', 'ReadTabTarget', 'ReadTabBatch']
 
 #Cell 0
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
 from ..core import *
 from ..data.all import *
@@ -162,7 +162,11 @@ class ReadTabBatch(ItemTransform):
         cats,conts,targ = (df[o] for o in (self.proc.cat_names,self.proc.cont_names,self.proc.y_names))
         return (TensorTabular((tensor(cats.values).long(),tensor(conts.values).float())), tensor(targ.values).long())
 
-    #def decodes(self, o) -> TabularLine:
-    #    to = Tabular(o, self.proc.cat_names, self.proc.cont_names, self.proc.y_names)
-    #    to = self.proc.decode(to)
-    #    return pd.Series({c: v for v,c in zip(to.items[0]+to.items[1], self.proc.cat_names+self.proc.cont_names)})
+    def decodes(self, o):
+        (cats,conts),targ = o
+        res = []
+        for cat,cont,t in zip(cats,conts,targ):
+            to = Tabular((cat,cont), self.proc.cat_names, self.proc.cont_names, self.proc.y_names)
+            to = self.proc.decode(to)
+            res.append(pd.Series({c: v for v,c in zip(to.items[0]+to.items[1], self.proc.cat_names+self.proc.cont_names)}))
+        return pd.DataFrame(res)

@@ -100,7 +100,7 @@ class CategoryMap(CollBase):
         if is_categorical_dtype(col): items = L(col.cat.categories, use_list=True)
         else:
             # `o==o` is the generalized definition of non-NaN used by Pandas
-            items = L(o for o in L(col).unique() if o==o)
+            items = L(o for o in L(col, use_list=True).unique() if o==o)
             if sort: items = items.sorted()
         self.items = '#na#' + items if add_na else items
         self.o2i = defaultdict(int, self.items.val2idx())
@@ -181,7 +181,7 @@ class TfmdDL(DataLoader):
             kwargs[nm].setup(self)
         super().__init__(dataset, bs=bs, shuffle=shuffle, num_workers=num_workers, **kwargs)
         it  = self.do_item(0)
-        its = self.do_batch([it])
+        its = self.after_batch(self.do_batch([it]))
         #TODO do we still need?
         self._retain_ds = partial(retain_types, typs=L(it ).mapped(type))
         self._retain_dl = partial(retain_types, typs=L(its).mapped(type))
@@ -205,6 +205,7 @@ class TfmdDL(DataLoader):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         if b is None: b = self.one_batch()
         b = self.decode(b)
+        if hasattr(b, 'show'): return b.show(max_n=max_n, **kwargs)
         if ctxs is None:
             if hasattr(b[0], 'get_ctxs'): ctxs = b[0].get_ctxs(max_n=max_n, **kwargs)
             else: ctxs = [None] * len(b[0] if is_iter(b[0]) else b)

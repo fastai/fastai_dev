@@ -7,9 +7,9 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le',
            'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type',
            'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'trace', 'compose', 'maps',
-           'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'sort_by_run', 'round_multiple',
-           'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params',
-           'PrettyString', 'flatten_check', 'display_df', 'one_param']
+           'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'sort_by_run', 'display_df',
+           'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'PrettyString',
+           'flatten_check', 'one_param']
 
 #Cell 1
 from .test import *
@@ -648,13 +648,20 @@ def sort_by_run(fs):
     return res
 
 #Cell 209
+def display_df(df):
+    "Display `df` in a notebook or defaults to print"
+    try: from IPython.display import display, HTML
+    except: return print(df)
+    display(HTML(df.to_html()))
+
+#Cell 210
 def round_multiple(x, mult, round_down=False):
     "Round `x` to nearest multiple of `mult`"
     def _f(x_): return (int if round_down else round)(x_/mult)*mult
     res = L(x).mapped(_f)
     return res if is_listy(x) else res[0]
 
-#Cell 211
+#Cell 212
 def num_cpus():
     "Get number of cpus"
     try:                   return len(os.sched_getaffinity(0))
@@ -662,7 +669,7 @@ def num_cpus():
 
 defaults.cpus = num_cpus()
 
-#Cell 212
+#Cell 213
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))
@@ -677,27 +684,13 @@ def all_disjoint(sets):
     "`True` iif no element appears in more than one item of `sets`"
     return sum(map(len,sets))==len(all_union(sets))
 
-#Comes from 13_learner.ipynb, cell 7
+#Comes from 13_learner.ipynb, cell 8
 _camel_re1 = re.compile('(.)([A-Z][a-z]+)')
 _camel_re2 = re.compile('([a-z0-9])([A-Z])')
 
 def camel2snake(name):
     s1   = re.sub(_camel_re1, r'\1_\2', name)
     return re.sub(_camel_re2, r'\1_\2', s1).lower()
-
-#Comes from 13_learner.ipynb, cell 53
-def trainable_params(m):
-    "Return all trainable parameters of `m`"
-    return [p for p in m.parameters() if p.requires_grad]
-
-#Comes from 13_learner.ipynb, cell 55
-def bn_bias_params(m):
-    "Return all bias and BatchNorm parameters"
-    if isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)):
-        return list(m.parameters())
-    res = sum([bn_bias_params(c) for c in m.children()], [])
-    if hasattr(m, 'bias'): res.append(m.bias)
-    return res
 
 #Comes from 15_callback_hook.ipynb, cell 63
 class PrettyString(str):
@@ -710,14 +703,6 @@ def flatten_check(inp, targ, detach=True):
     inp,targ = to_detach(inp.contiguous().view(-1)),to_detach(targ.contiguous().view(-1))
     test_eq(len(inp), len(targ))
     return inp,targ
-
-#Comes from 31_text_data.ipynb, cell 6
-def display_df(df):
-    "Display `df` in a notebook or defaults to print"
-    try:
-        from IPython.display import display, HTML
-        display(HTML(df.to_html()))
-    except: print(df)
 
 #Comes from 32_text_models_awdlstm.ipynb, cell 14
 def one_param(m): return next(iter(m.parameters()))

@@ -245,9 +245,9 @@ class ExecuteShowDocPreprocessor(ExecutePreprocessor):
 
 #Cell 44
 def _import_show_doc_cell(name=None):
-    "Add an import show_doc cell + deal with the ___file___ hack if necessary."
+    "Add an import show_doc cell + deal with the ____file____ hack if necessary."
     source = f"#export\nfrom local.notebook.showdoc import show_doc"
-    if name: source += f"\nfrom pathlib import Path\n___file___ = {name}"
+    if name: source += f"\nfrom pathlib import Path\n____file____ = {name}"
     return {'cell_type': 'code',
             'execution_count': None,
             'metadata': {'hide_input': True},
@@ -271,7 +271,7 @@ def _exporter(markdown=False):
     exporter.exclude_input_prompt=True
     exporter.exclude_output_prompt=True
     exporter.template_file = ('jekyll.tpl','jekyll-md.tpl')[markdown]
-    exporter.template_path.append(str(Path(___file___).parent))
+    exporter.template_path.append(str(Path(____file____).parent))
     return exporter
 
 #Cell 49
@@ -280,7 +280,7 @@ process_cell  = [hide_cells, remove_widget_state, add_jekyll_notes, convert_link
 
 #Cell 50
 _re_file = re.compile(r"""
-^___file___   # ___file___ at the beginning of a line (since re.MULTILINE is passed)
+^____file____   # ____file____ at the beginning of a line (since re.MULTILINE is passed)
 \s*=\s*   # Any number of whitespace, =, any number of whitespace
 (\S*)     # Catching group for any non-whitespace characters
 \s*$      # Any number of whitespace then the end of line
@@ -288,7 +288,7 @@ _re_file = re.compile(r"""
 
 #Cell 51
 def _find_file(cells):
-    "Find in `cells` if a ___file___ is defined."
+    "Find in `cells` if a ____file____ is defined."
     for cell in cells:
         if cell['cell_type']=='code' and _re_file.search(cell['source']):
             return _re_file.search(cell['source']).groups()[0]

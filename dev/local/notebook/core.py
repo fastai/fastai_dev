@@ -21,7 +21,6 @@ IN_IPYTHON = in_ipython()
 #Cell 4
 def in_colab():
     "Check if the code is running in Google Colaboratory"
-    if not IN_IPYTHON: return False
     try:
         from google import colab
         return True
@@ -32,20 +31,13 @@ IN_COLAB = in_colab()
 #Cell 5
 def in_notebook():
     "Check if the code is running in a jupyter notebook"
-    try:
-        from google import colab
-        return True
-    except: pass
+    if in_colab(): return True
     try:
         shell = get_ipython().__class__.__name__
-        if shell == 'ZMQInteractiveShell':
-            return True   # Jupyter notebook, Spyder or qtconsole
-        elif shell == 'TerminalInteractiveShell':
-            return False  # Terminal running IPython
-        else:
-            return False  # Other type (?)
-    except NameError:
-        return False      # Probably standard Python interpreter
+        if shell == 'ZMQInteractiveShell': return True   # Jupyter notebook, Spyder or qtconsole
+        elif shell == 'TerminalInteractiveShell': return False  # Terminal running IPython
+        else: return False  # Other type (?)
+    except NameError: return False      # Probably standard Python interpreter
 
 IN_NOTEBOOK = in_notebook()
 
