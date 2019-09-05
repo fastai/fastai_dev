@@ -2,9 +2,8 @@
 
 __all__ = ['download_url', 'URLs', 'get_path', 'ConfigKey', 'download_data', 'tar_extract', 'untar_data']
 
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
-from ..core import *
 
 def download_url(url, dest, overwrite=False, pbar=None, show_progress=True, chunk_size=1024*1024,
                  timeout=4, retries=5):

@@ -39,7 +39,7 @@ def test_ne(a,b):
 
 def is_close(a,b,eps=1e-5):
     "Is `a` within `eps` of `b`"
-    if isinstance(a, (Tensor,np.ndarray)) or isinstance(b, (Tensor,np.ndarray)):
+    if hasattr(a, '__array__') or hasattr(b,'__array__'):
         return (abs(a-b)<eps).all()
     if isinstance(a, (Iterable,Generator)) or isinstance(b, (Iterable,Generator)):
         return is_close(np.array(a), np.array(b), eps=eps)

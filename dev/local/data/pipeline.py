@@ -3,9 +3,8 @@
 __all__ = ['get_func', 'Func', 'Sig', 'SelfFunc', 'Self', 'compose_tfms', 'batch_to_samples', 'mk_transform',
            'Pipeline', 'TfmdBase', 'TfmdList', 'TfmdDS']
 
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
-from ..core import *
 from .transform import *
 from ..notebook.showdoc import show_doc
 

@@ -20,18 +20,12 @@ from notebook import notebookapp
 from urllib.request import urlopen
 
 # External modules
-import torch,matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy
+import matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy
 import requests,yaml
 from typeguard import typechecked
 from fastprogress import progress_bar,master_bar
 from pandas.api.types import is_categorical_dtype,is_numeric_dtype
 
-from torch import as_tensor,Tensor,ByteTensor,LongTensor,FloatTensor,HalfTensor,DoubleTensor
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.utils.data import SequentialSampler,RandomSampler,Sampler,BatchSampler
-from torch.utils.data import DataLoader,IterableDataset,get_worker_info
-from torch.utils.data._utils.collate import default_collate,default_convert
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace
 
@@ -62,16 +56,6 @@ def all_equal(a,b):
     if not is_iter(b): return False
     return all(equals(a_,b_) for a_,b_ in itertools.zip_longest(a,b))
 
-def equals(a,b):
-    "Compares `a` and `b` for equality; supports sublists, tensors and arrays too"
-    cmp = (torch.equal    if isinstance(a, Tensor    ) and a.dim() else
-           np.array_equal if isinstance(a, ndarray   ) else
-           operator.eq    if isinstance(a, (str,dict,set)) else
-           all_equal      if is_iter(a) else
-           operator.eq    if a.__eq__ != object.__eq__ else
-           operator.eq)
-    return cmp(a,b)
-
 def noop (x=None, *args, **kwargs):
     "Do nothing"
     return x
@@ -79,4 +63,15 @@ def noop (x=None, *args, **kwargs):
 def noops(self, x=None, *args, **kwargs):
     "Do nothing (method)"
     return x
+
+def equals(a,b):
+    "Compares `a` and `b` for equality; supports sublists, tensors and arrays too"
+    if isinstance(a,type): return a==b
+    if hasattr(a, '__array_eq__'): return a.__array_eq__(b)
+    cmp = (np.array_equal if isinstance(a, ndarray   ) else
+           operator.eq    if isinstance(a, (str,dict,set)) else
+           all_equal      if is_iter(a) else
+           operator.eq    if a.__eq__ != object.__eq__ else
+           operator.eq)
+    return cmp(a,b)
 

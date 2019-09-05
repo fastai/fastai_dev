@@ -5,15 +5,10 @@ __all__ = ['RandTransform', 'PILFlip', 'PILDihedral', 'clip_remove_empty', 'Crop
            'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs', 'apply_perspective', 'Warp', 'logit',
            'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms', 'aug_transforms']
 
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
-from ..core import *
-from ..data.transform import *
-from ..data.pipeline import *
-from ..data.source import *
-from ..data.core import *
+from ..data.all import *
 from .core import *
-from ..data.external import *
 from ..notebook.showdoc import show_doc
 
 from torch import stack, zeros_like as t0, ones_like as t1

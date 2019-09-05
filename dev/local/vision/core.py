@@ -4,9 +4,8 @@ __all__ = ['Image', 'n_px', 'shape', 'aspect', 'load_image', 'PILBase', 'PILImag
            'TensorPoint', 'get_annotations', 'BBox', 'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes',
            'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad']
 
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
-from ..core import *
 from ..data.all import *
 from ..notebook.showdoc import show_doc
 

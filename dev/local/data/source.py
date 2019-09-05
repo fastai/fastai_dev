@@ -2,9 +2,8 @@
 
 __all__ = ['DataSource']
 
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
-from ..core import *
 from .core import *
 from .transform import *
 from .pipeline import *

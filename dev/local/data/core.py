@@ -5,9 +5,8 @@ __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'Im
            'MultiCategory', 'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda',
            'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
-from ..core import *
 from .load import *
 from .transform import *
 from .pipeline import *
@@ -38,7 +37,8 @@ def get_files(path, extensions=None, recurse=True, include=None):
 
 def FileGetter(suf='', extensions=None, recurse=True, include=None):
     "Create `get_files` partial function that searches path suffix `suf` and passes along args"
-    def _inner(o, extensions=extensions, recurse=recurse, include=include): return get_files(o/suf, extensions, recurse, include)
+    def _inner(o, extensions=extensions, recurse=recurse, include=include):
+        return get_files(o/suf, extensions, recurse, include)
     return _inner
 
 image_extensions = set(k for k,v in mimetypes.types_map.items() if v.startswith('image/'))
@@ -84,7 +84,7 @@ def RegexLabeller(pat):
 
 class CategoryMap(CollBase):
     def __init__(self, col, sort=True, add_na=False):
-        if is_categorical_dtype(col): items = L(col.cat.categories)
+        if is_categorical_dtype(col): items = L(col.cat.categories, use_list=True)
         else:
             # `o==o` is the generalized definition of non-NaN used by Pandas
             items = L(o for o in L(col).unique() if o==o)
@@ -142,8 +142,8 @@ class OneHotEncode(Transform):
         else: self.c = len(L(getattr(dsrc, 'vocab', None)))
         if not self.c: warn("Couldn't infer the number of classes, please pass a `vocab` at init")
 
-    def encodes(self, o)->Tensor: return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
-    def decodes(self, o)->L: return one_hot_decode(o, self.vocab)
+    def encodes(self, o): return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
+    def decodes(self, o): return one_hot_decode(o, self.vocab)
 
 class ToTensor(Transform):
     "Convert item to appropriate tensor class"
