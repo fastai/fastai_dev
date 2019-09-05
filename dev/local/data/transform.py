@@ -3,17 +3,14 @@
 __all__ = ['type_hints', 'anno_ret', 'cmp_instance', 'subplots', 'TensorImageBase', 'TensorImage', 'TensorImageBW',
            'TensorMask', 'TypeDispatch', 'Transform', 'InplaceTransform', 'TupleTransform', 'ItemTransform']
 
-#Cell 1
 from ..torch_basics import *
 from ..test import *
 from ..notebook.showdoc import show_doc
 
-#Cell 5
 def type_hints(f):
     "Same as `typing.get_type_hints` but returns `{}` if not allowed type"
     return typing.get_type_hints(f) if isinstance(f, typing._allowed_types) else {}
 
-#Cell 6
 def anno_ret(func):
     "Get the return annotation of `func`"
     if not func: return None
@@ -21,24 +18,20 @@ def anno_ret(func):
     if not ann: return None
     return ann.get('return')
 
-#Cell 8
 cmp_instance = functools.cmp_to_key(lambda a,b: 0 if a==b else 1 if issubclass(a,b) else -1)
 
-#Cell 10
 def _p1_anno(f):
     "Get the annotation of first param of `f`"
     hints = type_hints(f)
     ann = [o for n,o in hints.items() if n!='return']
     return ann[0] if ann else object
 
-#Cell 13
 @delegates(plt.subplots, keep=True)
 def subplots(nrows=1, ncols=1, **kwargs):
     fig,ax = plt.subplots(nrows,ncols,**kwargs)
     if nrows*ncols==1: ax = array([ax])
     return fig,ax
 
-#Cell 14
 class TensorImageBase(TensorBase):
     _show_args = {'cmap':'viridis'}
     def show(self, ctx=None, **kwargs):
@@ -52,16 +45,12 @@ class TensorImageBase(TensorBase):
         _,axs = subplots(rows, cols, figsize=figsize)
         return axs.flatten()
 
-#Cell 15
 class TensorImage(TensorImageBase): pass
 
-#Cell 16
 class TensorImageBW(TensorImage): _show_args = {'cmap':'Greys'}
 
-#Cell 17
 class TensorMask(TensorImageBase): _show_args = {'alpha':0.5, 'cmap':'tab20'}
 
-#Cell 25
 class TypeDispatch:
     "Dictionary-like object; `__getitem__` matches keys of types using `issubclass`"
     def __init__(self, *funcs):
@@ -100,7 +89,6 @@ class TypeDispatch:
         self.cache[k] = res
         return res
 
-#Cell 29
 class _TfmDict(dict):
     def __setitem__(self,k,v):
         if k=='_': k='encodes'
@@ -109,7 +97,6 @@ class _TfmDict(dict):
         res = self[k]
         res.add(v)
 
-#Cell 30
 class _TfmMeta(type):
     def __new__(cls, name, bases, dict):
         res = super().__new__(cls, name, bases, dict)
@@ -129,7 +116,6 @@ class _TfmMeta(type):
     @classmethod
     def __prepare__(cls, name, bases): return _TfmDict()
 
-#Cell 31
 class Transform(metaclass=_TfmMeta):
     "Delegates (`__call__`,`decode`) to (`encodes`,`decodes`) if `filt` matches"
     filt,init_enc,as_item_force,as_item,order = None,False,None,True,0
@@ -164,19 +150,16 @@ class Transform(metaclass=_TfmMeta):
 
 add_docs(Transform, decode="Delegate to `decodes` to undo transform")
 
-#Cell 50
 class InplaceTransform(Transform):
     "A `Transform` that modifies in-place and just returns whatever it's passed"
     def __call__(self, x, **kwargs):
         super().__call__(x,**kwargs)
         return x
 
-#Cell 53
 class TupleTransform(Transform):
     "`Transform` that always treats `as_item` as `False`"
     as_item_force=False
 
-#Cell 54
 class ItemTransform (Transform):
     "`Transform` that always treats `as_item` as `True`"
     as_item_force=True

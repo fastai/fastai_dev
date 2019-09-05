@@ -2,7 +2,6 @@
 
 __all__ = ['get_master', 'to_master_grads', 'to_model_params', 'test_overflow', 'grad_overflow', 'MixedPrecision']
 
-#Cell 0
 from ..torch_basics import *
 from ..test import *
 from ..layers import *
@@ -12,10 +11,8 @@ from ..optimizer import *
 from ..learner import *
 from .progress import *
 
-#Cell 8
 from ..utils.fp16 import convert_network, model_grads_to_master_grads, master_params_to_model_params
 
-#Cell 14
 from torch.nn.utils import parameters_to_vector
 
 def get_master(opt, flat_master=False):
@@ -33,29 +30,24 @@ def get_master(opt, flat_master=False):
             for param in pg: param.requires_grad_(True)
     return model_params, master_params
 
-#Cell 19
 def to_master_grads(model_pgs, master_pgs, flat_master=False):
     for (model_params,master_params) in zip(model_pgs,master_pgs):
         model_grads_to_master_grads(model_params, master_params, flat_master=flat_master)
 
-#Cell 24
 def to_model_params(model_pgs, master_pgs, flat_master:bool=False)->None:
     for (model_params,master_params) in zip(model_pgs,master_pgs):
         master_params_to_model_params(model_params, master_params, flat_master=flat_master)
 
-#Cell 29
 def test_overflow(x):
     s = float(x.float().sum())
     return (s == float('inf') or s == float('-inf') or s != s)
 
-#Cell 32
 def grad_overflow(pgs):
     for pg in pgs:
         for p in pg:
             if p.grad is not None and test_overflow(p.grad.data): return True
     return False
 
-#Cell 35
 @docs
 class MixedPrecision(Callback):
     "Run training in mixed precision"

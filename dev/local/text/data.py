@@ -2,7 +2,6 @@
 
 __all__ = ['make_vocab', 'TensorText', 'Numericalize', 'LMDataLoader', 'pad_collate']
 
-#Cell 0
 from ..imports import *
 from ..test import *
 from ..core import *
@@ -15,7 +14,6 @@ from ..data.load import *
 from .core import *
 from ..notebook.showdoc import show_doc
 
-#Cell 4
 def make_vocab(count, min_freq=3, max_vocab=60000):
     "Create a vocab of `max_vocab` size from `Counter` `count` with items present more than `min_freq`"
     vocab = [o for o,c in count.most_common(max_vocab) if c >= min_freq]
@@ -25,7 +23,6 @@ def make_vocab(count, min_freq=3, max_vocab=60000):
     vocab = vocab[:max_vocab]
     return vocab + ['xxfake' for _ in range(0, 8-len(vocab)%8)]
 
-#Cell 7
 class TensorText(TensorBase):
     def get_ctxs(self, max_n=10, **kwargs):
         n_samples = min(self.shape[0], max_n)
@@ -34,7 +31,6 @@ class TensorText(TensorBase):
 
     def display(self, ctxs): display_df(pd.DataFrame(ctxs))
 
-#Cell 8
 class Numericalize(Transform):
     "Reversible transform of tokenized texts to numericalized ids"
     def __init__(self, vocab=None, min_freq=3, max_vocab=60000, sep=' '):
@@ -52,7 +48,6 @@ class Numericalize(Transform):
     def encodes(self, o)->TensorText: return tensor([self.o2i[o_] for o_ in o])
     def decodes(self, o)->Str: return self.sep.join([self.vocab[o_] for o_ in o if self.vocab[o_] != PAD])
 
-#Cell 13
 @delegates()
 class LMDataLoader(DataLoader):
     def __init__(self, dataset, lens=None, cache=2, bs=64, seq_len=72, **kwargs):
@@ -77,7 +72,6 @@ class LMDataLoader(DataLoader):
         txt = self.chunks[st : st+self.seq_len+1]
         return txt[:-1],txt[1:]
 
-#Cell 30
 def pad_collate(samples, pad_idx=1, pad_first=True, backwards=False):
     "Function that collect samples and adds padding. Flips token order if needed"
     max_len = max([len(s[0]) for s in samples])
