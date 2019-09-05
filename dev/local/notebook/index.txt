@@ -59,7 +59,7 @@
   "chunked": "01_core.ipynb",
   "retain_type": "01_core.ipynb",
   "retain_types": "01_core.ipynb",
-  "show_title": "01_core.ipynb",
+  "show_title": "01a_torch_core.ipynb",
   "ShowTitle": "01_core.ipynb",
   "Int": "01_core.ipynb",
   "Float": "01_core.ipynb",

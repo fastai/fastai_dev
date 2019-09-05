@@ -10,8 +10,6 @@ from .notebook.showdoc import show_doc
 
 from argparse import ArgumentParser
 
-#Cell 2
-
 #Cell 4
 def _param_pre(self): return '--' if self.opt else ''
 def _param_kwargs(self): return {k:v for k,v in self.__dict__.items() if v is not None and k!='opt'}

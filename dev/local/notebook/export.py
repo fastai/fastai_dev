@@ -223,7 +223,8 @@ def _notebook2script(fname):
         _add2add(fname_out, [f"'{f}'" for f in names if '.' not in f] + extra)
         index.update({f: fname.name for f in names})
         code = re.sub(r' +$', '', code, flags=re.MULTILINE)
-        with open(fname_out, 'a') as f: f.write(code)
+        if code != '\n\n' + orig[:-1]:
+            with open(fname_out, 'a') as f: f.write(code)
     _save_index(index)
     print(f"Converted {fname}.")
 

@@ -16,8 +16,6 @@ from .data.external import *
 from .notebook.showdoc import show_doc
 from .optimizer import *
 
-#Cell 2
-
 #Cell 9
 def class2attr(self, cls_name):
     return camel2snake(re.sub(rf'{cls_name}$', '', self.__class__.__name__) or cls_name.lower())
