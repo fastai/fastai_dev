@@ -2,6 +2,7 @@
 
 __all__ = ['DataBlock']
 
+#Cell 1
 from ..torch_basics import *
 from ..test import *
 from .load import *
@@ -12,14 +13,17 @@ from .source import *
 from .external import *
 from ..notebook.showdoc import show_doc
 
+#Cell 5
 from inspect import isfunction,ismethod
 
+#Cell 6
 def _merge_tfms(*tfms):
     "Group the `tfms` in a single list, removing duplicates (from the same class) and instantiating"
     g = groupby(concat(*tfms), lambda o:
         o if isinstance(o, type) else o.__qualname__ if (isfunction(o) or ismethod(o)) else o.__class__)
     return L(v[-1] for k,v in g.items()).mapped(instantiate)
 
+#Cell 8
 @docs
 @funcs_kwargs
 class DataBlock():
@@ -57,4 +61,5 @@ class DataBlock():
     _docs = dict(datasource="Create a `Datasource` from `source` with `tfms` and `tuple_tfms`",
                  databunch="Create a `DataBunch` from `source` with `tfms`")
 
+#Cell 25
 MultiCategory.default_type_tfms = OneHotEncode

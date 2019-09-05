@@ -2,6 +2,7 @@
 
 __all__ = ['LinearDecoder', 'SequentialRNN', 'get_language_model']
 
+#Cell 0
 from ...imports import *
 from ...test import *
 from ...core import *
@@ -15,6 +16,7 @@ from ..core import *
 from ...notebook.showdoc import show_doc
 from .awdlstm import *
 
+#Cell 3
 _model_meta = {AWD_LSTM: {'hid_name':'emb_sz', 'url':URLs.WT103_FWD, 'url_bwd':URLs.WT103_BWD,
                           'config_lm':awd_lstm_lm_config, 'split_lm': awd_lstm_lm_split,
                           'config_clas':awd_lstm_clas_config, 'split_clas': awd_lstm_clas_split},
@@ -28,6 +30,7 @@ _model_meta = {AWD_LSTM: {'hid_name':'emb_sz', 'url':URLs.WT103_FWD, 'url_bwd':U
               #                'config_lm':tfmerXL_lm_config, 'split_lm': tfmerXL_lm_split,
               #                'config_clas':tfmerXL_clas_config, 'split_clas': tfmerXL_clas_split}}
 
+#Cell 5
 class LinearDecoder(Module):
     "To go on top of a RNNCore module and create a Language Model."
     initrange=0.1
@@ -44,11 +47,13 @@ class LinearDecoder(Module):
         decoded = self.decoder(self.output_dp(outputs[-1]))
         return decoded, raw_outputs, outputs
 
+#Cell 7
 class SequentialRNN(nn.Sequential):
     "A sequential module that passes the reset call to its children."
     def reset(self):
         for c in self.children(): getattr(c, 'reset', noop)()
 
+#Cell 9
 def get_language_model(arch, vocab_sz, config=None, drop_mult=1.):
     "Create a language model from `arch` and its `config`."
     meta = _model_meta[arch]

@@ -3,14 +3,17 @@
 __all__ = ['Tabular', 'TabularProc', 'Categorify', 'Normalize', 'FillStrategy', 'FillMissing', 'process_df',
            'TabularLine', 'TensorTabular', 'ReadTabLine', 'ReadTabTarget', 'ReadTabBatch']
 
-from ..imports import *
+#Cell 0
+from ..torch_basics import *
 from ..test import *
 from ..core import *
 from ..data.all import *
 from ..notebook.showdoc import show_doc
 
+#Cell 1
 pd.set_option('mode.chained_assignment','raise')
 
+#Cell 6
 class Tabular(CollBase):
     def __init__(self, df, cat_names=None, cont_names=None, y_names=None, is_y_cat=True, splits=None):
         super().__init__(df)
@@ -34,6 +37,7 @@ class Tabular(CollBase):
     @property
     def all_col_names (self): return self.all_cont_names + self.all_cat_names
 
+#Cell 7
 def _add_prop(cls, nm):
     prop = property(lambda o: o.items[list(getattr(o,nm+'_names'))])
     setattr(cls, nm+'s', prop)
@@ -46,10 +50,12 @@ _add_prop(Tabular, 'cont')
 _add_prop(Tabular, 'all_cont')
 _add_prop(Tabular, 'all_col')
 
+#Cell 8
 class TabularProc(InplaceTransform):
     "Base class to write a tabular processor for dataframes"
     def process(self, *args,**kwargs): return self(*args,**kwargs)
 
+#Cell 9
 class Categorify(TabularProc, CollBase):
     "Transform the categorical variables to that type."
     order = 1
@@ -64,6 +70,7 @@ class Categorify(TabularProc, CollBase):
         to.items = (cats, to.items[1])
         return to
 
+#Cell 15
 class Normalize(TabularProc):
     "Normalize the continuous variables."
     order = 2
@@ -77,12 +84,14 @@ class Normalize(TabularProc):
         to.items = (to.items[0], conts)
         return to
 
+#Cell 19
 class FillStrategy:
     "Namespace containing the various filling strategies."
     def median  (c,fill): return c.median()
     def constant(c,fill): return fill
     def mode    (c,fill): return c.dropna().value_counts().idxmax()
 
+#Cell 20
 class FillMissing(TabularProc):
     "Fill the missing values in continuous columns."
     def __init__(self, fill_strategy=FillStrategy.median, add_col=True, fill_vals=None):
@@ -103,6 +112,7 @@ class FillMissing(TabularProc):
                 to[n+'_na'] = missing[n]
                 if n+'_na' not in to.cat_names: to.cat_names.append(n+'_na')
 
+#Cell 27
 @delegates(Tabular)
 def process_df(df, procs, inplace=True, **kwargs):
     "Process `df` with `procs` and returns the processed dataframe and the `TabularProcessor` associated"
@@ -111,10 +121,12 @@ def process_df(df, procs, inplace=True, **kwargs):
     proc.setup(to)
     return to,proc
 
+#Cell 31
 class TabularLine(pd.Series):
     "A line of a dataframe that knows how to show itself"
     def show(self, ctx=None, **kwargs): return self if ctx is None else ctx.append(self)
 
+#Cell 32
 class TensorTabular(tuple):
     def get_ctxs(self, max_n=10, **kwargs):
         n_samples = min(self[0].shape[0], max_n)
@@ -123,6 +135,7 @@ class TensorTabular(tuple):
 
     def display(self, ctxs): display_df(pd.DataFrame(ctxs))
 
+#Cell 33
 class ReadTabLine(ItemTransform):
     def __init__(self, proc): self.proc = proc
 
@@ -135,11 +148,13 @@ class ReadTabLine(ItemTransform):
         to = self.proc.decode(to)
         return pd.Series({c: v for v,c in zip(to.items[0]+to.items[1], self.proc.cat_names+self.proc.cont_names)})
 
+#Cell 34
 class ReadTabTarget(ItemTransform):
     def __init__(self, proc): self.proc = proc
     def encodes(self, row): return row[self.proc.y_names].astype(np.int64)
     def decodes(self, o) -> Category: return self.proc.classes[self.proc.y_names][o]
 
+#Cell 42
 class ReadTabBatch(ItemTransform):
     def __init__(self, proc): self.proc = proc
 
@@ -147,7 +162,11 @@ class ReadTabBatch(ItemTransform):
         cats,conts,targ = (df[o] for o in (self.proc.cat_names,self.proc.cont_names,self.proc.y_names))
         return (TensorTabular((tensor(cats.values).long(),tensor(conts.values).float())), tensor(targ.values).long())
 
-    #def decodes(self, o) -> TabularLine:
-    #    to = Tabular(o, self.proc.cat_names, self.proc.cont_names, self.proc.y_names)
-    #    to = self.proc.decode(to)
-    #    return pd.Series({c: v for v,c in zip(to.items[0]+to.items[1], self.proc.cat_names+self.proc.cont_names)})
+    def decodes(self, o):
+        (cats,conts),targ = o
+        res = []
+        for cat,cont,t in zip(cats,conts,targ):
+            to = Tabular((cat,cont), self.proc.cat_names, self.proc.cont_names, self.proc.y_names)
+            to = self.proc.decode(to)
+            res.append(pd.Series({c: v for v,c in zip(to.items[0]+to.items[1], self.proc.cat_names+self.proc.cont_names)}))
+        return pd.DataFrame(res)

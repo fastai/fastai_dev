@@ -2,8 +2,10 @@
 
 __all__ = ['in_ipython', 'IN_IPYTHON', 'in_colab', 'IN_COLAB', 'in_notebook', 'IN_NOTEBOOK', 'DocsTestClass']
 
+#Cell 1
 from ..imports import *
 
+#Cell 3
 def in_ipython():
     "Check if the code is running in the ipython environment (jupyter including)"
     program_name = os.path.basename(os.getenv('_', ''))
@@ -16,6 +18,7 @@ def in_ipython():
 
 IN_IPYTHON = in_ipython()
 
+#Cell 4
 def in_colab():
     "Check if the code is running in Google Colaboratory"
     try:
@@ -25,6 +28,7 @@ def in_colab():
 
 IN_COLAB = in_colab()
 
+#Cell 5
 def in_notebook():
     "Check if the code is running in a jupyter notebook"
     if in_colab(): return True
@@ -37,5 +41,6 @@ def in_notebook():
 
 IN_NOTEBOOK = in_notebook()
 
+#Cell 7
 class DocsTestClass:
     def test(): pass

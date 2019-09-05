@@ -5,15 +5,18 @@ __all__ = ['RandTransform', 'PILFlip', 'PILDihedral', 'clip_remove_empty', 'Crop
            'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs', 'apply_perspective', 'Warp', 'logit',
            'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms', 'aug_transforms']
 
+#Cell 2
 from ..torch_basics import *
 from ..test import *
 from ..data.all import *
 from .core import *
 from ..notebook.showdoc import show_doc
 
+#Cell 3
 from torch import stack, zeros_like as t0, ones_like as t1
 from torch.distributions.bernoulli import Bernoulli
 
+#Cell 6
 @docs
 class RandTransform(Transform):
     "A transform that randomize its state at each `__call__`, only applied on the training set"
@@ -32,6 +35,7 @@ class RandTransform(Transform):
 
     _docs = dict(randomize="Randomize the state for input `b`")
 
+#Cell 14
 def _minus_axis(x, axis):
     x[...,axis] = -x[...,axis]
     return x
@@ -46,6 +50,7 @@ class PILFlip(RandTransform):
         bb = _minus_axis(bb.view(-1,2), 0)
         return (bb.view(-1,4),lbl)
 
+#Cell 17
 class PILDihedral(RandTransform):
     "Applies any of the eight dihedral transformations with probability `p`"
     def __init__(self, p=0.5, draw=None): self.p,self.draw = p,draw
@@ -66,6 +71,7 @@ class PILDihedral(RandTransform):
         tl,br = pnts.min(dim=1)[0],pnts.max(dim=1)[0]
         return [torch.cat([tl, br], dim=1), x[1]]
 
+#Cell 22
 def clip_remove_empty(bbox, label):
     "Clip bounding boxes with image border and label background the empty ones."
     bbox = torch.clamp(bbox, -1, 1)
@@ -74,11 +80,14 @@ def clip_remove_empty(bbox, label):
     else: label = [0 if m else l for l,m in zip(label,empty)]
     return (bbox, label)
 
+#Cell 24
 from torchvision.transforms.functional import pad as tvpad
 
+#Cell 25
 mk_class('PadMode', **{o:o.lower() for o in ['Zeros', 'Border', 'Reflection']},
          doc="All possible padding mode as attributes to get tab-completion and typo-proofing")
 
+#Cell 27
 class CropPad(Transform):
     "Center crop or pad an image to `size`"
     order = 5
@@ -121,6 +130,7 @@ class CropPad(Transform):
         bbox = self.encodes(TensorPoint(bbox.view(-1,2))).view(-1,4)
         return clip_remove_empty(bbox, label)
 
+#Cell 33
 class RandomCrop(CropPad):
     "Randomly crop an image to `size`"
     def __init__(self, size): super().__init__(size)
@@ -131,9 +141,11 @@ class RandomCrop(CropPad):
         if filt: self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
         else: self.tl = (random.randint(0,w-self.cp_size[0]), random.randint(0,h-self.cp_size[1]))
 
+#Cell 36
 mk_class('ResizeMethod', **{o:o.lower() for o in ['Squish', 'Crop', 'Pad']},
          doc="All possible resize method as attributes to get tab-completion and typo-proofing")
 
+#Cell 40
 class Resize(CropPad):
     order=10
     "Resize image to `size` using `method`"
@@ -156,6 +168,7 @@ class Resize(CropPad):
         if self.method==ResizeMethod.Pad or filt: self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
         else: self.tl = (random.randint(0,w-self.cp_size[0]), random.randint(0,h-self.cp_size[1]))
 
+#Cell 46
 class RandomResizedCrop(CropPad):
     "Picks a random scaled crop of an image and resize it to `size`"
     def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), resamples=(Image.BILINEAR, Image.NEAREST), **kwargs):
@@ -182,6 +195,7 @@ class RandomResizedCrop(CropPad):
         else:                     self.cp_size = (w, h)
         self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
 
+#Cell 52
 class AffineCoordTfm(RandTransform):
     "Combine and apply affine and coord transforms"
     order = 30
@@ -236,12 +250,14 @@ class AffineCoordTfm(RandTransform):
         tl,dr = pnts.min(dim=2)[0],pnts.max(dim=2)[0]
         return clip_remove_empty(torch.cat([tl, dr], dim=2), label)
 
+#Cell 55
 def affine_mat(*ms):
     "Restructure length-6 vector `ms` into an affine matrix with 0,0,1 in the last line"
     return stack([stack([ms[0], ms[1], ms[2]], dim=1),
                   stack([ms[3], ms[4], ms[5]], dim=1),
                   stack([t0(ms[0]), t0(ms[0]), t1(ms[0])], dim=1)], dim=1)
 
+#Cell 56
 def mask_tensor(x, p=0.5, neutral=0.):
     "Mask elements of `x` with `neutral` with probability `1-p`"
     if p==1.: return x
@@ -250,16 +266,19 @@ def mask_tensor(x, p=0.5, neutral=0.):
     x.mul_(mask)
     return x.add_(neutral) if neutral != 0 else x
 
+#Cell 57
 def flip_mat(x, p=0.5):
     "Return a random flip matrix"
     mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
     return affine_mat(mask,     t0(mask), t0(mask),
                       t0(mask), t1(mask), t0(mask))
 
+#Cell 59
 def Flip(p=0.5, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Randomly flip a batch of images with a probability `p`"
     return AffineCoordTfm(aff_fs=partial(flip_mat, p=p), size=size, mode=mode, pad_mode=pad_mode)
 
+#Cell 61
 def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0.):
     if draw is None: draw=def_draw
     if isinstance(draw, Callable):
@@ -271,6 +290,7 @@ def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0.):
     else: res = x.new_zeros(x.size(0)) + draw
     return mask_tensor(res, p=p, neutral=neutral)
 
+#Cell 63
 def dihedral_mat(x, p=0.5, draw=None):
     "Return a random dihedral matrix"
     def _def_draw(): return random.randint(0,7)
@@ -283,10 +303,12 @@ def dihedral_mat(x, p=0.5, draw=None):
                       ys*m1,  ys*m0,  t0(xs)).float()
     mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
 
+#Cell 64
 def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Apply a random dihedral transformation to a batch of images with a probability `p`"
     return AffineCoordTfm(aff_fs=partial(dihedral_mat, p=p, draw=draw), size=size, mode=mode, pad_mode=pad_mode)
 
+#Cell 68
 def rotate_mat(x, max_deg=10, p=0.5, draw=None):
     "Return a random rotation matrix with `max_deg` and `p`"
     def _def_draw(): return random.uniform(-max_deg,max_deg)
@@ -294,11 +316,13 @@ def rotate_mat(x, max_deg=10, p=0.5, draw=None):
     return affine_mat(thetas.cos(), thetas.sin(), t0(thetas),
                      -thetas.sin(), thetas.cos(), t0(thetas))
 
+#Cell 69
 def Rotate(max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Apply a random rotation of at most `max_deg` with probability `p` to a batch of images"
     return AffineCoordTfm(partial(rotate_mat, max_deg=max_deg, p=p, draw=draw),
                           size=size, mode=mode, pad_mode=pad_mode)
 
+#Cell 72
 def zoom_mat(x, max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None):
     "Return a random zoom matrix with `max_zoom` and `p`"
     def _def_draw():     return random.uniform(1., max_zoom)
@@ -311,12 +335,14 @@ def zoom_mat(x, max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None):
     return affine_mat(s,     t0(s), col_c,
                       t0(s), s,     row_c)
 
+#Cell 73
 def Zoom(max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None, size=None, mode='bilinear',
          pad_mode=PadMode.Reflection):
     "Apply a random zoom of at most `max_zoom` with probability `p` to a batch of images"
     return AffineCoordTfm(partial(zoom_mat, max_zoom=max_zoom, p=p, draw=draw, draw_x=draw_x, draw_y=draw_y),
                           size=size, mode=mode, pad_mode=pad_mode)
 
+#Cell 78
 def find_coeffs(p1, p2):
     "Find coefficients for warp tfm from `p1` to `p2`"
     m = []
@@ -330,6 +356,7 @@ def find_coeffs(p1, p2):
     B = p1.view(p1.shape[0], 8, 1)
     return torch.solve(B,A)[0]
 
+#Cell 79
 def apply_perspective(coords, coeffs):
     "Apply perspective tranfom on `coords` with `coeffs`"
     sz = coords.shape
@@ -339,6 +366,7 @@ def apply_perspective(coords, coeffs):
     coords.div_(coords[...,2].unsqueeze(-1))
     return coords[...,:2].view(*sz)
 
+#Cell 80
 class _WarpCoord():
     def __init__(self, magnitude=0.2, p=0.5, draw_x=None, draw_y=None):
         self.coeffs,self.magnitude,self.p,self.draw_x,self.draw_y = None,magnitude,p,draw_x,draw_y
@@ -357,16 +385,19 @@ class _WarpCoord():
         coeffs = find_coeffs(self.targ_pts, self.orig_pts) if invert else find_coeffs(self.orig_pts, self.targ_pts)
         return apply_perspective(x, coeffs)
 
+#Cell 81
 def Warp(magnitude=0.2, p=0.5, draw_x=None, draw_y=None,size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Apply perspective warping with `magnitude` and `p` on a batch of matrices"
     return AffineCoordTfm(coord_fs=_WarpCoord(magnitude=magnitude, p=p, draw_x=draw_x, draw_y=draw_y),
                           size=size, mode=mode, pad_mode=pad_mode)
 
+#Cell 88
 def logit(x):
     "Logit of `x`, clamped to avoid inf."
     x = x.clamp(1e-7, 1-1e-7)
     return -(1/x-1).log()
 
+#Cell 89
 class LightingTfm(RandTransform):
     "Apply `fs` to the logits"
     order = 40
@@ -382,6 +413,7 @@ class LightingTfm(RandTransform):
 
     def encodes(self,x:TensorImage): return torch.sigmoid(compose_tfms(logit(x), self.fs))
 
+#Cell 90
 class _BrightnessLogit():
     def __init__(self, max_lighting=0.2, p=0.75, draw=None):
         self.max_lighting,self.p,self.draw = max_lighting,p,draw
@@ -393,10 +425,12 @@ class _BrightnessLogit():
 
     def __call__(self, x): return x.add_(logit(self.change[:,None,None,None]))
 
+#Cell 91
 def Brightness(max_lighting=0.2, p=0.75, draw=None):
     "Apply change in brightness of `max_lighting` to batch of images with probability `p`."
     return LightingTfm(_BrightnessLogit(max_lighting, p, draw))
 
+#Cell 95
 class _ContrastLogit():
     def __init__(self, max_lighting=0.2, p=0.75, draw=None):
         self.max_lighting,self.p,self.draw = max_lighting,p,draw
@@ -409,10 +443,12 @@ class _ContrastLogit():
 
     def __call__(self, x): return x.mul_(self.change[:,None,None,None])
 
+#Cell 96
 def Contrast(max_lighting=0.2, p=0.75, draw=None):
     "Apply change in contrast of `max_lighting` to batch of images with probability `p`."
     return LightingTfm(_ContrastLogit(max_lighting, p, draw))
 
+#Cell 101
 def _compose_same_tfms(tfms):
     tfms = L(tfms)
     if len(tfms) == 0: return None
@@ -420,6 +456,7 @@ def _compose_same_tfms(tfms):
     for tfm in tfms[1:]: res.compose(tfm)
     return res
 
+#Cell 102
 def setup_aug_tfms(tfms):
     "Go through `tfms` and combines together affine/coord or lighting transforms"
     aff_tfms = [tfm for tfm in tfms if isinstance(tfm, AffineCoordTfm)]
@@ -430,6 +467,7 @@ def setup_aug_tfms(tfms):
     if lig_tfm is not None: res.append(lig_tfm)
     return res + others
 
+#Cell 106
 def aug_transforms(do_flip=True, flip_vert=False, max_rotate=10., max_zoom=1.1, max_lighting=0.2,
                    max_warp=0.2, p_affine=0.75, p_lighting=0.75, xtra_tfms=None,
                    size=None, mode='bilinear', pad_mode=PadMode.Reflection):

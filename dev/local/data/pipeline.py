@@ -3,16 +3,19 @@
 __all__ = ['get_func', 'Func', 'Sig', 'SelfFunc', 'Self', 'compose_tfms', 'batch_to_samples', 'mk_transform',
            'Pipeline', 'TfmdBase', 'TfmdList', 'TfmdDS']
 
+#Cell 1
 from ..torch_basics import *
 from ..test import *
 from .transform import *
 from ..notebook.showdoc import show_doc
 
+#Cell 5
 def get_func(t, name, *args, **kwargs):
     "Get the `t.name` (potentially partial-ized with `args` and `kwargs`) or `noop` if not defined"
     f = getattr(t, name, noop)
     return f if not (args or kwargs) else partial(f, *args, **kwargs)
 
+#Cell 10
 class Func():
     "Basic wrapper around a `name` with `args` and `kwargs` to call on a given type"
     def __init__(self, name, *args, **kwargs): self.name,self.args,self.kwargs = name,args,kwargs
@@ -20,6 +23,7 @@ class Func():
     def _get(self, t): return get_func(t, self.name, *self.args, **self.kwargs)
     def __call__(self,t): return L(t).mapped(self._get) if is_listy(t) else self._get(t)
 
+#Cell 13
 class _Sig():
     def __getattr__(self,k):
         def _inner(*args, **kwargs): return Func(k, *args, **kwargs)
@@ -27,6 +31,7 @@ class _Sig():
 
 Sig = _Sig()
 
+#Cell 17
 class SelfFunc():
     "Search for `name` attribute and call it with `args` and `kwargs` on any object it's passed."
     def __init__(self, nm, *args, **kwargs): self.nm,self.args,self.kwargs = nm,args,kwargs
@@ -35,6 +40,7 @@ class SelfFunc():
         if not is_listy(o): return getattr(o,self.nm)(*self.args, **self.kwargs)
         else: return [getattr(o_,self.nm)(*self.args, **self.kwargs) for o_ in o]
 
+#Cell 20
 class _SelfFunc():
     def __getattr__(self,k):
         def _inner(*args, **kwargs): return SelfFunc(k, *args, **kwargs)
@@ -42,6 +48,7 @@ class _SelfFunc():
 
 Self = _SelfFunc()
 
+#Cell 25
 def compose_tfms(x, tfms, is_enc=True, reverse=False, **kwargs):
     "Apply all `func_nm` attribute of `tfms` on `x`, maybe in `reverse` order"
     if reverse: tfms = reversed(tfms)
@@ -50,15 +57,18 @@ def compose_tfms(x, tfms, is_enc=True, reverse=False, **kwargs):
         x = f(x, **kwargs)
     return x
 
+#Cell 30
 def batch_to_samples(b, max_n=10):
     "'Transposes' a batch to (at most `max_n`) samples"
     if isinstance(b, Tensor): return b[:max_n]
     return L(batch_to_samples(b_, max_n) for b_ in b).zipped()
 
+#Cell 32
 def mk_transform(f, as_item=True):
     "Convert function `f` to `Transform` if it isn't already one"
     return f if isinstance(f,Transform) else Transform(f, as_item=as_item)
 
+#Cell 33
 class Pipeline(GetAttr):
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None, as_item=True, filt=None):
@@ -103,6 +113,7 @@ class Pipeline(GetAttr):
         for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
         return 1 if ctx is None else ctx
 
+#Cell 58
 class TfmdBase(L):
     "Base class for transformed lists"
     def _gets(self, i): return L(self._get(i_) for i_ in mask2idxs(i))
@@ -110,6 +121,7 @@ class TfmdBase(L):
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx, **kwargs): return self.show(self[idx], **kwargs)
 
+#Cell 59
 class TfmdList(TfmdBase):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
     def __init__(self, items, tfms, do_setup=True, as_item=True, use_list=None, filt=None):
@@ -134,6 +146,7 @@ class TfmdList(TfmdBase):
     @filt.setter
     def filt(self,v): self.tfms.filt = v
 
+#Cell 78
 @docs
 class TfmdDS(TfmdBase):
     "A dataset that creates a tuple from each `tfms`, passed thru `ds_tfms`"

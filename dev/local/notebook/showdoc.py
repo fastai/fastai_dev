@@ -4,6 +4,7 @@ __all__ = ['is_enum', 'add_pytorch_index', 'is_fastai_module', 'FASTAI_DOCS', 'd
            'get_function_source', 'SOURCE_URL', 'get_source_link', 'FASTAI_NB_DEV', 'source_link', 'type_repr',
            'format_param', 'show_doc', 'md2html', 'doc']
 
+#Cell 1
 from ..imports import *
 from .core import *
 from .export import *
@@ -12,10 +13,12 @@ from IPython.display import Markdown,display
 from IPython.core import page
 from nbconvert import HTMLExporter
 
+#Cell 6
 def is_enum(cls):
     "Check if `cls` is an enum or another type of class"
     return type(cls) in (enum.Enum, enum.EnumMeta)
 
+#Cell 11
 def _get_pytorch_index():
     if not (Path(__file__).parent/'index_pytorch.txt').exists(): return {}
     return json.load(open(Path(__file__).parent/'index_pytorch.txt', 'r'))
@@ -28,16 +31,19 @@ def add_pytorch_index(func_name, url):
     index[func_name] = url
     json.dump(index, open(Path(__file__).parent/'index_pytorch.txt', 'w'), indent=2)
 
+#Cell 15
 def is_fastai_module(name):
     "Test if `name` is a fastai module."
     dir_name = os.path.sep.join(name.split('.'))
     return (Path(__file__).parent.parent/f"{dir_name}.py").exists()
 
+#Cell 17
 #Might change once the library is renamed fastai.
 def _is_fastai_class(ft): return belongs_to_module(ft, 'fastai_source')
 def _strip_fastai(s): return re.sub(r'^local\.', '', s)
 FASTAI_DOCS = ''
 
+#Cell 18
 def doc_link(name, include_bt:bool=True):
     "Create link to documentation for `name`."
     cname = f'`{name}`' if include_bt else name
@@ -54,6 +60,7 @@ def doc_link(name, include_bt:bool=True):
     #Leave as is
     return cname
 
+#Cell 20
 _re_backticks = re.compile(r"""
 # Catches any link of the form \[`obj`\](old_link) or just `obj` to either update old links or add the link to the docs of obj
 \[`      #     Opening [ and `
@@ -70,11 +77,13 @@ _re_backticks = re.compile(r"""
 `        #     Closing `
 """, re.VERBOSE)
 
+#Cell 21
 def add_doc_links(text):
     "Search for doc links for any item between backticks in `text`."
     def _replace_link(m): return doc_link(m.group(1) or m.group(2))
     return _re_backticks.sub(_replace_link, text)
 
+#Cell 25
 SOURCE_URL = "https://github.com/fastai/fastai_docs/tree/master/dev/"
 
 def get_function_source(func):
@@ -84,6 +93,7 @@ def get_function_source(func):
     module = inspect.getmodule(func).__name__.replace('.', '/') + '.py'
     return f"{SOURCE_URL}{module}#L{line}"
 
+#Cell 28
 _re_header = re.compile(r"""
 # Catches any header in markdown with the title in group 1
 ^\s*  # Beginning of text followed by any number of whitespace
@@ -93,6 +103,7 @@ _re_header = re.compile(r"""
 $     # End of text
 """, re.VERBOSE)
 
+#Cell 29
 FASTAI_NB_DEV = 'https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/'
 
 def get_source_link(func, local=False, is_name=None):
@@ -124,6 +135,7 @@ def get_source_link(func, local=False, is_name=None):
         i -= 1
     return f'{pref}{nb_name}'
 
+#Cell 32
 def source_link(func, is_name=None, disp=True):
     "Show a relative link to the notebook where `func` is defined"
     is_name = is_name or isinstance(func, str)
@@ -132,6 +144,7 @@ def source_link(func, is_name=None, disp=True):
     if disp: display(Markdown(f'[{func_name}]({link})'))
     else: return link
 
+#Cell 37
 def type_repr(t):
     "Representation of type `t` (in a type annotation)"
     if getattr(t, '__args__', None):
@@ -142,6 +155,7 @@ def type_repr(t):
         return f'{doc_link(get_name(t))}\[{reprs}\]'
     else: return doc_link(get_name(t))
 
+#Cell 41
 _arg_prefixes = {inspect._VAR_POSITIONAL: '\*', inspect._VAR_KEYWORD:'\*\*'}
 
 def format_param(p):
@@ -157,11 +171,13 @@ def format_param(p):
         else: res += f'=*`{repr(default)}`*'
     return res
 
+#Cell 43
 def _format_enum_doc(enum, full_name):
     "Formatted `enum` definition to show in documentation"
     vals = ', '.join(enum.__members__.keys())
     return f'<code>{full_name}</code>',f'<code>Enum</code> = [{vals}]'
 
+#Cell 45
 def _escape_chars(s):
     return s.replace('_', '\_')
 
@@ -177,6 +193,7 @@ def _format_func_doc(func, full_name=None):
     f_name = f"<code>class</code> {name}" if inspect.isclass(func) else name
     return f'{f_name}',f'{name}{arg_str}'
 
+#Cell 47
 def _format_cls_doc(cls, full_name):
     "Formatted `cls` definition to show in documentation"
     parent_class = inspect.getclasstree([cls])[-1][0][1][0]
@@ -184,6 +201,7 @@ def _format_cls_doc(cls, full_name):
     if parent_class != object: args += f' :: {doc_link(get_name(parent_class))}'
     return name,args
 
+#Cell 49
 def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, default_cls_level=2):
     "Show documentation for element `elt`. Supported types: class, function, and enum."
     elt = getattr(elt, '__func__', elt)
@@ -202,11 +220,13 @@ def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, defau
     if disp: display(Markdown(doc))
     else: return doc
 
+#Cell 63
 def md2html(md):
     "Convert markdown `md` to HTML code"
     if nbconvert.__version__ < '5.5.0': return HTMLExporter().markdown2html(md)
     else: return HTMLExporter().markdown2html(defaultdict(lambda: defaultdict(dict)), md)
 
+#Cell 64
 def doc(elt):
     "Show `show_doc` info in preview window"
     md = show_doc(elt, disp=False)

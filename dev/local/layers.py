@@ -7,15 +7,18 @@ __all__ = ['Module', 'Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten'
            'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN',
            'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model']
 
+#Cell 1
 from .torch_basics import *
 from .test import *
 from torch.nn.utils import weight_norm, spectral_norm
 
+#Cell 4
 class Module(nn.Module, metaclass=PrePostInitMeta):
     "Same as `nn.Module`, but no need for subclasses to call `super().__init__`"
     def __pre_init__(self): super().__init__()
     def __init__(self): pass
 
+#Cell 5
 class Lambda(Module):
     "An easy way to create a pytorch layer for a simple `func`"
     def __init__(self, func): self.func=func
@@ -23,6 +26,7 @@ class Lambda(Module):
     def forward(self, x): return self.func(x)
     def __repr__(self): return f'{self.__class__.__name__}({self.func})'
 
+#Cell 8
 class PartialLambda(Lambda):
     "Layer that applies `partial(func, **kwargs)`"
     def __init__(self, func, **kwargs):
@@ -32,36 +36,43 @@ class PartialLambda(Lambda):
     def forward(self, x): return self.func(x)
     def __repr__(self): return f'{self.__class__.__name__}({self.repr})'
 
+#Cell 10
 class View(Module):
     "Reshape `x` to `size`"
     def __init__(self, *size): self.size = size
     def forward(self, x): return x.view(self.size)
 
+#Cell 12
 class ResizeBatch(Module):
     "Reshape `x` to `size`, keeping batch dim the same size"
     def __init__(self, *size): self.size = size
     def forward(self, x): return x.view((x.size(0),) + self.size)
 
+#Cell 14
 class Flatten(Module):
     "Flatten `x` to a single dimension, often used at the end of a model. `full` for rank-1 tensor"
     def __init__(self, full=False): self.full = full
     def forward(self, x): return x.view(-1) if self.full else x.view(x.size(0), -1)
 
+#Cell 16
 class Debugger(nn.Module):
     "A module to debug inside a model."
     def forward(self,x):
         set_trace()
         return x
 
+#Cell 17
 def sigmoid_range(x, low, high):
     "Sigmoid function with range `(low, high)`"
     return torch.sigmoid(x) * (high - low) + low
 
+#Cell 19
 class SigmoidRange(Module):
     "Sigmoid module with range `(low, high)`"
     def __init__(self, low, high): self.low,self.high = low,high
     def forward(self, x): return sigmoid_range(x, self.low, self.high)
 
+#Cell 22
 class AdaptiveConcatPool2d(nn.Module):
     "Layer that concats `AdaptiveAvgPool2d` and `AdaptiveMaxPool2d`"
     def __init__(self, size=None):
@@ -71,17 +82,22 @@ class AdaptiveConcatPool2d(nn.Module):
         self.mp = nn.AdaptiveMaxPool2d(self.size)
     def forward(self, x): return torch.cat([self.mp(x), self.ap(x)], 1)
 
+#Cell 25
 mk_class('PoolType', **{o:o for o in 'Avg Max Cat'.split()})
 
+#Cell 26
 def pool_layer(pool_type):
     return nn.AdaptiveAvgPool2d if pool_type=='Avg' else nn.AdaptiveMaxPool2d if pool_type=='Max' else AdaptiveConcatPool2d
 
+#Cell 27
 class PoolFlatten(nn.Sequential):
     "Combine `nn.AdaptiveAvgPool2d` and `Flatten`."
     def __init__(self, pool_type=PoolType.Avg): super().__init__(pool_layer(pool_type)(1), Flatten())
 
+#Cell 30
 NormType = Enum('NormType', 'Batch BatchZero Weight Spectral')
 
+#Cell 31
 def BatchNorm(nf, norm_type=NormType.Batch, ndim=2, **kwargs):
     "BatchNorm layer with `nf` features and `ndim` initialized depending on `norm_type`."
     assert 1 <= ndim <= 3
@@ -90,6 +106,7 @@ def BatchNorm(nf, norm_type=NormType.Batch, ndim=2, **kwargs):
     bn.weight.data.fill_(0. if norm_type==NormType.BatchZero else 1.)
     return bn
 
+#Cell 34
 class BatchNorm1dFlat(nn.BatchNorm1d):
     "`nn.BatchNorm1d`, but first flattens leading dimensions"
     def forward(self, x):
@@ -98,6 +115,7 @@ class BatchNorm1dFlat(nn.BatchNorm1d):
         x = x.contiguous().view(-1,l)
         return super().forward(x).view(*f,l)
 
+#Cell 36
 class BnDropLin(nn.Sequential):
     "Module grouping `BatchNorm1d`, `Dropout` and `Linear` layers"
     def __init__(self, n_in, n_out, bn=True, p=0., act=None):
@@ -107,6 +125,7 @@ class BnDropLin(nn.Sequential):
         if act is not None: layers.append(act)
         super().__init__(*layers)
 
+#Cell 40
 def init_default(m, func=nn.init.kaiming_normal_):
     "Initialize `m` weights with `func` and set `bias` to 0."
     if func and hasattr(m, 'weight'): func(m.weight)
@@ -114,13 +133,16 @@ def init_default(m, func=nn.init.kaiming_normal_):
         if getattr(m, 'bias', None) is not None: m.bias.fill_(0.)
     return m
 
+#Cell 41
 def _conv_func(ndim=2, transpose=False):
     "Return the proper conv `ndim` function, potentially `transposed`."
     assert 1 <= ndim <=3
     return getattr(nn, f'Conv{"Transpose" if transpose else ""}{ndim}d')
 
+#Cell 43
 defaults.activation=nn.ReLU
 
+#Cell 44
 class ConvLayer(nn.Sequential):
     "Create a sequence of convolutional (`ni` to `nf`), ReLU (if `use_activ`) and `norm_type` layers."
     def __init__(self, ni, nf, ks=3, stride=1, padding=None, bias=None, ndim=2, norm_type=NormType.Batch,
@@ -138,6 +160,7 @@ class ConvLayer(nn.Sequential):
         if xtra: layers.append(xtra)
         super().__init__(*layers)
 
+#Cell 57
 class FlattenedLoss():
     "Same as `loss_cls`, but flattens input and target."
     def __init__(self, loss_cls, *args, axis=-1, floatify=False, is_2d=True, **kwargs):
@@ -157,33 +180,40 @@ class FlattenedLoss():
         inp = inp.view(-1,inp.shape[-1]) if self.is_2d else inp.view(-1)
         return self.func.__call__(inp, targ.view(-1), **kwargs)
 
+#Cell 59
 def CrossEntropyLossFlat(*args, axis=-1, **kwargs):
     "Same as `nn.CrossEntropyLoss`, but flattens input and target."
     return FlattenedLoss(nn.CrossEntropyLoss, *args, axis=axis, **kwargs)
 
+#Cell 61
 def BCEWithLogitsLossFlat(*args, axis=-1, floatify=True, **kwargs):
     "Same as `nn.BCEWithLogitsLoss`, but flattens input and target."
     return FlattenedLoss(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
+#Cell 63
 def BCELossFlat(*args, axis=-1, floatify=True, **kwargs):
     "Same as `nn.BCELoss`, but flattens input and target."
     return FlattenedLoss(nn.BCELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
+#Cell 65
 def MSELossFlat(*args, axis=-1, floatify=True, **kwargs):
     "Same as `nn.MSELoss`, but flattens input and target."
     return FlattenedLoss(nn.MSELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
+#Cell 69
 def trunc_normal_(x, mean=0., std=1.):
     "Truncated normal initialization (approximation)"
     # From https://discuss.pytorch.org/t/implementing-truncated-normal-initializer/4778/12
     return x.normal_().fmod_(2).mul_(std).add_(mean)
 
+#Cell 70
 class Embedding(nn.Embedding):
     "Embedding layer with truncated normal initialization"
     def __init__(self, ni, nf):
         super().__init__(ni, nf)
         trunc_normal_(self.weight.data, std=0.01)
 
+#Cell 74
 class SelfAttention(nn.Module):
     "Self attention layer for `n_channels`."
     def __init__(self, n_channels):
@@ -203,6 +233,7 @@ class SelfAttention(nn.Module):
         o = self.gamma * torch.bmm(h, beta) + x
         return o.view(*size).contiguous()
 
+#Cell 83
 class PooledSelfAttention2d(nn.Module):
     "Pooled self attention layer for 2d."
     def __init__(self, n_channels):
@@ -224,6 +255,7 @@ class PooledSelfAttention2d(nn.Module):
         o = self.out(torch.bmm(h, beta.transpose(1,2)).view(-1, self.n_channels//2, x.shape[2], x.shape[3]))
         return self.gamma * o + x
 
+#Cell 87
 def icnr_init(x, scale=2, init=nn.init.kaiming_normal_):
     "ICNR init of `x`, with `scale` and `init` function"
     ni,nf,h,w = x.shape
@@ -233,6 +265,7 @@ def icnr_init(x, scale=2, init=nn.init.kaiming_normal_):
     k = k.repeat(1, 1, scale**2)
     return k.contiguous().view([nf,ni,h,w]).transpose(0, 1)
 
+#Cell 90
 class PixelShuffle_ICNR(nn.Sequential):
     "Upsample by `scale` from `ni` filters to `nf` (default `ni`), using `nn.PixelShuffle`."
     def __init__(self, ni, nf=None, scale=2, blur=False, norm_type=NormType.Weight, act_cls=defaults.activation):
@@ -244,6 +277,7 @@ class PixelShuffle_ICNR(nn.Sequential):
         if blur: layers += [nn.ReplicationPad2d((1,0,1,0)), nn.AvgPool2d(2, stride=1)]
         super().__init__(*layers)
 
+#Cell 94
 class SequentialEx(Module):
     "Like `nn.Sequential`, but with ModuleList semantics, and can access module input"
     def __init__(self, *layers): self.layers = nn.ModuleList(layers)
@@ -263,11 +297,13 @@ class SequentialEx(Module):
     def extend(self,l):      return self.layers.extend(l)
     def insert(self,i,l):    return self.layers.insert(i,l)
 
+#Cell 96
 class MergeLayer(Module):
     "Merge a shortcut with the result of the module by adding them or concatenating them if `dense=True`."
     def __init__(self, dense:bool=False): self.dense=dense
     def forward(self, x): return torch.cat([x,x.orig], dim=1) if self.dense else (x+x.orig)
 
+#Cell 99
 class SimpleCNN(nn.Sequential):
     "Create a simple CNN with `filters`."
     def __init__(self, filters, kernel_szs=None, strides=None, bn=True):
@@ -279,6 +315,7 @@ class SimpleCNN(nn.Sequential):
         layers.append(PoolFlatten())
         super().__init__(*layers)
 
+#Cell 106
 class ResBlock(nn.Module):
     "Resnet block from `ni` to `nh` with `stride`"
     def __init__(self, expansion, ni, nh, stride=1, norm_type=NormType.Batch, **kwargs):
@@ -299,11 +336,13 @@ class ResBlock(nn.Module):
 
     def forward(self, x): return self.act(self.convs(x) + self.idconv(self.pool(x)))
 
+#Cell 110
 class ParameterModule(Module):
     "Register a lone parameter `p` in a module."
     def __init__(self, p): self.val = p
     def forward(self, x): return x
 
+#Cell 111
 def children_and_parameters(m):
     "Return the children of `m` and its direct parameters not registered in modules."
     children = list(m.children())
@@ -312,6 +351,7 @@ def children_and_parameters(m):
         if id(p) not in children_p: children.append(ParameterModule(p))
     return children
 
+#Cell 112
 class TstModule(Module):
     def __init__(self): self.a,self.lin = nn.Parameter(torch.randn(1)),nn.Linear(5,10)
 
@@ -322,6 +362,7 @@ test_eq(children[0], tst.lin)
 assert isinstance(children[1], ParameterModule)
 test_eq(children[1].val, tst.a)
 
+#Cell 113
 def _has_children(m:nn.Module):
     try: next(m.children())
     except StopIteration: return False
@@ -329,6 +370,7 @@ def _has_children(m:nn.Module):
 
 nn.Module.has_children = property(_has_children)
 
+#Cell 115
 def flatten_model(m):
     "Return the list of all submodules and parameters of `m`"
     return sum(map(flatten_model,children_and_parameters(m)),[]) if m.has_children else [m]
