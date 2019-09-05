@@ -4,14 +4,10 @@ __all__ = ['TerminateOnNaNCallback', 'TrackerCallback', 'EarlyStoppingCallback',
            'ReduceLROnPlateau']
 
 #Cell 0
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
-from ..core import *
 from ..layers import *
-from ..data.pipeline import *
-from ..data.source import *
-from ..data.core import *
-from ..data.external import *
+from ..data.all import *
 from ..notebook.showdoc import show_doc
 from ..optimizer import *
 from ..learner import *

@@ -3,8 +3,8 @@
 __all__ = ['synth_data', 'RegModel', 'synth_learner']
 
 #Cell 0
-from ..imports import *
-from ..core import *
+from ..torch_basics import *
+from ..test import *
 from ..layers import *
 from ..data.pipeline import *
 from ..data.source import *

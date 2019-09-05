@@ -3,9 +3,8 @@
 __all__ = ['reduce_loss', 'MixUp']
 
 #Cell 0
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
-from ..core import *
 from ..layers import *
 from ..data.all import *
 from ..notebook.showdoc import show_doc

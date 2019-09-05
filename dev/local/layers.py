@@ -8,9 +8,8 @@ __all__ = ['Module', 'Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten'
            'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model']
 
 #Cell 1
-from .imports import *
+from .torch_basics import *
 from .test import *
-from .core import *
 from torch.nn.utils import weight_norm, spectral_norm
 
 #Cell 4

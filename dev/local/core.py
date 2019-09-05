@@ -8,8 +8,8 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type',
            'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'trace', 'compose', 'maps',
            'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'sort_by_run', 'round_multiple',
-           'num_cpus', 'add_props', 'one_hot', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params',
-           'bn_bias_params', 'PrettyString', 'flatten_check', 'display_df', 'one_param']
+           'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'trainable_params', 'bn_bias_params',
+           'PrettyString', 'flatten_check', 'display_df', 'one_param']
 
 #Cell 1
 from .test import *
@@ -666,13 +666,6 @@ defaults.cpus = num_cpus()
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))
-
-#Comes from 05_data_core.ipynb, cell 54
-def one_hot(x, c):
-    "One-hot encode `x` with `c` classes."
-    res = torch.zeros(c, dtype=torch.uint8)
-    res[L(x)] = 1.
-    return res
 
 #Comes from 06_data_source.ipynb, cell 4
 def all_union(sets):
