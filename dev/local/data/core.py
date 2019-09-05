@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Category', 'Categorize',
-           'MultiCategory', 'MultiCategorize', 'one_hot_decode', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda',
-           'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
+           'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda', 'ByteToFloatTensor',
+           'Normalize', 'broadcast_vec', 'DataBunch']
 
 #Cell 1
 from ..torch_basics import *
@@ -148,11 +148,7 @@ class MultiCategorize(Categorize):
 #Cell 52
 MultiCategory.create = MultiCategorize
 
-#Cell 56
-def one_hot_decode(x, vocab=None):
-    return L(vocab[i] if vocab else i for i,x_ in enumerate(x) if x_==1)
-
-#Cell 58
+#Cell 54
 class OneHotEncode(Transform):
     "One-hot encodes targets and optionally decodes with `vocab`"
     order=2
@@ -166,15 +162,15 @@ class OneHotEncode(Transform):
     def encodes(self, o): return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
     def decodes(self, o): return one_hot_decode(o, self.vocab)
 
-#Cell 70
+#Cell 66
 class ToTensor(Transform):
     "Convert item to appropriate tensor class"
     order = 15
 
-#Cell 71
+#Cell 67
 _dl_tfms = ('after_item','before_batch','after_batch')
 
-#Cell 72
+#Cell 68
 @delegates()
 class TfmdDL(DataLoader):
     "Transformed `DataLoader`"
@@ -216,7 +212,7 @@ class TfmdDL(DataLoader):
         ctxs = [self.dataset.show(o, ctx=ctx, **kwargs) for o,ctx in zip(db, ctxs)]
         if hasattr(b[0], 'display'): b[0].display(ctxs)
 
-#Cell 91
+#Cell 87
 @docs
 class Cuda(Transform):
     "Move batch to `device` (defaults to `defaults.device`)"
@@ -228,7 +224,7 @@ class Cuda(Transform):
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
-#Cell 98
+#Cell 94
 class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order = 20 #Need to run after CUDA if on the GPU
@@ -241,7 +237,7 @@ class ByteToFloatTensor(Transform):
     def encodes(self, o:TensorMask)->TensorMask: return o.div_(255.).long() if self.div_mask else o.long()
     def decodes(self, o:TensorMask): return o
 
-#Cell 101
+#Cell 97
 @docs
 class Normalize(Transform):
     "Normalize/denorm batch of `TensorImage`"
@@ -252,7 +248,7 @@ class Normalize(Transform):
 
     _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
 
-#Cell 102
+#Cell 98
 def broadcast_vec(dim, ndim, *t, cuda=True):
     "Make a vector broadcastable over `dim` (out of `ndim` total) by prepending and appending unit axes"
     v = [1]*ndim
@@ -260,7 +256,7 @@ def broadcast_vec(dim, ndim, *t, cuda=True):
     f = to_device if cuda else noop
     return [f(tensor(o).view(*v)) for o in t]
 
-#Cell 110
+#Cell 106
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."

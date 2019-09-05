@@ -5,9 +5,8 @@ __all__ = ['Optimizer', 'sgd_step', 'weight_decay', 'l2_reg', 'average_grad', 'a
            'lamb_step', 'Lamb']
 
 #Cell 1
-from .imports import *
+from .torch_basics import *
 from .test import *
-from .core import *
 from .notebook.showdoc import show_doc
 
 #Cell 4
