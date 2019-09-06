@@ -464,6 +464,7 @@
   "qual_name": "91_notebook_export.ipynb",
   "source_nb": "91_notebook_export.ipynb",
   "script2notebook": "91_notebook_export.ipynb",
+  "diff_nb_script": "91_notebook_export.ipynb",
   "is_enum": "92_notebook_showdoc.ipynb",
   "add_pytorch_index": "92_notebook_showdoc.ipynb",
   "is_fastai_module": "92_notebook_showdoc.ipynb",
