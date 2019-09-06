@@ -202,7 +202,7 @@ def _reset_index():
         os.remove(Path(__file__).parent/'index.txt')
 
 #Cell 53
-def _notebook2script(fname):
+def _notebook2script(fname, dest='local', silent=False):
     "Finds cells starting with `#export` and puts them into a new module"
     if os.environ.get('IN_TEST',0): return  # don't export if running tests
     fname = Path(fname)
@@ -210,7 +210,7 @@ def _notebook2script(fname):
     default = find_default_export(nb['cells'])
     if default is not None:
         default = os.path.sep.join(default.split('.'))
-        _create_mod_file(Path.cwd()/'local'/f'{default}.py', fname)
+        _create_mod_file(Path.cwd()/dest/f'{default}.py', fname)
     index = _get_index()
     exports = [is_export(c, default) for c in nb['cells']]
     cells = [(i,c,e) for i,(c,e) in enumerate(zip(nb['cells'],exports)) if e is not None]
@@ -227,7 +227,7 @@ def _notebook2script(fname):
         if code != '\n\n' + orig[:-1]:
             with open(fname_out, 'a') as f: f.write(code)
     _save_index(index)
-    print(f"Converted {fname}.")
+    if not silent: print(f"Converted {fname}.")
 
 #Cell 55
 def _get_sorted_files(all_fs: Union[bool,str], up_to=None):
@@ -240,7 +240,7 @@ def _get_sorted_files(all_fs: Union[bool,str], up_to=None):
     return sorted(ret)
 
 #Cell 56
-def notebook2script(fname=None, all_fs=None, up_to=None):
+def notebook2script(fname=None, all_fs=None, up_to=None, dest='local', silent=False):
     "Convert `fname` or all the notebook satisfying `all_fs`."
     # initial checks
     if os.environ.get('IN_TEST',0): return  # don't export if running tests
@@ -248,7 +248,7 @@ def notebook2script(fname=None, all_fs=None, up_to=None):
     if all_fs: _reset_index()
     if (all_fs is None) and (up_to is not None): all_fs=True # Enable allFiles if upTo is present
     fnames = _get_sorted_files(all_fs, up_to=up_to) if all_fs else [fname]
-    [_notebook2script(f) for f in fnames]
+    [_notebook2script(f, dest=dest, silent=silent) for f in fnames]
 
 #Cell 59
 def get_name(obj):
@@ -289,11 +289,11 @@ def _split(code):
     while e < len(lines):
         while e < len(lines) and _re_cell_num.search(lines[e]) is None: e += 1
         grps = _re_cell_num.search(lines[s]).groups()
-        cell_num = int(grps[0] or grps[2])
+        num = int(grps[0] or grps[2])
         nb = grps[1] or default_nb
         content = lines[s+1:e]
         while len(content) > 1 and content[-1] == '': content = content[:-1]
-        res.append((cell_num, nb, '\n'.join(content)))
+        res.append((num, nb, '\n'.join(content)))
         s,e = e,e+1
     return res
 
@@ -301,6 +301,7 @@ def _split(code):
 def _relimport2name(name, mod_name):
     if mod_name.endswith('.py'): mod_name = mod_name[:-3]
     mods = mod_name.split(os.path.sep)
+    mods = mods[mods.index('local'):]
     i = 0
     while name[i] == '.': i += 1
     return '.'.join(mods[:-i] + [name[i:]])
@@ -310,18 +311,18 @@ def _relimport2name(name, mod_name):
 _re_loc_import = re.compile(r'^\s*from (\.\S*) import (.*)$')
 
 #Cell 73
-def _deal_loc_import(code_lines, fname):
+def _deal_loc_import(code, fname):
     lines = []
     def _replace(m):
         mod,obj = m.groups()
         return f"from {_relimport2name(mod, fname)} import {obj}"
-    for line in code_lines:
+    for line in code.split('\n'):
         line = re.sub('__'+'file__', '_'+'file_', line) #Need to break __file__ or that line will be treated
         lines.append(_re_loc_import.sub(_replace,line))
-    return lines
+    return '\n'.join(lines)
 
 #Cell 75
-def _script2notebook(fname):
+def _script2notebook(fname, silent=False):
     "Put the content of `fname` back in the notebooks it came from."
     if os.environ.get('IN_TEST',0): return  # don't export if running tests
     fname = Path(fname)
@@ -331,16 +332,21 @@ def _script2notebook(fname):
     for nb_fname in nb_fnames:
         nb = read_nb(nb_fname)
         for i,f,c in splits:
-            c = '\n'.join(_deal_loc_import(c.split('\n'), str(fname)))
+            c = _deal_loc_import(c, str(fname))
             if f == nb_fname:
                 l = nb['cells'][i]['source'].split('\n')[0]
                 nb['cells'][i]['source'] = l + '\n' + c
         NotebookNotary().sign(nb)
         nbformat.write(nb, nb_fname, version=4)
-    print(f"Converted {fname}.")
+    if not silent: print(f"Converted {fname}.")
 
 #Cell 77
-def script2notebook(folder='local'):
+_manual_mods = ['__init__.py', 'imports.py', 'torch_imports.py', 'all.py', 'torch_basics.py']
+_manual_mods = ['__init__.py', 'imports.py', 'torch_imports.py', 'all.py', 'torch_basics.py']
+
+#Cell 78
+def script2notebook(folder='local', silent=False):
+    if os.environ.get('IN_TEST',0): return  # don't export if running tests
     manual_mods = ['__init__.py', 'imports.py', 'torch_imports.py', 'all.py', 'torch_basics.py']
     for f in Path(folder).glob('**/*.py'):
-        if f.name not in manual_mods and f.parent.name != 'utils': _script2notebook(f)
+        if f.name not in manual_mods and f.parent.name != 'utils': _script2notebook(f, silent=silent)

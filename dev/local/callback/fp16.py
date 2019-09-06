@@ -13,7 +13,7 @@ from ..learner import *
 from .progress import *
 
 #Cell 8
-from ..utils.fp16 import convert_network, model_grads_to_master_grads, master_params_to_model_params
+from ..utils.fp16_utils import convert_network, model_grads_to_master_grads, master_params_to_model_params
 
 #Cell 14
 from torch.nn.utils import parameters_to_vector
