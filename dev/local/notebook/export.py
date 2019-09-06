@@ -354,20 +354,44 @@ def script2notebook(folder='local', silent=False):
         if f.name not in _manual_mods: _script2notebook(f, silent=silent)
 
 #Cell 81
+def _print_diff_py(code1, code2, fname):
+    split1,split2 = _split(code1),_split(code2)
+    diff = []
+    for (i1,f1,c1),(i2,f2,c2) in zip_longest(split1, split2):
+        if c1 != c2: diff.append(f'Cell {i1} in {f1}:\n{c1}\n\nExported code from cell {i2} of {f2}:\n{c2}')
+    if len(diff) > 0:
+        print(f"Diff notebook and script in {fname}")
+        print("\n\n\n".join(diff))
+
+#Cell 82
+def _print_diff_txt(code1, code2, fname):
+    split1,split2 = code1.split("\n"),code2.split("\n")
+    diff = []
+    for t1,t2 in zip(split1, split2):
+        if t1 is None: diff.append(f'Exported code cell {t2[0]} in {t2[1]}:\n{c1}\n\nExported code from cell {i2} of {f2}:\n{c2}')
+        if c1 != c2: diff.append(f'Cell {i1} in {f1}:\n{c1}\n\nExported code from cell {i2} of {f2}:\n{c2}')
+    if len(diff) > 0:
+        print(f"Diff notebook and script in {fname}")
+        print("\n\n\n".join(diff))
+
+#Cell 84
+def _print_diff(code1, code2, fname):
+    diff = difflib.ndiff(code1, code2)
+    sys.stdout.writelines(diff)
+    #for l in difflib.context_diff(code1, code2): print(l)
+    #_print_diff_py(code1, code2, fname) if fname.endswith('.py') else _print_diff_txt(code1, code2, fname)
+
+#Cell 85
 def diff_nb_script(lib_folder='local'):
-    tmp_path = Path.cwd()/'tmp_lib'
-    shutil.move(Path.cwd()/lib_folder, tmp_path)
+    tmp_path1,tmp_path2 = Path.cwd()/'tmp_lib',Path.cwd()/'tmp_lib1'
+    shutil.copytree(Path.cwd()/lib_folder, tmp_path1)
     try:
         notebook2script(all_fs=True, silent=True)
-        shutil.move(Path.cwd()/lib_folder, Path.cwd()/'tmp_lib1')
-        shutil.move(tmp_path, Path.cwd()/lib_folder)
-        shutil.move(Path.cwd()/'tmp_lib1', tmp_path)
-        for f in tmp_path.glob('**/*'):
-            if f.is_file():
-                g = Path.cwd()/lib_folder/(f.relative_to(tmp_path))
-                if not g.exists(): print(f'{g} is missing, you should run notebook2script')
-                with open(f, 'r') as f1: txt1 = f1.read()
-                with open(g, 'r') as f2: txt2 = f2.read()
-                if txt1 != txt2:
-                    print(f'Diff notebook and script in {g}')
-    finally: shutil.rmtree(Path.cwd()/'tmp_lib')
+        shutil.copytree(Path.cwd()/lib_folder, tmp_path2)
+        shutil.rmtree(Path.cwd()/lib_folder)
+        shutil.copytree(tmp_path1, Path.cwd()/lib_folder)
+        res = subprocess.run(['diff', '-ru', 'tmp_lib1', lib_folder], stdout=subprocess.PIPE)
+        print(res.stdout.decode('utf-8'))
+    finally:
+        shutil.rmtree(tmp_path1)
+        shutil.rmtree(tmp_path2)
