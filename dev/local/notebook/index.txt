@@ -441,8 +441,6 @@
   "FillStrategy": "40_tabular_core.ipynb",
   "FillMissing": "40_tabular_core.ipynb",
   "process_df": "40_tabular_core.ipynb",
-  "TabularLine": "40_tabular_core.ipynb",
-  "TensorTabular": "40_tabular_core.ipynb",
   "ReadTabLine": "40_tabular_core.ipynb",
   "ReadTabTarget": "40_tabular_core.ipynb",
   "ReadTabBatch": "40_tabular_core.ipynb",
