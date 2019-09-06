@@ -272,3 +272,63 @@ def source_nb(func, is_name=None, return_all=False):
     while len(name) > 0:
         if name in index: return (name,index[name]) if return_all else index[name]
         name = '.'.join(name.split('.')[:-1])
+
+#Cell 69
+def _split(code):
+    lines = code.split('\n')
+    default_nb = _re_default_nb.search(lines[0]).groups()[0]
+    s,res = 1,[]
+    while _re_cell_num.search(lines[s]) is None: s += 1
+    e = s+1
+    while e < len(lines):
+        while e < len(lines) and _re_cell_num.search(lines[e]) is None: e += 1
+        grps = _re_cell_num.search(lines[s]).groups()
+        cell_num = int(grps[0] or grps[2])
+        nb = grps[1] or default_nb
+        content = lines[s+1:e]
+        while len(content) > 1 and content[-1] == '': content = content[:-1]
+        res.append((cell_num, nb, '\n'.join(content)))
+        s,e = e,e+1
+    return res
+
+#Cell 70
+def _relimport2name(name, mod_name):
+    if mod_name.endswith('.py'): mod_name = mod_name[:-3]
+    mods = mod_name.split(os.path.sep)
+    i = 0
+    while name[i] == '.': i += 1
+    return '.'.join(mods[:-i] + [name[i:]])
+
+#Cell 72
+#Catches any from .bla import something and catches local.bla in group 1, the imported thing(s) in group 2.
+_re_loc_import = re.compile(r'^\s*from (\.\S*) import (.*)$')
+
+#Cell 73
+def _deal_loc_import(code_lines, fname):
+    lines = []
+    def _replace(m):
+        mod,obj = m.groups()
+        return f"from {_relimport2name(mod, fname)} import {obj}"
+    for line in code_lines:
+        line = re.sub('__'+'file__', '_'+'file_', line) #Need to break __file__ or that line will be treated
+        lines.append(_re_loc_import.sub(_replace,line))
+    return lines
+
+#Cell 75
+def _script2notebook(fname):
+    "Put the content of `fname` back in the notebooks it came from."
+    if os.environ.get('IN_TEST',0): return  # don't export if running tests
+    fname = Path(fname)
+    with open(fname) as f: code = f.read()
+    splits = _split(code)
+    nb_fnames = {s[1] for s in splits}
+    for nb_fname in nb_fnames:
+        nb = read_nb(nb_fname)
+        for i,f,c in splits:
+            c = '\n'.join(_deal_loc_import(c.split('\n'), str(fname)))
+            if f == nb_fname:
+                l = nb['cells'][i]['source'].split('\n')[0]
+                nb['cells'][i]['source'] = l + '\n' + c
+        NotebookNotary().sign(nb)
+        nbformat.write(nb, nb_fname, version=4)
+    print(f"Converted {fname}.")
