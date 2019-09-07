@@ -7,9 +7,9 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le',
            'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type',
            'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'trace', 'compose', 'maps',
-           'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'sort_by_run', 'display_df',
-           'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'PrettyString',
-           'flatten_check', 'one_param']
+           'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'sort_by_run',
+           'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake',
+           'PrettyString', 'flatten_check', 'one_param']
 
 #Cell 1
 from .test import *
@@ -230,7 +230,7 @@ class CollBase:
     def __init__(self, items): self.items = items
     def __len__(self): return len(self.items)
     def __getitem__(self, k): return self.items[k]
-    def __setitem__(self, k, v): self.items[k] = v
+    def __setitem__(self, k, v): self.items[list(k) if isinstance(k,CollBase) else k] = v
     def __delitem__(self, i): del(self.items[i])
     def __repr__(self): return self.items.__repr__()
     def __iter__(self): return self.items.__iter__()
@@ -613,7 +613,23 @@ class bind:
         fargs = L(args[x.i] if isinstance(x, _Arg) else x for x in self.pargs) + args[self.maxi+1:]
         return self.fn(*fargs, **{**self.pkwargs, **kwargs})
 
-#Cell 196
+#Cell 195
+class _SelfFunc():
+    "Search for `name` attribute and call it with `args` and `kwargs` on any object it's passed."
+    def __init__(self, nm, *args, **kwargs): self.nm,self.args,self.kwargs = nm,args,kwargs
+    def __repr__(self): return f'self: {self.nm}({self.args}, {self.kwargs})'
+    def __call__(self, o):
+        if not is_listy(o): return getattr(o,self.nm)(*self.args, **self.kwargs)
+        else: return [getattr(o_,self.nm)(*self.args, **self.kwargs) for o_ in o]
+
+class _SelfFuncCls():
+    def __getattr__(self,k):
+        def _inner(*args, **kwargs): return _SelfFunc(k, *args, **kwargs)
+        return _inner
+
+Self = _SelfFuncCls()
+
+#Cell 202
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 @patch
 def ls(self:Path, file_type=None, file_exts=None):
@@ -622,7 +638,7 @@ def ls(self:Path, file_type=None, file_exts=None):
     if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
     return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
 
-#Cell 206
+#Cell 212
 def _is_instance(f, gs):
     tst = [g if type(g) in [type, 'function'] else g.__class__ for g in gs]
     for g in tst:
@@ -647,21 +663,21 @@ def sort_by_run(fs):
         else: raise Exception("Impossible to sort")
     return res
 
-#Cell 209
+#Cell 215
 def display_df(df):
     "Display `df` in a notebook or defaults to print"
     try: from IPython.display import display, HTML
     except: return print(df)
     display(HTML(df.to_html()))
 
-#Cell 210
+#Cell 216
 def round_multiple(x, mult, round_down=False):
     "Round `x` to nearest multiple of `mult`"
     def _f(x_): return (int if round_down else round)(x_/mult)*mult
     res = L(x).mapped(_f)
     return res if is_listy(x) else res[0]
 
-#Cell 212
+#Cell 218
 def num_cpus():
     "Get number of cpus"
     try:                   return len(os.sched_getaffinity(0))
@@ -669,7 +685,7 @@ def num_cpus():
 
 defaults.cpus = num_cpus()
 
-#Cell 213
+#Cell 219
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))

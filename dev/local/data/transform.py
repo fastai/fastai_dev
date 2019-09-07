@@ -133,7 +133,7 @@ class _TfmMeta(type):
 class Transform(metaclass=_TfmMeta):
     "Delegates (`__call__`,`decode`) to (`encodes`,`decodes`) if `filt` matches"
     filt,init_enc,as_item_force,as_item,order = None,False,None,True,0
-    def __init__(self, enc=None, dec=None, filt=None, as_item=True):
+    def __init__(self, enc=None, dec=None, filt=None, as_item=False):
         self.filt,self.as_item = ifnone(filt, self.filt),as_item
         self.init_enc = enc or dec
         if not self.init_enc: return
@@ -155,7 +155,8 @@ class Transform(metaclass=_TfmMeta):
     def _call(self, fn, x, filt=None, **kwargs):
         if filt!=self.filt and self.filt is not None: return x
         f = getattr(self, fn)
-        if self.use_as_item: return self._do_call(f, x, **kwargs)
+#         if self.use_as_item: return self._do_call(f, x, **kwargs)
+        if self.use_as_item or not is_listy(x): return self._do_call(f, x, **kwargs)
         res = tuple(self._do_call(f, x_, **kwargs) for x_ in x)
         return retain_type(res, x)
 
@@ -164,11 +165,11 @@ class Transform(metaclass=_TfmMeta):
 
 add_docs(Transform, decode="Delegate to `decodes` to undo transform")
 
-#Cell 50
+#Cell 51
 class InplaceTransform(Transform):
     "A `Transform` that modifies in-place and just returns whatever it's passed"
-    def __call__(self, x, **kwargs):
-        super().__call__(x,**kwargs)
+    def _call(self, fn, x, filt=None, **kwargs):
+        super()._call(fn,x,filt,**kwargs)
         return x
 
 #Cell 53

@@ -353,7 +353,7 @@ def script2notebook(folder='local', silent=False):
     for f in Path(folder).glob('**/*.py'):
         if f.name not in _manual_mods: _script2notebook(f, silent=silent)
 
-#Cell 81
+#Cell 82
 def diff_nb_script(lib_folder='local'):
     tmp_path = Path.cwd()/'tmp_lib'
     shutil.move(Path.cwd()/lib_folder, tmp_path)

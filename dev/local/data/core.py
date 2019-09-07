@@ -216,7 +216,7 @@ class TfmdDL(DataLoader):
 #Cell 87
 @docs
 class Cuda(Transform):
-    "Move batch to `device` (defaults to `defaults.device`)"
+    "Move batch to `device` (defaults to `default_device()`)"
     def __init__(self,device=None):
         self.device=default_device() if device is None else device
         super().__init__(filt=None, as_item=False)
@@ -234,9 +234,8 @@ class ByteToFloatTensor(Transform):
         self.div,self.div_mask = div,div_mask
 
     def encodes(self, o:TensorImage): return o.float().div_(255.) if self.div else o.float()
+    def encodes(self, o:TensorMask ): return o.div_(255.).long() if self.div_mask else o.long()
     def decodes(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
-    def encodes(self, o:TensorMask)->TensorMask: return o.div_(255.).long() if self.div_mask else o.long()
-    def decodes(self, o:TensorMask): return o
 
 #Cell 97
 @docs
@@ -257,7 +256,7 @@ def broadcast_vec(dim, ndim, *t, cuda=True):
     f = to_device if cuda else noop
     return [f(tensor(o).view(*v)) for o in t]
 
-#Cell 106
+#Cell 105
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."
