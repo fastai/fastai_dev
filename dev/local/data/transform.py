@@ -155,7 +155,6 @@ class Transform(metaclass=_TfmMeta):
     def _call(self, fn, x, filt=None, **kwargs):
         if filt!=self.filt and self.filt is not None: return x
         f = getattr(self, fn)
-#         if self.use_as_item: return self._do_call(f, x, **kwargs)
         if self.use_as_item or not is_listy(x): return self._do_call(f, x, **kwargs)
         res = tuple(self._do_call(f, x_, **kwargs) for x_ in x)
         return retain_type(res, x)
