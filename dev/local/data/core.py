@@ -82,9 +82,9 @@ def GrandparentSplitter(train_name='train', valid_name='valid'):
 #Cell 32
 def parent_label(o, **kwargs):
     "Label `item` with the parent folder name."
-    return o.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-1]
+    return o.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-2]
 
-#Cell 35
+#Cell 36
 def RegexLabeller(pat):
     "Label `item` with regex `pat`."
     pat = re.compile(pat)
@@ -94,7 +94,7 @@ def RegexLabeller(pat):
         return res.group(1)
     return _inner
 
-#Cell 39
+#Cell 40
 class CategoryMap(CollBase):
     def __init__(self, col, sort=True, add_na=False):
         if is_categorical_dtype(col): items = L(col.cat.categories, use_list=True)
@@ -106,10 +106,10 @@ class CategoryMap(CollBase):
         self.o2i = defaultdict(int, self.items.val2idx())
     def __eq__(self,b): return all_equal(b,self)
 
-#Cell 44
+#Cell 45
 class Category(str, ShowTitle): _show_args = {'label': 'category'}
 
-#Cell 45
+#Cell 46
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order=1
@@ -123,14 +123,14 @@ class Categorize(Transform):
     def encodes(self, o): return self.vocab.o2i[o]
     def decodes(self, o)->Category: return self.vocab[o]
 
-#Cell 46
+#Cell 47
 Category.create = Categorize
 
-#Cell 50
+#Cell 51
 class MultiCategory(L):
     def show(self, ctx=None, sep=';', **kwargs): return show_title(sep.join(self.mapped(str)), ctx=ctx)
 
-#Cell 51
+#Cell 52
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
     def setup(self, dsrc):
@@ -145,10 +145,10 @@ class MultiCategorize(Categorize):
     def encodes(self, o):                return [self.o2i  [o_] for o_ in o]
     def decodes(self, o)->MultiCategory: return [self.vocab[o_] for o_ in o]
 
-#Cell 52
+#Cell 53
 MultiCategory.create = MultiCategorize
 
-#Cell 54
+#Cell 55
 class OneHotEncode(Transform):
     "One-hot encodes targets and optionally decodes with `vocab`"
     order=2
@@ -162,15 +162,15 @@ class OneHotEncode(Transform):
     def encodes(self, o): return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
     def decodes(self, o): return one_hot_decode(o, self.vocab)
 
-#Cell 66
+#Cell 67
 class ToTensor(Transform):
     "Convert item to appropriate tensor class"
     order = 15
 
-#Cell 67
+#Cell 68
 _dl_tfms = ('after_item','before_batch','after_batch')
 
-#Cell 68
+#Cell 69
 @delegates()
 class TfmdDL(DataLoader):
     "Transformed `DataLoader`"
@@ -213,7 +213,7 @@ class TfmdDL(DataLoader):
         ctxs = [self.dataset.show(o, ctx=ctx, **kwargs) for o,ctx in zip(db, ctxs)]
         if hasattr(b[0], 'display'): b[0].display(ctxs)
 
-#Cell 87
+#Cell 88
 @docs
 class Cuda(Transform):
     "Move batch to `device` (defaults to `default_device()`)"
@@ -225,7 +225,7 @@ class Cuda(Transform):
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
-#Cell 94
+#Cell 95
 class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order = 20 #Need to run after CUDA if on the GPU
@@ -237,7 +237,7 @@ class ByteToFloatTensor(Transform):
     def encodes(self, o:TensorMask ): return o.div_(255.).long() if self.div_mask else o.long()
     def decodes(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
 
-#Cell 97
+#Cell 98
 @docs
 class Normalize(Transform):
     "Normalize/denorm batch of `TensorImage`"
@@ -248,7 +248,7 @@ class Normalize(Transform):
 
     _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
 
-#Cell 98
+#Cell 99
 def broadcast_vec(dim, ndim, *t, cuda=True):
     "Make a vector broadcastable over `dim` (out of `ndim` total) by prepending and appending unit axes"
     v = [1]*ndim
@@ -256,7 +256,7 @@ def broadcast_vec(dim, ndim, *t, cuda=True):
     f = to_device if cuda else noop
     return [f(tensor(o).view(*v)) for o in t]
 
-#Cell 105
+#Cell 106
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."
