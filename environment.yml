@@ -15,6 +15,7 @@ dependencies:
 - pillow
 - python>=3.6
 - pip
+- scikit-learn
 - scipy
 - spacy
 - pip:
