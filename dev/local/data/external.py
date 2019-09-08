@@ -113,6 +113,9 @@ class URLs():
     WT103_FWD          = f'{S3_MODEL}wt103-fwd'
     WT103_BWD          = f'{S3_MODEL}wt103-bwd'
 
+    # Audio datasets
+    ESC50_SAMPLE = 'https://github.com/limeai/dataset/raw/master/esc50_sample.tgz'
+
 #Cell 9
 def _get_config():
     config_path = Path(os.getenv('FASTAI_HOME', '~/.fastai')).expanduser()
@@ -173,12 +176,12 @@ def _add_check(url, fname):
     checks[url] = _check_file(fname)
     json.dump(checks, open(Path(__file__).parent/'checks.txt', 'w'), indent=2)
 
-#Cell 26
+#Cell 27
 def tar_extract(fname, dest):
     "Extract `fname` to `dest` using `tarfile`"
     tarfile.open(fname, 'r:gz').extractall(dest)
 
-#Cell 28
+#Cell 29
 def untar_data(url, fname=None, dest=None, c_key=ConfigKey.Data, force_download=False, extract_func=tar_extract):
     "Download `url` to `fname` if `dest` doesn't exist, and un-tgz to folder `dest`."
     default_dest = _url2path(url, c_key=c_key).with_suffix('')
