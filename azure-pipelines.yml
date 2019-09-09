@@ -41,9 +41,9 @@ jobs:
 
     # Install nbformat
   - script: |
-      pip install nbformat ipykernel notebook matplotlib pandas requests pyyaml fastprogress pillow scipy numpy
-    displayName: 'Install nbformat'
-    continueOnError: false
+      pip install nbformat ipykernel notebook matplotlib pandas requests pyyaml fastprogress pillow scipy numpy typeguard
+      displayName: 'Install nbformat'
+      continueOnError: false
     
     # check that notebooks are stripped out. if they aren't that means the committer doesn't have the correct configuration for the stripout filter.
   - script: |
