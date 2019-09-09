@@ -62,3 +62,12 @@ jobs:
     displayName: 'Detect unstripped out notebook commits'
     failOnStderr: true
     continueOnError: false
+    
+    # check that there is no diff notebooks/module.
+  - script: |
+      echo "Diff nbs/module"
+      pushd dev
+      if [ -n "$(python diff_nb_script.py)" ]; then echo -e "!!! Diff between nbs and scripts\n!!!Remember to run notebook2script.py or script2notebook.py"; false; fi
+    displayName: 'Detect diff module/nbs'
+    failOnStderr: true
+    continueOnError: false
