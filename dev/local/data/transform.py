@@ -79,6 +79,9 @@ class TypeDispatch:
         self._reset()
 
     def returns(self, x): return anno_ret(self[type(x)])
+    def returns_none(self, x):
+        r = anno_ret(self[type(x)])
+        return r if r == NoneType else None
 
     def __repr__(self): return str({getattr(k,'__name__',str(k)):v.__name__ for k,v in self.funcs.items()})
 
@@ -160,23 +163,23 @@ class Transform(metaclass=_TfmMeta):
         return retain_type(res, x)
 
     def _do_call(self, f, x, **kwargs):
-        return x if f is None else retain_type(f(x, **kwargs), x, f.returns(x))
+        return x if f is None else retain_type(f(x, **kwargs), x, f.returns_none(x))
 
 add_docs(Transform, decode="Delegate to `decodes` to undo transform")
 
-#Cell 51
+#Cell 52
 class InplaceTransform(Transform):
     "A `Transform` that modifies in-place and just returns whatever it's passed"
     def _call(self, fn, x, filt=None, **kwargs):
         super()._call(fn,x,filt,**kwargs)
         return x
 
-#Cell 53
+#Cell 54
 class TupleTransform(Transform):
     "`Transform` that always treats `as_item` as `False`"
     as_item_force=False
 
-#Cell 54
+#Cell 55
 class ItemTransform (Transform):
     "`Transform` that always treats `as_item` as `True`"
     as_item_force=True

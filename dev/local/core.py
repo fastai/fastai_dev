@@ -9,7 +9,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'trace', 'compose', 'maps',
            'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'sort_by_run',
            'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake',
-           'PrettyString', 'flatten_check', 'one_param']
+           'PrettyString', 'one_param']
 
 #Cell 1
 from .test import *
@@ -614,22 +614,38 @@ class bind:
         return self.fn(*fargs, **{**self.pkwargs, **kwargs})
 
 #Cell 195
-class _SelfFunc():
-    "Search for `name` attribute and call it with `args` and `kwargs` on any object it's passed."
-    def __init__(self, nm, *args, **kwargs): self.nm,self.args,self.kwargs = nm,args,kwargs
-    def __repr__(self): return f'self: {self.nm}({self.args}, {self.kwargs})'
-    def __call__(self, o):
-        if not is_listy(o): return getattr(o,self.nm)(*self.args, **self.kwargs)
-        else: return [getattr(o_,self.nm)(*self.args, **self.kwargs) for o_ in o]
+class _Self:
+    "An alternative to `lambda` for calling methods on passed object."
+    def __init__(self): self.nms,self.args,self.kwargs,self.ready = [],[],[],True
+    def __repr__(self): return f'self: {self.nms}({self.args}, {self.kwargs})'
 
-class _SelfFuncCls():
+    def __call__(self, *args, **kwargs):
+        if self.ready:
+            x = args[0]
+            for n,a,k in zip(self.nms,self.args,self.kwargs):
+                x = getattr(x,n)
+                if a is not None: x = x(*a, **k)
+            return x
+        else:
+            self.args.append(args)
+            self.kwargs.append(kwargs)
+            self.ready = True
+            return self
+
     def __getattr__(self,k):
-        def _inner(*args, **kwargs): return _SelfFunc(k, *args, **kwargs)
-        return _inner
+        if not self.ready:
+            self.args.append(None)
+            self.kwargs.append(None)
+        self.nms.append(k)
+        self.ready = False
+        return self
 
-Self = _SelfFuncCls()
+class _SelfCls:
+    def __getattr__(self,k): return getattr(_Self(),k)
 
-#Cell 202
+Self = _SelfCls()
+
+#Cell 200
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 @patch
 def ls(self:Path, file_type=None, file_exts=None):
@@ -638,7 +654,7 @@ def ls(self:Path, file_type=None, file_exts=None):
     if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
     return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
 
-#Cell 212
+#Cell 210
 def _is_instance(f, gs):
     tst = [g if type(g) in [type, 'function'] else g.__class__ for g in gs]
     for g in tst:
@@ -663,21 +679,21 @@ def sort_by_run(fs):
         else: raise Exception("Impossible to sort")
     return res
 
-#Cell 215
+#Cell 213
 def display_df(df):
     "Display `df` in a notebook or defaults to print"
     try: from IPython.display import display, HTML
     except: return print(df)
     display(HTML(df.to_html()))
 
-#Cell 216
+#Cell 214
 def round_multiple(x, mult, round_down=False):
     "Round `x` to nearest multiple of `mult`"
     def _f(x_): return (int if round_down else round)(x_/mult)*mult
     res = L(x).mapped(_f)
     return res if is_listy(x) else res[0]
 
-#Cell 218
+#Cell 216
 def num_cpus():
     "Get number of cpus"
     try:                   return len(os.sched_getaffinity(0))
@@ -685,7 +701,7 @@ def num_cpus():
 
 defaults.cpus = num_cpus()
 
-#Cell 219
+#Cell 217
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))
@@ -712,13 +728,6 @@ def camel2snake(name):
 class PrettyString(str):
     "Little hack to get strings to show properly in Jupyter."
     def __repr__(self): return self
-
-#Comes from 20_metrics.ipynb, cell 6
-def flatten_check(inp, targ, detach=True):
-    "Check that `out` and `targ` have the same number of elements and flatten them."
-    inp,targ = to_detach(inp.contiguous().view(-1)),to_detach(targ.contiguous().view(-1))
-    test_eq(len(inp), len(targ))
-    return inp,targ
 
 #Comes from 32_text_models_awdlstm.ipynb, cell 14
 def one_param(m): return next(iter(m.parameters()))

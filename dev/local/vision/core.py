@@ -144,11 +144,11 @@ def image2byte(img):
 
 #Cell 62
 @ToTensor
-def encodes(self, o:PILImage)->TensorImage: return image2byte(o)
+def encodes(self, o:PILImage): return TensorImage(image2byte(o))
 @ToTensor
-def encodes(self, o:PILImageBW)->TensorImageBW: return image2byte(o)
+def encodes(self, o:PILImageBW): return TensorImageBW(image2byte(o))
 @ToTensor
-def encodes(self, o:PILMask) ->TensorMask:  return image2byte(o)[0]
+def encodes(self, o:PILMask):  return TensorMask(image2byte(o)[0])
 
 #Cell 68
 def _scale_pnts(x, y, do_scale=True,y_first=False):
@@ -198,9 +198,9 @@ class BBoxCategorize(Transform):
         for bb in dsrc: vals = vals.union(set(bb.lbl))
         self.vocab,self.otoi = uniqueify(list(vals), sort=True, bidir=True, start='#bg')
 
-    def encodes(self, o:BBox)->TensorBBox:
+    def encodes(self, o:BBox):
         return TensorBBox.create((o.bbox,tensor([self.otoi[o_] for o_ in o.lbl if o_ in self.otoi])))
-    def decodes(self, o:TensorBBox)->BBox:
+    def decodes(self, o:TensorBBox):
         return BBox((o.bbox,[self.vocab[i_] for i_ in o.lbl]))
 
 BBox.default_type_tfms,BBox.default_ds_tfms = BBoxCategorize,BBoxScaler

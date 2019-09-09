@@ -71,7 +71,7 @@ class Hooks():
                  __exit__="Remove the hooks")
 
 #Cell 37
-def hook_outputs(modules, detach=True, cpu=False, grad=False)->Hooks:
+def hook_outputs(modules, detach=True, cpu=False, grad=False):
     "Return `Hooks` that store activations of all `modules` in `self.stored`"
     return Hooks(modules, _hook_inner, detach=detach, cpu=cpu, is_forward=not grad)
 

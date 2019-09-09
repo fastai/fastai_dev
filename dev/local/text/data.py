@@ -49,8 +49,8 @@ class Numericalize(Transform):
             self.vocab = make_vocab(count, min_freq=self.min_freq, max_vocab=self.max_vocab)
             self.o2i = defaultdict(int, {v:k for k,v in enumerate(self.vocab) if v != 'xxfake'})
 
-    def encodes(self, o)->TensorText: return tensor([self.o2i[o_] for o_ in o])
-    def decodes(self, o)->Str: return self.sep.join([self.vocab[o_] for o_ in o if self.vocab[o_] != PAD])
+    def encodes(self, o): return TensorText(tensor([self.o2i[o_] for o_ in o]))
+    def decodes(self, o): return Str(self.sep.join([self.vocab[o_] for o_ in o if self.vocab[o_] != PAD]))
 
 #Cell 12
 @delegates()

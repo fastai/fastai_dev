@@ -121,7 +121,7 @@ class Categorize(Transform):
         if self.vocab is None and dsrc: self.vocab = CategoryMap(getattr(dsrc,'train',dsrc), add_na=self.add_na)
 
     def encodes(self, o): return self.vocab.o2i[o]
-    def decodes(self, o)->Category: return self.vocab[o]
+    def decodes(self, o): return Category(self.vocab[o])
 
 #Cell 46
 Category.create = Categorize
@@ -143,7 +143,7 @@ class MultiCategorize(Categorize):
         setattr(dsrc, 'vocab', self.vocab)
 
     def encodes(self, o):                return [self.o2i  [o_] for o_ in o]
-    def decodes(self, o)->MultiCategory: return [self.vocab[o_] for o_ in o]
+    def decodes(self, o): return MultiCategory([self.vocab[o_] for o_ in o])
 
 #Cell 52
 MultiCategory.create = MultiCategorize

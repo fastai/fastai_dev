@@ -74,7 +74,7 @@ def rm_useless_spaces(t):
 _re_rep = re.compile(r'(\S)(\1{2,})')
 
 def replace_rep(t):
-    "Replace repetitions at the character level: cccc -> TK_REP 4 c"
+    "Replace repetitions at the character level: cccc -- TK_REP 4 c"
     def _replace_rep(m):
         c,cc = m.groups()
         return f' {TK_REP} {len(cc)+1} {c} '
@@ -85,7 +85,7 @@ _re_wrep = re.compile(r'(?:\s|^)(\w+)\s+((?:\1\s+)+)\1(\s|\W|$)')
 
 #Cell 23
 def replace_wrep(t):
-    "Replace word repetitions: word word word word -> TK_WREP 4 word"
+    "Replace word repetitions: word word word word -- TK_WREP 4 word"
     def _replace_wrep(m):
         c,cc,e = m.groups()
         return f' {TK_WREP} {len(cc.split())+2} {c} {e}'

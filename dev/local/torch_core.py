@@ -3,7 +3,7 @@
 __all__ = ['tensor', 'set_seed', 'TensorBase', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float',
            'default_device', 'to_device', 'to_cpu', 'to_np', 'item_find', 'find_device', 'find_bs', 'Module', 'one_hot',
            'one_hot_decode', 'trainable_params', 'bn_bias_params', 'make_cross_image', 'show_title', 'show_image',
-           'show_titled_image', 'show_image_batch']
+           'show_titled_image', 'show_image_batch', 'flatten_check']
 
 #Cell 1
 from .test import *
@@ -297,3 +297,10 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     if figsize is None: figsize = (cols*3, rows*3)
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
     for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
+
+#Comes from 20_metrics.ipynb, cell 6
+def flatten_check(inp, targ, detach=True):
+    "Check that `out` and `targ` have the same number of elements and flatten them."
+    inp,targ = to_detach(inp.contiguous().view(-1)),to_detach(targ.contiguous().view(-1))
+    test_eq(len(inp), len(targ))
+    return inp,targ
