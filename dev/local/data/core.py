@@ -22,15 +22,15 @@ def _get_files(p, fs, extensions=None):
     return res
 
 #Cell
-def get_files(path, extensions=None, recurse=True, include=None):
-    "Get all the files in `path` with optional `extensions`, optionally with `recurse`."
+def get_files(path, extensions=None, recurse=True, folders=None):
+    "Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
     path = Path(path)
     extensions = setify(extensions)
     extensions = {e.lower() for e in extensions}
     if recurse:
         res = []
         for i,(p,d,f) in enumerate(os.walk(path)): # returns (dirpath, dirnames, filenames)
-            if include is not None and i==0: d[:] = [o for o in d if o in include]
+            if folders is not None and i==0: d[:] = [o for o in d if o in folders]
             else:                            d[:] = [o for o in d if not o.startswith('.')]
             res += _get_files(p, f, extensions)
     else:
@@ -39,24 +39,24 @@ def get_files(path, extensions=None, recurse=True, include=None):
     return L(res)
 
 #Cell
-def FileGetter(suf='', extensions=None, recurse=True, include=None):
-    "Create `get_files` partial function that searches path suffix `suf` and passes along args"
-    def _inner(o, extensions=extensions, recurse=recurse, include=include):
-        return get_files(o/suf, extensions, recurse, include)
+def FileGetter(suf='', extensions=None, recurse=True, folders=None):
+    "Create `get_files` partial function that searches path suffix `suf`, only in `folders`, if specified, and passes along args"
+    def _inner(o, extensions=extensions, recurse=recurse, folders=folders):
+        return get_files(o/suf, extensions, recurse, folders)
     return _inner
 
 #Cell
 image_extensions = set(k for k,v in mimetypes.types_map.items() if v.startswith('image/'))
 
 #Cell
-def get_image_files(path, recurse=True, include=None):
-    "Get image files in `path` recursively."
-    return get_files(path, extensions=image_extensions, recurse=recurse, include=include)
+def get_image_files(path, recurse=True, folders=None):
+    "Get image files in `path` recursively, only in `folders`, if specified."
+    return get_files(path, extensions=image_extensions, recurse=recurse, folders=folders)
 
 #Cell
-def ImageGetter(suf='', recurse=True, include=None):
-    "Create `get_image_files` partial function that searches path suffix `suf` and passes along `kwargs`"
-    def _inner(o, recurse=recurse, include=include): return get_image_files(o/suf, recurse, include)
+def ImageGetter(suf='', recurse=True, folders=None):
+    "Create `get_image_files` partial function that searches path suffix `suf` and passes along `kwargs`, only in `folders`, if specified."
+    def _inner(o, recurse=recurse, folders=folders): return get_image_files(o/suf, recurse, folders)
     return _inner
 
 #Cell
