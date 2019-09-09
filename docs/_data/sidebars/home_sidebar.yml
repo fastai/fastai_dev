@@ -18,12 +18,43 @@ entries:
     - output: web,pdf
       title: Pets tutorial
       url: /pets.tutorial.html
+    - output: web,pdf
+      title: Imagenette tutorial
+      url: /tutorial.imagenette.html
     output: web
     title: Tutorials
   - folderitems:
     - output: web,pdf
       title: Training loop
       url: /learner.html
+    - output: web,pdf
+      title: Optimizer
+      url: /optimizer.html
+    - output: web,pdf
+      title: Metrics
+      url: /metrics.html
+      subfolders:
+      - output: web
+        subfolderitems:
+        - output: web,pdf
+          title: Schedulers
+          url: /callback.schedule.html
+        - output: web,pdf
+          title: Hooks and callbacks
+          url: /callback.hook.html
+        - output: web,pdf
+          title: Mixed precision
+          url: /callback.fp16.html
+        - output: web,pdf
+          title: Mixup
+          url: /callback.mixup.html
+        - output: web,pdf
+          title: Trackers
+          url: /callback.tracker.html
+        - output: web,pdf
+          title: Progress
+          url: /callback.progress.html
+        title: Callbacks
     output: web
     title: Training
   - folderitems:
