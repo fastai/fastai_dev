@@ -2,10 +2,7 @@
 
 __all__ = ['Image', 'ToTensor', 'n_px', 'shape', 'aspect', 'load_image', 'PILBase', 'PILImage', 'PILImageBW', 'PILMask',
            'TensorPoint', 'get_annotations', 'BBox', 'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes',
-           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad', 'Image', 'ToTensor', 'n_px', 'shape', 'aspect',
-           'load_image', 'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'TensorPoint', 'get_annotations', 'BBox',
-           'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'BBoxScaler', 'BBoxCategorize',
-           'bb_pad']
+           'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad']
 
 #Cell
 from ..torch_basics import *

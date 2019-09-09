@@ -3,10 +3,7 @@
 __all__ = ['remove_widget_state', 'hide_cells', 'clean_exports', 'treat_backticks', 'convert_links', 'add_jekyll_notes',
            'copy_images', 'remove_hidden', 'find_default_level', 'add_show_docs', 'remove_fake_headers', 'remove_empty',
            'get_metadata', 'ExecuteShowDocPreprocessor', 'execute_nb', 'process_cells', 'process_cell', 'notebook_path',
-           'convert_nb', 'convert_all', 'convert_post', 'remove_widget_state', 'hide_cells', 'clean_exports',
-           'treat_backticks', 'convert_links', 'add_jekyll_notes', 'copy_images', 'remove_hidden', 'find_default_level',
-           'add_show_docs', 'remove_fake_headers', 'remove_empty', 'get_metadata', 'ExecuteShowDocPreprocessor',
-           'execute_nb', 'process_cells', 'process_cell', 'notebook_path', 'convert_nb', 'convert_all', 'convert_post']
+           'convert_nb', 'convert_all', 'convert_post']
 
 #Cell
 from ..imports import *

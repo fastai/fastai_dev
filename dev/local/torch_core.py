@@ -3,11 +3,7 @@
 __all__ = ['tensor', 'set_seed', 'TensorBase', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float',
            'default_device', 'to_device', 'to_cpu', 'to_np', 'item_find', 'find_device', 'find_bs', 'Module', 'one_hot',
            'one_hot_decode', 'trainable_params', 'bn_bias_params', 'make_cross_image', 'show_title', 'show_image',
-           'show_titled_image', 'show_image_batch', 'flatten_check', 'tensor', 'set_seed', 'TensorBase', 'concat',
-           'Chunks', 'apply', 'to_detach', 'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'to_np',
-           'item_find', 'find_device', 'find_bs', 'Module', 'one_hot', 'one_hot_decode', 'trainable_params',
-           'bn_bias_params', 'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch',
-           'flatten_check']
+           'show_titled_image', 'show_image_batch', 'flatten_check']
 
 #Cell
 from .test import *

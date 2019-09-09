@@ -2,9 +2,7 @@
 
 __all__ = ['Optimizer', 'sgd_step', 'weight_decay', 'l2_reg', 'average_grad', 'average_sqr_grad', 'momentum_step',
            'SGD', 'rms_prop_step', 'RMSProp', 'step_stat', 'adam_step', 'Adam', 'larc_layer_lr', 'larc_step', 'Larc',
-           'lamb_step', 'Lamb', 'Optimizer', 'sgd_step', 'weight_decay', 'l2_reg', 'average_grad', 'average_sqr_grad',
-           'momentum_step', 'SGD', 'rms_prop_step', 'RMSProp', 'step_stat', 'adam_step', 'Adam', 'larc_layer_lr',
-           'larc_step', 'Larc', 'lamb_step', 'Lamb']
+           'lamb_step', 'Lamb']
 
 #Cell
 from .torch_basics import *
