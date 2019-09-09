@@ -113,7 +113,7 @@ FASTAI_NB_DEV = 'https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/mas
 
 def get_source_link(func, local=False, is_name=None):
     "Return a link to the notebook where `func` is defined."
-    func = unwrapped_type_dispatch_func(func)
+    func = _unwrapped_type_dispatch_func(func)
     pref = '' if local else FASTAI_NB_DEV
     is_name = is_name or isinstance(func, str)
     src = source_nb(func, is_name=is_name, return_all=True)
