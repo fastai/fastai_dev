@@ -41,7 +41,7 @@ jobs:
 
     # Install nbformat
   - script: |
-      pip install nbformat ipykernel notebook
+      pip install nbformat ipykernel notebook matplotlib pandas requests pyyaml fastprogress pillow scipy numpy
     displayName: 'Install nbformat'
     continueOnError: false
     
