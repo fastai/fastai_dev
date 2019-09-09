@@ -373,6 +373,7 @@ def _print_diff(code1, code2, fname):
 
 #Cell
 def diff_nb_script(lib_folder='local'):
+    "Print the diff between the notebooks and the library in `lib_folder`"
     tmp_path1,tmp_path2 = Path.cwd()/'tmp_lib',Path.cwd()/'tmp_lib1'
     shutil.copytree(Path.cwd()/lib_folder, tmp_path1)
     try:
