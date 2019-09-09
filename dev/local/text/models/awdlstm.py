@@ -2,7 +2,9 @@
 
 __all__ = ['dropout_mask', 'RNNDropout', 'WeightDropout', 'EmbeddingDropout', 'AWD_LSTM', 'awd_lstm_lm_split',
            'awd_lstm_lm_config', 'awd_lstm_clas_split', 'awd_lstm_clas_config', 'AWD_QRNN', 'awd_qrnn_lm_config',
-           'awd_qrnn_clas_config']
+           'awd_qrnn_clas_config', 'dropout_mask', 'RNNDropout', 'WeightDropout', 'EmbeddingDropout', 'AWD_LSTM',
+           'awd_lstm_lm_split', 'awd_lstm_lm_config', 'awd_lstm_clas_split', 'awd_lstm_clas_config', 'AWD_QRNN',
+           'awd_qrnn_lm_config', 'awd_qrnn_clas_config']
 
 #Cell
 from ...imports import *

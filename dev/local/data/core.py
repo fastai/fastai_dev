@@ -3,7 +3,10 @@
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Category', 'Categorize',
            'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda', 'ByteToFloatTensor',
-           'Normalize', 'broadcast_vec', 'DataBunch']
+           'Normalize', 'broadcast_vec', 'DataBunch', 'get_files', 'FileGetter', 'image_extensions', 'get_image_files',
+           'ImageGetter', 'RandomSplitter', 'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap',
+           'Category', 'Categorize', 'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda',
+           'ByteToFloatTensor', 'Normalize', 'broadcast_vec', 'DataBunch']
 
 #Cell
 from ..torch_basics import *

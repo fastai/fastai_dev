@@ -3,7 +3,11 @@
 __all__ = ['ProcessPoolExecutor', 'parallel', 'parallel_gen', 'spec_add_spaces', 'rm_useless_spaces', 'replace_rep',
            'replace_wrep', 'fix_html', 'replace_all_caps', 'replace_maj', 'lowercase', 'replace_space', 'BaseTokenizer',
            'SpacyTokenizer', 'apply_rules', 'TokenizeBatch', 'tokenize1', 'parallel_tokenize', 'tokenize_folder',
-           'tokenize_df', 'tokenize_csv', 'SentencePieceTokenizer']
+           'tokenize_df', 'tokenize_csv', 'SentencePieceTokenizer', 'ProcessPoolExecutor', 'parallel', 'parallel_gen',
+           'spec_add_spaces', 'rm_useless_spaces', 'replace_rep', 'replace_wrep', 'fix_html', 'replace_all_caps',
+           'replace_maj', 'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer', 'apply_rules',
+           'TokenizeBatch', 'tokenize1', 'parallel_tokenize', 'tokenize_folder', 'tokenize_df', 'tokenize_csv',
+           'SentencePieceTokenizer']
 
 #Cell
 from ..imports import *

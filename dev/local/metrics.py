@@ -5,7 +5,12 @@ __all__ = ['AccumMetric', 'skm_to_fastai', 'accuracy', 'error_rate', 'top_k_accu
            'Recall', 'RocAuc', 'Perplexity', 'perplexity', 'accuracy_multi', 'APScoreMulti', 'BrierScoreMulti',
            'F1ScoreMulti', 'FBetaMulti', 'HammingLossMulti', 'JaccardMulti', 'MatthewsCorrCoefMulti', 'PrecisionMulti',
            'RecallMulti', 'RocAucMulti', 'mse', 'rmse', 'mae', 'msle', 'exp_rmspe', 'ExplainedVariance', 'R2Score',
-           'foreground_acc', 'Dice', 'JaccardCoeff']
+           'foreground_acc', 'Dice', 'JaccardCoeff', 'AccumMetric', 'skm_to_fastai', 'accuracy', 'error_rate',
+           'top_k_accuracy', 'APScore', 'BalancedAccuracy', 'BrierScore', 'CohenKappa', 'F1Score', 'FBeta',
+           'HammingLoss', 'Jaccard', 'MatthewsCorrCoef', 'Precision', 'Recall', 'RocAuc', 'Perplexity', 'perplexity',
+           'accuracy_multi', 'APScoreMulti', 'BrierScoreMulti', 'F1ScoreMulti', 'FBetaMulti', 'HammingLossMulti',
+           'JaccardMulti', 'MatthewsCorrCoefMulti', 'PrecisionMulti', 'RecallMulti', 'RocAucMulti', 'mse', 'rmse',
+           'mae', 'msle', 'exp_rmspe', 'ExplainedVariance', 'R2Score', 'foreground_acc', 'Dice', 'JaccardCoeff']
 
 #Cell
 from .torch_basics import *

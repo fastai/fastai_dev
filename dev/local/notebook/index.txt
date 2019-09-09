@@ -470,8 +470,6 @@
   "FASTAI_DOCS": "92_notebook_showdoc.ipynb",
   "doc_link": "92_notebook_showdoc.ipynb",
   "add_doc_links": "92_notebook_showdoc.ipynb",
-  "is_type_dispatch": "92_notebook_showdoc.ipynb",
-  "unwrapped_type_dispatch_func": "92_notebook_showdoc.ipynb",
   "get_function_source": "92_notebook_showdoc.ipynb",
   "SOURCE_URL": "92_notebook_showdoc.ipynb",
   "get_source_link": "92_notebook_showdoc.ipynb",

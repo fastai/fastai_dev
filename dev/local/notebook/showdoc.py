@@ -2,7 +2,10 @@
 
 __all__ = ['is_enum', 'add_pytorch_index', 'is_fastai_module', 'FASTAI_DOCS', 'doc_link', 'add_doc_links',
            'is_type_dispatch', 'unwrapped_type_dispatch_func', 'get_function_source', 'SOURCE_URL', 'get_source_link',
-           'FASTAI_NB_DEV', 'source_link', 'type_repr', 'format_param', 'show_doc', 'md2html', 'doc']
+           'FASTAI_NB_DEV', 'source_link', 'type_repr', 'format_param', 'show_doc', 'md2html', 'doc', 'is_enum',
+           'add_pytorch_index', 'is_fastai_module', 'FASTAI_DOCS', 'doc_link', 'add_doc_links', 'get_function_source',
+           'SOURCE_URL', 'get_source_link', 'FASTAI_NB_DEV', 'source_link', 'type_repr', 'format_param', 'show_doc',
+           'md2html', 'doc']
 
 #Cell
 from ..imports import *

@@ -2,7 +2,10 @@
 
 __all__ = ['CancelFitException', 'CancelEpochException', 'CancelTrainException', 'CancelValidException',
            'CancelBatchException', 'class2attr', 'Callback', 'TrainEvalCallback', 'GatherPredsCallback', 'Learner',
-           'VerboseCallback', 'Metric', 'AvgMetric', 'AvgLoss', 'AvgSmoothLoss', 'Recorder']
+           'VerboseCallback', 'Metric', 'AvgMetric', 'AvgLoss', 'AvgSmoothLoss', 'Recorder', 'CancelFitException',
+           'CancelEpochException', 'CancelTrainException', 'CancelValidException', 'CancelBatchException', 'class2attr',
+           'Callback', 'TrainEvalCallback', 'GatherPredsCallback', 'Learner', 'VerboseCallback', 'Metric', 'AvgMetric',
+           'AvgLoss', 'AvgSmoothLoss', 'Recorder']
 
 #Cell
 from .torch_basics import *

@@ -3,7 +3,11 @@
 __all__ = ['RandTransform', 'PILFlip', 'PILDihedral', 'clip_remove_empty', 'CropPad', 'RandomCrop', 'Resize',
            'RandomResizedCrop', 'AffineCoordTfm', 'affine_mat', 'mask_tensor', 'flip_mat', 'Flip', 'dihedral_mat',
            'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs', 'apply_perspective', 'Warp', 'logit',
-           'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms', 'aug_transforms']
+           'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms', 'aug_transforms', 'RandTransform', 'PILFlip',
+           'PILDihedral', 'clip_remove_empty', 'CropPad', 'RandomCrop', 'Resize', 'RandomResizedCrop', 'AffineCoordTfm',
+           'affine_mat', 'mask_tensor', 'flip_mat', 'Flip', 'dihedral_mat', 'Dihedral', 'rotate_mat', 'Rotate',
+           'zoom_mat', 'Zoom', 'find_coeffs', 'apply_perspective', 'Warp', 'logit', 'LightingTfm', 'Brightness',
+           'Contrast', 'setup_aug_tfms', 'aug_transforms']
 
 #Cell
 from ..torch_basics import *

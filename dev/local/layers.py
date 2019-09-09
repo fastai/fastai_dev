@@ -5,6 +5,12 @@ __all__ = ['Module', 'Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten'
            'BatchNorm1dFlat', 'BnDropLin', 'init_default', 'ConvLayer', 'FlattenedLoss', 'CrossEntropyLossFlat',
            'BCEWithLogitsLossFlat', 'BCELossFlat', 'MSELossFlat', 'trunc_normal_', 'Embedding', 'SelfAttention',
            'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN',
+           'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model',
+           'Module', 'Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugger', 'sigmoid_range',
+           'SigmoidRange', 'AdaptiveConcatPool2d', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm',
+           'BatchNorm1dFlat', 'BnDropLin', 'init_default', 'ConvLayer', 'FlattenedLoss', 'CrossEntropyLossFlat',
+           'BCEWithLogitsLossFlat', 'BCELossFlat', 'MSELossFlat', 'trunc_normal_', 'Embedding', 'SelfAttention',
+           'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN',
            'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model']
 
 #Cell
