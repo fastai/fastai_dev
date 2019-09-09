@@ -2,11 +2,11 @@
 
 __all__ = ['download_url', 'URLs', 'get_path', 'ConfigKey', 'download_data', 'tar_extract', 'untar_data']
 
-#Cell 1
+#Cell
 from ..torch_basics import *
 from ..test import *
 
-#Cell 4
+#Cell
 def download_url(url, dest, overwrite=False, pbar=None, show_progress=True, chunk_size=1024*1024,
                  timeout=4, retries=5):
     "Download `url` to `dest` unless it exists and not `overwrite`"
@@ -38,7 +38,7 @@ def download_url(url, dest, overwrite=False, pbar=None, show_progress=True, chun
                   f'$ tar -zxvf {fname}\n'
                   f' And re-run your code once the download is successful\n')
 
-#Cell 7
+#Cell
 class URLs():
     "Global constants for dataset and model URLs."
     LOCAL_PATH = Path.cwd()
@@ -113,7 +113,7 @@ class URLs():
     WT103_FWD          = f'{S3_MODEL}wt103-fwd'
     WT103_BWD          = f'{S3_MODEL}wt103-bwd'
 
-#Cell 9
+#Cell
 def _get_config():
     config_path = Path(os.getenv('FASTAI_HOME', '~/.fastai')).expanduser()
     config_path.mkdir(parents=True, exist_ok=True)
@@ -132,20 +132,20 @@ def _get_config():
         yaml.dump(config, yaml_file, default_flow_style=False)
     return config
 
-#Cell 12
+#Cell
 ConfigKey = Enum('ConfigKey', 'Data Archive Model')
 
 def get_path(c_key=ConfigKey.Data):
     return Path(_get_config()[f"{c_key.name.lower()}_path"])
 
-#Cell 15
+#Cell
 def _url2path(url, c_key=ConfigKey.Archive):
     fname = url.split('/')[-1]
     local_path = URLs.LOCAL_PATH/('models' if c_key==ConfigKey.Model else 'data')/fname
     if local_path.exists(): return local_path
     return get_path(c_key)/fname
 
-#Cell 17
+#Cell
 def download_data(url, fname=None, c_key=ConfigKey.Archive, force_download=False):
     "Download `url` to `fname`."
     fname = Path(fname or _url2path(url, c_key=c_key))
@@ -155,7 +155,7 @@ def download_data(url, fname=None, c_key=ConfigKey.Archive, force_download=False
         download_url(url, fname, overwrite=force_download)
     return fname
 
-#Cell 22
+#Cell
 def _get_check(url):
     checks = json.load(open(Path(__file__).parent/'checks.txt', 'r'))
     return checks.get(url, None)
@@ -166,19 +166,19 @@ def _check_file(fname):
         hash_nb = hashlib.md5(f.read(2**20)).hexdigest()
     return [size,hash_nb]
 
-#Cell 24
+#Cell
 def _add_check(url, fname):
     "Internal function to update the internal check file with `url` and check on `fname`."
     checks = json.load(open(Path(__file__).parent/'checks.txt', 'r'))
     checks[url] = _check_file(fname)
     json.dump(checks, open(Path(__file__).parent/'checks.txt', 'w'), indent=2)
 
-#Cell 26
+#Cell
 def tar_extract(fname, dest):
     "Extract `fname` to `dest` using `tarfile`"
     tarfile.open(fname, 'r:gz').extractall(dest)
 
-#Cell 28
+#Cell
 def untar_data(url, fname=None, dest=None, c_key=ConfigKey.Data, force_download=False, extract_func=tar_extract):
     "Download `url` to `fname` if `dest` doesn't exist, and un-tgz to folder `dest`."
     default_dest = _url2path(url, c_key=c_key).with_suffix('')

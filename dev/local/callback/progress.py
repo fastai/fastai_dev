@@ -2,7 +2,7 @@
 
 __all__ = ['ProgressCallback', 'ShowGraphCallback', 'CSVLogger']
 
-#Cell 0
+#Cell
 from ..torch_basics import *
 from ..test import *
 from ..layers import *
@@ -11,7 +11,7 @@ from ..notebook.showdoc import show_doc
 from ..optimizer import *
 from ..learner import *
 
-#Cell 5
+#Cell
 @docs
 class ProgressCallback(Callback):
     "A `Callback` to handle the display of progress bars"
@@ -55,7 +55,7 @@ class ProgressCallback(Callback):
 
 defaults.callbacks = [TrainEvalCallback, Recorder, ProgressCallback]
 
-#Cell 17
+#Cell
 class ShowGraphCallback(Callback):
     "Update a graph of training and validation loss"
     run_after=ProgressCallback
@@ -75,7 +75,7 @@ class ShowGraphCallback(Callback):
         y_bounds = (0, max((max(Tensor(rec.losses)), max(Tensor(val_losses)))))
         self.progress.mbar.update_graph([(iters, rec.losses), (self.nb_batches, val_losses)], x_bounds, y_bounds)
 
-#Cell 20
+#Cell
 class CSVLogger(Callback):
     order=30 #Need to run after the recorder
     "Log the results displayed in `learn.path/fname`"

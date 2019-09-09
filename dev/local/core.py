@@ -11,15 +11,15 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake',
            'PrettyString', 'one_param']
 
-#Cell 1
+#Cell
 from .test import *
 from .imports import *
 from .notebook.showdoc import show_doc
 
-#Cell 3
+#Cell
 defaults = SimpleNamespace()
 
-#Cell 5
+#Cell
 class PrePostInitMeta(type):
     "A metaclass that calls optional `__pre_init__` and `__post_init__` methods"
     def __new__(cls, name, bases, dct):
@@ -37,12 +37,12 @@ class PrePostInitMeta(type):
         setattr(x, '__init__', _init)
         return x
 
-#Cell 8
+#Cell
 class BaseObj(metaclass=PrePostInitMeta):
     "Base class that provides `PrePostInitMeta` metaclass to subclasses"
     pass
 
-#Cell 10
+#Cell
 class NewChkMeta(PrePostInitMeta):
     "Metaclass to avoid recreating object passed to constructor (plus all `PrePostInitMeta` functionality)"
     def __new__(cls, name, bases, dct):
@@ -66,7 +66,7 @@ class NewChkMeta(PrePostInitMeta):
         x.__init__,x.__new__ = _init,_new
         return x
 
-#Cell 12
+#Cell
 class BypassNewMeta(type):
     "Metaclass: casts `x` to this class, initializing with `_new_meta` if available"
     def __call__(cls, x, *args, **kwargs):
@@ -74,7 +74,7 @@ class BypassNewMeta(type):
         if cls!=x.__class__: x.__class__ = cls
         return x
 
-#Cell 15
+#Cell
 def patch_to(cls, as_prop=False):
     "Decorator: add `f` to `cls`"
     def _inner(f):
@@ -86,22 +86,22 @@ def patch_to(cls, as_prop=False):
         return f
     return _inner
 
-#Cell 17
+#Cell
 def patch(f):
     "Decorator: add `f` to the first parameter's class (based on f's type annotations)"
     cls = next(iter(f.__annotations__.values()))
     return patch_to(cls)(f)
 
-#Cell 19
+#Cell
 def patch_property(f):
     "Decorator: add `f` as a property to the first parameter's class (based on f's type annotations)"
     cls = next(iter(f.__annotations__.values()))
     return patch_to(cls, as_prop=True)(f)
 
-#Cell 21
+#Cell
 def _mk_param(n,d=None): return inspect.Parameter(n, inspect.Parameter.KEYWORD_ONLY, default=d)
 
-#Cell 23
+#Cell
 def use_kwargs(names, keep=False):
     "Decorator: replace `**kwargs` in signature with `names` params"
     def _f(f):
@@ -115,7 +115,7 @@ def use_kwargs(names, keep=False):
         return f
     return _f
 
-#Cell 25
+#Cell
 def delegates(to=None, keep=False):
     "Decorator: replace `**kwargs` in signature with params from `to`"
     def _f(f):
@@ -132,7 +132,7 @@ def delegates(to=None, keep=False):
         return f
     return _f
 
-#Cell 28
+#Cell
 def funcs_kwargs(cls):
     "Replace methods in `self._methods` with those from `kwargs`"
     old_init = cls.__init__
@@ -147,17 +147,17 @@ def funcs_kwargs(cls):
     cls.__init__ = use_kwargs(cls._methods)(_init)
     return cls
 
-#Cell 29
+#Cell
 def method(f):
     "Mark `f` as a method"
     # `1` is a dummy instance since Py3 doesn't allow `None` any more
     return types.MethodType(f, 1)
 
-#Cell 32
+#Cell
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 def chk(f): return typechecked(always=True)(f)
 
-#Cell 39
+#Cell
 def add_docs(cls, cls_doc=None, **docs):
     "Copy values from `docs` to `cls` docstrings, and confirm all public methods are documented"
     if cls_doc is not None: cls.__doc__ = cls_doc
@@ -171,18 +171,18 @@ def add_docs(cls, cls_doc=None, **docs):
     assert not nodoc, f"Missing docs: {nodoc}"
     assert cls.__doc__ is not None, f"Missing class docs: {cls}"
 
-#Cell 40
+#Cell
 def docs(cls):
     "Decorator version of `add_docs`, using `_docs` dict"
     add_docs(cls, **cls._docs)
     return cls
 
-#Cell 42
+#Cell
 def custom_dir(c, add:List):
     "Implement custom `__dir__`, adding `add` to `cls`"
     return dir(type(c)) + list(c.__dict__.keys()) + add
 
-#Cell 46
+#Cell
 class GetAttr(BaseObj):
     "Inherit from this to have all attr accesses in `self._xtra` passed down to `self.default`"
     @property
@@ -193,20 +193,20 @@ class GetAttr(BaseObj):
     def __dir__(self): return custom_dir(self, self._xtra)
     def __setstate__(self,data): self.__dict__.update(data)
 
-#Cell 48
+#Cell
 def delegate_attr(self, k, to):
     "Use in `__getattr__` to delegate to attr `to` without inheriting from `GetAttr`"
     if k.startswith('_') or k==to: raise AttributeError(k)
     try: return getattr(getattr(self,to), k)
     except AttributeError: raise AttributeError(k) from None
 
-#Cell 51
+#Cell
 def coll_repr(c, max_n=10):
     "String repr of up to `max_n` items of (possibly lazy) collection `c`"
     return f'(#{len(c)}) [' + ','.join(itertools.islice(map(str,c), max_n)) + (
         '...' if len(c)>10 else '') + ']'
 
-#Cell 53
+#Cell
 def mask2idxs(mask):
     "Convert bool mask or index list to index `L`"
     mask = list(mask)
@@ -214,7 +214,7 @@ def mask2idxs(mask):
     if isinstance(mask[0],bool): return [i for i,m in enumerate(mask) if m]
     return [int(i) for i in mask]
 
-#Cell 55
+#Cell
 def _listify(o):
     if o is None: return []
     if isinstance(o, list): return o
@@ -222,7 +222,7 @@ def _listify(o):
     if is_iter(o): return list(o)
     return [o]
 
-#Cell 56
+#Cell
 class CollBase:
     "Base class for composing a list of `items`"
     _xtra =  [o for o in dir([]) if not o.startswith('_')]
@@ -236,17 +236,17 @@ class CollBase:
     def __iter__(self): return self.items.__iter__()
     def _new(self, items, *args, **kwargs): return self.__class__(items, *args, **kwargs)
 
-#Cell 57
+#Cell
 def cycle(o):
     "Like `itertools.cycle` except creates list of `None`s if `o` is empty"
     return itertools.cycle(o) if o is not None and len(o) > 0 else itertools.cycle([None])
 
-#Cell 59
+#Cell
 def zip_cycle(x, *args):
     "Like `itertools.zip_longest` but `cycle`s through elements of all but first argument"
     return zip(x, *map(cycle,args))
 
-#Cell 61
+#Cell
 class L(CollBase, GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     def __init__(self, items=None, *rest, use_list=False, match=None):
@@ -317,7 +317,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         random.shuffle(it)
         return self._new(it)
 
-#Cell 62
+#Cell
 add_docs(L,
          __getitem__="Retrieve `idx` (can be list of indices, or mask, or int) items",
          unique="Unique items, in stable order",
@@ -335,12 +335,12 @@ add_docs(L,
          mapped_zipwith="Combine `zipwith` and `starmapped`",
          shuffled="Same as `random.shuffle`, but not inplace")
 
-#Cell 110
+#Cell
 def ifnone(a, b):
     "`b` if `a` is None else `a`"
     return b if a is None else a
 
-#Cell 113
+#Cell
 def get_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
     "Dynamically create a class, optionally inheriting from `sup`, containing `fld_names`"
     attrs = {}
@@ -364,14 +364,14 @@ def get_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
     if doc is not None: res.__doc__ = doc
     return res
 
-#Cell 116
+#Cell
 def mk_class(nm, *fld_names, sup=None, doc=None, funcs=None, mod=None, **flds):
     "Create a class using `get_class` and add to the caller's module"
     if mod is None: mod = inspect.currentframe().f_back.f_locals
     res = get_class(nm, *fld_names, sup=sup, doc=doc, funcs=funcs, **flds)
     mod[nm] = res
 
-#Cell 121
+#Cell
 def wrap_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
     "Decorator: makes function a method of a new class `nm` passing parameters to `mk_class`"
     def _inner(f):
@@ -379,23 +379,23 @@ def wrap_class(nm, *fld_names, sup=None, doc=None, funcs=None, **flds):
         return f
     return _inner
 
-#Cell 127
+#Cell
 def store_attr(self, nms):
     "Store params named in comma-separated `nms` from calling context into attrs in `self`"
     mod = inspect.currentframe().f_back.f_locals
     for n in re.split(', *', nms): setattr(self,n,mod[n])
 
-#Cell 130
+#Cell
 def tuplify(o, use_list=False, match=None):
     "Make `o` a tuple"
     return tuple(L(o, use_list=use_list, match=match))
 
-#Cell 132
+#Cell
 def replicate(item,match):
     "Create tuple of `item` copied `len(match)` times"
     return (item,)*len(match)
 
-#Cell 134
+#Cell
 def uniqueify(x, sort=False, bidir=False, start=None):
     "Return the unique elements in `x`, optionally `sort`-ed, optionally return the reverse correspondance."
     res = L(x).unique()
@@ -404,43 +404,43 @@ def uniqueify(x, sort=False, bidir=False, start=None):
     if bidir: return res, res.val2idx()
     return res
 
-#Cell 136
+#Cell
 def setify(o): return o if isinstance(o,set) else set(L(o))
 
-#Cell 138
+#Cell
 def is_listy(x):
     "`isinstance(x, (tuple,list,L))`"
     return isinstance(x, (tuple,list,L,slice,Generator))
 
-#Cell 140
+#Cell
 def range_of(x):
     "All indices of collection `x` (i.e. `list(range(len(x)))`)"
     return list(range(len(x)))
 
-#Cell 142
+#Cell
 def groupby(x, key):
     "Like `itertools.groupby` but doesn't need to be sorted, and isn't lazy"
     res = {}
     for o in x: res.setdefault(key(o), []).append(o)
     return res
 
-#Cell 144
+#Cell
 def merge(*ds):
     "Merge all dictionaries in `ds`"
     return {k:v for d in ds for k,v in d.items()}
 
-#Cell 146
+#Cell
 def shufflish(x, pct=0.04):
     "Randomly relocate items of `x` up to `pct` of `len(x)` from their starting location"
     n = len(x)
     return L(x[i] for i in sorted(range_of(x), key=lambda o: o+n*(1+random.random()*pct)))
 
-#Cell 148
+#Cell
 class IterLen:
     "Base class to add iteration to anything supporting `len` and `__getitem__`"
     def __iter__(self): return (self[i] for i in range_of(self))
 
-#Cell 149
+#Cell
 @docs
 class ReindexCollection(GetAttr, IterLen):
     "Reindexes collection `coll` with indices `idxs` and optional LRU cache of size `cache`"
@@ -460,7 +460,7 @@ class ReindexCollection(GetAttr, IterLen):
                 shuffle="Randomly shuffle indices",
                 cache_clear="Clear LRU cache")
 
-#Cell 151
+#Cell
 def _oper(op,a,b=None): return (lambda o:op(o,a)) if b is None else op(a,b)
 
 def _mk_op(nm, mod=None):
@@ -472,10 +472,10 @@ def _mk_op(nm, mod=None):
     _inner.__doc__ = f'Same as `operator.{nm}`, or returns partial if 1 arg'
     mod[nm] = _inner
 
-#Cell 153
+#Cell
 for op in 'lt gt le ge eq ne add sub mul truediv'.split(): _mk_op(op)
 
-#Cell 158
+#Cell
 class _InfMeta(type):
     @property
     def count(self): return itertools.count()
@@ -486,27 +486,27 @@ class _InfMeta(type):
     @property
     def nones(self): return itertools.cycle([None])
 
-#Cell 159
+#Cell
 class Inf(metaclass=_InfMeta):
     "Infinite lists"
     pass
 
-#Cell 162
+#Cell
 def true(*args, **kwargs):
     "Predicate: always `True`"
     return True
 
-#Cell 163
+#Cell
 def stop(e=StopIteration):
     "Raises exception `e` (by default `StopException`) even if in an expression"
     raise e
 
-#Cell 164
+#Cell
 def gen(func, seq, cond=true):
     "Like `(func(o) for o in seq if cond(func(o)))` but handles `StopIteration`"
     return itertools.takewhile(cond, map(func,seq))
 
-#Cell 166
+#Cell
 def chunked(it, cs, drop_last=False):
     if not isinstance(it, Iterator): it = iter(it)
     while True:
@@ -514,7 +514,7 @@ def chunked(it, cs, drop_last=False):
         if res and (len(res)==cs or not drop_last): yield res
         if len(res)<cs: return
 
-#Cell 168
+#Cell
 def retain_type(new, old=None, typ=None):
     "Cast `new` to type of `old` if it's a superclass"
     # e.g. old is TensorImage, new is Tensor - if not subclass then do nothing
@@ -526,13 +526,13 @@ def retain_type(new, old=None, typ=None):
     # Do nothing the new type is already an instance of requested type (i.e. same type)
     return typ(new) if typ!=NoneType and not isinstance(new, typ) else new
 
-#Cell 170
+#Cell
 def retain_types(new, old=None, typs=None):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
     if not is_listy(new): return retain_type(new, old, typs)
     return tuple(L(new, old, typs).mapped_zip(retain_type, cycled=True))
 
-#Cell 173
+#Cell
 def show_title(o, ax=None, ctx=None, label=None, **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
@@ -543,7 +543,7 @@ def show_title(o, ax=None, ctx=None, label=None, **kwargs):
         ax = ax.append(pd.Series({label: o}))
     return ax
 
-#Cell 175
+#Cell
 class ShowTitle:
     "Base class that adds a simple `show`"
     _show_args = {'label': 'text'}
@@ -554,12 +554,12 @@ class Float(float, ShowTitle): pass
 class Str(str, ShowTitle): pass
 add_docs(Int, "An `int` with `show`"); add_docs(Str, "An `str` with `show`"); add_docs(Float, "An `float` with `show`")
 
-#Cell 180
+#Cell
 class TupleBase(tuple, ShowTitle):
     "A `tuple` with `show` and `__neg__`"
     def __neg__(self): return tuple(map(operator.neg,self))
 
-#Cell 182
+#Cell
 def trace(f):
     "Add `set_trace` to an existing function `f`"
     def _inner(*args,**kwargs):
@@ -567,7 +567,7 @@ def trace(f):
         return f(*args,**kwargs)
     return _inner
 
-#Cell 183
+#Cell
 def compose(*funcs, order=None):
     "Create a function that composes all functions in `funcs`, passing along remaining `*args` and `**kwargs` to all"
     funcs = L(funcs)
@@ -577,14 +577,14 @@ def compose(*funcs, order=None):
         return x
     return _inner
 
-#Cell 185
+#Cell
 def maps(*args, retain=noop):
     "Like `map`, except funcs are composed first"
     f = compose(*args[:-1])
     def _f(b): return retain(f(b), b)
     return map(_f, args[-1])
 
-#Cell 187
+#Cell
 def partialler(f, *args, order=None, **kwargs):
     "Like `functools.partial` but also copies over docstring"
     fnew = partial(f,*args,**kwargs)
@@ -593,16 +593,16 @@ def partialler(f, *args, order=None, **kwargs):
     elif hasattr(f,'order'): fnew.order=f.order
     return fnew
 
-#Cell 189
+#Cell
 def instantiate(t):
     "Instantiate `t` if it's a type, otherwise do nothing"
     return t() if isinstance(t, type) else t
 
-#Cell 191
+#Cell
 mk_class('_Arg', 'i')
 _0,_1,_2,_3,_4 = _Arg(0),_Arg(1),_Arg(2),_Arg(3),_Arg(4)
 
-#Cell 193
+#Cell
 class bind:
     "Same as `partial`, except you can use `_0` `_1` etc param placeholders"
     def __init__(self, fn, *pargs, **pkwargs):
@@ -613,7 +613,7 @@ class bind:
         fargs = L(args[x.i] if isinstance(x, _Arg) else x for x in self.pargs) + args[self.maxi+1:]
         return self.fn(*fargs, **{**self.pkwargs, **kwargs})
 
-#Cell 195
+#Cell
 class _Self:
     "An alternative to `lambda` for calling methods on passed object."
     def __init__(self): self.nms,self.args,self.kwargs,self.ready = [],[],[],True
@@ -645,7 +645,7 @@ class _SelfCls:
 
 Self = _SelfCls()
 
-#Cell 200
+#Cell
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 @patch
 def ls(self:Path, file_type=None, file_exts=None):
@@ -654,7 +654,7 @@ def ls(self:Path, file_type=None, file_exts=None):
     if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
     return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
 
-#Cell 210
+#Cell
 def _is_instance(f, gs):
     tst = [g if type(g) in [type, 'function'] else g.__class__ for g in gs]
     for g in tst:
@@ -679,21 +679,21 @@ def sort_by_run(fs):
         else: raise Exception("Impossible to sort")
     return res
 
-#Cell 213
+#Cell
 def display_df(df):
     "Display `df` in a notebook or defaults to print"
     try: from IPython.display import display, HTML
     except: return print(df)
     display(HTML(df.to_html()))
 
-#Cell 214
+#Cell
 def round_multiple(x, mult, round_down=False):
     "Round `x` to nearest multiple of `mult`"
     def _f(x_): return (int if round_down else round)(x_/mult)*mult
     res = L(x).mapped(_f)
     return res if is_listy(x) else res[0]
 
-#Cell 216
+#Cell
 def num_cpus():
     "Get number of cpus"
     try:                   return len(os.sched_getaffinity(0))
@@ -701,22 +701,22 @@ def num_cpus():
 
 defaults.cpus = num_cpus()
 
-#Cell 217
+#Cell
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))
 
-#Comes from 06_data_source.ipynb, cell 4
+#Comes from 06_data_source.ipynb, cell
 def all_union(sets):
     "Set of union of all `sets` (each `setified` if needed)"
     return set().union(*(map(setify,sets)))
 
-#Comes from 06_data_source.ipynb, cell 6
+#Comes from 06_data_source.ipynb, cell
 def all_disjoint(sets):
     "`True` iif no element appears in more than one item of `sets`"
     return sum(map(len,sets))==len(all_union(sets))
 
-#Comes from 13_learner.ipynb, cell 8
+#Comes from 13_learner.ipynb, cell
 _camel_re1 = re.compile('(.)([A-Z][a-z]+)')
 _camel_re2 = re.compile('([a-z0-9])([A-Z])')
 
@@ -724,10 +724,10 @@ def camel2snake(name):
     s1   = re.sub(_camel_re1, r'\1_\2', name)
     return re.sub(_camel_re2, r'\1_\2', s1).lower()
 
-#Comes from 15_callback_hook.ipynb, cell 63
+#Comes from 15_callback_hook.ipynb, cell
 class PrettyString(str):
     "Little hack to get strings to show properly in Jupyter."
     def __repr__(self): return self
 
-#Comes from 32_text_models_awdlstm.ipynb, cell 14
+#Comes from 32_text_models_awdlstm.ipynb, cell
 def one_param(m): return next(iter(m.parameters()))

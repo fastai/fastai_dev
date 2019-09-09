@@ -2,7 +2,7 @@
 
 __all__ = ['dispatch_cuda', 'forget_mult_CPU', 'ForgetMultGPU', 'QRNNLayer', 'QRNN']
 
-#Cell 0
+#Cell
 from ...imports import *
 from ...test import *
 from ...core import *
@@ -16,11 +16,11 @@ from ..core import *
 from .awdlstm import dropout_mask
 from ...notebook.showdoc import show_doc
 
-#Cell 4
+#Cell
 from torch.utils.cpp_extension import load
 from torch.autograd import Function
 
-#Cell 5
+#Cell
 import local
 if torch.cuda.is_available():
     #fastai_path = Path(fastai.__path__[0])/'text'/'models'
@@ -30,12 +30,12 @@ if torch.cuda.is_available():
     files = ['bwd_forget_mult_cuda.cpp', 'bwd_forget_mult_cuda_kernel.cu']
     bwd_forget_mult_cuda = load(name='bwd_forget_mult_cuda', sources=[fastai_path/f for f in files])
 
-#Cell 6
+#Cell
 def dispatch_cuda(cuda_class, cpu_func, x):
     "Depending on `x.device` uses `cpu_func` or `cuda_class.apply`"
     return cuda_class.apply if x.device.type == 'cuda' else cpu_func
 
-#Cell 8
+#Cell
 def forget_mult_CPU(x, f, first_h=None, batch_first=True, backward=False):
     "ForgetMult gate applied to `x` and `f` on the CPU."
     result = []
@@ -50,7 +50,7 @@ def forget_mult_CPU(x, f, first_h=None, batch_first=True, backward=False):
         else:        result.append(prev_h)
     return torch.cat(result, dim=dim)
 
-#Cell 12
+#Cell
 class ForgetMultGPU(Function):
     "Wraper around the CUDA kernels for the ForgetMult gate."
     @staticmethod
@@ -75,7 +75,7 @@ class ForgetMultGPU(Function):
         grad_x, grad_f, grad_h = ctx.forget_mult.backward(x, f, output, grad_output, ctx.batch_first)
         return (grad_x, grad_f, (None if first_h is None else grad_h), None, None)
 
-#Cell 15
+#Cell
 class QRNNLayer(Module):
     "Apply a single layer Quasi-Recurrent Neural Network (QRNN) to an input sequence."
     def __init__(self, input_size, hidden_size=None, save_prev_x=False, zoneout=0, window=1,
@@ -118,7 +118,7 @@ class QRNNLayer(Module):
         inp_shift = torch.cat(inp_shift, dim)
         return torch.cat([inp, inp_shift], 2)
 
-#Cell 17
+#Cell
 class QRNN(Module):
     "Apply a multiple layer Quasi-Recurrent Neural Network (QRNN) to an input sequence."
     def __init__(self, input_size, hidden_size, n_layers=1, batch_first=True, dropout=0,

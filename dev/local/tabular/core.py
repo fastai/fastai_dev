@@ -3,17 +3,17 @@
 __all__ = ['Tabular', 'TabularProc', 'Categorify', 'Normalize', 'FillStrategy', 'FillMissing', 'process_df',
            'ReadTabBatch', 'TabDataLoader']
 
-#Cell 0
+#Cell
 from ..torch_basics import *
 from ..test import *
 from ..core import *
 from ..data.all import *
 from ..notebook.showdoc import show_doc
 
-#Cell 1
+#Cell
 pd.set_option('mode.chained_assignment','raise')
 
-#Cell 6
+#Cell
 class Tabular(CollBase):
     def __init__(self, df, cat_names=None, cont_names=None, y_names=None, is_y_cat=True, splits=None):
         super().__init__(df)
@@ -50,7 +50,7 @@ class Tabular(CollBase):
     @property
     def all_col_names (self): return self.all_cont_names + self.all_cat_names
 
-#Cell 7
+#Cell
 def _add_prop(cls, nm):
     prop = property(lambda o: o.items[list(getattr(o,nm+'_names'))])
     setattr(cls, nm+'s', prop)
@@ -63,12 +63,12 @@ _add_prop(Tabular, 'cont')
 _add_prop(Tabular, 'all_cont')
 _add_prop(Tabular, 'all_col')
 
-#Cell 9
+#Cell
 class TabularProc(InplaceTransform):
     "Base class to write a tabular processor for dataframes"
     def process(self, *args,**kwargs): return self(*args,**kwargs)
 
-#Cell 10
+#Cell
 class Categorify(TabularProc, CollBase):
     "Transform the categorical variables to that type."
     order = 1
@@ -81,7 +81,7 @@ class Categorify(TabularProc, CollBase):
     def _decode_cats(self, c): return c.map(dict(enumerate(self[c.name].items)))
     def decodes(self, to): to.transform(to.all_cat_names, self._decode_cats)
 
-#Cell 15
+#Cell
 class Normalize(TabularProc):
     "Normalize the continuous variables."
     order = 2
@@ -92,14 +92,14 @@ class Normalize(TabularProc):
     def encodes(self, to): to.conts = (to.conts-self.means) / self.stds
     def decodes(self, to): to.conts = (to.conts*self.stds ) + self.means
 
-#Cell 19
+#Cell
 class FillStrategy:
     "Namespace containing the various filling strategies."
     def median  (c,fill): return c.median()
     def constant(c,fill): return fill
     def mode    (c,fill): return c.dropna().value_counts().idxmax()
 
-#Cell 20
+#Cell
 class FillMissing(TabularProc):
     "Fill the missing values in continuous columns."
     def __init__(self, fill_strategy=FillStrategy.median, add_col=True, fill_vals=None):
@@ -120,7 +120,7 @@ class FillMissing(TabularProc):
                 to.loc[:,n+'_na'] = missing[n]
                 if n+'_na' not in to.cat_names: to.cat_names.append(n+'_na')
 
-#Cell 26
+#Cell
 @delegates(Tabular)
 def process_df(df, procs, inplace=True, **kwargs):
     "Process `df` with `procs` and returns the processed dataframe and the `TabularProcessor` associated"
@@ -129,7 +129,7 @@ def process_df(df, procs, inplace=True, **kwargs):
     proc.setup(to)
     return to,proc
 
-#Cell 29
+#Cell
 class ReadTabBatch(ItemTransform):
     def __init__(self, proc): self.proc = proc
 
@@ -145,7 +145,7 @@ class ReadTabBatch(ItemTransform):
         to = self.proc.decode(to)
         return to
 
-#Cell 30
+#Cell
 @delegates()
 class TabDataLoader(TfmdDL):
     do_item = noops
