@@ -41,7 +41,7 @@ jobs:
 
     # Install nbformat
   - script: |
-      pip install nbformat ipykernel
+      pip install nbformat ipykernel notebook
     displayName: 'Install nbformat'
     continueOnError: false
     
