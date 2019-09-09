@@ -231,7 +231,7 @@ def _notebook2script(fname, silent=False, to_pkl=False):
         index.update({f: fname.name for f in names})
         code = re.sub(r' +$', '', code, flags=re.MULTILINE)
         if code != '\n\n' + orig[:-1]:
-            if to_pkl: _update_pkl(fname_out, (i, code))
+            if to_pkl: _update_pkl(fname_out, (i, fname, code))
             else:
                 with open(fname_out, 'a') as f: f.write(code)
     _save_index(index)
@@ -285,23 +285,22 @@ def source_nb(func, is_name=None, return_all=False):
 
 #Cell
 _re_default_nb = re.compile(r'File to edit: dev/(\S+)\s+')
-_re_cell_num = re.compile(r'^#Cell\s+(\d+)|^#Comes from\s+(\S+), cell\s+(\d+)')
+_re_cell = re.compile(r'^#Cell|^#Comes from\s+(\S+), cell')
 
 #Cell
 def _split(code):
     lines = code.split('\n')
     default_nb = _re_default_nb.search(lines[0]).groups()[0]
     s,res = 1,[]
-    while _re_cell_num.search(lines[s]) is None: s += 1
+    while _re_cell.search(lines[s]) is None: s += 1
     e = s+1
     while e < len(lines):
-        while e < len(lines) and _re_cell_num.search(lines[e]) is None: e += 1
-        grps = _re_cell_num.search(lines[s]).groups()
-        num = int(grps[0] or grps[2])
-        nb = grps[1] or default_nb
+        while e < len(lines) and _re_cell.search(lines[e]) is None: e += 1
+        grps = _re_cell.search(lines[s]).groups()
+        nb = grps[0] or default_nb
         content = lines[s+1:e]
         while len(content) > 1 and content[-1] == '': content = content[:-1]
-        res.append((num, nb, '\n'.join(content)))
+        res.append((nb, '\n'.join(content)))
         s,e = e,e+1
     return res
 
@@ -330,12 +329,15 @@ def _deal_loc_import(code, fname):
     return '\n'.join(lines)
 
 #Cell
-def _script2notebook(fname, silent=False):
+def _script2notebook(fname, dic, silent=False):
     "Put the content of `fname` back in the notebooks it came from."
     if os.environ.get('IN_TEST',0): return  # don't export if running tests
     fname = Path(fname)
     with open(fname) as f: code = f.read()
     splits = _split(code)
+    assert len(splits) == len(dic[fname]), f"Exported file from notebooks should have {len(dic[fname])} cells but has {len(splits)}."
+    assert np.all([c1[0]==c2[1]] for c1,c2 in zip(splits, dic[fname]))
+    splits = [(c2[0],c1[0],c1[1]) for c1,c2 in zip(splits, dic[fname])]
     nb_fnames = {s[1] for s in splits}
     for nb_fname in nb_fnames:
         nb = read_nb(nb_fname)
@@ -353,9 +355,12 @@ _manual_mods = ['__init__.py', 'imports.py', 'torch_imports.py', 'all.py', 'torc
 
 #Cell
 def script2notebook(folder='local', silent=False):
+    if (Path.cwd()/'lib.pkl').exists(): os.remove(Path.cwd()/'lib.pkl')
+    notebook2script(all_fs=True, silent=True, to_pkl=True)
+    dic = pickle.load(open(Path.cwd()/'lib.pkl', 'rb'))
     if os.environ.get('IN_TEST',0): return  # don't export if running tests
     for f in Path(folder).glob('**/*.py'):
-        if f.name not in _manual_mods: _script2notebook(f, silent=silent)
+        if f.name not in _manual_mods: _script2notebook(f, dic, silent=silent)
 
 #Cell
 def _print_diff_py(code1, code2, fname):
