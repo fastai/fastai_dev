@@ -3,7 +3,7 @@
 __all__ = ['LinearDecoder', 'SequentialRNN', 'get_language_model']
 
 #Cell
-from ...imports import *
+from ...torch_basics import *
 from ...test import *
 from ...core import *
 from ...layers import *

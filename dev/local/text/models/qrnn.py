@@ -3,7 +3,7 @@
 __all__ = ['dispatch_cuda', 'forget_mult_CPU', 'ForgetMultGPU', 'QRNNLayer', 'QRNN']
 
 #Cell
-from ...imports import *
+from ...torch_basics import *
 from ...test import *
 from ...core import *
 from ...layers import *

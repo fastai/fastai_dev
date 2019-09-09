@@ -56,7 +56,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="read_nb" class="doc_header"><code>read_nb</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#What's-a-notebook?" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_nb</code>(<strong><code>fname</code></strong>)</p>
+<h4 id="read_nb" class="doc_header"><code>read_nb</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_nb</code>(<strong><code>fname</code></strong>)</p>
 </blockquote>
 <p>Read the notebook in <code>fname</code>.</p>
 
@@ -222,7 +222,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
  &#39;execution_count&#39;: 1,
  &#39;metadata&#39;: {&#39;hide_input&#39;: False},
  &#39;outputs&#39;: [],
- &#39;source&#39;: &#39;# export\nfrom local.imports import *\nfrom local.notebook.core import *\nimport nbformat,inspect&#39;}</pre>
+ &#39;source&#39;: &#39;# export\nfrom local.imports import *\nfrom local.notebook.core import *\nimport nbformat,inspect\nfrom nbformat.sign import NotebookNotary&#39;}</pre>
 </div>
 
 </div>
@@ -249,7 +249,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="check_re" class="doc_header"><code>check_re</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#Finding-patterns" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>check_re</code>(<strong><code>cell</code></strong>, <strong><code>pat</code></strong>, <strong><code>code_only</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="check_re" class="doc_header"><code>check_re</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>check_re</code>(<strong><code>cell</code></strong>, <strong><code>pat</code></strong>, <strong><code>code_only</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Check if <code>cell</code> contains a line with regex <code>pat</code></p>
 
@@ -305,7 +305,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_export" class="doc_header"><code>is_export</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#Finding-patterns" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_export</code>(<strong><code>cell</code></strong>, <strong><code>default</code></strong>)</p>
+<h4 id="is_export" class="doc_header"><code>is_export</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_export</code>(<strong><code>cell</code></strong>, <strong><code>default</code></strong>)</p>
 </blockquote>
 <p>Check if <code>cell</code> is to be exported and returns the name of the module.</p>
 
@@ -361,7 +361,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="find_default_export" class="doc_header"><code>find_default_export</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#Finding-patterns" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>find_default_export</code>(<strong><code>cells</code></strong>)</p>
+<h4 id="find_default_export" class="doc_header"><code>find_default_export</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>find_default_export</code>(<strong><code>cells</code></strong>)</p>
 </blockquote>
 <p>Find in <code>cells</code> the default export module.</p>
 
@@ -431,7 +431,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_names" class="doc_header"><code>export_names</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#Exporting-notebooks" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_names</code>(<strong><code>code</code></strong>, <strong><code>func_only</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="export_names" class="doc_header"><code>export_names</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L7" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_names</code>(<strong><code>code</code></strong>, <strong><code>func_only</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Find the names of the objects, functions or classes defined in <code>code</code> that are exported.</p>
 
@@ -498,7 +498,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="extra_add" class="doc_header"><code>extra_add</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#Exporting-notebooks" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>extra_add</code>(<strong><code>code</code></strong>)</p>
+<h4 id="extra_add" class="doc_header"><code>extra_add</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>extra_add</code>(<strong><code>code</code></strong>)</p>
 </blockquote>
 <p>Catch adds to <code>__all__</code> required by a cell with <code>_all_=</code></p>
 
@@ -582,6 +582,22 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_update_pkl</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
+    <span class="n">dic</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">((</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;lib.pkl&#39;</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;lib.pkl&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">dic</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dic</span><span class="p">,</span> <span class="nb">open</span><span class="p">((</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;lib.pkl&#39;</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -589,7 +605,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_notebook2script</span><span class="p">(</span><span class="s1">&#39;92_notebook_showdoc.ipynb&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_notebook2script</span><span class="p">(</span><span class="s1">&#39;92_notebook_showdoc.ipynb&#39;</span><span class="p">,</span> <span class="n">to_pkl</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -626,7 +642,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="notebook2script" class="doc_header"><code>notebook2script</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#Exporting-notebooks" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>notebook2script</code>(<strong><code>fname</code></strong>=<em><code>None</code></em>, <strong><code>all_fs</code></strong>=<em><code>None</code></em>, <strong><code>up_to</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="notebook2script" class="doc_header"><code>notebook2script</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>notebook2script</code>(<strong><code>fname</code></strong>=<em><code>None</code></em>, <strong><code>all_fs</code></strong>=<em><code>None</code></em>, <strong><code>up_to</code></strong>=<em><code>None</code></em>, <strong><code>silent</code></strong>=<em><code>False</code></em>, <strong><code>to_pkl</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Convert <code>fname</code> or all the notebook satisfying <code>all_fs</code>.</p>
 
@@ -675,7 +691,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_name" class="doc_header"><code>get_name</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#Finding-the-way-back-to-notebooks" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_name</code>(<strong><code>obj</code></strong>)</p>
+<h4 id="get_name" class="doc_header"><code>get_name</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_name</code>(<strong><code>obj</code></strong>)</p>
 </blockquote>
 <p>Get the name of <code>obj</code></p>
 
@@ -714,7 +730,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="qual_name" class="doc_header"><code>qual_name</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#Finding-the-way-back-to-notebooks" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>qual_name</code>(<strong><code>obj</code></strong>)</p>
+<h4 id="qual_name" class="doc_header"><code>qual_name</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>qual_name</code>(<strong><code>obj</code></strong>)</p>
 </blockquote>
 <p>Get the qualified name of <code>obj</code></p>
 
@@ -752,7 +768,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="source_nb" class="doc_header"><code>source_nb</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/91_notebook_export.ipynb#Finding-the-way-back-to-notebooks" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>source_nb</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<em><code>None</code></em>, <strong><code>return_all</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="source_nb" class="doc_header"><code>source_nb</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>source_nb</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<em><code>None</code></em>, <strong><code>return_all</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Return the name of the notebook where <code>func</code> was defined</p>
 
@@ -781,12 +797,12 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 <span class="kn">from</span> <span class="nn">local.test</span> <span class="k">import</span> <span class="n">test_fail</span>
 
 <span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">test_fail</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;00_test.ipynb&#39;</span>
-<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">Transform</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;02_transforms.ipynb&#39;</span>
-<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">Transform</span><span class="o">.</span><span class="n">decode</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;02_transforms.ipynb&#39;</span>
+<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">Transform</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;02_data_transforms.ipynb&#39;</span>
+<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">Transform</span><span class="o">.</span><span class="n">decode</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;02_data_transforms.ipynb&#39;</span>
 <span class="c1">#opt_call is in the core module but defined in 02</span>
 <span class="c1"># from local.core import opt_call</span>
 <span class="c1"># assert source_nb(opt_call) == &#39;02_data_pipeline.ipynb&#39; # TODO: find something else</span>
-<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">Tensor</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
 <span class="c1">#Added through a monkey-patch</span>
 <span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="s1">&#39;Path.ls&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;01_core.ipynb&#39;</span>
 
@@ -800,6 +816,273 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Reading-the-library">Reading the library<a class="anchor-link" href="#Reading-the-library">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If someone decides to change a module instead of the notebooks, the following functions help update the notebooks accordingly.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;local&#39;</span><span class="o">/</span><span class="s1">&#39;core.py&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="n">code</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">_relimport2name</span><span class="p">(</span><span class="s1">&#39;.core&#39;</span><span class="p">,</span> <span class="s1">&#39;local/data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;local.core&#39;</span>
+<span class="k">assert</span> <span class="n">_relimport2name</span><span class="p">(</span><span class="s1">&#39;.core&#39;</span><span class="p">,</span> <span class="s1">&#39;home/sgugger/fastai_dev/dev/local/data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;local.core&#39;</span>
+<span class="k">assert</span> <span class="n">_relimport2name</span><span class="p">(</span><span class="s1">&#39;..core&#39;</span><span class="p">,</span> <span class="s1">&#39;local/vision/data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;local.core&#39;</span>
+<span class="k">assert</span> <span class="n">_relimport2name</span><span class="p">(</span><span class="s1">&#39;.transform&#39;</span><span class="p">,</span> <span class="s1">&#39;local/vision/data.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;local.vision.transform&#39;</span>
+<span class="k">assert</span> <span class="n">_relimport2name</span><span class="p">(</span><span class="s1">&#39;..notebook.core&#39;</span><span class="p">,</span> <span class="s1">&#39;local/data/external.py&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;local.notebook.core&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;lib.pkl&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span> <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;lib.pkl&#39;</span><span class="p">)</span>
+<span class="n">notebook2script</span><span class="p">(</span><span class="n">all_fs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">to_pkl</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dic</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;lib.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_script2notebook</span><span class="p">(</span><span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;local/tabular/core.py&#39;</span><span class="p">,</span> <span class="n">dic</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Converted /home/sgugger/git/fastai_dev/dev/local/tabular/core.py.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="script2notebook" class="doc_header"><code>script2notebook</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>script2notebook</code>(<strong><code>folder</code></strong>=<em><code>'local'</code></em>, <strong><code>silent</code></strong>=<em><code>False</code></em>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">script2notebook</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Converted /home/sgugger/git/fastai_dev/dev/local/test.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/metrics.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/optimizer.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/core.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/layers.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/script.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/torch_core.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/learner.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/tabular/core.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/tabular/model.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/callback/fp16.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/callback/tracker.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/callback/schedule.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/callback/mixup.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/callback/rnn.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/callback/progress.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/callback/hook.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/vision/augment.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/vision/core.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/vision/models/xresnet.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/utils/test.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/text/core.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/text/data.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/text/models/awdlstm.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/text/models/core.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/text/models/qrnn.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/notebook/showdoc.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/notebook/core.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/notebook/export.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/notebook/export2html.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/data/block.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/data/load.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/data/core.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/data/transform.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/data/pipeline.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/data/source.py.
+Converted /home/sgugger/git/fastai_dev/dev/local/data/external.py.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Diff-notebook---library">Diff notebook - library<a class="anchor-link" href="#Diff-notebook---library">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="diff_nb_script" class="doc_header"><code>diff_nb_script</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>diff_nb_script</code>(<strong><code>lib_folder</code></strong>=<em><code>'local'</code></em>)</p>
+</blockquote>
+<p>Print the diff between the notebooks and the library in <code>lib_folder</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">diff_nb_script</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>diff -ru tmp_lib1/notebook/export.py local/notebook/export.py
+--- tmp_lib1/notebook/export.py	2019-09-09 10:30:25.058251854 -0700
++++ local/notebook/export.py	2019-09-09 10:29:27.590360206 -0700
+@@ -225,7 +225,7 @@
+         # remove trailing spaces
+         names = export_names(code)
+         extra,code = extra_add(code)
+-        if not to_pkl: _add2add(fname_out, [f&#34;&#39;{f}&#39;&#34; for f in names if &#39;.&#39; not in f] + extra)
++        _add2add(fname_out, [f&#34;&#39;{f}&#39;&#34; for f in names if &#39;.&#39; not in f] + extra)
+         index.update({f: fname.name for f in names})
+         code = re.sub(r&#39; +$&#39;, &#39;&#39;, code, flags=re.MULTILINE)
+         if code != &#39;\n\n&#39; + orig[:-1]:
+
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 

@@ -3,7 +3,7 @@
 __all__ = ['make_vocab', 'TensorText', 'Numericalize', 'LMDataLoader', 'pad_collate']
 
 #Cell
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
 from ..core import *
 from ..data.transform import *

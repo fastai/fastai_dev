@@ -245,9 +245,9 @@ class ExecuteShowDocPreprocessor(ExecutePreprocessor):
 
 #Cell
 def _import_show_doc_cell(name=None):
-    "Add an import show_doc cell + deal with the ____file____ hack if necessary."
+    "Add an import show_doc cell + deal with the __file__ hack if necessary."
     source = f"#export\nfrom local.notebook.showdoc import show_doc"
-    if name: source += f"\nfrom pathlib import Path\n____file____ = {name}"
+    if name: source += f"\nfrom pathlib import Path\n__file__ = {name}"
     return {'cell_type': 'code',
             'execution_count': None,
             'metadata': {'hide_input': True},
@@ -271,7 +271,7 @@ def _exporter(markdown=False):
     exporter.exclude_input_prompt=True
     exporter.exclude_output_prompt=True
     exporter.template_file = ('jekyll.tpl','jekyll-md.tpl')[markdown]
-    exporter.template_path.append(str(Path(____file____).parent))
+    exporter.template_path.append(str(Path(__file__).parent))
     return exporter
 
 #Cell
@@ -280,7 +280,7 @@ process_cell  = [hide_cells, remove_widget_state, add_jekyll_notes, convert_link
 
 #Cell
 _re_file = re.compile(r"""
-^____file____   # ____file____ at the beginning of a line (since re.MULTILINE is passed)
+^__file__   # __file__ at the beginning of a line (since re.MULTILINE is passed)
 \s*=\s*   # Any number of whitespace, =, any number of whitespace
 (\S*)     # Catching group for any non-whitespace characters
 \s*$      # Any number of whitespace then the end of line
@@ -288,7 +288,7 @@ _re_file = re.compile(r"""
 
 #Cell
 def _find_file(cells):
-    "Find in `cells` if a ____file____ is defined."
+    "Find in `cells` if a __file__ is defined."
     for cell in cells:
         if cell['cell_type']=='code' and _re_file.search(cell['source']):
             return _re_file.search(cell['source']).groups()[0]
@@ -321,15 +321,18 @@ def convert_nb(fname, dest_path='docs'):
     meta_jekyll['nb_path'] = f'{fname.parent.name}/{fname.name}'
     nb = execute_nb(nb, name=_name)
     nb['cells'] = [clean_exports(c) for c in nb['cells']]
+    #print(f'{dest_path}/{dest_name}')
     with open(f'{dest_path}/{dest_name}','w') as f:
+        #res = _exporter().from_notebook_node(nb, resources=meta_jekyll)[0]
+        #print(res)
         f.write(_exporter().from_notebook_node(nb, resources=meta_jekyll)[0])
 
 #Cell
-def convert_all(path='.', dest_path='docs', force_all=False):
+def convert_all(path='.', dest_path='../docs', force_all=False):
     "Convert all notebooks in `path` to html files in `dest_path`."
     path = Path(path)
     changed_cnt = 0
-    for fname in path.glob("*.ipynb"):
+    for fname in path.glob("[0-9]*.ipynb"):
         # only rebuild modified files
         if fname.name.startswith('_'): continue
         fname_out = Path(dest_path)/'.'.join(fname.with_suffix('.html').name.split('_')[1:])

@@ -177,15 +177,15 @@ def _relative_import(name, fname):
 
 #Cell
 #Catches any from local.bla import something and catches local.bla in group 1, the imported thing(s) in group 2.
-_re_import = re.compile(r'^\s*from (local.\S*) import (.*)$')
+_re_import = re.compile(r'^(\s*)from (local.\S*) import (.*)$')
 
 #Cell
 def _deal_import(code_lines, fname):
     pat = re.compile(r'from (local.\S*) import (\S*)$')
     lines = []
     def _replace(m):
-        mod,obj = m.groups()
-        return f"from {_relative_import(mod, fname)} import {obj}"
+        sp,mod,obj = m.groups()
+        return f"{sp}from {_relative_import(mod, fname)} import {obj}"
     for line in code_lines:
         line = re.sub('_'+'file_', '__'+'file__', line) #Need to break __file__ or that line will be treated
         lines.append(_re_import.sub(_replace,line))
@@ -313,14 +313,14 @@ def _relimport2name(name, mod_name):
 
 #Cell
 #Catches any from .bla import something and catches local.bla in group 1, the imported thing(s) in group 2.
-_re_loc_import = re.compile(r'^\s*from (\.\S*) import (.*)$')
+_re_loc_import = re.compile(r'(^\s*)from (\.\S*) import (.*)$')
 
 #Cell
 def _deal_loc_import(code, fname):
     lines = []
     def _replace(m):
-        mod,obj = m.groups()
-        return f"from {_relimport2name(mod, fname)} import {obj}"
+        sp,mod,obj = m.groups()
+        return f"{sp}from {_relimport2name(mod, fname)} import {obj}"
     for line in code.split('\n'):
         line = re.sub('__'+'file__', '_'+'file_', line) #Need to break __file__ or that line will be treated
         lines.append(_re_loc_import.sub(_replace,line))
