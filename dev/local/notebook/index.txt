@@ -65,6 +65,7 @@
   "Float": "01_core.ipynb",
   "Str": "01_core.ipynb",
   "TupleBase": "01_core.ipynb",
+  "TupleTitled": "01_core.ipynb",
   "trace": "01_core.ipynb",
   "compose": "01_core.ipynb",
   "maps": "01_core.ipynb",

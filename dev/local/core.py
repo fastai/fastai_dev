@@ -6,10 +6,10 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'tuplify', 'replicate', 'uniqueify', 'setify',
            'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le',
            'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type',
-           'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'trace', 'compose', 'maps',
-           'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'sort_by_run',
-           'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake',
-           'PrettyString', 'one_param']
+           'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'TupleTitled', 'trace',
+           'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self',
+           'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint',
+           'camel2snake', 'PrettyString', 'one_param']
 
 #Cell
 from .test import *
@@ -555,9 +555,20 @@ class Str(str, ShowTitle): pass
 add_docs(Int, "An `int` with `show`"); add_docs(Str, "An `str` with `show`"); add_docs(Float, "An `float` with `show`")
 
 #Cell
-class TupleBase(tuple, ShowTitle):
-    "A `tuple` with `show` and `__neg__`"
+class TupleBase(tuple):
+    "A `tuple` with `__neg__` and more friendly __init__ behavior"
+    def __new__(cls, x=None, *rest):
+        if x is None: x = ()
+        if not is_listy(x): x = (x,)
+        x = tuple(x)
+        return super().__new__(cls, x+rest if rest else x)
+
     def __neg__(self): return tuple(map(operator.neg,self))
+
+#Cell
+class TupleTitled(TupleBase, ShowTitle):
+    "A `TupleBase` with `show`"
+    pass
 
 #Cell
 def trace(f):
