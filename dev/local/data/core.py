@@ -180,11 +180,13 @@ class TfmdDL(DataLoader):
             kwargs[nm] = Pipeline(kwargs.get(nm,None), as_item=(nm=='before_batch'))
             kwargs[nm].setup(self)
         super().__init__(dataset, bs=bs, shuffle=shuffle, num_workers=num_workers, **kwargs)
+
+    def _retain_dl(self,b):
         it  = self.do_item(0)
         its = self.after_batch(self.do_batch([it]))
-        #TODO do we still need?
-        self._retain_ds = partial(retain_types, typs=L(it ).mapped(type))
         self._retain_dl = partial(retain_types, typs=L(its).mapped(type))
+        # we just replaced ourselves, so this is *not* recursive! :)
+        return self._retain_dl(b)
 
     def before_iter(self):
         super().before_iter()
@@ -197,7 +199,7 @@ class TfmdDL(DataLoader):
     def decode_batch(self, b, max_n=10, ds_decode=True): return self._decode_batch(self.decode(b), max_n, ds_decode)
 
     def _decode_batch(self, b, max_n=10, ds_decode=True):
-        f = compose(self._retain_ds, self.after_item.decode)
+        f = self.after_item.decode
         if ds_decode: f = compose(f, getattr(self.dataset,'decode',noop))
         return L(batch_to_samples(b, max_n=max_n)).mapped(f)
 

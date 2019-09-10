@@ -51,7 +51,7 @@ class NewChkMeta(PrePostInitMeta):
 
         @functools.wraps(old_init)
         def _new(cls, x=None, *args, **kwargs):
-            if x is not None and isinstance(x,cls):
+            if not args and not kwargs and x is not None and isinstance(x,cls):
                 x._newchk = 1
                 return x
             res = old_new(cls)

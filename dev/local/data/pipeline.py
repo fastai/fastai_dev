@@ -44,7 +44,9 @@ def compose_tfms(x, tfms, is_enc=True, reverse=False, **kwargs):
 def batch_to_samples(b, max_n=10):
     "'Transposes' a batch to (at most `max_n`) samples"
     if isinstance(b, Tensor): return b[:max_n]
-    return L(batch_to_samples(b_, max_n) for b_ in b).zipped()
+    else:
+        res = L(b).mapped(partial(batch_to_samples,max_n=max_n))
+        return L(retain_types(res.zipped(), [b]))
 
 #Cell
 def mk_transform(f, as_item=True):
