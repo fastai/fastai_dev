@@ -5,7 +5,7 @@ __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'Im
            'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda', 'ByteToFloatTensor',
            'Normalize', 'broadcast_vec', 'DataBunch']
 
-#Cell 1
+#Cell
 from ..torch_basics import *
 from ..test import *
 from .load import *
@@ -14,23 +14,23 @@ from .pipeline import *
 from .external import *
 from ..notebook.showdoc import *
 
-#Cell 8
+#Cell
 def _get_files(p, fs, extensions=None):
     p = Path(p)
     res = [p/f for f in fs if not f.startswith('.')
            and ((not extensions) or f'.{f.split(".")[-1].lower()}' in extensions)]
     return res
 
-#Cell 9
-def get_files(path, extensions=None, recurse=True, include=None):
-    "Get all the files in `path` with optional `extensions`, optionally with `recurse`."
+#Cell
+def get_files(path, extensions=None, recurse=True, folders=None):
+    "Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
     path = Path(path)
     extensions = setify(extensions)
     extensions = {e.lower() for e in extensions}
     if recurse:
         res = []
         for i,(p,d,f) in enumerate(os.walk(path)): # returns (dirpath, dirnames, filenames)
-            if include is not None and i==0: d[:] = [o for o in d if o in include]
+            if folders is not None and i==0: d[:] = [o for o in d if o in folders]
             else:                            d[:] = [o for o in d if not o.startswith('.')]
             res += _get_files(p, f, extensions)
     else:
@@ -38,28 +38,28 @@ def get_files(path, extensions=None, recurse=True, include=None):
         res = _get_files(path, f, extensions)
     return L(res)
 
-#Cell 14
-def FileGetter(suf='', extensions=None, recurse=True, include=None):
-    "Create `get_files` partial function that searches path suffix `suf` and passes along args"
-    def _inner(o, extensions=extensions, recurse=recurse, include=include):
-        return get_files(o/suf, extensions, recurse, include)
+#Cell
+def FileGetter(suf='', extensions=None, recurse=True, folders=None):
+    "Create `get_files` partial function that searches path suffix `suf`, only in `folders`, if specified, and passes along args"
+    def _inner(o, extensions=extensions, recurse=recurse, folders=folders):
+        return get_files(o/suf, extensions, recurse, folders)
     return _inner
 
-#Cell 16
+#Cell
 image_extensions = set(k for k,v in mimetypes.types_map.items() if v.startswith('image/'))
 
-#Cell 17
-def get_image_files(path, recurse=True, include=None):
-    "Get image files in `path` recursively."
-    return get_files(path, extensions=image_extensions, recurse=recurse, include=include)
+#Cell
+def get_image_files(path, recurse=True, folders=None):
+    "Get image files in `path` recursively, only in `folders`, if specified."
+    return get_files(path, extensions=image_extensions, recurse=recurse, folders=folders)
 
-#Cell 20
-def ImageGetter(suf='', recurse=True, include=None):
-    "Create `get_image_files` partial function that searches path suffix `suf` and passes along `kwargs`"
-    def _inner(o, recurse=recurse, include=include): return get_image_files(o/suf, recurse, include)
+#Cell
+def ImageGetter(suf='', recurse=True, folders=None):
+    "Create `get_image_files` partial function that searches path suffix `suf` and passes along `kwargs`, only in `folders`, if specified."
+    def _inner(o, recurse=recurse, folders=folders): return get_image_files(o/suf, recurse, folders)
     return _inner
 
-#Cell 25
+#Cell
 def RandomSplitter(valid_pct=0.2, seed=None, **kwargs):
     "Create function that splits `items` between train/val with `valid_pct` randomly."
     def _inner(o, **kwargs):
@@ -69,22 +69,22 @@ def RandomSplitter(valid_pct=0.2, seed=None, **kwargs):
         return rand_idx[cut:],rand_idx[:cut]
     return _inner
 
-#Cell 27
+#Cell
 def _grandparent_idxs(items, name): return mask2idxs(Path(o).parent.parent.name == name for o in items)
 
-#Cell 28
+#Cell
 def GrandparentSplitter(train_name='train', valid_name='valid'):
     "Split `items` from the grand parent folder names (`train_name` and `valid_name`)."
     def _inner(o, **kwargs):
         return _grandparent_idxs(o, train_name),_grandparent_idxs(o, valid_name)
     return _inner
 
-#Cell 32
+#Cell
 def parent_label(o, **kwargs):
     "Label `item` with the parent folder name."
     return o.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-2]
 
-#Cell 35
+#Cell
 def RegexLabeller(pat):
     "Label `item` with regex `pat`."
     pat = re.compile(pat)
@@ -94,7 +94,7 @@ def RegexLabeller(pat):
         return res.group(1)
     return _inner
 
-#Cell 39
+#Cell
 class CategoryMap(CollBase):
     def __init__(self, col, sort=True, add_na=False):
         if is_categorical_dtype(col): items = L(col.cat.categories, use_list=True)
@@ -106,10 +106,10 @@ class CategoryMap(CollBase):
         self.o2i = defaultdict(int, self.items.val2idx())
     def __eq__(self,b): return all_equal(b,self)
 
-#Cell 44
+#Cell
 class Category(str, ShowTitle): _show_args = {'label': 'category'}
 
-#Cell 45
+#Cell
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order=1
@@ -123,14 +123,14 @@ class Categorize(Transform):
     def encodes(self, o): return self.vocab.o2i[o]
     def decodes(self, o): return Category(self.vocab[o])
 
-#Cell 46
+#Cell
 Category.create = Categorize
 
-#Cell 50
+#Cell
 class MultiCategory(L):
     def show(self, ctx=None, sep=';', **kwargs): return show_title(sep.join(self.mapped(str)), ctx=ctx)
 
-#Cell 51
+#Cell
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
     def setup(self, dsrc):
@@ -145,10 +145,10 @@ class MultiCategorize(Categorize):
     def encodes(self, o):                return [self.o2i  [o_] for o_ in o]
     def decodes(self, o): return MultiCategory([self.vocab[o_] for o_ in o])
 
-#Cell 52
+#Cell
 MultiCategory.create = MultiCategorize
 
-#Cell 54
+#Cell
 class OneHotEncode(Transform):
     "One-hot encodes targets and optionally decodes with `vocab`"
     order=2
@@ -162,15 +162,15 @@ class OneHotEncode(Transform):
     def encodes(self, o): return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
     def decodes(self, o): return one_hot_decode(o, self.vocab)
 
-#Cell 66
+#Cell
 class ToTensor(Transform):
     "Convert item to appropriate tensor class"
     order = 15
 
-#Cell 67
+#Cell
 _dl_tfms = ('after_item','before_batch','after_batch')
 
-#Cell 68
+#Cell
 @delegates()
 class TfmdDL(DataLoader):
     "Transformed `DataLoader`"
@@ -213,7 +213,7 @@ class TfmdDL(DataLoader):
         ctxs = [self.dataset.show(o, ctx=ctx, **kwargs) for o,ctx in zip(db, ctxs)]
         if hasattr(b[0], 'display'): b[0].display(ctxs)
 
-#Cell 87
+#Cell
 @docs
 class Cuda(Transform):
     "Move batch to `device` (defaults to `default_device()`)"
@@ -225,7 +225,7 @@ class Cuda(Transform):
 
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
-#Cell 94
+#Cell
 class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order = 20 #Need to run after CUDA if on the GPU
@@ -237,7 +237,7 @@ class ByteToFloatTensor(Transform):
     def encodes(self, o:TensorMask ): return o.div_(255.).long() if self.div_mask else o.long()
     def decodes(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
 
-#Cell 97
+#Cell
 @docs
 class Normalize(Transform):
     "Normalize/denorm batch of `TensorImage`"
@@ -248,7 +248,7 @@ class Normalize(Transform):
 
     _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
 
-#Cell 98
+#Cell
 def broadcast_vec(dim, ndim, *t, cuda=True):
     "Make a vector broadcastable over `dim` (out of `ndim` total) by prepending and appending unit axes"
     v = [1]*ndim
@@ -256,7 +256,7 @@ def broadcast_vec(dim, ndim, *t, cuda=True):
     f = to_device if cuda else noop
     return [f(tensor(o).view(*v)) for o in t]
 
-#Cell 105
+#Cell
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."

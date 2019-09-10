@@ -2,7 +2,7 @@
 
 __all__ = ['DataSource']
 
-#Cell 1
+#Cell
 from ..torch_basics import *
 from ..test import *
 from .core import *
@@ -10,12 +10,12 @@ from .transform import *
 from .pipeline import *
 from ..notebook.showdoc import show_doc
 
-#Cell 9
+#Cell
 def _mk_subset(self, i):
     tfms = [o.tfms for o in self.tls]
     return TfmdDS(L._gets(self, self.filts[i]), tfms=tfms, do_setup=False, filt=i)
 
-#Cell 10
+#Cell
 class _FiltTfmdList(TfmdList):
     "Like `TfmdList` but with filters and train/valid attribute, for proper setup"
     def __init__(self, items, tfms, filt_idx, do_setup=True, use_list=None):
@@ -30,7 +30,7 @@ class _FiltTfmdList(TfmdList):
 
 _FiltTfmdList.train,_FiltTfmdList.valid = add_props(lambda i,x: x.subset(i), 2)
 
-#Cell 11
+#Cell
 class DataSource(TfmdDS):
     "Applies a `tfm` to filtered subsets of `items`"
     def __init__(self, items, tfms=None, filts=None, do_setup=True):

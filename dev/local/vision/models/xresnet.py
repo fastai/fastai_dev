@@ -2,18 +2,18 @@
 
 __all__ = ['init_cnn', 'XResNet', 'xresnet18', 'xresnet34', 'xresnet50', 'xresnet101', 'xresnet152']
 
-#Cell 0
+#Cell
 from ...torch_basics import *
 from ...test import *
 from ...layers import *
 
-#Cell 3
+#Cell
 def init_cnn(m):
     if getattr(m, 'bias', None) is not None: nn.init.constant_(m.bias, 0)
     if isinstance(m, (nn.Conv2d,nn.Linear)): nn.init.kaiming_normal_(m.weight)
     for l in m.children(): init_cnn(l)
 
-#Cell 4
+#Cell
 class XResNet(nn.Sequential):
     def __init__(self, expansion, layers, c_in=3, c_out=1000):
         stem = []
@@ -38,7 +38,7 @@ class XResNet(nn.Sequential):
             *[ResBlock(expansion, ni if i==0 else nf, nf, stride if i==0 else 1)
               for i in range(blocks)])
 
-#Cell 5
+#Cell
 def xresnet18 (**kwargs): return XResNet(1, [2, 2,  2, 2], **kwargs)
 def xresnet34 (**kwargs): return XResNet(1, [3, 4,  6, 3], **kwargs)
 def xresnet50 (**kwargs): return XResNet(4, [3, 4,  6, 3], **kwargs)

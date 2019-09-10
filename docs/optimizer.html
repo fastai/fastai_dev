@@ -57,7 +57,7 @@ summary: "Define the general fastai optimizer and the variants"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>params</code> will be used to create the <code>param_groups</code> of the optimizer. If it's a colection (or a generator) of parameters, it will be a <a href="/core.html#L"><code>L</code></a> containing one <a href="/core.html#L"><code>L</code></a> with all the parameters. To define multiple parameter groups <code>params</code> should be passed as a collection (or a generator) of <a href="/core.html#L"><code>L</code></a>s.</p>
+<p><code>params</code> will be used to create the <code>param_groups</code> of the optimizer. If it's a collection (or a generator) of parameters, it will be a <a href="/core.html#L"><code>L</code></a> containing one <a href="/core.html#L"><code>L</code></a> with all the parameters. To define multiple parameter groups <code>params</code> should be passed as a collection (or a generator) of <a href="/core.html#L"><code>L</code></a>s.</p>
 <blockquote><p>Note: In PyTorch, <code>model.parameters()</code> returns a generator with all the parameters, that you can directly pass to <a href="/optimizer.html#Optimizer"><code>Optimizer</code></a>.</p>
 </blockquote>
 
@@ -86,7 +86,7 @@ summary: "Define the general fastai optimizer and the variants"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>steppers</code> is a list of functions that will be composed when applying the step. For instance, you can compose a function making the SGD step, with one applying weight decay. Additionaly, each <code>stepper</code> can have a <a href="/core.html#defaults"><code>defaults</code></a> attribute that contains hyper-parameters and their default value. Those are all gathered at initialization, and new value can be passed to overrided those defaults with the <a href="/core.html#defaults"><code>defaults</code></a> kwargs.</p>
+<p><code>steppers</code> is a list of functions that will be composed when applying the step. For instance, you can compose a function making the SGD step, with another one applying weight decay. Additionally, each <code>stepper</code> can have a <a href="/core.html#defaults"><code>defaults</code></a> attribute that contains hyper-parameters and their default value. Those are all gathered at initialization, and new values can be passed to override those defaults with the <a href="/core.html#defaults"><code>defaults</code></a> kwargs.</p>
 <p>Once the defaults have all been pulled off, they are copied as many times as there are <code>param_groups</code> and stored in <code>hypers</code>. To apply different hyper-parameters to different groups (differential learning rates, or no weight decay for certain layers for instance), you will need to adjsut those values after the init.</p>
 
 </div>
@@ -415,7 +415,9 @@ summary: "Define the general fastai optimizer and the variants"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/optimizer.html#Optimizer"><code>Optimizer</code></a> has <code>stats</code> which are functions taking the state associated to a parameter, that parameter, plus the optimizer hyper-parameters and updates the state. That state can then be used by any stepper. It is initiliazed to an empty dictionary the first time we try to access it, then the <code>stat</code> function will have to properly initiliaze it.</p>
+<p><a href="/optimizer.html#Optimizer"><code>Optimizer</code></a> has <code>stats</code> which are functions taking the state associated with a parameter.  <code>stats</code> use that parameter, plus the optimizer hyper-parameters, to update the state. 
+That state can then be used by any stepper.  The best example is a momentum calculation. 
+<code>stats</code> are initialized to an empty dictionary the first time we try to access it, and after that the <code>stat</code> function will have to be properly initialized.</p>
 
 </div>
 </div>

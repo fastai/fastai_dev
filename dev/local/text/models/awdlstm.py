@@ -4,7 +4,7 @@ __all__ = ['dropout_mask', 'RNNDropout', 'WeightDropout', 'EmbeddingDropout', 'A
            'awd_lstm_lm_config', 'awd_lstm_clas_split', 'awd_lstm_clas_config', 'AWD_QRNN', 'awd_qrnn_lm_config',
            'awd_qrnn_clas_config']
 
-#Cell 0
+#Cell
 from ...imports import *
 from ...test import *
 from ...core import *
@@ -17,12 +17,12 @@ from ...data.pipeline import *
 from ..core import *
 from ...notebook.showdoc import show_doc
 
-#Cell 5
+#Cell
 def dropout_mask(x, sz, p):
     "Return a dropout mask of the same type as `x`, size `sz`, with probability `p` to cancel an element."
     return x.new(*sz).bernoulli_(1-p).div_(1-p)
 
-#Cell 7
+#Cell
 class RNNDropout(Module):
     "Dropout with probability `p` that is consistent on the seq_len dimension."
     def __init__(self, p=0.5): self.p=p
@@ -31,10 +31,10 @@ class RNNDropout(Module):
         if not self.training or self.p == 0.: return x
         return x * dropout_mask(x.data, (x.size(0), 1, x.size(2)), self.p)
 
-#Cell 9
+#Cell
 import warnings
 
-#Cell 10
+#Cell
 class WeightDropout(Module):
     "A module that warps another layer in which some weights will be replaced by 0 during training."
 
@@ -65,7 +65,7 @@ class WeightDropout(Module):
             self.module._parameters[layer] = F.dropout(raw_w, p=self.weight_p, training=False)
         if hasattr(self.module, 'reset'): self.module.reset()
 
-#Cell 12
+#Cell
 class EmbeddingDropout(Module):
     "Apply dropout with probabily `embed_p` to an embedding layer `emb`."
 
@@ -82,7 +82,7 @@ class EmbeddingDropout(Module):
         return F.embedding(words, masked_embed, ifnone(self.emb.padding_idx, -1), self.emb.max_norm,
                            self.emb.norm_type, self.emb.scale_grad_by_freq, self.emb.sparse)
 
-#Cell 15
+#Cell
 class AWD_LSTM(Module):
     "AWD-LSTM inspired by https://arxiv.org/abs/1708.02182"
     initrange=0.1
@@ -130,32 +130,32 @@ class AWD_LSTM(Module):
         [r.reset() for r in self.rnns if hasattr(r, 'reset')]
         self.hidden = [self._one_hidden(l) for l in range(self.n_layers)]
 
-#Cell 18
+#Cell
 def awd_lstm_lm_split(model):
     "Split a RNN `model` in groups for differential learning rates."
     groups = [[rnn, dp] for rnn, dp in zip(model[0].rnns, model[0].hidden_dps)]
     return groups + [[model[0].encoder, model[0].encoder_dp, model[1]]]
 
-#Cell 19
+#Cell
 awd_lstm_lm_config = dict(emb_sz=400, n_hid=1152, n_layers=3, pad_token=1, bidir=False, output_p=0.1,
                           hidden_p=0.15, input_p=0.25, embed_p=0.02, weight_p=0.2, tie_weights=True, out_bias=True)
 
-#Cell 20
+#Cell
 def awd_lstm_clas_split(model):
     "Split a RNN `model` in groups for differential learning rates."
     groups = [[model[0].module.encoder, model[0].module.encoder_dp]]
     groups += [[rnn, dp] for rnn, dp in zip(model[0].module.rnns, model[0].module.hidden_dps)]
     return groups + [[model[1]]]
 
-#Cell 21
+#Cell
 awd_lstm_clas_config = dict(emb_sz=400, n_hid=1152, n_layers=3, pad_token=1, bidir=False, output_p=0.4,
                             hidden_p=0.3, input_p=0.4, embed_p=0.05, weight_p=0.5)
 
-#Cell 23
+#Cell
 class AWD_QRNN(AWD_LSTM):
     "Same as an AWD-LSTM, but using QRNNs instead of LSTMs"
     def _one_rnn(self, n_in, n_out, bidir, weight_p, l):
-from .qrnn import QRNN
+        from .qrnn import QRNN
         rnn = QRNN(n_in, n_out, 1, save_prev_x=True, zoneout=0, window=2 if l == 0 else 1, output_gate=True, bidirectional=bidir)
         rnn.layers[0].linear = WeightDropout(rnn.layers[0].linear, weight_p, layer_names='weight')
         return rnn
@@ -165,10 +165,10 @@ from .qrnn import QRNN
         nh = (self.n_hid if l != self.n_layers - 1 else self.emb_sz) // self.n_dir
         return one_param(self).new_zeros(self.n_dir, self.bs, nh)
 
-#Cell 24
+#Cell
 awd_qrnn_lm_config = dict(emb_sz=400, n_hid=1552, n_layers=4, pad_token=1, bidir=False, output_p=0.1,
                           hidden_p=0.15, input_p=0.25, embed_p=0.02, weight_p=0.2, tie_weights=True, out_bias=True)
 
-#Cell 25
+#Cell
 awd_qrnn_clas_config = dict(emb_sz=400, n_hid=1552, n_layers=4, pad_token=1, bidir=False, output_p=0.4,
                             hidden_p=0.3, input_p=0.4, embed_p=0.05, weight_p=0.5)

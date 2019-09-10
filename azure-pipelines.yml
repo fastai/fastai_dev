@@ -41,7 +41,7 @@ jobs:
 
     # Install nbformat
   - script: |
-      pip install nbformat
+      pip install nbformat ipykernel notebook matplotlib pandas requests pyyaml fastprogress pillow scipy numpy typeguard
     displayName: 'Install nbformat'
     continueOnError: false
     
@@ -60,5 +60,14 @@ jobs:
       git status -s # display the status to see which nbs need cleaning up
       if [ -n "$(git status -uno -s)" ]; then echo -e "!!! Detected unstripped out notebooks\n!!!Remember to run tools/run-after-git-clone"; false; fi
     displayName: 'Detect unstripped out notebook commits'
+    failOnStderr: true
+    continueOnError: false
+    
+    # check that there is no diff notebooks/module.
+  - script: |
+      echo "Diff nbs/module"
+      pushd dev
+      if [ -n "$(python diff_nb_script.py)" ]; then echo -e "!!! Diff between nbs and scripts\n!!!Remember to run notebook2script.py or script2notebook.py"; false; fi
+    displayName: 'Detect diff module/nbs'
     failOnStderr: true
     continueOnError: false

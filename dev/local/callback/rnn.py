@@ -2,7 +2,7 @@
 
 __all__ = ['RNNTrainer']
 
-#Cell 0
+#Cell
 from ..imports import *
 from ..test import *
 from ..core import *
@@ -15,7 +15,7 @@ from ..notebook.showdoc import show_doc
 from ..optimizer import *
 from ..learner import *
 
-#Cell 3
+#Cell
 @docs
 class RNNTrainer(Callback):
     "`Callback` that adds AR and TAR regularization in RNN training"

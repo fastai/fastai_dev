@@ -16,9 +16,22 @@ sidebar_d = {
     },
     'Tutorials': {
         'Pets tutorial': '/pets.tutorial',
+        'Imagenette tutorial': '/tutorial.imagenette'
     },
     'Training': {
         'Training loop': '/learner',
+        'Optimizer': '/optimizer',
+        'Metrics': '/metrics',
+        '': {
+            'Callbacks': {
+                'Schedulers': '/callback.schedule',
+                'Hooks and callbacks': '/callback.hook',
+                'Mixed precision': '/callback.fp16',
+                'Mixup': '/callback.mixup',
+                'Trackers': '/callback.tracker',
+                'Progress': '/callback.progress'
+            }
+        },
     },
     'Data': {
         'Data Transforms': '/data.transforms',

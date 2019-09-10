@@ -28,6 +28,20 @@ summary: "Basic image opening/processing functionality"
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#It didn&#39;t use to be necessary to add ToTensor in all but we don&#39;t have the encodes methods defined here otherwise.</span>
+<span class="c1">#TODO: investigate</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Helpers">Helpers<a class="anchor-link" href="#Helpers">&#182;</a></h2>
@@ -59,7 +73,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Image.n_px" class="doc_header"><code>Image.n_px</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.n_px</code>(<strong><code>x</code></strong>:<code>Image</code>)</p>
+<h4 id="Image.n_px" class="doc_header"><code>Image.n_px</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.n_px</code>(<strong><code>x</code></strong>:<code>Image</code>)</p>
 </blockquote>
 
 </div>
@@ -104,7 +118,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Image.shape" class="doc_header"><code>Image.shape</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.shape</code>(<strong><code>x</code></strong>:<code>Image</code>)</p>
+<h4 id="Image.shape" class="doc_header"><code>Image.shape</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.shape</code>(<strong><code>x</code></strong>:<code>Image</code>)</p>
 </blockquote>
 
 </div>
@@ -149,7 +163,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Image.aspect" class="doc_header"><code>Image.aspect</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.aspect</code>(<strong><code>x</code></strong>:<code>Image</code>)</p>
+<h4 id="Image.aspect" class="doc_header"><code>Image.aspect</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.aspect</code>(<strong><code>x</code></strong>:<code>Image</code>)</p>
 </blockquote>
 
 </div>
@@ -194,7 +208,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Image.reshape" class="doc_header"><code>Image.reshape</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.reshape</code>(<strong><code>x</code></strong>:<code>Image</code>, <strong><code>h</code></strong>, <strong><code>w</code></strong>, <strong><code>resample</code></strong>=<em><code>0</code></em>)</p>
+<h4 id="Image.reshape" class="doc_header"><code>Image.reshape</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.reshape</code>(<strong><code>x</code></strong>:<code>Image</code>, <strong><code>h</code></strong>, <strong><code>w</code></strong>, <strong><code>resample</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <p><code>resize</code> <code>x</code> to <code>(w,h)</code></p>
 
@@ -231,7 +245,7 @@ summary: "Basic image opening/processing functionality"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Image.resize_max" class="doc_header"><code>Image.resize_max</code><a href="https://github.com/fastai/fastai_docs/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.resize_max</code>(<strong><code>x</code></strong>:<code>Image</code>, <strong><code>resample</code></strong>=<em><code>0</code></em>, <strong><code>max_px</code></strong>=<em><code>None</code></em>, <strong><code>max_h</code></strong>=<em><code>None</code></em>, <strong><code>max_w</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="Image.resize_max" class="doc_header"><code>Image.resize_max</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/__main__.py#L2" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Image.resize_max</code>(<strong><code>x</code></strong>:<code>Image</code>, <strong><code>resample</code></strong>=<em><code>0</code></em>, <strong><code>max_px</code></strong>=<em><code>None</code></em>, <strong><code>max_h</code></strong>=<em><code>None</code></em>, <strong><code>max_w</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -720,7 +734,7 @@ directly.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="TensorPoint" class="doc_header"><code>class</code> <code>TensorPoint</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/07_vision_core.ipynb#Points" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TensorPoint</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/core.html#TensorBase"><code>TensorBase</code></a></p>
+<h3 id="TensorPoint" class="doc_header"><code>class</code> <code>TensorPoint</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/07_vision_core.ipynb#Points" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TensorPoint</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/torch.core.html#TensorBase"><code>TensorBase</code></a></p>
 </blockquote>
 <p>Basic type for points in an image</p>
 
@@ -939,7 +953,7 @@ directly.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Unless specifically metioned, all the following transforms can be used as single-item transforms (in one of the list in the <code>tfms</code> you pass to a <a href="/pipeline.html#TfmdDS"><code>TfmdDS</code></a> or a <code>Datasource</code>) or tuple transform (in the <code>tuple_tfms</code> you pass to a <a href="/pipeline.html#TfmdDS"><code>TfmdDS</code></a> or a <code>Datasource</code>). The safest way that will work accross applications is to always use them as <code>tuple_tfms</code>. For instance, if you have points or bounding boxes as targets and use <code>ImageResizer</code> as a single-item transform, when you get to <a href="/vision.core.html#PointScaler"><code>PointScaler</code></a> or <a href="/vision.core.html#BBoxScaler"><code>BBoxScaler</code></a> (which are tuple transforms) you won't have the correct size of the image to properly scale your points.</p>
+<p>Unless specifically metioned, all the following transforms can be used as single-item transforms (in one of the list in the <code>tfms</code> you pass to a <a href="/data.pipeline.html#TfmdDS"><code>TfmdDS</code></a> or a <code>Datasource</code>) or tuple transform (in the <code>tuple_tfms</code> you pass to a <a href="/data.pipeline.html#TfmdDS"><code>TfmdDS</code></a> or a <code>Datasource</code>). The safest way that will work accross applications is to always use them as <code>tuple_tfms</code>. For instance, if you have points or bounding boxes as targets and use <code>ImageResizer</code> as a single-item transform, when you get to <a href="/vision.core.html#PointScaler"><code>PointScaler</code></a> or <a href="/vision.core.html#BBoxScaler"><code>BBoxScaler</code></a> (which are tuple transforms) you won't have the correct size of the image to properly scale your points.</p>
 
 </div>
 </div>
@@ -1192,7 +1206,7 @@ directly.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="PointScaler" class="doc_header"><code>class</code> <code>PointScaler</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/07_vision_core.ipynb#Basic-Transforms" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>PointScaler</code>(<strong><code>do_scale</code></strong>=<em><code>True</code></em>, <strong><code>y_first</code></strong>=<em><code>False</code></em>) :: <a href="/transforms.html#ItemTransform"><code>ItemTransform</code></a></p>
+<h3 id="PointScaler" class="doc_header"><code>class</code> <code>PointScaler</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/07_vision_core.ipynb#Basic-Transforms" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>PointScaler</code>(<strong><code>do_scale</code></strong>=<em><code>True</code></em>, <strong><code>y_first</code></strong>=<em><code>False</code></em>) :: <a href="/data.transforms.html#ItemTransform"><code>ItemTransform</code></a></p>
 </blockquote>
 <p>Scale a tensor representing points</p>
 
@@ -1218,8 +1232,8 @@ directly.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_pnt_lbl</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">TensorPoint</span><span class="p">:</span> <span class="k">return</span> <span class="n">TensorPoint</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">pnts</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">_pnt_open</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">PILImage</span><span class="p">:</span> <span class="k">return</span> <span class="n">PILImage</span><span class="p">(</span><span class="n">PILImage</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span><span class="mi">35</span><span class="p">)))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_pnt_lbl</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">TensorPoint</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">pnts</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_pnt_open</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span> <span class="k">return</span> <span class="n">PILImage</span><span class="p">(</span><span class="n">PILImage</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span><span class="mi">35</span><span class="p">)))</span>
 <span class="n">pnt_tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([</span><span class="n">mnist_fn</span><span class="p">],</span> <span class="p">[</span><span class="n">_pnt_open</span><span class="p">,</span> <span class="p">[</span><span class="n">_pnt_lbl</span><span class="p">]])</span>
 <span class="n">pnt_tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">pnt_tds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">after_item</span><span class="o">=</span><span class="p">[</span><span class="n">PointScaler</span><span class="p">(),</span> <span class="n">ToTensor</span><span class="p">()])</span>
 </pre></div>
@@ -1318,7 +1332,7 @@ directly.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="BBoxCategorize" class="doc_header"><code>class</code> <code>BBoxCategorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/07_vision_core.ipynb#Basic-Transforms" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>BBoxCategorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/transforms.html#Transform"><code>Transform</code></a></p>
+<h3 id="BBoxCategorize" class="doc_header"><code>class</code> <code>BBoxCategorize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/07_vision_core.ipynb#Basic-Transforms" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>BBoxCategorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>) :: <a href="/data.transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Reversible transform of category string to <code>vocab</code> id</p>
 
@@ -1359,7 +1373,7 @@ directly.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_coco_lbl</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">BBox</span><span class="p">:</span> <span class="k">return</span> <span class="n">BBox</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_coco_lbl</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">BBox</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
 <span class="n">tcat</span> <span class="o">=</span> <span class="n">BBoxCategorize</span><span class="p">()</span>
 <span class="n">coco_tds</span> <span class="o">=</span> <span class="n">TfmdDS</span><span class="p">([</span><span class="n">coco_fn</span><span class="p">],</span> <span class="p">[</span><span class="n">PILImage</span><span class="o">.</span><span class="n">create</span><span class="p">,</span> <span class="p">[</span><span class="n">_coco_lbl</span><span class="p">,</span> <span class="n">tcat</span><span class="p">]])</span>
 <span class="n">coco_tdl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">coco_tds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">after_item</span><span class="o">=</span><span class="p">[</span><span class="n">BBoxScaler</span><span class="p">(),</span> <span class="n">ToTensor</span><span class="p">()])</span>

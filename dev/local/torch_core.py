@@ -5,22 +5,22 @@ __all__ = ['tensor', 'set_seed', 'TensorBase', 'concat', 'Chunks', 'apply', 'to_
            'one_hot_decode', 'trainable_params', 'bn_bias_params', 'make_cross_image', 'show_title', 'show_image',
            'show_titled_image', 'show_image_batch', 'flatten_check']
 
-#Cell 1
+#Cell
 from .test import *
 from .imports import *
 from .torch_imports import *
 from .core import *
 from .notebook.showdoc import show_doc
 
-#Cell 2
+#Cell
 if torch.cuda.is_available(): torch.cuda.set_device(int(os.environ.get('DEFAULT_GPU') or 0))
 
-#Cell 5
+#Cell
 @patch
 def __array_eq__(self:Tensor,b):
     return torch.equal(self,b) if self.dim() else self==b
 
-#Cell 6
+#Cell
 def tensor(x, *rest, **kwargs):
     "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
     if len(rest): x = (x,)+rest
@@ -39,7 +39,7 @@ def tensor(x, *rest, **kwargs):
         return res.long()
     return res
 
-#Cell 8
+#Cell
 def set_seed(s):
     "Set random seed for `random`, `torch`, and `numpy` (where available)"
     try: torch.manual_seed(s)
@@ -48,11 +48,11 @@ def set_seed(s):
     except NameError: pass
     random.seed(s)
 
-#Cell 10
+#Cell
 def _fa_rebuild_tensor (cls, *args, **kwargs): return cls(torch._utils._rebuild_tensor_v2(*args, **kwargs))
 def _fa_rebuild_qtensor(cls, *args, **kwargs): return cls(torch._utils._rebuild_qtensor  (*args, **kwargs))
 
-#Cell 11
+#Cell
 class TensorBase(Tensor, metaclass=BypassNewMeta):
     def _new_meta(self, *args, **kwargs): return tensor(self)
 
@@ -63,7 +63,7 @@ class TensorBase(Tensor, metaclass=BypassNewMeta):
         f = _fa_rebuild_qtensor if self.is_quantized else  _fa_rebuild_tensor
         return (f, args + (self.requires_grad, OrderedDict()))
 
-#Cell 12
+#Cell
 def _patch_tb():
     def get_f(fn):
         def _f(self, *args, **kwargs):
@@ -84,7 +84,7 @@ def _patch_tb():
 
 _patch_tb()
 
-#Cell 15
+#Cell
 @patch
 def tensored(self:L):
     "`mapped(tensor)`"
@@ -98,7 +98,7 @@ def cat  (self:L, dim=0):
     "Same as `torch.cat`"
     return torch.cat  (list(self.tensored()), dim=dim)
 
-#Cell 24
+#Cell
 def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"
     if not len(ls): return []
@@ -111,7 +111,7 @@ def concat(*ls):
         else: res = L(res)
     return retain_type(res, it)
 
-#Cell 26
+#Cell
 class Chunks:
     "Slice and int indexing into a list of lists"
     def __init__(self, chunks, lens=None):
@@ -139,7 +139,7 @@ class Chunks:
         cl = self.cumlens[docidx]
         return docidx,i-cl
 
-#Cell 31
+#Cell
 def apply(func, x, *args, **kwargs):
     "Apply `func` recursively to `x`, passing on args"
     if is_listy(x): return type(x)([apply(func, o, *args, **kwargs) for o in x])
@@ -147,7 +147,7 @@ def apply(func, x, *args, **kwargs):
     res = func(x, *args, **kwargs)
     return res if x is None else retain_type(res, x)
 
-#Cell 32
+#Cell
 def to_detach(b, cpu=True):
     "Recursively detach lists of tensors in `b `; put them on the CPU if `cpu=True`."
     def _inner(x, cpu=True):
@@ -156,21 +156,21 @@ def to_detach(b, cpu=True):
         return x.cpu() if cpu else x
     return apply(_inner, b, cpu=cpu)
 
-#Cell 33
+#Cell
 def to_half(b):
     "Recursively map lists of tensors in `b ` to FP16."
     return apply(lambda x: x.half() if torch.is_floating_point(x) else x, b)
 
-#Cell 34
+#Cell
 def to_float(b):
     "Recursively map lists of int tensors in `b ` to float."
     return apply(lambda x: x.float() if torch.is_floating_point(x) else x, b)
 
-#Cell 35
+#Cell
 # None: True if available; True: error if not availabe; False: use CPU
 defaults.use_cuda = None
 
-#Cell 36
+#Cell
 def default_device(use_cuda=-1):
     "Return or set default device; `use_cuda`: None - CUDA if available; True - error if not availabe; False - CPU"
     if use_cuda != -1: defaults.use_cuda=use_cuda
@@ -178,24 +178,24 @@ def default_device(use_cuda=-1):
     assert torch.cuda.is_available() or not use
     return torch.device(torch.cuda.current_device()) if use else torch.device('cpu')
 
-#Cell 38
+#Cell
 def to_device(b, device=None):
     "Recursively put `b` on `device`."
     if device is None: device=default_device()
     def _inner(o): return o.to(device, non_blocking=True) if isinstance(o,Tensor) else o
     return apply(_inner, b)
 
-#Cell 40
+#Cell
 def to_cpu(b):
     "Recursively map lists of tensors in `b ` to the cpu."
     return to_device(b,'cpu')
 
-#Cell 43
+#Cell
 def to_np(x):
     "Convert a tensor to a numpy array."
     return apply(lambda o: o.data.cpu().numpy(), x)
 
-#Cell 45
+#Cell
 def item_find(x, idx=0):
     "Recursively takes the `idx`-th element of `x`"
     if is_listy(x): return item_find(x[idx])
@@ -204,39 +204,39 @@ def item_find(x, idx=0):
         return item_find(x[key])
     return x
 
-#Cell 46
+#Cell
 def find_device(b):
     "Recursively search the device of `b`."
     return item_find(b).device
 
-#Cell 48
+#Cell
 def find_bs(b):
     "Recursively search the batch size of `b`."
     return item_find(b).shape[0]
 
-#Cell 53
+#Cell
 class Module(nn.Module, metaclass=PrePostInitMeta):
     "Same as `nn.Module`, but no need for subclasses to call `super().__init__`"
     def __pre_init__(self): super().__init__()
     def __init__(self): pass
 
-#Cell 56
+#Cell
 def one_hot(x, c):
     "One-hot encode `x` with `c` classes."
     res = torch.zeros(c, dtype=torch.uint8)
     res[L(x)] = 1.
     return res
 
-#Cell 58
+#Cell
 def one_hot_decode(x, vocab=None):
     return L(vocab[i] if vocab else i for i,x_ in enumerate(x) if x_==1)
 
-#Cell 60
+#Cell
 def trainable_params(m):
     "Return all trainable parameters of `m`"
     return [p for p in m.parameters() if p.requires_grad]
 
-#Cell 62
+#Cell
 def bn_bias_params(m):
     "Return all bias and BatchNorm parameters"
     if isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)): return list(m.parameters())
@@ -244,7 +244,7 @@ def bn_bias_params(m):
     if hasattr(m, 'bias'): res.append(m.bias)
     return res
 
-#Cell 65
+#Cell
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:
@@ -257,7 +257,7 @@ def make_cross_image(bw=True):
         im[1,:,2] = 1.
     return im
 
-#Cell 68
+#Cell
 def show_title(o, ax=None, ctx=None, label=None, **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
@@ -268,7 +268,7 @@ def show_title(o, ax=None, ctx=None, label=None, **kwargs):
         ax = ax.append(pd.Series({label: o}))
     return ax
 
-#Cell 70
+#Cell
 def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
     "Show a PIL or PyTorch image on `ax`."
     ax = ifnone(ax,ctx)
@@ -285,12 +285,12 @@ def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
     ax.axis('off')
     return ax
 
-#Cell 78
+#Cell
 def show_titled_image(o, **kwargs):
     "Call `show_image` destructuring `o` to `(img,title)`"
     show_image(o[0], title=str(o[1]), **kwargs)
 
-#Cell 79
+#Cell
 def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs):
     "Display batch `b` in a grid of size `items` with `cols` width"
     rows = (items+cols-1) // cols
@@ -298,7 +298,7 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
     for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
-#Comes from 20_metrics.ipynb, cell 6
+#Comes from 20_metrics.ipynb, cell
 def flatten_check(inp, targ, detach=True):
     "Check that `out` and `targ` have the same number of elements and flatten them."
     inp,targ = to_detach(inp.contiguous().view(-1)),to_detach(targ.contiguous().view(-1))

@@ -4,7 +4,7 @@ __all__ = ['Image', 'ToTensor', 'n_px', 'shape', 'aspect', 'load_image', 'PILBas
            'TensorPoint', 'get_annotations', 'BBox', 'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes',
            'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad']
 
-#Cell 1
+#Cell
 from ..torch_basics import *
 from ..test import *
 from ..data.all import *
@@ -12,25 +12,25 @@ from ..notebook.showdoc import show_doc
 
 from PIL import Image
 
-#Cell 7
+#Cell
 @patch_property
 def n_px(x: Image.Image): return x.size[0] * x.size[1]
 
-#Cell 10
+#Cell
 @patch_property
 def shape(x: Image.Image): return x.size[1],x.size[0]
 
-#Cell 13
+#Cell
 @patch_property
 def aspect(x: Image.Image): return x.size[0]/x.size[1]
 
-#Cell 16
+#Cell
 @patch
 def reshape(x: Image.Image, h, w, resample=0):
     "`resize` `x` to `(w,h)`"
     return x.resize((w,h), resample=resample)
 
-#Cell 19
+#Cell
 @patch
 def resize_max(x: Image.Image, resample=0, max_px=None, max_h=None, max_w=None):
     h,w = x.shape
@@ -39,7 +39,7 @@ def resize_max(x: Image.Image, resample=0, max_px=None, max_h=None, max_w=None):
     if max_w and w>max_w: h,w = h*max_w/w,w*max_w/w
     return x.reshape(round(h), round(w), resample=resample)
 
-#Cell 25
+#Cell
 def load_image(fn, mode=None, **kwargs):
     "Open and load a `PIL.Image` and convert to `mode`"
     im = Image.open(fn, **kwargs)
@@ -47,7 +47,7 @@ def load_image(fn, mode=None, **kwargs):
     im = im._new(im.im)
     return im.convert(mode) if mode else im
 
-#Cell 26
+#Cell
 class PILBase(Image.Image, metaclass=BypassNewMeta):
     default_dl_tfms = ByteToFloatTensor
     _show_args = {'cmap':'viridis'}
@@ -61,16 +61,16 @@ class PILBase(Image.Image, metaclass=BypassNewMeta):
         "Show image using `merge(self._show_args, kwargs)`"
         return show_image(self, ctx=ctx, **merge(self._show_args, kwargs))
 
-#Cell 27
+#Cell
 class PILImage(PILBase): pass
 
-#Cell 28
+#Cell
 class PILImageBW(PILImage): _show_args,_open_args = {'cmap':'Greys'},{'mode': 'L'}
 
-#Cell 33
+#Cell
 class PILMask(PILBase): _open_args,_show_args = {'mode':'L'},{'alpha':0.5, 'cmap':'tab20'}
 
-#Cell 43
+#Cell
 class TensorPoint(TensorBase):
     "Basic type for points in an image"
     _show_args = dict(s=10, marker='.', c='r')
@@ -85,7 +85,7 @@ class TensorPoint(TensorBase):
         ctx.scatter(self[:, 0], self[:, 1], **{**self._show_args, **kwargs})
         return ctx
 
-#Cell 48
+#Cell
 def get_annotations(fname, prefix=None):
     "Open a COCO style json in `fname` and returns the lists of filenames (with maybe `prefix`) and labelled bboxes."
     annot_dict = json.load(open(fname))
@@ -99,7 +99,7 @@ def get_annotations(fname, prefix=None):
     ids = list(id2images.keys())
     return [id2images[k] for k in ids], [(id2bboxes[k], id2cats[k]) for k in ids]
 
-#Cell 50
+#Cell
 from matplotlib import patches, patheffects
 
 def _draw_outline(o, lw):
@@ -115,7 +115,7 @@ def _draw_rect(ax, b, color='white', text=None, text_size=14, hw=True, rev=False
         patch = ax.text(lx,ly, text, verticalalignment='top', color=color, fontsize=text_size, weight='bold')
         _draw_outline(patch,1)
 
-#Cell 51
+#Cell
 class BBox(TupleBase):
     "Basic type for a list of bounding boxes in an image"
     def show(self, ctx=None, **kwargs):
@@ -127,7 +127,7 @@ class BBox(TupleBase):
 
     bbox,lbl = add_props(lambda i,self: self[i])
 
-#Cell 52
+#Cell
 class TensorBBox(TupleBase):
     "Basic type for a tensor of bounding boxes in an image"
     @classmethod
@@ -135,14 +135,14 @@ class TensorBBox(TupleBase):
 
     bbox,lbl = add_props(lambda i,self: self[i])
 
-#Cell 61
+#Cell
 def image2byte(img):
     "Transform image to byte tensor in `c*h*w` dim order."
     res = torch.ByteTensor(torch.ByteStorage.from_buffer(img.tobytes()))
     w,h = img.size
     return res.view(h,w,-1).permute(2,0,1)
 
-#Cell 62
+#Cell
 @ToTensor
 def encodes(self, o:PILImage): return TensorImage(image2byte(o))
 @ToTensor
@@ -150,7 +150,7 @@ def encodes(self, o:PILImageBW): return TensorImageBW(image2byte(o))
 @ToTensor
 def encodes(self, o:PILMask):  return TensorMask(image2byte(o)[0])
 
-#Cell 68
+#Cell
 def _scale_pnts(x, y, do_scale=True,y_first=False):
     if y_first: y = y.flip(1)
     sz = [x.shape[-1], x.shape[-2]] if isinstance(x, Tensor) else x.size
@@ -160,7 +160,7 @@ def _unscale_pnts(x, y):
     sz = [x.shape[-1], x.shape[-2]] if isinstance(x, Tensor) else x.size
     return (y+1) * tensor(sz).float()/2
 
-#Cell 69
+#Cell
 #TODO: Transform on a whole tuple lose types, see if we can simplify that?
 class PointScaler(ItemTransform):
     "Scale a tensor representing points"
@@ -170,7 +170,7 @@ class PointScaler(ItemTransform):
 
 TensorPoint.default_ds_tfms = PointScaler
 
-#Cell 74
+#Cell
 class BBoxScaler(PointScaler):
     "Scale a tensor representing bounding boxes"
     def encodes(self, o):
@@ -183,7 +183,7 @@ class BBoxScaler(PointScaler):
         scaled_bb = _unscale_pnts(x, y.bbox.view(-1,2))
         return (x, TensorBBox((scaled_bb.view(-1,4), y.lbl)))
 
-#Cell 75
+#Cell
 class BBoxCategorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order,state_args=1,'vocab'
@@ -205,7 +205,7 @@ class BBoxCategorize(Transform):
 
 BBox.default_type_tfms,BBox.default_ds_tfms = BBoxCategorize,BBoxScaler
 
-#Cell 76
+#Cell
 #TODO tests
 def bb_pad(samples, pad_idx=0):
     "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."

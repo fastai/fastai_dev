@@ -3,7 +3,7 @@
 __all__ = ['Hook', 'hook_output', 'Hooks', 'hook_outputs', 'has_params', 'HookCallback', 'ActivationStats',
            'total_params', 'layer_info']
 
-#Cell 0
+#Cell
 from ..torch_basics import *
 from ..test import *
 from ..layers import *
@@ -12,7 +12,7 @@ from ..notebook.showdoc import show_doc
 from ..optimizer import *
 from ..learner import *
 
-#Cell 11
+#Cell
 @docs
 class Hook():
     "Create a hook on `m` with `hook_func`."
@@ -39,14 +39,14 @@ class Hook():
     _docs = dict(__enter__="Register the hook",
                  __exit__="Remove the hook")
 
-#Cell 23
+#Cell
 def _hook_inner(m,i,o): return o if isinstance(o,Tensor) or is_listy(o) else list(o)
 
 def hook_output(module, detach=True, cpu=False, grad=False):
     "Return a `Hook` that stores activations of `module` in `self.stored`"
     return Hook(module, _hook_inner, detach=detach, cpu=cpu, is_forward=not grad)
 
-#Cell 28
+#Cell
 @docs
 class Hooks():
     "Create several hooks on the modules in `ms` with `hook_func`."
@@ -70,17 +70,17 @@ class Hooks():
                  __enter__="Register the hooks",
                  __exit__="Remove the hooks")
 
-#Cell 37
+#Cell
 def hook_outputs(modules, detach=True, cpu=False, grad=False):
     "Return `Hooks` that store activations of all `modules` in `self.stored`"
     return Hooks(modules, _hook_inner, detach=detach, cpu=cpu, is_forward=not grad)
 
-#Cell 43
+#Cell
 def has_params(m):
     "Check if `m` has at least one parameter"
     return len(list(m.parameters())) > 0
 
-#Cell 45
+#Cell
 class HookCallback(Callback):
     "`Callback` that can be used to register hooks on `modules`"
     def __init__(self, hook=None, modules=None, do_remove=True, is_forward=True, detach=True, cpu=False):
@@ -103,7 +103,7 @@ class HookCallback(Callback):
 
     def __del__(self): self._remove()
 
-#Cell 52
+#Cell
 @docs
 class ActivationStats(HookCallback):
     "Callback that record the mean and std of activations."
@@ -126,14 +126,14 @@ class ActivationStats(HookCallback):
 
     _docs = dict(hook="Take the mean and std of the output")
 
-#Cell 58
+#Cell
 def total_params(m):
     "Give the number of parameters of a module and if it's trainable or not"
     params = sum([p.numel() for p in m.parameters()])
     trains = [p.requires_grad for p in m.parameters()]
     return params, (False if len(trains)==0 else trains[0])
 
-#Cell 60
+#Cell
 def layer_info(learn):
     def _track(m, i, o):
         return (m.__class__.__name__,)+total_params(m)+(apply(lambda x:x.shape, o),)
@@ -143,12 +143,12 @@ def layer_info(learn):
         _ = learn.model.eval()(apply(lambda o:o[:1], xb))
         return h.stored
 
-#Cell 64
+#Cell
 def _print_shapes(o, bs):
     if isinstance(o, torch.Size): return ' x '.join([str(bs)] + [str(t) for t in o[1:]])
     else: return [_print_shapes(x, bs) for x in o]
 
-#Cell 65
+#Cell
 @patch
 def summary(self:Learner):
     "Print a summary of the model, optimizer and loss function."
