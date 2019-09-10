@@ -65,9 +65,9 @@ def test_is(a,b):
 
 #Cell
 def test_shuffled(a,b):
-    "`test` that `a` and `b` are shuffled versions of the same set of items"
+    "`test` that `a` and `b` are shuffled versions of the same sequence of items"
     test_ne(a, b)
-    test_eq(set(a), set(b))
+    test_eq(sorted(a), sorted(b))
 
 #Cell
 def test_stdout(f, exp, regex=False):
