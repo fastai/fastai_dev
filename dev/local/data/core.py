@@ -182,8 +182,7 @@ class TfmdDL(DataLoader):
         super().__init__(dataset, bs=bs, shuffle=shuffle, num_workers=num_workers, **kwargs)
 
     def _retain_dl(self,b):
-        it  = self.do_item(0)
-        its = self.after_batch(self.do_batch([it]))
+        its = self.after_batch(self.do_batch([self.do_item(0)]))
         self._retain_dl = partial(retain_types, typs=L(its).mapped(type))
         # we just replaced ourselves, so this is *not* recursive! :)
         return self._retain_dl(b)

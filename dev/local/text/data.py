@@ -56,6 +56,7 @@ class Numericalize(Transform):
 @delegates()
 class LMDataLoader(TfmdDL):
     def __init__(self, dataset, lens=None, cache=2, bs=64, seq_len=72, num_workers=0, **kwargs):
+        super().__init__(dataset=dataset, bs=bs, num_workers=num_workers, **kwargs)
         self.items = ReindexCollection([(o[0] if isinstance(o, tuple) else o) for o in dataset], cache=cache)
         self.seq_len = seq_len
         if lens is None: lens = [len(o) for o in self.items]
@@ -64,10 +65,6 @@ class LMDataLoader(TfmdDL):
         self.m = round_multiple(sum(lens)-1, bs*seq_len, round_down=True)
         self.n = self.m//(self.seq_len)
         self.spb = self.n//bs
-        self.chunks = Chunks(self.items, self.lens)
-        #Have to put the super here cause it tries to access elements, but then changes self.n
-        super().__init__(dataset=dataset, bs=bs, num_workers=num_workers, **kwargs)
-        self.n = self.m//(self.seq_len)
 
     def shuffle_fn(self,idxs): return idxs
     def before_iter(self):
