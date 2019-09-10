@@ -116,7 +116,7 @@ def _draw_rect(ax, b, color='white', text=None, text_size=14, hw=True, rev=False
         _draw_outline(patch,1)
 
 #Cell 51
-class BBox(tuple):
+class BBox(TupleBase):
     "Basic type for a list of bounding boxes in an image"
     def show(self, ctx=None, **kwargs):
         for b,l in zip(self.bbox, self.lbl):
@@ -128,10 +128,10 @@ class BBox(tuple):
     bbox,lbl = add_props(lambda i,self: self[i])
 
 #Cell 52
-class TensorBBox(tuple):
+class TensorBBox(TupleBase):
     "Basic type for a tensor of bounding boxes in an image"
     @classmethod
-    def create(cls, x): return cls((tensor(x[0]).view(-1, 4).float(), x[1]))
+    def create(cls, x): return cls(tensor(x[0]).view(-1, 4).float(), x[1])
 
     bbox,lbl = add_props(lambda i,self: self[i])
 

@@ -6,10 +6,10 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'tuplify', 'replicate', 'uniqueify', 'setify',
            'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le',
            'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type',
-           'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'trace', 'compose', 'maps',
-           'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'sort_by_run',
-           'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake',
-           'PrettyString', 'one_param']
+           'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'TupleTitled', 'trace',
+           'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self',
+           'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint',
+           'camel2snake', 'PrettyString', 'one_param']
 
 #Cell 1
 from .test import *
@@ -555,11 +555,22 @@ class Str(str, ShowTitle): pass
 add_docs(Int, "An `int` with `show`"); add_docs(Str, "An `str` with `show`"); add_docs(Float, "An `float` with `show`")
 
 #Cell 180
-class TupleBase(tuple, ShowTitle):
-    "A `tuple` with `show` and `__neg__`"
+class TupleBase(tuple):
+    "A `tuple` with `__neg__` and more friendly __init__ behavior"
+    def __new__(cls, x=None, *rest):
+        if x is None: x = ()
+        if not is_listy(x): x = (x,)
+        x = tuple(x)
+        return super().__new__(cls, x+rest if rest else x)
+
     def __neg__(self): return tuple(map(operator.neg,self))
 
 #Cell 182
+class TupleTitled(TupleBase, ShowTitle):
+    "A `TupleBase` with `show`"
+    pass
+
+#Cell 184
 def trace(f):
     "Add `set_trace` to an existing function `f`"
     def _inner(*args,**kwargs):
@@ -567,7 +578,7 @@ def trace(f):
         return f(*args,**kwargs)
     return _inner
 
-#Cell 183
+#Cell 185
 def compose(*funcs, order=None):
     "Create a function that composes all functions in `funcs`, passing along remaining `*args` and `**kwargs` to all"
     funcs = L(funcs)
@@ -577,14 +588,14 @@ def compose(*funcs, order=None):
         return x
     return _inner
 
-#Cell 185
+#Cell 187
 def maps(*args, retain=noop):
     "Like `map`, except funcs are composed first"
     f = compose(*args[:-1])
     def _f(b): return retain(f(b), b)
     return map(_f, args[-1])
 
-#Cell 187
+#Cell 189
 def partialler(f, *args, order=None, **kwargs):
     "Like `functools.partial` but also copies over docstring"
     fnew = partial(f,*args,**kwargs)
@@ -593,16 +604,16 @@ def partialler(f, *args, order=None, **kwargs):
     elif hasattr(f,'order'): fnew.order=f.order
     return fnew
 
-#Cell 189
+#Cell 191
 def instantiate(t):
     "Instantiate `t` if it's a type, otherwise do nothing"
     return t() if isinstance(t, type) else t
 
-#Cell 191
+#Cell 193
 mk_class('_Arg', 'i')
 _0,_1,_2,_3,_4 = _Arg(0),_Arg(1),_Arg(2),_Arg(3),_Arg(4)
 
-#Cell 193
+#Cell 195
 class bind:
     "Same as `partial`, except you can use `_0` `_1` etc param placeholders"
     def __init__(self, fn, *pargs, **pkwargs):
@@ -613,7 +624,7 @@ class bind:
         fargs = L(args[x.i] if isinstance(x, _Arg) else x for x in self.pargs) + args[self.maxi+1:]
         return self.fn(*fargs, **{**self.pkwargs, **kwargs})
 
-#Cell 195
+#Cell 197
 class _Self:
     "An alternative to `lambda` for calling methods on passed object."
     def __init__(self): self.nms,self.args,self.kwargs,self.ready = [],[],[],True
@@ -645,7 +656,7 @@ class _SelfCls:
 
 Self = _SelfCls()
 
-#Cell 200
+#Cell 202
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 @patch
 def ls(self:Path, file_type=None, file_exts=None):
@@ -654,7 +665,7 @@ def ls(self:Path, file_type=None, file_exts=None):
     if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
     return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
 
-#Cell 210
+#Cell 212
 def _is_instance(f, gs):
     tst = [g if type(g) in [type, 'function'] else g.__class__ for g in gs]
     for g in tst:
@@ -679,21 +690,21 @@ def sort_by_run(fs):
         else: raise Exception("Impossible to sort")
     return res
 
-#Cell 213
+#Cell 215
 def display_df(df):
     "Display `df` in a notebook or defaults to print"
     try: from IPython.display import display, HTML
     except: return print(df)
     display(HTML(df.to_html()))
 
-#Cell 214
+#Cell 216
 def round_multiple(x, mult, round_down=False):
     "Round `x` to nearest multiple of `mult`"
     def _f(x_): return (int if round_down else round)(x_/mult)*mult
     res = L(x).mapped(_f)
     return res if is_listy(x) else res[0]
 
-#Cell 216
+#Cell 218
 def num_cpus():
     "Get number of cpus"
     try:                   return len(os.sched_getaffinity(0))
@@ -701,7 +712,7 @@ def num_cpus():
 
 defaults.cpus = num_cpus()
 
-#Cell 217
+#Cell 219
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))
