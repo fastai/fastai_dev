@@ -102,12 +102,12 @@ mk_class('event', **{o:o for o in _events},
 defaults.callbacks = [TrainEvalCallback]
 
 class Learner():
-    "Group together a `model`, some `data` and a `loss_func` to handle training"
-    def __init__(self, model, data, loss_func, opt_func=SGD, lr=1e-2, splitter=trainable_params,
+    "Group together a `model`, some `dbunch` and a `loss_func` to handle training"
+    def __init__(self, model, dbunch, loss_func, opt_func=SGD, lr=1e-2, splitter=trainable_params,
                  cbs=None, cb_funcs=None, metrics=None, path=None, wd_bn_bias=False):
-        self.model,self.data,self.loss_func = model,data,loss_func
+        self.model,self.dbunch,self.loss_func = model,dbunch,loss_func
         self.opt_func,self.lr,self.splitter,self.wd_bn_bias = opt_func,lr,splitter,wd_bn_bias
-        self.path = path if path is not None else getattr(data, 'path', Path('.'))
+        self.path = path if path is not None else getattr(dbunch, 'path', Path('.'))
 
         self.metrics = [m if isinstance(m, Metric) else AvgMetric(m) for m in L(metrics)]
         self.training,self.logger,self.opt = False,print,None
@@ -180,7 +180,7 @@ class Learner():
 
     def _do_epoch_train(self):
         "Execute the training part of the `epoch`-th epoch"
-        self.dl = self.data.train_dl
+        self.dl = self.dbunch.train_dl
         try:
             self('begin_train')
             self.all_batches()
@@ -190,7 +190,7 @@ class Learner():
     def _do_epoch_validate(self):
         "Execute the validation part of an epoch"
         try:
-            self.dl = self.data.valid_dl
+            self.dl = self.dbunch.valid_dl
             self('begin_validate')
             with torch.no_grad(): self.all_batches()
         except CancelValidException: self('after_cancel_validate')
@@ -216,7 +216,7 @@ class Learner():
 
     def validate(self, dl=None, cbs=None):
         "Validate on `dl` with potential new `cbs`."
-        self.dl = dl or self.data.valid_dl
+        self.dl = dl or self.dbunch.valid_dl
         with self.added_cbs(cbs), self.no_logging():
             self(['begin_fit', 'begin_epoch', 'begin_validate'])
             self.all_batches()
@@ -224,8 +224,8 @@ class Learner():
         return self.recorder.values[-1]
 
     def get_preds(self, ds_idx=1, with_loss=False):
-        "Get the predictions and targets on the `ds_idx`-th dataset, optionally `with_loss`"
-        self.dl = self.data.dls[ds_idx]
+        "Get the predictions and targets on the `ds_idx`-th dbunchset, optionally `with_loss`"
+        self.dl = self.dbunch.dls[ds_idx]
         cb = GatherPredsCallback(with_loss=with_loss)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
             self(['begin_fit', 'begin_epoch', 'begin_validate'])

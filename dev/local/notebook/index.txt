@@ -502,7 +502,7 @@
   "convert_nb": "93_notebook_export2html.ipynb",
   "convert_all": "93_notebook_export2html.ipynb",
   "convert_post": "93_notebook_export2html.ipynb",
-  "synth_data": "95_utils_test.ipynb",
+  "synth_dbunch": "95_utils_test.ipynb",
   "RegModel": "95_utils_test.ipynb",
   "synth_learner": "95_utils_test.ipynb",
   "download_url": "96_data_external.ipynb",

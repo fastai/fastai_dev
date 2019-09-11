@@ -138,7 +138,7 @@ def layer_info(learn):
     def _track(m, i, o):
         return (m.__class__.__name__,)+total_params(m)+(apply(lambda x:x.shape, o),)
     layers = [m for m in flatten_model(learn.model)]
-    xb,_ = learn.data.train_dl.one_batch()
+    xb,_ = learn.dbunch.train_dl.one_batch()
     with Hooks(layers, _track) as h:
         _ = learn.model.eval()(apply(lambda o:o[:1], xb))
         return h.stored
@@ -153,7 +153,7 @@ def _print_shapes(o, bs):
 def summary(self:Learner):
     "Print a summary of the model, optimizer and loss function."
     infos = layer_info(self)
-    xb,_ = self.data.train_dl.one_batch()
+    xb,_ = self.dbunch.train_dl.one_batch()
     n,bs = 64,find_bs(xb)
     inp_sz = _print_shapes(apply(lambda x:x.shape, xb), bs)
     res = f"{self.model.__class__.__name__} (Input shape: {inp_sz})\n"
