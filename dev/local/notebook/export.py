@@ -327,6 +327,12 @@ def _deal_loc_import(code, fname):
     return '\n'.join(lines)
 
 #Cell
+def _update_pkl(fname, cell):
+    dic = pickle.load(open((Path.cwd()/'lib.pkl'), 'rb')) if (Path.cwd()/'lib.pkl').exists() else collections.defaultdict(list)
+    dic[fname].append(cell)
+    pickle.dump(dic, open((Path.cwd()/'lib.pkl'), 'wb'))
+
+#Cell
 def _script2notebook(fname, dic, silent=False):
     "Put the content of `fname` back in the notebooks it came from."
     if os.environ.get('IN_TEST',0): return  # don't export if running tests

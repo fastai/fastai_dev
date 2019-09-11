@@ -191,7 +191,7 @@ class BBoxCategorize(Transform):
         self.vocab = vocab
         self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
 
-    def setup(self, dsrc):
+    def setups(self, dsrc):
         if not dsrc: return
         dsrc = getattr(dsrc,'train',dsrc)
         vals = set()

@@ -153,6 +153,7 @@ class Transform(metaclass=_TfmMeta):
     def use_as_item(self): return ifnone(self.as_item_force, self.as_item)
     def __call__(self, x, **kwargs): return self._call('encodes', x, **kwargs)
     def decode  (self, x, **kwargs): return self._call('decodes', x, **kwargs)
+    def setup(self, items=None): return getattr(self,'setups',noop)(items)
     def __repr__(self): return f'{self.__class__.__name__}: {self.use_as_item} {self.encodes} {self.decodes}'
 
     def _call(self, fn, x, filt=None, **kwargs):
@@ -165,7 +166,7 @@ class Transform(metaclass=_TfmMeta):
     def _do_call(self, f, x, **kwargs):
         return x if f is None else retain_type(f(x, **kwargs), x, f.returns_none(x))
 
-add_docs(Transform, decode="Delegate to `decodes` to undo transform")
+add_docs(Transform, decode="Delegate to `decodes` to undo transform", setup="Delegate to `setups` to set up transform")
 
 #Cell
 class InplaceTransform(Transform):

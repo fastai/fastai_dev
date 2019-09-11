@@ -51,6 +51,7 @@ def batch_to_samples(b, max_n=10):
 #Cell
 def mk_transform(f, as_item=True):
     "Convert function `f` to `Transform` if it isn't already one"
+    f = instantiate(f)
     return f if isinstance(f,Transform) else Transform(f, as_item=as_item)
 
 #Cell
@@ -73,8 +74,7 @@ class Pipeline(GetAttr):
         for t in tfms: self.add(t,items)
 
     def add(self,t, items=None):
-        getattr(t, 'setup', noop)(items)
-        getattr(t, 'process', noop)(items)
+        t.setup(items)
         self.fs.append(t)
 
     def __call__(self, o): return compose_tfms(o, tfms=self.fs, filt=self.filt)

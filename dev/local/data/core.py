@@ -117,7 +117,7 @@ class Categorize(Transform):
         self.add_na = add_na
         self.vocab = None if vocab is None else CategoryMap(vocab, add_na=add_na)
 
-    def setup(self, dsrc):
+    def setups(self, dsrc):
         if self.vocab is None and dsrc: self.vocab = CategoryMap(getattr(dsrc,'train',dsrc), add_na=self.add_na)
 
     def encodes(self, o): return self.vocab.o2i[o]
@@ -133,7 +133,7 @@ class MultiCategory(L):
 #Cell
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
-    def setup(self, dsrc):
+    def setups(self, dsrc):
         if not dsrc: return
         if self.vocab is None:
             dsrc1 = getattr(dsrc,'train',dsrc)
@@ -154,7 +154,7 @@ class OneHotEncode(Transform):
     order=2
     def __init__(self, do_encode=True, vocab=None): self.do_encode,self.vocab = do_encode,vocab
 
-    def setup(self, dsrc):
+    def setups(self, dsrc):
         if self.vocab is not None:  self.c = len(self.vocab)
         else: self.c = len(L(getattr(dsrc, 'vocab', None)))
         if not self.c: warn("Couldn't infer the number of classes, please pass a `vocab` at init")
