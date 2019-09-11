@@ -103,7 +103,7 @@ class CategoryMap(CollBase):
             items = L(o for o in L(col, use_list=True).unique() if o==o)
             if sort: items = items.sorted()
         self.items = '#na#' + items if add_na else items
-        self.o2i = defaultdict(int, self.items.val2idx())
+        self.o2i = defaultdict(int, self.items.val2idx()) if add_na else dict(self.items.val2idx())
     def __eq__(self,b): return all_equal(b,self)
 
 #Cell
