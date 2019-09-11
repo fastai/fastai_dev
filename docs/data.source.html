@@ -43,7 +43,7 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="all_union" class="doc_header"><code>all_union</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_data_source.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>all_union</code>(<strong><code>sets</code></strong>)</p>
+<h4 id="all_union" class="doc_header"><code>all_union</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L721" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>all_union</code>(<strong><code>sets</code></strong>)</p>
 </blockquote>
 <p>Set of union of all <code>sets</code> (each <code>setified</code> if needed)</p>
 
@@ -81,7 +81,7 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="all_disjoint" class="doc_header"><code>all_disjoint</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_data_source.ipynb#Convenience-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>all_disjoint</code>(<strong><code>sets</code></strong>)</p>
+<h4 id="all_disjoint" class="doc_header"><code>all_disjoint</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L726" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>all_disjoint</code>(<strong><code>sets</code></strong>)</p>
 </blockquote>
 <p><code>True</code> iif no element appears in more than one item of <code>sets</code></p>
 
@@ -128,7 +128,7 @@ summary: "Base container for all the items"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DataSource" class="doc_header"><code>class</code> <code>DataSource</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataSource</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>=<em><code>None</code></em>, <strong><code>filts</code></strong>=<em><code>None</code></em>, <strong><code>do_setup</code></strong>=<em><code>True</code></em>) :: <a href="/data.pipeline.html#TfmdDS"><code>TfmdDS</code></a></p>
+<h2 id="DataSource" class="doc_header"><code>class</code> <code>DataSource</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/source.py#L34" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataSource</code>(<strong><code>items</code></strong>, <strong><code>tfms</code></strong>=<em><code>None</code></em>, <strong><code>filts</code></strong>=<em><code>None</code></em>, <strong><code>do_setup</code></strong>=<em><code>True</code></em>) :: <a href="/data.pipeline.html#TfmdDS"><code>TfmdDS</code></a></p>
 </blockquote>
 <p>Applies a <code>tfm</code> to filtered subsets of <code>items</code></p>
 
@@ -393,7 +393,7 @@ tfms - [_Tfm: True {&#39;object&#39;: &#39;encodes&#39;} {&#39;object&#39;: &#39
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.databunch" class="doc_header"><code>DataSource.databunch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataSource.databunch</code>(<strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>val_bs</code></strong>=<em><code>None</code></em>, <strong><code>shuffle_train</code></strong>=<em><code>True</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>num_workers</code></strong>=<em><code>None</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="DataSource.databunch" class="doc_header"><code>DataSource.databunch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/source.py#L54" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataSource.databunch</code>(<strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>val_bs</code></strong>=<em><code>None</code></em>, <strong><code>shuffle_train</code></strong>=<em><code>True</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>num_workers</code></strong>=<em><code>None</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -413,7 +413,7 @@ tfms - [_Tfm: True {&#39;object&#39;: &#39;encodes&#39;} {&#39;object&#39;: &#39
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.subset" class="doc_header"><code>DataSource.subset</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataSource.subset</code>(<strong><code>i</code></strong>)</p>
+<h4 id="DataSource.subset" class="doc_header"><code>DataSource.subset</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/source.py#L49" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataSource.subset</code>(<strong><code>i</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -469,7 +469,7 @@ tfms - [_Tfm: True {&#39;object&#39;: &#39;encodes&#39;} {&#39;object&#39;: &#39
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataSource.subsets" class="doc_header"><code>DataSource.subsets</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/06_data_source.ipynb#DataSource--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataSource.subsets</code>()</p>
+<h4 id="DataSource.subsets" class="doc_header"><code>DataSource.subsets</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/source.py#L48" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataSource.subsets</code>()</p>
 </blockquote>
 
 </div>

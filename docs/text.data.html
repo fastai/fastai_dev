@@ -43,7 +43,7 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="make_vocab" class="doc_header"><code>make_vocab</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/31_text_data.ipynb#Numericalizing" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>make_vocab</code>(<strong><code>count</code></strong>, <strong><code>min_freq</code></strong>=<em><code>3</code></em>, <strong><code>max_vocab</code></strong>=<em><code>60000</code></em>)</p>
+<h4 id="make_vocab" class="doc_header"><code>make_vocab</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L19" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>make_vocab</code>(<strong><code>count</code></strong>, <strong><code>min_freq</code></strong>=<em><code>3</code></em>, <strong><code>max_vocab</code></strong>=<em><code>60000</code></em>)</p>
 </blockquote>
 <p>Create a vocab of <code>max_vocab</code> size from <code>Counter</code> <code>count</code> with items present more than <code>min_freq</code></p>
 
@@ -84,7 +84,7 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="TensorText" class="doc_header"><code>class</code> <code>TensorText</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/31_text_data.ipynb#Numericalizing" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TensorText</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/torch.core.html#TensorBase"><code>TensorBase</code></a></p>
+<h3 id="TensorText" class="doc_header"><code>class</code> <code>TensorText</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L29" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TensorText</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/torch.core.html#TensorBase"><code>TensorBase</code></a></p>
 </blockquote>
 
 </div>
@@ -107,7 +107,7 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Numericalize" class="doc_header"><code>class</code> <code>Numericalize</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/31_text_data.ipynb#Numericalizing" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Numericalize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>, <strong><code>min_freq</code></strong>=<em><code>3</code></em>, <strong><code>max_vocab</code></strong>=<em><code>60000</code></em>, <strong><code>sep</code></strong>=<em><code>' '</code></em>) :: <a href="/data.transforms.html#Transform"><code>Transform</code></a></p>
+<h3 id="Numericalize" class="doc_header"><code>class</code> <code>Numericalize</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L38" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Numericalize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>, <strong><code>min_freq</code></strong>=<em><code>3</code></em>, <strong><code>max_vocab</code></strong>=<em><code>60000</code></em>, <strong><code>sep</code></strong>=<em><code>' '</code></em>) :: <a href="/data.transforms.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Reversible transform of tokenized texts to numericalized ids</p>
 
@@ -182,26 +182,14 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="LMDataLoader" class="doc_header"><code>class</code> <code>LMDataLoader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/31_text_data.ipynb#LM_Dataset--" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>LMDataLoader</code>(<strong><code>dataset</code></strong>, <strong><code>lens</code></strong>=<em><code>None</code></em>, <strong><code>cache</code></strong>=<em><code>2</code></em>, <strong><code>bs</code></strong>=<em><code>64</code></em>, <strong><code>seq_len</code></strong>=<em><code>72</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>) :: <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
+<h3 id="LMDataLoader" class="doc_header"><code>class</code> <code>LMDataLoader</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L57" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>LMDataLoader</code>(<strong><code>dataset</code></strong>, <strong><code>lens</code></strong>=<em><code>None</code></em>, <strong><code>cache</code></strong>=<em><code>2</code></em>, <strong><code>bs</code></strong>=<em><code>64</code></em>, <strong><code>seq_len</code></strong>=<em><code>72</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>) :: <a href="/data.core.html#TfmdDL"><code>TfmdDL</code></a></p>
 </blockquote>
+<p>Transformed <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
 
 </div>
 
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: don&#39;t smash subclass sig</span>
-</pre></div>
-
-    </div>
 </div>
 </div>
 
@@ -273,21 +261,21 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>tensor([[11, 12, 13],
-        [17, 18,  5],
-        [ 9, 10, 24],
-        [ 3,  4, 21]]) x
+        [17, 18, 24],
+        [ 8,  9, 10],
+        [19, 20,  0]]) x
 tensor([[12, 13, 14],
-        [18,  5,  6],
-        [10, 24,  0],
-        [ 4, 21, 22]]) y
+        [18, 24,  5],
+        [ 9, 10, 21],
+        [20,  0,  1]]) y
 tensor([[14, 15, 16],
-        [ 6,  7,  8],
-        [ 0,  1,  2],
-        [22, 23, 19]]) x
+        [ 5,  6,  7],
+        [21, 22, 23],
+        [ 1,  2,  3]]) x
 tensor([[15, 16, 17],
-        [ 7,  8,  9],
-        [ 1,  2,  3],
-        [23, 19, 20]]) y
+        [ 6,  7,  8],
+        [22, 23, 19],
+        [ 2,  3,  4]]) y
 </pre>
 </div>
 </div>
@@ -460,7 +448,7 @@ tensor([[15, 16, 17],
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="n">RandomSplitter</span><span class="p">()(</span><span class="n">texts</span><span class="p">)</span>
 <span class="n">tfm</span> <span class="o">=</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
-<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="p">[[</span><span class="n">tfm</span><span class="p">],</span> <span class="p">[</span><span class="n">tfm</span><span class="p">]],</span> <span class="n">filts</span><span class="o">=</span><span class="n">splits</span><span class="p">)</span>
+<span class="c1">#dsrc = DataSource(texts, [[tfm], [tfm]], filts=splits)</span>
 <span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="p">[</span><span class="n">tfm</span><span class="p">],</span> <span class="n">filts</span><span class="o">=</span><span class="n">splits</span><span class="p">)</span>
 </pre></div>
 
@@ -487,13 +475,9 @@ tensor([[15, 16, 17],
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>xxbos xxmaj this movies is the best movie to watch for comic book feel . xxmaj the sets , costumes and the color are just so vivid it is just like stepping into a comic book . xxmaj this is the movie i think of when the xxmaj mob is mentioned , the suits , the xxunk and the xxunk . 
+<pre>xxbos xxmaj every once in a long while a movie will come along that will be so awful that i feel compelled to warn people . xxmaj if i labor all my days and i can save but one soul from watching this movie , how great will be my joy . 
 
- xxmaj hoffman gives comic relief as xxmaj xxunk and you ca n&#39;t help but feel sorry for xxmaj madonna as she tries , and fails , to win xxmaj tracy over . xxmaj this movie contains all the classic mob clichés - xxunk people in xxunk , blowing up peoples cars , xxunk up the good guy and attempting to blow up his girlfriends house . 
-
- xxmaj this movie is a classic in ever sense of the word , even camera angels cry out comic book . xxmaj its so great to be able to go back to an older movie and see that someone knew how a comic should be made into a movie after seeing such mistakes as xxmaj xxunk and the xxmaj xxunk . 
-
-▁ xxrep 3 ! xxup you xxup have xxup to xxup see xxup this xxup movie xxrep 4 !
+ xxmaj where to begin my discussion of pain . xxmaj for xxunk , there was a musical montage every five minutes . xxmaj there was no character development . xxmaj every character was a stereotype . xxmaj we had xxunk guy , fat guy who eats donuts , goofy foreign guy , etc . xxmaj the script felt as if it were being written as the movie was being shot . xxmaj the production value was so incredibly low that it felt like i was watching a junior high video presentation . xxmaj have the directors , producers , etc . ever even seen a movie before ? xxmaj xxunk is getting worse and worse with every new entry . xxmaj the concept for this movie sounded so funny . xxmaj how could you go wrong with xxmaj gary xxmaj coleman and a handful of somewhat legitimate actors . xxmaj but trust me when i say this , things went wrong , xxup very xxup wrong .
 </pre>
 </div>
 </div>
@@ -530,11 +514,58 @@ tensor([[15, 16, 17],
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#TODO fix</span>
-<span class="c1">#tdl.show_batch(max_n=2)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tdl</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">max_n</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos i thought the original of this film was quaint and charming as well as having me sitting on the edge of my seat trying to figure it out . \n\n xxmaj since i had already seen the original , when i saw this on xxmaj sci xxmaj fi xxmaj xxunk i do n't know if this remake was deliberately made for xxmaj sci xxmaj fi - i knew what it was</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>connection with the character on the screen . xxmaj you might even feel briefly bored with the xxunk of time as we witness xxmaj brian dealing with his situation through first , primitive means , and then more improved ones ( using xxunk , etc ) for his survival . xxmaj it is more like the ordinary time that passes if you were actually stuck in the situation , and that is</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>the films defence xxmaj brad xxmaj pitt , xxmaj eric xxmaj xxunk and xxmaj peter xxup o ' xxmaj xxunk acted very well with a bad script but that is n't enough to save this awful movie . \n\n xxmaj can anybody tell me where the xxunk 200 million budget went ? xxmaj maybe in all the trees they used for the funeral xxunk - where did they get all those trees</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>let some of her friends read the screenplay and none of them could predict the ending . xxmaj apparently she hangs out with special kids . xxbos xxmaj the xxmaj blob starts with one of the most bizarre theme songs ever , xxunk by an uncredited xxmaj burt xxmaj xxunk of all people ! xxmaj you really have to hear it to believe it , xxmaj the xxmaj blob may be worth</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>this movies strongest point is its cast . xxmaj this film needed good actors to deliver the dialog and thrills . xxmaj if they did n't have those actors the film would have been lost and boring . xxmaj we had xxmaj rachel xxunk from xxmaj mean xxmaj girls and xxmaj wedding xxmaj xxunk . xxmaj xxunk xxmaj murphy from xxmaj batman xxmaj begins and 28 days xxmaj later . xxmaj rounding</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>culture statements just to keep his audience understanding that he was a comedian first , an actor second . xxmaj fuqua should have stopped this immediately . xxmaj foxx 's jokes destroyed his character , which in turn left me with nothing solid to grasp xxunk of . xxmaj instead of character development , he would crack a joke . xxmaj neither style worked , no joke was funny . xxmaj the</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -544,8 +575,8 @@ tensor([[15, 16, 17],
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#x,y = next(iter(tdl.dl))</span>
-<span class="c1">#type(x)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tdl</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">TensorText</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -571,7 +602,7 @@ tensor([[15, 16, 17],
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="pad_collate" class="doc_header"><code>pad_collate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/31_text_data.ipynb#Classification" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>pad_collate</code>(<strong><code>samples</code></strong>, <strong><code>pad_idx</code></strong>=<em><code>1</code></em>, <strong><code>pad_first</code></strong>=<em><code>True</code></em>, <strong><code>backwards</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="pad_collate" class="doc_header"><code>pad_collate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L82" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>pad_collate</code>(<strong><code>samples</code></strong>, <strong><code>pad_idx</code></strong>=<em><code>1</code></em>, <strong><code>pad_first</code></strong>=<em><code>True</code></em>, <strong><code>backwards</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Function that collect samples and adds padding. Flips token order if needed</p>
 
@@ -592,8 +623,7 @@ tensor([[15, 16, 17],
 <span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">df_tok</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(),</span> <span class="n">filts</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span>
     <span class="p">[</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">),</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">))],</span>
     <span class="p">[</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">),</span> <span class="n">Categorize</span><span class="p">()]])</span>
-<span class="c1">#TODO fix</span>
-<span class="c1">#dl = TfmdDL(dsrc, collate_fn=pad_collate)</span>
+<span class="n">dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">create_batch</span><span class="o">=</span><span class="n">pad_collate</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -606,11 +636,55 @@ tensor([[15, 16, 17],
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#TODO fix</span>
-<span class="c1">#dl.show_batch(max_n=4)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dl</span><span class="o">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">max_n</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+      <th>category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos xxmaj old xxmaj jane 's mannered tale seems very popular these days . i have lost count of the number of versions going around . xxmaj probably the reason is that her " xxunk " are our " xxunk " even at this late date . xxmaj this xxup tv mini - series gives it a mannered telling suitable to the novel . xxmaj xxunk , xxunk xxmaj emma is a pretty " modern " girl when you think about it , even though the xxunk of xxmaj jane xxmaj austen 's world may seem a tad artificial to us today . xxmaj if you have n't seem xxup emma , xxmaj i 'll only say that self - xxunk xxmaj emma does get her comeuppance . xxmaj it 's worth watching to find out how . xxmaj the acting xxunk here go to the ladies : xxmaj kate , xxmaj xxunk , xxmaj lucy and xxmaj samantha . xxmaj they could almost have had a psychic connection to old xxmaj jane !</td>
+      <td>positive</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>xxbos xxmaj after mob boss xxmaj xxunk xxmaj xxunk ( late great xxmaj anthony xxmaj xxunk ) kills his lady whom has been cheating on him with xxmaj derek , their new xxunk / xxmaj vietnam vet , and blames it on the poor guy , xxmaj derek finds himself in jail where he has to xxunk with a corrupt xxunk , xxmaj xxunk 's prisoner brother who runs the jail , and , oh yeah xxunk xxunk xxunk by a shady xxup cia agent ( great genre - xxunk and first time director xxmaj john xxmaj saxon ) to turn various prisoners into super - human invincible zombies . xxmaj of course things get out of hand and it 's up to xxmaj derek , and the rest of the xxunk prisoners , to save the day after the infected ones take the jail over . \n\n xxmaj john xxmaj saxon is a great talented actor &amp; as a director xxmaj saxon is a … great talented actor . xxmaj to say this movie ( john 's sole directorial outing to date ) lacks a certain visual flair would be a bit of an understatement . xxmaj however , the film is n't totally without merit . xxmaj the dialog , while idiotic , is just bad enough to be humorous sometimes . xxmaj sadly , this is n't really enough for the movie to coast by on that alone and it takes forever for the film to even start coming into it 's own ( which is fairly late in the movie ) . xxmaj as such , the most i can recommend this film is to say that if you 're a fan of xxmaj saxon ( which i indeed am ) , it 's worth one watch , just go in with low expectations and you should be fine . \n\n xxmaj eye xxmaj candy : xxmaj dana xxmaj xxunk xxmaj mason and xxmaj xxunk xxunk get topless \n\n xxmaj my xxmaj grade : xxup xxunk</td>
+      <td>negative</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>xxbos xxup shallow xxup grave begins with either a tribute or a rip off of the shower scene in xxup psycho . ( i 'm leaning toward rip off . ) xxmaj after that it gets worse and then surprisingly gets better , almost to the point of being original . xxmaj bad acting and amateurish directing xxunk down a fairly interesting little story , but the film already surpasses many in the " yankee comes down xxmaj south to get killed by a bunch of rednecks " genre because it is actually shot in the xxmaj south . \n\n a group of college girls head to xxmaj xxunk . xxmaj xxunk for summer vacation and are xxunk in xxmaj georgia by a flat xxunk after getting off the main road . ( note to xxmaj xxunk : stay on the xxunk when you go to xxmaj florida . ) xxmaj sue xxmaj ellen ( lisa xxmaj stahl ) has to xxunk so she heads into the woods . xxmaj when she finally finds a good spot to do her business she witnesses the local sheriff ( tony xxmaj march ) xxunk his mistress ( merry xxmaj xxunk ) to death . ( note to xxmaj xxunk : do not wander off into the woods when in the xxmaj south ; not because you might witness a murder , but you may run across a xxunk plantation . ) xxmaj this is the point where the story , not the movie , actually comes close to being good . \n\n xxmaj while xxmaj tony xxmaj march will never have to practice his xxmaj oscar speech , his xxmaj sheriff xxmaj dean becomes a creepy xxunk of a normal guy torn by what he has done and what he must do . xxmaj tom xxmaj law is likable as xxmaj deputy xxmaj scott and is as authentic a xxmaj southern deputy as xxmaj i 've seen since xxmaj xxunk xxmaj xxunk ( deputy xxmaj steve xxmaj xxunk ) in xxup house xxup of 1 xxrep 3 0 xxup xxunk . \n\n a few scenes in the movie are worth the mention . xxmaj the girls stop at a xxup xxunk in xxmaj south xxmaj xxunk and display their racism when a big black guy xxunk them out . xxmaj sue xxmaj ellen runs into a xxunk to hide behind some hay xxunk and in a xxunk realistic moment a large snake is hiding in the hay with her . \n\n xxmaj and in the xxunk scene , xxmaj sheriff xxmaj dean makes like he 's about to rape xxmaj xxunk ( carol xxmaj xxunk ) and tells her to take off her clothes . xxmaj dean has turned the radio up to drown out the noise of what he 's about to do . xxmaj the preacher on the radio needs to go back and read his xxmaj bible . xxmaj his xxunk is about how xxmaj jezebel is saved by the blood of xxmaj jesus xxmaj christ . i feel sorry for this preacher 's xxunk . xxmaj jezebel was in the xxmaj old xxmaj testament a few thousand years before xxmaj christ was born and by no means is she one of the five people you are going to meet in xxmaj heaven .</td>
+      <td>negative</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>xxbos i viewed the movie together with a xxunk friend , my wife and her female friend . xxmaj so i had views from all kinds of directions . xxmaj mainly , the film made me laugh , the sexual tension was not really there and the only noticeable actors were xxmaj xxunk xxmaj xxunk and xxmaj maria xxmaj xxunk . xxmaj yes , i do think she played her role well , even if the script was not appropriate . xxmaj there were good xxmaj romanian actors around , they just did n't have complex roles . i applaud xxmaj xxunk 's entering the movie business . i do n't know why , but i think he 's a good guy , i just hope he 'll be a good actor . \n\n xxmaj the wife loved the movie , though , and i think there might have been chords being played and to which i had no ear for . xxmaj if the film tried to present xxunk sexual xxunk and their consequences in xxunk xxmaj xxunk , then it failed miserably . xxmaj there were no consequences . xxmaj just imagine that the girls are actually a boy and a girl , and the same story becomes just a boring , uninteresting plot . \n\n i have no idea why it got all those xxup xxunk awards . xxmaj in my book , it should have gotten the " better luck next time " award . ( xxunk = good luck in xxmaj romanian ) .</td>
+      <td>positive</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
 </div>
 </div>
 

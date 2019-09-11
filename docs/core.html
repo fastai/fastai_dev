@@ -46,7 +46,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="PrePostInitMeta" class="doc_header"><code>class</code> <code>PrePostInitMeta</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Metaclasses" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>PrePostInitMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dct</code></strong>) :: <code>type</code></p>
+<h3 id="PrePostInitMeta" class="doc_header"><code>class</code> <code>PrePostInitMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L23" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>PrePostInitMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dct</code></strong>) :: <code>type</code></p>
 </blockquote>
 <p>A metaclass that calls optional <code>__pre_init__</code> and <code>__post_init__</code> methods</p>
 
@@ -105,7 +105,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="BaseObj" class="doc_header"><code>class</code> <code>BaseObj</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Metaclasses" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BaseObj</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="BaseObj" class="doc_header"><code>class</code> <code>BaseObj</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L41" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BaseObj</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Base class that provides <a href="/core.html#PrePostInitMeta"><code>PrePostInitMeta</code></a> metaclass to subclasses</p>
 
@@ -164,7 +164,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="NewChkMeta" class="doc_header"><code>class</code> <code>NewChkMeta</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Metaclasses" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>NewChkMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dct</code></strong>) :: <a href="/core.html#PrePostInitMeta"><code>PrePostInitMeta</code></a></p>
+<h2 id="NewChkMeta" class="doc_header"><code>class</code> <code>NewChkMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L46" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>NewChkMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dct</code></strong>) :: <a href="/core.html#PrePostInitMeta"><code>PrePostInitMeta</code></a></p>
 </blockquote>
 <p>Metaclass to avoid recreating object passed to constructor (plus all <a href="/core.html#PrePostInitMeta"><code>PrePostInitMeta</code></a> functionality)</p>
 
@@ -183,7 +183,9 @@ summary: "Basic functions used in the fastai library"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_T</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">NewChkMeta</span><span class="p">):</span>
     <span class="s2">&quot;Testing&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
 
 <span class="k">class</span> <span class="nc">_T2</span><span class="p">():</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
@@ -193,6 +195,9 @@ summary: "Basic functions used in the fastai library"
 <span class="n">t2</span> <span class="o">=</span> <span class="n">_T</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t2</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">test_is</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">t2</span><span class="p">)</span>
+<span class="n">t3</span> <span class="o">=</span> <span class="n">_T</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t3</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">t3</span> <span class="ow">is</span> <span class="n">t</span>
 
 <span class="n">t</span> <span class="o">=</span> <span class="n">_T2</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -200,7 +205,7 @@ summary: "Basic functions used in the fastai library"
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t2</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="n">test_eq</span><span class="p">(</span><span class="n">_T</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="s2">&quot;Testing&quot;</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">_T</span><span class="p">)),</span> <span class="s1">&#39;(o=None)&#39;</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">_T</span><span class="p">)),</span> <span class="s1">&#39;(o=None, b=1)&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -220,7 +225,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="BypassNewMeta" class="doc_header"><code>class</code> <code>BypassNewMeta</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Metaclasses" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BypassNewMeta</code>() :: <code>type</code></p>
+<h2 id="BypassNewMeta" class="doc_header"><code>class</code> <code>BypassNewMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L70" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BypassNewMeta</code>() :: <code>type</code></p>
 </blockquote>
 <p>Metaclass: casts <code>x</code> to this class, initializing with <code>_new_meta</code> if available</p>
 
@@ -270,7 +275,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="patch_to" class="doc_header"><code>patch_to</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch_to</code>(<strong><code>as_prop</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="patch_to" class="doc_header"><code>patch_to</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L78" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch_to</code>(<strong><code>as_prop</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Decorator: add <code>f</code> to <code>cls</code></p>
 
@@ -313,7 +318,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="patch" class="doc_header"><code>patch</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch</code>(<strong><code>f</code></strong>)</p>
+<h4 id="patch" class="doc_header"><code>patch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L90" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch</code>(<strong><code>f</code></strong>)</p>
 </blockquote>
 <p>Decorator: add <code>f</code> to the first parameter's class (based on f's type annotations)</p>
 
@@ -357,7 +362,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="patch_property" class="doc_header"><code>patch_property</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch_property</code>(<strong><code>f</code></strong>)</p>
+<h4 id="patch_property" class="doc_header"><code>patch_property</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L96" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch_property</code>(<strong><code>f</code></strong>)</p>
 </blockquote>
 <p>Decorator: add <code>f</code> as a property to the first parameter's class (based on f's type annotations)</p>
 
@@ -414,7 +419,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="use_kwargs" class="doc_header"><code>use_kwargs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>use_kwargs</code>(<strong><code>names</code></strong>, <strong><code>keep</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="use_kwargs" class="doc_header"><code>use_kwargs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L105" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>use_kwargs</code>(<strong><code>names</code></strong>, <strong><code>keep</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Decorator: replace <code>**kwargs</code> in signature with <code>names</code> params</p>
 
@@ -457,7 +462,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="delegates" class="doc_header"><code>delegates</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>delegates</code>(<strong><code>to</code></strong>=<em><code>None</code></em>, <strong><code>keep</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="delegates" class="doc_header"><code>delegates</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L119" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>delegates</code>(<strong><code>to</code></strong>=<em><code>None</code></em>, <strong><code>keep</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Decorator: replace <code>**kwargs</code> in signature with params from <code>to</code></p>
 
@@ -522,7 +527,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="funcs_kwargs" class="doc_header"><code>funcs_kwargs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>funcs_kwargs</code>()</p>
+<h4 id="funcs_kwargs" class="doc_header"><code>funcs_kwargs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L136" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>funcs_kwargs</code>()</p>
 </blockquote>
 <p>Replace methods in <code>self._methods</code> with those from <code>kwargs</code></p>
 
@@ -546,7 +551,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="method" class="doc_header"><code>method</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>method</code>(<strong><code>f</code></strong>)</p>
+<h4 id="method" class="doc_header"><code>method</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L151" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>method</code>(<strong><code>f</code></strong>)</p>
 </blockquote>
 <p>Mark <code>f</code> as a method</p>
 
@@ -621,7 +626,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="chk" class="doc_header"><code>chk</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>chk</code>(<strong><code>f</code></strong>)</p>
+<h4 id="chk" class="doc_header"><code>chk</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L158" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>chk</code>(<strong><code>f</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -723,7 +728,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="add_docs" class="doc_header"><code>add_docs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_docs</code>(<strong><code>cls_doc</code></strong>=<em><code>None</code></em>, <strong>**<code>docs</code></strong>)</p>
+<h4 id="add_docs" class="doc_header"><code>add_docs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L161" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_docs</code>(<strong><code>cls_doc</code></strong>=<em><code>None</code></em>, <strong>**<code>docs</code></strong>)</p>
 </blockquote>
 <p>Copy values from <a href="/core.html#docs"><code>docs</code></a> to <code>cls</code> docstrings, and confirm all public methods are documented</p>
 
@@ -747,7 +752,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="docs" class="doc_header"><code>docs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>docs</code>()</p>
+<h4 id="docs" class="doc_header"><code>docs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L175" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>docs</code>()</p>
 </blockquote>
 <p>Decorator version of <a href="/core.html#add_docs"><code>add_docs</code></a>, using <code>_docs</code> dict</p>
 
@@ -792,7 +797,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="custom_dir" class="doc_header"><code>custom_dir</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>custom_dir</code>(<strong><code>c</code></strong>, <strong><code>add</code></strong>:<code>List</code>[<code>T</code>])</p>
+<h4 id="custom_dir" class="doc_header"><code>custom_dir</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L181" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>custom_dir</code>(<strong><code>c</code></strong>, <strong><code>add</code></strong>:<code>List</code>[<code>T</code>])</p>
 </blockquote>
 <p>Implement custom <code>__dir__</code>, adding <code>add</code> to <code>cls</code></p>
 
@@ -853,7 +858,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="GetAttr" class="doc_header"><code>class</code> <code>GetAttr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#GetAttr--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GetAttr</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/core.html#BaseObj"><code>BaseObj</code></a></p>
+<h2 id="GetAttr" class="doc_header"><code>class</code> <code>GetAttr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L186" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GetAttr</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/core.html#BaseObj"><code>BaseObj</code></a></p>
 </blockquote>
 <p>Inherit from this to have all attr accesses in <code>self._xtra</code> passed down to <code>self.default</code></p>
 
@@ -898,7 +903,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="delegate_attr" class="doc_header"><code>delegate_attr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#GetAttr--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>delegate_attr</code>(<strong><code>k</code></strong>, <strong><code>to</code></strong>)</p>
+<h4 id="delegate_attr" class="doc_header"><code>delegate_attr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L197" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>delegate_attr</code>(<strong><code>k</code></strong>, <strong><code>to</code></strong>)</p>
 </blockquote>
 <p>Use in <code>__getattr__</code> to delegate to attr <code>to</code> without inheriting from <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
 
@@ -940,7 +945,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="coll_repr" class="doc_header"><code>coll_repr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>coll_repr</code>(<strong><code>c</code></strong>, <strong><code>max_n</code></strong>=<em><code>10</code></em>)</p>
+<h4 id="coll_repr" class="doc_header"><code>coll_repr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L204" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>coll_repr</code>(<strong><code>c</code></strong>, <strong><code>max_n</code></strong>=<em><code>10</code></em>)</p>
 </blockquote>
 <p>String repr of up to <code>max_n</code> items of (possibly lazy) collection <code>c</code></p>
 
@@ -977,7 +982,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mask2idxs" class="doc_header"><code>mask2idxs</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mask2idxs</code>(<strong><code>mask</code></strong>)</p>
+<h4 id="mask2idxs" class="doc_header"><code>mask2idxs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L210" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mask2idxs</code>(<strong><code>mask</code></strong>)</p>
 </blockquote>
 <p>Convert bool mask or index list to index <a href="/core.html#L"><code>L</code></a></p>
 
@@ -1018,7 +1023,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CollBase" class="doc_header"><code>class</code> <code>CollBase</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Export--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CollBase</code>(<strong><code>items</code></strong>)</p>
+<h2 id="CollBase" class="doc_header"><code>class</code> <code>CollBase</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L226" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CollBase</code>(<strong><code>items</code></strong>)</p>
 </blockquote>
 <p>Base class for composing a list of <code>items</code></p>
 
@@ -1042,7 +1047,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="cycle" class="doc_header"><code>cycle</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cycle</code>(<strong><code>o</code></strong>)</p>
+<h4 id="cycle" class="doc_header"><code>cycle</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L240" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cycle</code>(<strong><code>o</code></strong>)</p>
 </blockquote>
 <p>Like <code>itertools.cycle</code> except creates list of <code>None</code>s if <code>o</code> is empty</p>
 
@@ -1081,7 +1086,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="zip_cycle" class="doc_header"><code>zip_cycle</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>zip_cycle</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>)</p>
+<h4 id="zip_cycle" class="doc_header"><code>zip_cycle</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L245" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>zip_cycle</code>(<strong><code>x</code></strong>, <strong>*<code>args</code></strong>)</p>
 </blockquote>
 <p>Like <code>itertools.zip_longest</code> but <a href="/core.html#cycle"><code>cycle</code></a>s through elements of all but first argument</p>
 
@@ -1118,7 +1123,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="L" class="doc_header"><code>class</code> <code>L</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>L</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
+<h2 id="L" class="doc_header"><code>class</code> <code>L</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L250" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>L</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
 </blockquote>
 <p>Behaves like a list of <code>items</code> but can also index with list of indices or masks</p>
 
@@ -1155,6 +1160,7 @@ summary: "Basic functions used in the fastai library"
 <span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">,</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;j&quot;</span><span class="p">,</span><span class="s2">&quot;k&quot;</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">L</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]),</span> <span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]))</span>
 <span class="n">t</span>
 </pre></div>
 
@@ -1358,7 +1364,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.__getitem__" class="doc_header"><code>L.__getitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__getitem__</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="L.__getitem__" class="doc_header"><code>L.__getitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L262" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__getitem__</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
 <p>Retrieve <code>idx</code> (can be list of indices, or mask, or int) items</p>
 
@@ -1397,7 +1403,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.__setitem__" class="doc_header"><code>L.__setitem__</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__setitem__</code>(<strong><code>idx</code></strong>, <strong><code>o</code></strong>)</p>
+<h4 id="L.__setitem__" class="doc_header"><code>L.__setitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L270" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__setitem__</code>(<strong><code>idx</code></strong>, <strong><code>o</code></strong>)</p>
 </blockquote>
 <p>Set <code>idx</code> (can be list of indices, or mask, or int) items to <code>o</code> (which is broadcast if not iterable)</p>
 
@@ -1434,7 +1440,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.unique" class="doc_header"><code>L.unique</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.unique</code>()</p>
+<h4 id="L.unique" class="doc_header"><code>L.unique</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L302" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.unique</code>()</p>
 </blockquote>
 <p>Unique items, in stable order</p>
 
@@ -1468,7 +1474,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.val2idx" class="doc_header"><code>L.val2idx</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.val2idx</code>()</p>
+<h4 id="L.val2idx" class="doc_header"><code>L.val2idx</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L303" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.val2idx</code>()</p>
 </blockquote>
 <p>Dict from value to index</p>
 
@@ -1502,7 +1508,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.filtered" class="doc_header"><code>L.filtered</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.filtered</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.filtered" class="doc_header"><code>L.filtered</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L307" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.filtered</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> filtered by predicate <code>f</code>, passing <code>args</code> and <code>kwargs</code> to <code>f</code></p>
 
@@ -1536,7 +1542,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.mapped" class="doc_header"><code>L.mapped</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.mapped" class="doc_header"><code>L.mapped</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L308" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with <code>f</code> applied to all <code>items</code>, passing <code>args</code> and <code>kwargs</code> to <code>f</code></p>
 
@@ -1570,7 +1576,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.mapped_dict" class="doc_header"><code>L.mapped_dict</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_dict</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.mapped_dict" class="doc_header"><code>L.mapped_dict</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L309" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_dict</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Like <code>mapped</code>, but creates a dict from <code>items</code> to function results</p>
 
@@ -1604,7 +1610,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.zipped" class="doc_header"><code>L.zipped</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipped</code>(<strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.zipped" class="doc_header"><code>L.zipped</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L311" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipped</code>(<strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with <code>zip(*items)</code></p>
 
@@ -1654,7 +1660,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.mapped_zip" class="doc_header"><code>L.mapped_zip</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_zip</code>(<strong><code>f</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.mapped_zip" class="doc_header"><code>L.mapped_zip</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L313" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_zip</code>(<strong><code>f</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Combine <code>zipped</code> and <code>starmapped</code></p>
 
@@ -1689,7 +1695,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.zipwith" class="doc_header"><code>L.zipwith</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipwith</code>(<strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.zipwith" class="doc_header"><code>L.zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L312" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipwith</code>(<strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with <code>self</code> zipped with each of <code>*rest</code></p>
 
@@ -1725,7 +1731,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.mapped_zipwith" class="doc_header"><code>L.mapped_zipwith</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_zipwith</code>(<strong><code>f</code></strong>, <strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.mapped_zipwith" class="doc_header"><code>L.mapped_zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L314" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_zipwith</code>(<strong><code>f</code></strong>, <strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Combine <code>zipwith</code> and <code>starmapped</code></p>
 
@@ -1759,7 +1765,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.itemgot" class="doc_header"><code>L.itemgot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.itemgot</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="L.itemgot" class="doc_header"><code>L.itemgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L304" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.itemgot</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with item <code>idx</code> of all <code>items</code></p>
 
@@ -1793,7 +1799,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.attrgot" class="doc_header"><code>L.attrgot</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.attrgot</code>(<strong><code>k</code></strong>, <strong><code>default</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="L.attrgot" class="doc_header"><code>L.attrgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L305" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.attrgot</code>(<strong><code>k</code></strong>, <strong><code>default</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with attr <code>k</code> of all <code>items</code></p>
 
@@ -1828,7 +1834,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.sorted" class="doc_header"><code>L.sorted</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.sorted</code>(<strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>reverse</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.sorted" class="doc_header"><code>L.sorted</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L289" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.sorted</code>(<strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>reverse</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>New <a href="/core.html#L"><code>L</code></a> sorted by <code>key</code>. If key is str then use <code>attrgetter</code>. If key is int then use <code>itemgetter</code>.</p>
 
@@ -1862,7 +1868,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.range" class="doc_header"><code>L.range</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#L--" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.range</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>step</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="L.range" class="doc_header"><code>L.range</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L296" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.range</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>step</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Same as builtin <code>range</code>, but returns an <a href="/core.html#L"><code>L</code></a>. Can pass a collection for <code>a</code>, to use <code>len(a)</code></p>
 
@@ -1912,7 +1918,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ifnone" class="doc_header"><code>ifnone</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Basics" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ifnone</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="ifnone" class="doc_header"><code>ifnone</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L339" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ifnone</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p><code>b</code> if <code>a</code> is None else <code>a</code></p>
 
@@ -1957,7 +1963,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_class" class="doc_header"><code>get_class</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Basics" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
+<h4 id="get_class" class="doc_header"><code>get_class</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L344" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
 </blockquote>
 <p>Dynamically create a class, optionally inheriting from <code>sup</code>, containing <code>fld_names</code></p>
 
@@ -2010,7 +2016,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mk_class" class="doc_header"><code>mk_class</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Basics" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mk_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong><code>mod</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
+<h4 id="mk_class" class="doc_header"><code>mk_class</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L368" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mk_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong><code>mod</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
 </blockquote>
 <p>Create a class using <a href="/core.html#get_class"><code>get_class</code></a> and add to the caller's module</p>
 
@@ -2101,7 +2107,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="wrap_class" class="doc_header"><code>wrap_class</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Basics" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>wrap_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
+<h4 id="wrap_class" class="doc_header"><code>wrap_class</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L375" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>wrap_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
 </blockquote>
 <p>Decorator: makes function a method of a new class <code>nm</code> passing parameters to <a href="/core.html#mk_class"><code>mk_class</code></a></p>
 
@@ -2213,7 +2219,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="store_attr" class="doc_header"><code>store_attr</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Basics" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>store_attr</code>(<strong><code>nms</code></strong>)</p>
+<h4 id="store_attr" class="doc_header"><code>store_attr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L383" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>store_attr</code>(<strong><code>nms</code></strong>)</p>
 </blockquote>
 <p>Store params named in comma-separated <code>nms</code> from calling context into attrs in <code>self</code></p>
 
@@ -2260,7 +2266,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tuplify" class="doc_header"><code>tuplify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tuplify</code>(<strong><code>o</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="tuplify" class="doc_header"><code>tuplify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L389" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tuplify</code>(<strong><code>o</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Make <code>o</code> a tuple</p>
 
@@ -2299,7 +2305,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="replicate" class="doc_header"><code>replicate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>replicate</code>(<strong><code>item</code></strong>, <strong><code>match</code></strong>)</p>
+<h4 id="replicate" class="doc_header"><code>replicate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L394" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>replicate</code>(<strong><code>item</code></strong>, <strong><code>match</code></strong>)</p>
 </blockquote>
 <p>Create tuple of <code>item</code> copied <code>len(match)</code> times</p>
 
@@ -2338,7 +2344,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="uniqueify" class="doc_header"><code>uniqueify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>uniqueify</code>(<strong><code>x</code></strong>, <strong><code>sort</code></strong>=<em><code>False</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>, <strong><code>start</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="uniqueify" class="doc_header"><code>uniqueify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L399" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>uniqueify</code>(<strong><code>x</code></strong>, <strong><code>sort</code></strong>=<em><code>False</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>, <strong><code>start</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Return the unique elements in <code>x</code>, optionally <code>sort</code>-ed, optionally return the reverse correspondance.</p>
 
@@ -2383,7 +2389,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="setify" class="doc_header"><code>setify</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>setify</code>(<strong><code>o</code></strong>)</p>
+<h4 id="setify" class="doc_header"><code>setify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L408" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>setify</code>(<strong><code>o</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -2424,7 +2430,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_listy" class="doc_header"><code>is_listy</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Foundational-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_listy</code>(<strong><code>x</code></strong>)</p>
+<h4 id="is_listy" class="doc_header"><code>is_listy</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L411" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_listy</code>(<strong><code>x</code></strong>)</p>
 </blockquote>
 <p><code>isinstance(x, (tuple,list,L))</code></p>
 
@@ -2464,7 +2470,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="range_of" class="doc_header"><code>range_of</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>range_of</code>(<strong><code>x</code></strong>)</p>
+<h4 id="range_of" class="doc_header"><code>range_of</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L416" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>range_of</code>(<strong><code>x</code></strong>)</p>
 </blockquote>
 <p>All indices of collection <code>x</code> (i.e. <code>list(range(len(x)))</code>)</p>
 
@@ -2501,7 +2507,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="groupby" class="doc_header"><code>groupby</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>groupby</code>(<strong><code>x</code></strong>, <strong><code>key</code></strong>)</p>
+<h4 id="groupby" class="doc_header"><code>groupby</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L421" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>groupby</code>(<strong><code>x</code></strong>, <strong><code>key</code></strong>)</p>
 </blockquote>
 <p>Like <code>itertools.groupby</code> but doesn't need to be sorted, and isn't lazy</p>
 
@@ -2538,7 +2544,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="merge" class="doc_header"><code>merge</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>merge</code>(<strong>*<code>ds</code></strong>)</p>
+<h4 id="merge" class="doc_header"><code>merge</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L428" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>merge</code>(<strong>*<code>ds</code></strong>)</p>
 </blockquote>
 <p>Merge all dictionaries in <code>ds</code></p>
 
@@ -2577,7 +2583,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="shufflish" class="doc_header"><code>shufflish</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>shufflish</code>(<strong><code>x</code></strong>, <strong><code>pct</code></strong>=<em><code>0.04</code></em>)</p>
+<h4 id="shufflish" class="doc_header"><code>shufflish</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L433" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>shufflish</code>(<strong><code>x</code></strong>, <strong><code>pct</code></strong>=<em><code>0.04</code></em>)</p>
 </blockquote>
 <p>Randomly relocate items of <code>x</code> up to <code>pct</code> of <code>len(x)</code> from their starting location</p>
 
@@ -2618,7 +2624,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="IterLen" class="doc_header"><code>class</code> <code>IterLen</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Export--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IterLen</code>()</p>
+<h2 id="IterLen" class="doc_header"><code>class</code> <code>IterLen</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L439" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IterLen</code>()</p>
 </blockquote>
 <p>Base class to add iteration to anything supporting <code>len</code> and <code>__getitem__</code></p>
 
@@ -2642,7 +2648,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReindexCollection" class="doc_header"><code>class</code> <code>ReindexCollection</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReindexCollection</code>(<strong><code>coll</code></strong>, <strong><code>idxs</code></strong>=<em><code>None</code></em>, <strong><code>cache</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
+<h2 id="ReindexCollection" class="doc_header"><code>class</code> <code>ReindexCollection</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L445" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReindexCollection</code>(<strong><code>coll</code></strong>, <strong><code>idxs</code></strong>=<em><code>None</code></em>, <strong><code>cache</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
 </blockquote>
 <p>Reindexes collection <code>coll</code> with indices <code>idxs</code> and optional LRU cache of size <code>cache</code></p>
 
@@ -2777,7 +2783,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Inf" class="doc_header"><code>class</code> <code>Inf</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Inf</code>()</p>
+<h2 id="Inf" class="doc_header"><code>class</code> <code>Inf</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L490" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Inf</code>()</p>
 </blockquote>
 <p>Infinite lists</p>
 
@@ -2831,7 +2837,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="true" class="doc_header"><code>true</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>true</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="true" class="doc_header"><code>true</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L495" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>true</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Predicate: always <code>True</code></p>
 
@@ -2855,7 +2861,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="stop" class="doc_header"><code>stop</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>stop</code>(<strong><code>e</code></strong>=<em><code>'StopIteration'</code></em>)</p>
+<h4 id="stop" class="doc_header"><code>stop</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L500" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>stop</code>(<strong><code>e</code></strong>=<em><code>'StopIteration'</code></em>)</p>
 </blockquote>
 <p>Raises exception <code>e</code> (by default <code>StopException</code>) even if in an expression</p>
 
@@ -2879,7 +2885,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="gen" class="doc_header"><code>gen</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gen</code>(<strong><code>func</code></strong>, <strong><code>seq</code></strong>, <strong><code>cond</code></strong>=<em><code>'true'</code></em>)</p>
+<h4 id="gen" class="doc_header"><code>gen</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L505" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gen</code>(<strong><code>func</code></strong>, <strong><code>seq</code></strong>, <strong><code>cond</code></strong>=<em><code>'true'</code></em>)</p>
 </blockquote>
 <p>Like <code>(func(o) for o in seq if cond(func(o)))</code> but handles <code>StopIteration</code></p>
 
@@ -2921,7 +2927,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="chunked" class="doc_header"><code>chunked</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>chunked</code>(<strong><code>it</code></strong>, <strong><code>cs</code></strong>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="chunked" class="doc_header"><code>chunked</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L510" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>chunked</code>(<strong><code>it</code></strong>, <strong><code>cs</code></strong>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -2968,7 +2974,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="retain_type" class="doc_header"><code>retain_type</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>retain_type</code>(<strong><code>new</code></strong>, <strong><code>old</code></strong>=<em><code>None</code></em>, <strong><code>typ</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="retain_type" class="doc_header"><code>retain_type</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L518" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>retain_type</code>(<strong><code>new</code></strong>, <strong><code>old</code></strong>=<em><code>None</code></em>, <strong><code>typ</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Cast <code>new</code> to type of <code>old</code> if it's a superclass</p>
 
@@ -3008,7 +3014,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="retain_types" class="doc_header"><code>retain_types</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Collection-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>retain_types</code>(<strong><code>new</code></strong>, <strong><code>old</code></strong>=<em><code>None</code></em>, <strong><code>typs</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="retain_types" class="doc_header"><code>retain_types</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L530" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>retain_types</code>(<strong><code>new</code></strong>, <strong><code>old</code></strong>=<em><code>None</code></em>, <strong><code>typs</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Cast each item of <code>new</code> to type of matching item in <code>old</code> if it's a superclass</p>
 
@@ -3055,7 +3061,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_title" class="doc_header"><code>show_title</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01a_torch_core.ipynb#Image-helpers" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="show_title" class="doc_header"><code>show_title</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L536" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Set title of <code>ax</code> to <code>o</code>, or print <code>o</code> if <code>ax</code> is <code>None</code></p>
 
@@ -3094,7 +3100,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ShowTitle" class="doc_header"><code>class</code> <code>ShowTitle</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Export--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ShowTitle</code>()</p>
+<h2 id="ShowTitle" class="doc_header"><code>class</code> <code>ShowTitle</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L547" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ShowTitle</code>()</p>
 </blockquote>
 <p>Base class that adds a simple <code>show</code></p>
 
@@ -3115,7 +3121,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Int" class="doc_header"><code>class</code> <code>Int</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Simple-types" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Int</code>() :: <code>int</code></p>
+<h3 id="Int" class="doc_header"><code>class</code> <code>Int</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L552" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Int</code>() :: <code>int</code></p>
 </blockquote>
 <p>An <code>int</code> with <code>show</code></p>
 
@@ -3136,7 +3142,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Str" class="doc_header"><code>class</code> <code>Str</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Simple-types" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Str</code>() :: <code>str</code></p>
+<h3 id="Str" class="doc_header"><code>class</code> <code>Str</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L554" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Str</code>() :: <code>str</code></p>
 </blockquote>
 <p>An <code>str</code> with <code>show</code></p>
 
@@ -3157,7 +3163,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Float" class="doc_header"><code>class</code> <code>Float</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Simple-types" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Float</code>(<strong><code>x</code></strong>=<em><code>0</code></em>) :: <code>float</code></p>
+<h3 id="Float" class="doc_header"><code>class</code> <code>Float</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L553" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Float</code>(<strong><code>x</code></strong>=<em><code>0</code></em>) :: <code>float</code></p>
 </blockquote>
 <p>An <code>float</code> with <code>show</code></p>
 
@@ -3195,9 +3201,51 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TupleBase" class="doc_header"><code>class</code> <code>TupleBase</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Simple-types" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleBase</code>(<strong><code>iterable</code></strong>=<em><code>()</code></em>) :: <code>tuple</code></p>
+<h2 id="TupleBase" class="doc_header"><code>class</code> <code>TupleBase</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L558" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleBase</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>) :: <code>tuple</code></p>
 </blockquote>
-<p>A <code>tuple</code> with <code>show</code> and <code>__neg__</code></p>
+<p>A <code>tuple</code> with <code>__neg__</code> and more friendly <strong>init</strong> behavior</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="n">TupleBase</span><span class="p">)</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">test_ne</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(),</span> <span class="p">())</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="TupleTitled" class="doc_header"><code>class</code> <code>TupleTitled</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L569" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleTitled</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>) :: <a href="/core.html#TupleBase"><code>TupleBase</code></a></p>
+</blockquote>
+<p>A <a href="/core.html#TupleBase"><code>TupleBase</code></a> with <code>show</code></p>
 
 </div>
 
@@ -3225,7 +3273,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="trace" class="doc_header"><code>trace</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Functions-on-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>trace</code>(<strong><code>f</code></strong>)</p>
+<h4 id="trace" class="doc_header"><code>trace</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L574" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>trace</code>(<strong><code>f</code></strong>)</p>
 </blockquote>
 <p>Add <code>set_trace</code> to an existing function <code>f</code></p>
 
@@ -3249,7 +3297,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compose" class="doc_header"><code>compose</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Functions-on-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compose</code>(<strong>*<code>funcs</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="compose" class="doc_header"><code>compose</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L582" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compose</code>(<strong>*<code>funcs</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create a function that composes all functions in <code>funcs</code>, passing along remaining <code>*args</code> and <code>**kwargs</code> to all</p>
 
@@ -3293,7 +3341,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="maps" class="doc_header"><code>maps</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Functions-on-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>maps</code>(<strong>*<code>args</code></strong>, <strong><code>retain</code></strong>=<em><code>'noop'</code></em>)</p>
+<h4 id="maps" class="doc_header"><code>maps</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L592" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>maps</code>(<strong>*<code>args</code></strong>, <strong><code>retain</code></strong>=<em><code>'noop'</code></em>)</p>
 </blockquote>
 <p>Like <code>map</code>, except funcs are composed first</p>
 
@@ -3335,7 +3383,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="partialler" class="doc_header"><code>partialler</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Functions-on-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partialler</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="partialler" class="doc_header"><code>partialler</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L599" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partialler</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Like <code>functools.partial</code> but also copies over docstring</p>
 
@@ -3382,7 +3430,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="instantiate" class="doc_header"><code>instantiate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Functions-on-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>instantiate</code>(<strong><code>t</code></strong>)</p>
+<h4 id="instantiate" class="doc_header"><code>instantiate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L608" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>instantiate</code>(<strong><code>t</code></strong>)</p>
 </blockquote>
 <p>Instantiate <code>t</code> if it's a type, otherwise do nothing</p>
 
@@ -3426,7 +3474,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="bind" class="doc_header"><code>class</code> <code>bind</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Export--" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>bind</code>(<strong><code>fn</code></strong>, <strong>*<code>pargs</code></strong>, <strong>**<code>pkwargs</code></strong>)</p>
+<h2 id="bind" class="doc_header"><code>class</code> <code>bind</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L617" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>bind</code>(<strong><code>fn</code></strong>, <strong>*<code>pargs</code></strong>, <strong>**<code>pkwargs</code></strong>)</p>
 </blockquote>
 <p>Same as <code>partial</code>, except you can use <code>_0</code> <code>_1</code> etc param placeholders</p>
 
@@ -3514,7 +3562,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Path.ls" class="doc_header"><code>Path.ls</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#File-and-network-functions" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Path.ls</code>(<strong><code>file_type</code></strong>=<em><code>None</code></em>, <strong><code>file_exts</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="Path.ls" class="doc_header"><code>Path.ls</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L661" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Path.ls</code>(<strong><code>file_type</code></strong>=<em><code>None</code></em>, <strong><code>file_exts</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Contents of path as a list</p>
 
@@ -3669,7 +3717,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="sort_by_run" class="doc_header"><code>sort_by_run</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Sorting-objects-from-before/after" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sort_by_run</code>(<strong><code>fs</code></strong>)</p>
+<h4 id="sort_by_run" class="doc_header"><code>sort_by_run</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L682" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sort_by_run</code>(<strong><code>fs</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -3734,7 +3782,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="display_df" class="doc_header"><code>display_df</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Other-helpers" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>display_df</code>(<strong><code>df</code></strong>)</p>
+<h4 id="display_df" class="doc_header"><code>display_df</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L694" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>display_df</code>(<strong><code>df</code></strong>)</p>
 </blockquote>
 <p>Display <code>df</code> in a notebook or defaults to print</p>
 
@@ -3758,7 +3806,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="round_multiple" class="doc_header"><code>round_multiple</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Other-helpers" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>round_multiple</code>(<strong><code>x</code></strong>, <strong><code>mult</code></strong>, <strong><code>round_down</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="round_multiple" class="doc_header"><code>round_multiple</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L701" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>round_multiple</code>(<strong><code>x</code></strong>, <strong><code>mult</code></strong>, <strong><code>round_down</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Round <code>x</code> to nearest multiple of <code>mult</code></p>
 
@@ -3800,7 +3848,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="num_cpus" class="doc_header"><code>num_cpus</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Other-helpers" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>num_cpus</code>()</p>
+<h4 id="num_cpus" class="doc_header"><code>num_cpus</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L708" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>num_cpus</code>()</p>
 </blockquote>
 <p>Get number of cpus</p>
 
@@ -3824,7 +3872,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="add_props" class="doc_header"><code>add_props</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01_core.ipynb#Other-helpers" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_props</code>(<strong><code>f</code></strong>, <strong><code>n</code></strong>=<em><code>2</code></em>)</p>
+<h4 id="add_props" class="doc_header"><code>add_props</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L716" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_props</code>(<strong><code>f</code></strong>, <strong><code>n</code></strong>=<em><code>2</code></em>)</p>
 </blockquote>
 <p>Create properties passing each of <code>range(n)</code> to f</p>
 

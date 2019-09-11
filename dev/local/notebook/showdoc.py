@@ -217,7 +217,7 @@ def show_doc(elt, doc_string=True, name=None, title_level=None, disp=True, defau
         else:                        name,args = _format_cls_doc (elt, qname)
     elif isinstance(elt, Callable):  name,args = _format_func_doc(elt, qname)
     else:                            name,args = f"<code>{qname}</code>", ''
-    link = get_nb_source_link(elt) #TODO: use get_source_link when it works
+    link = get_source_link(elt) #TODO: use get_source_link when it works
     source_link = f'<a href="{link}" class="source_link" style="float:right">[source]</a>'
     title_level = title_level or (default_cls_level if inspect.isclass(elt) else 4)
     doc =  f'<h{title_level} id="{qname}" class="doc_header">{name}{source_link}</h{title_level}>'

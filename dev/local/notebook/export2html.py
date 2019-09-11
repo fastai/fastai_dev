@@ -231,8 +231,8 @@ def get_metadata(cells):
             'title'   : 'Title'}
 
 #Cell
-#Catches any cell with a show_doc or an export/exports hashtag
-_re_cell_to_execute = re.compile(r"^\s*show_doc\(([^\)]*)\)|^\s*#\s*exports?\s*", re.MULTILINE)
+#Catches any cell with a show_doc or an import from local
+_re_cell_to_execute = re.compile(r"^\s*show_doc\(([^\)]*)\)|^from local\.", re.MULTILINE)
 
 #Cell
 class ExecuteShowDocPreprocessor(ExecutePreprocessor):
@@ -244,9 +244,10 @@ class ExecuteShowDocPreprocessor(ExecutePreprocessor):
         return cell, resources
 
 #Cell
-def _import_show_doc_cell(name=None):
+def _import_show_doc_cell(mod=None, name=None):
     "Add an import show_doc cell + deal with the __file__ hack if necessary."
     source = f"#export\nfrom local.notebook.showdoc import show_doc"
+    if mod:  source += f"\nfrom local.{mod} import *"
     if name: source += f"\nfrom pathlib import Path\n__file__ = {name}"
     return {'cell_type': 'code',
             'execution_count': None,
@@ -254,9 +255,9 @@ def _import_show_doc_cell(name=None):
             'outputs': [],
             'source': source}
 
-def execute_nb(nb, metadata=None, show_doc_only=True, name=None):
+def execute_nb(nb, mod=None, metadata=None, show_doc_only=True, name=None):
     "Execute `nb` (or only the `show_doc` cells) with `metadata`"
-    nb['cells'].insert(0, _import_show_doc_cell(name))
+    nb['cells'].insert(0, _import_show_doc_cell(mod, name))
     ep_cls = ExecuteShowDocPreprocessor if show_doc_only else ExecutePreprocessor
     ep = ep_cls(timeout=600, kernel_name='python3')
     metadata = metadata or {}
@@ -312,6 +313,7 @@ def convert_nb(fname, dest_path='docs'):
     nb = read_nb(fname)
     cls_lvl = find_default_level(nb['cells'])
     _name = _find_file(nb['cells'])
+    mod = find_default_export(nb['cells'])
     nb['cells'] = compose(*process_cells,partial(add_show_docs, cls_lvl=cls_lvl))(nb['cells'])
     nb['cells'] = [compose(partial(copy_images, fname=fname, dest=dest_path), *process_cell, treat_backticks)(c)
                     for c in nb['cells']]
@@ -319,7 +321,7 @@ def convert_nb(fname, dest_path='docs'):
     dest_name = '.'.join(fname.with_suffix('.html').name.split('_')[1:])
     meta_jekyll = get_metadata(nb['cells'])
     meta_jekyll['nb_path'] = f'{fname.parent.name}/{fname.name}'
-    nb = execute_nb(nb, name=_name)
+    nb = execute_nb(nb, mod=mod, name=_name)
     nb['cells'] = [clean_exports(c) for c in nb['cells']]
     #print(f'{dest_path}/{dest_name}')
     with open(f'{dest_path}/{dest_name}','w') as f:

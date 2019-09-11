@@ -66,7 +66,7 @@ summary: "summary"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fa_collate" class="doc_header"><code>fa_collate</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01c_dataloader.ipynb#DataLoader" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_collate</code>(<strong><code>t</code></strong>)</p>
+<h4 id="fa_collate" class="doc_header"><code>fa_collate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/load.py#L35" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_collate</code>(<strong><code>t</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -110,7 +110,7 @@ summary: "summary"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fa_convert" class="doc_header"><code>fa_convert</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01c_dataloader.ipynb#DataLoader" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_convert</code>(<strong><code>t</code></strong>)</p>
+<h4 id="fa_convert" class="doc_header"><code>fa_convert</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/load.py#L42" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_convert</code>(<strong><code>t</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -150,8 +150,56 @@ summary: "summary"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DataLoader" class="doc_header"><code>class</code> <code>DataLoader</code><a href="https://nbviewer.jupyter.org/github/fastai/fastai_docs/blob/master/dev/01c_dataloader.ipynb#DataLoader" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataLoader</code>(<strong><code>dataset</code></strong>=<em><code>None</code></em>, <strong><code>bs</code></strong>=<em><code>None</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="DataLoader" class="doc_header"><code>class</code> <code>DataLoader</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/torch/utils/data/dataloader.py#L60" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataLoader</code>(<strong><code>dataset</code></strong>, <strong><code>batch_size</code></strong>=<em><code>1</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>batch_sampler</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>collate_fn</code></strong>=<em><code>None</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>worker_init_fn</code></strong>=<em><code>None</code></em>, <strong><code>multiprocessing_context</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
+<p>Data loader. Combines a dataset and a sampler, and provides an iterable over
+the given dataset.</p>
+<p>The :class:<code>~torch.utils.data.DataLoader</code> supports both map-style and
+iterable-style datasets with single- or multi-process loading, customizing
+loading order and optional automatic batching (collation) and memory pinning.</p>
+<p>See :py:mod:<code>torch.utils.data</code> documentation page for more details.</p>
+<p>Arguments:
+    dataset (Dataset): dataset from which to load the data.
+    batch_size (int, optional): how many samples per batch to load
+        (default: <code>1</code>).
+    shuffle (bool, optional): set to <code>True</code> to have the data reshuffled
+        at every epoch (default: <code>False</code>).
+    sampler (Sampler, optional): defines the strategy to draw samples from
+        the dataset. If specified, :attr:<code>shuffle</code> must be <code>False</code>.
+    batch_sampler (Sampler, optional): like :attr:<code>sampler</code>, but returns a batch of
+        indices at a time. Mutually exclusive with :attr:<code>batch_size</code>,
+        :attr:<code>shuffle</code>, :attr:<code>sampler</code>, and :attr:<code>drop_last</code>.
+    num_workers (int, optional): how many subprocesses to use for data
+        loading. <code>0</code> means that the data will be loaded in the main process.
+        (default: <code>0</code>)
+    collate_fn (callable, optional): merges a list of samples to form a
+        mini-batch of Tensor(s).  Used when using batched loading from a
+        map-style dataset.
+    pin_memory (bool, optional): If <code>True</code>, the data loader will copy Tensors
+        into CUDA pinned memory before returning them.  If your data elements
+        are a custom type, or your :attr:<code>collate_fn</code> returns a batch that is a custom type,
+        see the example below.
+    drop_last (bool, optional): set to <code>True</code> to drop the last incomplete batch,
+        if the dataset size is not divisible by the batch size. If <code>False</code> and
+        the size of dataset is not divisible by the batch size, then the last batch
+        will be smaller. (default: <code>False</code>)
+    timeout (numeric, optional): if positive, the timeout value for collecting a batch
+        from workers. Should always be non-negative. (default: <code>0</code>)
+    worker_init_fn (callable, optional): If not <code>None</code>, this will be called on each
+        worker subprocess with the worker id (an int in <code>[0, num_workers - 1]</code>) as
+        input, after seeding and before data loading. (default: <code>None</code>)</p>
+<p>.. warning:: If the <code>spawn</code> start method is used, :attr:<code>worker_init_fn</code>
+             cannot be an unpicklable object, e.g., a lambda function. See
+             :ref:<code>multiprocessing-best-practices</code> on more details related
+             to multiprocessing in PyTorch.</p>
+<p>.. note:: <code>len(dataloader)</code> heuristic is based on the length of the sampler used.
+          When :attr:<code>dataset</code> is an :class:<code>~torch.utils.data.IterableDataset</code>,
+          an infinite sampler is used, whose :meth:<code>__len__</code> is not
+          implemented, because the actual length depends on both the
+          iterable as well as multi-process loading configurations. So one
+          should not query this method unless they work with a map-style
+          dataset. See <code>Dataset Types</code>_ for more details on these two types
+          of datasets.</p>
 
 </div>
 
