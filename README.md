@@ -10,7 +10,7 @@ git clone https://github.com/fastai/fastai_dev.git
 2. Install packages:
 
 ```bash
-conda install -c fastai -c pytorch jupyter "pytorch>=1.2.0" torchvision matplotlib pandas requests pyyaml fastprogress pillow "python>=3.6" pip scikit-learn scipy spacy
+conda install -c fastai -c pytorch jupyter "pytorch>=1.2.0" torchvision matplotlib pandas requests pyyaml fastprogress pillow pip scikit-learn scipy spacy
 pip install typeguard jupyter_nbextensions_configurator
 ```
 Alternatively, install packages using conda environment:
