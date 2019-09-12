@@ -136,6 +136,7 @@ class TfmdDS(TfmdBase):
     "A dataset that creates a tuple from each `tfms`, passed thru `ds_tfms`"
     def __init__(self, items, tfms=None, do_setup=True, use_list=None, filt=None):
         super().__init__(items, use_list=use_list)
+        if tfms is None: tms = [None]
         self.tls = [TfmdList(items, t, do_setup=do_setup, filt=filt, use_list=use_list) for t in L(tfms)]
 
     def _get(self, it): return tuple(tl._get(it) for tl in self.tls)

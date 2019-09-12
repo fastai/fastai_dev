@@ -96,6 +96,7 @@ def RegexLabeller(pat):
 
 #Cell
 class CategoryMap(CollBase):
+    "Collection of categories with the reverse mapping in `o2i`"
     def __init__(self, col, sort=True, add_na=False):
         if is_categorical_dtype(col): items = L(col.cat.categories, use_list=True)
         else:

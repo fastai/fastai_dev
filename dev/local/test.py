@@ -82,4 +82,5 @@ TEST_IMAGE = 'images/puppy.jpg'
 
 #Cell
 def test_fig_exists(ax):
+    "Test there is a figure displayed in `ax`"
     assert ax and len(np.frombuffer(ax.figure.canvas.tostring_argb(), dtype=np.uint8))
