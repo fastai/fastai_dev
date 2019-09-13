@@ -237,11 +237,11 @@ def trainable_params(m):
     return [p for p in m.parameters() if p.requires_grad]
 
 #Cell
-def bn_bias_params(m):
+def bn_bias_params(m, with_bias=True):
     "Return all bias and BatchNorm parameters"
     if isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)): return list(m.parameters())
-    res = sum([bn_bias_params(c) for c in m.children()], [])
-    if hasattr(m, 'bias'): res.append(m.bias)
+    res = sum([bn_bias_params(c, with_bias) for c in m.children()], [])
+    if with_bias and hasattr(m, 'bias'): res.append(m.bias)
     return res
 
 #Cell

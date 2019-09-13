@@ -104,11 +104,9 @@ defaults.callbacks = [TrainEvalCallback]
 class Learner():
     "Group together a `model`, some `dbunch` and a `loss_func` to handle training"
     def __init__(self, model, dbunch, loss_func, opt_func=SGD, lr=1e-2, splitter=trainable_params,
-                 cbs=None, cb_funcs=None, metrics=None, path=None, wd_bn_bias=False):
-        self.model,self.dbunch,self.loss_func = model,dbunch,loss_func
-        self.opt_func,self.lr,self.splitter,self.wd_bn_bias = opt_func,lr,splitter,wd_bn_bias
+                 cbs=None, cb_funcs=None, metrics=None, path=None, wd_bn_bias=False, train_bn=True):
+        store_attr(self, "model,dbunch,loss_func,opt_func,lr,splitter,wd_bn_bias,train_bn")
         self.path = path if path is not None else getattr(dbunch, 'path', Path('.'))
-
         self.metrics = [m if isinstance(m, Metric) else AvgMetric(m) for m in L(metrics)]
         self.training,self.logger,self.opt = False,print,None
         self.cbs = L([])
@@ -141,17 +139,20 @@ class Learner():
 
     @contextmanager
     def added_cbs(self, cbs):
+        "Context manage that temporarily adds `cbs`"
         self.add_cbs(cbs)
         yield
         self.remove_cbs(cbs)
 
     def create_opt(self, lr=None):
+        "Create an optimizer with `lr`"
         opt = self.opt_func(self.splitter(self.model), lr=self.lr if lr is None else lr)
         if not self.wd_bn_bias:
             for p in bn_bias_params(self.model):
-                p_state = opt.state.get(p, {})
-                p_state['do_wd'] = False
-                opt.state[p] = p_state
+                opt.state[p] = {**opt.state.get(p, {}), 'do_wd': False}
+        if self.train_bn:
+            for p in bn_bias_params(self.model, with_bias=False):
+                opt.state[p] = {**opt.state.get(p, {}), 'force_train': True}
         return opt
 
     def one_batch(self, xb, yb, i=None):
@@ -402,3 +403,15 @@ add_docs(Recorder,
          plot_loss = "Plot the losses")
 
 defaults.callbacks = [TrainEvalCallback, Recorder]
+
+#Cell
+@patch
+def freeze_to(self:Learner, n):
+    if self.opt is None: self.opt = self.create_opt(lr=self.lr)
+    self.opt.freeze_to(n)
+
+@patch
+def freeze(self:Learner): self.freeze_to(-1)
+
+@patch
+def unfreeze(self:Learner): self.freeze_to(0)

@@ -12,9 +12,9 @@ from .notebook.showdoc import show_doc
 #Cell
 class Optimizer():
     "Base optimizer class for the fastai library, updating `params` with `steppers`"
-    def __init__(self, params, steppers, stats=None, **defaults):
+    def __init__(self, params, steppers, stats=None, train_bn=True, **defaults):
         steppers,params = L(steppers),L(params)
-        self.stats,self.state = L(stats),{}
+        self.stats,self.state,self.train_bn = L(stats),{},train_bn
         for stat in self.stats: defaults = {**getattr(stat, 'defaults', {}), **defaults}
         for step in steppers: defaults = {**getattr(step, 'defaults', {}), **defaults}
         self.param_groups = params if isinstance(params[0], (L,list)) else L([params])
@@ -27,18 +27,29 @@ class Optimizer():
             for p in pg if p.grad is not None]
 
     def zero_grad(self):
-        "Zero all the grad attributes of the parameters"
         for p,hyper in self._grad_params():
             p.grad.detach_()
             p.grad.zero_()
 
     def step(self):
-        "Update the stats and execute the steppers in on all parameters that have a grad"
         for p,hyper in self._grad_params():
             state = self.state.get(p, {})
             for stat in self.stats: state = stat(state, p, **hyper)
             self.step_func(p, **{**state, **hyper})
             self.state[p] = state
+
+    def _set_require_grad(self, pg, rg):
+        for p in pg: p.requires_grad_(rg or self.state.get(p, {}).get('force_train', False))
+
+    def freeze_to(self, n):
+        for pg in self.param_groups[:n]: self._set_require_grad(pg, False)
+        for pg in self.param_groups[n:]: self._set_require_grad(pg, True)
+
+    def freeze(self):
+        assert(len(self.param_groups)>1)
+        self.freeze_to(-1)
+
+    def unfreeze(self): self.freeze_to(0)
 
 #Cell
 def sgd_step(p, lr, **kwargs):
