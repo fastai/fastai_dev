@@ -317,9 +317,9 @@ def init_default(m, func=nn.init.kaiming_normal_):
     return m
 
 #Cell
-def cond_init(m, init_func):
+def cond_init(m, func):
     "Apply `init_default` to `m` unless it's a batchnorm module"
-    if (not isinstance(m, bn_types)) and requires_grad(m): init_default(m, init_func)
+    if (not isinstance(m, bn_types)) and requires_grad(m): init_default(m, func)
 
 #Cell
 def apply_leaf(m, f):
@@ -329,9 +329,9 @@ def apply_leaf(m, f):
     for l in c: apply_leaf(l,f)
 
 #Cell
-def apply_init(m, init_func=nn.init.kaiming_normal_):
-    "Initialize all non-batchnorm layers of `m` with `init_func`."
-    apply_leaf(m, partial(cond_init, init_func=init_func))
+def apply_init(m, func=nn.init.kaiming_normal_):
+    "Initialize all non-batchnorm layers of `m` with `func`."
+    apply_leaf(m, partial(cond_init, func=func))
 
 #Comes from 20_metrics.ipynb, cell
 def flatten_check(inp, targ, detach=True):
