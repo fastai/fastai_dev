@@ -2,8 +2,8 @@
 
 __all__ = ['tensor', 'set_seed', 'TensorBase', 'concat', 'Chunks', 'apply', 'to_detach', 'to_half', 'to_float',
            'default_device', 'to_device', 'to_cpu', 'to_np', 'item_find', 'find_device', 'find_bs', 'Module', 'one_hot',
-           'one_hot_decode', 'trainable_params', 'bn_bias_params', 'make_cross_image', 'show_title', 'show_image',
-           'show_titled_image', 'show_image_batch', 'flatten_check']
+           'one_hot_decode', 'trainable_params', 'bn_types', 'bn_bias_params', 'make_cross_image', 'show_title',
+           'show_image', 'show_titled_image', 'show_image_batch', 'flatten_check']
 
 #Cell
 from .test import *
@@ -237,9 +237,12 @@ def trainable_params(m):
     return [p for p in m.parameters() if p.requires_grad]
 
 #Cell
+bn_types = (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)
+
+#Cell
 def bn_bias_params(m, with_bias=True):
     "Return all bias and BatchNorm parameters"
-    if isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)): return list(m.parameters())
+    if isinstance(m, bn_types): return list(m.parameters())
     res = sum([bn_bias_params(c, with_bias) for c in m.children()], [])
     if with_bias and hasattr(m, 'bias'): res.append(m.bias)
     return res
