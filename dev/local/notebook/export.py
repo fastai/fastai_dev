@@ -172,7 +172,7 @@ def _relative_import(name, fname):
     splits = str(fname).split(os.path.sep)
     if mods[0] not in splits: return name
     splits = splits[splits.index(mods[0]):]
-    while splits[0] == mods[0]: splits,mods = splits[1:],mods[1:]
+    while len(mods)>0 and splits[0] == mods[0]: splits,mods = splits[1:],mods[1:]
     return '.' * (len(splits)) + '.'.join(mods)
 
 #Cell

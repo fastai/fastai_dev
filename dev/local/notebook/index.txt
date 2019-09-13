@@ -396,6 +396,7 @@
   "num_features_model": "22_vision_learner.ipynb",
   "create_head": "22_vision_learner.ipynb",
   "create_cnn_model": "22_vision_learner.ipynb",
+  "model_meta": "22_vision_learner.ipynb",
   "cnn_learner": "22_vision_learner.ipynb",
   "ProcessPoolExecutor": "30_text_core.ipynb",
   "parallel": "30_text_core.ipynb",
