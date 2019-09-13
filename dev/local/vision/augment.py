@@ -225,7 +225,7 @@ class AffineCoordTfm(RandTransform):
     def encodes(self, x:TensorImage):
         if self.mat is None and len(self.coord_tfms)==0: return x
         bs = x.size(0)
-        size = tuple(x.shape[-2:]) if self.cp_size is None else size
+        size = tuple(x.shape[-2:]) if self.cp_size is None else self.cp_size
         size = (bs,x.size(1)) + size
         coords = F.affine_grid(self.mat, size)
         coords = compose_tfms(coords, self.coord_fs)
