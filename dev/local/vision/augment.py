@@ -282,9 +282,7 @@ def Flip(p=0.5, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
 #Cell
 def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0.):
     if draw is None: draw=def_draw
-    if isinstance(draw, Callable):
-        res = x.new_empty(x.size(0))
-        for i in range_of(res): res[i] = draw()
+    if isinstance(draw, Callable): return draw(x)
     elif is_listy(draw):
         test_eq(len(draw), x.size(0))
         res = tensor(draw, dtype=x.dtype, device=x.device)
@@ -294,7 +292,7 @@ def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0.):
 #Cell
 def dihedral_mat(x, p=0.5, draw=None):
     "Return a random dihedral matrix"
-    def _def_draw(): return random.randint(0,7)
+    def _def_draw(x): return torch.randint(0,8, (x.size(0),), device=x.device)
     idx = _draw_mask(x, _def_draw, draw=draw, p=p).long()
     xs = tensor([1,-1,1,-1,-1,1,1,-1], device=x.device).gather(0, idx)
     ys = tensor([1,1,-1,1,-1,-1,1,-1], device=x.device).gather(0, idx)
@@ -312,7 +310,7 @@ def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Refl
 #Cell
 def rotate_mat(x, max_deg=10, p=0.5, draw=None):
     "Return a random rotation matrix with `max_deg` and `p`"
-    def _def_draw(): return random.uniform(-max_deg,max_deg)
+    def _def_draw(x): return x.new(x.size(0)).uniform_(-max_deg, max_deg)
     thetas = _draw_mask(x, _def_draw, draw=draw, p=p) * math.pi/180
     return affine_mat(thetas.cos(), thetas.sin(), t0(thetas),
                      -thetas.sin(), thetas.cos(), t0(thetas))
@@ -326,8 +324,8 @@ def Rotate(max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=Pa
 #Cell
 def zoom_mat(x, max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None):
     "Return a random zoom matrix with `max_zoom` and `p`"
-    def _def_draw():     return random.uniform(1., max_zoom)
-    def _def_draw_ctr(): return random.uniform(0.,1.)
+    def _def_draw(x):     return x.new(x.size(0)).uniform_(1, max_zoom)
+    def _def_draw_ctr(x): return x.new(x.size(0)).uniform_(0,1)
     s = 1/_draw_mask(x, _def_draw, draw=draw, p=p, neutral=1.)
     col_pct = _draw_mask(x, _def_draw_ctr, draw=draw_x, p=1.)
     row_pct = _draw_mask(x, _def_draw_ctr, draw=draw_y, p=1.)
@@ -372,7 +370,7 @@ class _WarpCoord():
     def __init__(self, magnitude=0.2, p=0.5, draw_x=None, draw_y=None):
         self.coeffs,self.magnitude,self.p,self.draw_x,self.draw_y = None,magnitude,p,draw_x,draw_y
 
-    def _def_draw(self): return random.uniform(-self.magnitude, self.magnitude)
+    def _def_draw(self, x): return x.new(x.size(0)).uniform_(-self.magnitude, self.magnitude)
     def randomize(self, x):
         x_t = _draw_mask(x, self._def_draw, self.draw_x, p=self.p)
         y_t = _draw_mask(x, self._def_draw, self.draw_y, p=self.p)
@@ -419,7 +417,7 @@ class _BrightnessLogit():
     def __init__(self, max_lighting=0.2, p=0.75, draw=None):
         self.max_lighting,self.p,self.draw = max_lighting,p,draw
 
-    def _def_draw(self): return random.uniform(0.5*(1-self.max_lighting), 0.5*(1+self.max_lighting))
+    def _def_draw(self, x): return x.new(x.size(0)).uniform_(0.5*(1-self.max_lighting), 0.5*(1+self.max_lighting))
 
     def randomize(self, x):
         self.change = _draw_mask(x, self._def_draw, draw=self.draw, p=self.p, neutral=0.5)
@@ -436,8 +434,8 @@ class _ContrastLogit():
     def __init__(self, max_lighting=0.2, p=0.75, draw=None):
         self.max_lighting,self.p,self.draw = max_lighting,p,draw
 
-    def _def_draw(self):
-        return math.exp(random.uniform(math.log(1-self.max_lighting), -math.log(1-self.max_lighting)))
+    def _def_draw(self, x):
+        return torch.exp(x.new(x.size(0)).uniform_(math.log(1-self.max_lighting), -math.log(1-self.max_lighting)))
 
     def randomize(self, x):
         self.change = _draw_mask(x, self._def_draw, draw=self.draw, p=self.p, neutral=1.)
