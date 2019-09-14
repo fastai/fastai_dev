@@ -257,11 +257,22 @@ def notebook2script(fname=None, all_fs=None, up_to=None, silent=False, to_pkl=Fa
     [_notebook2script(f, silent=silent, to_pkl=to_pkl) for f in fnames]
 
 #Cell
+def _get_property_name(p):
+    "Get the name of property `p`"
+    if hasattr(p, 'fget'):
+        if hasattr(p.fget, 'func'):
+            return p.fget.func.__qualname__
+        else:
+            return p.fget.__qualname__
+    else:
+        return next(iter(re.findall(r'\'(.*)\'', str(p)))).split('.')[-1]
+
 def get_name(obj):
     "Get the name of `obj`"
     if hasattr(obj, '__name__'):       return obj.__name__
     elif getattr(obj, '_name', False): return obj._name
     elif hasattr(obj,'__origin__'):    return str(obj.__origin__).split('.')[-1] #for types
+    elif type(obj)==property:          return _get_property_name(obj)
     else:                              return str(obj).split('.')[-1]
 
 #Cell
