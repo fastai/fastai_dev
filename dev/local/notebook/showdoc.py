@@ -87,12 +87,21 @@ def add_doc_links(text):
 def _is_type_dispatch(x): return x.__class__.__name__ == "TypeDispatch"
 def _unwrapped_type_dispatch_func(x): return next(iter(x.funcs.values())) if _is_type_dispatch(x) else x
 
+def _is_property(x): return type(x)==property
+def _has_property_getter(x): return _is_property(x) and hasattr(x, 'fget') and hasattr(x.fget, 'func')
+def _property_getter(x): return x.fget.func if _has_property_getter(x) else x
+
+def _unwrapped_func(x):
+    x = _unwrapped_type_dispatch_func(x)
+    x = _property_getter(x)
+    return x
+
 #Cell
 SOURCE_URL = "https://github.com/fastai/fastai_dev/tree/master/dev/"
 
 def get_source_link(func):
     "Return link to `func` in source code"
-    func = _unwrapped_type_dispatch_func(func)
+    func = _unwrapped_func(func)
     try: line = inspect.getsourcelines(func)[1]
     except Exception: return ''
     module = inspect.getmodule(func).__name__.replace('.', '/') + '.py'
