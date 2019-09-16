@@ -260,12 +260,8 @@ def notebook2script(fname=None, all_fs=None, up_to=None, silent=False, to_pkl=Fa
 def _get_property_name(p):
     "Get the name of property `p`"
     if hasattr(p, 'fget'):
-        if hasattr(p.fget, 'func'):
-            return p.fget.func.__qualname__
-        else:
-            return p.fget.__qualname__
-    else:
-        return next(iter(re.findall(r'\'(.*)\'', str(p)))).split('.')[-1]
+        return p.fget.func.__qualname__ if hasattr(p.fget, 'func') else p.fget.__qualname__
+    else: return next(iter(re.findall(r'\'(.*)\'', str(p)))).split('.')[-1]
 
 def get_name(obj):
     "Get the name of `obj`"
