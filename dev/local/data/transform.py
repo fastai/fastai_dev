@@ -88,7 +88,7 @@ class TypeDispatch:
     def __call__(self, x, *args, **kwargs):
         f = self[type(x)]
         if not f: return x
-        if self.inst: f = types.MethodType(f, self.inst)
+        if self.inst is not None: f = types.MethodType(f, self.inst)
         return f(x, *args, **kwargs)
 
     def __get__(self, inst, owner):
@@ -104,10 +104,11 @@ class TypeDispatch:
         return res
 
 #Cell
+_tfm_methods = 'encodes','decodes','setups'
+
 class _TfmDict(dict):
     def __setitem__(self,k,v):
-        if k=='_': k='encodes'
-        if k not in ('encodes','decodes') or not isinstance(v,Callable): return super().__setitem__(k,v)
+        if k not in _tfm_methods or not isinstance(v,Callable): return super().__setitem__(k,v)
         if k not in self: super().__setitem__(k,TypeDispatch())
         res = self[k]
         res.add(v)
@@ -122,10 +123,10 @@ class _TfmMeta(type):
     def __call__(cls, *args, **kwargs):
         f = args[0] if args else None
         n = getattr(f,'__name__',None)
-        if not hasattr(cls,'encodes'): cls.encodes=TypeDispatch()
-        if not hasattr(cls,'decodes'): cls.decodes=TypeDispatch()
-        if isinstance(f,Callable) and n in ('decodes','encodes','_'):
-            getattr(cls,'encodes' if n=='_' else n).add(f)
+        for nm in _tfm_methods:
+            if not hasattr(cls,nm): setattr(cls, nm, TypeDispatch())
+        if isinstance(f,Callable) and n in _tfm_methods:
+            getattr(cls,n).add(f)
             return f
         return super().__call__(*args, **kwargs)
 
@@ -134,7 +135,7 @@ class _TfmMeta(type):
 
 #Cell
 class Transform(metaclass=_TfmMeta):
-    "Delegates (`__call__`,`decode`) to (`encodes`,`decodes`) if `filt` matches"
+    "Delegates (`__call__`,`decode`,`setup`) to (`encodes`,`decodes`,`setups`) if `filt` matches"
     filt,init_enc,as_item_force,as_item,order = None,False,None,True,0
     def __init__(self, enc=None, dec=None, filt=None, as_item=False):
         self.filt,self.as_item = ifnone(filt, self.filt),as_item
@@ -142,8 +143,8 @@ class Transform(metaclass=_TfmMeta):
         if not self.init_enc: return
 
         # Passing enc/dec, so need to remove (base) class level enc/dec
-        del(self.__class__.encodes,self.__class__.decodes)
-        self.encodes,self.decodes = (TypeDispatch(),TypeDispatch())
+        del(self.__class__.encodes,self.__class__.decodes,self.__class__.setups)
+        self.encodes,self.decodes,self.setups = TypeDispatch(),TypeDispatch(),TypeDispatch()
         if enc:
             self.encodes.add(enc)
             self.order = getattr(self.encodes,'order',self.order)
@@ -153,7 +154,7 @@ class Transform(metaclass=_TfmMeta):
     def use_as_item(self): return ifnone(self.as_item_force, self.as_item)
     def __call__(self, x, **kwargs): return self._call('encodes', x, **kwargs)
     def decode  (self, x, **kwargs): return self._call('decodes', x, **kwargs)
-    def setup(self, items=None): return getattr(self,'setups',noop)(items)
+    def setup(self, items=None): return self.setups(items)
     def __repr__(self): return f'{self.__class__.__name__}: {self.use_as_item} {self.encodes} {self.decodes}'
 
     def _call(self, fn, x, filt=None, **kwargs):
