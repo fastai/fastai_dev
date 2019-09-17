@@ -39,12 +39,9 @@ class Callback():
 class TrainEvalCallback(Callback):
     "`Callback` that tracks the number of iterations done and properly sets training/eval mode"
     def begin_fit(self):
-        "Set the iter and epoch counters to 0"
+        "Set the iter and epoch counters to 0, put the model and the right device"
         self.learn.train_iter,self.learn.pct_train = 0,0.
-
-    def begin_batch(self):
-        "On the first batch, put the model on the right device"
-        if self.learn.train_iter == 0: self.model.to(find_device(self.xb))
+        self.model.to(self.dbunch.device)
 
     def after_batch(self):
         "Update the iter counter (in training mode)"
