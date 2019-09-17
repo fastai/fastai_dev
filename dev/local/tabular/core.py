@@ -18,28 +18,33 @@ class Tabular(CollBase):
     "A `DataFrame` wrapper that knows which cols are cont/cat/y, and returns rows in `__getitem__`"
     def __init__(self, df, cat_names=None, cont_names=None, y_names=None, is_y_cat=True, split=None):
         super().__init__(df)
-        self.split = None if split is None else split-1 #pandas is crazy and loc is inclusive
-        store_attr(self, 'y_names,is_y_cat')
+        store_attr(self, 'y_names,is_y_cat,split')
         self.cat_names,self.cont_names = L(cat_names),L(cont_names)
         self.cat_y  = None if not is_y_cat else y_names
         self.cont_y = None if     is_y_cat else y_names
 
     def _new(self, df):
-        return TabularPandas(df, self.cat_names, self.cont_names, y_names=self.y_names, is_y_cat=self.is_y_cat, split=self.split)
+        return Tabular(df, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat, split=self.split)
 
     def set_col(self,k,v): super().__setitem__(k, v)
     def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
-    def __getitem__(self, idxs): return self._new(self.items.iloc[idxs])
+
+    def __getitem__(self, idxs):
+        rows,cols = idxs if isinstance(idxs,tuple) else (idxs,None)
+        f = self.items.columns.get_loc
+        c = (slice(None) if cols is None
+             else L(cols).mapped(f) if is_listy(cols)
+             else f(cols))
+        return self._new(self.items.iloc[rows, c])
+
     def __getattr__(self,k):
         if k.startswith('_') or k=='items': raise AttributeError
         return getattr(self.items,k)
 
-    @property
-    def __array__(self): return self.items.__array__
+#     @property
+#     def __array__(self): return self.items.__array__
     @property
     def iloc(self): return self
-    @property
-    def loc(self): return self.items.loc
 
     @property
     def targ(self): return self.items[self.y_names]
@@ -52,7 +57,7 @@ class Tabular(CollBase):
 
 #Cell
 class TabularPandas(Tabular):
-    def transform(self, cols, f): self.set_col(cols, self.loc[:,cols].transform(f))
+    def transform(self, cols, f): self.set_col(cols, self[:,cols].transform(f))
 
 #Cell
 def _add_prop(cls, nm):
@@ -71,7 +76,6 @@ _add_prop(Tabular, 'all_col')
 class TabularProc(InplaceTransform):
     "Base class to write a non-lazy tabular processor for dataframes"
     def setup(self, items=None):
-#         set_trace()
         super().setup(items)
         # Procs are called as soon as data is available
         return self(items)
@@ -82,7 +86,7 @@ class Categorify(TabularProc, CollBase):
     order = 1
     def __init__(self): self.items=[]
     def setups(self, to):
-        to.classes = self.items = {n:CategoryMap(to.loc[:to.split,n], add_na=True)
+        to.classes = self.items = {n:CategoryMap(to[:to.split,n], add_na=True)
                                    for n in to.all_cat_names}
 
     def _apply_cats (self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
@@ -95,7 +99,7 @@ class Normalize(TabularProc):
     "Normalize the continuous variables."
     order = 2
     def setups(self, to):
-        df = to.loc[:to.split, to.cont_names]
+        df = to[:to.split, to.cont_names]
         self.means,self.stds = df.mean(),df.std(ddof=0)+1e-7
 
     def encodes(self, to): to.conts = (to.conts-self.means) / self.stds
@@ -116,7 +120,7 @@ class FillMissing(TabularProc):
         store_attr(self, 'fill_strategy,add_col,fill_vals')
 
     def setups(self, to):
-        df = to.loc[:to.split, to.cont_names]
+        df = to[:to.split, to.cont_names].items
         self.na_dict = {n:self.fill_strategy(df[n], self.fill_vals[n])
                         for n in pd.isnull(to.conts).any().keys()}
 
@@ -124,7 +128,7 @@ class FillMissing(TabularProc):
         missing = pd.isnull(to.conts)
         for n in missing.any().keys():
             assert n in self.na_dict, f"nan values in `{n}` but not in setup training set"
-            to.loc[:,n].fillna(self.na_dict[n], inplace=True)
+            to[:,n].fillna(self.na_dict[n], inplace=True)
             if self.add_col:
                 to.loc[:,n+'_na'] = missing[n]
                 if n+'_na' not in to.cat_names: to.cat_names.append(n+'_na')
@@ -144,15 +148,12 @@ def process_df(df, procs, inplace=True, splits=None, **kwargs):
 #Cell
 class ReadTabBatch(ItemTransform):
     def __init__(self, proc): self.proc = proc
-
-    def encodes(self, to):
-        return (tensor(to.cats.values).long(),tensor(to.conts.values).float()), tensor(to.targ.values).long()
+    def encodes(self, to): return (tensor(to.cats).long(),tensor(to.conts).float()), tensor(to.targ).long()
 
     def decodes(self, o):
         (cats,conts),targs = to_np(o)
-        df = pd.DataFrame({**{c: cats [:,i] for i,c in enumerate(self.proc.cat_names )},
-                           **{c: conts[:,i] for i,c in enumerate(self.proc.cont_names)},
-                           self.proc.y_names: targs})
+        vals = np.concatenate([cats,conts,targs[:,None]], axis=1)
+        df = pd.DataFrame(vals, columns=self.proc.cat_names+self.proc.cont_names+self.proc.y_names)
         to = TabularPandas(df, self.proc.cat_names, self.proc.cont_names, self.proc.y_names, is_y_cat=self.proc.cat_y is not None)
         to = self.proc.decode(to)
         return to

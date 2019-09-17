@@ -9,7 +9,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'TupleTitled', 'trace',
            'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self',
            'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint',
-           'camel2snake', 'PrettyString', 'one_param']
+           'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -215,10 +215,12 @@ def mask2idxs(mask):
     return [int(i) for i in mask]
 
 #Cell
+def _is_array(x): return hasattr(x,'__array__') or hasattr(x,'iloc')
+
 def _listify(o):
     if o is None: return []
     if isinstance(o, list): return o
-    if isinstance(o, str) or hasattr(o,'__array__'): return [o]
+    if isinstance(o, str) or _is_array(o): return [o]
     if is_iter(o): return list(o)
     return [o]
 
@@ -252,7 +254,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
         if items is None: items = []
-        if (use_list is not None) or not hasattr(items,'__array__'):
+        if (use_list is not None) or not _is_array(items):
             items = list(items) if use_list else _listify(items)
         if match is not None:
             if len(items)==1: items = items*len(match)
@@ -739,6 +741,3 @@ def camel2snake(name):
 class PrettyString(str):
     "Little hack to get strings to show properly in Jupyter."
     def __repr__(self): return self
-
-#Comes from 32_text_models_awdlstm.ipynb, cell
-def one_param(m): return next(iter(m.parameters()))
