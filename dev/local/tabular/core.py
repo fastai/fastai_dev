@@ -24,12 +24,13 @@ class Tabular(CollBase):
         self.cont_y = None if     is_y_cat else y_names
 
     def _new(self, df):
-        return Tabular(df, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat, split=self.split)
+        return self.__class__(df, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat, split=self.split)
 
     def set_col(self,k,v): super().__setitem__(k, v)
     def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
 
     def __getitem__(self, idxs):
+        "Get/set rows by iloc and cols by name"
         rows,cols = idxs if isinstance(idxs,tuple) else (idxs,None)
         f = self.items.columns.get_loc
         c = (slice(None) if cols is None
@@ -41,11 +42,8 @@ class Tabular(CollBase):
         if k.startswith('_') or k=='items': raise AttributeError
         return getattr(self.items,k)
 
-#     @property
-#     def __array__(self): return self.items.__array__
     @property
     def iloc(self): return self
-
     @property
     def targ(self): return self.items[self.y_names]
     @property
@@ -57,7 +55,7 @@ class Tabular(CollBase):
 
 #Cell
 class TabularPandas(Tabular):
-    def transform(self, cols, f): self.set_col(cols, self[:,cols].transform(f))
+    def transform(self, cols, f): self.set_col(cols, self[:,cols].items.transform(f))
 
 #Cell
 def _add_prop(cls, nm):
@@ -110,7 +108,7 @@ class FillStrategy:
     "Namespace containing the various filling strategies."
     def median  (c,fill): return c.median()
     def constant(c,fill): return fill
-    def mode    (c,fill): return c.dropna().value_counts().idxmax()
+    def mode    (c,fill): return c.dropna().value_counts().index[0]
 
 #Cell
 class FillMissing(TabularProc):
