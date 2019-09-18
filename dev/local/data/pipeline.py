@@ -55,22 +55,26 @@ def mk_transform(f, as_item=True):
     return f if isinstance(f,Transform) else Transform(f, as_item=as_item)
 
 #Cell
-class Pipeline(GetAttr):
+class Pipeline:
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None, as_item=False, filt=None):
-        if not funcs: funcs=[noop]
         if isinstance(funcs, Pipeline): funcs = funcs.fs
-        self.filt = filt
-        self.fs = L(funcs).mapped(mk_transform).sorted(key='order')
+        self.filt,self.default = filt,None
+        self.fs = L(ifnone(funcs,[noop])).mapped(mk_transform).sorted(key='order')
         self.set_as_item(as_item)
+        for f in self.fs:
+            name = camel2snake(type(f).__name__)
+            a = getattr(self,name,None)
+            if a is not None: f = L(a)+f
+            setattr(self, name, f)
 
     def set_as_item(self, as_item):
         self.as_item = as_item
         for f in self.fs: f.as_item = as_item
 
     def setup(self, items=None):
-        self.default = self.items = items
-        tfms,self.fs = self.fs,[]
+        self.items = items
+        tfms,self.fs = self.fs,L()
         for t in tfms: self.add(t,items)
 
     def add(self,t, items=None):
@@ -84,6 +88,12 @@ class Pipeline(GetAttr):
     def decode_batch(self, b, max_n=10): return batch_to_samples(b, max_n=max_n).mapped(self.decode)
     def __setstate__(self,data): self.__dict__.update(data)
 
+    def __getattr__(self,k):
+        if k.startswith('_') or k=='fs': raise AttributeError(k)
+        res = sum(self.fs.attrgot(k).mapped(L), [])
+        if not res: raise AttributeError(k)
+        return res[0] if len(res)==1 else res
+
     def show(self, o, ctx=None, **kwargs):
         for f in reversed(self.fs):
             res = self._show(o, ctx, **kwargs)
@@ -95,7 +105,7 @@ class Pipeline(GetAttr):
         o1 = [o] if self.as_item or not is_listy(o) else o
         if not all(hasattr(o_, 'show') for o_ in o1): return
         for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
-        return 1 if ctx is None else ctx
+        return ifnone(ctx,1)
 
 #Cell
 class TfmdBase(L):

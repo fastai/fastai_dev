@@ -16,35 +16,30 @@ pd.set_option('mode.chained_assignment','raise')
 #Cell
 class Tabular(CollBase):
     "A `DataFrame` wrapper that knows which cols are cont/cat/y, and returns rows in `__getitem__`"
-    def __init__(self, df, cat_names=None, cont_names=None, y_names=None, is_y_cat=True, split=None):
+    def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True, split=None, setup=True):
         super().__init__(df)
         store_attr(self, 'y_names,is_y_cat,split')
-        self.cat_names,self.cont_names = L(cat_names),L(cont_names)
+        self.cat_names,self.cont_names,self.procs = L(cat_names),L(cont_names),Pipeline(procs)
         self.cat_y  = None if not is_y_cat else y_names
         self.cont_y = None if     is_y_cat else y_names
+        if setup: self.procs.setup(self)
 
-    def _new(self, df):
-        return Tabular(df, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat, split=self.split)
+    def new(self, df):
+        return self.__class__(df, self.procs, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat,
+                              split=self.split, setup=False)
 
-    def set_col(self,k,v): super().__setitem__(k, v)
+    def __getattr__(self,k): return delegate_attr(self, k, 'items')
     def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
+    def process(self): self.procs(self)
 
     def __getitem__(self, idxs):
-        rows,cols = idxs if isinstance(idxs,tuple) else (idxs,None)
-        f = self.items.columns.get_loc
-        c = (slice(None) if cols is None
-             else L(cols).mapped(f) if is_listy(cols)
-             else f(cols))
-        return self._new(self.items.iloc[rows, c])
-
-    def __getattr__(self,k):
-        if k.startswith('_') or k=='items': raise AttributeError
-        return getattr(self.items,k)
-
-#     @property
-#     def __array__(self): return self.items.__array__
-    @property
-    def iloc(self): return self
+        "Get/set rows by iloc and cols by name"
+        if isinstance(idxs,tuple):
+            rows,cols = idxs
+            c = self.items.columns
+            cols = c.isin(cols) if is_listy(cols) else c.get_loc(cols)
+        else: rows,cols = idxs,slice(None)
+        return self.new(self.items.iloc[rows, cols])
 
     @property
     def targ(self): return self.items[self.y_names]
@@ -57,13 +52,13 @@ class Tabular(CollBase):
 
 #Cell
 class TabularPandas(Tabular):
-    def transform(self, cols, f): self.set_col(cols, self[:,cols].transform(f))
+    def transform(self, cols, f): self[cols] = self.loc[:,cols].transform(f)
 
 #Cell
 def _add_prop(cls, nm):
     prop = property(lambda o: o.items[list(getattr(o,nm+'_names'))])
     setattr(cls, nm+'s', prop)
-    def _f(o,v): o.set_col(getattr(o,nm+'_names'), v)
+    def _f(o,v): o[getattr(o,nm+'_names')] = v
     setattr(cls, nm+'s', prop.setter(_f))
 
 _add_prop(Tabular, 'cat')
@@ -81,18 +76,17 @@ class TabularProc(InplaceTransform):
         return self(items)
 
 #Cell
-class Categorify(TabularProc, CollBase):
+class Categorify(TabularProc):
     "Transform the categorical variables to that type."
     order = 1
-    def __init__(self): self.items=[]
     def setups(self, to):
-        to.classes = self.items = {n:CategoryMap(to[:to.split,n], add_na=True)
-                                   for n in to.all_cat_names}
+        self.classes = {n:CategoryMap(to[:to.split,n], add_na=True) for n in to.all_cat_names}
 
     def _apply_cats (self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
     def _decode_cats(self, c): return c.map(dict(enumerate(self[c.name].items)))
     def encodes(self, to): to.transform(to.all_cat_names, self._apply_cats)
     def decodes(self, to): to.transform(to.all_cat_names, self._decode_cats)
+    def __getitem__(self,k): return self.classes[k]
 
 #Cell
 class Normalize(TabularProc):
@@ -138,9 +132,10 @@ class FillMissing(TabularProc):
 def process_df(df, procs, inplace=True, splits=None, **kwargs):
     "Process `df` with `procs` and returns the processed dataframe and the `TabularProcessor` associated"
     df = df if inplace else df.copy()
-    if splits is not None: df = df.iloc[sum(splits, [])].reset_index(drop=True)
-    split = None if splits is None else len(splits[0])
-    to = TabularPandas(df, split=split, **kwargs)
+    if splits is not None:
+        df = df.iloc[sum(splits, [])].reset_index(drop=True)
+        splits = len(splits[0])
+    to = TabularPandas(df, split=splits, **kwargs)
     proc = Pipeline(procs)
     proc.setup(to)
     return to,proc

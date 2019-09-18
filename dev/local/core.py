@@ -227,8 +227,6 @@ def _listify(o):
 #Cell
 class CollBase:
     "Base class for composing a list of `items`"
-    _xtra =  [o for o in dir([]) if not o.startswith('_')]
-
     def __init__(self, items): self.items = items
     def __len__(self): return len(self.items)
     def __getitem__(self, k): return self.items[k]
@@ -251,6 +249,7 @@ def zip_cycle(x, *args):
 #Cell
 class L(CollBase, GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
+    _xtra =  [o for o in dir([]) if not o.startswith('_')]
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
         if items is None: items = []
