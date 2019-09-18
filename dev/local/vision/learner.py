@@ -88,11 +88,6 @@ def create_cnn_model(arch, nc, cut, pretrained=True, lin_ftrs=None, ps=0.5, cust
     return nn.Sequential(body, head)
 
 #Cell
-def _get_c(dbunch):
-    for t in dbunch.train_ds.tls[1].tfms.fs:
-        if hasattr(t, 'vocab'): return len(t.vocab)
-
-#Cell
 def _default_split(m:nn.Module): return L(m[0], m[1]).mapped(trainable_params)
 def _resnet_split(m): return L(m[0][:6], m[0][6:], m[1]).mapped(trainable_params)
 def _squeezenet_split(m:nn.Module): return L(m[0][0][:5], m[0][0][5:], m[1]).mapped(trainable_params)
@@ -127,7 +122,7 @@ def cnn_learner(dbunch, arch, cut=None, pretrained=True, lin_ftrs=None, ps=0.5, 
                 init=nn.init.kaiming_normal_, concat_pool=True, **kwargs):
     "Build convnet style learner."
     meta = model_meta.get(arch)
-    model = create_cnn_model(arch, _get_c(dbunch), ifnone(cut, meta['cut']), pretrained, lin_ftrs, ps=ps, custom_head=custom_head,
+    model = create_cnn_model(arch, get_c(dbunch), ifnone(cut, meta['cut']), pretrained, lin_ftrs, ps=ps, custom_head=custom_head,
         bn_final=bn_final, concat_pool=concat_pool)
     learn = Learner(model, dbunch, splitter=ifnone(splitter, meta['split']), **kwargs)
     if pretrained: learn.freeze()

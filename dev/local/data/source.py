@@ -33,16 +33,17 @@ _FiltTfmdList.train,_FiltTfmdList.valid = add_props(lambda i,x: x.subset(i), 2)
 #Cell
 class DataSource(TfmdDS):
     "Applies a `tfm` to filtered subsets of `items`"
-    def __init__(self, items, tfms=None, filts=None, do_setup=True):
+    def __init__(self, items, tfms=None, filts=None, do_setup=True, dl_cls = TfmdDL):
         super(TfmdDS,self).__init__(items, use_list=None)
         if filts is None: filts = [range_of(items)]
         self.filts = L(mask2idxs(filt) for filt in filts)
-
+        self.dl_cls = dl_cls
         # Create map from item id to filter id
         assert all_disjoint(self.filts)
         self.filt_idx = L([None]*len(self.items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
         self.tls = [_FiltTfmdList(self.items, t, self.filt_idx, do_setup=do_setup) for t in L(tfms)]
+        #self.databunch = delegates(self.dl_cls.__init__)(self.databunch)
 
     def __repr__(self): return '\n'.join(map(str,self.subsets())) + f'\ntls - {self.tls}'
     def subsets(self): return map(self.subset, range_of(self.filts))
@@ -51,12 +52,12 @@ class DataSource(TfmdDS):
         self.filt = self.filt_idx[i]
         return super()._get(i)
 
-    @delegates(TfmdDL.__init__)
+    @delegates(DataLoader.__init__) #(self.dl_cls.__init__)
     def databunch(self, bs=16, val_bs=None, shuffle_train=True, **kwargs):
         n = len(self.filts)-1
         bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
         shuffles = [shuffle_train] + [False]*n
-        return DataBunch(*[TfmdDL(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
+        return DataBunch(*[self.dl_cls(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
                            for i,(b,s) in enumerate(zip(bss, shuffles))])
 
 DataSource.train,DataSource.valid = add_props(lambda i,x: x.subset(i), 2)

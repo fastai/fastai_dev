@@ -3,7 +3,7 @@
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Category', 'Categorize',
            'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda', 'ByteToFloatTensor',
-           'Normalize', 'broadcast_vec', 'DataBunch']
+           'Normalize', 'broadcast_vec', 'DataBunch', 'get_c']
 
 #Cell
 from ..torch_basics import *
@@ -182,9 +182,13 @@ class TfmdDL(DataLoader):
             kwargs[nm].setup(self)
         super().__init__(dataset, bs=bs, shuffle=shuffle, num_workers=num_workers, **kwargs)
 
-    def _retain_dl(self,b):
+    def _one_pass(self):
         its = self.after_batch(self.do_batch([self.do_item(0)]))
+        self._device = find_device(its)
         self._retain_dl = partial(retain_types, typs=L(its).mapped(type))
+
+    def _retain_dl(self,b):
+        self._one_pass()
         # we just replaced ourselves, so this is *not* recursive! :)
         return self._retain_dl(b)
 
@@ -214,6 +218,11 @@ class TfmdDL(DataLoader):
         db = self._decode_batch(b, max_n, False)
         ctxs = [self.dataset.show(o, ctx=ctx, **kwargs) for o,ctx in zip(db, ctxs)]
         if hasattr(b[0], 'display'): b[0].display(ctxs)
+
+    @property
+    def device(self):
+        if not hasattr(self, '_device'): _ = self._one_pass()
+        return self._device
 
 #Cell
 @docs
@@ -262,7 +271,7 @@ def broadcast_vec(dim, ndim, *t, cuda=True):
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."
-    _xtra = 'one_batch show_batch dataset'.split()
+    _xtra = 'one_batch show_batch dataset device'.split()
 
     def __init__(self, *dls): self.dls,self.default = dls,dls[0]
     def __getitem__(self, i): return self.dls[i]
@@ -275,3 +284,8 @@ class DataBunch(GetAttr):
               valid_dl="Validation `DataLoader`",
               train_ds="Training `Dataset`",
               valid_ds="Validation `Dataset`")
+
+#Cell
+def get_c(dbunch):
+    for t in dbunch.train_ds.tls[1].tfms.fs:
+        if hasattr(t, 'vocab'): return len(t.vocab)

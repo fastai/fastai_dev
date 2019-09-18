@@ -118,3 +118,8 @@ class MixedPrecision(Callback):
                  after_step="Copy the master params to the model params",
                  after_fit="Put the model back in FP32"
     )
+
+#Cell
+@delegates(MixedPrecision.__init__)
+@patch
+def to_fp16(self:Learner, **kwargs): self.add_cb(MixedPrecision(**kwargs))

@@ -78,6 +78,14 @@ class LMDataLoader(TfmdDL):
         txt = self.chunks[st : st+self.seq_len+1]
         return txt[:-1],txt[1:]
 
+    @classmethod
+    def dbunchify(cls, dsrc, bs=16, val_bs=None, shuffle_train=True, **kwargs):
+        n = len(dsrc.filts)-1
+        bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
+        shuffles = [shuffle_train] + [False]*n
+        return DataBunch(*[cls(dsrc.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
+                           for i,(b,s) in enumerate(zip(bss, shuffles))])
+
 #Cell
 def pad_collate(samples, pad_idx=1, pad_first=True, backwards=False):
     "Function that collect samples and adds padding. Flips token order if needed"
