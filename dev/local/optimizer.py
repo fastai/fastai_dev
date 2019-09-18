@@ -51,6 +51,17 @@ class Optimizer():
 
     def unfreeze(self): self.freeze_to(0)
 
+    @property
+    def state_dict(self):
+        state = [self.state[p] for pg in self.param_groups for p in pg]
+        return {'state': state, 'hypers': self.hypers}
+
+    def load_state_dict(self, sd):
+        assert len(sd["hypers"]) == len(self.param_groups)
+        assert len(sd["state"])  == sum([len(pg) for pg in self.param_groups])
+        self.hypers = sd['hypers']
+        self.state = {p: s for p,s in zip([p for pg in self.param_groups for p in pg], sd['state'])}
+
 #Cell
 def sgd_step(p, lr, **kwargs):
     p.data.add_(-lr, p.grad.data)
