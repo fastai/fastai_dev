@@ -37,12 +37,13 @@ class DataSource(TfmdDS):
         super(TfmdDS,self).__init__(items, use_list=None)
         if filts is None: filts = [range_of(items)]
         self.filts = L(mask2idxs(filt) for filt in filts)
-        self.dl_cls = TfmdDL
+        self.dl_cls = dl_cls
         # Create map from item id to filter id
         assert all_disjoint(self.filts)
         self.filt_idx = L([None]*len(self.items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
         self.tls = [_FiltTfmdList(self.items, t, self.filt_idx, do_setup=do_setup) for t in L(tfms)]
+        #DataSource.databunch = delegates(self.dl_cls.__init__)(DataSource.databunch)
 
     def __repr__(self): return '\n'.join(map(str,self.subsets())) + f'\ntls - {self.tls}'
     def subsets(self): return map(self.subset, range_of(self.filts))
@@ -51,7 +52,7 @@ class DataSource(TfmdDS):
         self.filt = self.filt_idx[i]
         return super()._get(i)
 
-    @delegates(DataLoader.__init__) #self.dl_cls.__init__
+    @delegates(DataLoader.__init__) #(self.dl_cls.__init__)
     def databunch(self, bs=16, val_bs=None, shuffle_train=True, **kwargs):
         n = len(self.filts)-1
         bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
