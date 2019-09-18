@@ -87,7 +87,7 @@ class LMDataLoader(TfmdDL):
                            for i,(b,s) in enumerate(zip(bss, shuffles))])
 
 #Cell
-def pad_collate(samples, pad_idx=1, pad_first=True, backwards=False):
+def pad_collate(samples, pad_idx=1, pad_first=False, backwards=False):
     "Function that collect samples and adds padding. Flips token order if needed"
     max_len = max([len(s[0]) for s in samples])
     res = torch.zeros(len(samples), max_len).long() + pad_idx

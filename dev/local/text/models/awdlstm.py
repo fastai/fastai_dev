@@ -83,13 +83,17 @@ class EmbeddingDropout(Module):
                            self.emb.norm_type, self.emb.scale_grad_by_freq, self.emb.sparse)
 
 #Cell
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
+
+#Cell
 class AWD_LSTM(Module):
     "AWD-LSTM inspired by https://arxiv.org/abs/1708.02182"
     initrange=0.1
 
     def __init__(self, vocab_sz, emb_sz, n_hid, n_layers, pad_token=1, hidden_p=0.2, input_p=0.6, embed_p=0.1,
-                 weight_p=0.5, bidir=False):
-        self.bs,self.emb_sz,self.n_hid,self.n_layers = 1,emb_sz,n_hid,n_layers
+                 weight_p=0.5, bidir=False, packed=False):
+        store_attr(self, 'emb_sz,n_hid,n_layers,pad_token,packed')
+        self.bs = 1
         self.n_dir = 2 if bidir else 1
         self.encoder = nn.Embedding(vocab_sz, emb_sz, padding_idx=pad_token)
         self.encoder_dp = EmbeddingDropout(self.encoder, embed_p)
@@ -104,10 +108,14 @@ class AWD_LSTM(Module):
         if bs!=self.bs:
             self.bs=bs
             self.reset()
+        if self.packed: inp,lens = self._pack_sequence(inp, sl)
+
         raw_output = self.input_dp(inp if from_embeds else self.encoder_dp(inp))
         new_hidden,raw_outputs,outputs = [],[],[]
         for l, (rnn,hid_dp) in enumerate(zip(self.rnns, self.hidden_dps)):
+            if self.packed: raw_output = pack_padded_sequence(raw_output, lens, batch_first=True)
             raw_output, new_h = rnn(raw_output, self.hidden[l])
+            if self.packed: raw_output = pad_packed_sequence(raw_output, batch_first=True)[0]
             new_hidden.append(new_h)
             raw_outputs.append(raw_output)
             if l != self.n_layers - 1: raw_output = hid_dp(raw_output)
@@ -130,14 +138,24 @@ class AWD_LSTM(Module):
         [r.reset() for r in self.rnns if hasattr(r, 'reset')]
         self.hidden = [self._one_hidden(l) for l in range(self.n_layers)]
 
+    def _pack_sequence(self, inp, sl):
+        mask = (inp == self.pad_token)
+        lens = sl - mask.long().sum(1)
+        n_empty = (lens == 0).sum()
+        if n_empty > 0:
+            inp,lens = inp[:-n_empty],lens[:-n_empty]
+            self.hidden = [(h[0][:,:inp.size(0)], h[1][:,:inp.size(0)]) for h in self.hidden]
+        return (inp,lens)
+
 #Cell
 def awd_lstm_lm_split(model):
     "Split a RNN `model` in groups for differential learning rates."
     groups = [[rnn, dp] for rnn, dp in zip(model[0].rnns, model[0].hidden_dps)]
-    return groups + [[model[0].encoder, model[0].encoder_dp, model[1]]]
+    groups = L(groups + [[model[0].encoder, model[0].encoder_dp, model[1]]])
+    return groups.mapped(trainable_params)
 
 #Cell
-awd_lstm_lm_config = dict(emb_sz=400, n_hid=1152, n_layers=3, pad_token=1, bidir=False, output_p=0.1,
+awd_lstm_lm_config = dict(emb_sz=400, n_hid=1152, n_layers=3, pad_token=1, bidir=False, output_p=0.1, packed=False,
                           hidden_p=0.15, input_p=0.25, embed_p=0.02, weight_p=0.2, tie_weights=True, out_bias=True)
 
 #Cell
@@ -145,11 +163,12 @@ def awd_lstm_clas_split(model):
     "Split a RNN `model` in groups for differential learning rates."
     groups = [[model[0].module.encoder, model[0].module.encoder_dp]]
     groups += [[rnn, dp] for rnn, dp in zip(model[0].module.rnns, model[0].module.hidden_dps)]
-    return groups + [[model[1]]]
+    groups = L(groups + [[model[1]]])
+    return groups.mapped(trainable_params)
 
 #Cell
 awd_lstm_clas_config = dict(emb_sz=400, n_hid=1152, n_layers=3, pad_token=1, bidir=False, output_p=0.4,
-                            hidden_p=0.3, input_p=0.4, embed_p=0.05, weight_p=0.5)
+                            hidden_p=0.3, input_p=0.4, embed_p=0.05, weight_p=0.5, packed=True)
 
 #Cell
 class AWD_QRNN(AWD_LSTM):

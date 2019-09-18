@@ -449,7 +449,7 @@
   "LinearDecoder": "33_text_models_core.ipynb",
   "SequentialRNN": "33_text_models_core.ipynb",
   "get_language_model": "33_text_models_core.ipynb",
-  "MultiBatchEncoder": "33_text_models_core.ipynb",
+  "SentenceEncoder": "33_text_models_core.ipynb",
   "masked_concat_pool": "33_text_models_core.ipynb",
   "PoolingLinearClassifier": "33_text_models_core.ipynb",
   "get_text_classifier": "33_text_models_core.ipynb",

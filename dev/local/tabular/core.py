@@ -77,7 +77,7 @@ class Categorify(TabularProc):
     "Transform the categorical variables to that type."
     order = 1
     def setups(self, to):
-        self.classes = {n:CategoryMap(to.iloc[:to.split,n].items, add_na=True) for n in to.all_cat_names}
+        self.classes = {n:CategoryMap(to.iloc[:to.split,n], add_na=True) for n in to.all_cat_names}
 
     def _apply_cats (self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
     def _decode_cats(self, c): return c.map(dict(enumerate(self[c.name].items)))
