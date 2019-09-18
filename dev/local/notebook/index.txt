@@ -32,6 +32,7 @@
   "delegate_attr": "01_core.ipynb",
   "coll_repr": "01_core.ipynb",
   "mask2idxs": "01_core.ipynb",
+  "listable_types": "01_core.ipynb",
   "CollBase": "01_core.ipynb",
   "cycle": "01_core.ipynb",
   "zip_cycle": "01_core.ipynb",

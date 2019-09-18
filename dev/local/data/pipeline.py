@@ -59,6 +59,7 @@ class Pipeline:
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None, as_item=False, filt=None):
         if isinstance(funcs, Pipeline): funcs = funcs.fs
+        elif isinstance(funcs, Transform): funcs = [funcs]
         self.filt,self.default = filt,None
         self.fs = L(ifnone(funcs,[noop])).mapped(mk_transform).sorted(key='order')
         self.set_as_item(as_item)

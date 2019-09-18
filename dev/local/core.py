@@ -2,14 +2,14 @@
 
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'chk', 'add_docs', 'docs',
-           'custom_dir', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'CollBase', 'cycle', 'zip_cycle', 'L',
-           'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'tuplify', 'replicate', 'uniqueify', 'setify',
-           'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le',
-           'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type',
-           'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'TupleBase', 'TupleTitled', 'trace',
-           'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self',
-           'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint',
-           'camel2snake', 'PrettyString']
+           'custom_dir', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'listable_types', 'CollBase', 'cycle',
+           'zip_cycle', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'tuplify', 'replicate',
+           'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
+           'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
+           'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str',
+           'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2', '_3',
+           '_4', 'bind', 'Self', 'Self', 'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props',
+           'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -215,6 +215,9 @@ def mask2idxs(mask):
     return [int(i) for i in mask]
 
 #Cell
+listable_types = typing.Collection,Generator,map,filter,zip
+
+#Cell
 def _is_array(x): return hasattr(x,'__array__') or hasattr(x,'iloc')
 
 def _listify(o):
@@ -279,6 +282,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def __iter__(self): return (self[i] for i in range(len(self)))
     def __repr__(self): return coll_repr(self)
     def __eq__(self,b): return all_equal(b,self)
+    def __contains__(self,b): return b in self.items
     def __invert__(self): return self._new(not i for i in self)
     def __mul__ (a,b): return a._new(a.items*b)
     def __add__ (a,b): return a._new(a.items+_listify(b))
