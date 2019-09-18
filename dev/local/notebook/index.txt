@@ -168,6 +168,7 @@
   "Normalize": "40_tabular_core.ipynb",
   "broadcast_vec": "05_data_core.ipynb",
   "DataBunch": "05_data_core.ipynb",
+  "get_c": "05_data_core.ipynb",
   "all_union": "06_data_source.ipynb",
   "all_disjoint": "06_data_source.ipynb",
   "DataSource": "06_data_source.ipynb",

@@ -3,7 +3,7 @@
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Category', 'Categorize',
            'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda', 'ByteToFloatTensor',
-           'Normalize', 'broadcast_vec', 'DataBunch']
+           'Normalize', 'broadcast_vec', 'DataBunch', 'get_c']
 
 #Cell
 from ..torch_basics import *
@@ -284,3 +284,8 @@ class DataBunch(GetAttr):
               valid_dl="Validation `DataLoader`",
               train_ds="Training `Dataset`",
               valid_ds="Validation `Dataset`")
+
+#Cell
+def get_c(dbunch):
+    for t in dbunch.train_ds.tls[1].tfms.fs:
+        if hasattr(t, 'vocab'): return len(t.vocab)

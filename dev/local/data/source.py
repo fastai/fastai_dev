@@ -43,7 +43,7 @@ class DataSource(TfmdDS):
         self.filt_idx = L([None]*len(self.items))
         for i,f in enumerate(self.filts): self.filt_idx[f] = i
         self.tls = [_FiltTfmdList(self.items, t, self.filt_idx, do_setup=do_setup) for t in L(tfms)]
-        #DataSource.databunch = delegates(self.dl_cls.__init__)(DataSource.databunch)
+        #self.databunch = delegates(self.dl_cls.__init__)(self.databunch)
 
     def __repr__(self): return '\n'.join(map(str,self.subsets())) + f'\ntls - {self.tls}'
     def subsets(self): return map(self.subset, range_of(self.filts))
