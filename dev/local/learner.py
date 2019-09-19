@@ -100,9 +100,11 @@ defaults.callbacks = [TrainEvalCallback]
 
 class Learner():
     "Group together a `model`, some `dbunch` and a `loss_func` to handle training"
-    def __init__(self, model, dbunch, loss_func, opt_func=SGD, lr=1e-2, splitter=trainable_params, model_dir='models',
-                 cbs=None, cb_funcs=None, metrics=None, path=None, wd_bn_bias=False, train_bn=True):
-        store_attr(self, "model,dbunch,loss_func,opt_func,lr,splitter,model_dir,wd_bn_bias,train_bn")
+    def __init__(self, dbunch, model, loss_func=None, opt_func=SGD, lr=1e-2, splitter=trainable_params, cbs=None,
+                 cb_funcs=None, metrics=None, path=None, model_dir='models', wd_bn_bias=False, train_bn=True):
+        store_attr(self, "dbunch,model,opt_func,lr,splitter,model_dir,wd_bn_bias,train_bn")
+        #TODO: infer loss_func from data
+        self.loss_func = CrossEntropyLossFlat() if loss_func is None else loss_func
         self.path = path if path is not None else getattr(dbunch, 'path', Path('.'))
         self.metrics = [m if isinstance(m, Metric) else AvgMetric(m) for m in L(metrics)]
         self.training,self.logger,self.opt = False,print,None
