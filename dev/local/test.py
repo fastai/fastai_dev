@@ -20,7 +20,7 @@ def test_fail(f, msg='', contains=''):
 def test(a, b, cmp,cname=None):
     "`assert` that `cmp(a,b)`; display inputs and `cname or cmp.__name__` if it fails"
     if cname is None: cname=cmp.__name__
-    assert cmp(a,b),f"{cname}:\n{a}\n{b}"
+    assert cmp(a,b) and cmp(b,a),f"{cname}:\n{a}\n{b}"
 
 #Cell
 def nequals(a,b):
