@@ -14,6 +14,18 @@ from ..notebook.showdoc import show_doc
 pd.set_option('mode.chained_assignment','raise')
 
 #Cell
+class _TabIloc:
+    "Get/set rows by iloc and cols by name"
+    def __init__(self,to): self.to = to
+    def __getitem__(self, idxs):
+        if isinstance(idxs,tuple):
+            rows,cols = idxs
+            c = self.to.items.columns
+            cols = c.isin(cols) if is_listy(cols) else c.get_loc(cols)
+        else: rows,cols = idxs,slice(None)
+        return self.to.new(self.to.items.iloc[rows, cols])
+
+#Cell
 class Tabular(CollBase):
     "A `DataFrame` wrapper that knows which cols are cont/cat/y, and returns rows in `__getitem__`"
     def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True,
