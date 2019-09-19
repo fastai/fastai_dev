@@ -281,7 +281,6 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def default(self): return self.items
     def __iter__(self): return (self[i] for i in range(len(self)))
     def __repr__(self): return coll_repr(self)
-    def __eq__(self,b): return all_equal(b,self)
     def __contains__(self,b): return b in self.items
     def __invert__(self): return self._new(not i for i in self)
     def __mul__ (a,b): return a._new(a.items*b)
@@ -290,6 +289,10 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def __addi__(a,b):
         a.items += list(b)
         return a
+
+    def __eq__(self,b):
+        if isinstance(b, (str,dict,set)): return False
+        return all_equal(b,self)
 
     def sorted(self, key=None, reverse=False):
         "New `L` sorted by `key`. If key is str then use `attrgetter`. If key is int then use `itemgetter`."
