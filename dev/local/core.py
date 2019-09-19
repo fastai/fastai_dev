@@ -671,11 +671,11 @@ def ls(self:Path, file_type=None, file_exts=None):
     return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
 
 #Cell
-def get_file(file, path):
+def get_file(file, path, ext=''):
     "Return `path/file` if file is a string or a `Path`, file otherwise"
     if not isinstance(file, (Path, str)): return file
     path.mkdir(parents=True, exist_ok=True)
-    return path/file
+    return path/(f'{file}{ext}')
 
 #Cell
 def _is_instance(f, gs):
