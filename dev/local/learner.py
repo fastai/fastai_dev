@@ -100,9 +100,9 @@ defaults.callbacks = [TrainEvalCallback]
 
 class Learner():
     "Group together a `model`, some `dbunch` and a `loss_func` to handle training"
-    def __init__(self, model, dbunch, loss_func, opt_func=SGD, lr=1e-2, splitter=trainable_params,
+    def __init__(self, model, dbunch, loss_func, opt_func=SGD, lr=1e-2, splitter=trainable_params, model_dir='models',
                  cbs=None, cb_funcs=None, metrics=None, path=None, wd_bn_bias=False, train_bn=True):
-        store_attr(self, "model,dbunch,loss_func,opt_func,lr,splitter,wd_bn_bias,train_bn")
+        store_attr(self, "model,dbunch,loss_func,opt_func,lr,splitter,model_dir,wd_bn_bias,train_bn")
         self.path = path if path is not None else getattr(dbunch, 'path', Path('.'))
         self.metrics = [m if isinstance(m, Metric) else AvgMetric(m) for m in L(metrics)]
         self.training,self.logger,self.opt = False,print,None
@@ -262,6 +262,33 @@ class Learner():
             self.loss_func = partial(self.loss_func, reduction='none')
             yield
             self.loss_func = old_loss_func
+
+    def save(self, file, with_opt=True):
+        "Save model and optimizer state (if `with_opt`) to `self.path/self.model_dir/file`"
+        #TODO: if rank_distrib(): return # don't save if slave proc
+        if not hasattr(self, 'opt'): with_opt=False
+        if not with_opt: state = get_model(self.model).state_dict()
+        else: state = {'model': get_model(self.model).state_dict(), 'opt':self.opt.state_dict()}
+        torch.save(state, get_file(f'{file}.pth', self.path/self.model_dir))
+
+    def load(self, file, with_opt=None, device=None, strict=True):
+        "Load model and optimizer state (if `with_opt`) from `self.path/self.model_dir/file` using `device`"
+        if device is None: device = self.dbunch.device
+        elif isinstance(device, int): device = torch.device('cuda', device)
+        state = torch.load(get_file(f'{file}.pth', self.path/self.model_dir))
+        if set(state.keys()) == {'model', 'opt'}:
+            model_state = state['model']
+            get_model(self.model).load_state_dict(model_state, strict=strict)
+            if ifnone(with_opt,True):
+                if self.opt is None: self.opt = self.create_opt(self.lr)
+                try:    self.opt.load_state_dict(state['opt'])
+                except:
+                    if with_opt: warn("Could not load the optimizer state.")
+                    pass
+        else:
+            if with_opt: warn("Saved filed doesn't contain an optimizer state.")
+            get_model(self.model).load_state_dict(state, strict=strict)
+        return self
 
 #Cell
 class VerboseCallback(Callback):

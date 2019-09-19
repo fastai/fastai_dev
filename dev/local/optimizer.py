@@ -12,6 +12,7 @@ from .notebook.showdoc import show_doc
 #Cell
 class Optimizer():
     "Base optimizer class for the fastai library, updating `params` with `steppers`"
+    _keep_on_clear = ['force_train', 'do_wd']
     def __init__(self, params, steppers, stats=None, train_bn=True, **defaults):
         steppers,params = L(steppers),L(params)
         self.stats,self.state,self.train_bn = L(stats),{},train_bn
@@ -51,9 +52,8 @@ class Optimizer():
 
     def unfreeze(self): self.freeze_to(0)
 
-    @property
     def state_dict(self):
-        state = [self.state[p] for pg in self.param_groups for p in pg]
+        state = [self.state.get(p, {}) for pg in self.param_groups for p in pg]
         return {'state': state, 'hypers': self.hypers}
 
     def load_state_dict(self, sd):
@@ -61,6 +61,10 @@ class Optimizer():
         assert len(sd["state"])  == sum([len(pg) for pg in self.param_groups])
         self.hypers = sd['hypers']
         self.state = {p: s for p,s in zip([p for pg in self.param_groups for p in pg], sd['state'])}
+
+    def clear_state(self):
+        for pg in self.param_groups:
+            for p in pg: self.state[p] = {k: self.state[p][k] for k in self._keep_on_clear if k in self.state[p]}
 
 #Cell
 def sgd_step(p, lr, **kwargs):

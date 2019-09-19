@@ -8,8 +8,8 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
            'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str',
            'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2', '_3',
-           '_4', 'bind', 'Self', 'Self', 'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props',
-           'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
+           '_4', 'bind', 'Self', 'Self', 'get_file', 'sort_by_run', 'display_df', 'round_multiple', 'num_cpus',
+           'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -669,6 +669,13 @@ def ls(self:Path, file_type=None, file_exts=None):
     extns=L(file_exts)
     if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
     return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
+
+#Cell
+def get_file(file, path):
+    "Return `path/file` if file is a string or a `Path`, file otherwise"
+    if not isinstance(file, (Path, str)): return file
+    path.mkdir(parents=True, exist_ok=True)
+    return path/file
 
 #Cell
 def _is_instance(f, gs):

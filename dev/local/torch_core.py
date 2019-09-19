@@ -2,9 +2,9 @@
 
 __all__ = ['tensor', 'set_seed', 'TensorBase', 'concat', 'Chunks', 'one_param', 'apply', 'to_detach', 'to_half',
            'to_float', 'default_device', 'to_device', 'to_cpu', 'to_np', 'item_find', 'find_device', 'find_bs',
-           'Module', 'one_hot', 'one_hot_decode', 'trainable_params', 'bn_types', 'bn_bias_params', 'make_cross_image',
-           'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'requires_grad', 'init_default',
-           'cond_init', 'apply_leaf', 'apply_init', 'flatten_check']
+           'Module', 'get_model', 'one_hot', 'one_hot_decode', 'trainable_params', 'bn_types', 'bn_bias_params',
+           'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'requires_grad',
+           'init_default', 'cond_init', 'apply_leaf', 'apply_init', 'flatten_check']
 
 #Cell
 from .test import *
@@ -224,6 +224,13 @@ class Module(nn.Module, metaclass=PrePostInitMeta):
     "Same as `nn.Module`, but no need for subclasses to call `super().__init__`"
     def __pre_init__(self): super().__init__()
     def __init__(self): pass
+
+#Cell
+from torch.nn.parallel import DistributedDataParallel
+
+def get_model(model):
+    "Return the model maybe wrapped inside `model`."
+    return model.module if isinstance(model, (DistributedDataParallel, nn.DataParallel)) else model
 
 #Cell
 def one_hot(x, c):
