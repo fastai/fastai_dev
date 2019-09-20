@@ -440,6 +440,7 @@
   "Numericalize": "31_text_data.ipynb",
   "LMDataLoader": "31_text_data.ipynb",
   "pad_collate": "31_text_data.ipynb",
+  "SortedDL": "31_text_data.ipynb",
   "dropout_mask": "32_text_models_awdlstm.ipynb",
   "RNNDropout": "32_text_models_awdlstm.ipynb",
   "WeightDropout": "32_text_models_awdlstm.ipynb",

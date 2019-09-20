@@ -48,7 +48,7 @@ def fa_convert(t):
 @funcs_kwargs
 class DataLoader():
     wif=before_iter=after_item=before_batch=after_batch=after_iter = noops
-    _methods = 'wif before_iter create_batches sampler create_item after_item before_batch create_batch retain after_batch after_iter'.split()
+    _methods = 'wif before_iter create_batches sampler create_item after_item before_batch create_batch retain after_batch after_iter get_idxs'.split()
     def __init__(self, dataset=None, bs=None, shuffle=False, drop_last=False, indexed=None,
                  num_workers=0, pin_memory=False, timeout=0, **kwargs):
         if indexed is None: indexed = dataset is not None and hasattr(dataset,'__getitem__')
@@ -75,11 +75,16 @@ class DataLoader():
         yield from res if self.bs is None else map(self.do_batch, chunked(res, self.bs, self.drop_last))
 
     def shuffle_fn(self, idxs): return self.rng.sample(idxs, len(idxs))
-    def sampler(self):
+
+    def get_idxs(self):
         idxs = Inf.count if self.indexed else Inf.nones
         if self.n is not None:
             idxs = list(itertools.islice(idxs, self.n))
-            idxs = self.shuffle_fn(idxs) if self.shuffle else idxs
+        return idxs
+
+    def sampler(self):
+        idxs = self.get_idxs()
+        idxs = self.shuffle_fn(idxs) if self.shuffle else idxs
         return (b for i,b in enumerate(idxs) if i//(self.bs or 1)%self.nw==self.offs)
 
     def retain(self, res, b):  return retain_types(res, b[0] if is_listy(b) else b)
