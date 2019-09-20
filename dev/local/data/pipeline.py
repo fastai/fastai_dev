@@ -91,9 +91,9 @@ class Pipeline:
 
     def __getattr__(self,k):
         if k.startswith('_') or k=='fs': raise AttributeError(k)
-        res = sum(self.fs.attrgot(k).mapped(L), [])
+        res = [t for t in self.fs.attrgot(k) if t is not None]
         if not res: raise AttributeError(k)
-        return res[0] if len(res)==1 else res
+        return res[0] if len(res)==1 else L(res)
 
     def show(self, o, ctx=None, **kwargs):
         for f in reversed(self.fs):
