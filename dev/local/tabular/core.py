@@ -96,7 +96,7 @@ class Categorify(TabularProc):
     "Transform the categorical variables to that type."
     order = 1
     def setups(self, dsrc):
-        self.classes = {n:CategoryMap(getattr(dsrc,'train',dsrc).iloc[:,n], add_na=True) for n in to.all_cat_names}
+        self.classes = {n:CategoryMap(getattr(dsrc,'train',dsrc).iloc[:,n], add_na=True) for n in dsrc.all_cat_names}
 
     def _apply_cats (self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
     def _decode_cats(self, c): return c.map(dict(enumerate(self[c.name].items)))
@@ -132,7 +132,7 @@ class FillMissing(TabularProc):
     def setups(self, dsrc):
         df = getattr(dsrc,'train',dsrc).conts
         self.na_dict = {n:self.fill_strategy(df[n], self.fill_vals[n])
-                        for n in pd.isnull(to.conts).any().keys()}
+                        for n in pd.isnull(df).any().keys()}
 
     def encodes(self, to):
         missing = pd.isnull(to.conts)
