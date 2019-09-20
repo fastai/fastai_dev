@@ -3,13 +3,13 @@
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'chk', 'add_docs', 'docs',
            'custom_dir', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'listable_types', 'CollBase', 'cycle',
-           'zip_cycle', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'tuplify', 'replicate',
-           'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen',
-           'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
-           'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str',
-           'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2', '_3',
-           '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'display_df', 'round_multiple',
-           'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
+           'zip_cycle', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrdict', 'properties',
+           'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish',
+           'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
+           'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float',
+           'Str', 'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2',
+           '_3', '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'display_df',
+           'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -394,6 +394,16 @@ def store_attr(self, nms):
     "Store params named in comma-separated `nms` from calling context into attrs in `self`"
     mod = inspect.currentframe().f_back.f_locals
     for n in re.split(', *', nms): setattr(self,n,mod[n])
+
+#Cell
+def attrdict(o, *ks):
+    "Dict from each `k` in `ks` to `getattr(o,k)`"
+    return {k:getattr(o,k) for k in ks}
+
+#Cell
+def properties(cls, *ps):
+    "Change attrs in `cls` with names in `ps` to properties"
+    for p in ps: setattr(cls,p,property(getattr(cls,p)))
 
 #Cell
 def tuplify(o, use_list=False, match=None):

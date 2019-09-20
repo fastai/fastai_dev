@@ -18,12 +18,12 @@ class _TabIloc:
     "Get/set rows by iloc and cols by name"
     def __init__(self,to): self.to = to
     def __getitem__(self, idxs):
+        df = self.to.items
         if isinstance(idxs,tuple):
             rows,cols = idxs
-            c = self.to.items.columns
-            cols = c.isin(cols) if is_listy(cols) else c.get_loc(cols)
+            cols = df.columns.isin(cols) if is_listy(cols) else df.columns.get_loc(cols)
         else: rows,cols = idxs,slice(None)
-        return self.to.new(self.to.items.iloc[rows, cols])
+        return self.to.new(df.iloc[rows, cols])
 
 #Cell
 class Tabular(CollBase, GetAttr):
@@ -35,36 +35,29 @@ class Tabular(CollBase, GetAttr):
         self.cat_y  = None if not is_y_cat else y_names
         self.cont_y = None if     is_y_cat else y_names
 
-    def new(self, df):
-        return self.__class__(df, self.procs, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat)
-
     def copy(self):
         self.items = self.items.copy()
         return self
 
+    def new(self, df): return type(self)(df, **attrdict(self, 'procs','cat_names','cont_names','y_names','is_y_cat'))
     def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
     def setup(self): self.procs.setup(self)
     def process(self): self.procs(self)
     def datasource(self, splits=None):
         if splits is None: splits=[range_of(self)]
         self.items = self.items.iloc[sum(splits, [])].copy()
-        split = len(splits[0])
-        res = DataSource(self, filts=[range(0, split), range(split, len(self))], tfms=[None])
+        res = DataSource(self, filts=[range(len(splits[0])), range(len(splits[0]), len(self))], tfms=[None])
         self.procs.setup(res)
         return res
 
-    @property
     def iloc(self): return _TabIloc(self)
-    @property
     def targ(self): return self.items[self.y_names]
-    @property
     def all_cont_names(self): return self.cont_names + self.cont_y
-    @property
     def all_cat_names (self): return self.cat_names  + self.cat_y
-    @property
     def all_col_names (self): return self.all_cont_names + self.all_cat_names
-    @property
     def default(self): return self.items
+
+properties(Tabular,'iloc','targ','all_cont_names','all_cat_names','all_col_names','default')
 
 #Cell
 class TabularPandas(Tabular):
