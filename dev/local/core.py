@@ -8,7 +8,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
            'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str',
            'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2', '_3',
-           '_4', 'bind', 'Self', 'Self', 'bunzip', 'get_file', 'sort_by_run', 'display_df', 'round_multiple',
+           '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'display_df', 'round_multiple',
            'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
 
 #Cell
@@ -687,7 +687,7 @@ def bunzip(fn):
         for d in iter(lambda: src.read(1024*1024), b''): dst.write(d)
 
 #Cell
-def get_file(file, path, ext=''):
+def join_path_file(file, path, ext=''):
     "Return `path/file` if file is a string or a `Path`, file otherwise"
     if not isinstance(file, (str, Path)): return file
     path.mkdir(parents=True, exist_ok=True)

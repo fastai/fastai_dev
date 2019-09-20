@@ -271,13 +271,13 @@ class Learner():
         if not hasattr(self, 'opt'): with_opt=False
         if not with_opt: state = get_model(self.model).state_dict()
         else: state = {'model': get_model(self.model).state_dict(), 'opt':self.opt.state_dict()}
-        torch.save(state, get_file(file, self.path/self.model_dir, ext='.pth'))
+        torch.save(state, join_path_file(file, self.path/self.model_dir, ext='.pth'))
 
     def load(self, file, with_opt=None, device=None, strict=True):
         "Load model and optimizer state (if `with_opt`) from `self.path/self.model_dir/file` using `device`"
         if device is None: device = self.dbunch.device
         elif isinstance(device, int): device = torch.device('cuda', device)
-        state = torch.load(get_file(file, self.path/self.model_dir, ext='.pth'))
+        state = torch.load(join_path_file(file, self.path/self.model_dir, ext='.pth'))
         if set(state.keys()) == {'model', 'opt'}:
             model_state = state['model']
             get_model(self.model).load_state_dict(model_state, strict=strict)

@@ -76,7 +76,7 @@
   "Self": "01_core.ipynb",
   "Path.ls": "01_core.ipynb",
   "bunzip": "01_core.ipynb",
-  "get_file": "01_core.ipynb",
+  "join_path_file": "01_core.ipynb",
   "sort_by_run": "01_core.ipynb",
   "display_df": "01_core.ipynb",
   "round_multiple": "01_core.ipynb",
