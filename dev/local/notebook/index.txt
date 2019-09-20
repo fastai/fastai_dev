@@ -42,6 +42,8 @@
   "mk_class": "01_core.ipynb",
   "wrap_class": "01_core.ipynb",
   "store_attr": "01_core.ipynb",
+  "attrdict": "01_core.ipynb",
+  "properties": "01_core.ipynb",
   "tuplify": "01_core.ipynb",
   "replicate": "01_core.ipynb",
   "uniqueify": "01_core.ipynb",
