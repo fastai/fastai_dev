@@ -199,11 +199,11 @@ def write(self:Path, txt):
     with self.open('w') as f: f.write(txt)
 
 #Cell
-def tokenize_folder(path, extensions=None, include=None, output_dir=None, n_workers=defaults.cpus,
+def tokenize_folder(path, extensions=None, folders=None, output_dir=None, n_workers=defaults.cpus,
                     rules=None, tok_func=SpacyTokenizer, **tok_kwargs):
     "Tokenize text files in `path` in parallel using `n_workers`"
     path,extensions = Path(path),ifnone(extensions, ['.txt'])
-    fnames = get_files(path, extensions=extensions, recurse=True, include=include)
+    fnames = get_files(path, extensions=extensions, recurse=True, folders=folders)
     output_dir = Path(ifnone(output_dir, path.parent/f'{path.name}_tok'))
     rules = Path.read + L(ifnone(rules, defaults.text_proc_rules.copy()))
 
