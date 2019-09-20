@@ -31,10 +31,9 @@ class Tabular(CollBase, GetAttr):
     def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True):
         super().__init__(df)
         store_attr(self, 'y_names,is_y_cat')
-        self.cat_names,self.cont_names,self.procs = L(cat_names),L(cont_names),Pipeline(procs)
+        self.cat_names,self.cont_names,self.procs = L(cat_names),L(cont_names),Pipeline(procs, as_item=True)
         self.cat_y  = None if not is_y_cat else y_names
         self.cont_y = None if     is_y_cat else y_names
-#         if setup: self.procs.setup(self)
 
     def new(self, df):
         return self.__class__(df, self.procs, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat)
@@ -43,7 +42,6 @@ class Tabular(CollBase, GetAttr):
         self.items = self.items.copy()
         return self
 
-#     def __getattr__(self,k): return delegate_attr(self, k, 'items')
     def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
     def setup(self): self.procs.setup(self)
     def process(self): self.procs(self)
@@ -52,7 +50,7 @@ class Tabular(CollBase, GetAttr):
         self.items = self.items.iloc[sum(splits, [])].copy()
         split = len(splits[0])
         res = DataSource(self, filts=[range(0, split), range(split, len(self))], tfms=[None])
-#         self.procs.setup(res)
+        self.procs.setup(res)
         return res
 
     @property
@@ -91,7 +89,7 @@ class TabularProc(InplaceTransform):
     def setup(self, items=None):
         super().setup(items)
         # Procs are called as soon as data is available
-        return self(items)
+        return self(items.items if isinstance(items,DataSource) else items)
 
 #Cell
 class Categorify(TabularProc):
@@ -111,8 +109,7 @@ class Normalize(TabularProc):
     "Normalize the continuous variables."
     order = 2
     def setups(self, dsrc):
-        to = getattr(dsrc,'train',dsrc)
-        df = to.conts
+        df = getattr(dsrc,'train',dsrc).conts
         self.means,self.stds = df.mean(),df.std(ddof=0)+1e-7
 
     def encodes(self, to): to.conts = (to.conts-self.means) / self.stds
@@ -132,8 +129,8 @@ class FillMissing(TabularProc):
         if fill_vals is None: fill_vals = defaultdict(int)
         store_attr(self, 'fill_strategy,add_col,fill_vals')
 
-    def setups(self, to):
-        df = to.iloc[:to.split, to.cont_names].items
+    def setups(self, dsrc):
+        df = getattr(dsrc,'train',dsrc).conts
         self.na_dict = {n:self.fill_strategy(df[n], self.fill_vals[n])
                         for n in pd.isnull(to.conts).any().keys()}
 

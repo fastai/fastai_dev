@@ -8,8 +8,8 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true',
            'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str',
            'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2', '_3',
-           '_4', 'bind', 'Self', 'Self', 'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props',
-           'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
+           '_4', 'bind', 'Self', 'Self', 'bunzip', 'get_file', 'sort_by_run', 'display_df', 'round_multiple',
+           'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -675,6 +675,23 @@ def ls(self:Path, file_type=None, file_exts=None):
     extns=L(file_exts)
     if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
     return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
+
+#Cell
+def bunzip(fn):
+    "bunzip `fn`, raising exception if output already exists"
+    fn = Path(fn)
+    assert fn.exists(), f"{fn} doesn't exist"
+    out_fn = fn.with_suffix('')
+    assert not out_fn.exists(), f"{out_fn} already exists"
+    with bz2.BZ2File(fn, 'rb') as src, out_fn.open('wb') as dst:
+        for d in iter(lambda: src.read(1024*1024), b''): dst.write(d)
+
+#Cell
+def get_file(file, path, ext=''):
+    "Return `path/file` if file is a string or a `Path`, file otherwise"
+    if not isinstance(file, (str, Path)): return file
+    path.mkdir(parents=True, exist_ok=True)
+    return path/f'{file}{ext}'
 
 #Cell
 def _is_instance(f, gs):
