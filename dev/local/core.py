@@ -261,15 +261,11 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if match is not None:
             if len(items)==1: items = items*len(match)
             else: assert len(items)==len(match), 'Match length mismatch'
-        if not hasattr(self,'_after_item'): self._after_item = None
         super().__init__(items)
 
     def __getitem__(self, idx):
         res = self._gets(idx) if is_iter(idx) else self._get(idx)
-        if isinstance(idx,slice) or is_iter(idx):
-            res = L(res, use_list=None)
-            return res if self._after_item is None else L(res).mapped(self._after_item)
-        else: return res if self._after_item is None else self._after_item(res)
+        return L(res, use_list=None) if isinstance(idx,slice) or is_iter(idx) else res
 
     def _get(self, i): return getattr(self.items,'iloc',self.items)[i]
     def _gets(self, i):

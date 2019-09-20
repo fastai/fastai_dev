@@ -111,6 +111,13 @@ class Pipeline:
 #Cell
 class TfmdBase(L):
     "Base class for transformed lists"
+    _after_item = None
+    def __getitem__(self, idx):
+        res = super().__getitem__(idx)
+        if self._after_item is None: return res
+        if isinstance(idx,slice) or is_iter(idx): return L(res).mapped(self._after_item)
+        return self._after_item(res)
+
     def subset(self, idxs): return self._new(super()._gets(idxs))
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx, **kwargs): return self.show(self[idx], **kwargs)
