@@ -140,6 +140,7 @@ class LRFinder(ParamScheduler):
 
     def begin_fit(self):
         super().begin_fit()
+        self.learn.save('_tmp')
         self.best_loss = float('inf')
 
     def begin_batch(self):
@@ -151,13 +152,16 @@ class LRFinder(ParamScheduler):
         if self.smooth_loss > 4*self.best_loss and self.stop_div: raise CancelFitException()
         if self.train_iter >= self.num_it: raise CancelFitException()
 
-    def begin_validate(self):
-        raise CancelValidException()
+    def begin_validate(self): raise CancelValidException()
 
-    _docs = {"begin_fit": "Initialize container for hyper-parameters",
+    def after_fit(self):
+        self.learn.load('_tmp')
+        os.remove(self.path/self.model_dir/'_tmp.pth')
+
+    _docs = {"begin_fit": "Initialize container for hyper-parameters and save the model",
              "begin_batch": "Set the proper hyper-parameters in the optimizer",
-             "after_batch": "Record hyper-parameters of this batch",
-             "after_fit": "Save the hyper-parameters in the recorder if there is one",
+             "after_batch": "Record hyper-parameters of this batch and potentially stop training",
+             "after_fit": "Save the hyper-parameters in the recorder if there is one and load the original model",
              "begin_validate": "Skip the validation part of training"}
 
 #Cell

@@ -124,7 +124,7 @@ def cnn_learner(dbunch, arch, cut=None, pretrained=True, lin_ftrs=None, ps=0.5, 
     meta = model_meta.get(arch)
     model = create_cnn_model(arch, get_c(dbunch), ifnone(cut, meta['cut']), pretrained, lin_ftrs, ps=ps, custom_head=custom_head,
         bn_final=bn_final, concat_pool=concat_pool)
-    learn = Learner(model, dbunch, splitter=ifnone(splitter, meta['split']), **kwargs)
+    learn = Learner(dbunch, model, splitter=ifnone(splitter, meta['split']), **kwargs)
     if pretrained: learn.freeze()
     if init: apply_init(model[1], init)
     return learn

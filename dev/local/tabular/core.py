@@ -32,6 +32,10 @@ class Tabular(CollBase):
         return self.__class__(df, self.procs, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat,
                               split=self.split, setup=False)
 
+    def copy(self):
+        self.items = self.items.copy()
+        return self
+
     def __getattr__(self,k): return delegate_attr(self, k, 'items')
     def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
     def process(self): self.procs(self)

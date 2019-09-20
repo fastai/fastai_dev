@@ -103,6 +103,7 @@
   "find_device": "01a_torch_core.ipynb",
   "find_bs": "01a_torch_core.ipynb",
   "Module": "11_layers.ipynb",
+  "get_model": "01a_torch_core.ipynb",
   "one_hot": "01a_torch_core.ipynb",
   "one_hot_decode": "01a_torch_core.ipynb",
   "trainable_params": "01a_torch_core.ipynb",
