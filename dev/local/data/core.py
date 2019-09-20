@@ -100,8 +100,9 @@ class CategoryMap(CollBase):
     def __init__(self, col, sort=True, add_na=False):
         if is_categorical_dtype(col): items = L(col.cat.categories, use_list=True)
         else:
+            if not hasattr(col,'unique'): col = L(col, use_list=True)
             # `o==o` is the generalized definition of non-NaN used by Pandas
-            items = L(o for o in L(col, use_list=True).unique() if o==o)
+            items = L(o for o in col.unique() if o==o)
             if sort: items = items.sorted()
         self.items = '#na#' + items if add_na else items
         self.o2i = defaultdict(int, self.items.val2idx()) if add_na else dict(self.items.val2idx())

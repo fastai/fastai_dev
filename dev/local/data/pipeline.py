@@ -115,9 +115,10 @@ class TfmdBase(L):
     def __getitem__(self, idx):
         res = super().__getitem__(idx)
         if self._after_item is None: return res
-        if isinstance(idx,slice) or is_iter(idx): return L(res).mapped(self._after_item)
-        return self._after_item(res)
+        if isinstance(idx,int): return self._after_item(res)
+        return res.mapped(self._after_item)
 
+    def __iter__(self): return (self[i] for i in range(len(self)))
     def subset(self, idxs): return self._new(super()._gets(idxs))
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx, **kwargs): return self.show(self[idx], **kwargs)
@@ -132,7 +133,7 @@ class TfmdList(TfmdBase):
         self.tfms = Pipeline(tfms, as_item=as_item, filt=filt)
         if do_setup: self.setup()
 
-    def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, use_list=None, filt=self.filt)
+    def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, filt=self.filt)
     def _after_item(self, o): return self.tfms(o)
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms.fs}"
 

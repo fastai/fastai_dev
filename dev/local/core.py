@@ -3,13 +3,14 @@
 __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMeta', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'chk', 'add_docs', 'docs',
            'custom_dir', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'listable_types', 'CollBase', 'cycle',
-           'zip_cycle', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrdict', 'properties',
-           'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish',
-           'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
-           'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float',
-           'Str', 'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2',
-           '_3', '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'display_df',
-           'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
+           'zip_cycle', 'is_indexer', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrdict',
+           'properties', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge',
+           'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul',
+           'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle',
+           'Int', 'Float', 'Str', 'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate',
+           '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run',
+           'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake',
+           'PrettyString']
 
 #Cell
 from .test import *
@@ -237,7 +238,6 @@ class CollBase:
     def __delitem__(self, i): del(self.items[i])
     def __repr__(self): return self.items.__repr__()
     def __iter__(self): return self.items.__iter__()
-    def _new(self, items, *args, **kwargs): return self.__class__(items, *args, **kwargs)
 
 #Cell
 def cycle(o):
@@ -248,6 +248,11 @@ def cycle(o):
 def zip_cycle(x, *args):
     "Like `itertools.zip_longest` but `cycle`s through elements of all but first argument"
     return zip(x, *map(cycle,args))
+
+#Cell
+def is_indexer(idx):
+    "Test whether `idx` will index a single item in a list"
+    return isinstance(idx,int) or not getattr(idx,'ndim',1)
 
 #Cell
 class L(CollBase, GetAttr, metaclass=NewChkMeta):
@@ -262,9 +267,10 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
             else: assert len(items)==len(match), 'Match length mismatch'
         super().__init__(items)
 
+    def _new(self, items, *args, **kwargs): return self.__class__(items, *args, use_list=None, **kwargs)
     def __getitem__(self, idx):
-        res = self._gets(idx) if is_iter(idx) else self._get(idx)
-        return L(res, use_list=None) if isinstance(idx,slice) or is_iter(idx) else res
+        res = self._get(idx) if is_indexer(idx) or isinstance(idx,slice) else self._gets(idx)
+        return res if is_indexer(idx) else L(res, use_list=None)
 
     def _get(self, i): return getattr(self.items,'iloc',self.items)[i]
     def _gets(self, i):
@@ -281,10 +287,10 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
 
     @property
     def default(self): return self.items
+    def __iter__(self): return iter(self.items.itertuples() if hasattr(self.items,'iloc') else self.items)
     def __contains__(self,b): return b in self.items
     def __invert__(self): return self._new(not i for i in self)
     def __eq__(self,b): return False if isinstance(b, (str,dict,set)) else all_equal(b,self)
-    def __iter__(self): return (self[i] for i in range(len(self)))
     def __repr__(self): return repr(self.items) if _is_array(self.items) else coll_repr(self)
     def __mul__ (a,b): return a._new(a.items*b)
     def __add__ (a,b): return a._new(a.items+_listify(b))
