@@ -252,7 +252,6 @@ def zip_cycle(x, *args):
 #Cell
 class L(CollBase, GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
-    _xtra = [o for o in dir([]) if not o.startswith('_')]
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
         if items is None: items = []
@@ -270,7 +269,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def _get(self, i): return getattr(self.items,'iloc',self.items)[i]
     def _gets(self, i):
         i = mask2idxs(i)
-        return (self.items.iloc[list(i)].copy() if hasattr(self.items,'iloc')
+        return (self.items.iloc[list(i)] if hasattr(self.items,'iloc')
                 else self.items.__array__()[(i,)] if hasattr(self.items,'__array__')
                 else [self.items[i_] for i_ in i])
 
@@ -325,6 +324,9 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         it = copy(self.items)
         random.shuffle(it)
         return self._new(it)
+
+    @property
+    def _xtra(self): return [o for o in dir(self.items) if not o.startswith('_')]
 
 #Cell
 add_docs(L,

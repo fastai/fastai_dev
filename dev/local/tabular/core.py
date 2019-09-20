@@ -14,31 +14,46 @@ from ..notebook.showdoc import show_doc
 pd.set_option('mode.chained_assignment','raise')
 
 #Cell
-class Tabular(CollBase):
+class _TabIloc:
+    "Get/set rows by iloc and cols by name"
+    def __init__(self,to): self.to = to
+    def __getitem__(self, idxs):
+        if isinstance(idxs,tuple):
+            rows,cols = idxs
+            c = self.to.items.columns
+            cols = c.isin(cols) if is_listy(cols) else c.get_loc(cols)
+        else: rows,cols = idxs,slice(None)
+        return self.to.new(self.to.items.iloc[rows, cols])
+
+#Cell
+class Tabular(CollBase, GetAttr):
     "A `DataFrame` wrapper that knows which cols are cont/cat/y, and returns rows in `__getitem__`"
-    def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True,
-                 splits=None, split=None, setup=True):
-        if splits is not None:
-            df = df.iloc[sum(splits, [])]
-            if split is None: split = len(splits[0])
-        super().__init__(df.copy())
-        store_attr(self, 'y_names,is_y_cat,split')
+    def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True):
+        super().__init__(df)
+        store_attr(self, 'y_names,is_y_cat')
         self.cat_names,self.cont_names,self.procs = L(cat_names),L(cont_names),Pipeline(procs)
         self.cat_y  = None if not is_y_cat else y_names
         self.cont_y = None if     is_y_cat else y_names
-        if setup: self.procs.setup(self)
+#         if setup: self.procs.setup(self)
 
     def new(self, df):
-        return self.__class__(df, self.procs, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat,
-                              split=self.split, setup=False)
+        return self.__class__(df, self.procs, self.cat_names, self.cont_names, self.y_names, is_y_cat=self.is_y_cat)
 
     def copy(self):
         self.items = self.items.copy()
         return self
 
-    def __getattr__(self,k): return delegate_attr(self, k, 'items')
+#     def __getattr__(self,k): return delegate_attr(self, k, 'items')
     def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
+    def setup(self): self.procs.setup(self)
     def process(self): self.procs(self)
+    def datasource(self, splits=None):
+        if splits is None: splits=[range_of(self)]
+        self.items = self.items.iloc[sum(splits, [])].copy()
+        split = len(splits[0])
+        res = DataSource(self, filts=[range(0, split), range(split, len(self))], tfms=[None])
+#         self.procs.setup(res)
+        return res
 
     @property
     def iloc(self): return _TabIloc(self)
@@ -50,6 +65,8 @@ class Tabular(CollBase):
     def all_cat_names (self): return self.cat_names  + self.cat_y
     @property
     def all_col_names (self): return self.all_cont_names + self.all_cat_names
+    @property
+    def default(self): return self.items
 
 #Cell
 class TabularPandas(Tabular):
@@ -80,8 +97,8 @@ class TabularProc(InplaceTransform):
 class Categorify(TabularProc):
     "Transform the categorical variables to that type."
     order = 1
-    def setups(self, to):
-        self.classes = {n:CategoryMap(to.iloc[:to.split,n], add_na=True) for n in to.all_cat_names}
+    def setups(self, dsrc):
+        self.classes = {n:CategoryMap(getattr(dsrc,'train',dsrc).iloc[:,n], add_na=True) for n in to.all_cat_names}
 
     def _apply_cats (self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
     def _decode_cats(self, c): return c.map(dict(enumerate(self[c.name].items)))
@@ -93,8 +110,9 @@ class Categorify(TabularProc):
 class Normalize(TabularProc):
     "Normalize the continuous variables."
     order = 2
-    def setups(self, to):
-        df = to.iloc[:to.split, to.cont_names]
+    def setups(self, dsrc):
+        to = getattr(dsrc,'train',dsrc)
+        df = to.conts
         self.means,self.stds = df.mean(),df.std(ddof=0)+1e-7
 
     def encodes(self, to): to.conts = (to.conts-self.means) / self.stds
