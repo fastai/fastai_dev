@@ -35,14 +35,6 @@ class Tabular(CollBase, GetAttr):
         self.cat_y  = None if not is_y_cat else y_names
         self.cont_y = None if     is_y_cat else y_names
 
-    def copy(self):
-        self.items = self.items.copy()
-        return self
-
-    def new(self, df): return type(self)(df, **attrdict(self, 'procs','cat_names','cont_names','y_names','is_y_cat'))
-    def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
-    def setup(self): self.procs.setup(self)
-    def process(self): self.procs(self)
     def datasource(self, splits=None):
         if splits is None: splits=[range_of(self)]
         self.items = self.items.iloc[sum(splits, [])].copy()
@@ -50,13 +42,17 @@ class Tabular(CollBase, GetAttr):
         self.procs.setup(res)
         return res
 
+    def copy(self): self.items = self.items.copy(); return self
+    def new(self, df): return type(self)(df, **attrdict(self, 'procs','cat_names','cont_names','y_names','is_y_cat'))
+    def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
+    def setup(self): self.procs.setup(self)
+    def process(self): self.procs(self)
     def iloc(self): return _TabIloc(self)
     def targ(self): return self.items[self.y_names]
     def all_cont_names(self): return self.cont_names + self.cont_y
     def all_cat_names (self): return self.cat_names  + self.cat_y
     def all_col_names (self): return self.all_cont_names + self.all_cat_names
     def default(self): return self.items
-
 properties(Tabular,'iloc','targ','all_cont_names','all_cat_names','all_col_names','default')
 
 #Cell

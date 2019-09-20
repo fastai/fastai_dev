@@ -9,7 +9,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float',
            'Str', 'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate', '_0', '_1', '_2',
            '_3', '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'display_df',
-           'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake', 'PrettyString']
+           'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint']
 
 #Cell
 from .test import *
@@ -763,16 +763,3 @@ def all_union(sets):
 def all_disjoint(sets):
     "`True` iif no element appears in more than one item of `sets`"
     return sum(map(len,sets))==len(all_union(sets))
-
-#Comes from 13_learner.ipynb, cell
-_camel_re1 = re.compile('(.)([A-Z][a-z]+)')
-_camel_re2 = re.compile('([a-z0-9])([A-Z])')
-
-def camel2snake(name):
-    s1   = re.sub(_camel_re1, r'\1_\2', name)
-    return re.sub(_camel_re2, r'\1_\2', s1).lower()
-
-#Comes from 15_callback_hook.ipynb, cell
-class PrettyString(str):
-    "Little hack to get strings to show properly in Jupyter."
-    def __repr__(self): return self

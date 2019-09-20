@@ -4,7 +4,7 @@ __all__ = ['tensor', 'set_seed', 'TensorBase', 'concat', 'Chunks', 'one_param', 
            'to_float', 'default_device', 'to_device', 'to_cpu', 'to_np', 'item_find', 'find_device', 'find_bs',
            'Module', 'get_model', 'one_hot', 'one_hot_decode', 'trainable_params', 'bn_types', 'bn_bias_params',
            'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch', 'requires_grad',
-           'init_default', 'cond_init', 'apply_leaf', 'apply_init', 'flatten_check']
+           'init_default', 'cond_init', 'apply_leaf', 'apply_init']
 
 #Cell
 from .test import *
@@ -343,10 +343,3 @@ def apply_leaf(m, f):
 def apply_init(m, func=nn.init.kaiming_normal_):
     "Initialize all non-batchnorm layers of `m` with `func`."
     apply_leaf(m, partial(cond_init, func=func))
-
-#Comes from 20_metrics.ipynb, cell
-def flatten_check(inp, targ, detach=True):
-    "Check that `out` and `targ` have the same number of elements and flatten them."
-    inp,targ = to_detach(inp.contiguous().view(-1)),to_detach(targ.contiguous().view(-1))
-    test_eq(len(inp), len(targ))
-    return inp,targ
