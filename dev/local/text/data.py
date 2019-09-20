@@ -65,12 +65,13 @@ class LMDataLoader(TfmdDL):
         self.m = round_multiple(sum(lens)-1, bs*seq_len, round_down=True)
         self.n = self.m//(self.seq_len)
         self.spb = self.n//bs
+        self.chunkify()
 
-    def shuffle_fn(self,idxs): return idxs
-    def before_iter(self):
-        super().before_iter()
-        if self.shuffle: self.items.shuffle()
-        self.chunks = Chunks(self.items, self.lens)
+    def chunkify(self): self.chunks = Chunks(self.items, self.lens)
+    def shuffle_fn(self,idxs):
+        self.items.shuffle()
+        self.chunkify()
+        return idxs
 
     def create_item(self, seq):
         if seq>=self.n: raise IndexError

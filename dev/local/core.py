@@ -201,6 +201,16 @@ def delegate_attr(self, k, to):
     except AttributeError: raise AttributeError(k) from None
 
 #Cell
+def _is_array(x): return hasattr(x,'__array__') or hasattr(x,'iloc')
+
+def _listify(o):
+    if o is None: return []
+    if isinstance(o, list): return o
+    if isinstance(o, str) or _is_array(o): return [o]
+    if is_iter(o): return list(o)
+    return [o]
+
+#Cell
 def coll_repr(c, max_n=10):
     "String repr of up to `max_n` items of (possibly lazy) collection `c`"
     return f'(#{len(c)}) [' + ','.join(itertools.islice(map(str,c), max_n)) + (
@@ -216,16 +226,6 @@ def mask2idxs(mask):
 
 #Cell
 listable_types = typing.Collection,Generator,map,filter,zip
-
-#Cell
-def _is_array(x): return hasattr(x,'__array__') or hasattr(x,'iloc')
-
-def _listify(o):
-    if o is None: return []
-    if isinstance(o, list): return o
-    if isinstance(o, str) or _is_array(o): return [o]
-    if is_iter(o): return list(o)
-    return [o]
 
 #Cell
 class CollBase:
@@ -252,7 +252,7 @@ def zip_cycle(x, *args):
 #Cell
 class L(CollBase, GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
-    _xtra =  [o for o in dir([]) if not o.startswith('_')]
+    _xtra = [o for o in dir([]) if not o.startswith('_')]
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
         if items is None: items = []
@@ -261,13 +261,20 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if match is not None:
             if len(items)==1: items = items*len(match)
             else: assert len(items)==len(match), 'Match length mismatch'
+        if not hasattr(self,'_after_item'): self._after_item = None
         super().__init__(items)
 
-    def __getitem__(self, idx): return L(self._gets(idx), use_list=None) if is_iter(idx) else self._get(idx)
+    def __getitem__(self, idx):
+        res = self._gets(idx) if is_iter(idx) else self._get(idx)
+        if isinstance(idx,slice) or is_iter(idx):
+            res = L(res, use_list=None)
+            return res if self._after_item is None else L(res).mapped(self._after_item)
+        else: return res if self._after_item is None else self._after_item(res)
+
     def _get(self, i): return getattr(self.items,'iloc',self.items)[i]
     def _gets(self, i):
         i = mask2idxs(i)
-        return (self.items.iloc[list(i)] if hasattr(self.items,'iloc')
+        return (self.items.iloc[list(i)].copy() if hasattr(self.items,'iloc')
                 else self.items.__array__()[(i,)] if hasattr(self.items,'__array__')
                 else [self.items[i_] for i_ in i])
 
@@ -280,7 +287,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     @property
     def default(self): return self.items
     def __iter__(self): return (self[i] for i in range(len(self)))
-    def __repr__(self): return coll_repr(self)
+    def __repr__(self): return repr(self.items) if _is_array(self.items) else coll_repr(self)
     def __eq__(self,b): return all_equal(b,self)
     def __contains__(self,b): return b in self.items
     def __invert__(self): return self._new(not i for i in self)

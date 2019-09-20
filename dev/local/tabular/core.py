@@ -17,11 +17,11 @@ pd.set_option('mode.chained_assignment','raise')
 class Tabular(CollBase):
     "A `DataFrame` wrapper that knows which cols are cont/cat/y, and returns rows in `__getitem__`"
     def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True,
-                 splits=None, split=None, setup=True, inplace=True):
-        if not inplace: df = df.copy()
-        if splits is not None: df = df.iloc[sum(splits, [])].reset_index(drop=True)
-        super().__init__(df)
-        if split is None and splits is not None: split = len(splits[0])
+                 splits=None, split=None, setup=True):
+        if splits is not None:
+            df = df.iloc[sum(splits, [])]
+            if split is None: split = len(splits[0])
+        super().__init__(df.copy())
         store_attr(self, 'y_names,is_y_cat,split')
         self.cat_names,self.cont_names,self.procs = L(cat_names),L(cont_names),Pipeline(procs)
         self.cat_y  = None if not is_y_cat else y_names

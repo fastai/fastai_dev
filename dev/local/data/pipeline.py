@@ -111,7 +111,6 @@ class Pipeline:
 #Cell
 class TfmdBase(L):
     "Base class for transformed lists"
-    def _gets(self, i): return L(self._get(i_) for i_ in mask2idxs(i))
     def subset(self, idxs): return self._new(super()._gets(idxs))
     def decode_at(self, idx): return self.decode(self[idx])
     def show_at(self, idx, **kwargs): return self.show(self[idx], **kwargs)
@@ -127,7 +126,7 @@ class TfmdList(TfmdBase):
         if do_setup: self.setup()
 
     def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, use_list=None, filt=self.filt)
-    def _get (self, i): return self.tfms(super()._get(i))
+    def _after_item(self, o): return self.tfms(o)
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms.fs}"
 
     # Delegating to `self.tfms`
@@ -150,7 +149,7 @@ class TfmdDS(TfmdBase):
         if tfms is None: tms = [None]
         self.tls = [TfmdList(items, t, do_setup=do_setup, filt=filt, use_list=use_list) for t in L(tfms)]
 
-    def _get(self, it): return tuple(tl._get(it) for tl in self.tls)
+    def _after_item(self, it): return tuple(tl.tfms(it) for tl in self.tls)
     def __repr__(self): return coll_repr(self)
     def decode(self, o): return tuple(it.decode(o_) for o_,it in zip(o,self.tls))
     def show(self, o, ctx=None, **kwargs):
