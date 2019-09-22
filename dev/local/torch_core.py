@@ -106,7 +106,7 @@ def concat(*ls):
     if isinstance(it,torch.Tensor): res = torch.cat(ls)
     elif isinstance(it,ndarray): res = np.concatenate(ls)
     else:
-        res = [o for x in ls for o in L(x)]
+        res = itertools.chain.from_iterable(map(L,ls))
         if isinstance(it,(tuple,list)): res = type(it)(res)
         else: res = L(res)
     return retain_type(res, it)

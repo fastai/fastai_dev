@@ -14,7 +14,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
 #Cell
 from .test import *
 from .imports import *
-from .notebook.showdoc import show_doc
+from .notebook.showdoc import *
 
 #Cell
 defaults = SimpleNamespace()
