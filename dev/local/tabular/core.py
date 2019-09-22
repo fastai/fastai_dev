@@ -135,6 +135,7 @@ class FillMissing(TabularProc):
 #Cell
 class ReadTabBatch(ItemTransform):
     def __init__(self, to): self.to = to
+    # TODO: use float for cont targ
     def encodes(self, to): return (tensor(to.cats).long(),tensor(to.conts).float()), tensor(to.targ).long()
 
     def decodes(self, o):
