@@ -5,6 +5,7 @@ channels:
 - defaults
 dependencies:
 - jupyter
+- jupyterlab
 - pytorch>=1.2.0
 - torchvision
 - matplotlib
