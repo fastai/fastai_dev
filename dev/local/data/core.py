@@ -3,7 +3,7 @@
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Category', 'Categorize',
            'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda', 'ByteToFloatTensor',
-           'Normalize', 'broadcast_vec', 'DataBunch', 'get_c']
+           'Normalize', 'broadcast_vec', 'DataBunch', 'get_c', 'databunch']
 
 #Cell
 from ..torch_basics import *
@@ -289,3 +289,13 @@ class DataBunch(GetAttr):
 def get_c(dbunch):
     for t in dbunch.train_ds.tls[1].tfms.fs:
         if hasattr(t, 'vocab'): return len(t.vocab)
+
+#Cell
+@patch
+@delegates(TfmdDL.__init__)
+def databunch(self:DataSource, bs=16, val_bs=None, shuffle_train=True, **kwargs):
+    n = len(self.tls[0].filts)-1
+    bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
+    shuffles = [shuffle_train] + [False]*n
+    return DataBunch(*[TfmdDL(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
+                           for i,(b,s) in enumerate(zip(bss, shuffles))])
