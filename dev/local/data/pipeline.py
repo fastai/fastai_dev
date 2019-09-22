@@ -126,12 +126,12 @@ class TfmdBase(L):
 #Cell
 class TfmdList(TfmdBase):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
-    def __init__(self, items, tfms, do_setup=True, as_item=True, use_list=None, filt=None):
+    def __init__(self, items, tfms, do_setup=True, as_item=True, use_list=None, filt=None, train_setup=True):
         super().__init__(items, use_list=use_list)
         if isinstance(tfms,TfmdList): tfms = tfms.tfms
         if isinstance(tfms,Pipeline): do_setup=False
         self.tfms = Pipeline(tfms, as_item=as_item, filt=filt)
-        if do_setup: self.setup()
+        if do_setup: self.setup(train_setup=train_setup)
 
     def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, filt=self.filt)
     def _after_item(self, o): return self.tfms(o)
@@ -139,9 +139,14 @@ class TfmdList(TfmdBase):
 
     # Delegating to `self.tfms`
     def show(self, o, **kwargs): return self.tfms.show(o, **kwargs)
-    def setup(self): self.tfms.setup(self)
     def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
     def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
+
+    def setup(self, train_setup=True):
+        set_trace()
+        items = getattr(self,'train',self) if train_setup else self
+        #items = self
+        self.tfms.setup(items)
 
     @property
     def filt(self): return self.tfms.filt
@@ -152,10 +157,11 @@ class TfmdList(TfmdBase):
 @docs
 class TfmdDS(TfmdBase):
     "A dataset that creates a tuple from each `tfms`, passed thru `ds_tfms`"
-    def __init__(self, items, tfms=None, do_setup=True, use_list=None, filt=None):
+    @delegates(TfmdList.__init__)
+    def __init__(self, items, tfms=None, use_list=None, **kwargs):
         super().__init__(items, use_list=use_list)
         if tfms is None: tms = [None]
-        self.tls = [TfmdList(items, t, do_setup=do_setup, filt=filt, use_list=use_list) for t in L(tfms)]
+        self.tls = [TfmdList(items, t, use_list=use_list, **kwargs) for t in L(tfms)]
 
     def _after_item(self, it): return tuple(tl.tfms(it) for tl in self.tls)
     def __repr__(self): return coll_repr(self)

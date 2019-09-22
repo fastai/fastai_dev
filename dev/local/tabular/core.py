@@ -76,7 +76,7 @@ _add_prop(Tabular, 'all_col')
 class TabularProc(InplaceTransform):
     "Base class to write a non-lazy tabular processor for dataframes"
     def setup(self, items=None):
-        super().setup(items)
+        super().setup(getattr(items,'train',items))
         # Procs are called as soon as data is available
         return self(items.items if isinstance(items,DataSource) else items)
 
@@ -135,6 +135,7 @@ class FillMissing(TabularProc):
 #Cell
 class ReadTabBatch(ItemTransform):
     def __init__(self, to): self.to = to
+    # TODO: use float for cont targ
     def encodes(self, to): return (tensor(to.cats).long(),tensor(to.conts).float()), tensor(to.targ).long()
 
     def decodes(self, o):

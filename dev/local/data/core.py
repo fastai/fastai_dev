@@ -120,7 +120,7 @@ class Categorize(Transform):
         self.vocab = None if vocab is None else CategoryMap(vocab, add_na=add_na)
 
     def setups(self, dsrc):
-        if self.vocab is None and dsrc: self.vocab = CategoryMap(getattr(dsrc,'train',dsrc), add_na=self.add_na)
+        if self.vocab is None and dsrc is not None: self.vocab = CategoryMap(dsrc, add_na=self.add_na)
 
     def encodes(self, o): return self.vocab.o2i[o]
     def decodes(self, o): return Category(self.vocab[o])
@@ -138,9 +138,8 @@ class MultiCategorize(Categorize):
     def setups(self, dsrc):
         if not dsrc: return
         if self.vocab is None:
-            dsrc1 = getattr(dsrc,'train',dsrc)
             vals = set()
-            for b in dsrc1: vals = vals.union(set(b))
+            for b in dsrc: vals = vals.union(set(b))
             self.vocab,self.o2i = uniqueify(list(vals), sort=True, bidir=True)
         setattr(dsrc, 'vocab', self.vocab)
 
