@@ -84,9 +84,7 @@ class TabularProc(InplaceTransform):
 class Categorify(TabularProc):
     "Transform the categorical variables to that type."
     order = 1
-    def setups(self, dsrc):
-        self.classes = {n:CategoryMap(getattr(dsrc,'train',dsrc).iloc[:,n].items, add_na=True) for n in dsrc.all_cat_names}
-
+    def setups(self, dsrc): self.classes = {n:CategoryMap(dsrc.iloc[:,n].items, add_na=True) for n in dsrc.all_cat_names}
     def _apply_cats (self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
     def _decode_cats(self, c): return c.map(dict(enumerate(self[c.name].items)))
     def encodes(self, to): to.transform(to.all_cat_names, self._apply_cats)
@@ -97,10 +95,7 @@ class Categorify(TabularProc):
 class Normalize(TabularProc):
     "Normalize the continuous variables."
     order = 2
-    def setups(self, dsrc):
-        df = getattr(dsrc,'train',dsrc).conts
-        self.means,self.stds = df.mean(),df.std(ddof=0)+1e-7
-
+    def setups(self, dsrc): self.means,self.stds = dsrc.conts.mean(),dsrc.conts.std(ddof=0)+1e-7
     def encodes(self, to): to.conts = (to.conts-self.means) / self.stds
     def decodes(self, to): to.conts = (to.conts*self.stds ) + self.means
 
@@ -119,9 +114,8 @@ class FillMissing(TabularProc):
         store_attr(self, 'fill_strategy,add_col,fill_vals')
 
     def setups(self, dsrc):
-        df = getattr(dsrc,'train',dsrc).conts
-        self.na_dict = {n:self.fill_strategy(df[n], self.fill_vals[n])
-                        for n in pd.isnull(df).any().keys()}
+        self.na_dict = {n:self.fill_strategy(dsrc[n], self.fill_vals[n])
+                        for n in pd.isnull(dsrc.conts).any().keys()}
 
     def encodes(self, to):
         missing = pd.isnull(to.conts)

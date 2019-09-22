@@ -9,8 +9,7 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle',
            'Int', 'Float', 'Str', 'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate',
            '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run',
-           'display_df', 'round_multiple', 'num_cpus', 'add_props', 'all_union', 'all_disjoint', 'camel2snake',
-           'PrettyString']
+           'display_df', 'round_multiple', 'num_cpus', 'add_props', 'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -267,7 +266,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
             else: assert len(items)==len(match), 'Match length mismatch'
         super().__init__(items)
 
-    def _new(self, items, *args, **kwargs): return self.__class__(items, *args, use_list=None, **kwargs)
+    def _new(self, items, *args, **kwargs): return type(self)(items, *args, use_list=None, **kwargs)
     def __getitem__(self, idx):
         res = self._get(idx) if is_indexer(idx) or isinstance(idx,slice) else self._gets(idx)
         return res if is_indexer(idx) else L(res, use_list=None)
@@ -759,16 +758,6 @@ defaults.cpus = num_cpus()
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))
-
-#Comes from 06_data_source.ipynb, cell
-def all_union(sets):
-    "Set of union of all `sets` (each `setified` if needed)"
-    return set().union(*(map(setify,sets)))
-
-#Comes from 06_data_source.ipynb, cell
-def all_disjoint(sets):
-    "`True` iif no element appears in more than one item of `sets`"
-    return sum(map(len,sets))==len(all_union(sets))
 
 #Comes from 13_learner.ipynb, cell
 _camel_re1 = re.compile('(.)([A-Z][a-z]+)')
