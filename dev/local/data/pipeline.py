@@ -56,6 +56,14 @@ def mk_transform(f, as_item=True):
     return f if isinstance(f,Transform) else Transform(f, as_item=as_item)
 
 #Cell
+def _gather_attrs(o, k, nm):
+    if k.startswith('_') or k==nm: raise AttributeError(k)
+    att = getattr(o,nm)
+    res = [t for t in att.attrgot(k) if t is not None]
+    if not res: raise AttributeError(k)
+    return res[0] if len(res)==1 else L(res)
+
+#Cell
 class Pipeline:
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None, as_item=False, filt=None):
