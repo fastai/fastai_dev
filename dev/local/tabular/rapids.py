@@ -27,21 +27,25 @@ def _remove_none(c):
 #Cell
 @Categorify
 def setups(self, to: TabularGPU):
-    self.lbls = {n: nvcategory.from_strings(_to_str(to[:to.split,n]).data).keys() for n in to.all_cat_names}
-    self.items = to.classes = {n: CategoryMap(_remove_none(c.to_host()), add_na=True) for n,c in self.lbls.items()}
+    self.lbls = {n: nvcategory.from_strings(_to_str(to.iloc[:,n]).data).keys() for n in to.all_cat_names}
+    self.classes = {n: CategoryMap(_remove_none(c.to_host()), add_na=(n in to.cat_names)) for n,c in self.lbls.items()}
 
 @patch
 def _apply_cats_gpu(self: Categorify, c):
-    return cudf.Series(nvcategory.from_strings(_to_str(c).data).set_keys(self.lbls[c.name]).values()).add(1)
+    return cudf.Series(nvcategory.from_strings(_to_str(c).data).set_keys(self.lbls[c.name]).values()).add(add)
 
 @Categorify
-def encodes(self, to: TabularGPU): to.transform(to.all_cat_names, self._apply_cats_gpu)
+def encodes(self, to: TabularGPU):
+    def _apply_cats_gpu(add, c):
+        return cudf.Series(nvcategory.from_strings(_to_str(c).data).set_keys(self.lbls[c.name]).values()).add(add)
+    to.transform(to.cat_names, partial(_apply_cats_gpu, 1))
+    to.transform(L(to.cat_y),  partial(_apply_cats_gpu, 0))
 
 #Cell
 @Normalize
 def setups(self, to: TabularGPU):
-    self.means = {n: to[:to.split,n].mean()           for n in to.cont_names}
-    self.stds  = {n: to[:to.split,n].std(ddof=0)+1e-7 for n in to.cont_names}
+    self.means = {n: to.iloc[:,n].mean()           for n in to.cont_names}
+    self.stds  = {n: to.iloc[:,n].std(ddof=0)+1e-7 for n in to.cont_names}
 
 @Normalize
 def encodes(self, to: TabularGPU):
@@ -55,11 +59,17 @@ def median(self:cudf.Series):
     return col[len(col)//2] if len(col)%2 != 0 else (col[len(col)//2]+col[len(col)//2-1])/2
 
 #Cell
+@patch
+def idxmax(self:cudf.Series):
+    "Return the index of the first occurence of the max in `self`"
+    return self.argsort(ascending=False).index[0]
+
+#Cell
 @FillMissing
 def setups(self, to: TabularGPU):
     self.na_dict = {}
     for n in to.cont_names:
-        col = to.loc[:to.split, n]
+        col = to.iloc[:, n]
         if col.isnull().any(): self.na_dict[n] = self.fill_strategy(col, self.fill_vals[n])
 
 @FillMissing
@@ -67,9 +77,9 @@ def encodes(self, to: TabularGPU):
     for n in to.cont_names:
         if n in self.na_dict:
             if self.add_col:
-                to.items[n+'_na'] = to.items[n].isnull()
+                to.items[n+'_na'] = to[n].isnull()
                 if n+'_na' not in to.cat_names: to.cat_names.append(n+'_na')
-            to.set_col(n, to.items[n].fillna(self.na_dict[n]))
+            to[n] = to[n].fillna(self.na_dict[n])
         elif df[n].isnull().any():
             raise Exception(f"nan values in `{n}` but not in setup training set")
 
