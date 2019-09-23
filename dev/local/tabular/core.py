@@ -26,7 +26,7 @@ class _TabIloc:
         return self.to.new(df.iloc[rows, cols])
 
 #Cell
-class Tabular(CollBase, GetAttr):
+class Tabular(CollBase, GetAttr, FilteredBase):
     "A `DataFrame` wrapper that knows which cols are cont/cat/y, and returns rows in `__getitem__`"
     def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True, splits=None, do_setup=True):
         if splits is None: splits=[range_of(df)]
@@ -52,9 +52,9 @@ class Tabular(CollBase, GetAttr):
     def all_cat_names (self): return self.cat_names  + self.cat_y
     def all_col_names (self): return self.all_cont_names + self.all_cat_names
     def default(self): return self.items
+    def n_subsets(self): return 2
 
-properties(Tabular,'iloc','targ','all_cont_names','all_cat_names','all_col_names','default')
-Tabular.train,Tabular.valid = add_props(lambda i,x: x.subset(i), 2)
+properties(Tabular,'iloc','targ','all_cont_names','all_cat_names','all_col_names','default','n_subsets')
 
 #Cell
 class TabularPandas(Tabular):
@@ -155,3 +155,5 @@ class TabDataLoader(TfmdDL):
         super().__init__(dataset, bs=bs, shuffle=shuffle, after_batch=after_batch, num_workers=num_workers, **kwargs)
 
     def create_batch(self, b): return self.dataset.iloc[b]
+
+TabularPandas._dl_type = TabDataLoader
