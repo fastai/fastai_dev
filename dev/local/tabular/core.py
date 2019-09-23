@@ -26,24 +26,23 @@ class _TabIloc:
         return self.to.new(df.iloc[rows, cols])
 
 #Cell
-class Tabular(CollBase, GetAttr):
+class Tabular(CollBase, GetAttr, FilteredBase):
     "A `DataFrame` wrapper that knows which cols are cont/cat/y, and returns rows in `__getitem__`"
-    def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True):
+    def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True, splits=None, do_setup=True):
+        if splits is None: splits=[range_of(df)]
+        df = df.iloc[sum(splits, [])].copy()
         super().__init__(df)
+
         store_attr(self, 'y_names,is_y_cat')
         self.cat_names,self.cont_names,self.procs = L(cat_names),L(cont_names),Pipeline(procs, as_item=True)
         self.cat_y  = None if not is_y_cat else y_names
         self.cont_y = None if     is_y_cat else y_names
+        self.split = len(splits[0])
+        if do_setup: self.procs.setup(self)
 
-    def datasource(self, splits=None):
-        if splits is None: splits=[range_of(self)]
-        self.items = self.items.iloc[sum(splits, [])].copy()
-        res = DataSource(self, filts=[range(len(splits[0])), range(len(splits[0]), len(self))], tfms=[None])
-        self.procs.setup(res)
-        return res
-
+    def subset(self, i): return self.new(self.items[slice(0,self.split) if i==0 else slice(self.split,len(self))])
     def copy(self): self.items = self.items.copy(); return self
-    def new(self, df): return type(self)(df, **attrdict(self, 'procs','cat_names','cont_names','y_names','is_y_cat'))
+    def new(self, df): return type(self)(df, do_setup=False, **attrdict(self, 'procs','cat_names','cont_names','y_names','is_y_cat'))
     def show(self, max_n=10, **kwargs): display_df(self.all_cols[:max_n])
     def setup(self): self.procs.setup(self)
     def process(self): self.procs(self)
@@ -53,7 +52,9 @@ class Tabular(CollBase, GetAttr):
     def all_cat_names (self): return self.cat_names  + self.cat_y
     def all_col_names (self): return self.all_cont_names + self.all_cat_names
     def default(self): return self.items
-properties(Tabular,'iloc','targ','all_cont_names','all_cat_names','all_col_names','default')
+    def n_subsets(self): return 2
+
+properties(Tabular,'iloc','targ','all_cont_names','all_cat_names','all_col_names','default','n_subsets')
 
 #Cell
 class TabularPandas(Tabular):
@@ -86,10 +87,13 @@ class TabularProc(InplaceTransform):
 class Categorify(TabularProc):
     "Transform the categorical variables to that type."
     order = 1
-    def setups(self, dsrc): self.classes = {n:CategoryMap(dsrc.iloc[:,n].items, add_na=True) for n in dsrc.all_cat_names}
-    def _apply_cats (self, c): return c.cat.codes+1 if is_categorical_dtype(c) else c.map(self[c.name].o2i)
+    def setups(self, to):
+        self.classes = {n:CategoryMap(to.iloc[:,n].items, add_na=(n in to.cat_names)) for n in to.all_cat_names}
+    def _apply_cats (self, add, c): return c.cat.codes+add if is_categorical_dtype(c) else c.map(self[c.name].o2i)
     def _decode_cats(self, c): return c.map(dict(enumerate(self[c.name].items)))
-    def encodes(self, to): to.transform(to.all_cat_names, self._apply_cats)
+    def encodes(self, to):
+        to.transform(to.cat_names, partial(self._apply_cats,1))
+        to.transform(L(to.cat_y),  partial(self._apply_cats,0))
     def decodes(self, to): to.transform(to.all_cat_names, self._decode_cats)
     def __getitem__(self,k): return self.classes[k]
 
@@ -147,7 +151,7 @@ class ReadTabBatch(ItemTransform):
 class TabDataLoader(TfmdDL):
     do_item = noops
     def __init__(self, dataset, bs=16, shuffle=False, after_batch=None, num_workers=0, **kwargs):
-        after_batch = L(after_batch)+ReadTabBatch(dataset.items)
+        after_batch = L(after_batch)+ReadTabBatch(dataset)
         super().__init__(dataset, bs=bs, shuffle=shuffle, after_batch=after_batch, num_workers=num_workers, **kwargs)
 
-    def create_batch(self, b): return self.dataset.items.iloc[b]
+    def create_batch(self, b): return self.dataset.iloc[b]
