@@ -34,7 +34,7 @@ def reshape(x: Image.Image, h, w, resample=0):
 @patch
 def resize_max(x: Image.Image, resample=0, max_px=None, max_h=None, max_w=None):
     h,w = x.shape
-    if max_px and x.n_px>max_px: h,w = h*max_px/x.n_px,w*max_px/x.n_px
+    if max_px and x.n_px>max_px: h,w = L([h,w]).mapped(lambda y: y*math.sqrt(max_px/x.n_px))
     if max_h and h>max_h: h,w = h*max_h/h,w*max_h/h
     if max_w and w>max_w: h,w = h*max_w/w,w*max_w/w
     return x.reshape(round(h), round(w), resample=resample)
