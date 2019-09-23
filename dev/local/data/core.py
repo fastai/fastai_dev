@@ -152,6 +152,8 @@ class DataSource(FilteredBase):
     def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, **kwargs)
     @property
     def filts(self): return self.tls[0].filts
+    @property
+    def filt(self): return self.tls[0].tfms.filt
 
     def show(self, o, ctx=None, **kwargs):
         for o_,tl in zip(o,self.tls): ctx = tl.show(o_, ctx=ctx, **kwargs)
