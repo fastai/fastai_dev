@@ -148,6 +148,8 @@
   "batch_to_samples": "03_data_pipeline.ipynb",
   "mk_transform": "03_data_pipeline.ipynb",
   "Pipeline": "03_data_pipeline.ipynb",
+  "decode_at": "03_data_pipeline.ipynb",
+  "show_at": "03_data_pipeline.ipynb",
   "FilteredBase": "03_data_pipeline.ipynb",
   "FilteredBase.train,FilteredBase.valid": "03_data_pipeline.ipynb",
   "TfmdList": "03_data_pipeline.ipynb",
