@@ -219,6 +219,7 @@ def coll_repr(c, max_n=10):
 #Cell
 def mask2idxs(mask):
     "Convert bool mask or index list to index `L`"
+    if isinstance(mask,slice): return mask
     mask = list(mask)
     if len(mask)==0: return []
     if isinstance(mask[0],bool): return [i for i,m in enumerate(mask) if m]
@@ -267,12 +268,10 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         super().__init__(items)
 
     def _new(self, items, *args, **kwargs): return type(self)(items, *args, use_list=None, **kwargs)
-    def __getitem__(self, idx):
-        res = self._get(idx) if is_indexer(idx) or isinstance(idx,slice) else self._gets(idx)
-        return res if is_indexer(idx) else L(res, use_list=None)
+    def __getitem__(self, idx): return self._get(idx) if is_indexer(idx) else L(self._get(idx), use_list=None)
 
-    def _get(self, i): return getattr(self.items,'iloc',self.items)[i]
-    def _gets(self, i):
+    def _get(self, i):
+        if is_indexer(i) or isinstance(i,slice): return getattr(self.items,'iloc',self.items)[i]
         i = mask2idxs(i)
         return (self.items.iloc[list(i)] if hasattr(self.items,'iloc')
                 else self.items.__array__()[(i,)] if hasattr(self.items,'__array__')
