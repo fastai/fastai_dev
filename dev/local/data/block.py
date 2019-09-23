@@ -5,12 +5,7 @@ __all__ = ['DataBlock']
 #Cell
 from ..torch_basics import *
 from ..test import *
-from .load import *
-from .core import *
-from .transform import *
-from .pipeline import *
-from .source import *
-from .external import *
+from .all import *
 from ..notebook.showdoc import show_doc
 
 #Cell
