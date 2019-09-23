@@ -74,6 +74,7 @@
   "compose": "01_core.ipynb",
   "maps": "01_core.ipynb",
   "partialler": "01_core.ipynb",
+  "mapped": "01_core.ipynb",
   "instantiate": "01_core.ipynb",
   "bind": "01_core.ipynb",
   "Self": "01_core.ipynb",

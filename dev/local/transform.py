@@ -199,7 +199,7 @@ class Func():
     def __init__(self, name, *args, **kwargs): self.name,self.args,self.kwargs = name,args,kwargs
     def __repr__(self): return f'sig: {self.name}({self.args}, {self.kwargs})'
     def _get(self, t): return get_func(t, self.name, *self.args, **self.kwargs)
-    def __call__(self,t): return L(t).mapped(self._get) if is_listy(t) else self._get(t)
+    def __call__(self,t): return mapped(self._get, t)
 
 #Cell
 class _Sig():
@@ -226,6 +226,7 @@ def mk_transform(f, as_item=True):
 
 #Cell
 def gather_attrs(o, k, nm):
+    "Used in __getattr__ to collect all attrs `k` from `self.{nm}`"
     if k.startswith('_') or k==nm: raise AttributeError(k)
     att = getattr(o,nm)
     res = [t for t in att.attrgot(k) if t is not None]

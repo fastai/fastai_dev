@@ -13,7 +13,7 @@ from ..notebook.showdoc import show_doc
 class FilteredBase:
     "Base class for lists with subsets"
     def _new(self, items, **kwargs): return super()._new(items, filts=self.filts, **kwargs)
-    def subsets(self): return map(self.subset, range(self.n_subsets))
+    def subset(self): raise NotImplemented
     @property
     def n_subsets(self): return len(self.filts)
 
@@ -74,7 +74,7 @@ class TfmdDL(DataLoader):
     def _one_pass(self):
         its = self.after_batch(self.do_batch([self.do_item(0)]))
         self._device = find_device(its)
-        self._retain_dl = partial(retain_types, typs=L(its).mapped(type))
+        self._retain_dl = partial(retain_types, typs=mapped(type,its))
 
     def _retain_dl(self,b):
         self._one_pass()

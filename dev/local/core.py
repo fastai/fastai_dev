@@ -7,9 +7,9 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'properties', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge',
            'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul',
            'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle',
-           'Int', 'Float', 'Str', 'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'instantiate',
-           '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run',
-           'display_df', 'round_multiple', 'num_cpus', 'add_props', 'camel2snake', 'PrettyString']
+           'Int', 'Float', 'Str', 'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped',
+           'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file',
+           'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props', 'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -624,6 +624,11 @@ def partialler(f, *args, order=None, **kwargs):
     if order is not None: fnew.order=order
     elif hasattr(f,'order'): fnew.order=f.order
     return fnew
+
+#Cell
+def mapped(f, it):
+    "map `f` over `it`, unless it's not listy, in which case return `f(it)`"
+    return L(it).mapped(f) if is_listy(it) else f(it)
 
 #Cell
 def instantiate(t):

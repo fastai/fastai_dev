@@ -262,7 +262,7 @@ def bn_bias_params(m, with_bias=True):
 #Cell
 def batch_to_samples(b, max_n=10):
     "'Transposes' a batch to (at most `max_n`) samples"
-    if isinstance(b, Tensor): return b[:max_n]
+    if isinstance(b, Tensor): return list(b[:max_n])
     else:
         res = L(b).mapped(partial(batch_to_samples,max_n=max_n))
         return L(retain_types(res.zipped(), [b]))
