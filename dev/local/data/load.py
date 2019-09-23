@@ -70,7 +70,7 @@ class DataLoader():
         return self.n//self.bs + (0 if self.drop_last or self.n%self.bs==0 else 1)
 
     def create_batches(self, samps):
-        self.it = iter(self.dataset) if self.dataset else None
+        self.it = iter(self.dataset) if self.dataset is not None else None
         res = map(self.do_item, samps)
         yield from res if self.bs is None else map(self.do_batch, chunked(res, self.bs, self.drop_last))
 

@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Category', 'Categorize',
-           'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'Cuda', 'ByteToFloatTensor',
-           'Normalize', 'broadcast_vec', 'DataBunch', 'get_c', 'databunch']
+           'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'TfmdDL', 'DataBunch', 'get_c', 'databunch',
+           'Cuda', 'ByteToFloatTensor', 'Normalize', 'broadcast_vec']
 
 #Cell
 from ..torch_basics import *
@@ -226,6 +226,39 @@ class TfmdDL(DataLoader):
 
 #Cell
 @docs
+class DataBunch(GetAttr):
+    "Basic wrapper around several `DataLoader`s."
+    _xtra = 'one_batch show_batch dataset device'.split()
+
+    def __init__(self, *dls): self.dls,self.default = dls,dls[0]
+    def __getitem__(self, i): return self.dls[i]
+
+    train_dl,valid_dl = add_props(lambda i,x: x[i])
+    train_ds,valid_ds = add_props(lambda i,x: x[i].dataset)
+
+    _docs=dict(__getitem__="Retrieve `DataLoader` at `i` (`0` is training, `1` is validation)",
+              train_dl="Training `DataLoader`",
+              valid_dl="Validation `DataLoader`",
+              train_ds="Training `Dataset`",
+              valid_ds="Validation `Dataset`")
+
+#Cell
+def get_c(dbunch):
+    for t in dbunch.train_ds.tls[1].tfms.fs:
+        if hasattr(t, 'vocab'): return len(t.vocab)
+
+#Cell
+@patch
+@delegates(TfmdDL.__init__)
+def databunch(self:DataSource, bs=16, val_bs=None, shuffle_train=True, **kwargs):
+    n = len(self.tls[0].filts)-1
+    bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
+    shuffles = [shuffle_train] + [False]*n
+    return DataBunch(*[TfmdDL(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
+                           for i,(b,s) in enumerate(zip(bss, shuffles))])
+
+#Cell
+@docs
 class Cuda(Transform):
     "Move batch to `device` (defaults to `default_device()`)"
     def __init__(self,device=None):
@@ -266,36 +299,3 @@ def broadcast_vec(dim, ndim, *t, cuda=True):
     v[dim] = -1
     f = to_device if cuda else noop
     return [f(tensor(o).view(*v)) for o in t]
-
-#Cell
-@docs
-class DataBunch(GetAttr):
-    "Basic wrapper around several `DataLoader`s."
-    _xtra = 'one_batch show_batch dataset device'.split()
-
-    def __init__(self, *dls): self.dls,self.default = dls,dls[0]
-    def __getitem__(self, i): return self.dls[i]
-
-    train_dl,valid_dl = add_props(lambda i,x: x[i])
-    train_ds,valid_ds = add_props(lambda i,x: x[i].dataset)
-
-    _docs=dict(__getitem__="Retrieve `DataLoader` at `i` (`0` is training, `1` is validation)",
-              train_dl="Training `DataLoader`",
-              valid_dl="Validation `DataLoader`",
-              train_ds="Training `Dataset`",
-              valid_ds="Validation `Dataset`")
-
-#Cell
-def get_c(dbunch):
-    for t in dbunch.train_ds.tls[1].tfms.fs:
-        if hasattr(t, 'vocab'): return len(t.vocab)
-
-#Cell
-@patch
-@delegates(TfmdDL.__init__)
-def databunch(self:DataSource, bs=16, val_bs=None, shuffle_train=True, **kwargs):
-    n = len(self.tls[0].filts)-1
-    bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
-    shuffles = [shuffle_train] + [False]*n
-    return DataBunch(*[TfmdDL(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
-                           for i,(b,s) in enumerate(zip(bss, shuffles))])
