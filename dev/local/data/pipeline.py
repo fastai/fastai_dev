@@ -137,6 +137,8 @@ class TfmdList(L, FilteredBase):
     def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
     def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
     def setup(self, train_setup=True): self.tfms.setup(getattr(self,'train',self) if train_setup else self)
+    @property
+    def default(self): return self.tfms
 
     def __getitem__(self, idx):
         res = super().__getitem__(idx)

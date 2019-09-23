@@ -328,9 +328,6 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         random.shuffle(it)
         return self._new(it)
 
-    @property
-    def _xtra(self): return [o for o in dir(self.items) if not o.startswith('_')]
-
 #Cell
 add_docs(L,
          __getitem__="Retrieve `idx` (can be list of indices, or mask, or int) items",
