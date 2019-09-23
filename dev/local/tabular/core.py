@@ -61,10 +61,12 @@ class TabularPandas(Tabular):
 
 #Cell
 def _add_prop(cls, nm):
-    prop = property(lambda o: o[list(getattr(o,nm+'_names'))])
-    setattr(cls, nm+'s', prop)
-    def _f(o,v): o[getattr(o,nm+'_names')] = v
-    setattr(cls, nm+'s', prop.setter(_f))
+    @property
+    def f(o): return o[list(getattr(o,nm+'_names'))]
+    @f.setter
+    def fset(o, v): o[getattr(o,nm+'_names')] = v
+    setattr(cls, nm+'s', f)
+    setattr(cls, nm+'s', fset)
 
 _add_prop(Tabular, 'cat')
 _add_prop(Tabular, 'all_cat')
