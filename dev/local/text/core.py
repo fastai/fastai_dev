@@ -10,8 +10,7 @@ __all__ = ['ProcessPoolExecutor', 'parallel', 'parallel_gen', 'UNK', 'PAD', 'BOS
 from ..imports import *
 from ..test import *
 from ..core import *
-from ..data.core import *
-from ..data.external import *
+from ..data.all import *
 from ..notebook.showdoc import show_doc
 
 #Cell

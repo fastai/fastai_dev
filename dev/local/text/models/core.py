@@ -8,11 +8,7 @@ from ...torch_basics import *
 from ...test import *
 from ...core import *
 from ...layers import *
-from ...data.transform import *
-from ...data.core import *
-from ...data.source import *
-from ...data.external import *
-from ...data.pipeline import *
+from ...data.all import *
 from ..core import *
 from ...notebook.showdoc import show_doc
 from .awdlstm import *

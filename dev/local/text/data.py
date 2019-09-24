@@ -6,12 +6,7 @@ __all__ = ['make_vocab', 'TensorText', 'Numericalize', 'LMDataLoader', 'pad_coll
 from ..torch_basics import *
 from ..test import *
 from ..core import *
-from ..data.transform import *
-from ..data.core import *
-from ..data.source import *
-from ..data.external import *
-from ..data.pipeline import *
-from ..data.load import *
+from ..data.all import *
 from .core import *
 from ..notebook.showdoc import show_doc
 

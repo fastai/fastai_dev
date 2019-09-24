@@ -9,11 +9,7 @@ from ...torch_basics import *
 from ...test import *
 from ...core import *
 from ...layers import *
-from ...data.transform import *
-from ...data.core import *
-from ...data.source import *
-from ...data.external import *
-from ...data.pipeline import *
+from ...data.all import *
 from ..core import *
 from ...notebook.showdoc import show_doc
 
@@ -105,7 +101,11 @@ class AWD_LSTM(Module):
 
     def forward(self, inp, from_embeds=False):
         bs,sl = inp.shape[:2] if from_embeds else inp.shape
-        if bs!=self.bs:
+        if bs!=self.bs:transform import *
+from ...data.core import *
+from ...data.source import *
+from ...data.external import *
+from local.data.pipeline
             self.bs=bs
             self.reset()
         if self.packed: inp,lens = self._pack_sequence(inp, sl)
