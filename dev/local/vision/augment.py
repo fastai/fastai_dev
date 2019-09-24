@@ -18,38 +18,46 @@ from torch import stack, zeros_like as t0, ones_like as t1
 from torch.distributions.bernoulli import Bernoulli
 
 #Cell
-@docs
 class RandTransform(Transform):
     "A transform that randomize its state at each `__call__`, only applied on the training set"
-    filt=0
-    def __init__(self, encodes=None, decodes=None, randomize=None, p=1.):
-        self.p = p
-        if randomize is not None: self.randomize=randomize
-        super().__init__(encodes, decodes)
+    filt,do,nm,supports = 0,True,None,[]
+    def __init__(self, p=1., nm=None, randomize=None, **kwargs):
+        super().__init__(**kwargs)
+        self.p,self.nm,self.randomize = p,nm,ifnone(randomize,self.randomize)
 
-    def randomize(self, b): self.do = random.random() < self.p
+    def randomize(self, b):
+        "Randomize the state for input `b`"
+        self.do = random.random() < self.p
 
     def __call__(self, b, filt=None, **kwargs):
-        self.randomize(b) #Randomize before calling
-        if not getattr(self, 'do', True): return b
-        return super().__call__(b, filt=filt, **kwargs)
+        self.randomize(b)
+        return super().__call__(b, filt=filt, **kwargs) if self.do else b
 
-    _docs = dict(randomize="Randomize the state for input `b`")
+    def encodes(self, x):
+        if self.nm is None or type(x) not in self.supports: return x
+        return getattr(x,self.nm)
 
 #Cell
-def _minus_axis(x, axis):
+def _neg_axis(x, axis):
     x[...,axis] = -x[...,axis]
     return x
 
+#Cell
+@patch
+def flip(x:PILImage): return x.transpose(Image.FLIP_LEFT_RIGHT)
+@patch
+def flip(x:TensorPoint): return _neg_axis(x, 0)
+@patch
+def flip(x:TensorBBox):
+    bb,lbl = x
+    bb = _neg_axis(bb.view(-1,2), 0)
+    return (bb.view(-1,4),lbl)
+
+#Cell
 class PILFlip(RandTransform):
     "Randomly flip with probability `p`"
-    def __init__(self, p=0.5): self.p = p
-    def encodes(self, x:PILImage):    return x.transpose(Image.FLIP_LEFT_RIGHT)
-    def encodes(self, x:TensorPoint): return _minus_axis(x, 0)
-    def encodes(self, x:TensorBBox):
-        bb,lbl = x
-        bb = _minus_axis(bb.view(-1,2), 0)
-        return (bb.view(-1,4),lbl)
+    supports=[PILImage,TensorPoint,TensorBBox]
+    def __init__(self, p=0.5): super().__init__(p=p,nm='flip')
 
 #Cell
 class PILDihedral(RandTransform):
@@ -62,8 +70,8 @@ class PILDihedral(RandTransform):
 
     def encodes(self, x:PILImage): return x if self.idx==0 else x.transpose(self.idx-1)
     def encodes(self, x:TensorPoint):
-        if self.idx in [1, 3, 4, 7]: x = _minus_axis(x, 0)
-        if self.idx in [2, 4, 5, 7]: x = _minus_axis(x, 1)
+        if self.idx in [1, 3, 4, 7]: x = _neg_axis(x, 0)
+        if self.idx in [2, 4, 5, 7]: x = _neg_axis(x, 1)
         if self.idx in [3, 5, 6, 7]: x = x.flip(1)
         return x
 

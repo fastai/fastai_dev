@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Category', 'Categorize',
-           'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'ToTensor', 'Cuda', 'ByteToFloatTensor', 'Normalize',
-           'broadcast_vec']
+           'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'get_c', 'ToTensor', 'Cuda', 'ByteToFloatTensor',
+           'Normalize', 'broadcast_vec']
 
 #Cell
 from ..torch_basics import *
@@ -162,6 +162,10 @@ class OneHotEncode(Transform):
 
     def encodes(self, o): return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
     def decodes(self, o): return one_hot_decode(o, self.vocab)
+
+#Cell
+def get_c(dbunch):
+    return len(getattr(dbunch.train_ds.tls[1].tfms, 'vocab', []))
 
 #Cell
 class ToTensor(Transform):
