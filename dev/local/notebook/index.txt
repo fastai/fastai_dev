@@ -17,6 +17,7 @@
   "BaseObj": "01_core.ipynb",
   "NewChkMeta": "01_core.ipynb",
   "BypassNewMeta": "01_core.ipynb",
+  "copy_func": "01_core.ipynb",
   "patch_to": "01_core.ipynb",
   "patch": "01_core.ipynb",
   "patch_property": "01_core.ipynb",
