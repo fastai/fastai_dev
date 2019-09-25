@@ -80,7 +80,7 @@ def patch_to(cls, as_prop=False):
     if isinstance(cls, type): cls=(cls,)
     def _inner(f):
         for c_ in cls:
-            nf = copy(f)
+            nf = copy_func(f)
             # `functools.update_wrapper` when passing patched function to `Pipeline`, so we do it manually
             for o in functools.WRAPPER_ASSIGNMENTS: setattr(nf, o, getattr(f,o))
             nf.__qualname__ = f"{c_.__name__}.{f.__name__}"
