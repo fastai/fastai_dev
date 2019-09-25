@@ -223,7 +223,7 @@ class AffineCoordTfm(RandTransform):
         coord_func = None if len(self.coord_fs)==0 else partial(compose_tfms, tfms=self.coord_fs, reverse=reverse)
         return x.affine_coord(self.mat, coord_func, sz=self.size, mode=mode, pad_mode=self.pad_mode)
 
-    def encodes(self, x:TensorImage): return self._encode(x, self.mode_mask)
+    def encodes(self, x:TensorImage): return self._encode(x, self.mode)
     def encodes(self, x:TensorMask):  return self._encode(x, self.mode_mask)
     def encodes(self, x:(TensorPoint, TensorBBox)): return self._encode(x, self.mode, reverse=True)
 
@@ -249,6 +249,11 @@ def flip_mat(x, p=0.5):
     mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
     return affine_mat(mask,     t0(mask), t0(mask),
                       t0(mask), t1(mask), t0(mask))
+
+#Cell
+@patch
+def flip_batch(x: TensorImage, p=0.5, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+    return x.affine_coord(mat=flip_mat(x, p=p)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Flip(p=0.5, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
@@ -279,6 +284,11 @@ def dihedral_mat(x, p=0.5, draw=None):
     mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
 
 #Cell
+@patch
+def dihedral_batch(x: TensorImage, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+    return x.affine_coord(mat=dihedral_mat(x, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+
+#Cell
 def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Apply a random dihedral transformation to a batch of images with a probability `p`"
     return AffineCoordTfm(aff_fs=partial(dihedral_mat, p=p, draw=draw), size=size, mode=mode, pad_mode=pad_mode)
@@ -290,6 +300,11 @@ def rotate_mat(x, max_deg=10, p=0.5, draw=None):
     thetas = _draw_mask(x, _def_draw, draw=draw, p=p) * math.pi/180
     return affine_mat(thetas.cos(), thetas.sin(), t0(thetas),
                      -thetas.sin(), thetas.cos(), t0(thetas))
+
+#Cell
+@patch
+def rotate(x: TensorImage, max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+    return x.affine_coord(mat=rotate_mat(x, max_deg=max_deg, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Rotate(max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
@@ -309,6 +324,12 @@ def zoom_mat(x, max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None):
     row_c = (1-s) * (2*row_pct - 1)
     return affine_mat(s,     t0(s), col_c,
                       t0(s), s,     row_c)
+
+#Cell
+@delegates(zoom_mat)
+@patch
+def zoom(x: TensorImage, size=None, mode='bilinear', pad_mode=PadMode.Reflection, **kwargs):
+    return x.affine_coord(mat=zoom_mat(x, **kwargs)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Zoom(max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None, size=None, mode='bilinear',
@@ -386,7 +407,7 @@ class LightingTfm(RandTransform):
         "Compose `self` with another `LightingTransform`"
         self.fs += tfm.fs
 
-    def encodes(self,x:TensorImage): return torch.sigmoid(compose_tfms(logit(x), self.fs))
+    def encodes(self,x:TensorImage): return x.lighting(partial(compose_tfms, tfms=self.fs))
 
 #Cell
 class _BrightnessLogit():
