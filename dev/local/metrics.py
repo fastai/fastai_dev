@@ -18,6 +18,9 @@ from .learner import *
 from .callback.progress import *
 
 #Cell
+import sklearn.metrics as skm
+
+#Cell
 class AccumMetric(Metric):
     "Stores predictions and targets on CPU in accumulate to perform final calculations with `func`."
     def __init__(self, func, dim_argmax=None, sigmoid=False, thresh=None, to_np=False, invert_arg=False, **kwargs):
