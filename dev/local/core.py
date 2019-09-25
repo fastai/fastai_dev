@@ -590,7 +590,7 @@ add_docs(Int, "An `int` with `show`"); add_docs(Str, "An `str` with `show`"); ad
 #Cell
 num_methods = """
     __add__ __sub__ __mul__ __matmul__ __truediv__ __floordiv__ __mod__ __divmod__ __pow__
-    __lshift__ __rshift__ __and__ __xor__ __or__ __neg__ __pos__ __abs__ __invert__
+    __lshift__ __rshift__ __and__ __xor__ __or__ __neg__ __pos__ __abs__
 """.split()
 rnum_methods = """
     __radd__ __rsub__ __rmul__ __rmatmul__ __rtruediv__ __rfloordiv__ __rmod__ __rdivmod__
@@ -607,8 +607,10 @@ class Tuple(tuple):
     def __new__(cls, x=None, *rest):
         if x is None: x = ()
         if not isinstance(x,tuple):
-            try: x = tuple(iter(x))
-            except TypeError: x = (x,)
+            if len(rest): x = (x,)
+            else:
+                try: x = tuple(iter(x))
+                except TypeError: x = (x,)
         return super().__new__(cls, x+rest if rest else x)
 
     def _op(self,op,*args):
@@ -620,7 +622,7 @@ class Tuple(tuple):
         return Tuple._op(self, operator.add,*args)
 
 def _get_op(op):
-    if isinstance(op,str): op = getattr(operator,n)
+    if isinstance(op,str): op = getattr(operator,op)
     def _f(self,*args): return self._op(op,*args)
     return _f
 
@@ -628,6 +630,7 @@ for n in num_methods:
     if not hasattr(Tuple, n) and hasattr(operator,n): setattr(Tuple,n,_get_op(n))
 
 for n in 'eq ne lt le gt ge'.split(): setattr(Tuple,n,_get_op(n))
+setattr(Tuple,'__invert__',_get_op('__not__'))
 setattr(Tuple,'max',_get_op(max))
 setattr(Tuple,'min',_get_op(min))
 
