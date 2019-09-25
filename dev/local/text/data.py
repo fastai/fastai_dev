@@ -107,10 +107,18 @@ class SortedDL(TfmdDL):
 
     def get_idxs(self):
         idxs = super().get_idxs()
+        if self.shuffle: return idxs
         return sorted(idxs, key=lambda i: self.sort_func(self.do_item(i)), reverse=True)
 
     def shuffle_fn(self,idxs):
-
-        self.items.shuffle()
-        self.chunkify()
-        return idxs
+        idxs = np.random.permutation(len(self.dataset))
+        sz = self.bs*50
+        ck_idx = [idxs[i:i+sz] for i in range(0, len(idxs), sz)]
+        sort_idx = np.concatenate([sorted(s, key=lambda i: self.sort_func(self.do_item(i)), reverse=True) for s in ck_idx])
+        sz = self.bs
+        ck_idx = [sort_idx[i:i+sz] for i in range(0, len(sort_idx), sz)]
+        max_ck = np.argmax([self.sort_func(self.do_item(ck[0])) for ck in ck_idx])  # find the chunk with the largest key,
+        ck_idx[0],ck_idx[max_ck] = ck_idx[max_ck],ck_idx[0]     # then make sure it goes first.
+        sort_idx = np.concatenate(np.random.permutation(ck_idx[1:])) if len(ck_idx) > 1 else np.array([],dtype=np.int)
+        sort_idx = np.concatenate((ck_idx[0], sort_idx))
+        return iter(sort_idx)
