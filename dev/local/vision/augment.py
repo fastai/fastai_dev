@@ -398,7 +398,7 @@ class LightingTfm(RandTransform):
     "Apply `fs` to the logits"
     order = 40
     def __init__(self, fs): self.fs=L(fs)
-    def before_call(self, b):
+    def before_call(self, b, filt):
         self.do = True
         if isinstance(b, tuple): b = b[0]
         for t in self.fs: t.before_call(b)

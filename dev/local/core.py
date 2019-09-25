@@ -77,12 +77,14 @@ class BypassNewMeta(type):
 #Cell
 def patch_to(cls, as_prop=False):
     "Decorator: add `f` to `cls`"
+    if isinstance(cls, type): cls=(cls,)
     def _inner(f):
-        nf = copy(f)
-        # `functools.update_wrapper` when passing patched function to `Pipeline`, so we do it manually
-        for o in functools.WRAPPER_ASSIGNMENTS: setattr(nf, o, getattr(f,o))
-        nf.__qualname__ = f"{cls.__name__}.{f.__name__}"
-        setattr(cls, f.__name__, property(nf) if as_prop else nf)
+        for c_ in cls:
+            nf = copy(f)
+            # `functools.update_wrapper` when passing patched function to `Pipeline`, so we do it manually
+            for o in functools.WRAPPER_ASSIGNMENTS: setattr(nf, o, getattr(f,o))
+            nf.__qualname__ = f"{c_.__name__}.{f.__name__}"
+            setattr(c_, f.__name__, property(nf) if as_prop else nf)
         return f
     return _inner
 
