@@ -2,7 +2,7 @@
 
 __all__ = ['RandTransform', 'FlipItem', 'DihedralItem', 'clip_remove_empty', 'PadMode', 'CropPad', 'RandomCrop',
            'ResizeMethod', 'Resize', 'RandomResizedCrop', 'AffineCoordTfm', 'affine_mat', 'mask_tensor', 'flip_mat',
-           'Flip', 'dihedral_mat', 'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs',
+           'TensorTypes', 'Flip', 'dihedral_mat', 'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs',
            'apply_perspective', 'Warp', 'logit', 'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms',
            'aug_transforms']
 
@@ -251,9 +251,19 @@ def flip_mat(x, p=0.5):
                       t0(mask), t1(mask), t0(mask))
 
 #Cell
+def _get_default(x, mode=None, pad_mode=None):
+    if mode is None: mode='bilinear' if isinstance(x, TensorMask) else 'bilinear'
+    if pad_mode is None: pad_mode=PadMode.Zeros if isinstance(x, (TensorPoint, TensorBBox)) else PadMode.Reflection
+    x0 = x[0] if isinstance(x, tuple) else x
+    return x0,mode,pad_mode
+
+TensorTypes = (TensorImage,TensorMask,TensorPoint, TensorBBox)
+
+#Cell
 @patch
-def flip_batch(x: TensorImage, p=0.5, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
-    return x.affine_coord(mat=flip_mat(x, p=p)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+def flip_batch(x: TensorTypes, p=0.5, size=None, mode=None, pad_mode=None):
+    x0,mode,pad_mode = _get_default(x, mode, pad_mode)
+    return x.affine_coord(mat=flip_mat(x0, p=p)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Flip(p=0.5, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
@@ -285,8 +295,9 @@ def dihedral_mat(x, p=0.5, draw=None):
 
 #Cell
 @patch
-def dihedral_batch(x: TensorImage, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
-    return x.affine_coord(mat=dihedral_mat(x, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+def dihedral_batch(x: TensorTypes, p=0.5, draw=None, size=None, mode=None, pad_mode=None):
+    x0,mode,pad_mode = _get_default(x, mode, pad_mode)
+    return x.affine_coord(mat=dihedral_mat(x0, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
@@ -302,9 +313,11 @@ def rotate_mat(x, max_deg=10, p=0.5, draw=None):
                      -thetas.sin(), thetas.cos(), t0(thetas))
 
 #Cell
+@delegates(rotate_mat)
 @patch
-def rotate(x: TensorImage, max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
-    return x.affine_coord(mat=rotate_mat(x, max_deg=max_deg, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+def rotate(x: TensorTypes, size=None, mode=None, pad_mode=None, **kwargs):
+    x0,mode,pad_mode = _get_default(x, mode, pad_mode)
+    return x.affine_coord(mat=rotate_mat(x0, **kwargs)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Rotate(max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
@@ -328,8 +341,9 @@ def zoom_mat(x, max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None):
 #Cell
 @delegates(zoom_mat)
 @patch
-def zoom(x: TensorImage, size=None, mode='bilinear', pad_mode=PadMode.Reflection, **kwargs):
-    return x.affine_coord(mat=zoom_mat(x, **kwargs)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+def zoom(x: TensorTypes, size=None, mode='bilinear', pad_mode=PadMode.Reflection, **kwargs):
+    x0,mode,pad_mode = _get_default(x, mode, pad_mode)
+    return x.affine_coord(mat=zoom_mat(x0, **kwargs)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Zoom(max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None, size=None, mode='bilinear',
