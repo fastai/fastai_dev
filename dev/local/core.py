@@ -166,7 +166,7 @@ def add_docs(cls, cls_doc=None, **docs):
         if hasattr(f,'__func__'): f = f.__func__ # required for class methods
         f.__doc__ = v
     # List of public callables without docstring
-    nodoc = [c for n,c in vars(cls).items() if isinstance(c,Callable)
+    nodoc = [c for n,c in vars(cls).items() if callable(c)
              and not n.startswith('_') and c.__doc__ is None]
     assert not nodoc, f"Missing docs: {nodoc}"
     assert cls.__doc__ is not None, f"Missing class docs: {cls}"
@@ -178,7 +178,7 @@ def docs(cls):
     return cls
 
 #Cell
-def custom_dir(c, add:List):
+def custom_dir(c, add:list):
     "Implement custom `__dir__`, adding `add` to `cls`"
     return dir(type(c)) + list(c.__dict__.keys()) + add
 

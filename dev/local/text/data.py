@@ -97,7 +97,20 @@ def pad_collate(samples, pad_idx=1, pad_first=False, backwards=False):
     return res, tensor(np.array([s[1] for s in samples]))
 
 #Cell
+def _default_sort(x): return len(x[0])
+
+@delegates(TfmdDL)
 class SortedDL(TfmdDL):
+    def __init__(self, dataset, sort_func=None, **kwargs):
+        super().__init__(dataset, **kwargs)
+        self.sort_func = _default_sort if sort_func is None else sort_func
+
     def get_idxs(self):
         idxs = super().get_idxs()
-        return sorted(idxs, key=lambda i: len(self.do_item(i)[0]), reverse=True)
+        return sorted(idxs, key=lambda i: self.sort_func(self.do_item(i)), reverse=True)
+
+    def shuffle_fn(self,idxs):
+
+        self.items.shuffle()
+        self.chunkify()
+        return idxs

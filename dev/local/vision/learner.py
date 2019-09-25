@@ -37,7 +37,7 @@ def create_body(arch, pretrained=True, cut=None):
         ll = list(enumerate(model.children()))
         cut = next(i for i,o in reversed(ll) if has_pool_type(o))
     if   isinstance(cut, int):      return nn.Sequential(*list(model.children())[:cut])
-    elif isinstance(cut, Callable): return cut(model)
+    elif callable(cut): return cut(model)
     else:                           raise NamedError("cut must be either integer or a function")
 
 #Cell
