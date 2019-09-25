@@ -111,6 +111,42 @@ mk_class('PadMode', **{o:o.lower() for o in ['Zeros', 'Border', 'Reflection']},
          doc="All possible padding mode as attributes to get tab-completion and typo-proofing")
 
 #Cell
+_pad_modes = {'zeros': 'constant', 'border': 'edge', 'reflection': 'reflect'}
+
+@patch
+def _do_crop_pad(x:Image.Image, tl, sz, pad_mode=PadMode.Zeros, resize_mode=Image.BILINEAR, resize_to=None):
+    if tl[0] > 0 or tl[1] > 0:
+        # At least one dim is inside the image, so needs to be cropped
+        cw,ch = max(tl[0],0),max(tl[1],0)
+        fw,fh = min(cw+sz[0], x.size[0]),min(ch+sz[1], x.size[1])
+        x = x.crop((cw, ch, fw, fh))
+    if tl[0] < 0 or tl[1] < 0:
+        # At least one dim is outside the image, so needs to be padded
+        pw,ph = max(-tl[0],0),max(-tl[1],0)
+        fw,fh = max(sz[0]-x.size[0]-pw,0),max(sz[1]-x.size[1]-ph,0)
+        x = tvpad(x, (pw, ph, fw, fh), padding_mode=_pad_modes[pad_mode])
+    if resize_to is not None: x = x.resize(resize_to, resize_mode)
+    return x
+
+@patch
+def _do_crop_pad(x:TensorPoint, tl, sz, orig_sz, pad_mode=PadMode.Zeros):
+    #assert pad_mode==PadMode.Zeros,"Only zero padding is supported for `TensorPoint` and `TensorBBox`"
+    old_sz,new_sz,tl = map(lambda o: tensor(o).float(), (orig_sz,sz,tl))
+    return TensorPoint((x + 1) * old_sz/new_sz - tl * 2/new_sz - 1)
+
+@patch
+def _do_crop_pad(x:TensorBBox, tl, sz, orig_sz, pad_mode=PadMode.Zeros):
+    bbox,label = x
+    bbox = TensorPoint._do_crop_pad(bbox.view(-1,2), tl, sz, orig_sz, pad_mode).view(-1,4)
+    return TensorBBox(clip_remove_empty(bbox, label))
+
+@patch
+def crop_pad(x:Image.Image, sz, pad_mode=PadMode.Zeros, resize_mode=Image.BILINEAR, resize_to=None):
+    if isinstance(sz,int): sz = (sz,sz)
+    tl = ((x.size[0]-sz[0])//2, (x.size[1]-sz[1])//2)
+    return x._do_crop_pad(tl, sz, pad_mode=pad_mode, resize_mode=resize_mode, resize_to=resize_to)
+
+#Cell
 class CropPad(RandTransform):
     "Center crop or pad an image to `size`"
     mode,mode_mask,order,final_size,filt = Image.BILINEAR,Image.NEAREST,5,None,None
@@ -458,6 +494,11 @@ def logit(x):
     return -(1/x-1).log()
 
 #Cell
+@patch
+def lighting(x: TensorImage, func):
+    return TensorImage(torch.sigmoid(func(logit(x))))
+
+#Cell
 class LightingTfm(RandTransform):
     "Apply `fs` to the logits"
     order = 40
@@ -486,6 +527,14 @@ class _BrightnessLogit():
     def __call__(self, x): return x.add_(logit(self.change[:,None,None,None]))
 
 #Cell
+@delegates(_BrightnessLogit.__init__)
+@patch
+def brightness(x: TensorImage, **kwargs):
+    func = _BrightnessLogit(**kwargs)
+    func.before_call(x)
+    return x.lighting(func)
+
+#Cell
 def Brightness(max_lighting=0.2, p=0.75, draw=None):
     "Apply change in brightness of `max_lighting` to batch of images with probability `p`."
     return LightingTfm(_BrightnessLogit(max_lighting, p, draw))
@@ -502,6 +551,14 @@ class _ContrastLogit():
         self.change = _draw_mask(x, self._def_draw, draw=self.draw, p=self.p, neutral=1.)
 
     def __call__(self, x): return x.mul_(self.change[:,None,None,None])
+
+#Cell
+@delegates(_ContrastLogit.__init__)
+@patch
+def contrast(x: TensorImage, **kwargs):
+    func = _ContrastLogit(**kwargs)
+    func.before_call(x)
+    return x.lighting(func)
 
 #Cell
 def Contrast(max_lighting=0.2, p=0.75, draw=None):
