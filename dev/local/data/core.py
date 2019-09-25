@@ -97,7 +97,7 @@ class FilteredBase:
         n = self.n_subsets-1
         bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
         shuffles = [shuffle_train] + [False]*n
-        return DataBunch(*[self._dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
+        return DataBunch(*[self._dl_type(self.subset(i), bs=b, shuffle=s, **kwargs)
                                for i,(b,s) in enumerate(zip(bss, shuffles))])
 
 FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
