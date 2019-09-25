@@ -115,7 +115,7 @@ _pad_modes = {'zeros': 'constant', 'border': 'edge', 'reflection': 'reflect'}
 
 @patch
 def _do_crop_pad(x:Image.Image, tl, sz, pad_mode=PadMode.Zeros, resize_mode=Image.BILINEAR, resize_to=None):
-    tl,sz = map(Tuple,(tl,sz))
+    tl,sz = Tuple(tl),Tuple(sz)
     if any(tl.gt(0)):
         # At least one dim is inside the image, so needs to be cropped
         c = tl.max(0)
@@ -131,8 +131,8 @@ def _do_crop_pad(x:Image.Image, tl, sz, pad_mode=PadMode.Zeros, resize_mode=Imag
 @patch
 def _do_crop_pad(x:TensorPoint, tl, sz, orig_sz, pad_mode=PadMode.Zeros):
     #assert pad_mode==PadMode.Zeros,"Only zero padding is supported for `TensorPoint` and `TensorBBox`"
-    old_sz,new_sz,tl = map(lambda o: tensor(o).float(), (orig_sz,sz,tl))
-    return TensorPoint((x + 1) * old_sz/new_sz - tl * 2/new_sz - 1)
+    old_sz,new_sz,tl = map(FloatTensor, (orig_sz,sz,tl))
+    return TensorPoint((x+1)*old_sz/new_sz - tl*2/new_sz - 1)
 
 @patch
 def _do_crop_pad(x:TensorBBox, tl, sz, orig_sz, pad_mode=PadMode.Zeros):
@@ -143,8 +143,7 @@ def _do_crop_pad(x:TensorBBox, tl, sz, orig_sz, pad_mode=PadMode.Zeros):
 @patch
 def crop_pad(x:Image.Image, sz, pad_mode=PadMode.Zeros, resize_mode=Image.BILINEAR, resize_to=None):
     if isinstance(sz,int): sz = (sz,sz)
-    tl = ((x.size[0]-sz[0])//2, (x.size[1]-sz[1])//2)
-    return x._do_crop_pad(tl, sz, pad_mode=pad_mode, resize_mode=resize_mode, resize_to=resize_to)
+    return x._do_crop_pad((x.size-sz)//2, sz, pad_mode=pad_mode, resize_mode=resize_mode, resize_to=resize_to)
 
 #Cell
 class CropPad(RandTransform):
@@ -159,7 +158,7 @@ class CropPad(RandTransform):
         self.do = True
         self.cp_size = self.size
         self.orig_size = (b[0] if isinstance(b, tuple) else b).size
-        self.tl = ((self.orig_size[0]-self.cp_size[0])//2, (self.orig_size[1]-self.cp_size[1])//2)
+        self.tl = (self.orig_size-self.cp_size)//2
 
     def _encode_pil(self, x, mode): return x._do_crop_pad(self.tl, self.cp_size, pad_mode=self.pad_mode, resize_mode=mode, resize_to=self.final_size)
     def encodes(self, x:PILImage): return self._encode_pil(x, self.mode)
