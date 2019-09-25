@@ -153,16 +153,15 @@ class Resize(CropPad):
         (self.mode,self.mode_mask),self.method = resamples,method
 
     def before_call(self, b, filt):
-        self.final_sz = self.cp_size
-        w,h = (b[0] if isinstance(b, tuple) else b).size
-        self.orig_size = (w,h)
+        super().before_call(b, filt)
+        self.final_sz = self.size
         if self.method==ResizeMethod.Squish:
-            self.tl,self.cp_size = (0,0),(w,h)
+            self.tl,self.cp_size = (0,0),self.orig_size
             return
-
+        w,h = self.orig_size
         op = (operator.lt,operator.gt)[self.method==ResizeMethod.Pad]
         m = w/self.final_sz[0] if op(w/self.final_sz[0],h/self.final_sz[1]) else h/self.final_sz[1]
-        self.cp_size = (m*self.final_sz[0],m*self.final_sz[1])
+        self.cp_size = (int(m*self.final_sz[0]),int(m*self.final_sz[1]))
         if self.method==ResizeMethod.Pad or filt: self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
         else: self.tl = (random.randint(0,w-self.cp_size[0]), random.randint(0,h-self.cp_size[1]))
 
@@ -175,9 +174,9 @@ class RandomResizedCrop(CropPad):
         self.mode,self.mode_mask = resamples
 
     def before_call(self, b, filt):
+        super().before_call(b, filt)
         self.final_sz = self.cp_size
-        w,h = (b[0] if isinstance(b, tuple) else b).size
-        self.orig_size = w,h
+        w,h = self.orig_size
         for attempt in range(10):
             if filt: break
             area = random.uniform(self.min_scale,1.) * w * h
@@ -197,11 +196,12 @@ class RandomResizedCrop(CropPad):
 class AffineCoordTfm(RandTransform):
     "Combine and apply affine and coord transforms"
     order = 30
-    def __init__(self, aff_fs=None, coord_fs=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
-        self.aff_fs,self.coord_fs,self.mode,self.pad_mode = L(aff_fs),L(coord_fs),mode,pad_mode
+    def __init__(self, aff_fs=None, coord_fs=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection, mode_mask='nearest'):
+        self.aff_fs,self.coord_fs = L(aff_fs),L(coord_fs)
+        store_attr(self, 'size,mode,pad_mode,mode_mask')
         self.cp_size = None if size is None else (size,size) if isinstance(size, int) else tuple(size)
 
-    def before_call(self, b):
+    def before_call(self, b, filt):
         if isinstance(b, tuple): b = b[0]
         self.do,self.mat = True,self._get_affine_mat(b)[:,:2]
         for t in self.coord_fs: t.before_call(b)
@@ -219,34 +219,13 @@ class AffineCoordTfm(RandTransform):
         for m in ms: aff_m = aff_m @ m
         return aff_m
 
-    def encodes(self, x:TensorImage):
-        if self.mat is None and len(self.coord_tfms)==0: return x
-        bs = x.size(0)
-        size = tuple(x.shape[-2:]) if self.cp_size is None else self.cp_size
-        size = (bs,x.size(1)) + size
-        coords = F.affine_grid(self.mat, size)
-        coords = compose_tfms(coords, self.coord_fs)
-        return F.grid_sample(x, coords, mode=self.mode, padding_mode=self.pad_mode)
+    def _encode(self, x, mode, reverse=False):
+        coord_func = None if len(self.coord_fs)==0 else partial(compose_tfms, tfms=self.coord_fs, reverse=reverse)
+        return x.affine_coord(self.mat, coord_func, sz=self.size, mode=mode, pad_mode=self.pad_mode)
 
-    def encodes(self, x:TensorMask):
-        self.mode,old_mode = 'nearest',self.mode
-        res = self.encodes(TensorImage(x.float()[:,None])).long()[:,0]
-        self.mode = old_mode
-        return res
-
-    def encodes(self, x:TensorPoint):
-        x = compose_tfms(x, self.coord_fs, reverse=True, invert=True)
-        return (x - self.mat[:,:,2].unsqueeze(1)) @ torch.inverse(self.mat[:,:,:2].transpose(1,2))
-
-    def encodes(self, x:TensorBBox):
-        bbox,label = x
-        bs,n = bbox.shape[:2]
-        pnts = stack([bbox[...,:2], stack([bbox[...,0],bbox[...,3]],dim=2),
-                      stack([bbox[...,2],bbox[...,1]],dim=2), bbox[...,2:]], dim=2)
-        pnts = self.encodes(TensorPoint(pnts.view(bs, 4*n, 2)))
-        pnts = pnts.view(bs, n, 4, 2)
-        tl,dr = pnts.min(dim=2)[0],pnts.max(dim=2)[0]
-        return clip_remove_empty(torch.cat([tl, dr], dim=2), label)
+    def encodes(self, x:TensorImage): return self._encode(x, self.mode_mask)
+    def encodes(self, x:TensorMask):  return self._encode(x, self.mode_mask)
+    def encodes(self, x:(TensorPoint, TensorBBox)): return self._encode(x, self.mode, reverse=True)
 
 #Cell
 def affine_mat(*ms):
