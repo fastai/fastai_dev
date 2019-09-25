@@ -7,9 +7,10 @@ __all__ = ['defaults', 'PrePostInitMeta', 'BaseObj', 'NewChkMeta', 'BypassNewMet
            'properties', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge',
            'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul',
            'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle',
-           'Int', 'Float', 'Str', 'TupleBase', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped',
-           'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'bunzip', 'join_path_file',
-           'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props', 'camel2snake', 'PrettyString']
+           'Int', 'Float', 'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple', 'TupleTitled', 'trace',
+           'compose', 'maps', 'partialler', 'mapped', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self',
+           'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props',
+           'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -252,6 +253,7 @@ class CollBase:
 #Cell
 def cycle(o):
     "Like `itertools.cycle` except creates list of `None`s if `o` is empty"
+    o = _listify(o)
     return itertools.cycle(o) if o is not None and len(o) > 0 else itertools.cycle([None])
 
 #Cell
@@ -586,19 +588,52 @@ class Str(str, ShowTitle): pass
 add_docs(Int, "An `int` with `show`"); add_docs(Str, "An `str` with `show`"); add_docs(Float, "An `float` with `show`")
 
 #Cell
-class TupleBase(tuple):
-    "A `tuple` with `__neg__` and more friendly __init__ behavior"
-    def __new__(cls, x=None, *rest):
-        if x is None: x = ()
-        if not is_listy(x): x = (x,)
-        x = tuple(x)
-        return super().__new__(cls, x+rest if rest else x)
-
-    def __neg__(self): return tuple(map(operator.neg,self))
+num_methods = """
+    __add__ __sub__ __mul__ __matmul__ __truediv__ __floordiv__ __mod__ __divmod__ __pow__
+    __lshift__ __rshift__ __and__ __xor__ __or__ __neg__ __pos__ __abs__ __invert__
+""".split()
+rnum_methods = """
+    __radd__ __rsub__ __rmul__ __rmatmul__ __rtruediv__ __rfloordiv__ __rmod__ __rdivmod__
+    __rpow__ __rlshift__ __rrshift__ __rand__ __rxor__ __ror__
+""".split()
+inum_methods = """
+    __iadd__ __isub__ __imul__ __imatmul__ __itruediv__
+    __ifloordiv__ __imod__ __ipow__ __ilshift__ __irshift__ __iand__ __ixor__ __ior__
+""".split()
 
 #Cell
-class TupleTitled(TupleBase, ShowTitle):
-    "A `TupleBase` with `show`"
+class Tuple(tuple):
+    "A `tuple` with elementwise ops and more friendly __init__ behavior"
+    def __new__(cls, x=None, *rest):
+        if x is None: x = ()
+        if not isinstance(x,tuple):
+            try: x = tuple(iter(x))
+            except TypeError: x = (x,)
+        return super().__new__(cls, x+rest if rest else x)
+
+    def _op(self,op,*args):
+        if not isinstance(self,Tuple): self = Tuple(self)
+        return type(self)(map(op,self,*map(cycle, args)))
+
+    def add(self,*args):
+        "`+` is already defined in `tuple` for concat, so use `add` instead"
+        return Tuple._op(self, operator.add,*args)
+
+def _get_op(op):
+    if isinstance(op,str): op = getattr(operator,n)
+    def _f(self,*args): return self._op(op,*args)
+    return _f
+
+for n in num_methods:
+    if not hasattr(Tuple, n) and hasattr(operator,n): setattr(Tuple,n,_get_op(n))
+
+for n in 'eq ne lt le gt ge'.split(): setattr(Tuple,n,_get_op(n))
+setattr(Tuple,'max',_get_op(max))
+setattr(Tuple,'min',_get_op(min))
+
+#Cell
+class TupleTitled(Tuple, ShowTitle):
+    "A `Tuple` with `show`"
     pass
 
 #Cell

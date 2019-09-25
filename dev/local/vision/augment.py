@@ -115,16 +115,16 @@ _pad_modes = {'zeros': 'constant', 'border': 'edge', 'reflection': 'reflect'}
 
 @patch
 def _do_crop_pad(x:Image.Image, tl, sz, pad_mode=PadMode.Zeros, resize_mode=Image.BILINEAR, resize_to=None):
-    if tl[0] > 0 or tl[1] > 0:
+    tl,sz = map(Tuple,(tl,sz))
+    if any(tl.gt(0)):
         # At least one dim is inside the image, so needs to be cropped
-        cw,ch = max(tl[0],0),max(tl[1],0)
-        fw,fh = min(cw+sz[0], x.size[0]),min(ch+sz[1], x.size[1])
-        x = x.crop((cw, ch, fw, fh))
-    if tl[0] < 0 or tl[1] < 0:
+        c = tl.max(0)
+        x = x.crop((*c, *c.add(sz).min(x.size)))
+    if any(tl.lt(0)):
         # At least one dim is outside the image, so needs to be padded
-        pw,ph = max(-tl[0],0),max(-tl[1],0)
-        fw,fh = max(sz[0]-x.size[0]-pw,0),max(sz[1]-x.size[1]-ph,0)
-        x = tvpad(x, (pw, ph, fw, fh), padding_mode=_pad_modes[pad_mode])
+        p = (-tl).max(0)
+        f = (sz-x.size-p).max(0)
+        x = tvpad(x, (*p, *f), padding_mode=_pad_modes[pad_mode])
     if resize_to is not None: x = x.resize(resize_to, resize_mode)
     return x
 
