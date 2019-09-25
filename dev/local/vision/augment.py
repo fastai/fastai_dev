@@ -193,6 +193,48 @@ class RandomResizedCrop(CropPad):
         self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
 
 #Cell
+def _init_mat(x):
+    mat = torch.eye(3, dtype=x.dtype, device=x.device)
+    return mat.unsqueeze(0).expand(x.size(0), 3, 3)
+
+#Cell
+@patch
+def affine_coord(x: TensorImage, mat=None, coord_tfm=None, sz=None, mode='bilinear', pad_mode=PadMode.Reflection):
+    if mat is None and coord_tfm is None: return x
+    size = tuple(x.shape[-2:]) if sz is None else (sz,sz) if isinstance(sz,int) else tuple(sz)
+    if mat is None: mat = _init_mat(x)[:,:2]
+    coords = F.affine_grid(mat, x.shape[:2] + size)
+    if coord_tfm is not None: coords = coord_tfm(coords)
+    return TensorImage(F.grid_sample(x, coords, mode=mode, padding_mode=pad_mode))
+
+@patch
+def affine_coord(x: TensorMask, mat=None, coord_tfm=None, sz=None, mode='nearest', pad_mode=PadMode.Reflection):
+    add_dim = (x.ndim==3)
+    if add_dim: x = x[:,None]
+    res = TensorImage.affine_coord(x.float(), mat, coord_tfm, sz, mode, pad_mode).long()
+    if add_dim: res = res[:,0]
+    return TensorMask(res)
+
+@patch
+def affine_coord(x: TensorPoint, mat=None, coord_tfm=None, sz=None, mode='nearest', pad_mode=PadMode.Zeros):
+    #assert pad_mode==PadMode.Zeros, "Only zero padding is supported for `TensorPoint` and `TensorBBox`"
+    if coord_tfm is not None: x = coord_tfm(x, invert=True)
+    if mat is not None: x = (x - mat[:,:,2].unsqueeze(1)) @ torch.inverse(mat[:,:,:2].transpose(1,2))
+    return TensorPoint(x)
+
+@patch
+def affine_coord(x: TensorBBox, mat=None, coord_tfm=None, sz=None, mode='nearest', pad_mode=PadMode.Zeros):
+    if mat is None and coord_tfm is None: return x
+    bbox,label = x
+    bs,n = bbox.shape[:2]
+    pnts = stack([bbox[...,:2], stack([bbox[...,0],bbox[...,3]],dim=2),
+                  stack([bbox[...,2],bbox[...,1]],dim=2), bbox[...,2:]], dim=2)
+    pnts = TensorPoint.affine_coord(pnts.view(bs, 4*n, 2), mat, coord_tfm, sz, mode, pad_mode)
+    pnts = pnts.view(bs, n, 4, 2)
+    tl,dr = pnts.min(dim=2)[0],pnts.max(dim=2)[0]
+    return TensorBBox(clip_remove_empty(torch.cat([tl, dr], dim=2), label))
+
+#Cell
 class AffineCoordTfm(RandTransform):
     "Combine and apply affine and coord transforms"
     order = 30
@@ -212,8 +254,7 @@ class AffineCoordTfm(RandTransform):
         self.coord_fs += tfm.coord_fs
 
     def _get_affine_mat(self, x):
-        aff_m = torch.eye(3, dtype=x.dtype, device=x.device)
-        aff_m = aff_m.unsqueeze(0).expand(x.size(0), 3, 3)
+        aff_m = _init_mat(x)
         ms = [f(x) for f in self.aff_fs]
         ms = [m for m in ms if m is not None]
         for m in ms: aff_m = aff_m @ m
@@ -394,6 +435,15 @@ class _WarpCoord():
     def __call__(self, x, invert=False):
         coeffs = find_coeffs(self.targ_pts, self.orig_pts) if invert else find_coeffs(self.orig_pts, self.targ_pts)
         return apply_perspective(x, coeffs)
+
+#Cell
+@delegates(_WarpCoord.__init__)
+@patch
+def warp(x: TensorTypes, size=None, mode='bilinear', pad_mode=PadMode.Reflection, **kwargs):
+    x0,mode,pad_mode = _get_default(x, mode, pad_mode)
+    coord_tfm = _WarpCoord(**kwargs)
+    coord_tfm.before_call(x0)
+    return x.affine_coord(coord_tfm=coord_tfm, sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Warp(magnitude=0.2, p=0.5, draw_x=None, draw_y=None,size=None, mode='bilinear', pad_mode=PadMode.Reflection):
