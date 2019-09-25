@@ -156,6 +156,7 @@ class CropPad(RandTransform):
         self.size,self.pad_mode = (size[1],size[0]),pad_mode
 
     def before_call(self, b, filt):
+        self.do = True
         self.cp_size = self.size
         self.orig_size = (b[0] if isinstance(b, tuple) else b).size
         self.tl = ((self.orig_size[0]-self.cp_size[0])//2, (self.orig_size[1]-self.cp_size[1])//2)
@@ -190,14 +191,14 @@ class Resize(CropPad):
 
     def before_call(self, b, filt):
         super().before_call(b, filt)
-        self.final_sz = self.size
+        self.final_size = self.size
         if self.method==ResizeMethod.Squish:
             self.tl,self.cp_size = (0,0),self.orig_size
             return
         w,h = self.orig_size
         op = (operator.lt,operator.gt)[self.method==ResizeMethod.Pad]
-        m = w/self.final_sz[0] if op(w/self.final_sz[0],h/self.final_sz[1]) else h/self.final_sz[1]
-        self.cp_size = (int(m*self.final_sz[0]),int(m*self.final_sz[1]))
+        m = w/self.final_size[0] if op(w/self.final_size[0],h/self.final_size[1]) else h/self.final_size[1]
+        self.cp_size = (int(m*self.final_size[0]),int(m*self.final_size[1]))
         if self.method==ResizeMethod.Pad or filt: self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
         else: self.tl = (random.randint(0,w-self.cp_size[0]), random.randint(0,h-self.cp_size[1]))
 
@@ -211,7 +212,7 @@ class RandomResizedCrop(CropPad):
 
     def before_call(self, b, filt):
         super().before_call(b, filt)
-        self.final_sz = self.cp_size
+        self.final_size = self.size
         w,h = self.orig_size
         for attempt in range(10):
             if filt: break
