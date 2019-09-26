@@ -222,7 +222,7 @@ def find_bs(b):
 #Cell
 class Module(nn.Module, metaclass=PrePostInitMeta):
     "Same as `nn.Module`, but no need for subclasses to call `super().__init__`"
-    def __pre_init__(self): super().__init__()
+    def __pre_init__(self, *args, **kwargs): super().__init__()
     def __init__(self): pass
 
 #Cell

@@ -146,7 +146,7 @@ def show_at(o, idx, **kwargs):
 class DataSource(FilteredBase):
     "A dataset that creates a tuple from each `tfms`, passed thru `ds_tfms`"
     def __init__(self, items=None, tfms=None, tls=None, **kwargs):
-        self.tls = tls if tls else L(TfmdList(items, t, **kwargs) for t in L(ifnone(tfms,[None])))
+        self.tls = L(tls if tls else [TfmdList(items, t, **kwargs) for t in L(ifnone(tfms,[None]))])
 
     def __getitem__(self, it):
         res = tuple([tl[it] for tl in self.tls])
@@ -157,7 +157,7 @@ class DataSource(FilteredBase):
     def __iter__(self): return (self[i] for i in range(len(self)))
     def __repr__(self): return coll_repr(self)
     def decode(self, o): return tuple(tl.decode(o_) for o_,tl in zip(o,self.tls))
-    def subset(self, i): return type(self)(tls=[tl.subset(i) for tl in self.tls])
+    def subset(self, i): return type(self)(tls=L(tl.subset(i) for tl in self.tls))
     def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, **kwargs)
     @property
     def filts(self): return self.tls[0].filts
