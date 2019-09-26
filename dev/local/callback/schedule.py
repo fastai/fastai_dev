@@ -57,9 +57,9 @@ def combine_scheds(pcts, scheds):
 #Cell
 def combined_cos(pct, start, middle, end):
     "Return a combined scheduler with cosine annealing from `start` to `middle` then `middle` to `end`"
-    if isinstance(start, Iterable):
-        return [combine_scheds([pct,1-pct], [SchedCos(s, m), SchedCos(m, e)])
-                for s,m,e in zip(start,middle,end)]
+    #if isinstance(start, Iterable):
+    #    return [combine_scheds([pct,1-pct], [SchedCos(s, m), SchedCos(m, e)])
+    #            for s,m,e in zip(start,middle,end)]
     return combine_scheds([pct,1-pct], [SchedCos(start, middle), SchedCos(middle, end)])
 
 #Cell
@@ -73,10 +73,7 @@ class ParamScheduler(Callback):
     def begin_fit(self): self.hps = {p:[] for p in self.scheds.keys()}
 
     def _update_val(self, pct):
-        for pname,fs in self.scheds.items():
-            fs = L(fs)
-            if len(fs)==1: fs = fs*len(self.opt.param_groups)
-            for f,h in zip(fs,self.opt.hypers): h[pname] = f(pct)
+        for n,f in self.scheds.items(): self.opt.set_hyper(n, f(pct))
 
     def begin_batch(self):
         if not self.training: return
@@ -96,13 +93,15 @@ class ParamScheduler(Callback):
 
 #Cell
 @patch
-def fit_one_cycle(self:Learner, n_epoch, lr_max=None, div=25., div_final=1e5, pct_start=0.25,
+def fit_one_cycle(self:Learner, n_epoch, lr_max=None, div=25., div_final=1e5, pct_start=0.25, wd=None,
                   moms=(0.95,0.85,0.95), cbs=None, reset_opt=False):
     "Fit `self.model` for `n_epoch` using the 1cycle policy."
-    lr_max = self._lr_range(self.lr if lr_max is None else lr_max)
+    if self.opt is None: self.opt=self.create_opt()
+    self.opt.set_hyper('lr', self.lr if lr_max is None else lr_max)
+    lr_max = np.array([h['lr'] for h in self.opt.hypers])
     scheds = {'lr': combined_cos(pct_start, lr_max/div, lr_max, lr_max/div_final),
               'mom': combined_cos(pct_start, *moms)}
-    self.fit(n_epoch, cbs=ParamScheduler(scheds)+L(cbs), reset_opt=reset_opt)
+    self.fit(n_epoch, cbs=ParamScheduler(scheds)+L(cbs), reset_opt=reset_opt, wd=wd)
 
 #Cell
 @patch
@@ -117,14 +116,16 @@ def plot_sched(self:Recorder, figsize=None):
 
 #Cell
 @patch
-def fit_sgdr(self:Learner, n_cycles, cycle_len, lr_max=None, cycle_mult=2, cbs=None, reset_opt=False):
+def fit_sgdr(self:Learner, n_cycles, cycle_len, lr_max=None, cycle_mult=2, cbs=None, reset_opt=False, wd=None):
     "Fit `self.model` for `n_cycles` of `cycle_len` using SGDR."
-    lr_max = lr_max or self.lr
+    if self.opt is None: self.opt=self.create_opt()
+    self.opt.set_hyper('lr', self.lr if lr_max is None else lr_max)
+    lr_max = np.array([h['lr'] for h in self.opt.hypers])
     n_epoch = cycle_len * (cycle_mult**n_cycles-1)//(cycle_mult-1)
     pcts = [cycle_len * cycle_mult**i / n_epoch for i in range(n_cycles)]
     scheds = [SchedCos(lr_max, 0) for _ in range(n_cycles)]
     scheds = {'lr': combine_scheds(pcts, scheds)}
-    self.fit(n_epoch, cbs=ParamScheduler(scheds)+L(cbs), reset_opt=reset_opt)
+    self.fit(n_epoch, cbs=ParamScheduler(scheds)+L(cbs), reset_opt=reset_opt, wd=wd)
 
 #Cell
 @docs
