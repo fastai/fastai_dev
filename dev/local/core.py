@@ -86,7 +86,7 @@ def copy_func(f):
 #Cell
 def patch_to(cls, as_prop=False):
     "Decorator: add `f` to `cls`"
-    if isinstance(cls, type): cls=(cls,)
+    if not isinstance(cls, (tuple,list)): cls=(cls,)
     def _inner(f):
         for c_ in cls:
             nf = copy_func(f)

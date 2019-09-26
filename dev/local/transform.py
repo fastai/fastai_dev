@@ -76,7 +76,9 @@ class TypeDispatch:
 
     def add(self, f):
         "Add type `t` and function `f`"
-        self.funcs[_p1_anno(f) or object] = f
+        t = _p1_anno(f) or object
+        if not isinstance(t,tuple): t=(t,)
+        for t_ in t: self.funcs[t_] = f
         self._reset()
 
     def returns(self, x): return anno_ret(self[type(x)])
