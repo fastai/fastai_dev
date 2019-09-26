@@ -225,7 +225,7 @@ def _notebook2script(fname, silent=False, to_pkl=False):
         # remove trailing spaces
         names = export_names(code)
         extra,code = extra_add(code)
-        if not to_pkl: _add2add(fname_out, [f"'{f}'" for f in names if '.' not in f] + extra)
+        if not to_pkl: _add2add(fname_out, [f"'{f}'" for f in names if '.' not in f and len(f) > 0] + extra)
         index.update({f: fname.name for f in names})
         code = re.sub(r' +$', '', code, flags=re.MULTILINE)
         if code != '\n\n' + orig[:-1]:
