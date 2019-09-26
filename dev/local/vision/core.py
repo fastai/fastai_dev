@@ -54,6 +54,7 @@ def load_image(fn, mode=None, **kwargs):
 
 #Cell
 class PILBase(Image.Image, metaclass=BypassNewMeta):
+    _bypass_type=Image.Image
     default_dl_tfms = ByteToFloatTensor
     _show_args = {'cmap':'viridis'}
     _open_args = {'mode': 'RGB'}

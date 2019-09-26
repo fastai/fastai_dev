@@ -55,9 +55,9 @@ class NewChkMeta(FixSigMeta):
 class BypassNewMeta(FixSigMeta):
     "Metaclass: casts `x` to this class if it's of type `cls._bypass_type`, initializing with `_new_meta` if available"
     def __call__(cls, x=None, *args, **kwargs):
-        if not isinstance(x,getattr(cls,'_bypass_type',object)) or len(args) or len(kwargs):
-            return super().__call__(*((x,)+args), **kwargs)
         if hasattr(cls, '_new_meta'): x = cls._new_meta(x, *args, **kwargs)
+        elif not isinstance(x,getattr(cls,'_bypass_type',object)) or len(args) or len(kwargs):
+            x = super().__call__(*((x,)+args), **kwargs)
         if cls!=x.__class__: x.__class__ = cls
         return x
 
