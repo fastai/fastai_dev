@@ -51,6 +51,7 @@ class TensorImageBase(TensorBase):
         cols = cols or int(np.ceil(math.sqrt(n_samples)))
         figsize = (cols*3, rows*3) if figsize is None else figsize
         _,axs = subplots(rows, cols, figsize=figsize)
+        for ax in axs.flatten()[max_n:]: ax.set_axis_off()
         return axs.flatten()
 
 #Cell
