@@ -446,7 +446,7 @@ def groupby(x, key):
 #Cell
 def merge(*ds):
     "Merge all dictionaries in `ds`"
-    return {k:v for d in ds for k,v in d.items()}
+    return {k:v for d in ds if d is not None for k,v in d.items()}
 
 #Cell
 def shufflish(x, pct=0.04):
@@ -603,6 +603,10 @@ class Tuple(tuple):
         if not isinstance(self,Tuple): self = Tuple(self)
         return type(self)(map(op,self,*map(cycle, args)))
 
+    def mul(self,*args):
+        "`*` is already defined in `tuple` for replicating, so use `mul` instead"
+        return Tuple._op(self, operator.mul,*args)
+
     def add(self,*args):
         "`+` is already defined in `tuple` for concat, so use `add` instead"
         return Tuple._op(self, operator.add,*args)
@@ -695,7 +699,7 @@ class _Self:
             x = args[0]
             for n,a,k in zip(self.nms,self.args,self.kwargs):
                 x = getattr(x,n)
-                if a is not None: x = x(*a, **k)
+                if callable(x) and a is not None: x = x(*a, **k)
             return x
         else:
             self.args.append(args)

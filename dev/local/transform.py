@@ -113,8 +113,7 @@ class _TfmDict(dict):
     def __setitem__(self,k,v):
         if k not in _tfm_methods or not callable(v): return super().__setitem__(k,v)
         if k not in self: super().__setitem__(k,TypeDispatch())
-        res = self[k]
-        res.add(v)
+        self[k].add(v)
 
 #Cell
 class _TfmMeta(type):

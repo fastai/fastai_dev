@@ -7,7 +7,7 @@ __all__ = ['Optimizer', 'sgd_step', 'weight_decay', 'l2_reg', 'average_grad', 'a
 #Cell
 from .torch_basics import *
 from .test import *
-from .notebook.showdoc import show_doc
+from .notebook.showdoc import *
 
 #Cell
 class Optimizer():
@@ -16,8 +16,7 @@ class Optimizer():
     def __init__(self, params, steppers, stats=None, train_bn=True, **defaults):
         steppers,params = L(steppers),L(params)
         self.stats,self.state,self.train_bn = L(stats),{},train_bn
-        for stat in self.stats: defaults = {**getattr(stat, 'defaults', {}), **defaults}
-        for step in steppers: defaults = {**getattr(step, 'defaults', {}), **defaults}
+        defaults = merge(*self.stats.attrgot('defaults'), *steppers.attrgot('defaults'), defaults)
         self.param_groups = params if isinstance(params[0], (L,list)) else L([params])
         self.step_func = compose(*steppers)
         self.hypers = L({**defaults} for p in self.param_groups)
