@@ -6,9 +6,7 @@ __all__ = ['synth_dbunch', 'RegModel', 'synth_learner']
 from ..torch_basics import *
 from ..test import *
 from ..layers import *
-from ..data.pipeline import *
-from ..data.source import *
-from ..data.core import *
+from ..data.all import *
 from ..optimizer import *
 from ..learner import *
 from torch.utils.data import TensorDataset
