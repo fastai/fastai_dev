@@ -117,6 +117,7 @@
   "get_model": "01a_torch_core.ipynb",
   "one_hot": "01a_torch_core.ipynb",
   "one_hot_decode": "01a_torch_core.ipynb",
+  "params": "01a_torch_core.ipynb",
   "trainable_params": "01a_torch_core.ipynb",
   "bn_types": "01a_torch_core.ipynb",
   "bn_bias_params": "01a_torch_core.ipynb",
