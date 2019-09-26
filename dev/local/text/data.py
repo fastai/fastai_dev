@@ -76,13 +76,14 @@ class LMDataLoader(TfmdDL):
         return txt[:-1],txt[1:]
 
     @classmethod
-    def dbunchify(cls, dsrc, bs=16, val_bs=None, shuffle_train=True, after_batch=None, **kwargs):
+    def dbunchify(cls, dsrc, lens=None, bs=16, val_bs=None, shuffle_train=True, after_batch=None, **kwargs):
         n = len(dsrc.filts)-1
         bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
         shuffles = [shuffle_train] + [False]*n
         if after_batch is None: after_batch = Cuda()
-        return DataBunch(*[cls(dsrc.subset(i), bs=b, shuffle=s, drop_last=s, after_batch=after_batch, **kwargs)
-                           for i,(b,s) in enumerate(zip(bss, shuffles))])
+        lens = [None]*dsrc.n_subsets if lens is None else [L(lens, use_list=None)[f] for f in dsrc.filts]
+        return DataBunch(*[cls(dsrc.subset(i), lens=l, bs=b, shuffle=s, drop_last=s, after_batch=after_batch, **kwargs)
+                           for i,(b,s,l) in enumerate(zip(bss, shuffles, lens))])
 
 #Cell
 def pad_collate(samples, pad_idx=1, pad_first=False, backwards=False):
