@@ -9,8 +9,8 @@ __all__ = ['defaults', 'FixSigMeta', 'PrePostInitMeta', 'NewChkMeta', 'BypassNew
            'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle',
            'Int', 'Float', 'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple', 'TupleTitled', 'trace',
            'compose', 'maps', 'partialler', 'mapped', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self',
-           'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'display_df', 'round_multiple', 'num_cpus', 'add_props',
-           'camel2snake', 'PrettyString']
+           'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'display_df', 'round_multiple', 'even_mults', 'num_cpus',
+           'add_props', 'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -784,6 +784,13 @@ def round_multiple(x, mult, round_down=False):
     def _f(x_): return (int if round_down else round)(x_/mult)*mult
     res = L(x).mapped(_f)
     return res if is_listy(x) else res[0]
+
+#Cell
+def even_mults(start, stop, n):
+    "Build log-stepped array from `start` to `stop` in `n` steps."
+    mult = stop/start
+    step = mult**(1/(n-1))
+    return np.array([start*(step**i) for i in range(n)])
 
 #Cell
 def num_cpus():

@@ -19,7 +19,8 @@ class Optimizer():
         defaults = merge(*self.stats.attrgot('defaults'), *steppers.attrgot('defaults'), defaults)
         self.param_groups = params if isinstance(params[0], (L,list)) else L([params])
         self.step_func = compose(*steppers)
-        self.hypers = L({**defaults} for p in self.param_groups)
+        self.hypers = L({} for _ in range_of(self.param_groups))
+        for k,v in defaults.items(): self.set_hyper(k, v)
 
     def _grad_params(self):
         "Helper function to loop over param groups then params that have a grad"
@@ -64,6 +65,14 @@ class Optimizer():
     def clear_state(self):
         for pg in self.param_groups:
             for p in pg: self.state[p] = {k: self.state[p][k] for k in self._keep_on_clear if k in self.state[p]}
+
+    def set_hyper(self, k, v):
+        if isinstance(v, slice):
+            if v.start: v = even_mults(v.start, v.stop, len(self.param_groups))
+            else: v = [v.stop/10]*(len(self.param_groups)-1) + [v.stop]
+        v = L(v, use_list=None)
+        if len(v)==1: v = v*len(self.param_groups)
+        for v_,h in zip(v, self.hypers): h[k] = v_
 
 #Cell
 def sgd_step(p, lr, **kwargs):

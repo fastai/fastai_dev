@@ -2,9 +2,10 @@
 
 __all__ = ['tensor', 'set_seed', 'TensorBase', 'concat', 'Chunks', 'one_param', 'apply', 'to_detach', 'to_half',
            'to_float', 'default_device', 'to_device', 'to_cpu', 'to_np', 'item_find', 'find_device', 'find_bs',
-           'Module', 'get_model', 'one_hot', 'one_hot_decode', 'trainable_params', 'bn_types', 'bn_bias_params',
-           'batch_to_samples', 'make_cross_image', 'show_title', 'show_image', 'show_titled_image', 'show_image_batch',
-           'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init', 'flatten_check']
+           'Module', 'get_model', 'one_hot', 'one_hot_decode', 'params', 'trainable_params', 'bn_types',
+           'bn_bias_params', 'batch_to_samples', 'make_cross_image', 'show_title', 'show_image', 'show_titled_image',
+           'show_image_batch', 'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init',
+           'flatten_check']
 
 #Cell
 from .test import *
@@ -242,6 +243,11 @@ def one_hot(x, c):
 #Cell
 def one_hot_decode(x, vocab=None):
     return L(vocab[i] if vocab else i for i,x_ in enumerate(x) if x_==1)
+
+#Cell
+def params(m):
+    "Return all parameters of `m`"
+    return [p for p in m.parameters()]
 
 #Cell
 def trainable_params(m):

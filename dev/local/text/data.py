@@ -114,12 +114,14 @@ class SortedDL(TfmdDL):
     def shuffle_fn(self,idxs):
         idxs = np.random.permutation(len(self.dataset))
         sz = self.bs*50
-        ck_idx = [idxs[i:i+sz] for i in range(0, len(idxs), sz)]
-        sort_idx = np.concatenate([sorted(s, key=lambda i: self.sort_func(self.do_item(i)), reverse=True) for s in ck_idx])
+        chunks = [idxs[i:i+sz] for i in range(0, len(idxs), sz)]
+        chunks = [sorted(s, key=lambda i: self.sort_func(self.do_item(i)), reverse=True) for s in chunks]
+        max_ck = np.argmax([self.sort_func(self.do_item(ck[0])) for ck in chunks])  # find the chunk with the largest key,
+        chunks[0][0],chunks[max_ck][0] = chunks[max_ck][0],chunks[0][0]     # then make sure it goes first.
+        sort_idx = np.concatenate(chunks)
+
         sz = self.bs
-        ck_idx = [sort_idx[i:i+sz] for i in range(0, len(sort_idx), sz)]
-        max_ck = np.argmax([self.sort_func(self.do_item(ck[0])) for ck in ck_idx])  # find the chunk with the largest key,
-        ck_idx[0],ck_idx[max_ck] = ck_idx[max_ck],ck_idx[0]     # then make sure it goes first.
-        sort_idx = np.concatenate(np.random.permutation(ck_idx[1:])) if len(ck_idx) > 1 else np.array([],dtype=np.int)
-        sort_idx = np.concatenate((ck_idx[0], sort_idx))
+        batches = [sort_idx[i:i+sz] for i in range(0, len(sort_idx), sz)]
+        sort_idx = np.concatenate(np.random.permutation(batches[1:-1])) if len(batches) > 2 else np.array([],dtype=np.int)
+        sort_idx = np.concatenate((batches[0], sort_idx) if len(batches)==1 else (batches[0], sort_idx,batches[-1]))
         return iter(sort_idx)

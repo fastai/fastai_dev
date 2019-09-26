@@ -96,13 +96,18 @@ mk_class('event', **{o:o for o in _events},
          doc="All possible events as attributes to get tab-completion and typo-proofing")
 
 #Cell
+defaults.lr = slice(3e-3)
+defaults.wd = 1e-2
+
+#Cell
 defaults.callbacks = [TrainEvalCallback]
 
 class Learner():
     "Group together a `model`, some `dbunch` and a `loss_func` to handle training"
-    def __init__(self, dbunch, model, loss_func=None, opt_func=SGD, lr=1e-2, splitter=trainable_params, cbs=None,
+    def __init__(self, dbunch, model, loss_func=None, opt_func=SGD, lr=None, splitter=trainable_params, cbs=None,
                  cb_funcs=None, metrics=None, path=None, model_dir='models', wd_bn_bias=False, train_bn=True):
-        store_attr(self, "dbunch,model,opt_func,lr,splitter,model_dir,wd_bn_bias,train_bn")
+        store_attr(self, "dbunch,model,opt_func,splitter,model_dir,wd_bn_bias,train_bn")
+        self.lr = defaults.lr if lr is None else lr
         #TODO: infer loss_func from data
         self.loss_func = CrossEntropyLossFlat() if loss_func is None else loss_func
         self.path = path if path is not None else getattr(dbunch, 'path', Path('.'))
@@ -143,9 +148,9 @@ class Learner():
         yield
         self.remove_cbs(cbs)
 
-    def create_opt(self, lr=None):
+    def create_opt(self):
         "Create an optimizer with `lr`"
-        opt = self.opt_func(self.splitter(self.model), lr=self.lr if lr is None else lr)
+        opt = self.opt_func(self.splitter(self.model), lr=self.lr)
         if not self.wd_bn_bias:
             for p in bn_bias_params(self.model):
                 opt.state[p] = {**opt.state.get(p, {}), 'do_wd': False}
@@ -196,10 +201,12 @@ class Learner():
         except CancelValidException: self('after_cancel_validate')
         finally:                     self('after_validate')
 
-    def fit(self, n_epoch, lr=None, cbs=None, reset_opt=False):
+    def fit(self, n_epoch, lr=None, wd=None, cbs=None, reset_opt=False):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
         with self.added_cbs(cbs):
-            if reset_opt or not self.opt: self.opt = self.create_opt(lr=lr)
+            if reset_opt or not self.opt: self.opt = self.create_opt()
+            self.opt.set_hyper('lr', self.lr     if lr is None else lr)
+            self.opt.set_hyper('wd', defaults.wd if wd is None else wd)
 
             try:
                 self._do_begin_fit(n_epoch)
@@ -282,7 +289,7 @@ class Learner():
             model_state = state['model']
             get_model(self.model).load_state_dict(model_state, strict=strict)
             if ifnone(with_opt,True):
-                if self.opt is None: self.opt = self.create_opt(self.lr)
+                if self.opt is None: self.opt = self.create_opt()
                 try:    self.opt.load_state_dict(state['opt'])
                 except:
                     if with_opt: warn("Could not load the optimizer state.")
@@ -433,7 +440,7 @@ defaults.callbacks = [TrainEvalCallback, Recorder]
 #Cell
 @patch
 def freeze_to(self:Learner, n):
-    if self.opt is None: self.opt = self.create_opt(lr=self.lr)
+    if self.opt is None: self.opt = self.create_opt()
     self.opt.freeze_to(n)
 
 @patch
