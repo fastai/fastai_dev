@@ -47,8 +47,14 @@ def parallel_gen(cls, items, n_workers=defaults.cpus, as_gen=False, **kwargs):
         for i,b in enumerate(f(batch)): queue.put((start_idx+i,b))
     processes = [Process(target=_f, args=o) for o in zip(batches,idx)]
     for p in processes: p.start()
-    res = (queue.get() for _ in progress_bar(items, leave=False))
-    try: return res if as_gen else [o[1] for o in sorted(res)]
+    try:
+        for _ in progress_bar(items, leave=False): yield queue.get()
+    #res = []
+    #for _ in progress_bar(items, leave=False):
+    #    res.append(queue.get())
+    #res = (queue.get() for _ in progress_bar(items, leave=False))
+    #try: return res #if as_gen else [o[1] for o in sorted(res)]
+    except Exception as e: print(e)
     finally:
         for p in processes: p.join()
 
