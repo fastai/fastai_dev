@@ -243,11 +243,11 @@ class Pipeline:
         else:
             if isinstance(funcs, Transform): funcs = [funcs]
             self.fs = L(ifnone(funcs,[noop])).mapped(mk_transform).sorted(key='order')
-            for f in self.fs:
-                name = camel2snake(type(f).__name__)
-                a = getattr(self,name,None)
-                if a is not None: f = L(a)+f
-                setattr(self, name, f)
+        for f in self.fs:
+            name = camel2snake(type(f).__name__)
+            a = getattr(self,name,None)
+            if a is not None: f = L(a)+f
+            setattr(self, name, f)
         self.set_as_item(as_item)
 
     def set_as_item(self, as_item):
