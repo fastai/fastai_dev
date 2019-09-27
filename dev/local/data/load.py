@@ -28,7 +28,6 @@ class _FakeLoader(GetAttr):
 
     def __iter__(self): return iter(self.d.create_batches(self.d.sampler()))
 
-#Cell
 _collate_types = (ndarray, Tensor, typing.Mapping, str)
 
 #Cell
@@ -60,6 +59,7 @@ class DataLoader():
         assert not kwargs and not (bs is None and drop_last)
 
     def __iter__(self):
+        self.rng = random.Random(self.rng.randint(0,2**32-1))
         self.before_iter()
         for b in _loaders[self.fake_l.num_workers==0](self.fake_l): yield self.after_batch(b)
         self.after_iter()
