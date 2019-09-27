@@ -102,26 +102,28 @@ def _default_sort(x): return len(x[0])
 
 @delegates(TfmdDL)
 class SortedDL(TfmdDL):
-    def __init__(self, dataset, sort_func=None, **kwargs):
+    def __init__(self, dataset, sort_func=None, res=None, **kwargs):
         super().__init__(dataset, **kwargs)
         self.sort_func = _default_sort if sort_func is None else sort_func
+        self.res = [self.sort_func(self.do_item(i)) for i in range_of(self.dataset)] if res is None else res
+        self.idx_max = np.argmax(self.res)
 
     def get_idxs(self):
         idxs = super().get_idxs()
         if self.shuffle: return idxs
-        return sorted(idxs, key=lambda i: self.sort_func(self.do_item(i)), reverse=True)
+        return sorted(idxs, key=lambda i: self.res[i], reverse=True)
 
     def shuffle_fn(self,idxs):
         idxs = np.random.permutation(len(self.dataset))
+        idx_max = np.extract(idxs==self.idx_max, idxs)[0]
+        idxs[0],idxs[idx_max] = idxs[idx_max],idxs[0]
         sz = self.bs*50
         chunks = [idxs[i:i+sz] for i in range(0, len(idxs), sz)]
-        chunks = [sorted(s, key=lambda i: self.sort_func(self.do_item(i)), reverse=True) for s in chunks]
-        max_ck = np.argmax([self.sort_func(self.do_item(ck[0])) for ck in chunks])  # find the chunk with the largest key,
-        chunks[0][0],chunks[max_ck][0] = chunks[max_ck][0],chunks[0][0]     # then make sure it goes first.
+        chunks = [sorted(s, key=lambda i: self.res[i], reverse=True) for s in chunks]
         sort_idx = np.concatenate(chunks)
 
         sz = self.bs
         batches = [sort_idx[i:i+sz] for i in range(0, len(sort_idx), sz)]
         sort_idx = np.concatenate(np.random.permutation(batches[1:-1])) if len(batches) > 2 else np.array([],dtype=np.int)
-        sort_idx = np.concatenate((batches[0], sort_idx) if len(batches)==1 else (batches[0], sort_idx,batches[-1]))
+        sort_idx = np.concatenate((batches[0], sort_idx) if len(batches)==1 else (batches[0], sort_idx, batches[-1]))
         return iter(sort_idx)
