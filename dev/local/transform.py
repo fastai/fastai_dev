@@ -2,7 +2,7 @@
 
 __all__ = ['type_hints', 'anno_ret', 'cmp_instance', 'subplots', 'TensorImageBase', 'TensorImage', 'TensorImageBW',
            'TensorMask', 'TypeDispatch', 'Transform', 'InplaceTransform', 'TupleTransform', 'ItemTransform', 'get_func',
-           'Func', 'Sig', 'compose_tfms', 'mk_transform', 'gather_attrs', 'Pipeline']
+           'Func', 'Sig', 'compose_tfms', 'mk_transform', 'gather_attrs', 'gather_attr_names', 'Pipeline']
 
 #Cell
 from .torch_basics import *
@@ -236,6 +236,11 @@ def gather_attrs(o, k, nm):
     return res[0] if len(res)==1 else L(res)
 
 #Cell
+def gather_attr_names(o, nm):
+    "Used in __dir__ to collect all attrs `k` from `self.{nm}`"
+    return L(getattr(o,nm)).mapped(dir).concat().unique()
+
+#Cell
 class Pipeline:
     "A pipeline of composed (for encode/decode) transforms, setup with types"
     def __init__(self, funcs=None, as_item=False, filt=None):
@@ -271,6 +276,7 @@ class Pipeline:
     def decode_batch(self, b, max_n=10): return batch_to_samples(b, max_n=max_n).mapped(self.decode)
     def __setstate__(self,data): self.__dict__.update(data)
     def __getattr__(self,k): return gather_attrs(self, k, 'fs')
+    def __dir__(self): return super().__dir__() + gather_attr_names(self, 'fs')
 
     def show(self, o, ctx=None, **kwargs):
         for f in reversed(self.fs):

@@ -185,7 +185,7 @@ class GetAttr:
     @property
     def _xtra(self): return [o for o in dir(self.default) if not o.startswith('_')]
     def __getattr__(self,k):
-        if k not in ('_xtra','default') and k in self._xtra: return getattr(self.default, k)
+        if k not in ('_xtra','default') and (self._xtra is None or k in self._xtra): return getattr(self.default, k)
         raise AttributeError(k)
     def __dir__(self): return custom_dir(self, self._xtra)
     def __setstate__(self,data): self.__dict__.update(data)
@@ -321,6 +321,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def zipwith(self, *rest, cycled=False): return self._new([self, *rest]).zipped(cycled=cycled)
     def mapped_zip(self, f, cycled=False): return self.zipped(cycled=cycled).starmapped(f)
     def mapped_zipwith(self, f, *rest, cycled=False): return self.zipwith(*rest, cycled=cycled).starmapped(f)
+    def concat(self): return self._new(itertools.chain.from_iterable(self.mapped(L)))
     def shuffled(self):
         it = copy(self.items)
         random.shuffle(it)
@@ -342,6 +343,7 @@ add_docs(L,
          zipwith="Create new `L` with `self` zipped with each of `*rest`",
          mapped_zip="Combine `zipped` and `starmapped`",
          mapped_zipwith="Combine `zipwith` and `starmapped`",
+         concat="Concatenate all elements of list",
          shuffled="Same as `random.shuffle`, but not inplace")
 
 #Cell
