@@ -51,7 +51,7 @@ class DataLoader():
     def __init__(self, dataset=None, bs=None, shuffle=False, drop_last=False, indexed=None,
                  num_workers=0, pin_memory=False, timeout=0, **kwargs):
         if indexed is None: indexed = dataset is not None and hasattr(dataset,'__getitem__')
-        store_attr(self, 'dataset,bs,drop_last,shuffle,indexed')
+        store_attr(self, 'dataset,bs,drop_last,shuffle,indexed,pin_memory,timeout')
         self.fake_l = _FakeLoader(self, pin_memory, num_workers, timeout)
         self.lock,self.rng,self.nw,self.offs = Lock(),random.Random(),1,0
         try: self.n = len(self.dataset)
@@ -86,6 +86,12 @@ class DataLoader():
         idxs = self.get_idxs()
         idxs = self.shuffle_fn(idxs) if self.shuffle else idxs
         return (b for i,b in enumerate(idxs) if i//(self.bs or 1)%self.nw==self.offs)
+
+    def new(self, dataset):
+        kwargs = dict(bs=self.bs, shuffle=self.shuffle, drop_last=self.drop_last, indexed=self.indexed,
+                      num_workers=self.nw, pin_memory=self.pin_memory, timeout=self.timeout)
+        for n in self._methods: kwargs[n] = getattr(self, n)
+        return self.__class__(dataset, **kwargs)
 
     def retain(self, res, b):  return retain_types(res, b[0] if is_listy(b) else b)
     def create_item(self, s):  return next(self.it) if s is None else self.dataset[s]
