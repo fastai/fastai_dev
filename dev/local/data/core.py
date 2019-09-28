@@ -87,12 +87,15 @@ class DataBunch(GetAttr):
 class FilteredBase:
     "Base class for lists with subsets"
     _dl_type = TfmdDL
+    def __init__(self, *args, **kwargs):
+        self.databunch = delegates(self._dl_type.__init__)(self.databunch)
+        super().__init__(*args, **kwargs)
+
     def _new(self, items, **kwargs): return super()._new(items, filts=self.filts, **kwargs)
     def subset(self): raise NotImplemented
     @property
     def n_subsets(self): return len(self.filts)
 
-    @delegates(TfmdDL.__init__)
     def databunch(self, bs=16, val_bs=None, shuffle_train=True, **kwargs):
         n = self.n_subsets-1
         bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
@@ -103,7 +106,7 @@ class FilteredBase:
 FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
 
 #Cell
-class TfmdList(L, FilteredBase):
+class TfmdList(FilteredBase, L):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
     def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, filt=None, train_setup=True, filts=None):
         super().__init__(items, use_list=use_list)

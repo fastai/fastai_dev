@@ -118,6 +118,8 @@ def delegates(to=None, keep=False):
     def _f(f):
         if to is None: to_f,from_f = f.__base__.__init__,f.__init__
         else:          to_f,from_f = to,f
+        from_f = getattr(from_f,'__func__',from_f)
+        if hasattr(from_f,'__delwrap__'): return f
         sig = inspect.signature(from_f)
         sigd = dict(sig.parameters)
         k = sigd.pop('kwargs')
@@ -126,6 +128,7 @@ def delegates(to=None, keep=False):
         sigd.update(s2)
         if keep: sigd['kwargs'] = k
         from_f.__signature__ = sig.replace(parameters=sigd.values())
+        from_f.__delwrap__ = to_f
         return f
     return _f
 
