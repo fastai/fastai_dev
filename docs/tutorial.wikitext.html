@@ -27,7 +27,7 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.imports</span> <span class="k">import</span> <span class="o">*</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.torch_basics</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.test</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.core</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.layers</span> <span class="k">import</span> <span class="o">*</span>
@@ -36,6 +36,7 @@ summary: "Training a Language Model on WT2"
 <span class="kn">from</span> <span class="nn">local.optimizer</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.learner</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.metrics</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">local.text.core</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.text.data</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.text.models.core</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.text.models.awdlstm</span> <span class="k">import</span> <span class="o">*</span>
@@ -47,6 +48,12 @@ summary: "Training a Language Model on WT2"
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Data">Data<a class="anchor-link" href="#Data">&#182;</a></h2>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -82,7 +89,7 @@ summary: "Training a Language Model on WT2"
         <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
     <span class="n">current_article</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
-        <span class="n">current_article</span> <span class="o">+=</span> <span class="n">line</span>
+        <span class="n">current_article</span> <span class="o">+=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;unk&gt;&#39;</span><span class="p">,</span> <span class="n">UNK</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39; </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">and</span> <span class="n">istitle</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]):</span>
             <span class="n">articles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_article</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
             <span class="n">current_article</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
@@ -107,9 +114,9 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span><span class="p">,</span><span class="n">sl</span> <span class="o">=</span> <span class="mi">104</span><span class="p">,</span><span class="mi">72</span>
-<span class="n">train</span> <span class="o">=</span> <span class="n">LM_Dataset</span><span class="p">(</span><span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train.txt&#39;</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">valid</span> <span class="o">=</span> <span class="n">LM_Dataset</span><span class="p">(</span><span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;valid.txt&#39;</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">trn_txt</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train.txt&#39;</span><span class="p">)</span>
+<span class="n">val_txt</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;valid.txt&#39;</span><span class="p">)</span>
+<span class="n">tst_txt</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;test.txt&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -122,7 +129,9 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_texts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">val_txt</span><span class="p">,</span> <span class="n">trn_txt</span><span class="p">,</span> <span class="n">tst_txt</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;texts&#39;</span><span class="p">:</span><span class="n">all_texts</span><span class="p">})</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -134,32 +143,67 @@ summary: "Training a Language Model on WT2"
 
 <div class="output_area">
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>([&#39;&#39;, &#39;\n&#39;, &#39;=&#39;, &#39;Geopyxis&#39;, &#39;carbonaria&#39;, &#39;=&#39;, &#39;\n&#39;, &#39;\n&#39;, &#39;Geopyxis&#39;, &#39;carbonaria&#39;, &#39;is&#39;, &#39;a&#39;, &#39;species&#39;, &#39;of&#39;, &#39;fungus&#39;, &#39;in&#39;, &#39;the&#39;, &#39;genus&#39;, &#39;Geopyxis&#39;, &#39;,&#39;, &#39;family&#39;, &#39;&lt;unk&gt;&#39;, &#39;.&#39;, &#39;First&#39;, &#39;described&#39;, &#39;to&#39;, &#39;science&#39;, &#39;in&#39;, &#39;1805&#39;, &#39;,&#39;, &#39;and&#39;, &#39;given&#39;, &#39;its&#39;, &#39;current&#39;, &#39;name&#39;, &#39;in&#39;, &#39;1889&#39;, &#39;,&#39;, &#39;the&#39;, &#39;species&#39;, &#39;is&#39;, &#39;commonly&#39;, &#39;known&#39;, &#39;as&#39;, &#39;the&#39;, &#39;charcoal&#39;, &#39;loving&#39;, &#39;elf&#39;, &#39;@-@&#39;, &#39;cup&#39;, &#39;,&#39;, &#39;dwarf&#39;, &#39;&lt;unk&gt;&#39;, &#39;cup&#39;, &#39;,&#39;, &#39;&lt;unk&gt;&#39;, &#39;&lt;unk&gt;&#39;, &#39;cup&#39;, &#39;,&#39;, &#39;or&#39;, &#39;pixie&#39;, &#39;cup&#39;, &#39;.&#39;, &#39;The&#39;, &#39;small&#39;, &#39;,&#39;, &#39;&lt;unk&gt;&#39;, &#39;@-@&#39;, &#39;shaped&#39;, &#39;fruitbodies&#39;, &#39;of&#39;, &#39;the&#39;], [&#39;\n&#39;, &#39;=&#39;, &#39;Geopyxis&#39;, &#39;carbonaria&#39;, &#39;=&#39;, &#39;\n&#39;, &#39;\n&#39;, &#39;Geopyxis&#39;, &#39;carbonaria&#39;, &#39;is&#39;, &#39;a&#39;, &#39;species&#39;, &#39;of&#39;, &#39;fungus&#39;, &#39;in&#39;, &#39;the&#39;, &#39;genus&#39;, &#39;Geopyxis&#39;, &#39;,&#39;, &#39;family&#39;, &#39;&lt;unk&gt;&#39;, &#39;.&#39;, &#39;First&#39;, &#39;described&#39;, &#39;to&#39;, &#39;science&#39;, &#39;in&#39;, &#39;1805&#39;, &#39;,&#39;, &#39;and&#39;, &#39;given&#39;, &#39;its&#39;, &#39;current&#39;, &#39;name&#39;, &#39;in&#39;, &#39;1889&#39;, &#39;,&#39;, &#39;the&#39;, &#39;species&#39;, &#39;is&#39;, &#39;commonly&#39;, &#39;known&#39;, &#39;as&#39;, &#39;the&#39;, &#39;charcoal&#39;, &#39;loving&#39;, &#39;elf&#39;, &#39;@-@&#39;, &#39;cup&#39;, &#39;,&#39;, &#39;dwarf&#39;, &#39;&lt;unk&gt;&#39;, &#39;cup&#39;, &#39;,&#39;, &#39;&lt;unk&gt;&#39;, &#39;&lt;unk&gt;&#39;, &#39;cup&#39;, &#39;,&#39;, &#39;or&#39;, &#39;pixie&#39;, &#39;cup&#39;, &#39;.&#39;, &#39;The&#39;, &#39;small&#39;, &#39;,&#39;, &#39;&lt;unk&gt;&#39;, &#39;@-@&#39;, &#39;shaped&#39;, &#39;fruitbodies&#39;, &#39;of&#39;, &#39;the&#39;, &#39;fungus&#39;])
-</pre>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>texts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>[, \n, =, Homarus, gammarus, =, \n, \n, Homarus, gammarus, ,, known, as, the, European, lobster, or, common, lobster, ,, is, a, species, of, xxunk, lobster, from, the, eastern, Atlantic, Ocean, ,, Mediterranean, Sea, and, parts, of, the, Black, Sea, ., It, is, closely, related, to, the, American, lobster, ,, H., americanus, ., It, may, grow, to, a, length, of, 60, cm, (, 24, in, ), and, a, mass, of, 6, kilograms, (, 13, lb, ), ,, and, bears, a, conspicuous, pair, of, claws, ., In, life, ,, the, lobsters, are, blue, ,, only, becoming, ", lobster, red, ", on, ...]</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>[, \n, =, Frank, xxunk, =, \n, \n, Air, Vice, Marshal, Frank, xxunk, ,, CB, ,, CBE, (, 15, July, 1914, –, 23, December, 1976, ), was, a, senior, commander, in, the, Royal, Australian, Air, Force, (, RAAF, ), ., Born, and, educated, in, Tasmania, ,, he, joined, the, RAAF, as, an, air, cadet, in, January, 1934, ., He, specialised, in, flying, instruction, and, navigation, before, the, outbreak, of, World, War, II, ., In, April, 1941, ,, he, became, commanding, officer, of, No., 2, Squadron, ,, which, operated, Lockheed, xxunk, ., The, squadron, was, deployed, to, Dutch, Timor, in, December, ...</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>[, \n, =, M, @-@, 82, (, Michigan, highway, ), =, \n, \n, M, @-@, 82, is, a, state, trunkline, in, the, Lower, Peninsula, in, the, US, state, of, Michigan, that, travels, between, xxunk, and, Howard, City, ., The, section, between, xxunk, and, Howard, City, travels, through, xxunk, and, along, the, southern, edge, of, xxunk, National, Forest, ., The, current, version, of, M, @-@, 82, is, actually, the, second, in, the, state, ;, the, first, usage, appeared, in, the, Upper, Peninsula, by, 1919, ., The, Lower, Peninsula, routing, has, been, in, use, since, the, 1920s, ., Various, extensions,...</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>[, \n, =, xxunk, xxunk, =, \n, \n, xxunk, xxunk, (, xxunk, xxunk, ,, xxunk, xxunk, ), is, a, fictional, character, in, the, xxunk, manga, and, anime, series, created, by, xxunk, xxunk, ., In, the, anime, and, manga, ,, xxunk, is, a, ninja, affiliated, with, the, village, of, xxunk, ., He, is, a, member, of, Team, 10, ,, a, group, of, ninja, consisting, of, himself, ,, xxunk, xxunk, ,, xxunk, xxunk, ,, and, team, leader, xxunk, xxunk, ., xxunk, is, portrayed, as, a, lazy, character, ,, unwilling, to, apply, his, prodigious, intelligence, ;, xxunk, has, noted, that, he, likes, xxunk, ...]</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>[, \n, =, Meridian, ,, Mississippi, =, \n, \n, Meridian, is, the, sixth, largest, city, in, the, state, of, Mississippi, ,, in, the, United, States, ., It, is, the, county, seat, of, Lauderdale, County, and, the, principal, city, of, the, Meridian, ,, Mississippi, xxunk, Statistical, Area, ., Along, major, highways, ,, the, city, is, 93, mi, (, 150, km, ), east, of, Jackson, ,, Mississippi, ;, 154, mi, (, xxunk, km, ), west, of, Birmingham, ,, Alabama, ;, 202, mi, (, 325, km, ), northeast, of, New, Orleans, ,, Louisiana, ;, and, 231, mi, (, 372, km, ), southeast, of, ...]</td>
+    </tr>
+  </tbody>
+</table>
 </div>
+</div>
+
 </div>
 
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can then wrap our <code>LM_Dataset</code>s in a <a href="/data.pipeline.html#TfmdList"><code>TfmdList</code></a> to apply the <a href="/text.data.html#Numericalize"><code>Numericalize</code></a> transform. We can't use a <a href="/data.pipeline.html#TfmdDS"><code>TfmdDS</code></a> because our elements are already tuples and <a href="/data.pipeline.html#TfmdDS"><code>TfmdDS</code></a> is there to create such tuples from individual items. Since we already have tuples, we specify <code>as_item=False</code>.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">train</span><span class="o">.</span><span class="n">ds</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">t</span><span class="p">])</span>
-<span class="n">vocab</span> <span class="o">=</span> <span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
-<span class="n">train_ds</span> <span class="o">=</span> <span class="n">TfmdList</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">),</span> <span class="n">as_item</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">wrap_l</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">valid_ds</span> <span class="o">=</span> <span class="n">TfmdList</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">),</span> <span class="n">as_item</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">wrap_l</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#df_tok,count = tokenize_df(df, [&#39;texts&#39;])</span>
 </pre></div>
 
     </div>
@@ -167,20 +211,55 @@ summary: "Training a Language Model on WT2"
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Last but not least, we need to use a special sampler that will make sure we ask for the correct sequences to form a batch: in the first batch we don't want the sequences 0,1,2,3... (they are contiguous in the source obtained by concatenating all texts) but the sequences 0,<code>num_batches</code>,<code>2*num_batches</code>,...</p>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;texts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">t</span><span class="p">])</span>
+<span class="n">vocab</span> <span class="o">=</span> <span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">LM_Sampler</span><span class="p">(</span><span class="n">train</span><span class="p">),</span> <span class="n">tfms</span><span class="o">=</span><span class="n">Cuda</span><span class="p">(),</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">valid_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">valid_ds</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">LM_Sampler</span><span class="p">(</span><span class="n">valid</span><span class="p">),</span> <span class="n">tfms</span><span class="o">=</span><span class="n">Cuda</span><span class="p">(),</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val_txt</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val_txt</span><span class="p">)))]</span>
+<span class="n">tfm</span> <span class="o">=</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;texts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">[</span><span class="n">tfm</span><span class="p">],</span> <span class="n">filts</span><span class="o">=</span><span class="n">splits</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span><span class="p">,</span><span class="n">sl</span> <span class="o">=</span> <span class="mi">104</span><span class="p">,</span><span class="mi">72</span>
+<span class="n">train_dl</span> <span class="o">=</span> <span class="n">LMDataLoader</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span>   <span class="n">seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="p">[</span><span class="n">Cuda</span><span class="p">()],</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">valid_dl</span> <span class="o">=</span> <span class="n">LMDataLoader</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">bs</span><span class="p">,</span> <span class="n">seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="p">[</span><span class="n">Cuda</span><span class="p">()],</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -211,61 +290,50 @@ summary: "Training a Language Model on WT2"
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>index</th>
+      <th></th>
       <th>text</th>
-      <th>text_</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
-      <td>\n = Geopyxis carbonaria = \n \n Geopyxis carbonaria is a species of fungus in the genus Geopyxis , family &lt;unk&gt; . First described to science in 1805 , and given its current name in 1889 , the species is commonly known as the charcoal loving elf @-@ cup , dwarf &lt;unk&gt; cup , &lt;unk&gt; &lt;unk&gt; cup , or pixie cup . The small , &lt;unk&gt; @-@ shaped fruitbodies of the</td>
-      <td>\n = Geopyxis carbonaria = \n \n Geopyxis carbonaria is a species of fungus in the genus Geopyxis , family &lt;unk&gt; . First described to science in 1805 , and given its current name in 1889 , the species is commonly known as the charcoal loving elf @-@ cup , dwarf &lt;unk&gt; cup , &lt;unk&gt; &lt;unk&gt; cup , or pixie cup . The small , &lt;unk&gt; @-@ shaped fruitbodies of the fungus</td>
+      <th>0</th>
+      <td>\n = French cruiser Sully = \n \n The French cruiser Sully was an armored cruiser of the Gloire class that was built for the French Navy in the early 1900s . She was named in honor of Maximilien de xxunk , Duke of Sully , trusted minister of King Henry IV . The ship struck a rock in xxunk Long Bay , French Indochina in 1905 , only eight months</td>
     </tr>
     <tr>
-      <td>1</td>
-      <td>Creek is in a sandstone and shale mountain region , it has a relatively low capacity to neutralize added acid . This makes it especially vulnerable to increased &lt;unk&gt; from acid rain , which poses a threat to the long term health of the plants and animals in the creek . The total &lt;unk&gt; ( TA ) is a measure of the capacity of water to neutralize acid , with a larger</td>
-      <td>is in a sandstone and shale mountain region , it has a relatively low capacity to neutralize added acid . This makes it especially vulnerable to increased &lt;unk&gt; from acid rain , which poses a threat to the long term health of the plants and animals in the creek . The total &lt;unk&gt; ( TA ) is a measure of the capacity of water to neutralize acid , with a larger TA</td>
+      <th>1</th>
+      <td>2005 . The song was written by band members Beyoncé , Kelly Rowland and Michelle Williams along with Rodney " xxunk " Jerkins , Ricky " Ric Rude " Lewis and Robert Waller , with Beyoncé , Rude and Jerkins handling its production . An R &amp; B ballad talking about a woman 's desire to cater to the male love interest of her life , " Cater 2 U " contains</td>
     </tr>
     <tr>
-      <td>2</td>
-      <td>the homes of wealthy Jews . \n Finally her soliciting paid off and in 1881 , Rosebery was offered a government position acceptable to him , that of Under Secretary at the Home Office with special responsibility for Scotland . He had sought the position feeling that Scotland was neglected by the Liberal Government who were more interested in Ireland . However , immediately upon assuming the job he began to demand</td>
-      <td>homes of wealthy Jews . \n Finally her soliciting paid off and in 1881 , Rosebery was offered a government position acceptable to him , that of Under Secretary at the Home Office with special responsibility for Scotland . He had sought the position feeling that Scotland was neglected by the Liberal Government who were more interested in Ireland . However , immediately upon assuming the job he began to demand a</td>
+      <th>2</th>
+      <td>first time in life . \n Pokiri was D 'Cruz 's breakthrough film in Telugu . In June 2006 , Trade analyst Sridhar xxunk said that the Andhra Pradesh trade felt that her glamour , screen presence , and on @-@ screen chemistry with Mahesh worked to the film 's advantage . xxunk called her the " new pin @-@ up girl of Telugu cinema " . Talking about being typecast after</td>
     </tr>
     <tr>
-      <td>3</td>
-      <td>and Sweden , and the Danish and Swedish governments threatened to terminate the SAS agreement . On 25 November 1966 , with 82 against 62 votes , the Norwegian Parliament voted to allow Braathens SAFE to fly to Bodø and Tromsø as an extension of the West Coast route from 1 April 1967 . \n On 3 March 1967 , parliament decided to build four short take @-@ off and landing airports</td>
-      <td>Sweden , and the Danish and Swedish governments threatened to terminate the SAS agreement . On 25 November 1966 , with 82 against 62 votes , the Norwegian Parliament voted to allow Braathens SAFE to fly to Bodø and Tromsø as an extension of the West Coast route from 1 April 1967 . \n On 3 March 1967 , parliament decided to build four short take @-@ off and landing airports along</td>
+      <th>3</th>
+      <td>Victoria appointed her president of the Queen Victoria Jubilee Institute for xxunk in Scotland , the beginning of the district nurse system , which was to xxunk health care for the rural poor and sick in Britain . She was also interested in general improvements in standards of nursing . \n Like many of her Rothschild relatives she was also deeply involved with the welfare of young working @-@ class women of</td>
     </tr>
     <tr>
-      <td>4</td>
-      <td>the outfitting center for Colorado gold &lt;unk&gt; headed for &lt;unk&gt; Peak in 1859 , 268 steamboats arrived at Omaha between March and November . \n With railroads becoming the dominant form of long @-@ range shipping and passenger travel in the early 1870s , &lt;unk&gt; like those in Omaha became obsolete . However , as late at 1949 the steamship Avalon was letting passengers in Omaha , before becoming one of the</td>
-      <td>outfitting center for Colorado gold &lt;unk&gt; headed for &lt;unk&gt; Peak in 1859 , 268 steamboats arrived at Omaha between March and November . \n With railroads becoming the dominant form of long @-@ range shipping and passenger travel in the early 1870s , &lt;unk&gt; like those in Omaha became obsolete . However , as late at 1949 the steamship Avalon was letting passengers in Omaha , before becoming one of the famous</td>
+      <th>4</th>
+      <td>Resources confirmed a cougar sighting in Michigan 's Upper Peninsula . Typically , extreme @-@ range sightings of cougars involve young males , which can travel great distances to establish ranges away from established males ; all four confirmed cougar kills in Iowa since 2000 involved males . \n On April 14 , 2008 , police shot and killed a cougar on the north side of Chicago , Illinois . DNA tests</td>
     </tr>
     <tr>
-      <td>5</td>
-      <td>of February 2016 , Vistara has a share of 2 % in the domestic carrier market . \n \n = = Corporate affairs = = \n \n In March 2015 , Vistara shifted to its new office at the One Horizon Center tower in Sector 43 , &lt;unk&gt; , a satellite city of Delhi . Vistara chose &lt;unk&gt; &lt;unk&gt; Yeoh as the chief executive officer ( CEO ) and &lt;unk&gt; Ming &lt;unk&gt;</td>
-      <td>February 2016 , Vistara has a share of 2 % in the domestic carrier market . \n \n = = Corporate affairs = = \n \n In March 2015 , Vistara shifted to its new office at the One Horizon Center tower in Sector 43 , &lt;unk&gt; , a satellite city of Delhi . Vistara chose &lt;unk&gt; &lt;unk&gt; Yeoh as the chief executive officer ( CEO ) and &lt;unk&gt; Ming &lt;unk&gt; as</td>
+      <th>5</th>
+      <td>expected to be completed for many decades . \n Chess playing programs xxunk and Deep Thought defeated chess masters in 1989 . Both were developed by Carnegie xxunk University ; Deep Thought development paved the way for the Deep Blue . \n \n = = = The money returns : the fifth generation project = = = \n \n In 1981 , the Japanese Ministry of International Trade and Industry set aside</td>
     </tr>
     <tr>
-      <td>6</td>
-      <td>the &lt;unk&gt; of the Indian National Congress and is still a major newspaper of Hindi northern India . \n \n = = = Art = = = \n \n Varanasi is a major centre of arts and designs . It is a producer of &lt;unk&gt; and &lt;unk&gt; with gold and silver thread work , carpet weaving , wooden toys , &lt;unk&gt; made of glass , ivory work , perfumes , artistic brass</td>
-      <td>&lt;unk&gt; of the Indian National Congress and is still a major newspaper of Hindi northern India . \n \n = = = Art = = = \n \n Varanasi is a major centre of arts and designs . It is a producer of &lt;unk&gt; and &lt;unk&gt; with gold and silver thread work , carpet weaving , wooden toys , &lt;unk&gt; made of glass , ivory work , perfumes , artistic brass and</td>
+      <th>6</th>
+      <td>successful independence from Spain . The city served as the main port for the Texas Navy during the Texas Revolution , and later served as the capital of the Republic of Texas . \n During the 19th century , Galveston became a major U.S. commercial center and one of the largest ports in the United States . It was devastated by the 1900 Galveston Hurricane , whose effects included flooding and a</td>
     </tr>
     <tr>
-      <td>7</td>
-      <td>of war under your charge to the State authorities , to be held subject to the action of the convention to be held on the 4th of March next . \n Perhaps because Abraham Lincoln had not yet been inaugurated as President , Captain Totten received no instructions from his superiors and was forced to withdraw his troops . He agreed to surrender the arsenal as long as the governor agreed to</td>
-      <td>war under your charge to the State authorities , to be held subject to the action of the convention to be held on the 4th of March next . \n Perhaps because Abraham Lincoln had not yet been inaugurated as President , Captain Totten received no instructions from his superiors and was forced to withdraw his troops . He agreed to surrender the arsenal as long as the governor agreed to three</td>
+      <th>7</th>
+      <td>architectural style is Georgian . In the Mendip district , the greatest concentrations of these cluster around the cathedral and xxunk in Wells and in Glastonbury . North Somerset features bridges and piers along with a selection of Manor houses . The Sedgemoor district has many buildings related to trade and commerce centered on Bridgwater ; while in South Somerset xxunk , xxunk and xxunk predominate . Taunton Deane includes the defensive</td>
     </tr>
     <tr>
-      <td>8</td>
-      <td>the home . The decision to use a stay @-@ at @-@ home dad arrangement is most commonly due to economic reasons . At the same time , women are progressing into higher @-@ paying jobs . There are now financial ramifications in deciding whether the mother or father should become the stay @-@ at @-@ home parent . In cases where the woman is the higher @-@ paid parent , it</td>
-      <td>home . The decision to use a stay @-@ at @-@ home dad arrangement is most commonly due to economic reasons . At the same time , women are progressing into higher @-@ paying jobs . There are now financial ramifications in deciding whether the mother or father should become the stay @-@ at @-@ home parent . In cases where the woman is the higher @-@ paid parent , it makes</td>
+      <th>8</th>
+      <td>the small harbours at Port @-@ en @-@ Bessin and xxunk @-@ sur @-@ Mer . Most shipments were brought in over the beaches until the port of Cherbourg was cleared of mines and obstructions on 16 July . The most important use of the Mulberry harbour was the unloading of heavy machinery that could not be brought across the beaches . Artificial xxunk ( xxunk ) sheltered hundreds of ships during</td>
     </tr>
     <tr>
-      <td>9</td>
-      <td>Allosaurus itself or at least the species A. fragillis , is technically a nomen dubium ( " dubious name " , based on a specimen too incomplete to compare to other specimens or to classify ) . In an attempt to fix this situation , Gregory S. Paul and Kenneth Carpenter ( 2010 ) submitted a petition to the &lt;unk&gt; to have the name A. fragillis officially transferred to the more complete</td>
-      <td>itself or at least the species A. fragillis , is technically a nomen dubium ( " dubious name " , based on a specimen too incomplete to compare to other specimens or to classify ) . In an attempt to fix this situation , Gregory S. Paul and Kenneth Carpenter ( 2010 ) submitted a petition to the &lt;unk&gt; to have the name A. fragillis officially transferred to the more complete specimen</td>
+      <th>9</th>
+      <td>to add a musical tone within the poem . \n In terms of poetic meter , Keats relies on xxunk throughout his 1819 odes and in just over 8 % of his lines within " Ode to a Nightingale " , including line 12 : \n and line 25 : \n To Walter Jackson Bate , the use of spondees in lines 31 – 34 creates a feeling of slow flight ,</td>
     </tr>
   </tbody>
 </table>
@@ -276,6 +344,12 @@ summary: "Training a Language Model on WT2"
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model">Model<a class="anchor-link" href="#Model">&#182;</a></h2>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -298,7 +372,7 @@ summary: "Training a Language Model on WT2"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">opt_func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">Adam</span><span class="p">,</span> <span class="n">wd</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
-<span class="n">cb_funcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">partial</span><span class="p">(</span><span class="n">MixedPrecision</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">partial</span><span class="p">(</span><span class="n">RNNTrainer</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">2</span><span class="p">)]</span>
+<span class="n">cb_funcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">partial</span><span class="p">(</span><span class="n">MixedPrecision</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">partial</span><span class="p">(</span><span class="n">RNNTrainer</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
 </pre></div>
 
     </div>
@@ -311,7 +385,7 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dbch</span><span class="p">,</span> <span class="n">loss_func</span><span class="o">=</span><span class="n">CrossEntropyLossFlat</span><span class="p">(),</span> <span class="n">opt_func</span><span class="o">=</span><span class="n">opt_func</span><span class="p">,</span> <span class="n">cb_funcs</span><span class="o">=</span><span class="n">cb_funcs</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">Perplexity</span><span class="p">()])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">dbch</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_func</span><span class="o">=</span><span class="n">CrossEntropyLossFlat</span><span class="p">(),</span> <span class="n">opt_func</span><span class="o">=</span><span class="n">opt_func</span><span class="p">,</span> <span class="n">cb_funcs</span><span class="o">=</span><span class="n">cb_funcs</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">Perplexity</span><span class="p">()])</span>
 </pre></div>
 
     </div>
@@ -324,7 +398,7 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">prun</span> learn.fit_one_cycle(1, 5e-3, moms=(0.8,0.7,0.8), div=10)
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5e-3</span><span class="p">,</span> <span class="n">moms</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span> <span class="n">div</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -352,11 +426,11 @@ summary: "Training a Language Model on WT2"
   <tbody>
     <tr>
       <td>0</td>
-      <td>5.557487</td>
-      <td>5.043018</td>
-      <td>0.244405</td>
-      <td>154.936890</td>
-      <td>01:52</td>
+      <td>7.002256</td>
+      <td>6.007985</td>
+      <td>0.170773</td>
+      <td>406.662903</td>
+      <td>00:27</td>
     </tr>
   </tbody>
 </table>
@@ -364,13 +438,26 @@ summary: "Training a Language Model on WT2"
 
 </div>
 
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre> </pre>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Full training</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#learn.fit_one_cycle(90, 5e-3, moms=(0.8,0.7,0.8), div=10)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 

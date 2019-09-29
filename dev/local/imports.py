@@ -17,15 +17,12 @@ from enum import Enum,IntEnum
 from warnings import warn
 from textwrap import TextWrapper
 from operator import itemgetter,attrgetter,methodcaller
-from notebook import notebookapp
 from urllib.request import urlopen
 
 # External modules
-import matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy
-import requests,yaml
-from typeguard import typechecked
-from fastprogress import progress_bar,master_bar
+import requests,yaml,matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy
 from pandas.api.types import is_categorical_dtype,is_numeric_dtype
+from fastprogress import progress_bar,master_bar
 
 from numpy import array,ndarray
 from IPython.core.debugger import set_trace

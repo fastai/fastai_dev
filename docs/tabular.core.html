@@ -28,12 +28,8 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We use this class to preprocess tabular data. <code>cat_names</code> should contain the names of the categorical variables in your dataframe, <code>cont_names</code> the names of the continuous variables. If you don't need any state, you can initiliaze a <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a> with a <code>func</code> to be applied on the dataframes. Otherwise you should subclass and implement <code>setup</code> and <code>__call__</code>.</p>
+<div class="cell border-box-sizing code_cell rendered">
 
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -47,9 +43,33 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Tabular" class="doc_header"><code>class</code> <code>Tabular</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L17" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Tabular</code>(<strong><code>df</code></strong>, <strong><code>cat_names</code></strong>=<em><code>None</code></em>, <strong><code>cont_names</code></strong>=<em><code>None</code></em>, <strong><code>y_names</code></strong>=<em><code>None</code></em>, <strong><code>is_y_cat</code></strong>=<em><code>True</code></em>, <strong><code>splits</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
+<h2 id="Tabular" class="doc_header"><code>class</code> <code>Tabular</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L29" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Tabular</code>(<strong><code>df</code></strong>, <strong><code>procs</code></strong>=<em><code>None</code></em>, <strong><code>cat_names</code></strong>=<em><code>None</code></em>, <strong><code>cont_names</code></strong>=<em><code>None</code></em>, <strong><code>y_names</code></strong>=<em><code>None</code></em>, <strong><code>is_y_cat</code></strong>=<em><code>True</code></em>, <strong><code>splits</code></strong>=<em><code>None</code></em>, <strong><code>do_setup</code></strong>=<em><code>True</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
 </blockquote>
-<p>Base class for composing a list of <code>items</code></p>
+<p>A <code>DataFrame</code> wrapper that knows which cols are cont/cat/y, and returns rows in <code>__getitem__</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="TabularPandas" class="doc_header"><code>class</code> <code>TabularPandas</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L60" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TabularPandas</code>(<strong><code>df</code></strong>, <strong><code>procs</code></strong>=<em><code>None</code></em>, <strong><code>cat_names</code></strong>=<em><code>None</code></em>, <strong><code>cont_names</code></strong>=<em><code>None</code></em>, <strong><code>y_names</code></strong>=<em><code>None</code></em>, <strong><code>is_y_cat</code></strong>=<em><code>True</code></em>, <strong><code>splits</code></strong>=<em><code>None</code></em>, <strong><code>do_setup</code></strong>=<em><code>True</code></em>) :: <a href="/tabular.core.html#Tabular"><code>Tabular</code></a></p>
+</blockquote>
+<p>A <code>DataFrame</code> wrapper that knows which cols are cont/cat/y, and returns rows in <code>__getitem__</code></p>
 
 </div>
 
@@ -67,11 +87,12 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]})</span>
-<span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]})</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">to</span><span class="p">))</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">items</span><span class="p">,</span><span class="n">to</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-<span class="n">to</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="c1"># only shows &#39;a&#39; since that&#39;s the only col in `Tabular`</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">all_cols</span><span class="p">,</span><span class="n">to</span><span class="p">[[</span><span class="s1">&#39;a&#39;</span><span class="p">]])</span>
+<span class="n">to</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="c1"># only shows &#39;a&#39; since that&#39;s the only col in `TabularPandas`</span>
 </pre></div>
 
     </div>
@@ -135,9 +156,9 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TabularProc" class="doc_header"><code>class</code> <code>TabularProc</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L67" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TabularProc</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/data.transforms.html#InplaceTransform"><code>InplaceTransform</code></a></p>
+<h2 id="TabularProc" class="doc_header"><code>class</code> <code>TabularProc</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L79" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TabularProc</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#InplaceTransform"><code>InplaceTransform</code></a></p>
 </blockquote>
-<p>Base class to write a tabular processor for dataframes</p>
+<p>Base class to write a non-lazy tabular processor for dataframes</p>
 
 </div>
 
@@ -159,7 +180,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Categorify" class="doc_header"><code>class</code> <code>Categorify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L72" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Categorify</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
+<h3 id="Categorify" class="doc_header"><code>class</code> <code>Categorify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L87" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Categorify</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
 </blockquote>
 <p>Transform the categorical variables to that type.</p>
 
@@ -176,19 +197,28 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cat</span> <span class="o">=</span> <span class="n">Categorify</span><span class="p">()</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]})</span>
-<span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
-
-<span class="n">cat</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]})</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">Categorify</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">cat</span> <span class="o">=</span> <span class="n">to</span><span class="o">.</span><span class="n">procs</span><span class="o">.</span><span class="n">categorify</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">cat</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]})</span>
-<span class="n">to1</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<span class="n">cat</span><span class="p">(</span><span class="n">to1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]})</span>
+<span class="n">to1</span> <span class="o">=</span> <span class="n">to</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="n">to1</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
 <span class="c1">#Values that weren&#39;t in the training df are sent to 0 (na)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">df1</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to1</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="n">to2</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">to1</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to2</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
@@ -206,11 +236,9 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#test with splits</span>
 <span class="n">cat</span> <span class="o">=</span> <span class="n">Categorify</span><span class="p">()</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]})</span>
-<span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
-<span class="n">cat</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">cat</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -224,12 +252,10 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">([</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;H&#39;</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">],</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)})</span>
-<span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<span class="n">cat</span> <span class="o">=</span> <span class="n">Categorify</span><span class="p">()</span>
-<span class="n">cat</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">Categorify</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">cat</span> <span class="o">=</span> <span class="n">to</span><span class="o">.</span><span class="n">procs</span><span class="o">.</span><span class="n">categorify</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="s1">&#39;H&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">])</span>
-<span class="n">cat</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">to2</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to2</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;H&#39;</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">])</span>
 </pre></div>
@@ -251,9 +277,9 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/core.py#L243" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>) :: <a href="/data.transforms.html#Transform"><code>Transform</code></a></p>
+<h3 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L201" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
-<p>Normalize/denorm batch of <a href="/data.transforms.html#TensorImage"><code>TensorImage</code></a></p>
+<p>Normalize/denorm batch of <a href="/transform.html#TensorImage"><code>TensorImage</code></a></p>
 
 </div>
 
@@ -270,18 +296,28 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">norm</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">()</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]})</span>
-<span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<span class="n">norm</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">m</span><span class="p">,</span><span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">means</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="n">m</span><span class="p">)</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">stds</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="n">s</span><span class="p">)</span>
-<span class="n">norm</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
-<span class="n">test_close</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
-<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]})</span>
-<span class="n">to1</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<span class="n">norm</span><span class="p">(</span><span class="n">to1</span><span class="p">)</span>
-<span class="n">test_close</span><span class="p">(</span><span class="n">df1</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">])</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]})</span>
+<span class="n">to1</span> <span class="o">=</span> <span class="n">to</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="n">to1</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">to1</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">])</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
 <span class="n">to2</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">to1</span><span class="p">)</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">to2</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">])</span>
 </pre></div>
@@ -298,14 +334,12 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">norm</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">()</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]})</span>
-<span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
-<span class="n">norm</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">m</span><span class="p">,</span><span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">means</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="n">m</span><span class="p">)</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">stds</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="n">s</span><span class="p">)</span>
-<span class="n">norm</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
-<span class="n">test_close</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
+<span class="n">test_close</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -325,7 +359,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="FillStrategy" class="doc_header"><code>class</code> <code>FillStrategy</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L96" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FillStrategy</code>()</p>
+<h2 id="FillStrategy" class="doc_header"><code>class</code> <code>FillStrategy</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L109" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FillStrategy</code>()</p>
 </blockquote>
 <p>Namespace containing the various filling strategies.</p>
 
@@ -349,7 +383,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="FillMissing" class="doc_header"><code>class</code> <code>FillMissing</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L103" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>FillMissing</code>(<strong><code>fill_strategy</code></strong>=<em><code>'median'</code></em>, <strong><code>add_col</code></strong>=<em><code>True</code></em>, <strong><code>fill_vals</code></strong>=<em><code>None</code></em>) :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
+<h3 id="FillMissing" class="doc_header"><code>class</code> <code>FillMissing</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L116" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>FillMissing</code>(<strong><code>fill_strategy</code></strong>=<em><code>'median'</code></em>, <strong><code>add_col</code></strong>=<em><code>True</code></em>, <strong><code>fill_vals</code></strong>=<em><code>None</code></em>) :: <a href="/tabular.core.html#TabularProc"><code>TabularProc</code></a></p>
 </blockquote>
 <p>Fill the missing values in continuous columns.</p>
 
@@ -370,24 +404,32 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
                      <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="n">FillStrategy</span><span class="o">.</span><span class="n">median</span><span class="p">,</span> <span class="n">FillStrategy</span><span class="o">.</span><span class="n">constant</span><span class="p">,</span> <span class="n">FillStrategy</span><span class="o">.</span><span class="n">mode</span><span class="p">])</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]})</span>
 <span class="n">df1</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">df2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">to</span><span class="p">,</span><span class="n">to1</span><span class="p">,</span><span class="n">to2</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">),</span><span class="n">Tabular</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">),</span><span class="n">Tabular</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<span class="n">fill1</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to</span><span class="p">);</span> <span class="n">fill2</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to1</span><span class="p">);</span> <span class="n">fill3</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to2</span><span class="p">)</span>
+<span class="n">tos</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">fill1</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">),</span><span class="n">TabularPandas</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">fill2</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">),</span><span class="n">TabularPandas</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">fill3</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">fill1</span><span class="o">.</span><span class="n">na_dict</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">})</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">fill2</span><span class="o">.</span><span class="n">na_dict</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">fill3</span><span class="o">.</span><span class="n">na_dict</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">})</span>
 
-<span class="n">fill1</span><span class="p">(</span><span class="n">to</span><span class="p">);</span> <span class="n">fill2</span><span class="p">(</span><span class="n">to1</span><span class="p">);</span> <span class="n">fill3</span><span class="p">(</span><span class="n">to2</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="n">to</span><span class="p">,</span> <span class="n">to1</span><span class="p">,</span> <span class="n">to2</span><span class="p">]:</span> <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">cat_names</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a_na&#39;</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tos</span><span class="p">:</span> <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">cat_names</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a_na&#39;</span><span class="p">])</span>
 
-<span class="k">for</span> <span class="n">to_</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">to</span><span class="p">,</span> <span class="n">to1</span><span class="p">,</span> <span class="n">to2</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]):</span>
+<span class="k">for</span> <span class="n">to_</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]):</span>
     <span class="n">test_eq</span><span class="p">(</span><span class="n">to_</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]))</span>
     <span class="n">test_eq</span><span class="p">(</span><span class="n">to_</span><span class="o">.</span><span class="n">a_na</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
-    
-<span class="n">dfa</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]})</span>
-<span class="n">dfa1</span> <span class="o">=</span> <span class="n">dfa</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">dfa2</span> <span class="o">=</span> <span class="n">dfa</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">to</span><span class="p">,</span><span class="n">to1</span><span class="p">,</span><span class="n">to2</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">dfa</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">),</span><span class="n">Tabular</span><span class="p">(</span><span class="n">dfa1</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">),</span><span class="n">Tabular</span><span class="p">(</span><span class="n">dfa2</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<span class="n">fill1</span><span class="p">(</span><span class="n">to</span><span class="p">);</span> <span class="n">fill2</span><span class="p">(</span><span class="n">to1</span><span class="p">);</span> <span class="n">fill3</span><span class="p">(</span><span class="n">to2</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">to_</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">to</span><span class="p">,</span> <span class="n">to1</span><span class="p">,</span> <span class="n">to2</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]):</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dfa</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]})</span>
+<span class="n">tos</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span><span class="n">o</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tos</span><span class="p">,(</span><span class="n">dfa</span><span class="p">,</span><span class="n">dfa</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">dfa</span><span class="o">.</span><span class="n">copy</span><span class="p">()))]</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tos</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">to_</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]):</span>
     <span class="n">test_eq</span><span class="p">(</span><span class="n">to_</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">]))</span>
     <span class="n">test_eq</span><span class="p">(</span><span class="n">to_</span><span class="o">.</span><span class="n">a_na</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
 </pre></div>
@@ -402,24 +444,18 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">procs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Normalize</span><span class="p">(),</span> <span class="n">Categorify</span><span class="p">(),</span> <span class="n">FillMissing</span><span class="p">(),</span> <span class="n">noop</span><span class="p">]</span>
-<span class="n">proc</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
-
-<span class="c1">#Test reordering and partialize</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">FillMissing</span><span class="p">,</span> <span class="n">Transform</span><span class="p">,</span> <span class="n">Categorify</span><span class="p">,</span> <span class="n">Normalize</span><span class="p">])</span>
-
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">procs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Normalize</span><span class="p">,</span> <span class="n">Categorify</span><span class="p">,</span> <span class="n">FillMissing</span><span class="p">,</span> <span class="n">noop</span><span class="p">]</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]})</span>
-<span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">procs</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
 
-<span class="c1">#Test setup and apply on df_trn</span>
-<span class="n">proc</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+<span class="c1">#Test setup and apply on df_main</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">cat_names</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b_na&#39;</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">b_na</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">m</span><span class="p">,</span><span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">]})</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">procs</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">]})</span>
 </pre></div>
 
     </div>
@@ -433,47 +469,20 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Test apply on y_names</span>
-<span class="n">procs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Normalize</span><span class="p">(),</span> <span class="n">Categorify</span><span class="p">(),</span> <span class="n">FillMissing</span><span class="p">(),</span> <span class="n">noop</span><span class="p">]</span>
-<span class="n">proc</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
-
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">]})</span>
-<span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">y_names</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
-<span class="n">proc</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">procs</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">y_names</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">cat_names</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b_na&#39;</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">b_na</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">m</span><span class="p">,</span><span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <span class="n">test_close</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">]})</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">procs</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b_na&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;#na#&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">]})</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="process_df" class="doc_header"><code>process_df</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L124" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>process_df</code>(<strong><code>df</code></strong>, <strong><code>procs</code></strong>, <strong><code>inplace</code></strong>=<em><code>True</code></em>, <strong><code>cat_names</code></strong>=<em><code>None</code></em>, <strong><code>cont_names</code></strong>=<em><code>None</code></em>, <strong><code>y_names</code></strong>=<em><code>None</code></em>, <strong><code>is_y_cat</code></strong>=<em><code>True</code></em>, <strong><code>splits</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<p>Process <code>df</code> with <code>procs</code> and returns the processed dataframe and the <code>TabularProcessor</code> associated</p>
-
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -483,14 +492,14 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">procs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Normalize</span><span class="p">(),</span> <span class="n">Categorify</span><span class="p">(),</span> <span class="n">FillMissing</span><span class="p">(),</span> <span class="n">noop</span><span class="p">]</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">]})</span>
-<span class="n">to</span><span class="p">,</span><span class="n">proc</span> <span class="o">=</span> <span class="n">process_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">procs</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">y_names</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">]})</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">procs</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">y_names</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">cat_names</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b_na&#39;</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">b_na</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -498,12 +507,25 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Pass the same <code>splits</code> as you will use for splitting the data, so that the setup is only done on the training set. <code>cat_names</code> are the names of the categorical variables, <code>cont_names</code> the continous ones, <code>y_names</code> are the names of the dependent variables that are categories. If <code>inplace=True</code>, processing is applied inplace, otherwis it creates a copy of <code>df</code>.</p>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">]})</span>
+<span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">procs</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">y_names</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span>
+
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">cat_names</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b_na&#39;</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">b_na</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -517,9 +539,9 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReadTabBatch" class="doc_header"><code>class</code> <code>ReadTabBatch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L133" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReadTabBatch</code>(<strong><code>proc</code></strong>) :: <a href="/data.transforms.html#ItemTransform"><code>ItemTransform</code></a></p>
+<h2 id="ReadTabBatch" class="doc_header"><code>class</code> <code>ReadTabBatch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L136" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReadTabBatch</code>(<strong><code>to</code></strong>) :: <a href="/transform.html#ItemTransform"><code>ItemTransform</code></a></p>
 </blockquote>
-<p><a href="/data.transforms.html#Transform"><code>Transform</code></a> that always treats <code>as_item</code> as <code>True</code></p>
+<p><a href="/transform.html#Transform"><code>Transform</code></a> that always treats <code>as_item</code> as <code>True</code></p>
 
 </div>
 
@@ -541,7 +563,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TabDataLoader" class="doc_header"><code>class</code> <code>TabDataLoader</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L150" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TabDataLoader</code>(<strong><code>dataset</code></strong>, <strong><code>proc</code></strong>, <strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>) :: <a href="/data.core.html#TfmdDL"><code>TfmdDL</code></a></p>
+<h2 id="TabDataLoader" class="doc_header"><code>class</code> <code>TabDataLoader</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/tabular/core.py#L151" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TabDataLoader</code>(<strong><code>dataset</code></strong>, <strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>num_workers</code></strong>=<em><code>0</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>, <strong><code>get_idxs</code></strong>=<em><code>None</code></em>) :: <a href="/data.core.html#TfmdDL"><code>TfmdDL</code></a></p>
 </blockquote>
 <p>Transformed <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
 
@@ -566,8 +588,8 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">ADULT_SAMPLE</span><span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;adult.csv&#39;</span><span class="p">)</span>
-<span class="n">df_trn</span><span class="p">,</span><span class="n">df_tst</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">10000</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">10000</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">df_trn</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">df_main</span><span class="p">,</span><span class="n">df_test</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">10000</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">10000</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_main</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -618,7 +640,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
+      <th>0</th>
       <td>49</td>
       <td>Private</td>
       <td>101320</td>
@@ -636,7 +658,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>&gt;=50k</td>
     </tr>
     <tr>
-      <td>1</td>
+      <th>1</th>
       <td>44</td>
       <td>Private</td>
       <td>236746</td>
@@ -654,7 +676,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>&gt;=50k</td>
     </tr>
     <tr>
-      <td>2</td>
+      <th>2</th>
       <td>38</td>
       <td>Private</td>
       <td>96185</td>
@@ -672,7 +694,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>&lt;50k</td>
     </tr>
     <tr>
-      <td>3</td>
+      <th>3</th>
       <td>38</td>
       <td>Self-emp-inc</td>
       <td>112847</td>
@@ -690,7 +712,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>&gt;=50k</td>
     </tr>
     <tr>
-      <td>4</td>
+      <th>4</th>
       <td>42</td>
       <td>Self-emp-not-inc</td>
       <td>82297</td>
@@ -725,10 +747,8 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cat_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">,</span> <span class="s1">&#39;education&#39;</span><span class="p">,</span> <span class="s1">&#39;marital-status&#39;</span><span class="p">,</span> <span class="s1">&#39;occupation&#39;</span><span class="p">,</span> <span class="s1">&#39;relationship&#39;</span><span class="p">,</span> <span class="s1">&#39;race&#39;</span><span class="p">]</span>
 <span class="n">cont_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;fnlwgt&#39;</span><span class="p">,</span> <span class="s1">&#39;education-num&#39;</span><span class="p">]</span>
-<span class="n">procs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Categorify</span><span class="p">(),</span> <span class="n">FillMissing</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">()]</span>
-
-<span class="n">splits</span> <span class="o">=</span> <span class="n">RandomSplitter</span><span class="p">()(</span><span class="n">range_of</span><span class="p">(</span><span class="n">df_trn</span><span class="p">))</span>
-<span class="n">to</span><span class="p">,</span><span class="n">proc</span> <span class="o">=</span> <span class="n">process_df</span><span class="p">(</span><span class="n">df_trn</span><span class="p">,</span> <span class="n">procs</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">cat_names</span><span class="o">=</span><span class="n">cat_names</span><span class="p">,</span> <span class="n">cont_names</span><span class="o">=</span><span class="n">cont_names</span><span class="p">,</span> <span class="n">y_names</span><span class="o">=</span><span class="s2">&quot;salary&quot;</span><span class="p">)</span>
+<span class="n">procs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Categorify</span><span class="p">,</span> <span class="n">FillMissing</span><span class="p">,</span> <span class="n">Normalize</span><span class="p">]</span>
+<span class="n">splits</span> <span class="o">=</span> <span class="n">RandomSplitter</span><span class="p">()(</span><span class="n">range_of</span><span class="p">(</span><span class="n">df_main</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -741,9 +761,36 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">filts</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">])</span>
-<span class="n">dl</span> <span class="o">=</span> <span class="n">TabDataLoader</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">,</span> <span class="n">proc</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">dl</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">time</span> to = TabularPandas(df_main, procs, cat_names, cont_names, y_names=&quot;salary&quot;, splits=splits)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 185 ms, sys: 24 µs, total: 185 ms
+Wall time: 184 ms
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dbch</span> <span class="o">=</span> <span class="n">to</span><span class="o">.</span><span class="n">databunch</span><span class="p">()</span>
+<span class="n">dbch</span><span class="o">.</span><span class="n">valid_dl</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -779,14 +826,14 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
   <tbody>
     <tr>
       <th>0</th>
-      <td>19.999998</td>
-      <td>109812.992188</td>
-      <td>7.0</td>
+      <td>52.000000</td>
+      <td>270728.000000</td>
+      <td>4.0</td>
       <td>Private</td>
-      <td>11th</td>
-      <td>Never-married</td>
-      <td>Tech-support</td>
-      <td>Other-relative</td>
+      <td>7th-8th</td>
+      <td>Married-civ-spouse</td>
+      <td>Other-service</td>
+      <td>Husband</td>
       <td>White</td>
       <td>False</td>
       <td>False</td>
@@ -795,91 +842,43 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
     </tr>
     <tr>
       <th>1</th>
-      <td>18.000000</td>
-      <td>230373.000000</td>
-      <td>10.0</td>
+      <td>61.000001</td>
+      <td>84409.001345</td>
+      <td>16.0</td>
       <td>Self-emp-not-inc</td>
-      <td>11th</td>
-      <td>Never-married</td>
-      <td>Other-service</td>
-      <td>Own-child</td>
+      <td>Doctorate</td>
+      <td>Married-civ-spouse</td>
+      <td>Prof-specialty</td>
+      <td>Husband</td>
       <td>White</td>
       <td>False</td>
       <td>False</td>
-      <td>True</td>
-      <td>&lt;50k</td>
+      <td>False</td>
+      <td>&gt;=50k</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>25.999998</td>
-      <td>35917.000000</td>
-      <td>10.0</td>
-      <td>Private</td>
-      <td>Some-college</td>
-      <td>Never-married</td>
-      <td>Transport-moving</td>
-      <td>Not-in-family</td>
+      <td>42.000000</td>
+      <td>120276.997829</td>
+      <td>14.0</td>
+      <td>Self-emp-inc</td>
+      <td>Masters</td>
+      <td>Married-civ-spouse</td>
+      <td>Exec-managerial</td>
+      <td>Husband</td>
       <td>White</td>
       <td>False</td>
       <td>False</td>
       <td>False</td>
-      <td>&lt;50k</td>
+      <td>&gt;=50k</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>61.000000</td>
-      <td>166855.000000</td>
-      <td>13.0</td>
-      <td>?</td>
-      <td>Bachelors</td>
-      <td>Married-civ-spouse</td>
-      <td>?</td>
-      <td>Husband</td>
-      <td>White</td>
-      <td>False</td>
-      <td>False</td>
-      <td>False</td>
-      <td>&lt;50k</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>26.999998</td>
-      <td>706026.000000</td>
-      <td>7.0</td>
-      <td>Private</td>
-      <td>11th</td>
-      <td>Married-civ-spouse</td>
-      <td>Handlers-cleaners</td>
-      <td>Husband</td>
-      <td>White</td>
-      <td>False</td>
-      <td>False</td>
-      <td>False</td>
-      <td>&lt;50k</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>25.999998</td>
-      <td>200639.000000</td>
-      <td>10.0</td>
-      <td>Private</td>
-      <td>Some-college</td>
-      <td>Married-civ-spouse</td>
-      <td>Machine-op-inspct</td>
-      <td>Husband</td>
-      <td>White</td>
-      <td>False</td>
-      <td>False</td>
-      <td>False</td>
-      <td>&lt;50k</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>39.000000</td>
-      <td>152307.000000</td>
-      <td>13.0</td>
-      <td>State-gov</td>
-      <td>Bachelors</td>
+      <td>51.000000</td>
+      <td>103257.001119</td>
+      <td>15.0</td>
+      <td>Self-emp-not-inc</td>
+      <td>Prof-school</td>
       <td>Married-civ-spouse</td>
       <td>Prof-specialty</td>
       <td>Husband</td>
@@ -890,15 +889,63 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>&lt;50k</td>
     </tr>
     <tr>
-      <th>7</th>
-      <td>42.000000</td>
-      <td>274913.000000</td>
+      <th>4</th>
+      <td>41.000000</td>
+      <td>32878.006247</td>
+      <td>13.0</td>
+      <td>Private</td>
+      <td>Bachelors</td>
+      <td>Married-civ-spouse</td>
+      <td>Prof-specialty</td>
+      <td>Husband</td>
+      <td>White</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>&gt;=50k</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>34.000000</td>
+      <td>194740.000026</td>
+      <td>10.0</td>
+      <td>Federal-gov</td>
+      <td>Some-college</td>
+      <td>Never-married</td>
+      <td>Adm-clerical</td>
+      <td>Not-in-family</td>
+      <td>White</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>&lt;50k</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>45.000000</td>
+      <td>34248.001750</td>
       <td>9.0</td>
       <td>Private</td>
       <td>HS-grad</td>
-      <td>Divorced</td>
-      <td>Craft-repair</td>
-      <td>Unmarried</td>
+      <td>Married-civ-spouse</td>
+      <td>Sales</td>
+      <td>Husband</td>
+      <td>White</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>&lt;50k</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>37.000000</td>
+      <td>144321.998598</td>
+      <td>11.0</td>
+      <td>Local-gov</td>
+      <td>Assoc-voc</td>
+      <td>Never-married</td>
+      <td>Adm-clerical</td>
+      <td>Not-in-family</td>
       <td>White</td>
       <td>False</td>
       <td>False</td>
@@ -907,30 +954,30 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
     </tr>
     <tr>
       <th>8</th>
-      <td>68.000000</td>
-      <td>186350.000000</td>
+      <td>57.000000</td>
+      <td>39379.996225</td>
       <td>9.0</td>
-      <td>Private</td>
+      <td>State-gov</td>
       <td>HS-grad</td>
-      <td>Widowed</td>
-      <td>Exec-managerial</td>
+      <td>Separated</td>
+      <td>Other-service</td>
       <td>Not-in-family</td>
       <td>White</td>
       <td>False</td>
       <td>False</td>
       <td>False</td>
-      <td>&gt;=50k</td>
+      <td>&lt;50k</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>35.000000</td>
-      <td>320305.000000</td>
+      <td>31.000000</td>
+      <td>91665.997095</td>
       <td>9.0</td>
       <td>Private</td>
       <td>HS-grad</td>
-      <td>Married-civ-spouse</td>
-      <td>Craft-repair</td>
-      <td>Husband</td>
+      <td>Never-married</td>
+      <td>#na#</td>
+      <td>Not-in-family</td>
       <td>White</td>
       <td>False</td>
       <td>False</td>
@@ -952,8 +999,8 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">to_tst</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">df_tst</span><span class="p">,</span> <span class="n">cat_names</span><span class="p">,</span> <span class="n">cont_names</span><span class="p">,</span> <span class="n">y_names</span><span class="o">=</span><span class="s2">&quot;salary&quot;</span><span class="p">)</span>
-<span class="n">proc</span><span class="p">(</span><span class="n">to_tst</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">to_tst</span> <span class="o">=</span> <span class="n">to</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span>
+<span class="n">to_tst</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
 <span class="n">to_tst</span><span class="o">.</span><span class="n">all_cols</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -1003,10 +1050,10 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
   </thead>
   <tbody>
     <tr>
-      <td>10000</td>
-      <td>0.462928</td>
-      <td>1.368242</td>
-      <td>1.172674</td>
+      <th>10000</th>
+      <td>0.476757</td>
+      <td>1.330941</td>
+      <td>1.168340</td>
       <td>5</td>
       <td>10</td>
       <td>3</td>
@@ -1016,13 +1063,13 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>1</td>
       <td>1</td>
       <td>1</td>
-      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
-      <td>10001</td>
-      <td>-0.925545</td>
-      <td>1.279475</td>
-      <td>-0.428109</td>
+      <th>10001</th>
+      <td>-0.920818</td>
+      <td>1.244358</td>
+      <td>-0.425779</td>
       <td>5</td>
       <td>12</td>
       <td>3</td>
@@ -1032,13 +1079,13 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>1</td>
       <td>1</td>
       <td>1</td>
-      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
-      <td>10002</td>
-      <td>1.047548</td>
-      <td>0.154700</td>
-      <td>-1.228501</td>
+      <th>10002</th>
+      <td>1.065210</td>
+      <td>0.147249</td>
+      <td>-1.222839</td>
       <td>5</td>
       <td>2</td>
       <td>1</td>
@@ -1048,13 +1095,13 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>1</td>
       <td>1</td>
       <td>1</td>
-      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
-      <td>10003</td>
-      <td>0.536005</td>
-      <td>-0.287084</td>
-      <td>-0.428109</td>
+      <th>10003</th>
+      <td>0.550314</td>
+      <td>-0.283668</td>
+      <td>-0.425779</td>
       <td>5</td>
       <td>12</td>
       <td>7</td>
@@ -1064,13 +1111,13 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>1</td>
       <td>1</td>
       <td>1</td>
-      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
-      <td>10004</td>
-      <td>0.755238</td>
-      <td>1.472831</td>
-      <td>0.372282</td>
+      <th>10004</th>
+      <td>0.770983</td>
+      <td>1.432958</td>
+      <td>0.371280</td>
       <td>6</td>
       <td>9</td>
       <td>3</td>
@@ -1080,7 +1127,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
       <td>1</td>
       <td>1</td>
       <td>1</td>
-      <td>2</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>
@@ -1104,7 +1151,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">TensorTabular</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">TensorTabular</span><span class="p">(</span><span class="n">Tuple</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">get_ctxs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_n</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_n</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">))</span>
@@ -1124,7 +1171,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
         <span class="k">return</span> <span class="n">TensorTabular</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="n">cats</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">(),</span><span class="n">tensor</span><span class="p">(</span><span class="n">conts</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
-        <span class="n">to</span> <span class="o">=</span> <span class="n">Tabular</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">cat_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">cont_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">y_names</span><span class="p">)</span>
+        <span class="n">to</span> <span class="o">=</span> <span class="n">TabularPandas</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">cat_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">cont_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">y_names</span><span class="p">)</span>
         <span class="n">to</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">TabularLine</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="n">c</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">to</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">to</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">cat_names</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">cont_names</span><span class="p">)}))</span>
 
@@ -1155,7 +1202,7 @@ summary: "Basic function to preprocess tabular data before assembling it in a [`
 <span class="c1"># test_close(dec[0], pd.Series({&#39;a&#39;: 1, &#39;b_na&#39;: False, &#39;b&#39;: 1}))</span>
 <span class="c1"># test_eq(dec[1], &#39;a&#39;)</span>
 
-<span class="c1"># test_stdout(lambda: print(tds.show_at(1)), &quot;&quot;&quot;a               1</span>
+<span class="c1"># test_stdout(lambda: print(show_at(tds, 1)), &quot;&quot;&quot;a               1</span>
 <span class="c1"># b_na        False</span>
 <span class="c1"># b               1</span>
 <span class="c1"># category        a</span>

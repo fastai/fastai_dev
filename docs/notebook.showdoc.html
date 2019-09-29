@@ -30,8 +30,8 @@ summary: "Functions to show the doc cells in notebooks"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.core</span> <span class="k">import</span> <span class="n">compose</span><span class="p">,</span> <span class="n">add_docs</span><span class="p">,</span> <span class="n">chk</span>
-<span class="kn">from</span> <span class="nn">local.data.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.core</span> <span class="k">import</span> <span class="n">compose</span><span class="p">,</span> <span class="n">add_docs</span><span class="p">,</span> <span class="n">patch</span>
+<span class="kn">from</span> <span class="nn">local.transform</span> <span class="k">import</span> <span class="n">Pipeline</span>
 <span class="kn">from</span> <span class="nn">local.data.external</span> <span class="k">import</span> <span class="n">untar_data</span><span class="p">,</span> <span class="n">ConfigKey</span>
 
 <span class="n">test_cases</span> <span class="o">=</span> <span class="p">[</span>
@@ -230,9 +230,38 @@ summary: "Functions to show the doc cells in notebooks"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">doc_link</span><span class="p">(</span><span class="s1">&#39;data.pipeline&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;[`data.pipeline`](</span><span class="si">{FASTAI_DOCS}</span><span class="s1">/data.pipeline.html)&#39;</span>
-<span class="k">assert</span> <span class="n">doc_link</span><span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;[`Pipeline`](</span><span class="si">{FASTAI_DOCS}</span><span class="s1">/data.pipeline.html#Pipeline)&#39;</span>
-<span class="k">assert</span> <span class="n">doc_link</span><span class="p">(</span><span class="s1">&#39;Transform.create&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;[`Transform.create`](</span><span class="si">{FASTAI_DOCS}</span><span class="s1">/data.transforms.html#Transform.create)&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">doc_link</span><span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;[`Pipeline`](/transform.html#Pipeline)&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">doc_link</span><span class="p">(</span><span class="s1">&#39;transform&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;[`transform`](</span><span class="si">{FASTAI_DOCS}</span><span class="s1">/transform.html)&#39;</span>
+<span class="k">assert</span> <span class="n">doc_link</span><span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;[`Pipeline`](</span><span class="si">{FASTAI_DOCS}</span><span class="s1">/transform.html#Pipeline)&#39;</span>
+<span class="k">assert</span> <span class="n">doc_link</span><span class="p">(</span><span class="s1">&#39;Transform.create&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;[`Transform.create`](</span><span class="si">{FASTAI_DOCS}</span><span class="s1">/transform.html#Transform.create)&#39;</span>
 <span class="k">assert</span> <span class="n">doc_link</span><span class="p">(</span><span class="s1">&#39;Tensor&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;[`Tensor`](https://pytorch.org/docs/stable/tensors.html#torch-tensor)&#39;</span>
 <span class="k">assert</span> <span class="n">doc_link</span><span class="p">(</span><span class="s1">&#39;Tenso&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;`Tenso`&#39;</span>
 </pre></div>
@@ -282,7 +311,7 @@ summary: "Functions to show the doc cells in notebooks"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tst</span> <span class="o">=</span> <span class="n">add_doc_links</span><span class="p">(</span><span class="s1">&#39;This is an example of `Pipeline`&#39;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">tst</span> <span class="o">==</span> <span class="s2">&quot;This is an example of [`Pipeline`](/data.pipeline.html#Pipeline)&quot;</span>
+<span class="k">assert</span> <span class="n">tst</span> <span class="o">==</span> <span class="s2">&quot;This is an example of [`Pipeline`](/transform.html#Pipeline)&quot;</span>
 <span class="n">tst</span> <span class="o">=</span> <span class="n">add_doc_links</span><span class="p">(</span><span class="s1">&#39;Here we alread add a link in [`Tensor`](fake)&#39;</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">tst</span> <span class="o">==</span> <span class="s2">&quot;Here we alread add a link in [`Tensor`](https://pytorch.org/docs/stable/tensors.html#torch-tensor)&quot;</span>
 </pre></div>
@@ -313,7 +342,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_source_link" class="doc_header"><code>get_source_link</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L93" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_source_link</code>(<strong><code>func</code></strong>)</p>
+<h4 id="get_source_link" class="doc_header"><code>get_source_link</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L102" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_source_link</code>(<strong><code>func</code></strong>)</p>
 </blockquote>
 <p>Return link to <code>func</code> in source code</p>
 
@@ -345,7 +374,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;https://github.com/fastai/fastai_dev/tree/master/dev/local/data/pipeline.py#L55&#39;</pre>
+<pre>&#39;https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L244&#39;</pre>
 </div>
 
 </div>
@@ -376,7 +405,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_nb_source_link" class="doc_header"><code>get_nb_source_link</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L114" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_nb_source_link</code>(<strong><code>func</code></strong>, <strong><code>local</code></strong>=<em><code>False</code></em>, <strong><code>is_name</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_nb_source_link" class="doc_header"><code>get_nb_source_link</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L123" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_nb_source_link</code>(<strong><code>func</code></strong>, <strong><code>local</code></strong>=<em><code>False</code></em>, <strong><code>is_name</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Return a link to the notebook where <code>func</code> is defined.</p>
 
@@ -395,8 +424,8 @@ summary: "Functions to show the doc cells in notebooks"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">decode</span><span class="p">)</span> <span class="o">==</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">chk</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{FASTAI_NB_DEV}</span><span class="s1">01_core.ipynb#Foundational-functions&#39;</span>
-<span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">chk</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;01_core.ipynb#Foundational-functions&#39;</span>
+<span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{FASTAI_NB_DEV}</span><span class="s1">01_core.ipynb#Foundational-functions&#39;</span>
+<span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">patch</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;01_core.ipynb#Foundational-functions&#39;</span>
 <span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="s1">&#39;Path.ls&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{FASTAI_NB_DEV}</span><span class="s1">01_core.ipynb#File-and-network-functions&#39;</span>
 </pre></div>
 
@@ -424,7 +453,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="nb_source_link" class="doc_header"><code>nb_source_link</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L145" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nb_source_link</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<em><code>None</code></em>, <strong><code>disp</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="nb_source_link" class="doc_header"><code>nb_source_link</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L154" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nb_source_link</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<em><code>None</code></em>, <strong><code>disp</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Show a relative link to the notebook where <code>func</code> is defined</p>
 
@@ -462,7 +491,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<p><a href="03_data_pipeline.ipynb#Pipeline--">Pipeline</a></p>
+<p><a href="04_transform.ipynb#Export--">Pipeline</a></p>
 
 </div>
 
@@ -477,8 +506,8 @@ summary: "Functions to show the doc cells in notebooks"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">nb_source_link</span><span class="p">(</span><span class="n">chk</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;01_core.ipynb#Foundational-functions&#39;</span>
-<span class="k">assert</span> <span class="n">nb_source_link</span><span class="p">(</span><span class="s1">&#39;chk&#39;</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;01_core.ipynb#Foundational-functions&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">nb_source_link</span><span class="p">(</span><span class="n">patch</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;01_core.ipynb#Foundational-functions&#39;</span>
+<span class="k">assert</span> <span class="n">nb_source_link</span><span class="p">(</span><span class="s1">&#39;patch&#39;</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;01_core.ipynb#Foundational-functions&#39;</span>
 </pre></div>
 
     </div>
@@ -504,7 +533,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="type_repr" class="doc_header"><code>type_repr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L154" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>type_repr</code>(<strong><code>t</code></strong>)</p>
+<h4 id="type_repr" class="doc_header"><code>type_repr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L163" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>type_repr</code>(<strong><code>t</code></strong>)</p>
 </blockquote>
 <p>Representation of type <code>t</code> (in a type annotation)</p>
 
@@ -564,7 +593,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="format_param" class="doc_header"><code>format_param</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L167" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>format_param</code>(<strong><code>p</code></strong>)</p>
+<h4 id="format_param" class="doc_header"><code>format_param</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L176" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>format_param</code>(<strong><code>p</code></strong>)</p>
 </blockquote>
 <p>Formats function param to <code>param1:Type=val</code>. Font weights: param1=bold, val=italic</p>
 
@@ -644,7 +673,7 @@ summary: "Functions to show the doc cells in notebooks"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">_format_cls_doc</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">,</span> <span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;&lt;code&gt;class&lt;/code&gt; &lt;code&gt;Pipeline&lt;/code&gt;&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;&lt;code&gt;Pipeline&lt;/code&gt;(**`funcs`**=*`None`*, **`as_item`**=*`False`*, **`filt`**=*`None`*) :: [`GetAttr`](/core.html#GetAttr)&#39;</span><span class="p">)</span>
+        <span class="s1">&#39;&lt;code&gt;Pipeline&lt;/code&gt;(**`funcs`**=*`None`*, **`as_item`**=*`False`*, **`filt`**=*`None`*)&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -664,7 +693,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_doc" class="doc_header"><code>show_doc</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L211" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_doc</code>(<strong><code>elt</code></strong>, <strong><code>doc_string</code></strong>=<em><code>True</code></em>, <strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>title_level</code></strong>=<em><code>None</code></em>, <strong><code>disp</code></strong>=<em><code>True</code></em>, <strong><code>default_cls_level</code></strong>=<em><code>2</code></em>)</p>
+<h4 id="show_doc" class="doc_header"><code>show_doc</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L220" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_doc</code>(<strong><code>elt</code></strong>, <strong><code>doc_string</code></strong>=<em><code>True</code></em>, <strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>title_level</code></strong>=<em><code>None</code></em>, <strong><code>disp</code></strong>=<em><code>True</code></em>, <strong><code>default_cls_level</code></strong>=<em><code>2</code></em>)</p>
 </blockquote>
 <p>Show documentation for element <code>elt</code>. Supported types: class, function, and enum.</p>
 
@@ -714,7 +743,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="md2html" class="doc_header"><code>md2html</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L230" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>md2html</code>(<strong><code>md</code></strong>)</p>
+<h4 id="md2html" class="doc_header"><code>md2html</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L239" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>md2html</code>(<strong><code>md</code></strong>)</p>
 </blockquote>
 <p>Convert markdown <code>md</code> to HTML code</p>
 
@@ -738,7 +767,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="doc" class="doc_header"><code>doc</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L236" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>doc</code>(<strong><code>elt</code></strong>)</p>
+<h4 id="doc" class="doc_header"><code>doc</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/showdoc.py#L245" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>doc</code>(<strong><code>elt</code></strong>)</p>
 </blockquote>
 <p>Show <a href="/notebook.showdoc.html#show_doc"><code>show_doc</code></a> info in preview window</p>
 

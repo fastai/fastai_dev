@@ -80,10 +80,27 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 
 <div class="output_area">
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 9.440685234507213e+35, &#39;00:00&#39;]
-</pre>
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1362503982497231923221770706509365248.000000</td>
+      <td>00:00</td>
+    </tr>
+  </tbody>
+</table>
 </div>
+
 </div>
 
 </div>
@@ -95,7 +112,7 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">train_dl</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">dbunch</span><span class="o">.</span><span class="n">train_dl</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="o">.</span><span class="n">losses</span><span class="p">:</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> 
 </pre></div>
@@ -186,11 +203,46 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 
 <div class="output_area">
 
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>20.582607</td>
+      <td>21.140226</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>20.582577</td>
+      <td>21.140173</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>20.582520</td>
+      <td>21.140097</td>
+      <td>00:00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+<div class="output_area">
+
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 13.335638046264648, 15.492764472961426, &#39;00:00&#39;]
-[1, 13.335619926452637, 15.492729187011719, &#39;00:00&#39;]
-[2, 13.33558464050293, 15.492679595947266, &#39;00:00&#39;]
-No improvement since epoch 0: early stopping
+<pre>No improvement since epoch 0: early stopping
 </pre>
 </div>
 </div>
@@ -285,12 +337,52 @@ No improvement since epoch 0: early stopping
 
 <div class="output_area">
 
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1.569402</td>
+      <td>3.269163</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>1.569400</td>
+      <td>3.269158</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>1.569397</td>
+      <td>3.269152</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>1.569396</td>
+      <td>3.269151</td>
+      <td>00:00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+<div class="output_area">
+
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 16.464069366455078, 8.472526550292969, &#39;00:00&#39;]
-[1, 16.464040756225586, 8.472502708435059, &#39;00:00&#39;]
-[2, 16.4639949798584, 8.472465515136719, &#39;00:00&#39;]
-Epoch 2: reducing lr to 1e-08
-[3, 16.463930130004883, 8.472461700439453, &#39;00:00&#39;]
+<pre>Epoch 2: reducing lr to 1e-08
 </pre>
 </div>
 </div>

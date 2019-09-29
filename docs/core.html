@@ -34,6 +34,18 @@ summary: "Basic functions used in the fastai library"
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>See this <a href="https://realpython.com/python-metaclasses/">blog post</a> for more information about metaclasses.</p>
+<ul>
+<li><a href="/core.html#PrePostInitMeta"><code>PrePostInitMeta</code></a> ensures that the classes defined with it run <code>__pre_init__</code> and <code>__post_init__</code> (without having to write <code>self.__pre_init__()</code> and <code>self.__post_init__()</code>  in the actual <code>init</code></li>
+<li><a href="/core.html#NewChkMeta"><code>NewChkMeta</code></a> gives the <a href="/core.html#PrePostInitMeta"><code>PrePostInitMeta</code></a> functionality and ensures classes defined with it don't re-create an object of their type whenever it's passed to the constructor</li>
+<li><a href="/core.html#BypassNewMeta"><code>BypassNewMeta</code></a> ensures classes defined with it can easily be casted form objects they subclass.</li>
+</ul>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
@@ -46,7 +58,31 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="PrePostInitMeta" class="doc_header"><code>class</code> <code>PrePostInitMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L23" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>PrePostInitMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dct</code></strong>) :: <code>type</code></p>
+<h2 id="FixSigMeta" class="doc_header"><code>class</code> <code>FixSigMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L24" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FixSigMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dict</code></strong>) :: <code>type</code></p>
+</blockquote>
+<p>A metaclass that fixes the signature on classes that override <strong>new</strong></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="PrePostInitMeta" class="doc_header"><code>class</code> <code>PrePostInitMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L32" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>PrePostInitMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dict</code></strong>) :: <a href="/core.html#FixSigMeta"><code>FixSigMeta</code></a></p>
 </blockquote>
 <p>A metaclass that calls optional <code>__pre_init__</code> and <code>__post_init__</code> methods</p>
 
@@ -65,30 +101,14 @@ summary: "Basic functions used in the fastai library"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_T</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">PrePostInitMeta</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__pre_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="bp">self</span><span class="o">.</span><span class="n">a</span>  <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">==</span><span class="mi">0</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">==</span><span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>  <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">==</span><span class="mi">1</span>
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">==</span><span class="mi">2</span>
 
 <span class="n">t</span> <span class="o">=</span> <span class="n">_T</span><span class="p">()</span>
-<span class="n">t</span><span class="o">.</span><span class="n">a</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>2</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -105,68 +125,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="BaseObj" class="doc_header"><code>class</code> <code>BaseObj</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L41" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BaseObj</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="NewChkMeta" class="doc_header"><code>class</code> <code>NewChkMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L43" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>NewChkMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dict</code></strong>) :: <a href="/core.html#FixSigMeta"><code>FixSigMeta</code></a></p>
 </blockquote>
-<p>Base class that provides <a href="/core.html#PrePostInitMeta"><code>PrePostInitMeta</code></a> metaclass to subclasses</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_T</span><span class="p">(</span><span class="n">BaseObj</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__pre_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="bp">self</span><span class="o">.</span><span class="n">a</span>  <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">==</span><span class="mi">0</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">==</span><span class="mi">1</span>
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">==</span><span class="mi">2</span>
-
-<span class="n">t</span> <span class="o">=</span> <span class="n">_T</span><span class="p">()</span>
-<span class="n">t</span><span class="o">.</span><span class="n">a</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>2</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="NewChkMeta" class="doc_header"><code>class</code> <code>NewChkMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L46" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>NewChkMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dct</code></strong>) :: <a href="/core.html#PrePostInitMeta"><code>PrePostInitMeta</code></a></p>
-</blockquote>
-<p>Metaclass to avoid recreating object passed to constructor (plus all <a href="/core.html#PrePostInitMeta"><code>PrePostInitMeta</code></a> functionality)</p>
+<p>Metaclass to avoid recreating object passed to constructor</p>
 
 </div>
 
@@ -186,8 +147,19 @@ summary: "Basic functions used in the fastai library"
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+</pre></div>
 
-<span class="k">class</span> <span class="nc">_T2</span><span class="p">():</span>
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_T2</span><span class="p">():</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
 <span class="n">t</span> <span class="o">=</span> <span class="n">_T</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -205,7 +177,8 @@ summary: "Basic functions used in the fastai library"
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t2</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="n">test_eq</span><span class="p">(</span><span class="n">_T</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="s2">&quot;Testing&quot;</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">_T</span><span class="p">)),</span> <span class="s1">&#39;(o=None, b=1)&#39;</span><span class="p">)</span>
+<span class="c1"># TODO: this shouldn&#39;t have &quot;self, &quot;</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">_T</span><span class="p">)),</span> <span class="s1">&#39;(self, o=None, b=1)&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -225,9 +198,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="BypassNewMeta" class="doc_header"><code>class</code> <code>BypassNewMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L70" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BypassNewMeta</code>() :: <code>type</code></p>
+<h2 id="BypassNewMeta" class="doc_header"><code>class</code> <code>BypassNewMeta</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L55" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BypassNewMeta</code>(<strong><code>name</code></strong>, <strong><code>bases</code></strong>, <strong><code>dict</code></strong>) :: <a href="/core.html#FixSigMeta"><code>FixSigMeta</code></a></p>
 </blockquote>
-<p>Metaclass: casts <code>x</code> to this class, initializing with <code>_new_meta</code> if available</p>
+<p>Metaclass: casts <code>x</code> to this class if it's of type <code>cls._bypass_type</code>, initializing with <code>_new_meta</code> if available</p>
 
 </div>
 
@@ -243,13 +216,18 @@ summary: "Basic functions used in the fastai library"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">T0</span><span class="p">:</span> <span class="k">pass</span>
-<span class="k">class</span> <span class="nc">_T</span><span class="p">(</span><span class="n">T0</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">BypassNewMeta</span><span class="p">):</span> <span class="k">pass</span>
+<span class="k">class</span> <span class="nc">_T</span><span class="p">(</span><span class="n">T0</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">BypassNewMeta</span><span class="p">):</span>
+    <span class="n">_bypass_type</span><span class="o">=</span><span class="n">T0</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
 
 <span class="n">t</span> <span class="o">=</span> <span class="n">T0</span><span class="p">()</span>
 <span class="n">t</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">t2</span> <span class="o">=</span> <span class="n">_T</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">t2</span><span class="p">),</span> <span class="n">_T</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t2</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_is</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">_T</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
 </pre></div>
 
     </div>
@@ -275,7 +253,31 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="patch_to" class="doc_header"><code>patch_to</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L78" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch_to</code>(<strong><code>as_prop</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="copy_func" class="doc_header"><code>copy_func</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L65" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>copy_func</code>(<strong><code>f</code></strong>)</p>
+</blockquote>
+<p>Copy a non-builtin function (NB <code>copy.copy</code> does not work for this)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="patch_to" class="doc_header"><code>patch_to</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L73" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch_to</code>(<strong><code>as_prop</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Decorator: add <code>f</code> to <code>cls</code></p>
 
@@ -306,6 +308,33 @@ summary: "Basic functions used in the fastai library"
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If <code>cls</code> is a tuple, <code>f</code> is added to all types in the tuple.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">_T4</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span> <span class="k">pass</span>
+<span class="nd">@patch_to</span><span class="p">((</span><span class="n">_T3</span><span class="p">,</span><span class="n">_T4</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">func2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">a</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">_T3</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">func2</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">_T4</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">func2</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
@@ -318,7 +347,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="patch" class="doc_header"><code>patch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L90" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch</code>(<strong><code>f</code></strong>)</p>
+<h4 id="patch" class="doc_header"><code>patch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L87" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch</code>(<strong><code>f</code></strong>)</p>
 </blockquote>
 <p>Decorator: add <code>f</code> to the first parameter's class (based on f's type annotations)</p>
 
@@ -350,6 +379,36 @@ summary: "Basic functions used in the fastai library"
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If annotation is a tuple, the function is added to all types in the tuple.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nd">@patch</span>
+<span class="k">def</span> <span class="nf">func3</span><span class="p">(</span><span class="n">x</span><span class="p">:(</span><span class="n">_T3</span><span class="p">,</span><span class="n">_T4</span><span class="p">),</span> <span class="n">a</span><span class="p">):</span>
+    <span class="s2">&quot;test&quot;</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">a</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">_T3</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">func3</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">func3</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">,</span> <span class="s1">&#39;_T3.func3&#39;</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">_T4</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">func3</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">func3</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">,</span> <span class="s1">&#39;_T4.func3&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
@@ -362,7 +421,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="patch_property" class="doc_header"><code>patch_property</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L96" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch_property</code>(<strong><code>f</code></strong>)</p>
+<h4 id="patch_property" class="doc_header"><code>patch_property</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L93" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>patch_property</code>(<strong><code>f</code></strong>)</p>
 </blockquote>
 <p>Decorator: add <code>f</code> as a property to the first parameter's class (based on f's type annotations)</p>
 
@@ -419,7 +478,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="use_kwargs" class="doc_header"><code>use_kwargs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L105" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>use_kwargs</code>(<strong><code>names</code></strong>, <strong><code>keep</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="use_kwargs" class="doc_header"><code>use_kwargs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L102" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>use_kwargs</code>(<strong><code>names</code></strong>, <strong><code>keep</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Decorator: replace <code>**kwargs</code> in signature with <code>names</code> params</p>
 
@@ -462,7 +521,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="delegates" class="doc_header"><code>delegates</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L119" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>delegates</code>(<strong><code>to</code></strong>=<em><code>None</code></em>, <strong><code>keep</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="delegates" class="doc_header"><code>delegates</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L116" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>delegates</code>(<strong><code>to</code></strong>=<em><code>None</code></em>, <strong><code>keep</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Decorator: replace <code>**kwargs</code> in signature with params from <code>to</code></p>
 
@@ -615,76 +674,6 @@ summary: "Basic functions used in the fastai library"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="chk" class="doc_header"><code>chk</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L158" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>chk</code>(<strong><code>f</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Decorator for a function to check that type-annotated arguments receive arguments of the right type.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nd">@chk</span>
-<span class="k">def</span> <span class="nf">test_chk</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span>
-
-<span class="n">test_eq</span><span class="p">(</span><span class="n">test_chk</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">test_chk</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">test_fail</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">test_chk</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">),</span> <span class="n">contains</span><span class="o">=</span><span class="s1">&#39;&quot;a&quot; must be int&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Decorated functions will pickle correctly.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">test_chk</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
@@ -728,7 +717,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="add_docs" class="doc_header"><code>add_docs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L161" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_docs</code>(<strong><code>cls_doc</code></strong>=<em><code>None</code></em>, <strong>**<code>docs</code></strong>)</p>
+<h4 id="add_docs" class="doc_header"><code>add_docs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L157" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_docs</code>(<strong><code>cls_doc</code></strong>=<em><code>None</code></em>, <strong>**<code>docs</code></strong>)</p>
 </blockquote>
 <p>Copy values from <a href="/core.html#docs"><code>docs</code></a> to <code>cls</code> docstrings, and confirm all public methods are documented</p>
 
@@ -752,7 +741,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="docs" class="doc_header"><code>docs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L175" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>docs</code>()</p>
+<h4 id="docs" class="doc_header"><code>docs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L171" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>docs</code>()</p>
 </blockquote>
 <p>Decorator version of <a href="/core.html#add_docs"><code>add_docs</code></a>, using <code>_docs</code> dict</p>
 
@@ -797,7 +786,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="custom_dir" class="doc_header"><code>custom_dir</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L181" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>custom_dir</code>(<strong><code>c</code></strong>, <strong><code>add</code></strong>:<code>List</code>[<code>T</code>])</p>
+<h4 id="custom_dir" class="doc_header"><code>custom_dir</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L177" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>custom_dir</code>(<strong><code>c</code></strong>, <strong><code>add</code></strong>:<code>list</code>)</p>
 </blockquote>
 <p>Implement custom <code>__dir__</code>, adding <code>add</code> to <code>cls</code></p>
 
@@ -858,7 +847,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="GetAttr" class="doc_header"><code>class</code> <code>GetAttr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L186" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GetAttr</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/core.html#BaseObj"><code>BaseObj</code></a></p>
+<h2 id="GetAttr" class="doc_header"><code>class</code> <code>GetAttr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L182" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GetAttr</code>()</p>
 </blockquote>
 <p>Inherit from this to have all attr accesses in <code>self._xtra</code> passed down to <code>self.default</code></p>
 
@@ -880,7 +869,7 @@ summary: "Basic functions used in the fastai library"
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">a</span>
     <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="n">noop</span>
 
-<span class="n">t</span> <span class="o">=</span> <span class="n">_C</span><span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">_C</span><span class="p">(</span><span class="s1">&#39;Hi&#39;</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s1">&#39;hi&#39;</span><span class="p">)</span>
 <span class="n">test_fail</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
 <span class="k">assert</span> <span class="s1">&#39;lower&#39;</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -903,7 +892,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="delegate_attr" class="doc_header"><code>delegate_attr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L197" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>delegate_attr</code>(<strong><code>k</code></strong>, <strong><code>to</code></strong>)</p>
+<h4 id="delegate_attr" class="doc_header"><code>delegate_attr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L193" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>delegate_attr</code>(<strong><code>k</code></strong>, <strong><code>to</code></strong>)</p>
 </blockquote>
 <p>Use in <code>__getattr__</code> to delegate to attr <code>to</code> without inheriting from <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
 
@@ -938,6 +927,9 @@ summary: "Basic functions used in the fastai library"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -945,7 +937,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="coll_repr" class="doc_header"><code>coll_repr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L204" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>coll_repr</code>(<strong><code>c</code></strong>, <strong><code>max_n</code></strong>=<em><code>10</code></em>)</p>
+<h4 id="coll_repr" class="doc_header"><code>coll_repr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L210" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>coll_repr</code>(<strong><code>c</code></strong>, <strong><code>max_n</code></strong>=<em><code>10</code></em>)</p>
 </blockquote>
 <p>String repr of up to <code>max_n</code> items of (possibly lazy) collection <code>c</code></p>
 
@@ -982,7 +974,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mask2idxs" class="doc_header"><code>mask2idxs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L210" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mask2idxs</code>(<strong><code>mask</code></strong>)</p>
+<h4 id="mask2idxs" class="doc_header"><code>mask2idxs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L216" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mask2idxs</code>(<strong><code>mask</code></strong>)</p>
 </blockquote>
 <p>Convert bool mask or index list to index <a href="/core.html#L"><code>L</code></a></p>
 
@@ -1023,7 +1015,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CollBase" class="doc_header"><code>class</code> <code>CollBase</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L226" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CollBase</code>(<strong><code>items</code></strong>)</p>
+<h2 id="CollBase" class="doc_header"><code>class</code> <code>CollBase</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L228" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CollBase</code>(<strong><code>items</code></strong>)</p>
 </blockquote>
 <p>Base class for composing a list of <code>items</code></p>
 
@@ -1047,7 +1039,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="cycle" class="doc_header"><code>cycle</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L240" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cycle</code>(<strong><code>o</code></strong>)</p>
+<h4 id="cycle" class="doc_header"><code>cycle</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L239" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cycle</code>(<strong><code>o</code></strong>)</p>
 </blockquote>
 <p>Like <code>itertools.cycle</code> except creates list of <code>None</code>s if <code>o</code> is empty</p>
 
@@ -1064,9 +1056,10 @@ summary: "Basic functions used in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">cycle</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">),</span><span class="mi">5</span><span class="p">),</span> <span class="s1">&#39;abcab&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">cycle</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="mi">5</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">cycle</span><span class="p">([]),</span><span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">cycle</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span><span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -1103,7 +1096,7 @@ summary: "Basic functions used in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">zip_cycle</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="s1">&#39;abc&#39;</span><span class="p">),</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">zip_cycle</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)),</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)])</span>
 </pre></div>
 
     </div>
@@ -1123,7 +1116,31 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="L" class="doc_header"><code>class</code> <code>L</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L250" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>L</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
+<h4 id="is_indexer" class="doc_header"><code>is_indexer</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L250" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_indexer</code>(<strong><code>idx</code></strong>)</p>
+</blockquote>
+<p>Test whether <code>idx</code> will index a single item in a list</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="L" class="doc_header"><code>class</code> <code>L</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L255" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>L</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
 </blockquote>
 <p>Behaves like a list of <code>items</code> but can also index with list of indices or masks</p>
 
@@ -1207,7 +1224,7 @@ summary: "Basic functions used in the fastai library"
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]})</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_list</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">L</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]}),</span> <span class="n">use_list</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">L</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="n">use_list</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -1246,10 +1263,7 @@ summary: "Basic functions used in the fastai library"
 <span class="n">t</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">L</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cycle</span><span class="p">()),</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)))</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">t2</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">shuffled</span><span class="p">()</span>
-<span class="n">test_ne</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">t2</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">t</span><span class="p">),</span><span class="nb">set</span><span class="p">(</span><span class="n">t2</span><span class="p">))</span>
+<span class="n">test_shuffled</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">shuffled</span><span class="p">())</span>
 </pre></div>
 
     </div>
@@ -1351,6 +1365,29 @@ summary: "Basic functions used in the fastai library"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>An <a href="/core.html#L"><code>L</code></a> is considred equal to a list if they have the same elements. It's never considered equal to a <code>str</code> a <code>set</code> or a <code>dict</code> even if they have the same elements/keys.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]),</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">])</span>
+<span class="n">test_ne</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]),</span> <span class="s1">&#39;ab&#39;</span><span class="p">)</span>
+<span class="n">test_ne</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]),</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
+<span class="n">test_ne</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]),</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Methods">Methods<a class="anchor-link" href="#Methods">&#182;</a></h3>
 </div>
 </div>
@@ -1364,7 +1401,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.__getitem__" class="doc_header"><code>L.__getitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L262" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__getitem__</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="L.__getitem__" class="doc_header"><code>L.__getitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L268" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__getitem__</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
 <p>Retrieve <code>idx</code> (can be list of indices, or mask, or int) items</p>
 
@@ -1403,7 +1440,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.__setitem__" class="doc_header"><code>L.__setitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L270" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__setitem__</code>(<strong><code>idx</code></strong>, <strong><code>o</code></strong>)</p>
+<h4 id="L.__setitem__" class="doc_header"><code>L.__setitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L277" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__setitem__</code>(<strong><code>idx</code></strong>, <strong><code>o</code></strong>)</p>
 </blockquote>
 <p>Set <code>idx</code> (can be list of indices, or mask, or int) items to <code>o</code> (which is broadcast if not iterable)</p>
 
@@ -1440,7 +1477,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.unique" class="doc_header"><code>L.unique</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L302" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.unique</code>()</p>
+<h4 id="L.unique" class="doc_header"><code>L.unique</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L310" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.unique</code>()</p>
 </blockquote>
 <p>Unique items, in stable order</p>
 
@@ -1474,7 +1511,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.val2idx" class="doc_header"><code>L.val2idx</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L303" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.val2idx</code>()</p>
+<h4 id="L.val2idx" class="doc_header"><code>L.val2idx</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L311" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.val2idx</code>()</p>
 </blockquote>
 <p>Dict from value to index</p>
 
@@ -1508,7 +1545,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.filtered" class="doc_header"><code>L.filtered</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L307" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.filtered</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.filtered" class="doc_header"><code>L.filtered</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L315" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.filtered</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> filtered by predicate <code>f</code>, passing <code>args</code> and <code>kwargs</code> to <code>f</code></p>
 
@@ -1542,7 +1579,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.mapped" class="doc_header"><code>L.mapped</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L308" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.mapped" class="doc_header"><code>L.mapped</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L316" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with <code>f</code> applied to all <code>items</code>, passing <code>args</code> and <code>kwargs</code> to <code>f</code></p>
 
@@ -1576,9 +1613,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.mapped_dict" class="doc_header"><code>L.mapped_dict</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L309" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_dict</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.mapped_dict" class="doc_header"><code>L.mapped_dict</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L317" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_dict</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>Like <code>mapped</code>, but creates a dict from <code>items</code> to function results</p>
+<p>Like <a href="/core.html#mapped"><code>mapped</code></a>, but creates a dict from <code>items</code> to function results</p>
 
 </div>
 
@@ -1610,7 +1647,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.zipped" class="doc_header"><code>L.zipped</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L311" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipped</code>(<strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.zipped" class="doc_header"><code>L.zipped</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L319" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipped</code>(<strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with <code>zip(*items)</code></p>
 
@@ -1641,7 +1678,7 @@ summary: "Basic functions used in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">L</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="s1">&#39;abc&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">L</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">]])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">zipped</span><span class="p">(</span><span class="n">cycled</span><span class="o">=</span><span class="kc">True</span> <span class="p">),</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">),(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">zipped</span><span class="p">(</span><span class="n">cycled</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)])</span>
 </pre></div>
@@ -1660,7 +1697,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.mapped_zip" class="doc_header"><code>L.mapped_zip</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L313" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_zip</code>(<strong><code>f</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.mapped_zip" class="doc_header"><code>L.mapped_zip</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L321" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_zip</code>(<strong><code>f</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Combine <code>zipped</code> and <code>starmapped</code></p>
 
@@ -1695,7 +1732,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.zipwith" class="doc_header"><code>L.zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L312" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipwith</code>(<strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.zipwith" class="doc_header"><code>L.zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L320" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipwith</code>(<strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with <code>self</code> zipped with each of <code>*rest</code></p>
 
@@ -1731,7 +1768,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.mapped_zipwith" class="doc_header"><code>L.mapped_zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L314" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_zipwith</code>(<strong><code>f</code></strong>, <strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.mapped_zipwith" class="doc_header"><code>L.mapped_zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L322" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.mapped_zipwith</code>(<strong><code>f</code></strong>, <strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Combine <code>zipwith</code> and <code>starmapped</code></p>
 
@@ -1765,7 +1802,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.itemgot" class="doc_header"><code>L.itemgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L304" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.itemgot</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="L.itemgot" class="doc_header"><code>L.itemgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L312" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.itemgot</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with item <code>idx</code> of all <code>items</code></p>
 
@@ -1799,7 +1836,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.attrgot" class="doc_header"><code>L.attrgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L305" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.attrgot</code>(<strong><code>k</code></strong>, <strong><code>default</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="L.attrgot" class="doc_header"><code>L.attrgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L313" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.attrgot</code>(<strong><code>k</code></strong>, <strong><code>default</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with attr <code>k</code> of all <code>items</code></p>
 
@@ -1834,7 +1871,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.sorted" class="doc_header"><code>L.sorted</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L289" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.sorted</code>(<strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>reverse</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.sorted" class="doc_header"><code>L.sorted</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L297" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.sorted</code>(<strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>reverse</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>New <a href="/core.html#L"><code>L</code></a> sorted by <code>key</code>. If key is str then use <code>attrgetter</code>. If key is int then use <code>itemgetter</code>.</p>
 
@@ -1868,7 +1905,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.range" class="doc_header"><code>L.range</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L296" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.range</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>step</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="L.range" class="doc_header"><code>L.range</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L304" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.range</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>step</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Same as builtin <code>range</code>, but returns an <a href="/core.html#L"><code>L</code></a>. Can pass a collection for <code>a</code>, to use <code>len(a)</code></p>
 
@@ -1887,6 +1924,40 @@ summary: "Basic functions used in the fastai library"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq_type</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">range</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">L</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
 <span class="n">test_eq_type</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">L</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="L.concat" class="doc_header"><code>L.concat</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L323" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.concat</code>()</p>
+</blockquote>
+<p>Concatenate all elements of list</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="mi">4</span><span class="p">,</span><span class="n">L</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span><span class="o">.</span><span class="n">concat</span><span class="p">(),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -1918,7 +1989,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ifnone" class="doc_header"><code>ifnone</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L339" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ifnone</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
+<h4 id="ifnone" class="doc_header"><code>ifnone</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L349" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ifnone</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>)</p>
 </blockquote>
 <p><code>b</code> if <code>a</code> is None else <code>a</code></p>
 
@@ -1963,7 +2034,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_class" class="doc_header"><code>get_class</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L344" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
+<h4 id="get_class" class="doc_header"><code>get_class</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L354" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
 </blockquote>
 <p>Dynamically create a class, optionally inheriting from <code>sup</code>, containing <code>fld_names</code></p>
 
@@ -2016,7 +2087,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mk_class" class="doc_header"><code>mk_class</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L368" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mk_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong><code>mod</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
+<h4 id="mk_class" class="doc_header"><code>mk_class</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L378" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mk_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong><code>mod</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
 </blockquote>
 <p>Create a class using <a href="/core.html#get_class"><code>get_class</code></a> and add to the caller's module</p>
 
@@ -2053,7 +2124,7 @@ summary: "Basic functions used in the fastai library"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A <code>__init__</code> is provided that sets attrs for any <code>kwargs</code>, and for any <code>args</code> (matching by position to fields), along with a <code>__repr__</code> which prints all attrs. The docstring is set to <a href="/notebook.showdoc.html#doc"><code>doc</code></a>. You can pass <code>funcs</code> which will be added as attrs with the function names.</p>
+<p>A <a href="/__init__.html"><code>__init__</code></a> is provided that sets attrs for any <code>kwargs</code>, and for any <code>args</code> (matching by position to fields), along with a <code>__repr__</code> which prints all attrs. The docstring is set to <a href="/notebook.showdoc.html#doc"><code>doc</code></a>. You can pass <code>funcs</code> which will be added as attrs with the function names.</p>
 
 </div>
 </div>
@@ -2086,7 +2157,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;__main__._t at 0x7f9d6cbbac50&gt;</pre>
+<pre>&lt;__main__._t at 0x7f6ca7473cc0&gt;</pre>
 </div>
 
 </div>
@@ -2107,7 +2178,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="wrap_class" class="doc_header"><code>wrap_class</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L375" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>wrap_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
+<h4 id="wrap_class" class="doc_header"><code>wrap_class</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L385" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>wrap_class</code>(<strong><code>nm</code></strong>, <strong>*<code>fld_names</code></strong>, <strong><code>sup</code></strong>=<em><code>None</code></em>, <strong><code>doc</code></strong>=<em><code>None</code></em>, <strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong>**<code>flds</code></strong>)</p>
 </blockquote>
 <p>Decorator: makes function a method of a new class <code>nm</code> passing parameters to <a href="/core.html#mk_class"><code>mk_class</code></a></p>
 
@@ -2219,7 +2290,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="store_attr" class="doc_header"><code>store_attr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L383" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>store_attr</code>(<strong><code>nms</code></strong>)</p>
+<h4 id="store_attr" class="doc_header"><code>store_attr</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L393" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>store_attr</code>(<strong><code>nms</code></strong>)</p>
 </blockquote>
 <p>Store params named in comma-separated <code>nms</code> from calling context into attrs in <code>self</code></p>
 
@@ -2248,6 +2319,86 @@ summary: "Basic functions used in the fastai library"
 </div>
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="attrdict" class="doc_header"><code>attrdict</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L399" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>attrdict</code>(<strong><code>o</code></strong>, <strong>*<code>ks</code></strong>)</p>
+</blockquote>
+<p>Dict from each <code>k</code> in <code>ks</code> to <code>getattr(o,k)</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">attrdict</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="properties" class="doc_header"><code>properties</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L404" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>properties</code>(<strong>*<code>ps</code></strong>)</p>
+</blockquote>
+<p>Change attrs in <code>cls</code> with names in <code>ps</code> to properties</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">T</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">a</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">b</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="mi">2</span>
+<span class="n">properties</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+
+<span class="n">test_eq</span><span class="p">(</span><span class="n">T</span><span class="p">()</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">T</span><span class="p">()</span><span class="o">.</span><span class="n">b</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Collection-functions">Collection functions<a class="anchor-link" href="#Collection-functions">&#182;</a></h3>
@@ -2266,7 +2417,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tuplify" class="doc_header"><code>tuplify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L389" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tuplify</code>(<strong><code>o</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="tuplify" class="doc_header"><code>tuplify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L409" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tuplify</code>(<strong><code>o</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Make <code>o</code> a tuple</p>
 
@@ -2305,7 +2456,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="replicate" class="doc_header"><code>replicate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L394" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>replicate</code>(<strong><code>item</code></strong>, <strong><code>match</code></strong>)</p>
+<h4 id="replicate" class="doc_header"><code>replicate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L414" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>replicate</code>(<strong><code>item</code></strong>, <strong><code>match</code></strong>)</p>
 </blockquote>
 <p>Create tuple of <code>item</code> copied <code>len(match)</code> times</p>
 
@@ -2344,7 +2495,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="uniqueify" class="doc_header"><code>uniqueify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L399" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>uniqueify</code>(<strong><code>x</code></strong>, <strong><code>sort</code></strong>=<em><code>False</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>, <strong><code>start</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="uniqueify" class="doc_header"><code>uniqueify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L419" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>uniqueify</code>(<strong><code>x</code></strong>, <strong><code>sort</code></strong>=<em><code>False</code></em>, <strong><code>bidir</code></strong>=<em><code>False</code></em>, <strong><code>start</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Return the unique elements in <code>x</code>, optionally <code>sort</code>-ed, optionally return the reverse correspondance.</p>
 
@@ -2389,7 +2540,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="setify" class="doc_header"><code>setify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L408" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>setify</code>(<strong><code>o</code></strong>)</p>
+<h4 id="setify" class="doc_header"><code>setify</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L428" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>setify</code>(<strong><code>o</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -2430,7 +2581,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_listy" class="doc_header"><code>is_listy</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L411" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_listy</code>(<strong><code>x</code></strong>)</p>
+<h4 id="is_listy" class="doc_header"><code>is_listy</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L431" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_listy</code>(<strong><code>x</code></strong>)</p>
 </blockquote>
 <p><code>isinstance(x, (tuple,list,L))</code></p>
 
@@ -2470,7 +2621,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="range_of" class="doc_header"><code>range_of</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L416" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>range_of</code>(<strong><code>x</code></strong>)</p>
+<h4 id="range_of" class="doc_header"><code>range_of</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L436" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>range_of</code>(<strong><code>x</code></strong>)</p>
 </blockquote>
 <p>All indices of collection <code>x</code> (i.e. <code>list(range(len(x)))</code>)</p>
 
@@ -2507,7 +2658,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="groupby" class="doc_header"><code>groupby</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L421" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>groupby</code>(<strong><code>x</code></strong>, <strong><code>key</code></strong>)</p>
+<h4 id="groupby" class="doc_header"><code>groupby</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L441" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>groupby</code>(<strong><code>x</code></strong>, <strong><code>key</code></strong>)</p>
 </blockquote>
 <p>Like <code>itertools.groupby</code> but doesn't need to be sorted, and isn't lazy</p>
 
@@ -2544,7 +2695,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="merge" class="doc_header"><code>merge</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L428" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>merge</code>(<strong>*<code>ds</code></strong>)</p>
+<h4 id="merge" class="doc_header"><code>merge</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L448" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>merge</code>(<strong>*<code>ds</code></strong>)</p>
 </blockquote>
 <p>Merge all dictionaries in <code>ds</code></p>
 
@@ -2563,7 +2714,7 @@ summary: "Basic functions used in the fastai library"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">merge</span><span class="p">(),</span> <span class="p">{})</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">merge</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">merge</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">)),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">merge</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="kc">None</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -2583,7 +2734,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="shufflish" class="doc_header"><code>shufflish</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L433" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>shufflish</code>(<strong><code>x</code></strong>, <strong><code>pct</code></strong>=<em><code>0.04</code></em>)</p>
+<h4 id="shufflish" class="doc_header"><code>shufflish</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L453" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>shufflish</code>(<strong><code>x</code></strong>, <strong><code>pct</code></strong>=<em><code>0.04</code></em>)</p>
 </blockquote>
 <p>Randomly relocate items of <code>x</code> up to <code>pct</code> of <code>len(x)</code> from their starting location</p>
 
@@ -2624,7 +2775,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="IterLen" class="doc_header"><code>class</code> <code>IterLen</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L439" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IterLen</code>()</p>
+<h2 id="IterLen" class="doc_header"><code>class</code> <code>IterLen</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L459" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IterLen</code>()</p>
 </blockquote>
 <p>Base class to add iteration to anything supporting <code>len</code> and <code>__getitem__</code></p>
 
@@ -2648,7 +2799,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReindexCollection" class="doc_header"><code>class</code> <code>ReindexCollection</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L445" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReindexCollection</code>(<strong><code>coll</code></strong>, <strong><code>idxs</code></strong>=<em><code>None</code></em>, <strong><code>cache</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
+<h2 id="ReindexCollection" class="doc_header"><code>class</code> <code>ReindexCollection</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L465" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReindexCollection</code>(<strong><code>coll</code></strong>, <strong><code>idxs</code></strong>=<em><code>None</code></em>, <strong><code>cache</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#GetAttr"><code>GetAttr</code></a></p>
 </blockquote>
 <p>Reindexes collection <code>coll</code> with indices <code>idxs</code> and optional LRU cache of size <code>cache</code></p>
 
@@ -2783,7 +2934,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Inf" class="doc_header"><code>class</code> <code>Inf</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L490" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Inf</code>()</p>
+<h2 id="Inf" class="doc_header"><code>class</code> <code>Inf</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L510" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Inf</code>()</p>
 </blockquote>
 <p>Infinite lists</p>
 
@@ -2837,7 +2988,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="true" class="doc_header"><code>true</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L495" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>true</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="true" class="doc_header"><code>true</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L515" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>true</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Predicate: always <code>True</code></p>
 
@@ -2861,7 +3012,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="stop" class="doc_header"><code>stop</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L500" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>stop</code>(<strong><code>e</code></strong>=<em><code>'StopIteration'</code></em>)</p>
+<h4 id="stop" class="doc_header"><code>stop</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L520" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>stop</code>(<strong><code>e</code></strong>=<em><code>'StopIteration'</code></em>)</p>
 </blockquote>
 <p>Raises exception <code>e</code> (by default <code>StopException</code>) even if in an expression</p>
 
@@ -2885,7 +3036,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="gen" class="doc_header"><code>gen</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L505" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gen</code>(<strong><code>func</code></strong>, <strong><code>seq</code></strong>, <strong><code>cond</code></strong>=<em><code>'true'</code></em>)</p>
+<h4 id="gen" class="doc_header"><code>gen</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L525" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gen</code>(<strong><code>func</code></strong>, <strong><code>seq</code></strong>, <strong><code>cond</code></strong>=<em><code>'true'</code></em>)</p>
 </blockquote>
 <p>Like <code>(func(o) for o in seq if cond(func(o)))</code> but handles <code>StopIteration</code></p>
 
@@ -2927,7 +3078,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="chunked" class="doc_header"><code>chunked</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L510" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>chunked</code>(<strong><code>it</code></strong>, <strong><code>cs</code></strong>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="chunked" class="doc_header"><code>chunked</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L530" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>chunked</code>(<strong><code>it</code></strong>, <strong><code>cs</code></strong>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -2974,7 +3125,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="retain_type" class="doc_header"><code>retain_type</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L518" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>retain_type</code>(<strong><code>new</code></strong>, <strong><code>old</code></strong>=<em><code>None</code></em>, <strong><code>typ</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="retain_type" class="doc_header"><code>retain_type</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L538" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>retain_type</code>(<strong><code>new</code></strong>, <strong><code>old</code></strong>=<em><code>None</code></em>, <strong><code>typ</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Cast <code>new</code> to type of <code>old</code> if it's a superclass</p>
 
@@ -3014,7 +3165,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="retain_types" class="doc_header"><code>retain_types</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L530" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>retain_types</code>(<strong><code>new</code></strong>, <strong><code>old</code></strong>=<em><code>None</code></em>, <strong><code>typs</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="retain_types" class="doc_header"><code>retain_types</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L550" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>retain_types</code>(<strong><code>new</code></strong>, <strong><code>old</code></strong>=<em><code>None</code></em>, <strong><code>typs</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Cast each item of <code>new</code> to type of matching item in <code>old</code> if it's a superclass</p>
 
@@ -3061,7 +3212,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_title" class="doc_header"><code>show_title</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L536" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="show_title" class="doc_header"><code>show_title</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L556" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Set title of <code>ax</code> to <code>o</code>, or print <code>o</code> if <code>ax</code> is <code>None</code></p>
 
@@ -3100,7 +3251,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ShowTitle" class="doc_header"><code>class</code> <code>ShowTitle</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L547" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ShowTitle</code>()</p>
+<h2 id="ShowTitle" class="doc_header"><code>class</code> <code>ShowTitle</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L567" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ShowTitle</code>()</p>
 </blockquote>
 <p>Base class that adds a simple <code>show</code></p>
 
@@ -3121,7 +3272,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Int" class="doc_header"><code>class</code> <code>Int</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L552" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Int</code>() :: <code>int</code></p>
+<h3 id="Int" class="doc_header"><code>class</code> <code>Int</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L572" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Int</code>() :: <code>int</code></p>
 </blockquote>
 <p>An <code>int</code> with <code>show</code></p>
 
@@ -3142,7 +3293,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Str" class="doc_header"><code>class</code> <code>Str</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L554" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Str</code>() :: <code>str</code></p>
+<h3 id="Str" class="doc_header"><code>class</code> <code>Str</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L574" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Str</code>() :: <code>str</code></p>
 </blockquote>
 <p>An <code>str</code> with <code>show</code></p>
 
@@ -3163,7 +3314,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Float" class="doc_header"><code>class</code> <code>Float</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L553" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Float</code>(<strong><code>x</code></strong>=<em><code>0</code></em>) :: <code>float</code></p>
+<h3 id="Float" class="doc_header"><code>class</code> <code>Float</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L573" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Float</code>(<strong><code>x</code></strong>=<em><code>0</code></em>) :: <code>float</code></p>
 </blockquote>
 <p>An <code>float</code> with <code>show</code></p>
 
@@ -3194,6 +3345,9 @@ summary: "Basic functions used in the fastai library"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -3201,9 +3355,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TupleBase" class="doc_header"><code>class</code> <code>TupleBase</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L558" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleBase</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>) :: <code>tuple</code></p>
+<h2 id="Tuple" class="doc_header"><code>class</code> <code>Tuple</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L592" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Tuple</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>) :: <code>tuple</code></p>
 </blockquote>
-<p>A <code>tuple</code> with <code>__neg__</code> and more friendly <strong>init</strong> behavior</p>
+<p>A <code>tuple</code> with elementwise ops and more friendly <strong>init</strong> behavior</p>
 
 </div>
 
@@ -3218,12 +3372,24 @@ summary: "Basic functions used in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="n">TupleBase</span><span class="p">)</span>
-<span class="n">test_eq_type</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="n">test_ne</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">TupleBase</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">(),</span> <span class="p">())</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">TupleBase</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="n">Tuple</span><span class="p">)</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">test_ne</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(),</span> <span class="p">())</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="o">-</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="n">Tuple</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">),</span> <span class="n">Tuple</span><span class="p">(</span><span class="s1">&#39;12&#39;</span><span class="p">,</span><span class="s1">&#39;22&#39;</span><span class="p">))</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">Tuple</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">Tuple</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="o">~</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -3243,9 +3409,9 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TupleTitled" class="doc_header"><code>class</code> <code>TupleTitled</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L569" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleTitled</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>) :: <a href="/core.html#TupleBase"><code>TupleBase</code></a></p>
+<h2 id="TupleTitled" class="doc_header"><code>class</code> <code>TupleTitled</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L629" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleTitled</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>) :: <a href="/core.html#Tuple"><code>Tuple</code></a></p>
 </blockquote>
-<p>A <a href="/core.html#TupleBase"><code>TupleBase</code></a> with <code>show</code></p>
+<p>A <a href="/core.html#Tuple"><code>Tuple</code></a> with <code>show</code></p>
 
 </div>
 
@@ -3273,7 +3439,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="trace" class="doc_header"><code>trace</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L574" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>trace</code>(<strong><code>f</code></strong>)</p>
+<h4 id="trace" class="doc_header"><code>trace</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L634" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>trace</code>(<strong><code>f</code></strong>)</p>
 </blockquote>
 <p>Add <code>set_trace</code> to an existing function <code>f</code></p>
 
@@ -3297,7 +3463,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compose" class="doc_header"><code>compose</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L582" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compose</code>(<strong>*<code>funcs</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="compose" class="doc_header"><code>compose</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L642" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compose</code>(<strong>*<code>funcs</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create a function that composes all functions in <code>funcs</code>, passing along remaining <code>*args</code> and <code>**kwargs</code> to all</p>
 
@@ -3341,7 +3507,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="maps" class="doc_header"><code>maps</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L592" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>maps</code>(<strong>*<code>args</code></strong>, <strong><code>retain</code></strong>=<em><code>'noop'</code></em>)</p>
+<h4 id="maps" class="doc_header"><code>maps</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L652" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>maps</code>(<strong>*<code>args</code></strong>, <strong><code>retain</code></strong>=<em><code>'noop'</code></em>)</p>
 </blockquote>
 <p>Like <code>map</code>, except funcs are composed first</p>
 
@@ -3362,8 +3528,8 @@ summary: "Basic functions used in the fastai library"
 <span class="n">test_eq</span><span class="p">(</span><span class="n">maps</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">maps</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span> <span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 
-<span class="n">test_eq_type</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">maps</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span> <span class="p">[</span><span class="n">TupleBase</span><span class="p">((</span><span class="mi">1</span><span class="p">,)),</span> <span class="mi">2</span><span class="p">],</span> <span class="n">retain</span><span class="o">=</span><span class="n">retain_type</span><span class="p">)),</span> 
-             <span class="p">[</span><span class="n">TupleBase</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,)),</span> <span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">maps</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">,</span> <span class="p">[</span><span class="n">Tuple</span><span class="p">((</span><span class="mi">1</span><span class="p">,)),</span> <span class="mi">2</span><span class="p">],</span> <span class="n">retain</span><span class="o">=</span><span class="n">retain_type</span><span class="p">)),</span> 
+             <span class="p">[</span><span class="n">Tuple</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,)),</span> <span class="o">-</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -3383,7 +3549,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="partialler" class="doc_header"><code>partialler</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L599" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partialler</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="partialler" class="doc_header"><code>partialler</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L659" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partialler</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong><code>order</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Like <code>functools.partial</code> but also copies over docstring</p>
 
@@ -3430,7 +3596,46 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="instantiate" class="doc_header"><code>instantiate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L608" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>instantiate</code>(<strong><code>t</code></strong>)</p>
+<h4 id="mapped" class="doc_header"><code>mapped</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L668" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mapped</code>(<strong><code>f</code></strong>, <strong><code>it</code></strong>)</p>
+</blockquote>
+<p>map <code>f</code> over <code>it</code>, unless it's not listy, in which case return <code>f(it)</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">mapped</span><span class="p">(</span><span class="n">_f</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">mapped</span><span class="p">(</span><span class="n">_f</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">mapped</span><span class="p">(</span><span class="n">_f</span><span class="p">,(</span><span class="mi">1</span><span class="p">,)),(</span><span class="mi">2</span><span class="p">,))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="instantiate" class="doc_header"><code>instantiate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L673" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>instantiate</code>(<strong><code>t</code></strong>)</p>
 </blockquote>
 <p>Instantiate <code>t</code> if it's a type, otherwise do nothing</p>
 
@@ -3474,7 +3679,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="bind" class="doc_header"><code>class</code> <code>bind</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L617" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>bind</code>(<strong><code>fn</code></strong>, <strong>*<code>pargs</code></strong>, <strong>**<code>pkwargs</code></strong>)</p>
+<h2 id="bind" class="doc_header"><code>class</code> <code>bind</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L682" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>bind</code>(<strong><code>fn</code></strong>, <strong>*<code>pargs</code></strong>, <strong>**<code>pkwargs</code></strong>)</p>
 </blockquote>
 <p>Same as <code>partial</code>, except you can use <code>_0</code> <code>_1</code> etc param placeholders</p>
 
@@ -3537,6 +3742,9 @@ summary: "Basic functions used in the fastai library"
 <span class="n">f</span> <span class="o">=</span> <span class="n">Self</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">Self</span><span class="o">.</span><span class="n">imag</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -3562,7 +3770,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Path.ls" class="doc_header"><code>Path.ls</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L661" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Path.ls</code>(<strong><code>file_type</code></strong>=<em><code>None</code></em>, <strong><code>file_exts</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="Path.ls" class="doc_header"><code>Path.ls</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L726" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Path.ls</code>(<strong><code>file_type</code></strong>=<em><code>None</code></em>, <strong><code>file_exts</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Contents of path as a list</p>
 
@@ -3654,21 +3862,25 @@ summary: "Basic functions used in the fastai library"
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">bunzip</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-    <span class="s2">&quot;bunzip `fn`, raising exception if output already exists&quot;</span>
-    <span class="n">fn</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">fn</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{fn}</span><span class="s2"> doesn&#39;t exist&quot;</span>
-    <span class="n">out_fn</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">out_fn</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{out_fn}</span><span class="s2"> already exists&quot;</span>
-    <span class="k">with</span> <span class="n">bz2</span><span class="o">.</span><span class="n">BZ2File</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">,</span> <span class="n">out_fn</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dst</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">src</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">):</span> <span class="n">dst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-</pre></div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
 
-    </div>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="bunzip" class="doc_header"><code>bunzip</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L734" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bunzip</code>(<strong><code>fn</code></strong>)</p>
+</blockquote>
+<p>bunzip <code>fn</code>, raising exception if output already exists</p>
+
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -3685,6 +3897,48 @@ summary: "Basic functions used in the fastai library"
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;test</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">f</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="join_path_file" class="doc_header"><code>join_path_file</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L744" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>join_path_file</code>(<strong><code>file</code></strong>, <strong><code>path</code></strong>, <strong><code>ext</code></strong>=<em><code>''</code></em>)</p>
+</blockquote>
+<p>Return <code>path/file</code> if file is a string or a <code>Path</code>, file otherwise</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;_tmp&#39;</span><span class="o">/</span><span class="s1">&#39;tst&#39;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">join_path_file</span><span class="p">(</span><span class="s1">&#39;tst.txt&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">path</span><span class="o">/</span><span class="s1">&#39;tst.txt&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_</span><span class="p">:</span> <span class="k">assert</span> <span class="n">join_path_file</span><span class="p">(</span><span class="n">f_</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="n">f_</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;_tmp&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -3717,7 +3971,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="sort_by_run" class="doc_header"><code>sort_by_run</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L682" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sort_by_run</code>(<strong><code>fs</code></strong>)</p>
+<h4 id="sort_by_run" class="doc_header"><code>sort_by_run</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L764" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sort_by_run</code>(<strong><code>fs</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -3782,7 +4036,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="display_df" class="doc_header"><code>display_df</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L694" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>display_df</code>(<strong><code>df</code></strong>)</p>
+<h4 id="display_df" class="doc_header"><code>display_df</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L776" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>display_df</code>(<strong><code>df</code></strong>)</p>
 </blockquote>
 <p>Display <code>df</code> in a notebook or defaults to print</p>
 
@@ -3806,7 +4060,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="round_multiple" class="doc_header"><code>round_multiple</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L701" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>round_multiple</code>(<strong><code>x</code></strong>, <strong><code>mult</code></strong>, <strong><code>round_down</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="round_multiple" class="doc_header"><code>round_multiple</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L783" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>round_multiple</code>(<strong><code>x</code></strong>, <strong><code>mult</code></strong>, <strong><code>round_down</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Round <code>x</code> to nearest multiple of <code>mult</code></p>
 
@@ -3848,7 +4102,45 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="num_cpus" class="doc_header"><code>num_cpus</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L708" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>num_cpus</code>()</p>
+<h4 id="even_mults" class="doc_header"><code>even_mults</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L790" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>even_mults</code>(<strong><code>start</code></strong>, <strong><code>stop</code></strong>, <strong><code>n</code></strong>)</p>
+</blockquote>
+<p>Build log-stepped array from <code>start</code> to <a href="/core.html#stop"><code>stop</code></a> in <code>n</code> steps.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">even_mults</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">even_mults</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">32</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="num_cpus" class="doc_header"><code>num_cpus</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L797" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>num_cpus</code>()</p>
 </blockquote>
 <p>Get number of cpus</p>
 
@@ -3872,7 +4164,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="add_props" class="doc_header"><code>add_props</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L716" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_props</code>(<strong><code>f</code></strong>, <strong><code>n</code></strong>=<em><code>2</code></em>)</p>
+<h4 id="add_props" class="doc_header"><code>add_props</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L805" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_props</code>(<strong><code>f</code></strong>, <strong><code>n</code></strong>=<em><code>2</code></em>)</p>
 </blockquote>
 <p>Create properties passing each of <code>range(n)</code> to f</p>
 

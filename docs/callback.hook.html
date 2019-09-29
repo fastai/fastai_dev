@@ -76,13 +76,13 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([[ 0.8686,  0.7311,  2.4489,  0.8700, -0.1670],
-        [ 0.6731,  1.0484,  1.9074,  0.6036,  0.2924],
-        [ 1.8885, -0.7867, -0.1672,  0.6644,  0.0809],
-        [ 0.2057, -0.7538,  0.7381, -1.3444, -0.7304]]),) tensor([[-1.6029,  0.3864, -0.6523],
-        [-1.5455,  0.2899, -0.3769],
-        [-0.2761, -0.7362, -1.2814],
-        [ 0.3392, -0.5898, -0.3673]], grad_fn=&lt;AddmmBackward&gt;)
+<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([[-2.0646,  0.6335, -0.4945, -1.3516, -0.2766],
+        [ 0.3787,  0.1929, -1.0105, -0.1394,  1.2466],
+        [ 0.4262,  0.3178, -0.6363,  1.3899, -0.6268],
+        [-0.4065, -0.5456, -0.8262,  0.2646, -0.0133]]),) tensor([[ 0.9182, -0.3857,  0.1477],
+        [ 0.4529, -0.3880,  0.2577],
+        [-0.0111,  0.5224, -0.2967],
+        [ 0.3068,  0.0634,  0.2909]], grad_fn=&lt;AddmmBackward&gt;)
 </pre>
 </div>
 </div>
@@ -123,14 +123,14 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([ 0.0678, -0.3397, -0.0614]), None, tensor([[ 0.1027, -0.1562, -0.1236],
-        [-0.4457,  0.3023,  0.1885],
-        [ 0.0831,  0.1418,  0.1246],
-        [-0.6508,  0.6550, -0.0966],
-        [-0.2673, -0.0194, -0.0025]])) (tensor([[ 0.0574, -0.1234, -0.1313],
-        [-0.1468,  0.0679,  0.0180],
-        [ 0.1980, -0.1640,  0.0177],
-        [-0.0408, -0.1202,  0.0341]]),)
+<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([-0.0707, -0.0338,  0.2112]), None, tensor([[ 0.0201, -0.2536,  0.0858],
+        [ 0.0628, -0.1510, -0.1085],
+        [ 0.0755, -0.3035,  0.0732],
+        [-0.1615,  0.3154, -0.0124],
+        [ 0.0139, -0.3440,  0.3543]])) (tensor([[-0.0342, -0.0164,  0.0617],
+        [-0.0114,  0.0620,  0.0617],
+        [-0.0562,  0.1065, -0.0395],
+        [ 0.0311, -0.1858,  0.1272]]),)
 </pre>
 </div>
 </div>
@@ -743,7 +743,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 9.737648010253906, 6.20616340637207, &#39;00:00&#39;]
+<pre>[0, 12.8126802444458, 8.25302505493164, &#39;00:00&#39;]
 </pre>
 </div>
 </div>
@@ -779,7 +779,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 10.041898727416992, 6.416956901550293, &#39;00:00&#39;]
+<pre>[0, 29.576908111572266, 13.428422927856445, &#39;00:00&#39;]
 </pre>
 </div>
 </div>
@@ -910,7 +910,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 16.44314956665039, 9.00023078918457, &#39;00:00&#39;]
+<pre>[0, 7.6173858642578125, 10.528912544250488, &#39;00:00&#39;]
 </pre>
 </div>
 </div>
@@ -939,9 +939,9 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>tensor([[[-0.8830, -0.8196, -0.3148, -0.3958, -0.3666]],
+<pre>tensor([[[0.8860, 0.7391, 0.8423, 0.8646, 1.0194]],
 
-        [[ 0.6630,  0.6767,  0.5763,  0.6836,  1.0421]]])</pre>
+        [[0.3738, 0.4353, 0.3109, 0.1945, 0.0571]]])</pre>
 </div>
 
 </div>
@@ -1075,7 +1075,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PrettyString" class="doc_header"><code>class</code> <code>PrettyString</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L739" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PrettyString</code>() :: <code>str</code></p>
+<h2 id="PrettyString" class="doc_header"><code>class</code> <code>PrettyString</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L818" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PrettyString</code>() :: <code>str</code></p>
 </blockquote>
 <p>Little hack to get strings to show properly in Jupyter.</p>
 
@@ -1155,7 +1155,7 @@ Total params: 251
 Total trainable params: 151
 Total non-trainable params: 100
 
-Optimizer used: functools.partial(&lt;function SGD at 0x7fdb1e2caf28&gt;, mom=0.9)
+Optimizer used: functools.partial(&lt;function SGD at 0x7f4429bf90d0&gt;, mom=0.9)
 Loss function: FlattenedLoss of MSELoss()
 
 Callbacks:

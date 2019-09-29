@@ -18,6 +18,4 @@ dependencies:
 - scikit-learn
 - scipy
 - spacy
-- pip:
-  - typeguard
-  - jupyter_nbextensions_configurator
+
