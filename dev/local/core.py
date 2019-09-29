@@ -218,7 +218,7 @@ def mask2idxs(mask):
     if isinstance(mask,slice): return mask
     mask = list(mask)
     if len(mask)==0: return []
-    if isinstance(mask[0],bool): return [i for i,m in enumerate(mask) if m]
+    if isinstance(mask[0],(bool,NoneType)): return [i for i,m in enumerate(mask) if m]
     return [int(i) for i in mask]
 
 #Cell
@@ -308,7 +308,8 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
     def unique(self): return L(dict.fromkeys(self).keys())
-    def val2idx(self): return {v:k for k,v in enumerate(self)}
+    def enumerated(self): return L(enumerate(self))
+    def val2idx(self): return {v:k for k,v in self.enumerated()}
     def itemgot(self, idx): return self.mapped(itemgetter(idx))
     def attrgot(self, k, default=None): return self.mapped(lambda o:getattr(o,k,default))
     def cycle(self): return cycle(self)
@@ -338,6 +339,7 @@ add_docs(L,
          itemgot="Create new `L` with item `idx` of all `items`",
          attrgot="Create new `L` with attr `k` of all `items`",
          cycle="Same as `itertools.cycle`",
+         enumerated="Same as `enumerate`",
          zipped="Create new `L` with `zip(*items)`",
          zipwith="Create new `L` with `self` zipped with each of `*rest`",
          mapped_zip="Combine `zipped` and `starmapped`",
@@ -762,9 +764,9 @@ def _is_first(f, gs):
     return True
 
 def sort_by_run(fs):
-    end = L(getattr(f, 'toward_end', False) for f in fs)
-    inp,res = L(fs)[~end] + L(fs)[end], []
-    while len(inp) > 0:
+    end = L(fs).attrgot('toward_end')
+    inp,res = L(fs)[~end] + L(fs)[end], L()
+    while len(inp):
         for i,o in enumerate(inp):
             if _is_first(o, inp):
                 res.append(inp.pop(i))

@@ -12,6 +12,7 @@ from ..test import *
 from .export import *
 from .showdoc import *
 import nbformat
+from notebook import notebookapp
 from nbconvert.preprocessors import ExecutePreprocessor, Preprocessor
 from nbconvert import HTMLExporter,MarkdownExporter
 from nbformat.sign import NotebookNotary

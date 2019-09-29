@@ -32,6 +32,6 @@ class RegModel(Module):
 
 #Cell
 @delegates(Learner.__init__)
-def synth_learner(n_trn=10, n_val=2, cuda=False, **kwargs):
-    return Learner(synth_dbunch(n_train=n_trn,n_valid=n_val, cuda=cuda), RegModel(), loss_func=MSELossFlat(),
+def synth_learner(n_trn=10, n_val=2, cuda=False, lr=1e-3, **kwargs):
+    return Learner(synth_dbunch(n_train=n_trn,n_valid=n_val, cuda=cuda), RegModel(), lr=lr, loss_func=MSELossFlat(),
                    opt_func=partial(SGD, mom=0.9), **kwargs)
