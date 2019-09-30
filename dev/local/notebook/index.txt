@@ -164,6 +164,8 @@
   "decode_at": "05_data_core.ipynb",
   "show_at": "05_data_core.ipynb",
   "DataSource": "05_data_core.ipynb",
+  "test_set": "05_data_core.ipynb",
+  "test_dl": "05_data_core.ipynb",
   "get_files": "06_data_transforms.ipynb",
   "FileGetter": "06_data_transforms.ipynb",
   "image_extensions": "06_data_transforms.ipynb",
