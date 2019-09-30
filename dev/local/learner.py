@@ -347,7 +347,7 @@ from fastprogress.fastprogress import format_time
 
 def _maybe_item(t):
     t = t.value
-    return t.item() if t.numel()==1 else t
+    return t.item() if isinstance(t, Tensor) and t.numel()==1 else t
 
 #Cell
 class Recorder(Callback):
