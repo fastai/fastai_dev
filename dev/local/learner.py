@@ -324,7 +324,7 @@ class AvgLoss(Metric):
     def reset(self):           self.total,self.count = 0.,0
     def accumulate(self, learn):
         bs = find_bs(learn.yb)
-        self.total += to_detach(learn.loss)*bs
+        self.total += to_detach(learn.loss.mean())*bs
         self.count += bs
     @property
     def value(self): return self.total/self.count if self.count != 0 else None
@@ -338,7 +338,7 @@ class AvgSmoothLoss(Metric):
     def reset(self):               self.count,self.val = 0,tensor(0.)
     def accumulate(self, learn):
         self.count += 1
-        self.val = torch.lerp(to_detach(learn.loss), self.val, self.beta)
+        self.val = torch.lerp(to_detach(learn.loss.mean()), self.val, self.beta)
     @property
     def value(self): return self.val/(1-self.beta**self.count)
 
