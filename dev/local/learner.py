@@ -185,7 +185,7 @@ class Learner():
 
     def all_batches(self):
         self.n_iter = len(self.dl)
-        L(self.dl).enumerate().starmap(self.one_batch)
+        for o in enumerate(self.dl): self.one_batch(*o)
 
     def one_batch(self, i, b):
         try:
