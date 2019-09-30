@@ -134,6 +134,7 @@ class Learner():
         self.metrics = L(metrics).map(mk_metric)
         self.add_cbs(cbf() for cbf in L(defaults.callbacks)+L(cb_funcs))
         self.add_cbs(cbs)
+        self.model.to(self.dbunch.device)
 
     def add_cbs(self, cbs): L(cbs).map(self.add_cb)
     def remove_cbs(self, cbs): L(cbs).map(self.remove_cb)
@@ -220,6 +221,7 @@ class Learner():
             finally:                               self('after_fit')
 
     def validate(self, dl=None, cbs=None):
+        self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         self.dl = dl or self.dbunch.valid_dl
         with self.added_cbs(cbs), self.no_logging():
             self(_before_inference)
@@ -228,6 +230,7 @@ class Learner():
         return self.recorder.values[-1]
 
     def get_preds(self, ds_idx=1, with_loss=False):
+        self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         self.dl = self.dbunch.dls[ds_idx]
         cb = GatherPredsCallback(with_loss=with_loss)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
@@ -321,7 +324,7 @@ class AvgLoss(Metric):
     def reset(self):           self.total,self.count = 0.,0
     def accumulate(self, learn):
         bs = find_bs(learn.yb)
-        self.total += to_detach(learn.loss)*bs
+        self.total += to_detach(learn.loss.mean())*bs
         self.count += bs
     @property
     def value(self): return self.total/self.count if self.count != 0 else None
@@ -335,7 +338,7 @@ class AvgSmoothLoss(Metric):
     def reset(self):               self.count,self.val = 0,tensor(0.)
     def accumulate(self, learn):
         self.count += 1
-        self.val = torch.lerp(to_detach(learn.loss), self.val, self.beta)
+        self.val = torch.lerp(to_detach(learn.loss.mean()), self.val, self.beta)
     @property
     def value(self): return self.val/(1-self.beta**self.count)
 
