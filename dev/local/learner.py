@@ -134,6 +134,7 @@ class Learner():
         self.metrics = L(metrics).map(mk_metric)
         self.add_cbs(cbf() for cbf in L(defaults.callbacks)+L(cb_funcs))
         self.add_cbs(cbs)
+        self.model.to(self.dbunch.device)
 
     def add_cbs(self, cbs): L(cbs).map(self.add_cb)
     def remove_cbs(self, cbs): L(cbs).map(self.remove_cb)
