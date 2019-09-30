@@ -21,8 +21,10 @@ class ProgressCallback(Callback):
         assert hasattr(self.learn, 'recorder')
         self.mbar = master_bar(list(range(self.n_epoch)))
         self.mbar.on_iter_begin()
-        self.old_logger,self.learn.logger = self.logger,self._write_stats
-        self._write_stats(self.recorder.metric_names)
+        if self.learn.logger != noop:
+            self.old_logger,self.learn.logger = self.logger,self._write_stats
+            self._write_stats(self.recorder.metric_names)
+        else: self.old_logger = noop
 
     def begin_epoch(self):    self.mbar.update(self.epoch)
     def begin_train(self):    self._launch_pbar()
@@ -31,7 +33,7 @@ class ProgressCallback(Callback):
     def after_validate(self): self.pbar.on_iter_end()
     def after_batch(self):
         self.pbar.update(self.iter+1)
-        self.pbar.comment = f'{self.smooth_loss:.4f}'
+        if hasattr(self, 'smooth_loss'): self.pbar.comment = f'{self.smooth_loss:.4f}'
 
     def _launch_pbar(self):
         self.pbar = progress_bar(self.dl, parent=self.mbar)

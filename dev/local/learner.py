@@ -221,6 +221,7 @@ class Learner():
             finally:                               self('after_fit')
 
     def validate(self, dl=None, cbs=None):
+        self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         self.dl = dl or self.dbunch.valid_dl
         with self.added_cbs(cbs), self.no_logging():
             self(_before_inference)
@@ -229,6 +230,7 @@ class Learner():
         return self.recorder.values[-1]
 
     def get_preds(self, ds_idx=1, with_loss=False):
+        self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         self.dl = self.dbunch.dls[ds_idx]
         cb = GatherPredsCallback(with_loss=with_loss)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
