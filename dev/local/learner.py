@@ -183,38 +183,43 @@ class Learner():
         if self.train_bn:
             for p in self._bn_bias_state(False): p['force_train'] = True
 
+    def _split(self, b):
+        i = getattr(self.dbunch, 'inp_idx', 1)
+        return b[:i],b[i:]
+
     def all_batches(self):
         self.n_iter = len(self.dl)
         for o in enumerate(self.dl): self.one_batch(*o)
 
     def one_batch(self, i, b):
         try:
-            self.iter,(self.xb,self.yb) = i,b;              self('begin_batch')
-            self.pred = self.model(self.xb);                self('after_pred')
-            self.loss = self.loss_func(self.pred, self.yb); self('after_loss')
+            self.iter,(self.xb,self.yb) = i,self._split(b);  self('begin_batch')
+            self.pred = self.model(*self.xb);                self('after_pred')
+            if len(self.yb) == 0: return
+            self.loss = self.loss_func(self.pred, *self.yb); self('after_loss')
             if not self.training: return
-            self.loss.backward();                           self('after_backward')
-            self.opt.step();                                self('after_step')
+            self.loss.backward();                            self('after_backward')
+            self.opt.step();                                 self('after_step')
             self.opt.zero_grad()
-        except CancelBatchException:                        self('after_cancel_batch')
-        finally:                                            self('after_batch')
+        except CancelBatchException:                         self('after_cancel_batch')
+        finally:                                             self('after_batch')
 
     def _do_begin_fit(self, n_epoch):
-        self.n_epoch,self.loss = n_epoch,tensor(0.);        self('begin_fit')
+        self.n_epoch,self.loss = n_epoch,tensor(0.);         self('begin_fit')
 
     def _do_epoch_train(self):
         try:
-            self.dl = self.dbunch.train_dl;                 self('begin_train')
+            self.dl = self.dbunch.train_dl;                  self('begin_train')
             self.all_batches()
-        except CancelTrainException:                        self('after_cancel_train')
-        finally:                                            self('after_train')
+        except CancelTrainException:                         self('after_cancel_train')
+        finally:                                             self('after_train')
 
     def _do_epoch_validate(self):
         try:
-            self.dl = self.dbunch.valid_dl;                 self('begin_validate')
+            self.dl = self.dbunch.valid_dl;                  self('begin_validate')
             with torch.no_grad(): self.all_batches()
-        except CancelValidException:                        self('after_cancel_validate')
-        finally:                                            self('after_validate')
+        except CancelValidException:                         self('after_cancel_validate')
+        finally:                                             self('after_validate')
 
     def fit(self, n_epoch, lr=None, wd=defaults.wd, cbs=None, reset_opt=False):
         with self.added_cbs(cbs):
