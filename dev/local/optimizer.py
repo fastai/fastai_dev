@@ -21,6 +21,7 @@ class Optimizer():
         self.step_func = compose(*steppers)
         self.hypers = L({} for _ in range_of(self.param_groups))
         self.set_hypers(**defaults)
+        self.frozen_idx = 0
 
     def _grad_params(self):
         "Helper function to loop over param groups then params that have a grad"
@@ -43,6 +44,9 @@ class Optimizer():
         for p in pg: p.requires_grad_(rg or self.state[p].get('force_train', False))
 
     def freeze_to(self, n):
+        self.frozen_idx = n if n >= 0 else len(self.param_groups) + n
+        if self.frozen_idx >= len(self.param_groups):
+            warn(f"Trying to freeze {self.frozen_idx} parameter groups when there are only {len(self.param_groups)}, the whole model is frozen.")
         for pg in self.param_groups[:n]: self._set_require_grad(pg, False)
         for pg in self.param_groups[n:]: self._set_require_grad(pg, True)
 
@@ -73,6 +77,7 @@ class Optimizer():
             else: v = [v.stop/10]*(len(self.param_groups)-1) + [v.stop]
         v = L(v, use_list=None)
         if len(v)==1: v = v*len(self.param_groups)
+        assert len(v) == len(self.hypers), f"Trying to set {len(v)} values for {k} but there are {len(self.param_groups)} parameter groups."
         for v_,h in zip(v, self.hypers): h[k] = v_
 
 #Cell

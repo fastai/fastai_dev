@@ -92,7 +92,7 @@ class ParamScheduler(Callback):
 
 #Cell
 @patch
-def fit_one_cycle(self:Learner, n_epoch, lr_max=None, div=25., div_final=1e5, pct_start=0.25, wd=None,
+def fit_one_cycle(self:Learner, n_epoch, lr_max=None, div=25., div_final=1e5, pct_start=0.25, wd=defaults.wd,
                   moms=(0.95,0.85,0.95), cbs=None, reset_opt=False):
     "Fit `self.model` for `n_epoch` using the 1cycle policy."
     if self.opt is None: self.create_opt()
@@ -115,7 +115,7 @@ def plot_sched(self:Recorder, figsize=None):
 
 #Cell
 @patch
-def fit_sgdr(self:Learner, n_cycles, cycle_len, lr_max=None, cycle_mult=2, cbs=None, reset_opt=False, wd=None):
+def fit_sgdr(self:Learner, n_cycles, cycle_len, lr_max=None, cycle_mult=2, cbs=None, reset_opt=False, wd=defaults.wd):
     "Fit `self.model` for `n_cycles` of `cycle_len` using SGDR."
     if self.opt is None: self.create_opt()
     self.opt.set_hyper('lr', self.lr if lr_max is None else lr_max)
