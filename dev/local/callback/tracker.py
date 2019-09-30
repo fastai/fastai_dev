@@ -74,12 +74,12 @@ class SaveModelCallback(TrackerCallback):
         if self.every_epoch: self.learn.save(f'{self.fname}_{self.epoch}')
         else: #every improvement
             super().after_epoch()
-            if self.new_best: self.learn.save(f'{self.name}')
+            if self.new_best: self.learn.save(f'{self.fname}')
 
     def on_train_end(self, **kwargs):
         "Load the best model."
-        if not self.every_epoch and (self.learn.path/f'{self.learn.model_dir}/{self.name}.pth').is_file():
-            self.learn.load(f'{self.name}')
+        if not self.every_epoch and (self.learn.path/f'{self.learn.model_dir}/{self.fname}.pth').is_file():
+            self.learn.load(f'{self.fname}')
 
 #Cell
 class ReduceLROnPlateau(TrackerCallback):
