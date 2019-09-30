@@ -295,15 +295,16 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         return a
 
     def sorted(self, key=None, reverse=False):
-        "New `L` sorted by `key`. If key is str then use `attrgetter`. If key is int then use `itemgetter`."
         if isinstance(key,str):   k=lambda o:getattr(o,key,0)
         elif isinstance(key,int): k=itemgetter(key)
         else: k=key
         return self._new(sorted(self.items, key=k, reverse=reverse))
 
     @classmethod
+    def split(cls, s, sep=None, maxsplit=-1): return cls(s.split(sep,maxsplit))
+
+    @classmethod
     def range(cls, a, b=None, step=None):
-        "Same as builtin `range`, but returns an `L`. Can pass a collection for `a`, to use `len(a)`"
         if is_coll(a): a = len(a)
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
@@ -320,7 +321,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def attrgot(self, k, default=None): return self.map(lambda o:getattr(o,k,default))
     def cycle(self): return cycle(self)
     def filter(self, f, *args, **kwargs): return self._new(filter(partial(f,*args,**kwargs), self))
-    def map_dict(self, f, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
+    def map_dict(self, f=noop, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
     def starmap(self, f, *args, **kwargs): return self._new(itertools.starmap(partial(f,*args,**kwargs), self))
     def zip(self, cycled=False): return self._new((zip_cycle if cycled else zip)(*self))
     def zipwith(self, *rest, cycled=False): return self._new([self, *rest]).zip(cycled=cycled)
@@ -335,6 +336,9 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
 #Cell
 add_docs(L,
          __getitem__="Retrieve `idx` (can be list of indices, or mask, or int) items",
+         range="Same as builtin `range`, but returns an `L`. Can pass a collection for `a`, to use `len(a)`",
+         split="Same as builtin `str.split`, but returns an `L`",
+         sorted="New `L` sorted by `key`. If key is str then use `attrgetter`. If key is int then use `itemgetter`",
          unique="Unique items, in stable order",
          val2idx="Dict from value to index",
          filter="Create new `L` filtered by predicate `f`, passing `args` and `kwargs` to `f`",

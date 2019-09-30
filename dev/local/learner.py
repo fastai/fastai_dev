@@ -2,7 +2,7 @@
 
 __all__ = ['CancelFitException', 'CancelEpochException', 'CancelTrainException', 'CancelValidException',
            'CancelBatchException', 'class2attr', 'Callback', 'TrainEvalCallback', 'GatherPredsCallback', 'event',
-           'replacing_yield', 'mk_metric', 'Learner', 'VerboseCallback', 'Metric', 'AvgMetric', 'AvgLoss',
+           'replacing_yield', 'mk_metric', 'save_model', 'Learner', 'VerboseCallback', 'Metric', 'AvgMetric', 'AvgLoss',
            'AvgSmoothLoss', 'Recorder']
 
 #Cell
@@ -18,23 +18,21 @@ def class2attr(self, cls_name):
     return camel2snake(re.sub(rf'{cls_name}$', '', self.__class__.__name__) or cls_name.lower())
 
 #Cell
-@docs
-class Callback():
+class Callback(GetAttr):
     "Basic class handling tweaks of the training loop by changing a `Learner` in various events"
-    def __call__(self, event_name): getattr(self, event_name, noop)()
-    def __repr__(self): return self.__class__.__name__
-    def __getattr__(self, k):
-        if k=='learn': raise AttributeError
-        if not hasattr(self,'learn'): raise AttributeError
-        return getattr(self.learn, k)
+    def __repr__(self): return type(self).__name__
+
+    def __call__(self, event_name):
+        "Call `self.{event_name}` if it's defined"
+        getattr(self, event_name, noop)()
+
+    @property
+    def default(self): return self.__dict__.get('learn')
 
     @property
     def name(self):
         "Name of the `Callback`, camel-cased and with '*Callback*' removed"
         return class2attr(self, 'Callback')
-
-    _docs=dict(__call__="Call `self.{event_name}` if it's defined",
-               __getattr__="Passthrough to get the attributes of `self.learn`")
 
 #Cell
 class TrainEvalCallback(Callback):
@@ -88,12 +86,12 @@ _ex_docs = dict(
 for c,d in _ex_docs.items(): mk_class(c,sup=Exception,doc=d)
 
 #Cell
-_events = 'begin_fit begin_epoch begin_train begin_batch after_pred after_loss \
+_events = L.split('begin_fit begin_epoch begin_train begin_batch after_pred after_loss \
     after_backward after_step after_cancel_batch after_batch after_cancel_train \
     after_train begin_validate after_cancel_validate after_validate after_cancel_epoch \
-    after_epoch after_cancel_fit after_fit'.split()
+    after_epoch after_cancel_fit after_fit')
 
-mk_class('event', **{o:o for o in _events},
+mk_class('event', **_events.map_dict(),
          doc="All possible events as attributes to get tab-completion and typo-proofing")
 
 _before_inference = [event.begin_fit, event.begin_epoch, event.begin_validate]
@@ -115,6 +113,14 @@ def replacing_yield(o, attr, val):
 def mk_metric(m):
     "Convert `m` to an `AvgMetric`, unless it's already a `Metric`"
     return m if isinstance(m, Metric) else AvgMetric(m)
+
+#Cell
+def save_model(file, model, opt, with_opt=True):
+    "Save `model` to `file` along with `opt` (if available, and if `with_opt`)"
+    if opt is None: with_opt=False
+    state = get_model(model).state_dict()
+    if with_opt: state = {'model': state, 'opt':opt.state_dict()}
+    torch.save(state, file)
 
 #Cell
 class Learner():
@@ -241,26 +247,14 @@ class Learner():
 
     def save(self, file, with_opt=True):
         #TODO: if rank_distrib(): return # don't save if slave proc
-        if not hasattr(self, 'opt'): with_opt=False
-        state = get_model(self.model).state_dict()
-        if with_opt: state = {'model': state, 'opt':self.opt.state_dict()}
-        torch.save(state, join_path_file(file, self.path/self.model_dir, ext='.pth'))
+        file = join_path_file(file, self.path/self.model_dir, ext='.pth')
+        save_model(file, self.model, getattr(self,'opt',None), with_opt)
 
     def load(self, file, with_opt=None, device=None, strict=True):
         if device is None: device = self.dbunch.device
-        elif isinstance(device, int): device = torch.device('cuda', device)
-        state = torch.load(join_path_file(file, self.path/self.model_dir, ext='.pth'))
-        if set(state.keys()) == {'model', 'opt'}:
-            model_state = state['model']
-            get_model(self.model).load_state_dict(model_state, strict=strict)
-            if ifnone(with_opt,True):
-                if self.opt is None: self.create_opt()
-                try: self.opt.load_state_dict(state['opt'])
-                except:
-                    if with_opt: warn("Could not load the optimizer state.")
-        else:
-            if with_opt: warn("Saved filed doesn't contain an optimizer state.")
-            get_model(self.model).load_state_dict(state, strict=strict)
+        if self.opt is None: self.create_opt()
+        file = join_path_file(file, self.path/self.model_dir, ext='.pth')
+        load_model(file, self.model, self.opt, with_opt=with_opt, device=device, strict=strict)
         return self
 
 #Cell
