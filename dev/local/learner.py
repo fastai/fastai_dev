@@ -403,7 +403,7 @@ class Recorder(Callback):
         if getattr(self, 'cancel_valid', False): return L()
         return L(self.loss) + self.metrics
 
-    def plot_loss(self): plt.plot(self.losses)
+    def plot_loss(self, skip_start=5): plt.plot(self.losses[skip_start:])
 
 #Cell
 add_docs(Recorder,
@@ -413,7 +413,7 @@ add_docs(Recorder,
          after_validate = "Log loss and metric values on the validation set",
          after_cancel_train = "Ignore training metrics for this epoch",
          after_cancel_validate = "Ignore validation metrics for this epoch",
-         plot_loss = "Plot the losses")
+         plot_loss = "Plot the losses from `skip_start` and onward")
 
 defaults.callbacks = [TrainEvalCallback, Recorder]
 
