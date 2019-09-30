@@ -46,7 +46,7 @@ class TfmdDL(DataLoader):
     def _decode_batch(self, b, max_n=10, ds_decode=True):
         f = self.after_item.decode
         if ds_decode: f = compose(f, getattr(self.dataset,'decode',noop))
-        return L(batch_to_samples(b, max_n=max_n)).mapped(f)
+        return L(batch_to_samples(b, max_n=max_n)).map(f)
 
     def show_batch(self, b=None, max_n=10, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
@@ -110,7 +110,7 @@ class TfmdList(FilteredBase, L):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
     def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, filt=None, train_setup=True, filts=None):
         super().__init__(items, use_list=use_list)
-        self.filts = L([slice(None)] if filts is None else filts).mapped(mask2idxs)
+        self.filts = L([slice(None)] if filts is None else filts).map(mask2idxs)
         if isinstance(tfms,TfmdList): tfms = tfms.tfms
         if isinstance(tfms,Pipeline): do_setup=False
         self.tfms = Pipeline(tfms, as_item=as_item, filt=filt)
@@ -131,7 +131,7 @@ class TfmdList(FilteredBase, L):
     def __getitem__(self, idx):
         res = super().__getitem__(idx)
         if self._after_item is None: return res
-        return self._after_item(res) if is_indexer(idx) else res.mapped(self._after_item)
+        return self._after_item(res) if is_indexer(idx) else res.map(self._after_item)
 
 #Cell
 def decode_at(o, idx):

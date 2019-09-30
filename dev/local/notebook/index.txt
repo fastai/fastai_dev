@@ -339,6 +339,7 @@
   "defaults.wd": "13_learner.ipynb",
   "defaults.callbacks": "16_callback_progress.ipynb",
   "replacing_yield": "13_learner.ipynb",
+  "mk_metric": "13_learner.ipynb",
   "Learner": "13_learner.ipynb",
   "VerboseCallback": "13_learner.ipynb",
   "Metric": "13_learner.ipynb",

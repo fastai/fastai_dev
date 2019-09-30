@@ -89,7 +89,7 @@ _patch_tb()
 @patch
 def tensored(self:L):
     "`mapped(tensor)`"
-    return self.mapped(tensor)
+    return self.map(tensor)
 @patch
 def stack(self:L, dim=0):
     "Same as `torch.stack`"
@@ -260,8 +260,8 @@ bn_types = (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)
 #Cell
 def bn_bias_params(m, with_bias=True):
     "Return all bias and BatchNorm parameters"
-    if isinstance(m, bn_types): return list(m.parameters())
-    res = sum([bn_bias_params(c, with_bias) for c in m.children()], [])
+    if isinstance(m, bn_types): return L(m.parameters())
+    res = L(m.children()).map(bn_bias_params, with_bias=with_bias).concat()
     if with_bias and hasattr(m, 'bias'): res.append(m.bias)
     return res
 
@@ -270,8 +270,8 @@ def batch_to_samples(b, max_n=10):
     "'Transposes' a batch to (at most `max_n`) samples"
     if isinstance(b, Tensor): return list(b[:max_n])
     else:
-        res = L(b).mapped(partial(batch_to_samples,max_n=max_n))
-        return L(retain_types(res.zipped(), [b]))
+        res = L(b).map(partial(batch_to_samples,max_n=max_n))
+        return retain_types(res.zip(), [b])
 
 #Cell
 def make_cross_image(bw=True):

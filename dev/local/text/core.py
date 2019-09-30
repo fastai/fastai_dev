@@ -41,7 +41,7 @@ def parallel_gen(cls, items, n_workers=defaults.cpus, as_gen=False, **kwargs):
     "Instantiate `cls` in `n_workers` procs & call each on a subset of `items` in parallel."
     queue = Queue()
     batches = np.array_split(items, n_workers)
-    idx = np.cumsum(0 + L(batches).mapped(len))
+    idx = np.cumsum(0 + L(batches).map(len))
     def _f(batch, start_idx):
         f = cls(**kwargs)
         for i,b in enumerate(f(batch)): queue.put((start_idx+i,b))
@@ -176,7 +176,7 @@ class TokenizeBatch:
         self.tok = tok_func(**tok_kwargs)
 
     def __call__(self, batch):
-        for o in self.tok.pipe(apply_rules(batch, self.rules)): yield L(o).mapped(self.post_f)
+        for o in self.tok.pipe(apply_rules(batch, self.rules)): yield L(o).map(self.post_f)
 
 #Cell
 def tokenize1(text, tok_func=SpacyTokenizer, rules=None, post_rules=None, **tok_kwargs):
@@ -239,7 +239,7 @@ def tokenize_df(df, text_cols, n_workers=defaults.cpus, rules=None, mark_fields=
     texts = _join_texts(df[text_cols], mark_fields=mark_fields)
     #outputs = L(parallel_tokenize(texts, tok_func, rules, n_workers=n_workers, **tok_kwargs))
     outputs = L([o[1] for o in sorted(parallel_tokenize(texts, tok_func, rules, n_workers=n_workers, **tok_kwargs))])
-    lengths = outputs.mapped(len)
+    lengths = outputs.map(len)
     counter = Counter()
     for o in outputs: counter.update(o)
 

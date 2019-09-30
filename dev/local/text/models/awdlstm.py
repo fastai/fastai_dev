@@ -148,7 +148,7 @@ def awd_lstm_lm_split(model):
     "Split a RNN `model` in groups for differential learning rates."
     groups = [nn.Sequential(rnn, dp) for rnn, dp in zip(model[0].rnns, model[0].hidden_dps)]
     groups = L(groups + [nn.Sequential(model[0].encoder, model[0].encoder_dp, model[1])])
-    return groups.mapped(params)
+    return groups.map(params)
 
 #Cell
 awd_lstm_lm_config = dict(emb_sz=400, n_hid=1152, n_layers=3, pad_token=1, bidir=False, output_p=0.1, packed=False,
@@ -160,7 +160,7 @@ def awd_lstm_clas_split(model):
     groups = [nn.Sequential(model[0].module.encoder, model[0].module.encoder_dp)]
     groups += [nn.Sequential(rnn, dp) for rnn, dp in zip(model[0].module.rnns, model[0].module.hidden_dps)]
     groups = L(groups + [model[1]])
-    return groups.mapped(params)
+    return groups.map(params)
 
 #Cell
 awd_lstm_clas_config = dict(emb_sz=400, n_hid=1152, n_layers=3, pad_token=1, bidir=False, output_p=0.4,

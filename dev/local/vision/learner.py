@@ -88,12 +88,12 @@ def create_cnn_model(arch, nc, cut, pretrained=True, lin_ftrs=None, ps=0.5, cust
     return nn.Sequential(body, head)
 
 #Cell
-def _default_split(m:nn.Module): return L(m[0], m[1]).mapped(trainable_params)
-def _resnet_split(m): return L(m[0][:6], m[0][6:], m[1]).mapped(params)
-def _squeezenet_split(m:nn.Module): return L(m[0][0][:5], m[0][0][5:], m[1]).mapped(trainable_params)
-def _densenet_split(m:nn.Module): return L(m[0][0][:7],m[0][0][7:], m[1]).mapped(trainable_params)
-def _vgg_split(m:nn.Module): return L(m[0][0][:22], m[0][0][22:], m[1]).mapped(trainable_params)
-def _alexnet_split(m:nn.Module): return L(m[0][0][:6], m[0][0][6:], m[1]).mapped(trainable_params)
+def _default_split(m:nn.Module): return L(m[0], m[1]).map(trainable_params)
+def _resnet_split(m): return L(m[0][:6], m[0][6:], m[1]).map(params)
+def _squeezenet_split(m:nn.Module): return L(m[0][0][:5], m[0][0][5:], m[1]).map(trainable_params)
+def _densenet_split(m:nn.Module): return L(m[0][0][:7],m[0][0][7:], m[1]).map(trainable_params)
+def _vgg_split(m:nn.Module): return L(m[0][0][:22], m[0][0][22:], m[1]).map(trainable_params)
+def _alexnet_split(m:nn.Module): return L(m[0][0][:6], m[0][0][6:], m[1]).map(trainable_params)
 
 _default_meta    = {'cut':None, 'split':_default_split}
 _resnet_meta     = {'cut':-2, 'split':_resnet_split }

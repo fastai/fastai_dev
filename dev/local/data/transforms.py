@@ -130,7 +130,7 @@ Category.create = Categorize
 
 #Cell
 class MultiCategory(L):
-    def show(self, ctx=None, sep=';', **kwargs): return show_title(sep.join(self.mapped(str)), ctx=ctx)
+    def show(self, ctx=None, sep=';', **kwargs): return show_title(sep.join(self.map(str)), ctx=ctx)
 
 #Cell
 class MultiCategorize(Categorize):

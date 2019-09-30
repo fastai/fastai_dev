@@ -15,12 +15,12 @@ class Optimizer():
     _keep_on_clear = ['force_train', 'do_wd']
     def __init__(self, params, steppers, stats=None, train_bn=True, **defaults):
         steppers,params = L(steppers),L(params)
-        self.stats,self.state,self.train_bn = L(stats),{},train_bn
+        self.stats,self.state,self.train_bn = L(stats),defaultdict(dict),train_bn
         defaults = merge(*self.stats.attrgot('defaults'), *steppers.attrgot('defaults'), defaults)
         self.param_groups = params if isinstance(params[0], (L,list)) else L([params])
         self.step_func = compose(*steppers)
         self.hypers = L({} for _ in range_of(self.param_groups))
-        for k,v in defaults.items(): self.set_hyper(k, v)
+        self.set_hypers(**defaults)
 
     def _grad_params(self):
         "Helper function to loop over param groups then params that have a grad"
@@ -34,13 +34,13 @@ class Optimizer():
 
     def step(self):
         for p,hyper in self._grad_params():
-            state = self.state.get(p, {})
+            state = self.state[p]
             for stat in self.stats: state = stat(state, p, **hyper)
             self.step_func(p, **{**state, **hyper})
             self.state[p] = state
 
     def _set_require_grad(self, pg, rg):
-        for p in pg: p.requires_grad_(rg or self.state.get(p, {}).get('force_train', False))
+        for p in pg: p.requires_grad_(rg or self.state[p].get('force_train', False))
 
     def freeze_to(self, n):
         for pg in self.param_groups[:n]: self._set_require_grad(pg, False)
@@ -53,7 +53,7 @@ class Optimizer():
     def unfreeze(self): self.freeze_to(0)
 
     def state_dict(self):
-        state = [self.state.get(p, {}) for pg in self.param_groups for p in pg]
+        state = [self.state[p] for pg in self.param_groups for p in pg]
         return {'state': state, 'hypers': self.hypers}
 
     def load_state_dict(self, sd):
@@ -66,6 +66,7 @@ class Optimizer():
         for pg in self.param_groups:
             for p in pg: self.state[p] = {k: self.state[p][k] for k in self._keep_on_clear if k in self.state[p]}
 
+    def set_hypers(self, **kwargs): L(kwargs.items()).starmap(self.set_hyper)
     def set_hyper(self, k, v):
         if isinstance(v, slice):
             if v.start: v = even_mults(v.start, v.stop, len(self.param_groups))

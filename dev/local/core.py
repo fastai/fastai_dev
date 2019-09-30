@@ -307,22 +307,27 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if is_coll(a): a = len(a)
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
+    def map(self, f, *args, **kwargs):
+        f = (partial(f,*args,**kwargs) if callable(f)
+             else f.format if isinstance(f,str)
+             else f.__getitem__)
+        return self._new(map(f, self))
+
     def unique(self): return L(dict.fromkeys(self).keys())
-    def enumerated(self): return L(enumerate(self))
-    def val2idx(self): return {v:k for k,v in self.enumerated()}
-    def itemgot(self, idx): return self.mapped(itemgetter(idx))
-    def attrgot(self, k, default=None): return self.mapped(lambda o:getattr(o,k,default))
+    def enumerate(self): return L(enumerate(self))
+    def val2idx(self): return {v:k for k,v in self.enumerate()}
+    def itemgot(self, idx): return self.map(itemgetter(idx))
+    def attrgot(self, k, default=None): return self.map(lambda o:getattr(o,k,default))
     def cycle(self): return cycle(self)
-    def filtered(self, f, *args, **kwargs): return self._new(filter(partial(f,*args,**kwargs), self))
-    def mapped(self, f, *args, **kwargs): return self._new(map(partial(f,*args,**kwargs), self))
-    def mapped_dict(self, f, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
-    def starmapped(self, f, *args, **kwargs): return self._new(itertools.starmap(partial(f,*args,**kwargs), self))
-    def zipped(self, cycled=False): return self._new((zip_cycle if cycled else zip)(*self))
-    def zipwith(self, *rest, cycled=False): return self._new([self, *rest]).zipped(cycled=cycled)
-    def mapped_zip(self, f, cycled=False): return self.zipped(cycled=cycled).starmapped(f)
-    def mapped_zipwith(self, f, *rest, cycled=False): return self.zipwith(*rest, cycled=cycled).starmapped(f)
-    def concat(self): return self._new(itertools.chain.from_iterable(self.mapped(L)))
-    def shuffled(self):
+    def filter(self, f, *args, **kwargs): return self._new(filter(partial(f,*args,**kwargs), self))
+    def map_dict(self, f, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
+    def starmap(self, f, *args, **kwargs): return self._new(itertools.starmap(partial(f,*args,**kwargs), self))
+    def zip(self, cycled=False): return self._new((zip_cycle if cycled else zip)(*self))
+    def zipwith(self, *rest, cycled=False): return self._new([self, *rest]).zip(cycled=cycled)
+    def map_zip(self, f, cycled=False): return self.zip(cycled=cycled).starmap(f)
+    def map_zipwith(self, f, *rest, cycled=False): return self.zipwith(*rest, cycled=cycled).starmap(f)
+    def concat(self): return self._new(itertools.chain.from_iterable(self.map(L)))
+    def shuffle(self):
         it = copy(self.items)
         random.shuffle(it)
         return self._new(it)
@@ -332,20 +337,20 @@ add_docs(L,
          __getitem__="Retrieve `idx` (can be list of indices, or mask, or int) items",
          unique="Unique items, in stable order",
          val2idx="Dict from value to index",
-         filtered="Create new `L` filtered by predicate `f`, passing `args` and `kwargs` to `f`",
-         mapped="Create new `L` with `f` applied to all `items`, passing `args` and `kwargs` to `f`",
-         mapped_dict="Like `mapped`, but creates a dict from `items` to function results",
-         starmapped="Like `mapped`, but use `itertools.starmap`",
+         filter="Create new `L` filtered by predicate `f`, passing `args` and `kwargs` to `f`",
+         map="Create new `L` with `f` applied to all `items`, passing `args` and `kwargs` to `f`",
+         map_dict="Like `map`, but creates a dict from `items` to function results",
+         starmap="Like `map`, but use `itertools.starmap`",
          itemgot="Create new `L` with item `idx` of all `items`",
          attrgot="Create new `L` with attr `k` of all `items`",
          cycle="Same as `itertools.cycle`",
-         enumerated="Same as `enumerate`",
-         zipped="Create new `L` with `zip(*items)`",
-         zipwith="Create new `L` with `self` zipped with each of `*rest`",
-         mapped_zip="Combine `zipped` and `starmapped`",
-         mapped_zipwith="Combine `zipwith` and `starmapped`",
+         enumerate="Same as `enumerate`",
+         zip="Create new `L` with `zip(*items)`",
+         zipwith="Create new `L` with `self` zip with each of `*rest`",
+         map_zip="Combine `zip` and `starmap`",
+         map_zipwith="Combine `zipwith` and `starmap`",
          concat="Concatenate all elements of list",
-         shuffled="Same as `random.shuffle`, but not inplace")
+         shuffle="Same as `random.shuffle`, but not inplace")
 
 #Cell
 def ifnone(a, b):
@@ -552,7 +557,7 @@ def retain_type(new, old=None, typ=None):
 def retain_types(new, old=None, typs=None):
     "Cast each item of `new` to type of matching item in `old` if it's a superclass"
     if not is_listy(new): return retain_type(new, old, typs)
-    return tuple(L(new, old, typs).mapped_zip(retain_type, cycled=True))
+    return type(new)(L(new, old, typs).map_zip(retain_type, cycled=True))
 
 #Cell
 def show_title(o, ax=None, ctx=None, label=None, **kwargs):
@@ -669,7 +674,7 @@ def partialler(f, *args, order=None, **kwargs):
 #Cell
 def mapped(f, it):
     "map `f` over `it`, unless it's not listy, in which case return `f(it)`"
-    return L(it).mapped(f) if is_listy(it) else f(it)
+    return L(it).map(f) if is_listy(it) else f(it)
 
 #Cell
 def instantiate(t):
@@ -730,7 +735,7 @@ def ls(self:Path, file_type=None, file_exts=None):
     "Contents of path as a list"
     extns=L(file_exts)
     if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
-    return L(self.iterdir()).filtered(lambda x: len(extns)==0 or x.suffix in extns)
+    return L(self.iterdir()).filter(lambda x: len(extns)==0 or x.suffix in extns)
 
 #Cell
 def bunzip(fn):
@@ -785,7 +790,7 @@ def display_df(df):
 def round_multiple(x, mult, round_down=False):
     "Round `x` to nearest multiple of `mult`"
     def _f(x_): return (int if round_down else round)(x_/mult)*mult
-    res = L(x).mapped(_f)
+    res = L(x).map(_f)
     return res if is_listy(x) else res[0]
 
 #Cell

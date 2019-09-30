@@ -238,7 +238,7 @@ def gather_attrs(o, k, nm):
 #Cell
 def gather_attr_names(o, nm):
     "Used in __dir__ to collect all attrs `k` from `self.{nm}`"
-    return L(getattr(o,nm)).mapped(dir).concat().unique()
+    return L(getattr(o,nm)).map(dir).concat().unique()
 
 #Cell
 class Pipeline:
@@ -248,7 +248,7 @@ class Pipeline:
         if isinstance(funcs, Pipeline): self.fs = funcs.fs
         else:
             if isinstance(funcs, Transform): funcs = [funcs]
-            self.fs = L(ifnone(funcs,[noop])).mapped(mk_transform).sorted(key='order')
+            self.fs = L(ifnone(funcs,[noop])).map(mk_transform).sorted(key='order')
         for f in self.fs:
             name = camel2snake(type(f).__name__)
             a = getattr(self,name,None)
@@ -273,7 +273,7 @@ class Pipeline:
     def decode  (self, o): return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, filt=self.filt)
     def __repr__(self): return f"Pipeline: {self.fs}"
     def __getitem__(self,i): return self.fs[i]
-    def decode_batch(self, b, max_n=10): return batch_to_samples(b, max_n=max_n).mapped(self.decode)
+    def decode_batch(self, b, max_n=10): return batch_to_samples(b, max_n=max_n).map(self.decode)
     def __setstate__(self,data): self.__dict__.update(data)
     def __getattr__(self,k): return gather_attrs(self, k, 'fs')
     def __dir__(self): return super().__dir__() + gather_attr_names(self, 'fs')

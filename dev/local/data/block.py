@@ -16,7 +16,7 @@ def _merge_tfms(*tfms):
     "Group the `tfms` in a single list, removing duplicates (from the same class) and instantiating"
     g = groupby(concat(*tfms), lambda o:
         o if isinstance(o, type) else o.__qualname__ if (isfunction(o) or ismethod(o)) else o.__class__)
-    return L(v[-1] for k,v in g.items()).mapped(instantiate)
+    return L(v[-1] for k,v in g.items()).map(instantiate)
 
 #Cell
 @docs
@@ -27,7 +27,7 @@ class DataBlock():
     _methods = 'get_items splitter get_y get_x'.split()
     def __init__(self, ts=None, **kwargs):
         types = L(getattr(self,'types',(float,float)) if ts is None else ts)
-        self.default_type_tfms = types.mapped(
+        self.default_type_tfms = types.map(
             lambda t: L(getattr(t,'create',None)) + L(getattr(t,'default_type_tfms',None)))
         self.default_ds_tfms = _merge_tfms(ToTensor, *types.attrgot('default_ds_tfms', L()))
         self.default_dl_tfms = _merge_tfms(Cuda    , *types.attrgot('default_dl_tfms', L()))
@@ -36,14 +36,14 @@ class DataBlock():
         self.source = source
         items = (self.get_items or noop)(source)
         if isinstance(items,tuple):
-            items = L(items).zipped()
+            items = L(items).zip()
             labellers = [itemgetter(i) for i in range_of(self.default_type_tfms)]
         else: labellers = [noop] * len(self.default_type_tfms)
         splits = (self.splitter or noop)(items)
         if self.get_x: labellers[0] = self.get_x
         if self.get_y: labellers[1] = self.get_y
         if type_tfms is None: type_tfms = [L() for t in self.default_type_tfms]
-        type_tfms = L([self.default_type_tfms, type_tfms, labellers]).mapped_zip(
+        type_tfms = L([self.default_type_tfms, type_tfms, labellers]).map_zip(
             lambda tt,tfm,l: L(l) + _merge_tfms(tt, tfm))
         return DataSource(items, tfms=type_tfms, filts=splits)
 
