@@ -2,8 +2,8 @@
 
 __all__ = ['CancelFitException', 'CancelEpochException', 'CancelTrainException', 'CancelValidException',
            'CancelBatchException', 'class2attr', 'Callback', 'TrainEvalCallback', 'GatherPredsCallback', 'event',
-           'replacing_yield', 'mk_metric', 'save_model', 'load_model', 'Learner', 'VerboseCallback', 'Metric',
-           'AvgMetric', 'AvgLoss', 'AvgSmoothLoss', 'Recorder']
+           'replacing_yield', 'mk_metric', 'save_model', 'load_model', 'detuplify', 'Learner', 'VerboseCallback',
+           'Metric', 'AvgMetric', 'AvgLoss', 'AvgSmoothLoss', 'Recorder']
 
 #Cell
 from .torch_basics import *
@@ -72,7 +72,7 @@ class GatherPredsCallback(Callback):
     def after_batch(self):
         "Save predictions, targets and potentially losses"
         self.preds.append(to_detach(self.pred))
-        self.targets.append(to_detach(self.yb))
+        self.targets.append(to_detach(self.y))
         if self.with_loss: self.losses.append(to_detach(self.loss))
 
 #Cell
@@ -137,6 +137,11 @@ def load_model(file, model, opt, with_opt=None, device=None, strict=True):
     elif with_opt: warn("Saved filed doesn't contain an optimizer state.")
 
 #Cell
+def detuplify(x):
+    "If `x` is a tuple with one thing, extract it"
+    return x[0] if len(x)==1 else x
+
+#Cell
 class Learner():
     def __init__(self, dbunch, model, loss_func=None, opt_func=SGD, lr=defaults.lr, splitter=trainable_params, cbs=None,
                  cb_funcs=None, metrics=None, path=None, model_dir='models', wd_bn_bias=False, train_bn=True):
@@ -184,16 +189,17 @@ class Learner():
             for p in self._bn_bias_state(False): p['force_train'] = True
 
     def _split(self, b):
-        i = getattr(self.dbunch, 'inp_idx', 1)
-        return b[:i],b[i:]
+        i = getattr(self.dbunch, 'n_inp', 1 if len(b)==0 else len(b)-1)
+        self.xb,self.yb = b[:i],b[i:]
 
     def all_batches(self):
         self.n_iter = len(self.dl)
         for o in enumerate(self.dl): self.one_batch(*o)
 
     def one_batch(self, i, b):
+        self.iter = i
         try:
-            self.iter,(self.xb,self.yb) = i,self._split(b);  self('begin_batch')
+            self._split(b);                                  self('begin_batch')
             self.pred = self.model(*self.xb);                self('after_pred')
             if len(self.yb) == 0: return
             self.loss = self.loss_func(self.pred, *self.yb); self('after_loss')
@@ -279,6 +285,8 @@ class Learner():
         load_model(file, self.model, self.opt, with_opt=with_opt, device=device, strict=strict)
         return self
 
+Learner.x,Learner.y = add_props(lambda i,x: detuplify((x.xb,x.yb)[i]))
+
 #Cell
 add_docs(Learner, "Group together a `model`, some `dbunch` and a `loss_func` to handle training",
     add_cbs="Add `cbs` to the list of `Callback` and register `self` as their learner",
@@ -330,7 +338,7 @@ class AvgMetric(Metric):
     def reset(self):           self.total,self.count = 0.,0
     def accumulate(self, learn):
         bs = find_bs(learn.yb)
-        self.total += to_detach(self.func(learn.pred, learn.yb))*bs
+        self.total += to_detach(self.func(learn.pred, *learn.yb))*bs
         self.count += bs
     @property
     def value(self): return self.total/self.count if self.count != 0 else None
