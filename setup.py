@@ -14,8 +14,7 @@ setup_requirements = ['setuptools>=36.2']
 setup(
     name = 'fastai2',
     version = __version__,
-    packages = find_packages('dev/local'),
-    package_dir = {'':'dev/local'},
+    packages = find_packages(),
     include_package_data = True,
 
     install_requires = requirements,
