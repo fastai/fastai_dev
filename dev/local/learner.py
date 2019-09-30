@@ -2,8 +2,8 @@
 
 __all__ = ['CancelFitException', 'CancelEpochException', 'CancelTrainException', 'CancelValidException',
            'CancelBatchException', 'class2attr', 'Callback', 'TrainEvalCallback', 'GatherPredsCallback', 'event',
-           'replacing_yield', 'mk_metric', 'save_model', 'Learner', 'VerboseCallback', 'Metric', 'AvgMetric', 'AvgLoss',
-           'AvgSmoothLoss', 'Recorder']
+           'replacing_yield', 'mk_metric', 'save_model', 'load_model', 'Learner', 'VerboseCallback', 'Metric',
+           'AvgMetric', 'AvgLoss', 'AvgSmoothLoss', 'Recorder']
 
 #Cell
 from .torch_basics import *
@@ -121,6 +121,20 @@ def save_model(file, model, opt, with_opt=True):
     state = get_model(model).state_dict()
     if with_opt: state = {'model': state, 'opt':opt.state_dict()}
     torch.save(state, file)
+
+#Cell
+def load_model(file, model, opt, with_opt=None, device=None, strict=True):
+    "Load `model` from `file` along with `opt` (if available, and if `with_opt`)"
+    if isinstance(device, int): device = torch.device('cuda', device)
+    state = torch.load(file)
+    hasopt = set(state)=={'model', 'opt'}
+    model_state = state['model'] if hasopt else state
+    get_model(model).load_state_dict(model_state, strict=strict)
+    if hasopt and ifnone(with_opt,True):
+        try: opt.load_state_dict(state['opt'])
+        except:
+            if with_opt: warn("Could not load the optimizer state.")
+    elif with_opt: warn("Saved filed doesn't contain an optimizer state.")
 
 #Cell
 class Learner():
@@ -347,7 +361,7 @@ from fastprogress.fastprogress import format_time
 
 def _maybe_item(t):
     t = t.value
-    return t.item() if t.numel()==1 else t
+    return t.item() if isinstance(t, Tensor) and t.numel()==1 else t
 
 #Cell
 class Recorder(Callback):

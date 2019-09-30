@@ -65,13 +65,13 @@ class EarlyStoppingCallback(TrackerCallback):
 #Cell
 class SaveModelCallback(TrackerCallback):
     "A `TrackerCallback` that terminates training when monitored quantity stops improving."
-    def __init__(self, monitor='valid_loss', comp=None, min_delta=0., name='model', every_epoch=False):
+    def __init__(self, monitor='valid_loss', comp=None, min_delta=0., fname='model', every_epoch=False):
         super().__init__(monitor=monitor, comp=comp, min_delta=min_delta)
-        self.name,self.every_epoch = name,every_epoch
+        store_attr(self, 'fname,every_epoch')
 
     def after_epoch(self):
         "Compare the value monitored to its best score and maybe stop training."
-        if self.every_epoch: self.learn.save(f'{self.name}_{self.epoch}')
+        if self.every_epoch: self.learn.save(f'{self.fname}_{self.epoch}')
         else: #every improvement
             super().after_epoch()
             if self.new_best: self.learn.save(f'{self.name}')

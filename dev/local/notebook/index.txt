@@ -341,6 +341,7 @@
   "replacing_yield": "13_learner.ipynb",
   "mk_metric": "13_learner.ipynb",
   "save_model": "13_learner.ipynb",
+  "load_model": "13_learner.ipynb",
   "Learner": "13_learner.ipynb",
   "VerboseCallback": "13_learner.ipynb",
   "Metric": "13_learner.ipynb",
