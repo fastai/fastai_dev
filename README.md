@@ -1,23 +1,17 @@
 # fastai_dev
 
-This repo is used for fastai development. fastai v2 is being developed in the `dev` folder. Docs are at http://dev.fast.ai . To install fastai v2:
+This repo is used for fastai development. fastai v2 is being developed in the `dev` folder. Docs are at http://dev.fast.ai .
 
-1. Clone this repository
+## Installation
 
-```bash
-git clone https://github.com/fastai/fastai_dev.git
-```
-2. Install packages:
-
-```bash
-conda install -c fastai -c pytorch jupyter "pytorch>=1.2.0" torchvision matplotlib pandas requests pyyaml fastprogress pillow pip scikit-learn scipy spacy
-```
-Alternatively, install packages using conda environment:
+You can get all the necessary dependencies by simply installing fastai v1: `conda install -c fastai -c pytorch fastai`. Or alternatively you can automatically install the dependencies into a new environment:
 
 ```bash
 cd fastai_dev
 conda env create -f environment.yml
 ```
+
+Then, you can install fastai v2 with pip: `pip install git+https://github.com/fastai/fastai_dev`. Or clone this repo, cd to its directory, and `pip install -e .` for an *editable install* (which is probably the best approach at the moment, since fastai v2 is under heavy development).
 
 ## Tests
 
