@@ -128,7 +128,7 @@ class Categorize(Transform):
     def decodes(self, o): return Category(self.vocab[o])
 
 #Cell
-Category.create = Categorize()
+Category.create = Categorize
 
 #Cell
 class MultiCategory(L):
@@ -167,7 +167,7 @@ class OneHotEncode(Transform):
 
 #Cell
 def get_c(dbunch):
-    return len(getattr(dbunch.train_ds.tls[1].tfms, 'vocab', []))
+    return len(getattr(dbunch.train_ds, 'vocab', []))
 
 #Cell
 class ToTensor(Transform):
