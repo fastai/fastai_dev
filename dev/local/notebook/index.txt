@@ -579,14 +579,16 @@
   "convert_nb": "93_notebook_export2html.ipynb",
   "convert_all": "93_notebook_export2html.ipynb",
   "convert_post": "93_notebook_export2html.ipynb",
-  "synth_dbunch": "95_utils_test.ipynb",
-  "RegModel": "95_utils_test.ipynb",
-  "synth_learner": "95_utils_test.ipynb",
+  "check_all_flag": "94_notebook_test.ipynb",
+  "NoExportPreprocessor": "94_notebook_test.ipynb",
   "download_url": "96_data_external.ipynb",
   "URLs": "96_data_external.ipynb",
   "get_path": "96_data_external.ipynb",
   "ConfigKey": "96_data_external.ipynb",
   "download_data": "96_data_external.ipynb",
   "tar_extract": "96_data_external.ipynb",
-  "untar_data": "96_data_external.ipynb"
+  "untar_data": "96_data_external.ipynb",
+  "synth_dbunch": "97_utils_test.ipynb",
+  "RegModel": "97_utils_test.ipynb",
+  "synth_learner": "97_utils_test.ipynb"
 }
