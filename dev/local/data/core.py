@@ -66,6 +66,13 @@ class TfmdDL(DataLoader):
         if not hasattr(self, '_device'): _ = self._one_pass()
         return self._device
 
+    @property
+    def n_inp(self):
+        if hasattr(self.dataset, 'n_inp'): return self.dataset.n_inp
+        it = self.do_item(0)
+        l = len(self.do_item(0)) if isinstance()
+
+
 #Cell
 @docs
 class DataBunch(GetAttr):
@@ -149,8 +156,9 @@ def show_at(o, idx, **kwargs):
 @delegates(TfmdList)
 class DataSource(FilteredBase):
     "A dataset that creates a tuple from each `tfms`, passed thru `ds_tfms`"
-    def __init__(self, items=None, tfms=None, tls=None, **kwargs):
+    def __init__(self, items=None, tfms=None, tls=None, n_inp=None, **kwargs):
         self.tls = L(tls if tls else [TfmdList(items, t, **kwargs) for t in L(ifnone(tfms,[None]))])
+        self.n_inp = (1 if len(self.tls)==1 else len(self.tls)-1) if n_inp is None else n_inp
 
     def __getitem__(self, it):
         res = tuple([tl[it] for tl in self.tls])
@@ -181,8 +189,8 @@ class DataSource(FilteredBase):
 #Cell
 def test_set(dsrc, test_items):
     "Create a test set from `test_items` using validation transforms of `dsrc`"
-    test_tl = dsrc.tls[0]._new(test_items, filt=1)
-    return DataSource(tls=[test_tl])
+    test_tls = [tl._new(test_items, filt=1) for tl in dsrc.tls[:dsrc.n_inp]]
+    return DataSource(tls=test_tls)
 
 #Cell
 def test_dl(dbunch, test_items):
