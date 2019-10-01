@@ -138,10 +138,10 @@ class _TfmMeta(type):
 
 #Cell
 class Transform(metaclass=_TfmMeta):
-    "Delegates (`__call__`,`decode`,`setup`) to (`encodes`,`decodes`,`setups`) if `filt` matches"
-    filt,init_enc,as_item_force,as_item,order = None,False,None,True,0
-    def __init__(self, enc=None, dec=None, filt=None, as_item=False):
-        self.filt,self.as_item = ifnone(filt, self.filt),as_item
+    "Delegates (`__call__`,`decode`,`setup`) to (`encodes`,`decodes`,`setups`) if `split_idx` matches"
+    split_idx,init_enc,as_item_force,as_item,order = None,False,None,True,0
+    def __init__(self, enc=None, dec=None, split_idx=None, as_item=False):
+        self.split_idx,self.as_item = ifnone(split_idx, self.split_idx),as_item
         self.init_enc = enc or dec
         if not self.init_enc: return
 
@@ -160,8 +160,8 @@ class Transform(metaclass=_TfmMeta):
     def setup(self, items=None): return self.setups(items)
     def __repr__(self): return f'{self.__class__.__name__}: {self.use_as_item} {self.encodes} {self.decodes}'
 
-    def _call(self, fn, x, filt=None, **kwargs):
-        if filt!=self.filt and self.filt is not None: return x
+    def _call(self, fn, x, split_idx=None, **kwargs):
+        if split_idx!=self.split_idx and self.split_idx is not None: return x
         f = getattr(self, fn)
         if self.use_as_item or not is_listy(x): return self._do_call(f, x, **kwargs)
         res = tuple(self._do_call(f, x_, **kwargs) for x_ in x)
@@ -175,8 +175,8 @@ add_docs(Transform, decode="Delegate to `decodes` to undo transform", setup="Del
 #Cell
 class InplaceTransform(Transform):
     "A `Transform` that modifies in-place and just returns whatever it's passed"
-    def _call(self, fn, x, filt=None, **kwargs):
-        super()._call(fn,x,filt,**kwargs)
+    def _call(self, fn, x, split_idx=None, **kwargs):
+        super()._call(fn,x,split_idx,**kwargs)
         return x
 
 #Cell
@@ -243,8 +243,8 @@ def gather_attr_names(o, nm):
 #Cell
 class Pipeline:
     "A pipeline of composed (for encode/decode) transforms, setup with types"
-    def __init__(self, funcs=None, as_item=False, filt=None):
-        self.filt,self.default = filt,None
+    def __init__(self, funcs=None, as_item=False, split_idx=None):
+        self.split_idx,self.default = split_idx,None
         if isinstance(funcs, Pipeline): self.fs = funcs.fs
         else:
             if isinstance(funcs, Transform): funcs = [funcs]
@@ -269,8 +269,8 @@ class Pipeline:
         t.setup(items)
         self.fs.append(t)
 
-    def __call__(self, o): return compose_tfms(o, tfms=self.fs, filt=self.filt)
-    def decode  (self, o): return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, filt=self.filt)
+    def __call__(self, o): return compose_tfms(o, tfms=self.fs, split_idx=self.split_idx)
+    def decode  (self, o): return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, split_idx=self.split_idx)
     def __repr__(self): return f"Pipeline: {self.fs}"
     def __getitem__(self,i): return self.fs[i]
     def decode_batch(self, b, max_n=10): return batch_to_samples(b, max_n=max_n).map(self.decode)
@@ -282,7 +282,7 @@ class Pipeline:
         for f in reversed(self.fs):
             res = self._show(o, ctx, **kwargs)
             if res is not None: return res
-            o = f.decode(o, filt=self.filt)
+            o = f.decode(o, split_idx=self.split_idx)
         return self._show(o, ctx, **kwargs)
 
     def _show(self, o, ctx, **kwargs):
