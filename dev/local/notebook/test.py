@@ -27,8 +27,6 @@ def _add_import_cell(mod):
             'source': f"\nfrom local.{mod} import *"}
 
 #Cell
-from .export import _re_mod_export
-
 class NoExportPreprocessor(ExecutePreprocessor):
     "An `ExecutePreprocessor` that executes not exported cells"
     @delegates(ExecutePreprocessor.__init__)
@@ -37,8 +35,8 @@ class NoExportPreprocessor(ExecutePreprocessor):
         super().__init__(**kwargs)
 
     def preprocess_cell(self, cell, resources, index):
-        if 'source' not in cell or cell['cell_type'] != "code": return cell, resources
-        if _re_mod_export.search(cell['source']):               return cell, resources
+        if 'source' not in cell or cell['cell_type'] != "code":                         return cell, resources
+        if _re_is_export.search(cell['source']) and not _re_has_import(cell['source']): return cell, resources
         for f in get_cell_flags(cell):
             if f not in self.flags:                             return cell, resources
         print(cell["source"])
