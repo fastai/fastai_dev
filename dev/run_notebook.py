@@ -2,19 +2,9 @@
 
 # TODO: parallel
 
-import nbformat,os
 from pathlib import Path
 from local.script import *
-from nbconvert.preprocessors import ExecutePreprocessor
-
-def run_nb(fn):
-    nb = nbformat.read(open(fn), as_version=nbformat.NO_CONVERT)
-    # TODO: filter out export cells
-    print(f"Doing {fn}")
-    try: ExecutePreprocessor(timeout=600).preprocess(nb, {})
-    except Exception as e:
-        print(f"Exception in {fn}")
-        raise e from None
+from local.notebook.test import test_nb
 
 def get_fns(path,max_num,fn):
     path = Path(path)
@@ -24,9 +14,12 @@ def get_fns(path,max_num,fn):
 
 @call_parse
 def main(path:Param("Path to notebooks",str)=".", max_num:Param("Max numbered notebook to run",str)=999,
-         fn:Param("Filename glob",str)=None):
-    "Executes notebooks in `path` and shows any exceptions. Useful for testing"
+         fn:Param("Filename glob",str)=None, cuda:Param("Run tests that require a GPU", bool)=False,
+         slow:Param("Run slow tests", bool)=False, cpp:Param("Run tests that require c++ extensions", bool)=False):
+    "Tests notebooks in `path` and shows any exceptions."
     fns = get_fns(path,max_num,fn)
-    os.environ['IN_TEST']='1'
-    for f in sorted(fns): run_nb(f)
+    flags = ["cuda"] if cuda else []
+    if slow: flags.append("slow")
+    if cpp:  flags.append("cpp")
+    for f in sorted(fns): test_nb(f, flags=flags)
 
