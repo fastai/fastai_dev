@@ -156,7 +156,8 @@ class LRFinder(ParamScheduler):
 
     def after_fit(self):
         self.learn.load('_tmp')
-        os.remove(self.path/self.model_dir/'_tmp.pth')
+        if (self.path/self.model_dir/'_tmp.pth').exists():
+            os.remove(self.path/self.model_dir/'_tmp.pth')
 
     _docs = {"begin_fit": "Initialize container for hyper-parameters and save the model",
              "begin_batch": "Set the proper hyper-parameters in the optimizer",
