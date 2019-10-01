@@ -72,7 +72,7 @@ class GatherPredsCallback(Callback):
     def after_batch(self):
         "Save predictions, targets and potentially losses"
         self.preds.append(to_detach(self.pred))
-        self.targets.append(to_detach(self.y))
+        self.targets.append(to_detach(self.yb))
         if self.with_loss: self.losses.append(to_detach(self.loss))
 
 #Cell
@@ -189,7 +189,7 @@ class Learner():
             for p in self._bn_bias_state(False): p['force_train'] = True
 
     def _split(self, b):
-        i = getattr(self.dbunch, 'n_inp', 1 if len(b)==0 else len(b)-1)
+        i = getattr(self.dbunch, 'n_inp', 1 if len(b)==1 else len(b)-1)
         self.xb,self.yb = b[:i],b[i:]
 
     def all_batches(self):
@@ -245,25 +245,26 @@ class Learner():
             except CancelFitException:             self('after_cancel_fit')
             finally:                               self('after_fit')
 
-    def validate(self, dl=None, cbs=None):
+    def validate(self, ds_idx=1, dl=None, cbs=None):
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
-        self.dl = dl or self.dbunch.valid_dl
+        self.dl = self.dbunch.dls[ds_idx] if dl is None else dl
         with self.added_cbs(cbs), self.no_logging():
             self(_before_inference)
             self.all_batches()
             self(_after_inference)
         return self.recorder.values[-1]
 
-    def get_preds(self, ds_idx=1, with_loss=False):
+    def get_preds(self, ds_idx=1, dl=None, with_loss=False):
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
-        self.dl = self.dbunch.dls[ds_idx]
+        self.dl = self.dbunch.dls[ds_idx] if dl is None else dl
         cb = GatherPredsCallback(with_loss=with_loss)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
             self(_before_inference)
             self.all_batches()
             self(_after_inference)
-            if with_loss: return torch.cat(cb.preds),torch.cat(cb.targets),torch.cat(cb.losses)
-            return torch.cat(cb.preds),torch.cat(cb.targets)
+            targs = detuplify(tuple(torch.cat(o) for o in zip(*cb.targets)))
+            if with_loss: return torch.cat(cb.preds),targs,torch.cat(cb.losses)
+            return torch.cat(cb.preds),targs
 
     @contextmanager
     def no_logging(self): return replacing_yield(self, 'logger', noop)
@@ -397,6 +398,7 @@ class Recorder(Callback):
 
     def after_batch(self):
         "Update all metrics and records lr and smooth loss in training"
+        if len(self.yb) == 0: return
         mets = L(self.smooth_loss) + (self._train_mets if self.training else self._valid_mets)
         for met in mets: met.accumulate(self.learn)
         if not self.training: return
