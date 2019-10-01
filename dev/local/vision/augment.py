@@ -20,18 +20,18 @@ from torch.distributions.bernoulli import Bernoulli
 #Cell
 class RandTransform(Transform):
     "A transform that before_call its state at each `__call__`, only applied on the training set"
-    filt,do,nm,supports = 0,True,None,[]
+    split_idx,do,nm,supports = 0,True,None,[]
     def __init__(self, p=1., nm=None, before_call=None, **kwargs):
         super().__init__(**kwargs)
         self.p,self.before_call = p,ifnone(before_call,self.before_call)
 
-    def before_call(self, b, filt):
+    def before_call(self, b, split_idx):
         "before_call the state for input `b`"
         self.do = random.random() < self.p
 
-    def __call__(self, b, filt=None, **kwargs):
-        self.before_call(b, filt=filt)
-        return super().__call__(b, filt=filt, **kwargs) if self.do else b
+    def __call__(self, b, split_idx=None, **kwargs):
+        self.before_call(b, split_idx=split_idx)
+        return super().__call__(b, split_idx=split_idx, **kwargs) if self.do else b
 
 #Cell
 def _neg_axis(x, axis):
@@ -85,8 +85,8 @@ class DihedralItem(RandTransform):
     "Randomly flip with probability `p`"
     def __init__(self, p=0.5): super().__init__(p=p)
 
-    def before_call(self, b, filt):
-        super().before_call(b, filt)
+    def before_call(self, b, split_idx):
+        super().before_call(b, split_idx)
         self.k = random.randint(0,7)
 
     def encodes(self, x:(Image.Image,*TensorTypes)): return x.dihedral(self.k)
@@ -148,13 +148,13 @@ def crop_pad(x:(TensorBBox,TensorPoint,Image.Image),
 #Cell
 class CropPad(RandTransform):
     "Center crop or pad an image to `size`"
-    mode,mode_mask,order,final_size,filt = Image.BILINEAR,Image.NEAREST,5,None,None
+    mode,mode_mask,order,final_size,split_idx = Image.BILINEAR,Image.NEAREST,5,None,None
     def __init__(self, size, pad_mode=PadMode.Zeros, **kwargs):
         super().__init__(**kwargs)
         if isinstance(size,int): size=(size,size)
         self.size,self.pad_mode = Tuple(size[1],size[0]),pad_mode
 
-    def before_call(self, b, filt):
+    def before_call(self, b, split_idx):
         self.do = True
         self.cp_size = self.size
         self.orig_sz = Tuple((b[0] if isinstance(b, tuple) else b).size)
@@ -167,10 +167,10 @@ class CropPad(RandTransform):
 #Cell
 class RandomCrop(CropPad):
     "Randomly crop an image to `size`"
-    def before_call(self, b, filt):
-        super().before_call(b, filt)
+    def before_call(self, b, split_idx):
+        super().before_call(b, split_idx)
         w,h = self.orig_sz
-        if not filt: self.tl = (random.randint(0,w-self.cp_size[0]), random.randint(0,h-self.cp_size[1]))
+        if not split_idx: self.tl = (random.randint(0,w-self.cp_size[0]), random.randint(0,h-self.cp_size[1]))
 
 #Cell
 mk_class('ResizeMethod', **{o:o.lower() for o in ['Squish', 'Crop', 'Pad']},
@@ -185,8 +185,8 @@ class Resize(CropPad):
         super().__init__(size, pad_mode=pad_mode, **kwargs)
         (self.mode,self.mode_mask),self.method = resamples,method
 
-    def before_call(self, b, filt):
-        super().before_call(b, filt)
+    def before_call(self, b, split_idx):
+        super().before_call(b, split_idx)
         self.final_size = self.size
         if self.method==ResizeMethod.Squish:
             self.tl,self.cp_size = (0,0),self.orig_sz
@@ -195,7 +195,7 @@ class Resize(CropPad):
         op = (operator.lt,operator.gt)[self.method==ResizeMethod.Pad]
         m = w/self.final_size[0] if op(w/self.final_size[0],h/self.final_size[1]) else h/self.final_size[1]
         self.cp_size = (int(m*self.final_size[0]),int(m*self.final_size[1]))
-        if self.method==ResizeMethod.Pad or filt: self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
+        if self.method==ResizeMethod.Pad or split_idx: self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
         else: self.tl = (random.randint(0,w-self.cp_size[0]), random.randint(0,h-self.cp_size[1]))
 
 #Cell
@@ -206,12 +206,12 @@ class RandomResizedCrop(CropPad):
         self.min_scale,self.ratio = min_scale,ratio
         self.mode,self.mode_mask = resamples
 
-    def before_call(self, b, filt):
-        super().before_call(b, filt)
+    def before_call(self, b, split_idx):
+        super().before_call(b, split_idx)
         self.final_size = self.size
         w,h = self.orig_sz
         for attempt in range(10):
-            if filt: break
+            if split_idx: break
             area = random.uniform(self.min_scale,1.) * w * h
             ratio = math.exp(random.uniform(math.log(self.ratio[0]), math.log(self.ratio[1])))
             nw = int(round(math.sqrt(area * ratio)))
@@ -276,7 +276,7 @@ class AffineCoordTfm(RandTransform):
         store_attr(self, 'size,mode,pad_mode,mode_mask')
         self.cp_size = None if size is None else (size,size) if isinstance(size, int) else tuple(size)
 
-    def before_call(self, b, filt):
+    def before_call(self, b, split_idx):
         if isinstance(b, tuple): b = b[0]
         self.do,self.mat = True,self._get_affine_mat(b)[:,:2]
         for t in self.coord_fs: t.before_call(b)
@@ -498,7 +498,7 @@ class LightingTfm(RandTransform):
     "Apply `fs` to the logits"
     order = 40
     def __init__(self, fs): self.fs=L(fs)
-    def before_call(self, b, filt):
+    def before_call(self, b, split_idx):
         self.do = True
         if isinstance(b, tuple): b = b[0]
         for t in self.fs: t.before_call(b)

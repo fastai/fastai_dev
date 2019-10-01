@@ -45,7 +45,7 @@ class DataBlock():
         if type_tfms is None: type_tfms = [L() for t in self.default_type_tfms]
         type_tfms = L([self.default_type_tfms, type_tfms, labellers]).map_zip(
             lambda tt,tfm,l: L(l) + _merge_tfms(tt, tfm))
-        return DataSource(items, tfms=type_tfms, filts=splits)
+        return DataSource(items, tfms=type_tfms, splits=splits)
 
     def databunch(self, source, type_tfms=None, ds_tfms=None, dl_tfms=None, bs=16, **kwargs):
         dsrc = self.datasource(source, type_tfms=type_tfms)

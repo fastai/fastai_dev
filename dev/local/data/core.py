@@ -36,10 +36,10 @@ class TfmdDL(DataLoader):
 
     def before_iter(self):
         super().before_iter()
-        filt = getattr(self.dataset, 'filt', None)
+        split_idx = getattr(self.dataset, 'split_idx', None)
         for nm in _dl_tfms:
             f = getattr(self,nm)
-            if isinstance(f,Pipeline): f.filt=filt
+            if isinstance(f,Pipeline): f.split_idx=split_idx
 
     def decode(self, b): return self.before_batch.decode(self.after_batch.decode(self._retain_dl(b)))
     def decode_batch(self, b, max_n=10, ds_decode=True): return self._decode_batch(self.decode(b), max_n, ds_decode)
@@ -98,10 +98,10 @@ class FilteredBase:
         self.databunch = delegates(self._dl_type.__init__)(self.databunch)
         super().__init__(*args, **kwargs)
 
-    def _new(self, items, **kwargs): return super()._new(items, filts=self.filts, **kwargs)
+    def _new(self, items, **kwargs): return super()._new(items, splits=self.splits, **kwargs)
     def subset(self): raise NotImplemented
     @property
-    def n_subsets(self): return len(self.filts)
+    def n_subsets(self): return len(self.splits)
 
     def databunch(self, bs=16, val_bs=None, shuffle_train=True, **kwargs):
         n = self.n_subsets-1
@@ -115,16 +115,16 @@ FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
 #Cell
 class TfmdList(FilteredBase, L):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
-    def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, filt=None, train_setup=True, filts=None):
+    def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, split_idx=None, train_setup=True, splits=None):
         super().__init__(items, use_list=use_list)
-        self.filts = L([slice(None)] if filts is None else filts).map(mask2idxs)
+        self.splits = L([slice(None)] if splits is None else splits).map(mask2idxs)
         if isinstance(tfms,TfmdList): tfms = tfms.tfms
         if isinstance(tfms,Pipeline): do_setup=False
-        self.tfms = Pipeline(tfms, as_item=as_item, filt=filt)
+        self.tfms = Pipeline(tfms, as_item=as_item, split_idx=split_idx)
         if do_setup: self.setup(train_setup=train_setup)
 
     def _new(self, items, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, **kwargs)
-    def subset(self, i): return self._new(self._get(self.filts[i]), filt=i)
+    def subset(self, i): return self._new(self._get(self.splits[i]), split_idx=i)
     def _after_item(self, o): return self.tfms(o)
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms.fs}"
     def __iter__(self): return (self[i] for i in range(len(self)))
@@ -171,9 +171,9 @@ class DataSource(FilteredBase):
     def subset(self, i): return type(self)(tls=L(tl.subset(i) for tl in self.tls))
     def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, **kwargs)
     @property
-    def filts(self): return self.tls[0].filts
+    def splits(self): return self.tls[0].splits
     @property
-    def filt(self): return self.tls[0].tfms.filt
+    def split_idx(self): return self.tls[0].tfms.split_idx
 
     def show(self, o, ctx=None, **kwargs):
         for o_,tl in zip(o,self.tls): ctx = tl.show(o_, ctx=ctx, **kwargs)
@@ -188,7 +188,7 @@ class DataSource(FilteredBase):
 #Cell
 def test_set(dsrc, test_items):
     "Create a test set from `test_items` using validation transforms of `dsrc`"
-    test_tls = [tl._new(test_items, filt=1) for tl in dsrc.tls[:dsrc.n_inp]]
+    test_tls = [tl._new(test_items, split_idx=1) for tl in dsrc.tls[:dsrc.n_inp]]
     return DataSource(tls=test_tls)
 
 #Cell

@@ -180,7 +180,7 @@ class Cuda(Transform):
     "Move batch to `device` (defaults to `default_device()`)"
     def __init__(self,device=None):
         self.device=default_device() if device is None else device
-        super().__init__(filt=None, as_item=False)
+        super().__init__(split_idx=None, as_item=False)
     def encodes(self, b): return to_device(b, self.device)
     def decodes(self, b): return to_cpu(b)
 
@@ -190,8 +190,8 @@ class Cuda(Transform):
 class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order = 20 #Need to run after CUDA if on the GPU
-    def __init__(self, div=True, div_mask=False, filt=None, as_item=True):
-        super().__init__(filt=filt,as_item=as_item)
+    def __init__(self, div=True, div_mask=False, split_idx=None, as_item=True):
+        super().__init__(split_idx=split_idx,as_item=as_item)
         self.div,self.div_mask = div,div_mask
 
     def encodes(self, o:TensorImage): return o.float().div_(255.) if self.div else o.float()
