@@ -10,6 +10,7 @@ import nbformat,inspect
 from nbformat.sign import NotebookNotary
 from nbconvert.preprocessors import ExecutePreprocessor
 from ..test import *
+from ..core import *
 
 #Cell
 def check_all_flag(cells):
@@ -26,17 +27,17 @@ def _add_import_cell(mod):
             'source': f"\nfrom local.{mod} import *"}
 
 #Cell
-from .export import _re_mod_export
-
 class NoExportPreprocessor(ExecutePreprocessor):
     "An `ExecutePreprocessor` that executes not exported cells"
     @delegates(ExecutePreprocessor.__init__)
     def __init__(self, flags, **kwargs):
         self.flags = flags
-
+        super().__init__(**kwargs)
 
     def preprocess_cell(self, cell, resources, index):
-        if 'source' in cell and cell['cell_type'] == "code":
-            if not _re_mod_export.search(cell['source']):
-                return super().preprocess_cell(cell, resources, index)
-        return cell, resources
+        if 'source' not in cell or cell['cell_type'] != "code":                         return cell, resources
+        if _re_is_export.search(cell['source']) and not _re_has_import(cell['source']): return cell, resources
+        for f in get_cell_flags(cell):
+            if f not in self.flags:                             return cell, resources
+        print(cell["source"])
+        return super().preprocess_cell(cell, resources, index)
