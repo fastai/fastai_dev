@@ -69,8 +69,8 @@ class TfmdDL(DataLoader):
     @property
     def n_inp(self):
         if hasattr(self.dataset, 'n_inp'): return self.dataset.n_inp
-        it = self.do_item(0)
-        return 1 if not isinstance(it, (list,tuple)) or len(it)==1 else len(it)-1
+        its = self.after_batch(self.do_batch([self.do_item(0)]))
+        return 1 if not isinstance(its, (list,tuple)) or len(its)==1 else len(its)-1
 
 #Cell
 @docs
