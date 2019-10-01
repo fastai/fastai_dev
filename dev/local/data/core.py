@@ -70,14 +70,13 @@ class TfmdDL(DataLoader):
     def n_inp(self):
         if hasattr(self.dataset, 'n_inp'): return self.dataset.n_inp
         it = self.do_item(0)
-        l = len(self.do_item(0)) if isinstance()
-
+        return 1 if not isinstance(it, (list,tuple)) or len(it)==1 else len(it)-1
 
 #Cell
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."
-    _xtra = 'one_batch show_batch dataset device'.split()
+    _xtra = 'one_batch show_batch dataset device n_inp'.split()
 
     def __init__(self, *dls): self.dls,self.default = dls,dls[0]
     def __getitem__(self, i): return self.dls[i]

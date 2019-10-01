@@ -13,6 +13,7 @@ from ..transform import *
 from .core import *
 from .external import *
 from ..notebook.showdoc import *
+from ..layers import *
 
 #Cell
 def _get_files(p, fs, extensions=None):
@@ -115,6 +116,7 @@ class Category(str, ShowTitle): _show_args = {'label': 'category'}
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
     order=1
+    loss_func = CrossEntropyLossFlat()
     def __init__(self, vocab=None, add_na=False):
         self.add_na = add_na
         self.vocab = None if vocab is None else CategoryMap(vocab, add_na=add_na)
@@ -126,7 +128,7 @@ class Categorize(Transform):
     def decodes(self, o): return Category(self.vocab[o])
 
 #Cell
-Category.create = Categorize
+Category.create = Categorize()
 
 #Cell
 class MultiCategory(L):
