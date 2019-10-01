@@ -4,7 +4,7 @@ __all__ = ['download_url', 'URLs', 'get_path', 'ConfigKey', 'download_data', 'ta
 
 #Cell
 from ..torch_basics import *
-from ..test import *
+from ..test import *from fastprogress import progress_bar,master_bar
 
 #Cell
 def download_url(url, dest, overwrite=False, pbar=None, show_progress=True, chunk_size=1024*1024,
