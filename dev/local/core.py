@@ -800,6 +800,7 @@ def round_multiple(x, mult, round_down=False):
 #Cell
 def even_mults(start, stop, n):
     "Build log-stepped array from `start` to `stop` in `n` steps."
+    if n==1: return stop
     mult = stop/start
     step = mult**(1/(n-1))
     return np.array([start*(step**i) for i in range(n)])

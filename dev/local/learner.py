@@ -148,7 +148,10 @@ class Learner():
         store_attr(self, "dbunch,model,opt_func,lr,splitter,model_dir,wd_bn_bias,train_bn")
         self.training,self.logger,self.opt,self.cbs = False,print,None,L()
         #TODO: infer loss_func from data
-        self.loss_func = CrossEntropyLossFlat() if loss_func is None else loss_func
+        if loss_func is None:
+            loss_func = getattr(dbunch.train_ds, 'loss_func', None)
+            assert loss_func is not None, "Could not infer loss function from the data, please pass a loss function."
+        self.loss_func = loss_func
         self.path = path if path is not None else getattr(dbunch, 'path', Path('.'))
         self.metrics = L(metrics).map(mk_metric)
         self.add_cbs(cbf() for cbf in L(defaults.callbacks)+L(cb_funcs))

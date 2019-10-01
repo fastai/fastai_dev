@@ -115,8 +115,7 @@ class Category(str, ShowTitle): _show_args = {'label': 'category'}
 #Cell
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
-    order=1
-    loss_func = CrossEntropyLossFlat()
+    loss_func,order=CrossEntropyLossFlat(),1
     def __init__(self, vocab=None, add_na=False):
         self.add_na = add_na
         self.vocab = None if vocab is None else CategoryMap(vocab, add_na=add_na)
@@ -137,6 +136,7 @@ class MultiCategory(L):
 #Cell
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
+    loss_func,order=BCEWithLogitsLossFlat(),1
     def setups(self, dsrc):
         if not dsrc: return
         if self.vocab is None:

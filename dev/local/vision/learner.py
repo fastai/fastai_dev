@@ -118,7 +118,7 @@ model_meta = {
 
 #Cell
 @delegates(Learner.__init__)
-def cnn_learner(dbunch, arch, cut=None, pretrained=True, lin_ftrs=None, ps=0.5, custom_head=None, splitter=trainable_params, bn_final=False,
+def cnn_learner(dbunch, arch, cut=None, pretrained=True, lin_ftrs=None, ps=0.5, custom_head=None, splitter=None, bn_final=False,
                 init=nn.init.kaiming_normal_, concat_pool=True, **kwargs):
     "Build convnet style learner."
     meta = model_meta.get(arch)
