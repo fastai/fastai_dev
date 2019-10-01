@@ -181,10 +181,11 @@ def custom_dir(c, add:list):
 #Cell
 class GetAttr:
     "Inherit from this to have all attr accesses in `self._xtra` passed down to `self.default`"
+    _default='default'
     @property
-    def _xtra(self): return [o for o in dir(self.default) if not o.startswith('_')]
+    def _xtra(self): return [o for o in dir(getattr(self,self._default)) if not o.startswith('_')]
     def __getattr__(self,k):
-        if k not in ('_xtra','default') and (self._xtra is None or k in self._xtra): return getattr(self.default, k)
+        if k not in ('_xtra',self._default) and (self._xtra is None or k in self._xtra): return getattr(getattr(self,self._default), k)
         raise AttributeError(k)
     def __dir__(self): return custom_dir(self, self._xtra)
     def __setstate__(self,data): self.__dict__.update(data)
@@ -254,6 +255,7 @@ def is_indexer(idx):
 #Cell
 class L(CollBase, GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
+    _default='items'
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
         if items is None: items = []
@@ -280,8 +282,6 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if not is_iter(o): o = [o]*len(idx)
         for i,o_ in zip(idx,o): self.items[i] = o_
 
-    @property
-    def default(self): return self.items
     def __iter__(self): return iter(self.items.itertuples() if hasattr(self.items,'iloc') else self.items)
     def __contains__(self,b): return b in self.items
     def __invert__(self): return self._new(not i for i in self)
@@ -475,8 +475,9 @@ class IterLen:
 @docs
 class ReindexCollection(GetAttr, IterLen):
     "Reindexes collection `coll` with indices `idxs` and optional LRU cache of size `cache`"
+    _default='coll'
     def __init__(self, coll, idxs=None, cache=None):
-        self.default,self.coll,self.idxs,self.cache = coll,coll,ifnone(idxs,L.range(coll)),cache
+        self.coll,self.idxs,self.cache = coll,ifnone(idxs,L.range(coll)),cache
         def _get(self, i): return self.coll[i]
         self._get = types.MethodType(_get,self)
         if cache is not None: self._get = functools.lru_cache(maxsize=cache)(self._get)

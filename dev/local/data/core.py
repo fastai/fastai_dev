@@ -77,9 +77,10 @@ class TfmdDL(DataLoader):
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."
-    _xtra = 'one_batch show_batch dataset device n_inp'.split()
+    _xtra='one_batch show_batch dataset device n_inp'.split()
+    _default='train_dl'
 
-    def __init__(self, *dls): self.dls,self.default = dls,dls[0]
+    def __init__(self, *dls): self.dls = dls
     def __getitem__(self, i): return self.dls[i]
 
     train_dl,valid_dl = add_props(lambda i,x: x[i])
@@ -116,6 +117,7 @@ FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
 #Cell
 class TfmdList(FilteredBase, L):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
+    _default='tfms'
     def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, split_idx=None, train_setup=True, splits=None):
         super().__init__(items, use_list=use_list)
         self.splits = L([slice(None)] if splits is None else splits).map(mask2idxs)
@@ -133,8 +135,6 @@ class TfmdList(FilteredBase, L):
     def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
     def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
     def setup(self, train_setup=True): self.tfms.setup(getattr(self,'train',self) if train_setup else self)
-    @property
-    def default(self): return self.tfms
 
     def __getitem__(self, idx):
         res = super().__getitem__(idx)
