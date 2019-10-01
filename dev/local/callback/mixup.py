@@ -28,12 +28,12 @@ class MixUp(Callback):
 
     def begin_batch(self):
         if not self.training: return #Only mixup things during training
-        lam = self.distrib.sample((self.yb.size(0),)).squeeze().to(self.xb.device)
+        lam = self.distrib.sample((self.y.size(0),)).squeeze().to(self.x.device)
         lam = torch.stack([lam, 1-lam], 1)
         self.lam = lam.max(1)[0][:,None,None,None]
-        shuffle = torch.randperm(self.yb.size(0)).to(self.xb.device)
-        xb1,self.yb1 = self.xb[shuffle],self.yb[shuffle]
-        self.learn.xb = torch.lerp(xb1, self.xb, self.lam)
+        shuffle = torch.randperm(self.y.size(0)).to(self.x.device)
+        xb1,self.yb1 = self.x[shuffle],self.y[shuffle]
+        self.learn.xb = (torch.lerp(xb1, self.xb, self.lam),)
 
     def after_fit(self): self.run.loss_func = self.old_loss_func
 
