@@ -76,7 +76,6 @@ class TfmdDL(DataLoader):
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."
-    _xtra='one_batch show_batch dataset device n_inp'.split()
     _default='train_dl'
 
     def __init__(self, *dls): self.dls = dls
@@ -166,6 +165,7 @@ class DataSource(FilteredBase):
         return res if is_indexer(it) else list(zip(*res))
 
     def __getattr__(self,k): return gather_attrs(self, k, 'tls')
+    def __dir__(self): return super().__dir__() + gather_attr_names(self, 'tls')
     def __len__(self): return len(self.tls[0])
     def __iter__(self): return (self[i] for i in range(len(self)))
     def __repr__(self): return coll_repr(self)

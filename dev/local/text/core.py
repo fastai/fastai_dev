@@ -192,38 +192,30 @@ def tokenize_df(df, text_cols, n_workers=defaults.cpus, rules=None, mark_fields=
                 tok_func=SpacyTokenizer, **tok_kwargs):
     "Tokenize texts in `df[text_cols]` in parallel using `n_workers`"
     text_cols = L(text_cols)
-    mark_fields = ifnone(mark_fields, len(text_cols) > 1)
+    if mark_fields is None: mark_fields = len(text_cols)>1
     rules = L(ifnone(rules, defaults.text_proc_rules.copy()))
     texts = _join_texts(df[text_cols], mark_fields=mark_fields)
-    #outputs = L(parallel_tokenize(texts, tok_func, rules, n_workers=n_workers, **tok_kwargs))
-    outputs = L([o[1] for o in sorted(parallel_tokenize(texts, tok_func, rules, n_workers=n_workers, **tok_kwargs))])
-    lengths = outputs.map(len)
-    counter = Counter()
-    for o in outputs: counter.update(o)
+    outputs = L(parallel_tokenize(texts, tok_func, rules, n_workers=n_workers, **tok_kwargs)
+               ).sorted().itemgot(1)
 
-    other_cols = [c for c in df.columns if c not in text_cols]
+    other_cols = df.columns[~df.columns.isin(text_cols)]
     res = df[other_cols].copy()
-    res['text'],res['text_lengths'] = outputs,lengths
-    return res,counter
+    res['text'],res['text_lengths'] = outputs,outputs.map(len)
+    return res,Counter(outputs.concat())
 
 #Cell
 #TODO: test + rework
 def tokenize_csv(fname, text_cols, outname=None, n_workers=4, rules=None, mark_fields=None,
-                 tok_func=SpacyTokenizer, header='infer', chunksize=None, **tok_kwargs):
+                 tok_func=SpacyTokenizer, header='infer', chunksize=50000, **tok_kwargs):
     "Tokenize texts in the `text_cols` of the csv `fname` in parallel using `n_workers`"
     df = pd.read_csv(fname, header=header, chunksize=chunksize)
     outname = Path(ifnone(outname, fname.parent/f'{fname.stem}_tok.csv'))
-    kwargs = dict(n_workers=n_workers, pre_rules=pre_rules, post_rules=post_rules,
-                  mark_fields=mark_fields, tok_func=tok_func, **tok_kwargs)
-    if chunksize is None:
-        out,cnt = tok_df(df, text_cols, **kwargs)
-        out.to_csv(outname, header=header, index=False)
-    else:
-        cnt = Counter()
-        for i,dfp in enumerate(df):
-            out,c = tok_df(dfp, text_cols, **kwargs)
-            out.to_csv(outname, header=header if i==0 else None, index=False, mode='w' if i==0 else 'a')
-            cnt.update(c)
+    cnt = Counter()
+    for i,dfp in enumerate(df):
+        out,c = tokenize_df(dfp, text_cols, n_workers=n_workers, pre_rules=pre_rules, post_rules=post_rules,
+                            mark_fields=mark_fields, tok_func=tok_func, **tok_kwargs)
+        out.to_csv(outname, header=(None,header)[i==0], index=False, mode=('a','w')[i==0])
+        cnt.update(c)
     pickle.dump(cnt, open(outname.parent/'counter.pkl', 'wb'))
 
 #Cell
