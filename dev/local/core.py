@@ -308,11 +308,12 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if is_coll(a): a = len(a)
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
-    def map(self, f, *args, **kwargs):
-        f = (partial(f,*args,**kwargs) if callable(f)
+    def map(self, f, *args, _arg=None, **kwargs):
+        g = ((lambda o: f(*args, **{_arg:o}, **kwargs)) if _arg is not None
+             else partial(f,*args,**kwargs) if callable(f)
              else f.format if isinstance(f,str)
              else f.__getitem__)
-        return self._new(map(f, self))
+        return self._new(map(g, self))
 
     def unique(self): return L(dict.fromkeys(self).keys())
     def enumerate(self): return L(enumerate(self))
@@ -325,8 +326,8 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def starmap(self, f, *args, **kwargs): return self._new(itertools.starmap(partial(f,*args,**kwargs), self))
     def zip(self, cycled=False): return self._new((zip_cycle if cycled else zip)(*self))
     def zipwith(self, *rest, cycled=False): return self._new([self, *rest]).zip(cycled=cycled)
-    def map_zip(self, f, cycled=False): return self.zip(cycled=cycled).starmap(f)
-    def map_zipwith(self, f, *rest, cycled=False): return self.zipwith(*rest, cycled=cycled).starmap(f)
+    def map_zip(self, f, *args, cycled=False, **kwargs): return self.zip(cycled=cycled).starmap(f, *args, **kwargs)
+    def map_zipwith(self, f, *rest, cycled=False, **kwargs): return self.zipwith(*rest, cycled=cycled).starmap(f, **kwargs)
     def concat(self): return self._new(itertools.chain.from_iterable(self.map(L)))
     def shuffle(self):
         it = copy(self.items)

@@ -94,7 +94,7 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
   <tbody>
     <tr>
       <td>0</td>
-      <td>1362503982497231923221770706509365248.000000</td>
+      <td>inf</td>
       <td>00:00</td>
     </tr>
   </tbody>
@@ -217,20 +217,20 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
   <tbody>
     <tr>
       <td>0</td>
-      <td>20.582607</td>
-      <td>21.140226</td>
+      <td>7.887365</td>
+      <td>8.094821</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>20.582577</td>
-      <td>21.140173</td>
+      <td>7.887353</td>
+      <td>8.094801</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>20.582520</td>
-      <td>21.140097</td>
+      <td>7.887331</td>
+      <td>8.094774</td>
       <td>00:00</td>
     </tr>
   </tbody>
@@ -263,7 +263,7 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SaveModelCallback" class="doc_header"><code>class</code> <code>SaveModelCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L66" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SaveModelCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>name</code></strong>=<em><code>'model'</code></em>, <strong><code>every_epoch</code></strong>=<em><code>False</code></em>) :: <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a></p>
+<h2 id="SaveModelCallback" class="doc_header"><code>class</code> <code>SaveModelCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L66" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SaveModelCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>fname</code></strong>=<em><code>'model'</code></em>, <strong><code>every_epoch</code></strong>=<em><code>False</code></em>) :: <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a></p>
 </blockquote>
 <p>A <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a> that terminates training when monitored quantity stops improving.</p>
 
@@ -282,12 +282,93 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>TODO: test when <a href="/learner.html#Learner.save"><code>Learner.save</code></a> is implemented.</p>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;tmp&#39;</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_epoch</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">SaveModelCallback</span><span class="p">())</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;tmp/models/model.pth&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_epoch</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">SaveModelCallback</span><span class="p">(</span><span class="n">every_epoch</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span> <span class="k">assert</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="n">f</span><span class="s1">&#39;tmp/models/model_</span><span class="si">{i}</span><span class="s1">.pth&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;tmp&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>16.986134</td>
+      <td>16.711008</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>16.697437</td>
+      <td>16.257027</td>
+      <td>00:00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>16.195871</td>
+      <td>15.609791</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>15.499868</td>
+      <td>14.834436</td>
+      <td>00:00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
 
 </div>
 </div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -351,26 +432,26 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
   <tbody>
     <tr>
       <td>0</td>
-      <td>1.569402</td>
-      <td>3.269163</td>
+      <td>16.207018</td>
+      <td>13.869708</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>1.569400</td>
-      <td>3.269158</td>
+      <td>16.206995</td>
+      <td>13.869673</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>1.569397</td>
-      <td>3.269152</td>
+      <td>16.206947</td>
+      <td>13.869625</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>1.569396</td>
-      <td>3.269151</td>
+      <td>16.206902</td>
+      <td>13.869619</td>
       <td>00:00</td>
     </tr>
   </tbody>

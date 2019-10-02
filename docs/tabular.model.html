@@ -101,8 +101,7 @@ summary: "A basic model that can be used on tabular data"
         <span class="k">if</span> <span class="n">bn_final</span><span class="p">:</span> <span class="n">_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">_layers</span><span class="p">)</span>
     
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">):</span>
-        <span class="n">x_cat</span><span class="p">,</span> <span class="n">x_cont</span> <span class="o">=</span> <span class="n">inp</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_cat</span><span class="p">,</span> <span class="n">x_cont</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_emb</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">(</span><span class="n">x_cat</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embeds</span><span class="p">)]</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -232,27 +231,11 @@ summary: "A basic model that can be used on tabular data"
   <tbody>
     <tr>
       <th>0</th>
-      <td>30.000000</td>
-      <td>278501.998733</td>
-      <td>9.0</td>
-      <td>Private</td>
-      <td>HS-grad</td>
-      <td>Divorced</td>
-      <td>Adm-clerical</td>
-      <td>Unmarried</td>
-      <td>Black</td>
-      <td>False</td>
-      <td>False</td>
-      <td>False</td>
-      <td>&lt;50k</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>31.000000</td>
-      <td>87417.999466</td>
-      <td>11.0</td>
-      <td>Private</td>
-      <td>Assoc-voc</td>
+      <td>70.000000</td>
+      <td>272895.999931</td>
+      <td>16.0</td>
+      <td>Self-emp-inc</td>
+      <td>Doctorate</td>
       <td>Married-civ-spouse</td>
       <td>Exec-managerial</td>
       <td>Husband</td>
@@ -260,49 +243,17 @@ summary: "A basic model that can be used on tabular data"
       <td>False</td>
       <td>False</td>
       <td>False</td>
-      <td>&lt;50k</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>33.000000</td>
-      <td>172303.999835</td>
-      <td>6.0</td>
-      <td>Private</td>
-      <td>10th</td>
-      <td>Married-civ-spouse</td>
-      <td>Machine-op-inspct</td>
-      <td>Husband</td>
-      <td>White</td>
-      <td>False</td>
-      <td>False</td>
-      <td>False</td>
-      <td>&lt;50k</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>48.000000</td>
-      <td>20295.996532</td>
-      <td>10.0</td>
-      <td>Private</td>
-      <td>HS-grad</td>
-      <td>Divorced</td>
-      <td>Adm-clerical</td>
-      <td>Not-in-family</td>
-      <td>White</td>
-      <td>False</td>
-      <td>False</td>
-      <td>True</td>
       <td>&gt;=50k</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>54.000001</td>
-      <td>98535.002827</td>
+      <th>1</th>
+      <td>38.000000</td>
+      <td>140854.001081</td>
       <td>13.0</td>
       <td>Private</td>
       <td>Bachelors</td>
       <td>Married-civ-spouse</td>
-      <td>Exec-managerial</td>
+      <td>Tech-support</td>
       <td>Husband</td>
       <td>White</td>
       <td>False</td>
@@ -311,14 +262,14 @@ summary: "A basic model that can be used on tabular data"
       <td>&gt;=50k</td>
     </tr>
     <tr>
-      <th>5</th>
+      <th>2</th>
       <td>27.000000</td>
-      <td>289484.000631</td>
-      <td>10.0</td>
+      <td>278581.002060</td>
+      <td>13.0</td>
       <td>Private</td>
-      <td>Some-college</td>
+      <td>Bachelors</td>
       <td>Never-married</td>
-      <td>Adm-clerical</td>
+      <td>Sales</td>
       <td>Own-child</td>
       <td>White</td>
       <td>False</td>
@@ -327,13 +278,13 @@ summary: "A basic model that can be used on tabular data"
       <td>&lt;50k</td>
     </tr>
     <tr>
-      <th>6</th>
-      <td>30.000000</td>
-      <td>165685.999481</td>
-      <td>13.0</td>
+      <th>3</th>
+      <td>45.000000</td>
+      <td>100650.999826</td>
+      <td>9.0</td>
       <td>Private</td>
-      <td>Bachelors</td>
-      <td>Never-married</td>
+      <td>HS-grad</td>
+      <td>Divorced</td>
       <td>Other-service</td>
       <td>Not-in-family</td>
       <td>White</td>
@@ -343,14 +294,78 @@ summary: "A basic model that can be used on tabular data"
       <td>&lt;50k</td>
     </tr>
     <tr>
-      <th>7</th>
-      <td>20.000001</td>
-      <td>194096.000187</td>
-      <td>10.0</td>
+      <th>4</th>
+      <td>63.000000</td>
+      <td>310395.998201</td>
+      <td>5.0</td>
       <td>?</td>
+      <td>9th</td>
+      <td>Married-civ-spouse</td>
+      <td>?</td>
+      <td>Husband</td>
+      <td>White</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>&gt;=50k</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>47.000000</td>
+      <td>81654.005553</td>
+      <td>10.0</td>
+      <td>Local-gov</td>
+      <td>Some-college</td>
+      <td>Divorced</td>
+      <td>Exec-managerial</td>
+      <td>Not-in-family</td>
+      <td>White</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>&gt;=50k</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>61.000000</td>
+      <td>180381.999798</td>
+      <td>3.0</td>
+      <td>Private</td>
+      <td>5th-6th</td>
+      <td>Married-civ-spouse</td>
+      <td>Handlers-cleaners</td>
+      <td>Husband</td>
+      <td>White</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>&lt;50k</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>39.000000</td>
+      <td>218489.999446</td>
+      <td>13.0</td>
+      <td>Private</td>
+      <td>Bachelors</td>
+      <td>Married-civ-spouse</td>
+      <td>Sales</td>
+      <td>Husband</td>
+      <td>White</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>&gt;=50k</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>18.999999</td>
+      <td>229430.998432</td>
+      <td>10.0</td>
+      <td>Private</td>
       <td>Some-college</td>
       <td>Never-married</td>
-      <td>?</td>
+      <td>Prof-specialty</td>
       <td>Own-child</td>
       <td>White</td>
       <td>False</td>
@@ -359,30 +374,14 @@ summary: "A basic model that can be used on tabular data"
       <td>&lt;50k</td>
     </tr>
     <tr>
-      <th>8</th>
-      <td>32.000000</td>
-      <td>161478.001070</td>
-      <td>13.0</td>
-      <td>Local-gov</td>
-      <td>Bachelors</td>
-      <td>Divorced</td>
-      <td>Adm-clerical</td>
-      <td>Unmarried</td>
-      <td>Asian-Pac-Islander</td>
-      <td>False</td>
-      <td>False</td>
-      <td>False</td>
-      <td>&lt;50k</td>
-    </tr>
-    <tr>
       <th>9</th>
-      <td>32.000000</td>
-      <td>237903.001494</td>
-      <td>13.0</td>
-      <td>Private</td>
-      <td>Bachelors</td>
-      <td>Never-married</td>
-      <td>Prof-specialty</td>
+      <td>50.000000</td>
+      <td>308764.002562</td>
+      <td>9.0</td>
+      <td>Local-gov</td>
+      <td>HS-grad</td>
+      <td>Widowed</td>
+      <td>Transport-moving</td>
       <td>Unmarried</td>
       <td>White</td>
       <td>False</td>
@@ -459,10 +458,10 @@ summary: "A basic model that can be used on tabular data"
   <tbody>
     <tr>
       <td>0</td>
-      <td>0.401515</td>
-      <td>0.363410</td>
-      <td>0.833385</td>
-      <td>00:13</td>
+      <td>0.419448</td>
+      <td>0.347999</td>
+      <td>0.842752</td>
+      <td>00:30</td>
     </tr>
   </tbody>
 </table>

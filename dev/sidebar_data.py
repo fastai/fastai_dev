@@ -29,26 +29,45 @@ sidebar_d = {
                 'Mixed precision': '/callback.fp16',
                 'Mixup': '/callback.mixup',
                 'Trackers': '/callback.tracker',
+                'RNN': '/callback.rnn',
                 'Progress': '/callback.progress'
             }
         },
     },
     'Data': {
+        'Data Blocks': '/data.block',
         'Data Transforms': '/data.transforms',
-        'Data Pipeline': '/data.pipeline',
-        'Data Source': '/data.source',
         'Data External': '/data.external',
         'Data Core': '/data.core',
+        'DataLoader': '/data.load',
+    },
+    'Core': {
+        'Core': '/core',
+        'PyTorch Core': '/torch_core',
+        'Transforms and Pipelines': '/transform',
+        'Layers': '/layers',
+        'Test': '/test',
+        'Script': '/script',
+    },
+    'Vision': {
+        'Vision Core': '/vision.core',
+        'Vision Learner': '/vision.learner',
+        'Vision Data Augmentation': '/vision.augment',
+    },
+    'Text': {
+        'Text Core': '/text.core',
+        'Text Data': '/text.data',
+        'Text Learner': '/text.learner',
+    },
+    'Tabular': {
+        'Tabular Core': '/tabular.core',
+        'Tabular Model': '/tabular.model',
+        'RapidsAI': '/tabular.rapids',
     },
     'Notebook': {
         'Export to modules': '/notebook.export',
         'Convert to html': '/notebook.export2html',
         'Show doc': '/notebook.showdoc',
         'Core functions': 'notebook.core',
-    },
-    'Core': {
-        'Layers': '/layers',
-        'Core': '/core',
-        'Test': '/test',
     },
 }

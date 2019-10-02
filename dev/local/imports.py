@@ -1,7 +1,8 @@
 import io,operator,sys,os,re,os,mimetypes,csv,itertools,json,shutil,glob,pickle,tarfile,collections
 import hashlib,itertools,types,random,inspect,functools,random,time,math,bz2,types,typing,numbers,string
-import multiprocessing,threading,urllib,ipykernel,tempfile
+import multiprocessing,threading,urllib,ipykernel,tempfile,concurrent.futures
 
+from concurrent.futures import as_completed
 from functools import partial,reduce
 from itertools import starmap,dropwhile,takewhile,zip_longest
 from copy import copy,deepcopy

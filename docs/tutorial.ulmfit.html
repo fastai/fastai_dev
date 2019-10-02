@@ -93,7 +93,7 @@ summary: "How to fine-tune a language model and train a classifier"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="n">RandomSplitter</span><span class="p">()(</span><span class="n">texts</span><span class="p">)</span>
 <span class="n">vocab</span> <span class="o">=</span> <span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
-<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="p">[</span><span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">)],</span> <span class="n">filts</span><span class="o">=</span><span class="n">splits</span><span class="p">)</span>
+<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="p">[</span><span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">)],</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -394,7 +394,7 @@ summary: "How to fine-tune a language model and train a classifier"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="n">RandomSplitter</span><span class="p">()(</span><span class="n">range_of</span><span class="p">(</span><span class="n">df_tok</span><span class="p">))</span>
-<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">df_tok</span><span class="p">,</span> <span class="n">filts</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span>
+<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">df_tok</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span>
     <span class="p">[</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">),</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">)],</span>
     <span class="p">[</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">),</span> <span class="n">Categorize</span><span class="p">()]])</span>
 </pre></div>

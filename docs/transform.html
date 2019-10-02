@@ -489,9 +489,9 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Transform" class="doc_header"><code>class</code> <code>Transform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L140" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="Transform" class="doc_header"><code>class</code> <code>Transform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L140" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
-<p>Delegates (<code>__call__</code>,<code>decode</code>,<code>setup</code>) to (<a href="/tabular.rapids.html#encodes"><code>encodes</code></a>,<code>decodes</code>,<a href="/tabular.rapids.html#setups"><code>setups</code></a>) if <code>filt</code> matches</p>
+<p>Delegates (<code>__call__</code>,<code>decode</code>,<code>setup</code>) to (<a href="/tabular.rapids.html#encodes"><code>encodes</code></a>,<code>decodes</code>,<a href="/tabular.rapids.html#setups"><code>setups</code></a>) if <code>split_idx</code> matches</p>
 
 </div>
 
@@ -510,7 +510,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 <li><strong>Reversability</strong> - A transform can be made reversible by implementing the <code>decodes</code> method. This is mainly used to turn something like a category which is encoded as a number back into a label understandable by humans for showing purposes.</li>
 <li><strong>Type propagation</strong> - Whenever possible a transform tries to return data of the same type it received. Mainly used to maintain semantics of things like <a href="/transform.html#TensorImage"><code>TensorImage</code></a> which is a thin wrapper of pytorches <a href="https://pytorch.org/docs/stable/tensors.html#torch-tensor"><code>Tensor</code></a>. You can opt out of this behavior by adding <code>-&gt;None</code> return type annotation.</li>
 <li><strong>Preprocessing</strong> - The <code>setup</code> method can be used to perform any one-time calculations to be later used by the transform, for example generating a vocabulary to encode categorical data.</li>
-<li><strong>Filtering based on the dataset type</strong> - By setting the <code>filt</code> flag you can make the transform be used only in a specific <a href="/data.core.html#DataSource"><code>DataSource</code></a> subset like in training, but not validation.</li>
+<li><strong>Filtering based on the dataset type</strong> - By setting the <code>split_idx</code> flag you can make the transform be used only in a specific <a href="/data.core.html#DataSource"><code>DataSource</code></a> subset like in training, but not validation.</li>
 <li><strong>Ordering</strong> - You can set the <code>order</code> attribute which the <a href="/transform.html#Pipeline"><code>Pipeline</code></a> uses when it needs to merge two lists of transforms.</li>
 <li><strong>Appending new behavior with decorators</strong> - You can easily extend an existing <a href="/transform.html#Transform"><code>Transform</code></a> by creating <a href="/tabular.rapids.html#encodes"><code>encodes</code></a> or <code>decodes</code> methods for new data types. You can put those new methods outside the original transform definition and decorate them with the class you wish them patched into. This can be used by the fastai library users to add their own behavior, or multiple modules contributing to the same transform.</li>
 </ul>
@@ -760,7 +760,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>If the transform has <code>filt</code> then it's only applied if <code>filt</code> param matches.</p>
+<p>If the transform has <code>split_idx</code> then it's only applied if <code>split_idx</code> param matches.</p>
 
 </div>
 </div>
@@ -770,9 +770,9 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">filt</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">filt</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">test_eq_type</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">filt</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">split_idx</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">split_idx</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">split_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -800,9 +800,9 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 <span class="n">t</span> <span class="o">=</span> <span class="n">f</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="n">f</span><span class="o">.</span><span class="n">filt</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">filt</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">filt</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">f</span><span class="o">.</span><span class="n">split_idx</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">split_idx</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">split_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -870,7 +870,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="InplaceTransform" class="doc_header"><code>class</code> <code>InplaceTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L176" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>InplaceTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="InplaceTransform" class="doc_header"><code>class</code> <code>InplaceTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L176" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>InplaceTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>A <a href="/transform.html#Transform"><code>Transform</code></a> that modifies in-place and just returns whatever it's passed</p>
 
@@ -900,7 +900,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TupleTransform" class="doc_header"><code>class</code> <code>TupleTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L183" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="TupleTransform" class="doc_header"><code>class</code> <code>TupleTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L183" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p><a href="/transform.html#Transform"><code>Transform</code></a> that always treats <code>as_item</code> as <code>False</code></p>
 
@@ -924,7 +924,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ItemTransform" class="doc_header"><code>class</code> <code>ItemTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L188" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ItemTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="ItemTransform" class="doc_header"><code>class</code> <code>ItemTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L188" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ItemTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p><a href="/transform.html#Transform"><code>Transform</code></a> that always treats <code>as_item</code> as <code>True</code></p>
 
@@ -1488,7 +1488,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Pipeline" class="doc_header"><code>class</code> <code>Pipeline</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L244" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Pipeline</code>(<strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>, <strong><code>filt</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="Pipeline" class="doc_header"><code>class</code> <code>Pipeline</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L244" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Pipeline</code>(<strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>A pipeline of composed (for encode/decode) transforms, setup with types</p>
 
@@ -1775,15 +1775,15 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Check filtering is properly applied</span>
 <span class="n">add1</span> <span class="o">=</span> <span class="n">B</span><span class="p">()</span>
-<span class="n">add1</span><span class="o">.</span><span class="n">filt</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">add1</span><span class="o">.</span><span class="n">split_idx</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="n">neg_tfm</span><span class="p">,</span> <span class="n">A</span><span class="p">(),</span> <span class="n">add1</span><span class="p">])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">pipe</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">pipe</span><span class="o">.</span><span class="n">filt</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">split_idx</span><span class="o">=</span><span class="mi">1</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">pipe</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">pipe</span><span class="o">.</span><span class="n">filt</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">split_idx</span><span class="o">=</span><span class="mi">0</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">pipe</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
-    <span class="n">pipe</span><span class="o">.</span><span class="n">filt</span><span class="o">=</span><span class="n">t</span>
+    <span class="n">pipe</span><span class="o">.</span><span class="n">split_idx</span><span class="o">=</span><span class="n">t</span>
     <span class="n">test_eq</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">pipe</span><span class="p">(</span><span class="n">start</span><span class="p">)),</span> <span class="n">start</span><span class="p">)</span>
     <span class="n">test_stdout</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">pipe</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">pipe</span><span class="p">(</span><span class="n">start</span><span class="p">)),</span> <span class="s2">&quot;-2.0&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1880,7 +1880,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipe</span><span class="o">.</span><span class="n">set_as_item</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-<span class="n">pipe</span><span class="o">.</span><span class="n">filt</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">split_idx</span><span class="o">=</span><span class="mi">1</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">decode_batch</span><span class="p">([</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">max_n</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)])</span>
 </pre></div>
 
