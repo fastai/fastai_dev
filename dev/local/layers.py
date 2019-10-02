@@ -2,11 +2,10 @@
 
 __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugger', 'sigmoid_range', 'SigmoidRange',
            'AdaptiveConcatPool2d', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm', 'BatchNorm1dFlat', 'BnDropLin',
-           'init_default', 'ConvLayer', 'FlattenedLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
+           'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
            'MSELossFlat', 'trunc_normal_', 'Embedding', 'SelfAttention', 'PooledSelfAttention2d', 'icnr_init',
            'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN', 'ResBlock', 'ParameterModule',
-           'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model', 'loss_func_name2activ',
-           'loss_func2activ']
+           'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model']
 
 #Cell
 from .torch_basics import *
@@ -156,10 +155,14 @@ class ConvLayer(nn.Sequential):
         super().__init__(*layers)
 
 #Cell
-class FlattenedLoss():
+@funcs_kwargs
+class BaseLoss():
     "Same as `loss_cls`, but flattens input and target."
-    def __init__(self, loss_cls, *args, axis=-1, floatify=False, is_2d=True, **kwargs):
-        self.func,self.axis,self.floatify,self.is_2d = loss_cls(*args,**kwargs),axis,floatify,is_2d
+    activation=decodes=noops
+    _methods = "activation decodes".split()
+    def __init__(self, loss_cls, *args, axis=-1, flatten=True, floatify=False, is_2d=True, **kwargs):
+        store_attr(self, "axis,flatten,floatify,is_2d")
+        self.func = loss_cls(*args,**kwargs)
         functools.update_wrapper(self, self.func)
 
     def __repr__(self): return f"FlattenedLoss of {self.func}"
@@ -172,28 +175,30 @@ class FlattenedLoss():
         inp  = inp .transpose(self.axis,-1).contiguous()
         targ = targ.transpose(self.axis,-1).contiguous()
         if self.floatify and targ.dtype!=torch.float16: targ = targ.float()
-        inp = inp.view(-1,inp.shape[-1]) if self.is_2d else inp.view(-1)
-        return self.func.__call__(inp, targ.view(-1), **kwargs)
+        if self.flatten: inp = inp.view(-1,inp.shape[-1]) if self.is_2d else inp.view(-1)
+        return self.func.__call__(inp, targ.view(-1) if self.flatten else targ, **kwargs)
 
 #Cell
 def CrossEntropyLossFlat(*args, axis=-1, **kwargs):
     "Same as `nn.CrossEntropyLoss`, but flattens input and target."
-    return FlattenedLoss(nn.CrossEntropyLoss, *args, axis=axis, **kwargs)
+    def _decodes(x): return x.argmax(dim=axis)
+    def _act(x): return F.softmax(x, dim=axis)
+    return BaseLoss(nn.CrossEntropyLoss, *args, axis=axis, activation=_act, decodes=_decodes, **kwargs)
 
 #Cell
 def BCEWithLogitsLossFlat(*args, axis=-1, floatify=True, **kwargs):
     "Same as `nn.BCEWithLogitsLoss`, but flattens input and target."
-    return FlattenedLoss(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
+    return BaseLoss(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, activation=torch.sigmoid, **kwargs)
 
 #Cell
 def BCELossFlat(*args, axis=-1, floatify=True, **kwargs):
     "Same as `nn.BCELoss`, but flattens input and target."
-    return FlattenedLoss(nn.BCELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
+    return BaseLoss(nn.BCELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
 #Cell
 def MSELossFlat(*args, axis=-1, floatify=True, **kwargs):
     "Same as `nn.MSELoss`, but flattens input and target."
-    return FlattenedLoss(nn.MSELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
+    return BaseLoss(nn.MSELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
 #Cell
 def trunc_normal_(x, mean=0., std=1.):
@@ -369,32 +374,3 @@ nn.Module.has_children = property(_has_children)
 def flatten_model(m):
     "Return the list of all submodules and parameters of `m`"
     return sum(map(flatten_model,children_and_parameters(m)),[]) if m.has_children else [m]
-
-#Cell
-loss_func_name2activ = {'cross_entropy_loss': F.softmax, 'nll_loss': torch.exp, 'poisson_nll_loss': torch.exp,
-    'kl_div_loss': torch.exp, 'bce_with_logits_loss': torch.sigmoid, 'cross_entropy': F.softmax,
-    'kl_div': torch.exp, 'binary_cross_entropy_with_logits': torch.sigmoid,
-}
-
-#Cell
-def _loss_func_name2activ(name, axis=-1):
-    res = loss_func_name2activ[name]
-    if res == F.softmax: res = partial(F.softmax, dim=axis)
-    return res
-
-#Cell
-def loss_func2activ(loss_func):
-    axis = getattr(loss_func, 'axis', -1)
-    if isinstance(loss_func, FlattenedLoss): loss_func = loss_func.func
-    if getattr(loss_func,'keywords',None):
-        if not loss_func.keywords.get('log_input', True): return
-        axis = loss_func.keywords.get('dim', axis)
-    # could have a partial inside flattened loss! Duplicate on purpose.
-    loss_func = getattr(loss_func, 'func', loss_func)
-    cls_name = camel2snake(loss_func.__class__.__name__)
-    if cls_name in loss_func_name2activ:
-        if cls_name == 'poisson_nll_loss' and (not getattr(loss_func, 'log_input', True)): return
-        return _loss_func_name2activ(cls_name, axis)
-    if getattr(loss_func,'__name__','') in loss_func_name2activ:
-        return _loss_func_name2activ(loss_func.__name__, axis)
-    return noop

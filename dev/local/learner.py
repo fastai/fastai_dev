@@ -255,7 +255,7 @@ class Learner():
             self(_after_inference)
         return self.recorder.values[-1]
 
-    def get_preds(self, ds_idx=1, dl=None, with_loss=False, act=None):
+    def get_preds(self, ds_idx=1, dl=None, with_loss=False, decoded=False, act=None):
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         self.dl = self.dbunch.dls[ds_idx] if dl is None else dl
         cb = GatherPredsCallback(with_loss=with_loss)
@@ -263,10 +263,19 @@ class Learner():
             self(_before_inference)
             self.all_batches()
             self(_after_inference)
-            if act is None: act = loss_func2activ(self.loss_func)
+            if act is None: act = getattr(self.loss_func, 'activation', noop)
+            preds = act(torch.cat(cb.preds))
+            if decoded: preds = getattr(sellf.loss_func, 'decodes', noop)(preds)
             targs = detuplify(tuple(torch.cat(o) for o in zip(*cb.targets)))
-            if with_loss: return act(torch.cat(cb.preds)),targs,torch.cat(cb.losses)
-            return act(torch.cat(cb.preds)),targs
+            if with_loss: return preds,targs,torch.cat(cb.losses)
+            return preds,targs
+
+    def predict(self, item):
+        dl = test_dl(self.dbunch, [item])
+        preds = self.get_preds(dl=dl)[0]
+        dec_preds = getattr(self.loss_func, 'decodes', noop)(preds)
+        ful_dec = self.dbunch.train_dl.decode_batch((list(dl)[0][0],dec_preds))[0][1]
+        return ful_dec,dec_preds,preds
 
     @contextmanager
     def no_logging(self): return replacing_yield(self, 'logger', noop)
@@ -303,6 +312,7 @@ add_docs(Learner, "Group together a `model`, some `dbunch` and a `loss_func` to 
     fit="Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`.",
     validate="Validate on `dl` with potential new `cbs`.",
     get_preds="Get the predictions and targets on the `ds_idx`-th dbunchset, optionally `with_loss`",
+    predict="Return the prediction on `item`, fully decoded, loss function decoded and probabilities",
     no_logging="Context manager to temporarily remove `logger`",
     loss_not_reduced="A context manager to evaluate `loss_func` with reduction set to none.",
     save="Save model and optimizer state (if `with_opt`) to `self.path/self.model_dir/file`",
