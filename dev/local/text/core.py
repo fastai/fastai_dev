@@ -2,7 +2,7 @@
 
 __all__ = ['UNK', 'PAD', 'BOS', 'EOS', 'FLD', 'TK_REP', 'TK_WREP', 'TK_UP', 'TK_MAJ', 'spec_add_spaces',
            'rm_useless_spaces', 'replace_rep', 'replace_wrep', 'fix_html', 'replace_all_caps', 'replace_maj',
-           'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer', 'apply_rules', 'TokenizeBatch', 'tokenize1',
+           'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer', 'TokenizeBatch', 'tokenize1',
            'parallel_tokenize', 'tokenize_folder', 'tokenize_df', 'tokenize_csv', 'SentencePieceTokenizer']
 
 #Cell
@@ -105,25 +105,19 @@ defaults.text_postproc_rules = [replace_space]
 class BaseTokenizer():
     "Basic tokenizer that just splits on spaces"
     def __init__(self, split_char=' ', **kwargs): self.split_char=split_char
-    def pipe(self, items): return (t.split(self.split_char) for t in items)
+    def __call__(self, items): return (t.split(self.split_char) for t in items)
 
 #Cell
 class SpacyTokenizer():
     "Spacy tokenizer for `lang`"
-    def __init__(self, lang='en', special_toks=None, batch_size=5000):
+    def __init__(self, lang='en', special_toks=None, buf_sz=5000):
         special_toks = ifnone(special_toks, defaults.text_spec_tok)
-        self.nlp = spacy.blank(lang, disable=["parser", "tagger", "ner"])
-        for w in special_toks: self.nlp.tokenizer.add_special_case(w, [{ORTH: w}])
-        self.batch_size=batch_size
+        nlp = spacy.blank(lang, disable=["parser", "tagger", "ner"])
+        for w in special_toks: nlp.tokenizer.add_special_case(w, [{ORTH: w}])
+        self.pipe,self.buf_sz = nlp.pipe,buf_sz
 
-    def pipe(self, items):
-        for doc in self.nlp.pipe(items, batch_size=self.batch_size):
-            yield [d.text for d in doc]
-
-#Cell
-def apply_rules(items, rules):
-    "Returns a generator that apply `rules`  to `items`"
-    return map(compose(*rules), items)
+    def __call__(self, items):
+        return (L(doc).attrgot('text') for doc in self.pipe(items, batch_size=self.buf_sz))
 
 #Cell
 class TokenizeBatch:
@@ -134,7 +128,7 @@ class TokenizeBatch:
         self.tok = tok_func(**tok_kwargs)
 
     def __call__(self, batch):
-        for o in self.tok.pipe(apply_rules(batch, self.rules)): yield L(o).map(self.post_f)
+        return (L(o).map(self.post_f) for o in self.tok(maps(*self.rules, batch)))
 
 #Cell
 def tokenize1(text, tok_func=SpacyTokenizer, rules=None, post_rules=None, **tok_kwargs):
@@ -263,7 +257,7 @@ class SentencePieceTokenizer():#TODO: pass the special tokens symbol to sp
         if self.tok is not None: return {'sp_model': self.sp_model}
         raw_text_path = self.cache_dir/'texts.out'
         with open(raw_text_path, 'w') as f:
-            for t in progress_bar(apply_rules(items, rules), total=len(items), leave=False):
+            for t in progress_bar(maps(*rules, items), total=len(items), leave=False):
                 f.write(f'{t}\n')
         return {'sp_model': self.train(raw_text_path)}
 
