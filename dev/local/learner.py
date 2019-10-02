@@ -263,6 +263,7 @@ class Learner():
             self(_before_inference)
             self.all_batches()
             self(_after_inference)
+            preds = loss_func2activ
             targs = detuplify(tuple(torch.cat(o) for o in zip(*cb.targets)))
             if with_loss: return torch.cat(cb.preds),targs,torch.cat(cb.losses)
             return torch.cat(cb.preds),targs

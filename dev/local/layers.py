@@ -5,7 +5,8 @@ __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugge
            'init_default', 'ConvLayer', 'FlattenedLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
            'MSELossFlat', 'trunc_normal_', 'Embedding', 'SelfAttention', 'PooledSelfAttention2d', 'icnr_init',
            'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN', 'ResBlock', 'ParameterModule',
-           'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model', 'loss_func_name2activ']
+           'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model', 'loss_func_name2activ',
+           'loss_func2activ']
 
 #Cell
 from .torch_basics import *
@@ -374,3 +375,26 @@ loss_func_name2activ = {'cross_entropy_loss': F.softmax, 'nll_loss': torch.exp, 
     'kl_div_loss': torch.exp, 'bce_with_logits_loss': torch.sigmoid, 'cross_entropy': F.softmax,
     'kl_div': torch.exp, 'binary_cross_entropy_with_logits': torch.sigmoid,
 }
+
+#Cell
+def _loss_func_name2activ(name, axis=-1):
+    res = loss_func_name2activ[name]
+    if res == F.softmax: res = partial(F.softmax, dim=axis)
+    return res
+
+#Cell
+def loss_func2activ(loss_func):
+    axis = getattr(loss_func, 'axis', -1)
+    if isinstance(loss_func, FlattenedLoss): loss_func = loss_func.func
+    if getattr(loss_func,'keywords',None):
+        if not loss_func.keywords.get('log_input', True): return
+        axis = loss_func.keywords.get('dim', axis)
+    # could have a partial inside flattened loss! Duplicate on purpose.
+    loss_func = getattr(loss_func, 'func', loss_func)
+    cls_name = camel2snake(loss_func.__class__.__name__)
+    if cls_name in loss_func_name2activ:
+        if cls_name == 'poisson_nll_loss' and (not getattr(loss_func, 'log_input', True)): return
+        return _loss_func_name2activ(cls_name, axis)
+    if getattr(loss_func,'__name__','') in loss_func_name2activ:
+        return _loss_func_name2activ(loss_func.__name__, axis)
+    return noop

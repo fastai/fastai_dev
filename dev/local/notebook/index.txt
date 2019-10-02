@@ -323,6 +323,7 @@
   "nn.Module.has_children": "11_layers.ipynb",
   "flatten_model": "11_layers.ipynb",
   "loss_func_name2activ": "11_layers.ipynb",
+  "loss_func2activ": "11_layers.ipynb",
   "init_cnn": "11a_vision_models_xresnet.ipynb",
   "XResNet": "11a_vision_models_xresnet.ipynb",
   "xresnet18": "11a_vision_models_xresnet.ipynb",
