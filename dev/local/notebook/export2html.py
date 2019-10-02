@@ -172,6 +172,8 @@ def add_show_docs(cells, cls_lvl=None):
         res.append(cell)
         if check_re(cell, _re_export):
             names = export_names(cell['source'], func_only=True)
+            print(cell['source'])
+            print(names)
             for n in names:
                 if n not in documented: res.append(_show_doc_cell(n, cls_lvl=cls_lvl))
     return res

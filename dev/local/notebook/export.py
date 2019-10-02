@@ -93,9 +93,9 @@ _re_patch_func = re.compile(r"""
 \s*\(        # Any number of whitespace followed by an opening parenthesis
 [^:]*        # Any number of character different of : (the name of the first arg that is type-annotated)
 :\s*         # A column followed by any number of whitespace
-([^,\)\s]*)  # Catch a group composed of anything but a comma, a closing parenthesis or whitespace (name of the class)
+([^,]*)      # Catch a group composed of anything but a comma, a closing parenthesis or whitespace (name of the class)
 \s*          # Any number of whitespace
-(?:,|\))     # Non-catching group with either a comma or a closing parenthesis
+(?:,|(?:\):))    # Non-catching group with either a comma or a closing parenthesis
 """, re.VERBOSE)
 
 #Cell

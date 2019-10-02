@@ -33,7 +33,7 @@ class AccumMetric(Metric):
         pred = learn.pred.argmax(dim=self.dim_argmax) if self.dim_argmax else learn.pred
         if self.sigmoid: pred = torch.sigmoid(pred)
         if self.thresh:  pred = (pred >= self.thresh)
-        pred,targ = flatten_check(pred, learn.yb)
+        pred,targ = flatten_check(pred, learn.y)
         self.preds.append(pred)
         self.targs.append(targ)
 
@@ -268,7 +268,7 @@ class Dice(Metric):
     def __init__(self, axis=1): self.axis = axis
     def reset(self): self.inter,self.union = 0,0
     def accumulate(self, learn):
-        pred,targ = flatten_check(learn.pred.argmax(dim=self.axis), learn.yb)
+        pred,targ = flatten_check(learn.pred.argmax(dim=self.axis), learn.y)
         self.inter += (pred*targ).float().sum().item()
         self.union += (pred+targ).float().sum().item()
 
