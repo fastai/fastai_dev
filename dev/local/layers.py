@@ -5,7 +5,7 @@ __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugge
            'init_default', 'ConvLayer', 'FlattenedLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
            'MSELossFlat', 'trunc_normal_', 'Embedding', 'SelfAttention', 'PooledSelfAttention2d', 'icnr_init',
            'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN', 'ResBlock', 'ParameterModule',
-           'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model']
+           'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model', 'loss_func_name2activ']
 
 #Cell
 from .torch_basics import *
@@ -368,3 +368,9 @@ nn.Module.has_children = property(_has_children)
 def flatten_model(m):
     "Return the list of all submodules and parameters of `m`"
     return sum(map(flatten_model,children_and_parameters(m)),[]) if m.has_children else [m]
+
+#Cell
+loss_func_name2activ = {'cross_entropy_loss': F.softmax, 'nll_loss': torch.exp, 'poisson_nll_loss': torch.exp,
+    'kl_div_loss': torch.exp, 'bce_with_logits_loss': torch.sigmoid, 'cross_entropy': F.softmax,
+    'kl_div': torch.exp, 'binary_cross_entropy_with_logits': torch.sigmoid,
+}
