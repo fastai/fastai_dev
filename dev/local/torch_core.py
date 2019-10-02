@@ -5,7 +5,7 @@ __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'TensorBase', 'co
            'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode', 'params', 'trainable_params',
            'bn_types', 'bn_bias_params', 'batch_to_samples', 'make_cross_image', 'show_title', 'show_image',
            'show_titled_image', 'show_image_batch', 'requires_grad', 'init_default', 'cond_init', 'apply_leaf',
-           'apply_init', 'ProcessPoolExecutor', 'parallel', 'parallel_gen', 'flatten_check']
+           'apply_init', 'ProcessPoolExecutor', 'parallel', 'run_procs', 'parallel_gen', 'flatten_check']
 
 #Cell
 from .test import *
@@ -380,18 +380,25 @@ def parallel(f, items, *args, n_workers=defaults.cpus, **kwargs):
         return L(progress_bar(ex.map(f,items, *args, **kwargs), total=len(items), leave=False))
 
 #Cell
+def run_procs(f, f_done, args):
+    "Call `f` for each item in `args` in parallel, yielding `f_done`"
+    processes = args.map(Process, args=_0, target=f)
+    for o in processes: o.start()
+    try: yield from f_done()
+    except Exception as e: print(e)
+    finally:
+        for o in processes: o.join()
+
+#Cell
 def parallel_gen(cls, items, n_workers=defaults.cpus, as_gen=False, **kwargs):
     "Instantiate `cls` in `n_workers` procs & call each on a subset of `items` in parallel."
-    queue = Queue()
     batches = np.array_split(items, n_workers)
     idx = np.cumsum(0 + L(batches).map(len))
-    def _f(batch, start_idx):
+    queue = Queue()
+    def f(batch, start_idx):
         for i,b in enumerate(cls(**kwargs)(batch)): queue.put((start_idx+i,b))
-    processes = L(batches,idx).zip().map(Process, _arg='args', target=_f)
-    processes.map(Self.start())
-    try: yield from (queue.get() for _ in progress_bar(items, leave=False))
-    except Exception as e: print(e)
-    finally: processes.map(Self.join())
+    def done(): return (queue.get() for _ in progress_bar(items, leave=False))
+    yield from run_procs(f, done, L(batches,idx).zip())
 
 #Comes from 20_metrics.ipynb, cell
 def flatten_check(inp, targ, detach=True):

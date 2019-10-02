@@ -51,7 +51,7 @@ def flip_lr(x:TensorBBox):
     bb = _neg_axis(bb.view(-1,2), 0)
     return (bb.view(-1,4),lbl)
 
-TensorTypes = (TensorImage,TensorMask,TensorPoint, TensorBBox)
+TensorTypes = (TensorImage,TensorMask,TensorPoint,TensorBBox)
 
 #Cell
 class FlipItem(RandTransform):
@@ -333,7 +333,7 @@ def _get_default(x, mode=None, pad_mode=None):
 
 #Cell
 @patch
-def flip_batch(x: TensorTypes, p=0.5, size=None, mode=None, pad_mode=None):
+def flip_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, size=None, mode=None, pad_mode=None):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
     return x.affine_coord(mat=flip_mat(x0, p=p)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
@@ -367,7 +367,7 @@ def dihedral_mat(x, p=0.5, draw=None):
 
 #Cell
 @patch
-def dihedral_batch(x: TensorTypes, p=0.5, draw=None, size=None, mode=None, pad_mode=None):
+def dihedral_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
     return x.affine_coord(mat=dihedral_mat(x0, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
@@ -387,7 +387,7 @@ def rotate_mat(x, max_deg=10, p=0.5, draw=None):
 #Cell
 @delegates(rotate_mat)
 @patch
-def rotate(x: TensorTypes, size=None, mode=None, pad_mode=None, **kwargs):
+def rotate(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), size=None, mode=None, pad_mode=None, **kwargs):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
     return x.affine_coord(mat=rotate_mat(x0, **kwargs)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
@@ -413,7 +413,7 @@ def zoom_mat(x, max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None):
 #Cell
 @delegates(zoom_mat)
 @patch
-def zoom(x: TensorTypes, size=None, mode='bilinear', pad_mode=PadMode.Reflection, **kwargs):
+def zoom(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), size=None, mode='bilinear', pad_mode=PadMode.Reflection, **kwargs):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
     return x.affine_coord(mat=zoom_mat(x0, **kwargs)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
@@ -470,7 +470,7 @@ class _WarpCoord():
 #Cell
 @delegates(_WarpCoord.__init__)
 @patch
-def warp(x: TensorTypes, size=None, mode='bilinear', pad_mode=PadMode.Reflection, **kwargs):
+def warp(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), size=None, mode='bilinear', pad_mode=PadMode.Reflection, **kwargs):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
     coord_tfm = _WarpCoord(**kwargs)
     coord_tfm.before_call(x0)
