@@ -3,7 +3,7 @@
 __all__ = ['remove_widget_state', 'hide_cells', 'clean_exports', 'treat_backticks', 'convert_links', 'add_jekyll_notes',
            'copy_images', 'remove_hidden', 'find_default_level', 'add_show_docs', 'remove_fake_headers', 'remove_empty',
            'get_metadata', 'ExecuteShowDocPreprocessor', 'execute_nb', 'process_cells', 'process_cell', 'notebook_path',
-           'convert_nb', 'convert_all', 'convert_post']
+           'convert_nb', 'convert_post']
 
 #Cell
 from ..imports import *
@@ -329,23 +329,6 @@ def convert_nb(fname, dest_path='docs'):
         #res = _exporter().from_notebook_node(nb, resources=meta_jekyll)[0]
         #print(res)
         f.write(_exporter().from_notebook_node(nb, resources=meta_jekyll)[0])
-
-#Cell
-def convert_all(path='.', dest_path='../docs', force_all=False):
-    "Convert all notebooks in `path` to html files in `dest_path`."
-    path = Path(path)
-    changed_cnt = 0
-    for fname in path.glob("[0-9]*.ipynb"):
-        # only rebuild modified files
-        if fname.name.startswith('_'): continue
-        fname_out = Path(dest_path)/'.'.join(fname.with_suffix('.html').name.split('_')[1:])
-        if not force_all and fname_out.exists() and os.path.getmtime(fname) < os.path.getmtime(fname_out):
-            continue
-        print(f"converting: {fname} => {fname_out}")
-        changed_cnt += 1
-        try: convert_nb(fname, dest_path=dest_path)
-        except Exception as e: print(e)
-    if changed_cnt==0: print("No notebooks were modified")
 
 #Cell
 def convert_post(fname, dest_path='posts'):
