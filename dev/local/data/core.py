@@ -76,7 +76,7 @@ class TfmdDL(DataLoader):
 @docs
 class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."
-    _xtra='one_batch show_batch dataset device n_inp'.split()
+    _xtra='one_batch show_batch decode_batch dataset device n_inp'.split()
     _default='train_dl'
 
     def __init__(self, *dls): self.dls = dls
