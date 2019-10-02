@@ -110,7 +110,7 @@ class FilteredBase:
         bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
         shuffles = [shuffle_train] + [False]*n
         return DataBunch(*[self._dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
-                               for i,(b,s) in enumerate(zip(bss, shuffles))])
+                           for i,(b,s) in enumerate(zip(bss, shuffles))])
 
 FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
 
@@ -118,8 +118,8 @@ FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
 class TfmdList(FilteredBase, L):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
     _default='tfms'
-    def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, split_idx=None, train_setup=True, splits=None): #, dl_type=None
-        super().__init__(items, use_list=use_list) #dl_type=dl_type
+    def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, split_idx=None, train_setup=True, splits=None):
+        super().__init__(items, use_list=use_list)
         self.splits = L([slice(None)] if splits is None else splits).map(mask2idxs)
         if isinstance(tfms,TfmdList): tfms = tfms.tfms
         if isinstance(tfms,Pipeline): do_setup=False
@@ -156,7 +156,8 @@ def show_at(o, idx, **kwargs):
 @delegates(TfmdList)
 class DataSource(FilteredBase):
     "A dataset that creates a tuple from each `tfms`, passed thru `ds_tfms`"
-    def __init__(self, items=None, tfms=None, tls=None, n_inp=None, **kwargs):
+    def __init__(self, items=None, tfms=None, tls=None, n_inp=None, dl_type=None, **kwargs):
+        super().__init__(dl_type=dl_type)
         self.tls = L(tls if tls else [TfmdList(items, t, **kwargs) for t in L(ifnone(tfms,[None]))])
         self.n_inp = (1 if len(self.tls)==1 else len(self.tls)-1) if n_inp is None else n_inp
 
