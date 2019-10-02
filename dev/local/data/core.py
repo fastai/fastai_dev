@@ -95,8 +95,9 @@ class DataBunch(GetAttr):
 class FilteredBase:
     "Base class for lists with subsets"
     _dl_type = TfmdDL
-    def __init__(self, *args, **kwargs):
-        self.databunch = delegates(self._dl_type.__init__)(self.databunch)
+    def __init__(self, *args, dl_type=None, **kwargs):
+        self.dl_type = self._dl_type if dl_type is None else dl_type
+        self.databunch = delegates(self.dl_type.__init__)(self.databunch)
         super().__init__(*args, **kwargs)
 
     def _new(self, items, **kwargs): return super()._new(items, splits=self.splits, **kwargs)
@@ -108,7 +109,7 @@ class FilteredBase:
         n = self.n_subsets-1
         bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
         shuffles = [shuffle_train] + [False]*n
-        return DataBunch(*[self._dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
+        return DataBunch(*[self.dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
                                for i,(b,s) in enumerate(zip(bss, shuffles))])
 
 FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
@@ -117,8 +118,8 @@ FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
 class TfmdList(FilteredBase, L):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
     _default='tfms'
-    def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, split_idx=None, train_setup=True, splits=None):
-        super().__init__(items, use_list=use_list)
+    def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, split_idx=None, train_setup=True, splits=None, dl_type=None):
+        super().__init__(items, use_list=use_list, dl_type=dl_type)
         self.splits = L([slice(None)] if splits is None else splits).map(mask2idxs)
         if isinstance(tfms,TfmdList): tfms = tfms.tfms
         if isinstance(tfms,Pipeline): do_setup=False

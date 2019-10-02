@@ -6,7 +6,7 @@ __all__ = ['UNK', 'PAD', 'BOS', 'EOS', 'FLD', 'TK_REP', 'TK_WREP', 'TK_UP', 'TK_
            'parallel_tokenize', 'tokenize_folder', 'tokenize_df', 'tokenize_csv', 'SentencePieceTokenizer']
 
 #Cell
-from ..imports import *
+from ..torch_basics import *
 from ..test import *
 from ..core import *
 from ..data.all import *
