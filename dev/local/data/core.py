@@ -95,9 +95,9 @@ class DataBunch(GetAttr):
 class FilteredBase:
     "Base class for lists with subsets"
     _dl_type = TfmdDL
-    def __init__(self, *args, **kwargs): #dl_type=None
-        #self.dl_type = self._dl_type if dl_type is None else dl_type
-        #self.databunch = delegates(self.dl_type.__init__)(self.databunch)
+    def __init__(self, *args, dl_type=None, **kwargs):
+        if dl_type is not None: self._dl_type = dl_type
+        self.databunch = delegates(self._dl_type.__init__)(self.databunch)
         super().__init__(*args, **kwargs)
 
     def _new(self, items, **kwargs): return super()._new(items, splits=self.splits, **kwargs)
