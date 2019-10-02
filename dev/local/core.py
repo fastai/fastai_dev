@@ -2,13 +2,13 @@
 
 __all__ = ['defaults', 'FixSigMeta', 'PrePostInitMeta', 'NewChkMeta', 'BypassNewMeta', 'copy_func', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'add_docs', 'docs', 'custom_dir',
-           'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'listable_types', 'CollBase', 'cycle', 'zip_cycle',
-           'is_indexer', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrdict', 'properties',
-           'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish',
-           'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
-           'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float',
-           'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple', 'TupleTitled', 'trace', 'compose', 'maps',
-           'partialler', 'mapped', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'bunzip',
+           '_0', '_1', '_2', '_3', '_4', 'bind', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'listable_types',
+           'CollBase', 'cycle', 'zip_cycle', 'is_indexer', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class',
+           'store_attr', 'attrdict', 'properties', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy',
+           'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq',
+           'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types',
+           'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple',
+           'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped', 'instantiate', 'Self', 'Self', 'bunzip',
            'join_path_file', 'sort_by_run', 'display_df', 'round_multiple', 'even_mults', 'num_cpus', 'add_props',
            'camel2snake', 'PrettyString']
 
@@ -179,6 +179,26 @@ def custom_dir(c, add:list):
     return dir(type(c)) + list(c.__dict__.keys()) + add
 
 #Cell
+class _Arg:
+    def __init__(self,i): self.i = i
+_0,_1,_2,_3,_4 = _Arg(0),_Arg(1),_Arg(2),_Arg(3),_Arg(4)
+
+#Cell
+class bind:
+    "Same as `partial`, except you can use `_0` `_1` etc param placeholders"
+    def __init__(self, fn, *pargs, **pkwargs):
+        self.fn,self.pargs,self.pkwargs = fn,pargs,pkwargs
+        self.maxi = max((x.i for x in pargs if isinstance(x, _Arg)), default=-1)
+
+    def __call__(self, *args, **kwargs):
+        args = list(args)
+        kwargs = {**self.pkwargs,**kwargs}
+        for k,v in kwargs.items():
+            if isinstance(v,_Arg): kwargs[k] = args.pop(v.i)
+        fargs = [args[x.i] if isinstance(x, _Arg) else x for x in self.pargs] + args[self.maxi+1:]
+        return self.fn(*fargs, **kwargs)
+
+#Cell
 class GetAttr:
     "Inherit from this to have all attr accesses in `self._xtra` passed down to `self.default`"
     _default='default'
@@ -308,9 +328,8 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if is_coll(a): a = len(a)
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
-    def map(self, f, *args, _arg=None, **kwargs):
-        g = ((lambda o: f(*args, **{_arg:o}, **kwargs)) if _arg is not None
-             else partial(f,*args,**kwargs) if callable(f)
+    def map(self, f, *args, **kwargs):
+        g = (bind(f,*args,**kwargs) if callable(f)
              else f.format if isinstance(f,str)
              else f.__getitem__)
         return self._new(map(g, self))
@@ -686,21 +705,6 @@ def mapped(f, it):
 def instantiate(t):
     "Instantiate `t` if it's a type, otherwise do nothing"
     return t() if isinstance(t, type) else t
-
-#Cell
-mk_class('_Arg', 'i')
-_0,_1,_2,_3,_4 = _Arg(0),_Arg(1),_Arg(2),_Arg(3),_Arg(4)
-
-#Cell
-class bind:
-    "Same as `partial`, except you can use `_0` `_1` etc param placeholders"
-    def __init__(self, fn, *pargs, **pkwargs):
-        store_attr(self, 'fn,pargs,pkwargs')
-        self.maxi = max((x.i for x in pargs if isinstance(x, _Arg)), default=-1)
-
-    def __call__(self, *args, **kwargs):
-        fargs = L(args[x.i] if isinstance(x, _Arg) else x for x in self.pargs) + args[self.maxi+1:]
-        return self.fn(*fargs, **{**self.pkwargs, **kwargs})
 
 #Cell
 class _Self:
