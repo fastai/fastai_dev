@@ -382,12 +382,11 @@ def parallel(f, items, *args, n_workers=defaults.cpus, **kwargs):
 #Cell
 def run_procs(f, f_done, args):
     "Call `f` for each item in `args` in parallel, yielding `f_done`"
-    processes = args.map(Process, args=_0, target=f)
+    processes = L(args).map(Process, args=_0, target=f)
     for o in processes: o.start()
     try: yield from f_done()
     except Exception as e: print(e)
-    finally:
-        for o in processes: o.join()
+    finally: processes.map(Self.join())
 
 #Cell
 def parallel_gen(cls, items, n_workers=defaults.cpus, as_gen=False, **kwargs):
