@@ -62,6 +62,9 @@ class GatherPredsCallback(Callback):
     "`Callback` that saves the predictions and targets, optionally `with_loss`"
     def __init__(self, with_input=False, with_loss=False): store_attr(self, "with_input,with_loss")
 
+    def begin_batch(self):
+        if self.with_input: self.inputs.append((to_detach(self.xb)))
+
     def begin_validate(self):
         "Initialize containers"
         self.preds,self.targets = [],[]
@@ -72,7 +75,6 @@ class GatherPredsCallback(Callback):
         "Save predictions, targets and potentially losses"
         self.preds.append(to_detach(self.pred))
         self.targets.append(to_detach(self.yb))
-        if self.with_input: self.inputs.append(to_detach(self.xb))
         if self.with_loss:  self.losses.append(to_detach(self.loss))
 
 #Cell
