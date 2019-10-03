@@ -45,14 +45,16 @@ class TensorImageBase(TensorBase):
     def show(self, ctx=None, **kwargs):
         return show_image(self, ctx=ctx, **{**self._show_args, **kwargs})
 
-    def get_ctxs(self, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+    def get_ctxs(self, max_n=10, rows=None, cols=None, figsize=None, double=False, **kwargs):
         n_samples = min(self.shape[0], max_n)
         rows = rows or int(np.ceil(math.sqrt(n_samples)))
-        cols = cols or int(np.ceil(math.sqrt(n_samples)))
+        cols = cols or int(np.ceil(n_samples/rows))
+        if double: cols*=2 ; max_n*=2
         figsize = (cols*3, rows*3) if figsize is None else figsize
         _,axs = subplots(rows, cols, figsize=figsize)
         for ax in axs.flatten()[max_n:]: ax.set_axis_off()
-        return axs.flatten()
+        if not double: return axs.flatten()
+        return axs.flatten()[::2],axs.flatten()[1::2]
 
 #Cell
 class TensorImage(TensorImageBase): pass
