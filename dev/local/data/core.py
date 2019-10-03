@@ -27,6 +27,7 @@ class TfmdDL(DataLoader):
     def _one_pass(self):
         its = self.after_batch(self.do_batch([self.do_item(0)]))
         self._device = find_device(its)
+        self._n_inp = 1 if not isinstance(its, (list,tuple)) or len(its)==1 else len(its)-1
         self._retain_dl = partial(retain_types, typs=mapped(type,its))
 
     def _retain_dl(self,b):
@@ -69,8 +70,8 @@ class TfmdDL(DataLoader):
     @property
     def n_inp(self):
         if hasattr(self.dataset, 'n_inp'): return self.dataset.n_inp
-        its = self.after_batch(self.do_batch([self.do_item(0)]))
-        return 1 if not isinstance(its, (list,tuple)) or len(its)==1 else len(its)-1
+        if not hasattr(self, '_n_inp'): self._one_pass()
+        return self._n_inp
 
 #Cell
 @docs

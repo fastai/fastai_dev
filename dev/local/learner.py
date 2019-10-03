@@ -60,18 +60,20 @@ class TrainEvalCallback(Callback):
 #Cell
 class GatherPredsCallback(Callback):
     "`Callback` that saves the predictions and targets, optionally `with_loss`"
-    def __init__(self, with_loss=False): self.with_loss = with_loss
+    def __init__(self, with_input=False, with_loss=False): store_attr(self, "with_input,with_loss")
 
     def begin_validate(self):
         "Initialize containers"
         self.preds,self.targets = [],[]
+        if self.with_input: self.inputs=[]
         if self.with_loss: self.losses = []
 
     def after_batch(self):
         "Save predictions, targets and potentially losses"
         self.preds.append(to_detach(self.pred))
         self.targets.append(to_detach(self.yb))
-        if self.with_loss: self.losses.append(to_detach(self.loss))
+        if self.with_input: self.inputs.append(to_detach(self.xb))
+        if self.with_loss:  self.losses.append(to_detach(self.loss))
 
 #Cell
 _ex_docs = dict(
@@ -255,10 +257,10 @@ class Learner():
             self(_after_inference)
         return self.recorder.values[-1]
 
-    def get_preds(self, ds_idx=1, dl=None, with_loss=False, decoded=False, act=None):
+    def get_preds(self, ds_idx=1, dl=None, with_input=False, with_loss=False, decoded=False, act=None):
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         self.dl = self.dbunch.dls[ds_idx] if dl is None else dl
-        cb = GatherPredsCallback(with_loss=with_loss)
+        cb = GatherPredsCallback(with_input=with_input, with_loss=with_loss)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
             self(_before_inference)
             self.all_batches()
@@ -266,9 +268,10 @@ class Learner():
             if act is None: act = getattr(self.loss_func, 'activation', noop)
             preds = act(torch.cat(cb.preds))
             if decoded: preds = getattr(sellf.loss_func, 'decodes', noop)(preds)
-            targs = detuplify(tuple(torch.cat(o) for o in zip(*cb.targets)))
-            if with_loss: return preds,targs,torch.cat(cb.losses)
-            return preds,targs
+            res = (preds, detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
+            if with_input: res = (detuplify(tuple(torch.cat(o) for o in zip(*cb.inputs))),) + res
+            if with_loss:  res = res + (torch.cat(cb.losses),)
+            return res
 
     def predict(self, item):
         dl = test_dl(self.dbunch, [item])
@@ -311,7 +314,7 @@ add_docs(Learner, "Group together a `model`, some `dbunch` and a `loss_func` to 
     all_batches="Train or evaluate `self.model` on all batches of `self.dl`",
     fit="Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`.",
     validate="Validate on `dl` with potential new `cbs`.",
-    get_preds="Get the predictions and targets on the `ds_idx`-th dbunchset, optionally `with_loss`",
+    get_preds="Get the predictions and targets on the `ds_idx`-th dbunchset, optionally `with_input` and `with_loss`",
     predict="Return the prediction on `item`, fully decoded, loss function decoded and probabilities",
     no_logging="Context manager to temporarily remove `logger`",
     loss_not_reduced="A context manager to evaluate `loss_func` with reduction set to none.",
