@@ -50,7 +50,7 @@ class TfmdDL(DataLoader):
         if ds_decode: f = compose(f, getattr(self.dataset,'decode',noop))
         return L(batch_to_samples(b, max_n=max_n)).map(f)
 
-    def show_batch(self, b=None, max_n=10, ctxs=None, **kwargs):
+    def show_batch(self, b=None, max_n=10, ctxs=None, return_fig=False, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         if b is None: b = self.one_batch()
         b = self.decode(b)
@@ -61,6 +61,7 @@ class TfmdDL(DataLoader):
         db = self._decode_batch(b, max_n, False)
         ctxs = [self.dataset.show(o, ctx=ctx, **kwargs) for o,ctx in zip(db, ctxs)]
         if hasattr(b[0], 'display'): b[0].display(ctxs)
+        if return_fig: return ctxs
 
     @property
     def device(self):
