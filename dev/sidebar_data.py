@@ -15,8 +15,11 @@ sidebar_d = {
         #'Support': '/support'
     },
     'Tutorials': {
+        'Vision tutorial': '/tutorial.transfer.learning',
         'Pets tutorial': '/pets.tutorial',
-        'Imagenette tutorial': '/tutorial.imagenette'
+        'Imagenette tutorial': '/tutorial.imagenette',
+        'UlMFiT tutorial': '/tutorial.ulmfit',
+        'Wikitext tutorial': '/tutorial.wikitext'
     },
     'Training': {
         'Training loop': '/learner',
@@ -53,11 +56,23 @@ sidebar_d = {
         'Vision Core': '/vision.core',
         'Vision Learner': '/vision.learner',
         'Vision Data Augmentation': '/vision.augment',
+        '': {
+            'Models': {
+                'XResnet': '/vision.models.xresnet',
+            }
+        },
     },
     'Text': {
         'Text Core': '/text.core',
         'Text Data': '/text.data',
         'Text Learner': '/text.learner',
+        '': {
+            'Models': {
+                'Core': '/text.models.core',
+                'AWD LSTM': '/text.models.awdlstm',
+                'QRNN': '/text.models.qrnn',
+            }
+        },
     },
     'Tabular': {
         'Tabular Core': '/tabular.core',
@@ -68,6 +83,7 @@ sidebar_d = {
         'Export to modules': '/notebook.export',
         'Convert to html': '/notebook.export2html',
         'Show doc': '/notebook.showdoc',
+        'Test functions': 'notebook.test',
         'Core functions': 'notebook.core',
     },
 }
