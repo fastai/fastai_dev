@@ -197,5 +197,5 @@ def test_set(dsrc, test_items):
 #Cell
 def test_dl(dbunch, test_items):
     "Create a test dataloader from `test_items` using validation transforms of `dbunch`"
-    test_ds = test_set(dbunch.valid_ds, test_items)
+    test_ds = test_set(dbunch.valid_ds, test_items) if isinstance(dbunch.valid_ds, DataSource) else test_items
     return dbunch.valid_dl.new(test_ds)

@@ -3,7 +3,8 @@
 __all__ = ['UNK', 'PAD', 'BOS', 'EOS', 'FLD', 'TK_REP', 'TK_WREP', 'TK_UP', 'TK_MAJ', 'spec_add_spaces',
            'rm_useless_spaces', 'replace_rep', 'replace_wrep', 'fix_html', 'replace_all_caps', 'replace_maj',
            'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer', 'TokenizeBatch', 'tokenize1',
-           'parallel_tokenize', 'tokenize_folder', 'tokenize_df', 'tokenize_csv', 'SentencePieceTokenizer']
+           'parallel_tokenize', 'tokenize_folder', 'tokenize_df', 'tokenize_csv', 'load_tokenized_csv',
+           'SentencePieceTokenizer']
 
 #Cell
 from ..torch_basics import *
@@ -206,11 +207,18 @@ def tokenize_csv(fname, text_cols, outname=None, n_workers=4, rules=None, mark_f
     outname = Path(ifnone(outname, fname.parent/f'{fname.stem}_tok.csv'))
     cnt = Counter()
     for i,dfp in enumerate(df):
-        out,c = tokenize_df(dfp, text_cols, n_workers=n_workers, pre_rules=pre_rules, post_rules=post_rules,
+        out,c = tokenize_df(dfp, text_cols, n_workers=n_workers, rules=rules,
                             mark_fields=mark_fields, tok_func=tok_func, **tok_kwargs)
         out.to_csv(outname, header=(None,header)[i==0], index=False, mode=('a','w')[i==0])
         cnt.update(c)
     pickle.dump(cnt, open(outname.parent/'counter.pkl', 'wb'))
+
+def load_tokenized_csv(fname):
+    parent_d = Path(fname).parent
+    cnt = pickle.load(open(d/'counter.pkl', 'rb'))
+    out = pd.read_csv(out_fname)
+    out['text'] = out.text.apply(eval)
+    return out, cnt
 
 #Cell
 class SentencePieceTokenizer():#TODO: pass the special tokens symbol to sp

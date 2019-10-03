@@ -269,16 +269,17 @@ class Learner():
             preds = act(torch.cat(cb.preds))
             if decoded: preds = getattr(sellf.loss_func, 'decodes', noop)(preds)
             res = (preds, detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
-            if with_input: res = (detuplify(tuple(torch.cat(o) for o in zip(*cb.inputs))),) + res
+            if with_input: res = (tuple(torch.cat(o) for o in zip(*cb.inputs)),) + res
             if with_loss:  res = res + (torch.cat(cb.losses),)
             return res
 
     def predict(self, item):
         dl = test_dl(self.dbunch, [item])
-        preds = self.get_preds(dl=dl)[0]
+        inp,preds,_ = self.get_preds(dl=dl, with_input=True)
         dec_preds = getattr(self.loss_func, 'decodes', noop)(preds)
-        ful_dec = self.dbunch.decode_batch((list(dl)[0][0],dec_preds))[0][1]
-        return ful_dec,dec_preds,preds
+        i = getattr(self.dbunch, 'n_inp', -1)
+        full_dec = self.dbunch.decode_batch((*inp,dec_preds))[0][i:]
+        return detuplify(full_dec),dec_preds[0],preds[0]
 
     @contextmanager
     def no_logging(self): return replacing_yield(self, 'logger', noop)
