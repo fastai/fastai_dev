@@ -274,7 +274,7 @@ class Learner():
         dl = test_dl(self.dbunch, [item])
         preds = self.get_preds(dl=dl)[0]
         dec_preds = getattr(self.loss_func, 'decodes', noop)(preds)
-        ful_dec = self.dbunch.train_dl.decode_batch((list(dl)[0][0],dec_preds))[0][1]
+        ful_dec = self.dbunch.decode_batch((list(dl)[0][0],dec_preds))[0][1]
         return ful_dec,dec_preds,preds
 
     @contextmanager

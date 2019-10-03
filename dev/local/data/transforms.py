@@ -167,7 +167,9 @@ class OneHotEncode(Transform):
 
 #Cell
 def get_c(dbunch):
-    return len(getattr(dbunch.train_ds, 'vocab', []))
+    vocab = getattr(dbunch, 'vocab', [])
+    if len(vocab) > 0 and is_listy(vocab[-1]): vocab = vocab[-1]
+    return len(vocab)
 
 #Cell
 class ToTensor(Transform):
