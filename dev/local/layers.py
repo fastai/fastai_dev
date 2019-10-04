@@ -309,8 +309,7 @@ class Cat(nn.ModuleList):
     def __init__(self, *layers, dim=1):
         self.dim=dim
         super().__init__(*layers)
-    def forward(self, x):
-        return torch.cat([l(x) for l in self], dim=self.dim)
+    def forward(self, x): return torch.cat([l(x) for l in self], dim=self.dim)
 
 #Cell
 class SimpleCNN(nn.Sequential):
