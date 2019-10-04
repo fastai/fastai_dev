@@ -230,6 +230,13 @@ def load_tokenized_csv(fname):
         out[txt_col] = out[txt_col].apply(ujson.loads)
     return out
 
+def load_tokenized_csv(fname):
+    parent_d = Path(fname).parent
+    cnt = pickle.load(open(d/'counter.pkl', 'rb'))
+    out = pd.read_csv(out_fname)
+    out['text'] = out.text.apply(eval)
+    return out, cnt
+
 #Cell
 class SentencePieceTokenizer():#TODO: pass the special tokens symbol to sp
     "Spacy tokenizer for `lang`"
