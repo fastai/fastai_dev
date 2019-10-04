@@ -414,6 +414,53 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">txt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">@patch</span>
+<span class="s2">def func (obj:(Class1, Class2), a)&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">gps</span><span class="p">):</span>
+    <span class="n">nm</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">gps</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+    <span class="k">if</span> <span class="bp">cls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;def </span><span class="si">{cls}</span><span class="s2">.</span><span class="si">{nm}</span><span class="s2">():&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;, *&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span> <span class="n">res</span> <span class="o">+=</span> <span class="n">f</span><span class="s2">&quot;def </span><span class="si">{c}</span><span class="s2">.</span><span class="si">{nm}</span><span class="s2">():&quot;</span>
+    <span class="k">return</span> <span class="n">res</span>
+            
+<span class="n">_re_patch_func</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">_f</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>func None (Class1, Class2) [&#39;Class1&#39;, &#39;Class2&#39;]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;\ndef Class1.func():def Class2.func(): a)&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -431,7 +478,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_names" class="doc_header"><code>export_names</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L126" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_names</code>(<strong><code>code</code></strong>, <strong><code>func_only</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="export_names" class="doc_header"><code>export_names</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L129" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_names</code>(<strong><code>code</code></strong>, <strong><code>func_only</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Find the names of the objects, functions or classes defined in <code>code</code> that are exported.</p>
 
@@ -476,6 +523,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 <span class="k">assert</span> <span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;@patch</span><span class="se">\n</span><span class="s2">def my_func(x:Class):</span><span class="se">\n</span><span class="s2">  pass&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;Class.my_func&quot;</span><span class="p">]</span>
 <span class="k">assert</span> <span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;@patch</span><span class="se">\n</span><span class="s2">def my_func(x:Class):</span><span class="se">\n</span><span class="s2">  pass&quot;</span><span class="p">,</span> <span class="n">func_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;Class.my_func&quot;</span><span class="p">]</span>
 <span class="k">assert</span> <span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;some code</span><span class="se">\n</span><span class="s2">@patch</span><span class="se">\n</span><span class="s2">def my_func(x:Class, y):</span><span class="se">\n</span><span class="s2">  pass&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;Class.my_func&quot;</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;some code</span><span class="se">\n</span><span class="s2">@patch</span><span class="se">\n</span><span class="s2">def my_func(x:(Class1,Class2), y):</span><span class="se">\n</span><span class="s2">  pass&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;Class1.my_func&quot;</span><span class="p">,</span> <span class="s2">&quot;Class2.my_func&quot;</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -498,7 +546,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="extra_add" class="doc_header"><code>extra_add</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L148" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>extra_add</code>(<strong><code>code</code></strong>)</p>
+<h4 id="extra_add" class="doc_header"><code>extra_add</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L156" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>extra_add</code>(<strong><code>code</code></strong>)</p>
 </blockquote>
 <p>Catch adds to <code>__all__</code> required by a cell with <code>_all_=</code></p>
 
@@ -627,7 +675,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="notebook2script" class="doc_header"><code>notebook2script</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L249" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>notebook2script</code>(<strong><code>fname</code></strong>=<em><code>None</code></em>, <strong><code>all_fs</code></strong>=<em><code>None</code></em>, <strong><code>up_to</code></strong>=<em><code>None</code></em>, <strong><code>silent</code></strong>=<em><code>False</code></em>, <strong><code>to_pkl</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="notebook2script" class="doc_header"><code>notebook2script</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L257" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>notebook2script</code>(<strong><code>fname</code></strong>=<em><code>None</code></em>, <strong><code>all_fs</code></strong>=<em><code>None</code></em>, <strong><code>up_to</code></strong>=<em><code>None</code></em>, <strong><code>silent</code></strong>=<em><code>False</code></em>, <strong><code>to_pkl</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Convert <code>fname</code> or all the notebook satisfying <code>all_fs</code>.</p>
 
@@ -683,7 +731,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_name" class="doc_header"><code>get_name</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L266" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_name</code>(<strong><code>obj</code></strong>)</p>
+<h4 id="get_name" class="doc_header"><code>get_name</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L274" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_name</code>(<strong><code>obj</code></strong>)</p>
 </blockquote>
 <p>Get the name of <code>obj</code></p>
 
@@ -707,7 +755,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="qual_name" class="doc_header"><code>qual_name</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L275" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>qual_name</code>(<strong><code>obj</code></strong>)</p>
+<h4 id="qual_name" class="doc_header"><code>qual_name</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L283" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>qual_name</code>(<strong><code>obj</code></strong>)</p>
 </blockquote>
 <p>Get the qualified name of <code>obj</code></p>
 
@@ -753,7 +801,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="source_nb" class="doc_header"><code>source_nb</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L282" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>source_nb</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<em><code>None</code></em>, <strong><code>return_all</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="source_nb" class="doc_header"><code>source_nb</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L290" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>source_nb</code>(<strong><code>func</code></strong>, <strong><code>is_name</code></strong>=<em><code>None</code></em>, <strong><code>return_all</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Return the name of the notebook where <code>func</code> was defined</p>
 
@@ -955,7 +1003,7 @@ e
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="script2notebook" class="doc_header"><code>script2notebook</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L368" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>script2notebook</code>(<strong><code>folder</code></strong>=<em><code>'local'</code></em>, <strong><code>silent</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="script2notebook" class="doc_header"><code>script2notebook</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L376" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>script2notebook</code>(<strong><code>folder</code></strong>=<em><code>'local'</code></em>, <strong><code>silent</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -1003,7 +1051,7 @@ e
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="diff_nb_script" class="doc_header"><code>diff_nb_script</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L388" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>diff_nb_script</code>(<strong><code>lib_folder</code></strong>=<em><code>'local'</code></em>)</p>
+<h4 id="diff_nb_script" class="doc_header"><code>diff_nb_script</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L396" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>diff_nb_script</code>(<strong><code>lib_folder</code></strong>=<em><code>'local'</code></em>)</p>
 </blockquote>
 <p>Print the diff between the notebooks and the library in <code>lib_folder</code></p>
 

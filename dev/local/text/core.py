@@ -199,19 +199,36 @@ def tokenize_df(df, text_cols, n_workers=defaults.cpus, rules=None, mark_fields=
     return res,Counter(outputs.concat())
 
 #Cell
-#TODO: test + rework
+#TODO: writing the text tokens in a single column works fine, but is problematic to reload
+#      currently i'm encoding/decoding each cell into json and back but thats slow
+#      need to find a faster approach
+import ujson
+
 def tokenize_csv(fname, text_cols, outname=None, n_workers=4, rules=None, mark_fields=None,
                  tok_func=SpacyTokenizer, header='infer', chunksize=50000, **tok_kwargs):
     "Tokenize texts in the `text_cols` of the csv `fname` in parallel using `n_workers`"
     df = pd.read_csv(fname, header=header, chunksize=chunksize)
     outname = Path(ifnone(outname, fname.parent/f'{fname.stem}_tok.csv'))
     cnt = Counter()
+
     for i,dfp in enumerate(df):
         out,c = tokenize_df(dfp, text_cols, n_workers=n_workers, rules=rules,
                             mark_fields=mark_fields, tok_func=tok_func, **tok_kwargs)
+
+        out.text = out.text.apply(ujson.dumps)
+
         out.to_csv(outname, header=(None,header)[i==0], index=False, mode=('a','w')[i==0])
         cnt.update(c)
-    pickle.dump(cnt, open(outname.parent/'counter.pkl', 'wb'))
+    return cnt
+
+
+def load_tokenized_csv(fname):
+    import ast
+
+    out = pd.read_csv(fname)
+    for txt_col in out.columns[1:-1]:
+        out[txt_col] = out[txt_col].apply(ujson.loads)
+    return out
 
 def load_tokenized_csv(fname):
     parent_d = Path(fname).parent
@@ -269,5 +286,5 @@ class SentencePieceTokenizer():#TODO: pass the special tokens symbol to sp
                 f.write(f'{t}\n')
         return {'sp_model': self.train(raw_text_path)}
 
-    def pipe(self, items):
+    def __call__(self, items):
         for t in items: yield self.tok.EncodeAsPieces(t)

@@ -60,18 +60,22 @@ class TrainEvalCallback(Callback):
 #Cell
 class GatherPredsCallback(Callback):
     "`Callback` that saves the predictions and targets, optionally `with_loss`"
-    def __init__(self, with_loss=False): self.with_loss = with_loss
+    def __init__(self, with_input=False, with_loss=False): store_attr(self, "with_input,with_loss")
+
+    def begin_batch(self):
+        if self.with_input: self.inputs.append((to_detach(self.xb)))
 
     def begin_validate(self):
         "Initialize containers"
         self.preds,self.targets = [],[]
+        if self.with_input: self.inputs=[]
         if self.with_loss: self.losses = []
 
     def after_batch(self):
         "Save predictions, targets and potentially losses"
         self.preds.append(to_detach(self.pred))
         self.targets.append(to_detach(self.yb))
-        if self.with_loss: self.losses.append(to_detach(self.loss))
+        if self.with_loss:  self.losses.append(to_detach(self.loss))
 
 #Cell
 _ex_docs = dict(
@@ -255,10 +259,10 @@ class Learner():
             self(_after_inference)
         return self.recorder.values[-1]
 
-    def get_preds(self, ds_idx=1, dl=None, with_loss=False, decoded=False, act=None):
+    def get_preds(self, ds_idx=1, dl=None, with_input=False, with_loss=False, decoded=False, act=None):
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         self.dl = self.dbunch.dls[ds_idx] if dl is None else dl
-        cb = GatherPredsCallback(with_loss=with_loss)
+        cb = GatherPredsCallback(with_input=with_input, with_loss=with_loss)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
             self(_before_inference)
             self.all_batches()
@@ -266,16 +270,33 @@ class Learner():
             if act is None: act = getattr(self.loss_func, 'activation', noop)
             preds = act(torch.cat(cb.preds))
             if decoded: preds = getattr(sellf.loss_func, 'decodes', noop)(preds)
-            targs = detuplify(tuple(torch.cat(o) for o in zip(*cb.targets)))
-            if with_loss: return preds,targs,torch.cat(cb.losses)
-            return preds,targs
+            res = (preds, detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
+            if with_input: res = (tuple(torch.cat(o) for o in zip(*cb.inputs)),) + res
+            if with_loss:  res = res + (torch.cat(cb.losses),)
+            return res
 
     def predict(self, item):
         dl = test_dl(self.dbunch, [item])
-        preds = self.get_preds(dl=dl)[0]
+        inp,preds,_ = self.get_preds(dl=dl, with_input=True)
         dec_preds = getattr(self.loss_func, 'decodes', noop)(preds)
-        ful_dec = self.dbunch.decode_batch((list(dl)[0][0],dec_preds))[0][1]
-        return ful_dec,dec_preds,preds
+        i = getattr(self.dbunch, 'n_inp', -1)
+        full_dec = self.dbunch.decode_batch((*inp,dec_preds))[0][i:]
+        return detuplify(full_dec),dec_preds[0],preds[0]
+
+    def show_results(self, ds_idx=0, dl=None, max_n=10, superpose=True):
+        dl = self.dbunch.dls[ds_idx] if dl is None else dl
+        b = dl.one_batch()
+        preds,_ = self.get_preds(dl=[b])
+        preds = getattr(self.loss_func, "decodes", noop)(preds)
+        i = getattr(self.dbunch, 'n_inp', 1 if len(b)==1 else len(b)-1)
+        b_out = (*b[:i], preds)
+        if superpose:
+            ctxs = self.dbunch.show_batch(b=b, max_n=max_n, return_fig=True)
+            self.dbunch.show_batch(b=b_out, max_n=max_n, ctxs=ctxs)
+        else:
+            ctxs1,ctxs2 = b[0].get_ctxs(max_n=max_n, double=True)
+            self.dbunch.show_batch(b=b,     max_n=max_n, ctxs=ctxs1)
+            self.dbunch.show_batch(b=b_out, max_n=max_n, ctxs=ctxs2)
 
     @contextmanager
     def no_logging(self): return replacing_yield(self, 'logger', noop)
@@ -311,8 +332,9 @@ add_docs(Learner, "Group together a `model`, some `dbunch` and a `loss_func` to 
     all_batches="Train or evaluate `self.model` on all batches of `self.dl`",
     fit="Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`.",
     validate="Validate on `dl` with potential new `cbs`.",
-    get_preds="Get the predictions and targets on the `ds_idx`-th dbunchset, optionally `with_loss`",
+    get_preds="Get the predictions and targets on the `ds_idx`-th dbunchset or `dl`, optionally `with_input` and `with_loss`",
     predict="Return the prediction on `item`, fully decoded, loss function decoded and probabilities",
+    show_results="Show some predictions on `ds_idx`-th dbunchset or `dl`",
     no_logging="Context manager to temporarily remove `logger`",
     loss_not_reduced="A context manager to evaluate `loss_func` with reduction set to none.",
     save="Save model and optimizer state (if `with_opt`) to `self.path/self.model_dir/file`",

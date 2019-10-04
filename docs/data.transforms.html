@@ -1092,7 +1092,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ToTensor" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L173" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="ToTensor" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L175" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Convert item to appropriate tensor class</p>
 
@@ -1116,7 +1116,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Cuda" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L179" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>None</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="Cuda" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L181" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>None</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Move batch to <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a> (defaults to <code>default_device()</code>)</p>
 
@@ -1137,7 +1137,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Cuda.encodes" class="doc_header"><code>Cuda.encodes</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L184" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.encodes</code>()</p>
+<h4 id="Cuda.encodes" class="doc_header"><code>Cuda.encodes</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L186" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.encodes</code>()</p>
 </blockquote>
 <p>Move batch to <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a></p>
 
@@ -1181,7 +1181,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Cuda.decodes" class="doc_header"><code>Cuda.decodes</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L185" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.decodes</code>()</p>
+<h4 id="Cuda.decodes" class="doc_header"><code>Cuda.decodes</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L187" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cuda.decodes</code>()</p>
 </blockquote>
 <p>Return batch to CPU</p>
 
@@ -1240,7 +1240,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ByteToFloatTensor" class="doc_header"><code>class</code> <code>ByteToFloatTensor</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L190" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ByteToFloatTensor</code>(<strong><code>div</code></strong>=<em><code>True</code></em>, <strong><code>div_mask</code></strong>=<em><code>False</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="ByteToFloatTensor" class="doc_header"><code>class</code> <code>ByteToFloatTensor</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L192" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ByteToFloatTensor</code>(<strong><code>div</code></strong>=<em><code>True</code></em>, <strong><code>div_mask</code></strong>=<em><code>False</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Transform image to float tensor, optionally dividing by 255 (e.g. for images).</p>
 
@@ -1285,7 +1285,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L203" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L205" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Normalize/denorm batch of <a href="/transform.html#TensorImage"><code>TensorImage</code></a></p>
 
@@ -1309,7 +1309,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="broadcast_vec" class="doc_header"><code>broadcast_vec</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L213" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>broadcast_vec</code>(<strong><code>dim</code></strong>, <strong><code>ndim</code></strong>, <strong>*<code>t</code></strong>, <strong><code>cuda</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="broadcast_vec" class="doc_header"><code>broadcast_vec</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L217" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>broadcast_vec</code>(<strong><code>dim</code></strong>, <strong><code>ndim</code></strong>, <strong>*<code>t</code></strong>, <strong><code>cuda</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Make a vector broadcastable over <code>dim</code> (out of <code>ndim</code> total) by prepending and appending unit axes</p>
 

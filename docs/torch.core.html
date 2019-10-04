@@ -1301,7 +1301,7 @@ summary: "Basic pytorch functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_title" class="doc_header"><code>show_title</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L569" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="show_title" class="doc_header"><code>show_title</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L588" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_title</code>(<strong><code>o</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>ctx</code></strong>=<em><code>None</code></em>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Set title of <code>ax</code> to <code>o</code>, or print <code>o</code> if <code>ax</code> is <code>None</code></p>
 
@@ -1890,7 +1890,31 @@ summary: "Basic pytorch functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="parallel_gen" class="doc_header"><code>parallel_gen</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/torch_core.py#L383" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parallel_gen</code>(<strong><code>items</code></strong>, <strong><code>n_workers</code></strong>=<em><code>64</code></em>, <strong><code>as_gen</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="run_procs" class="doc_header"><code>run_procs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/torch_core.py#L383" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_procs</code>(<strong><code>f</code></strong>, <strong><code>f_done</code></strong>, <strong><code>args</code></strong>)</p>
+</blockquote>
+<p>Call <code>f</code> for each item in <code>args</code> in parallel, yielding <code>f_done</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="parallel_gen" class="doc_header"><code>parallel_gen</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/torch_core.py#L392" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parallel_gen</code>(<strong><code>items</code></strong>, <strong><code>n_workers</code></strong>=<em><code>64</code></em>, <strong><code>as_gen</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Instantiate <code>cls</code> in <code>n_workers</code> procs &amp; call each on a subset of <code>items</code> in parallel.</p>
 
@@ -1940,8 +1964,8 @@ summary: "Basic pytorch functions used in the fastai library"
             <span class="k">yield</span> <span class="n">k</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.99</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parallel_gen</span><span class="p">(</span><span class="n">SleepyBatchFunc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">([</span><span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">res</span><span class="p">)],</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">parallel_gen</span><span class="p">(</span><span class="n">SleepyBatchFunc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">sorted</span><span class="p">()</span><span class="o">.</span><span class="n">itemgot</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
     </div>

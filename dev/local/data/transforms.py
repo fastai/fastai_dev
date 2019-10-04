@@ -207,7 +207,9 @@ class Normalize(Transform):
     order=99
     def __init__(self, mean, std): self.mean,self.std = mean,std
     def encodes(self, x:TensorImage): return (x-self.mean) / self.std
-    def decodes(self, x:TensorImage): return (x*self.std ) + self.mean
+    def decodes(self, x:TensorImage):
+        f = to_cpu if x.device.type=='cpu' else noop
+        return (x*f(self.std) + f(self.mean))
 
     _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
 

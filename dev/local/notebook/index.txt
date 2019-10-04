@@ -313,6 +313,7 @@
   "PixelShuffle_ICNR": "11_layers.ipynb",
   "SequentialEx": "11_layers.ipynb",
   "MergeLayer": "11_layers.ipynb",
+  "Cat": "11_layers.ipynb",
   "SimpleCNN": "11_layers.ipynb",
   "ResBlock": "11_layers.ipynb",
   "ParameterModule": "11_layers.ipynb",
