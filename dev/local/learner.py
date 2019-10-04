@@ -20,7 +20,7 @@ def class2attr(self, cls_name):
 #Cell
 class Callback(GetAttr):
     "Basic class handling tweaks of the training loop by changing a `Learner` in various events"
-    _default='learn'
+    _default,learn = 'learn',None
     def __repr__(self): return type(self).__name__
 
     def __call__(self, event_name):

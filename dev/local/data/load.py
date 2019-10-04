@@ -50,13 +50,15 @@ class DataLoader(GetAttr):
     _methods = 'wif before_iter create_batches sampler create_item after_item before_batch create_batch retain after_batch after_iter get_idxs'.split()
     _default='dataset'
     def __init__(self, dataset=None, bs=None, shuffle=False, drop_last=False, indexed=None,
-                 num_workers=0, pin_memory=False, timeout=0, **kwargs):
+                 num_workers=0, pin_memory=False, timeout=0, n=None, **kwargs):
         if indexed is None: indexed = dataset is not None and hasattr(dataset,'__getitem__')
         store_attr(self, 'dataset,bs,drop_last,shuffle,indexed,pin_memory,timeout')
         self.fake_l = _FakeLoader(self, pin_memory, num_workers, timeout)
         self.lock,self.rng,self.nw,self.offs = Lock(),random.Random(),1,0
-        try: self.n = len(self.dataset)
-        except TypeError: self.n = None
+        if n is None:
+            try: self.n = len(self.dataset)
+            except TypeError: self.n = None
+        else: self.n = n
         assert not kwargs and not (bs is None and drop_last)
 
     def __iter__(self):
