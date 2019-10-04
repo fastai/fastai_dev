@@ -42,3 +42,9 @@ class WeightedSampleCallback(Callback):
 
     @property
     def dl(self): return self.learn.dbunch.train_dl
+
+#Cell
+@patch
+def weighted_sampler(self:Learner, wgts):
+    self.add_cb(WeightedSampleCallback(wgts))
+    return self
