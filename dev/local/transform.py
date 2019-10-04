@@ -54,7 +54,7 @@ class TensorImageBase(TensorBase):
             _,ctxs = subplots(rows, cols, figsize=figsize)
             ctxs = ctxs.flatten()
             for ctx in ctxs[max_n:]: ctx.set_axis_off()
-        for b_,ctx in zip(b, ctxs): b_.show(ctx=ctx, **kwargs)
+        ctxs = [b_.show(ctx=c, **kwargs) for b_,c,_ in zip(b,ctxs,range(max_n))]
         return ctxs
 
 #Cell

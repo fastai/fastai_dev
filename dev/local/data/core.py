@@ -61,10 +61,10 @@ class TfmdDL(DataLoader):
         b = self.decode(b)
         if hasattr(b, 'show'): return b.show(max_n=max_n, **kwargs)
         db = self._decode_batch(b, max_n, False)
-        if not is_listy(b): ctxs = getattr(b, 'show_multi', default_show_multi)(db, max_n=max_n, ctxs=ctxs, **kwargs)
-        else:
-            for i,b_ in enumerate(b):
-                ctxs = getattr(b_, 'show_multi', default_show_multi)(db.itemgot(i), max_n=max_n, ctxs=ctxs, **kwargs)
+        if not is_listy(b): b,db = [b],L((o,) for o in db)
+        b = b[:len(db[0])] #Sometimes b is longer than the elements of db, like in a Language Model
+        for i,b_ in enumerate(b):
+            ctxs = getattr(b_, 'show_multi', default_show_multi)(db.itemgot(i), max_n=max_n, ctxs=ctxs, **kwargs)
         if return_fig: return ctxs
 
     @property
