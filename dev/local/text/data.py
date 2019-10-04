@@ -22,12 +22,14 @@ def make_vocab(count, min_freq=3, max_vocab=60000):
 
 #Cell
 class TensorText(TensorBase):
-    def get_ctxs(self, max_n=10, **kwargs):
-        n_samples = min(self.shape[0], max_n)
-        df = pd.DataFrame(index = range(n_samples))
-        return [df.iloc[i] for i in range(n_samples)]
-
-    def display(self, ctxs): display_df(pd.DataFrame(ctxs))
+    def show_multi(self, b, ctxs=None, max_n=10, **kwargs):
+        if ctxs is None:
+            n_samples = min(self.shape[0], max_n)
+            df = pd.DataFrame(index = range(n_samples))
+            ctxs = [df.iloc[i] for i in range(n_samples)]
+        ctxs = default_show_multi(b, max_n=max_n, ctxs=ctxs, **kwargs)
+        display_df(pd.DataFrame(ctxs))
+        return ctxs
 
 #Cell
 class Numericalize(Transform):
