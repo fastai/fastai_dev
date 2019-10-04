@@ -4,7 +4,7 @@ __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugge
            'AdaptiveConcatPool2d', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm', 'BatchNorm1dFlat', 'BnDropLin',
            'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
            'MSELossFlat', 'trunc_normal_', 'Embedding', 'SelfAttention', 'PooledSelfAttention2d', 'icnr_init',
-           'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'SimpleCNN', 'ResBlock', 'ParameterModule',
+           'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN', 'ResBlock', 'ParameterModule',
            'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model']
 
 #Cell
@@ -302,6 +302,15 @@ class MergeLayer(Module):
     "Merge a shortcut with the result of the module by adding them or concatenating them if `dense=True`."
     def __init__(self, dense:bool=False): self.dense=dense
     def forward(self, x): return torch.cat([x,x.orig], dim=1) if self.dense else (x+x.orig)
+
+#Cell
+class Cat(nn.ModuleList):
+    "Concatenate layers outputs over a given dim"
+    def __init__(self, *layers, dim=1):
+        self.dim=dim
+        super().__init__(*layers)
+    def forward(self, x):
+        return torch.cat([l(x) for l in self], dim=self.dim)
 
 #Cell
 class SimpleCNN(nn.Sequential):
