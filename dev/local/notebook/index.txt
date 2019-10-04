@@ -396,6 +396,7 @@
   "Learner.lr_find": "14_callback_schedule.ipynb",
   "CollectDataCallback": "14a_callback_data.ipynb",
   "WeightedSampleCallback": "14a_callback_data.ipynb",
+  "Learner.weighted_sampler": "14a_callback_data.ipynb",
   "Hook": "15_callback_hook.ipynb",
   "hook_output": "15_callback_hook.ipynb",
   "Hooks": "15_callback_hook.ipynb",
