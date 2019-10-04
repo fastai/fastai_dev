@@ -65,6 +65,7 @@ class TfmdDL(DataLoader):
         b = b[:len(db[0])] #Sometimes b is longer than the elements of db, like in a Language Model
         for i,b_ in enumerate(b):
             ctxs = getattr(b_, 'show_multi', default_show_multi)(db.itemgot(i), max_n=max_n, ctxs=ctxs, **kwargs)
+        for b_ in b: getattr(b_, 'display', noop)(ctxs)
         if return_fig: return ctxs
 
     @property
