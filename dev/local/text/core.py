@@ -279,5 +279,5 @@ class SentencePieceTokenizer():#TODO: pass the special tokens symbol to sp
                 f.write(f'{t}\n')
         return {'sp_model': self.train(raw_text_path)}
 
-    def pipe(self, items):
+    def __call__(self, items):
         for t in items: yield self.tok.EncodeAsPieces(t)
