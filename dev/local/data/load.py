@@ -5,7 +5,7 @@ __all__ = ['fa_collate', 'fa_convert', 'DataLoader']
 #Cell
 from ..torch_basics import *
 from ..test import *
-from ..notebook.showdoc import show_doc
+from ..notebook.showdoc import *
 
 #Cell
 from torch.utils.data.dataloader import _MultiProcessingDataLoaderIter,_SingleProcessDataLoaderIter,_DatasetKind
@@ -45,9 +45,10 @@ def fa_convert(t):
 
 #Cell
 @funcs_kwargs
-class DataLoader():
+class DataLoader(GetAttr):
     wif=before_iter=after_item=before_batch=after_batch=after_iter = noops
     _methods = 'wif before_iter create_batches sampler create_item after_item before_batch create_batch retain after_batch after_iter get_idxs'.split()
+    _default='dataset'
     def __init__(self, dataset=None, bs=None, shuffle=False, drop_last=False, indexed=None,
                  num_workers=0, pin_memory=False, timeout=0, **kwargs):
         if indexed is None: indexed = dataset is not None and hasattr(dataset,'__getitem__')

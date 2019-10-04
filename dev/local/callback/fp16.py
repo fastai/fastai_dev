@@ -75,9 +75,7 @@ class MixedPrecision(Callback):
         self.learn.opt.param_groups = self.master_pgs
         if self.dynamic: self.count = 0
 
-    def begin_batch(self):
-        if self.xb.dtype not in [torch.int16, torch.int32, torch.int64]: self.learn.xb = self.xb.half()
-
+    def begin_batch(self): self.learn.xb = to_half(self.xb)
     def after_pred(self):  self.learn.pred = self.pred.float()
     def after_loss(self):
         if self.training: self.learn.loss *= self.loss_scale

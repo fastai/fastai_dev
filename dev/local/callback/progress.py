@@ -79,7 +79,7 @@ class ShowGraphCallback(Callback):
 
 #Cell
 class CSVLogger(Callback):
-    order=30 #Need to run after the recorder
+    run_after=Recorder
     "Log the results displayed in `learn.path/fname`"
     def __init__(self, fname='history.csv', append=False):
         self.fname,self.append = Path(fname),append

@@ -2,13 +2,13 @@
 
 __all__ = ['defaults', 'FixSigMeta', 'PrePostInitMeta', 'NewChkMeta', 'BypassNewMeta', 'copy_func', 'patch_to', 'patch',
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'add_docs', 'docs', 'custom_dir',
-           'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'listable_types', 'CollBase', 'cycle', 'zip_cycle',
-           'is_indexer', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrdict', 'properties',
-           'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge', 'shufflish',
-           'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf',
-           'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float',
-           'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple', 'TupleTitled', 'trace', 'compose', 'maps',
-           'partialler', 'mapped', 'instantiate', '_0', '_1', '_2', '_3', '_4', 'bind', 'Self', 'Self', 'bunzip',
+           '_0', '_1', '_2', '_3', '_4', 'bind', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'listable_types',
+           'CollBase', 'cycle', 'zip_cycle', 'is_indexer', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class',
+           'store_attr', 'attrdict', 'properties', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy',
+           'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq',
+           'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types',
+           'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple',
+           'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped', 'instantiate', 'Self', 'Self', 'bunzip',
            'join_path_file', 'sort_by_run', 'display_df', 'round_multiple', 'even_mults', 'num_cpus', 'add_props',
            'camel2snake', 'PrettyString']
 
@@ -179,12 +179,33 @@ def custom_dir(c, add:list):
     return dir(type(c)) + list(c.__dict__.keys()) + add
 
 #Cell
+class _Arg:
+    def __init__(self,i): self.i = i
+_0,_1,_2,_3,_4 = _Arg(0),_Arg(1),_Arg(2),_Arg(3),_Arg(4)
+
+#Cell
+class bind:
+    "Same as `partial`, except you can use `_0` `_1` etc param placeholders"
+    def __init__(self, fn, *pargs, **pkwargs):
+        self.fn,self.pargs,self.pkwargs = fn,pargs,pkwargs
+        self.maxi = max((x.i for x in pargs if isinstance(x, _Arg)), default=-1)
+
+    def __call__(self, *args, **kwargs):
+        args = list(args)
+        kwargs = {**self.pkwargs,**kwargs}
+        for k,v in kwargs.items():
+            if isinstance(v,_Arg): kwargs[k] = args.pop(v.i)
+        fargs = [args[x.i] if isinstance(x, _Arg) else x for x in self.pargs] + args[self.maxi+1:]
+        return self.fn(*fargs, **kwargs)
+
+#Cell
 class GetAttr:
     "Inherit from this to have all attr accesses in `self._xtra` passed down to `self.default`"
+    _default='default'
     @property
-    def _xtra(self): return [o for o in dir(self.default) if not o.startswith('_')]
+    def _xtra(self): return [o for o in dir(getattr(self,self._default)) if not o.startswith('_')]
     def __getattr__(self,k):
-        if k not in ('_xtra','default') and (self._xtra is None or k in self._xtra): return getattr(self.default, k)
+        if k not in ('_xtra',self._default) and (self._xtra is None or k in self._xtra): return getattr(getattr(self,self._default), k)
         raise AttributeError(k)
     def __dir__(self): return custom_dir(self, self._xtra)
     def __setstate__(self,data): self.__dict__.update(data)
@@ -254,6 +275,7 @@ def is_indexer(idx):
 #Cell
 class L(CollBase, GetAttr, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
+    _default='items'
     def __init__(self, items=None, *rest, use_list=False, match=None):
         if rest: items = (items,)+rest
         if items is None: items = []
@@ -280,8 +302,6 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if not is_iter(o): o = [o]*len(idx)
         for i,o_ in zip(idx,o): self.items[i] = o_
 
-    @property
-    def default(self): return self.items
     def __iter__(self): return iter(self.items.itertuples() if hasattr(self.items,'iloc') else self.items)
     def __contains__(self,b): return b in self.items
     def __invert__(self): return self._new(not i for i in self)
@@ -309,10 +329,10 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         return cls(range(a,b,step) if step is not None else range(a,b) if b is not None else range(a))
 
     def map(self, f, *args, **kwargs):
-        f = (partial(f,*args,**kwargs) if callable(f)
+        g = (bind(f,*args,**kwargs) if callable(f)
              else f.format if isinstance(f,str)
              else f.__getitem__)
-        return self._new(map(f, self))
+        return self._new(map(g, self))
 
     def unique(self): return L(dict.fromkeys(self).keys())
     def enumerate(self): return L(enumerate(self))
@@ -325,8 +345,8 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def starmap(self, f, *args, **kwargs): return self._new(itertools.starmap(partial(f,*args,**kwargs), self))
     def zip(self, cycled=False): return self._new((zip_cycle if cycled else zip)(*self))
     def zipwith(self, *rest, cycled=False): return self._new([self, *rest]).zip(cycled=cycled)
-    def map_zip(self, f, cycled=False): return self.zip(cycled=cycled).starmap(f)
-    def map_zipwith(self, f, *rest, cycled=False): return self.zipwith(*rest, cycled=cycled).starmap(f)
+    def map_zip(self, f, *args, cycled=False, **kwargs): return self.zip(cycled=cycled).starmap(f, *args, **kwargs)
+    def map_zipwith(self, f, *rest, cycled=False, **kwargs): return self.zipwith(*rest, cycled=cycled).starmap(f, **kwargs)
     def concat(self): return self._new(itertools.chain.from_iterable(self.map(L)))
     def shuffle(self):
         it = copy(self.items)
@@ -475,8 +495,9 @@ class IterLen:
 @docs
 class ReindexCollection(GetAttr, IterLen):
     "Reindexes collection `coll` with indices `idxs` and optional LRU cache of size `cache`"
+    _default='coll'
     def __init__(self, coll, idxs=None, cache=None):
-        self.default,self.coll,self.idxs,self.cache = coll,coll,ifnone(idxs,L.range(coll)),cache
+        self.coll,self.idxs,self.cache = coll,ifnone(idxs,L.range(coll)),cache
         def _get(self, i): return self.coll[i]
         self._get = types.MethodType(_get,self)
         if cache is not None: self._get = functools.lru_cache(maxsize=cache)(self._get)
@@ -568,7 +589,10 @@ def show_title(o, ax=None, ctx=None, label=None, **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
     if ax is None: print(o)
-    elif hasattr(ax, 'set_title'): ax.set_title(o)
+    elif hasattr(ax, 'set_title'):
+        t = ax.title.get_text()
+        if len(t) > 0: o = t+'\n'+str(o)
+        ax.set_title(o)
     elif isinstance(ax, pd.Series):
         while label in ax: label += '_'
         ax = ax.append(pd.Series({label: o}))
@@ -686,21 +710,6 @@ def instantiate(t):
     return t() if isinstance(t, type) else t
 
 #Cell
-mk_class('_Arg', 'i')
-_0,_1,_2,_3,_4 = _Arg(0),_Arg(1),_Arg(2),_Arg(3),_Arg(4)
-
-#Cell
-class bind:
-    "Same as `partial`, except you can use `_0` `_1` etc param placeholders"
-    def __init__(self, fn, *pargs, **pkwargs):
-        store_attr(self, 'fn,pargs,pkwargs')
-        self.maxi = max((x.i for x in pargs if isinstance(x, _Arg)), default=-1)
-
-    def __call__(self, *args, **kwargs):
-        fargs = L(args[x.i] if isinstance(x, _Arg) else x for x in self.pargs) + args[self.maxi+1:]
-        return self.fn(*fargs, **{**self.pkwargs, **kwargs})
-
-#Cell
 class _Self:
     "An alternative to `lambda` for calling methods on passed object."
     def __init__(self): self.nms,self.args,self.kwargs,self.ready = [],[],[],True
@@ -800,6 +809,7 @@ def round_multiple(x, mult, round_down=False):
 #Cell
 def even_mults(start, stop, n):
     "Build log-stepped array from `start` to `stop` in `n` steps."
+    if n==1: return stop
     mult = stop/start
     step = mult**(1/(n-1))
     return np.array([start*(step**i) for i in range(n)])

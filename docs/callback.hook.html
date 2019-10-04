@@ -76,13 +76,13 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([[-2.0646,  0.6335, -0.4945, -1.3516, -0.2766],
-        [ 0.3787,  0.1929, -1.0105, -0.1394,  1.2466],
-        [ 0.4262,  0.3178, -0.6363,  1.3899, -0.6268],
-        [-0.4065, -0.5456, -0.8262,  0.2646, -0.0133]]),) tensor([[ 0.9182, -0.3857,  0.1477],
-        [ 0.4529, -0.3880,  0.2577],
-        [-0.0111,  0.5224, -0.2967],
-        [ 0.3068,  0.0634,  0.2909]], grad_fn=&lt;AddmmBackward&gt;)
+<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([[ 0.2873, -1.8587,  1.3439,  1.0073, -0.2455],
+        [-0.4986,  0.3943, -0.3815,  0.3257, -0.3659],
+        [ 0.0596, -1.8308,  1.4429, -1.3307,  1.9832],
+        [ 0.6360, -0.1225,  0.4871,  1.6854,  0.5455]]),) tensor([[-0.8150,  0.1165,  0.3040],
+        [-0.2244,  0.3916,  0.2242],
+        [ 0.4656,  0.2218,  0.2407],
+        [-0.6897, -0.3653, -0.7882]], grad_fn=&lt;AddmmBackward&gt;)
 </pre>
 </div>
 </div>
@@ -123,14 +123,14 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([-0.0707, -0.0338,  0.2112]), None, tensor([[ 0.0201, -0.2536,  0.0858],
-        [ 0.0628, -0.1510, -0.1085],
-        [ 0.0755, -0.3035,  0.0732],
-        [-0.1615,  0.3154, -0.0124],
-        [ 0.0139, -0.3440,  0.3543]])) (tensor([[-0.0342, -0.0164,  0.0617],
-        [-0.0114,  0.0620,  0.0617],
-        [-0.0562,  0.1065, -0.0395],
-        [ 0.0311, -0.1858,  0.1272]]),)
+<pre>Linear(in_features=5, out_features=3, bias=True) (tensor([-0.2152,  0.1659,  0.2722]), None, tensor([[-0.5524, -0.0239, -0.7440],
+        [ 0.3035,  0.0627, -0.6813],
+        [ 0.3563, -0.0099, -1.1833],
+        [ 0.0942, -0.1582, -0.1951],
+        [ 0.2163, -0.1865, -0.2723]])) (tensor([[-0.0005,  0.0059,  0.1601],
+        [-0.1666, -0.0424,  0.1369],
+        [-0.0272,  0.1506,  0.2330],
+        [-0.0210,  0.0519, -0.2577]]),)
 </pre>
 </div>
 </div>
@@ -743,7 +743,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 12.8126802444458, 8.25302505493164, &#39;00:00&#39;]
+<pre>(#4) [0,20.98162841796875,30.063140869140625,00:00]
 </pre>
 </div>
 </div>
@@ -763,7 +763,7 @@ summary: "Callback and helper function to add hooks in models"
     <span class="k">def</span> <span class="nf">hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span> <span class="k">return</span> <span class="n">o</span>
     <span class="k">def</span> <span class="nf">after_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
-            <span class="n">test_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hooks</span><span class="o">.</span><span class="n">stored</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pred</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">yb</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">test_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hooks</span><span class="o">.</span><span class="n">stored</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pred</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         
 <span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">(</span><span class="n">n_trn</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cbs</span> <span class="o">=</span> <span class="n">TstCallback</span><span class="p">())</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -779,7 +779,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 29.576908111572266, 13.428422927856445, &#39;00:00&#39;]
+<pre>(#4) [0,3.3218321800231934,3.6976609230041504,00:00]
 </pre>
 </div>
 </div>
@@ -910,7 +910,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0, 7.6173858642578125, 10.528912544250488, &#39;00:00&#39;]
+<pre>(#4) [0,11.153417587280273,10.009005546569824,00:00]
 </pre>
 </div>
 </div>
@@ -939,9 +939,9 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>tensor([[[0.8860, 0.7391, 0.8423, 0.8646, 1.0194]],
+<pre>tensor([[[ 0.0826, -0.1416,  0.1304,  0.1796, -0.3101]],
 
-        [[0.3738, 0.4353, 0.3109, 0.1945, 0.0571]]])</pre>
+        [[ 0.7106,  0.5210,  1.0406,  0.8907,  0.7914]]])</pre>
 </div>
 
 </div>
@@ -1050,7 +1050,7 @@ summary: "Callback and helper function to add hooks in models"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">layer_info</span><span class="p">(</span><span class="n">learn</span><span class="p">),</span> <span class="p">[</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">layer_info</span><span class="p">(</span><span class="n">learn</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span>
     <span class="p">(</span><span class="s1">&#39;Linear&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">]),</span>
     <span class="p">(</span><span class="s1">&#39;ReLU&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">]),</span>
     <span class="p">(</span><span class="s1">&#39;BatchNorm1d&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">]),</span>
@@ -1075,7 +1075,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PrettyString" class="doc_header"><code>class</code> <code>PrettyString</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L818" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PrettyString</code>() :: <code>str</code></p>
+<h2 id="PrettyString" class="doc_header"><code>class</code> <code>PrettyString</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L832" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PrettyString</code>() :: <code>str</code></p>
 </blockquote>
 <p>Little hack to get strings to show properly in Jupyter.</p>
 
@@ -1122,6 +1122,7 @@ summary: "Callback and helper function to add hooks in models"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span> <span class="n">p</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">()</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">create_opt</span><span class="p">()</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">model</span><span class="o">=</span><span class="n">m</span>
 <span class="n">learn</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 </pre></div>
@@ -1155,8 +1156,10 @@ Total params: 251
 Total trainable params: 151
 Total non-trainable params: 100
 
-Optimizer used: functools.partial(&lt;function SGD at 0x7f4429bf90d0&gt;, mom=0.9)
+Optimizer used: functools.partial(&lt;function SGD at 0x7f4c8b8a9ea0&gt;, mom=0.9)
 Loss function: FlattenedLoss of MSELoss()
+
+Model unfrozen
 
 Callbacks:
   - TrainEvalCallback

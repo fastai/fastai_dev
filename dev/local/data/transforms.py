@@ -13,6 +13,7 @@ from ..transform import *
 from .core import *
 from .external import *
 from ..notebook.showdoc import *
+from ..layers import *
 
 #Cell
 def _get_files(p, fs, extensions=None):
@@ -114,7 +115,7 @@ class Category(str, ShowTitle): _show_args = {'label': 'category'}
 #Cell
 class Categorize(Transform):
     "Reversible transform of category string to `vocab` id"
-    order=1
+    loss_func,order=CrossEntropyLossFlat(),1
     def __init__(self, vocab=None, add_na=False):
         self.add_na = add_na
         self.vocab = None if vocab is None else CategoryMap(vocab, add_na=add_na)
@@ -135,6 +136,7 @@ class MultiCategory(L):
 #Cell
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
+    loss_func,order=BCEWithLogitsLossFlat(),1
     def setups(self, dsrc):
         if not dsrc: return
         if self.vocab is None:
@@ -165,7 +167,9 @@ class OneHotEncode(Transform):
 
 #Cell
 def get_c(dbunch):
-    return len(getattr(dbunch.train_ds.tls[1].tfms, 'vocab', []))
+    vocab = getattr(dbunch, 'vocab', [])
+    if len(vocab) > 0 and is_listy(vocab[-1]): vocab = vocab[-1]
+    return len(vocab)
 
 #Cell
 class ToTensor(Transform):
@@ -178,7 +182,7 @@ class Cuda(Transform):
     "Move batch to `device` (defaults to `default_device()`)"
     def __init__(self,device=None):
         self.device=default_device() if device is None else device
-        super().__init__(filt=None, as_item=False)
+        super().__init__(split_idx=None, as_item=False)
     def encodes(self, b): return to_device(b, self.device)
     def decodes(self, b): return to_cpu(b)
 
@@ -188,8 +192,8 @@ class Cuda(Transform):
 class ByteToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order = 20 #Need to run after CUDA if on the GPU
-    def __init__(self, div=True, div_mask=False, filt=None, as_item=True):
-        super().__init__(filt=filt,as_item=as_item)
+    def __init__(self, div=True, div_mask=False, split_idx=None, as_item=True):
+        super().__init__(split_idx=split_idx,as_item=as_item)
         self.div,self.div_mask = div,div_mask
 
     def encodes(self, o:TensorImage): return o.float().div_(255.) if self.div else o.float()
@@ -203,7 +207,9 @@ class Normalize(Transform):
     order=99
     def __init__(self, mean, std): self.mean,self.std = mean,std
     def encodes(self, x:TensorImage): return (x-self.mean) / self.std
-    def decodes(self, x:TensorImage): return (x*self.std ) + self.mean
+    def decodes(self, x:TensorImage):
+        f = to_cpu if x.device.type=='cpu' else noop
+        return (x*f(self.std) + f(self.mean))
 
     _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
 

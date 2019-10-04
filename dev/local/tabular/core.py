@@ -28,6 +28,7 @@ class _TabIloc:
 #Cell
 class Tabular(CollBase, GetAttr, FilteredBase):
     "A `DataFrame` wrapper that knows which cols are cont/cat/y, and returns rows in `__getitem__`"
+    _default='items'
     def __init__(self, df, procs=None, cat_names=None, cont_names=None, y_names=None, is_y_cat=True, splits=None, do_setup=True):
         if splits is None: splits=[range_of(df)]
         df = df.iloc[sum(splits, [])].copy()
@@ -51,10 +52,9 @@ class Tabular(CollBase, GetAttr, FilteredBase):
     def all_cont_names(self): return self.cont_names + self.cont_y
     def all_cat_names (self): return self.cat_names  + self.cat_y
     def all_col_names (self): return self.all_cont_names + self.all_cat_names
-    def default(self): return self.items
     def n_subsets(self): return 2
 
-properties(Tabular,'iloc','targ','all_cont_names','all_cat_names','all_col_names','default','n_subsets')
+properties(Tabular,'iloc','targ','all_cont_names','all_cat_names','all_col_names','n_subsets')
 
 #Cell
 class TabularPandas(Tabular):
@@ -136,10 +136,10 @@ class FillMissing(TabularProc):
 class ReadTabBatch(ItemTransform):
     def __init__(self, to): self.to = to
     # TODO: use float for cont targ
-    def encodes(self, to): return (tensor(to.cats).long(),tensor(to.conts).float()), tensor(to.targ).long()
+    def encodes(self, to): return tensor(to.cats).long(),tensor(to.conts).float(), tensor(to.targ).long()
 
     def decodes(self, o):
-        (cats,conts),targs = to_np(o)
+        cats,conts,targs = to_np(o)
         vals = np.concatenate([cats,conts,targs[:,None]], axis=1)
         df = pd.DataFrame(vals, columns=self.to.cat_names+self.to.cont_names+self.to.y_names)
         to = self.to.new(df)

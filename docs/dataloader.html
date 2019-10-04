@@ -82,12 +82,12 @@ summary: "summary"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#e.g. x is int, y is tuple</span>
 <span class="n">t</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)),(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))]</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">default_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
 
 <span class="n">t</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">2</span><span class="p">,(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))),(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">2</span><span class="p">,(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)))]</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">default_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_collate</span><span class="p">(</span><span class="n">t</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -127,7 +127,7 @@ summary: "summary"
 <span class="n">t</span> <span class="o">=</span> <span class="p">[</span><span class="n">t0</span><span class="p">,(</span><span class="n">t0</span><span class="p">,</span><span class="n">t0</span><span class="p">)]</span>
 
 <span class="n">test_eq</span><span class="p">(</span><span class="n">fa_convert</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">default_convert</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_convert</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">fa_convert</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">type</span><span class="p">),</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">,</span><span class="nb">tuple</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -238,7 +238,7 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#45) [0.4891221664246985,0.8819529332576723,0.5552512551532909,0.6004698025832159,0.11141761521716964,0.009620063778281285,0.2908099176937903,0.5530372492375477,0.26241371466540975,0.10941206593219888...]</pre>
+<pre>(#0) []</pre>
 </div>
 
 </div>
@@ -252,7 +252,7 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span><span class="p">(</span><span class="n">RandDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span><span class="p">(</span><span class="n">RandDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -267,7 +267,7 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#1) [4]</pre>
+<pre>(#3) [4,4,4]</pre>
 </div>
 
 </div>
@@ -281,7 +281,7 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span><span class="p">(</span><span class="n">RandDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span><span class="p">(</span><span class="n">RandDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -296,7 +296,7 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#22) [4,4,4,4,4,4,4,4,4,4...]</pre>
+<pre>(#44) [4,4,4,4,4,4,4,4,4,4...]</pre>
 </div>
 
 </div>
@@ -329,7 +329,7 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#44) [0.014739695728209767,0.34806381407784626,0.9343493194591446,0.415112142901067,0.5702481970348409,0.42369347787361955,0.5448587129992851,0.3390913055889132,0.4379920681149915,0.5290756189363888...]</pre>
+<pre>(#2) [0.40015444699845026,0.09729594589146273]</pre>
 </div>
 
 </div>
@@ -481,8 +481,8 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 11.2 ms, sys: 24 ms, total: 35.2 ms
-Wall time: 96.7 ms
+<pre>CPU times: user 20.5 ms, sys: 11.3 ms, total: 31.8 ms
+Wall time: 86.7 ms
 </pre>
 </div>
 </div>
@@ -521,11 +521,14 @@ Wall time: 96.7 ms
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TensorBase</span><span class="p">):</span> <span class="k">pass</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 
 <span class="n">tdl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">([</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">],</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="n">to_device</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tdl</span><span class="p">))</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">A</span><span class="p">)</span>
+
+<span class="c1"># Unknown attributes are delegated to `dataset`</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">tdl</span><span class="o">.</span><span class="n">pop</span><span class="p">(),</span> <span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 </pre></div>
 
     </div>

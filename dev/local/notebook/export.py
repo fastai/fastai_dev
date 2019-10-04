@@ -86,16 +86,19 @@ def _create_mod_file(fname, nb_path):
 #Cell
 _re_patch_func = re.compile(r"""
 # Catches any function decorated with @patch, its name in group 1 and the patched class in group 2
-@patch       # At any place in the cell, something that begins with @patch
-\s*def       # Any number of whitespace (including a new line probably) followed by def
-\s+          # One whitespace or more
-([^\(\s]*)   # Catch a group composed of anything but whitespace or an opening parenthesis (name of the function)
-\s*\(        # Any number of whitespace followed by an opening parenthesis
-[^:]*        # Any number of character different of : (the name of the first arg that is type-annotated)
-:\s*         # A column followed by any number of whitespace
-([^,\)\s]*)  # Catch a group composed of anything but a comma, a closing parenthesis or whitespace (name of the class)
-\s*          # Any number of whitespace
-(?:,|\))     # Non-catching group with either a comma or a closing parenthesis
+@patch         # At any place in the cell, something that begins with @patch
+\s*def         # Any number of whitespace (including a new line probably) followed by def
+\s+            # One whitespace or more
+([^\(\s]*)     # Catch a group composed of anything but whitespace or an opening parenthesis (name of the function)
+\s*\(          # Any number of whitespace followed by an opening parenthesis
+[^:]*          # Any number of character different of : (the name of the first arg that is type-annotated)
+:\s*           # A column followed by any number of whitespace
+(?:            # Non-catching group with either
+([^,\s\(\)]*)  #    a group composed of anything but a comma, a parenthesis or whitespace (name of the class)
+|              #  or
+(\([^\)]*\)))  #    a group composed of something between parenthesis (tuple of classes)
+\s*            # Any number of whitespace
+(?:,|\))       # Non-catching group with either a comma or a closing parenthesis
 """, re.VERBOSE)
 
 #Cell
@@ -126,7 +129,12 @@ def _not_private(n):
 def export_names(code, func_only=False):
     "Find the names of the objects, functions or classes defined in `code` that are exported."
     #Format monkey-patches with @patch
-    code = _re_patch_func.sub(r'def \2.\1() = ', code)
+    def _f(gps):
+        nm, cls, t = gps.groups()
+        if cls is not None: return f"def {cls}.{nm}():"
+        return '\n'.join([f"def {c}.{nm}():" for c in re.split(', *', t[1:-1])])
+
+    code = _re_patch_func.sub(_f, code)
     names = _re_class_func_def.findall(code)
     if not func_only: names += _re_obj_def.findall(code)
     return [n for n in names if _not_private(n)]
