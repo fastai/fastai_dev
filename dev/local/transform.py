@@ -45,16 +45,17 @@ class TensorImageBase(TensorBase):
     def show(self, ctx=None, **kwargs):
         return show_image(self, ctx=ctx, **{**self._show_args, **kwargs})
 
-    def get_ctxs(self, max_n=10, rows=None, cols=None, figsize=None, double=False, **kwargs):
-        n_samples = min(self.shape[0], max_n)
-        rows = rows or int(np.ceil(math.sqrt(n_samples)))
-        cols = cols or int(np.ceil(n_samples/rows))
-        if double: cols*=2 ; max_n*=2
-        figsize = (cols*3, rows*3) if figsize is None else figsize
-        _,axs = subplots(rows, cols, figsize=figsize)
-        for ax in axs.flatten()[max_n:]: ax.set_axis_off()
-        if not double: return axs.flatten()
-        return axs.flatten()[::2],axs.flatten()[1::2]
+    def show_multi(self, b, max_n=10, ctxs=None, rows=None, cols=None, figsize=None, **kwargs):
+        if ctxs is None:
+            n_samples = min(len(b), max_n)
+            rows = rows or int(np.ceil(math.sqrt(n_samples)))
+            cols = cols or int(np.ceil(n_samples/rows))
+            figsize = (cols*3, rows*3) if figsize is None else figsize
+            _,ctxs = subplots(rows, cols, figsize=figsize)
+            ctxs = ctxs.flatten()
+            for ctx in ctxs[max_n:]: ctx.set_axis_off()
+        for b_,ctx in zip(b, ctxs): b_.show(ctx=ctx, **kwargs)
+        return ctxs
 
 #Cell
 class TensorImage(TensorImageBase): pass
@@ -272,7 +273,6 @@ class Pipeline:
         self.fs.append(t)
 
     def __call__(self, o): return compose_tfms(o, tfms=self.fs, split_idx=self.split_idx)
-    def decode  (self, o): return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, split_idx=self.split_idx)
     def __repr__(self): return f"Pipeline: {self.fs}"
     def __getitem__(self,i): return self.fs[i]
     def decode_batch(self, b, max_n=10): return batch_to_samples(b, max_n=max_n).map(self.decode)
@@ -280,15 +280,20 @@ class Pipeline:
     def __getattr__(self,k): return gather_attrs(self, k, 'fs')
     def __dir__(self): return super().__dir__() + gather_attr_names(self, 'fs')
 
-    def show(self, o, ctx=None, **kwargs):
+    def decode  (self, o, partial=False):
+        if not partial: return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, split_idx=self.split_idx)
         for f in reversed(self.fs):
-            res = self._show(o, ctx, **kwargs)
-            if res is not None: return res
+            if self._is_showable(o): return o
             o = f.decode(o, split_idx=self.split_idx)
-        return self._show(o, ctx, **kwargs)
+        return o
 
-    def _show(self, o, ctx, **kwargs):
+    def show(self, o, ctx=None, **kwargs):
+        o = self.decode(o, partial=True)
         o1 = [o] if self.as_item or not is_listy(o) else o
-        if not all(hasattr(o_, 'show') for o_ in o1): return
-        for o_ in o1: ctx = o_.show(ctx=ctx, **kwargs)
-        return ifnone(ctx,1)
+        for o_ in o1:
+            if hasattr(o_, 'show'): ctx = o_.show(ctx=ctx, **kwargs)
+        return ctx
+
+    def _is_showable(self, o):
+        o1 = [o] if self.as_item or not is_listy(o) else o
+        return all(hasattr(o_, 'show') for o_ in o1)
