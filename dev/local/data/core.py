@@ -111,12 +111,13 @@ class FilteredBase:
     @property
     def n_subsets(self): return len(self.splits)
 
-    def databunch(self, bs=16, val_bs=None, shuffle_train=True, **kwargs):
-        n = self.n_subsets-1
-        bss = [bs] + [2*bs]*n if val_bs is None else [bs] + [val_bs]*n
-        shuffles = [shuffle_train] + [False]*n
-        return DataBunch(*[self._dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, **kwargs)
-                           for i,(b,s) in enumerate(zip(bss, shuffles))])
+    def databunch(self, bs=16, val_bs=None, shuffle_train=True, n=None, **kwargs):
+        ns = self.n_subsets-1
+        bss = [bs] + [2*bs]*ns if val_bs is None else [bs] + [val_bs]*ns
+        shuffles = [shuffle_train] + [False]*ns
+        dls = [self._dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, n=n if i==0 else None, **kwargs)
+               for i,(b,s) in enumerate(zip(bss, shuffles))]
+        return DataBunch(*dls)
 
 FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
 
