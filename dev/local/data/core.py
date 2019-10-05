@@ -11,7 +11,7 @@ from .load import *
 from ..notebook.showdoc import *
 
 #Cell
-_dl_tfms = ('after_item','before_batch','after_batch')
+_batch_tfms = ('after_item','before_batch','after_batch')
 
 #Cell
 def default_show_multi(b, max_n=10, ctxs=None, **kwargs):
@@ -24,7 +24,7 @@ class TfmdDL(DataLoader):
     "Transformed `DataLoader`"
     def __init__(self, dataset, bs=16, shuffle=False, num_workers=None, **kwargs):
         if num_workers is None: num_workers = min(16, defaults.cpus)
-        for nm in _dl_tfms:
+        for nm in _batch_tfms:
             kwargs[nm] = Pipeline(kwargs.get(nm,None), as_item=(nm=='before_batch'))
             kwargs[nm].setup(self)
         super().__init__(dataset, bs=bs, shuffle=shuffle, num_workers=num_workers, **kwargs)
@@ -43,7 +43,7 @@ class TfmdDL(DataLoader):
     def before_iter(self):
         super().before_iter()
         split_idx = getattr(self.dataset, 'split_idx', None)
-        for nm in _dl_tfms:
+        for nm in _batch_tfms:
             f = getattr(self,nm)
             if isinstance(f,Pipeline): f.split_idx=split_idx
 
@@ -162,7 +162,7 @@ def show_at(o, idx, **kwargs):
 @docs
 @delegates(TfmdList)
 class DataSource(FilteredBase):
-    "A dataset that creates a tuple from each `tfms`, passed thru `ds_tfms`"
+    "A dataset that creates a tuple from each `tfms`, passed thru `item_tfms`"
     def __init__(self, items=None, tfms=None, tls=None, n_inp=None, dl_type=None, **kwargs):
         super().__init__(dl_type=dl_type)
         self.tls = L(tls if tls else [TfmdList(items, t, **kwargs) for t in L(ifnone(tfms,[None]))])

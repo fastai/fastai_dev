@@ -56,7 +56,7 @@ def load_image(fn, mode=None, **kwargs):
 #Cell
 class PILBase(Image.Image, metaclass=BypassNewMeta):
     _bypass_type=Image.Image
-    default_dl_tfms = ByteToFloatTensor
+    default_batch_tfms = ByteToFloatTensor
     _show_args = {'cmap':'viridis'}
     _open_args = {'mode': 'RGB'}
     @classmethod
@@ -177,7 +177,7 @@ class PointScaler(ItemTransform):
     def encodes(self, o): return (o[0],TensorPoint(_scale_pnts(*o, self.do_scale, self.y_first)))
     def decodes(self, o): return (o[0],TensorPoint(_unscale_pnts(*o)))
 
-TensorPoint.default_ds_tfms = PointScaler
+TensorPoint.default_item_tfms = PointScaler
 
 #Cell
 class BBoxScaler(PointScaler):
@@ -212,7 +212,7 @@ class BBoxCategorize(Transform):
     def decodes(self, o:TensorBBox):
         return BBox((o.bbox,[self.vocab[i_] for i_ in o.lbl]))
 
-BBox.default_type_tfms,BBox.default_ds_tfms = BBoxCategorize,BBoxScaler
+BBox.default_type_tfms,BBox.default_item_tfms = BBoxCategorize,BBoxScaler
 
 #Cell
 #TODO tests

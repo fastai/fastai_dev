@@ -96,8 +96,8 @@ _events = L.split('begin_fit begin_epoch begin_train begin_batch after_pred afte
 mk_class('event', **_events.map_dict(),
          doc="All possible events as attributes to get tab-completion and typo-proofing")
 
-_before_inference = [event.begin_fit, event.begin_epoch, event.begin_validate]
-_after_inference  = [event.after_validate, event.after_epoch, event.after_fit]
+_before_epoch = [event.begin_fit, event.begin_epoch]
+_after_epoch  = [event.after_epoch, event.after_fit]
 
 #Cell
 defaults.lr = slice(3e-3)
@@ -225,9 +225,10 @@ class Learner():
         except CancelTrainException:                         self('after_cancel_train')
         finally:                                             self('after_train')
 
-    def _do_epoch_validate(self):
+    def _do_epoch_validate(self, ds_idx=1, dl=None):
+        if dl is None: dl = self.dbunch.dls[ds_idx]
         try:
-            self.dl = self.dbunch.valid_dl;                  self('begin_validate')
+            self.dl = dl;                                    self('begin_validate')
             with torch.no_grad(): self.all_batches()
         except CancelValidException:                         self('after_cancel_validate')
         finally:                                             self('after_validate')
@@ -254,19 +255,18 @@ class Learner():
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         self.dl = self.dbunch.dls[ds_idx] if dl is None else dl
         with self.added_cbs(cbs), self.no_logging():
-            self(_before_inference)
-            self.all_batches()
-            self(_after_inference)
+            self(_before_epoch)
+            self._do_epoch_validate(ds_idx, dl)
+            self(_after_epoch)
         return self.recorder.values[-1]
 
     def get_preds(self, ds_idx=1, dl=None, with_input=False, with_loss=False, decoded=False, act=None):
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
-        self.dl = self.dbunch.dls[ds_idx] if dl is None else dl
         cb = GatherPredsCallback(with_input=with_input, with_loss=with_loss)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
-            self(_before_inference)
-            self.all_batches()
-            self(_after_inference)
+            self(_before_epoch)
+            self._do_epoch_validate(ds_idx, dl)
+            self(_after_epoch)
             if act is None: act = getattr(self.loss_func, 'activation', noop)
             preds = act(torch.cat(cb.preds))
             if decoded: preds = getattr(sellf.loss_func, 'decodes', noop)(preds)
