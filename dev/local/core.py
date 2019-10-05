@@ -742,6 +742,22 @@ class _SelfCls:
 Self = _SelfCls()
 
 #Cell
+@patch
+def save(fn:Path, o):
+    "Save a pickle file, to a file name or opened file"
+    if not isinstance(fn, io.IOBase): fn = open(fn,'wb')
+    try: pickle.dump(o, fn)
+    finally: fn.close()
+
+#Cell
+@patch
+def load(fn:Path):
+    "Load a pickle file from a file name or opened file"
+    if not isinstance(fn, io.IOBase): fn = open(fn,'rb')
+    try: return pickle.load(fn)
+    finally: fn.close()
+
+#Cell
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 @patch
 def ls(self:Path, file_type=None, file_exts=None):

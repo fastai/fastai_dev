@@ -364,14 +364,17 @@ from multiprocessing import Process, Queue
 
 #Cell
 class ProcessPoolExecutor(concurrent.futures.ProcessPoolExecutor):
-    def __init__(self, max_workers=None, mp_context=None, initializer=None, initargs=()):
-        self.no_workers = max_workers==0
-        if self.no_workers: max_workers=1
+    def __init__(self, max_workers=None, mp_context=None, initializer=None, initargs=(), on_exc=print):
+        self.not_parallel = max_workers==0
+        self.on_exc = on_exc
+        if self.not_parallel: max_workers=1
         super().__init__(max_workers, mp_context, initializer=initializer, initargs=initializer)
 
     def map(self, f, items, *args, **kwargs):
         g = partial(f, *args, **kwargs)
-        return L(items).map(g) if self.no_workers else super().map(g, items)
+        if self.not_parallel: return L(items).map(g)
+        try: return super().map(g, items)
+        except Exception as e: self.on_exc(e)
 
 #Cell
 def parallel(f, items, *args, n_workers=defaults.cpus, **kwargs):

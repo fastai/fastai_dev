@@ -65,7 +65,7 @@ class RNNLearner(Learner):
     #TODO: When access is easier, grab new_vocab from self.dbunch
     def load_pretrained(self, wgts_fname, vocab_fname, new_vocab, strict=True):
         "Load a pretrained model and adapt it to the data vocabulary."
-        old_vocab = pickle.load(open(vocab_fname, 'rb'))
+        old_vocab = load(vocab_fname)
         wgts = torch.load(wgts_fname, map_location = lambda storage,loc: storage)
         if 'model' in wgts: wgts = wgts['model'] #Just in case the pretrained model was saved with an optimizer
         wgts = match_embeds(wgts, old_vocab, new_vocab)

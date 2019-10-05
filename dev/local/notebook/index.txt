@@ -81,6 +81,8 @@
   "mapped": "01_core.ipynb",
   "instantiate": "01_core.ipynb",
   "Self": "01_core.ipynb",
+  "Path.save": "01_core.ipynb",
+  "Path.load": "01_core.ipynb",
   "Path.ls": "01_core.ipynb",
   "bunzip": "01_core.ipynb",
   "join_path_file": "01_core.ipynb",
