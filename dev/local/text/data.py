@@ -28,8 +28,9 @@ class TensorText(TensorBase):
             df = pd.DataFrame(index = range(n_samples))
             ctxs = [df.iloc[i] for i in range(n_samples)]
         ctxs = default_show_multi(b, max_n=max_n, ctxs=ctxs, **kwargs)
-        display_df(pd.DataFrame(ctxs))
         return ctxs
+
+    def display(self, ctxs): display_df(pd.DataFrame(ctxs))
 
 #Cell
 class Numericalize(Transform):
