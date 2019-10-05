@@ -34,8 +34,8 @@ class AccumMetric(Metric):
         if self.sigmoid: pred = torch.sigmoid(pred)
         if self.thresh:  pred = (pred >= self.thresh)
         pred,targ = flatten_check(pred, learn.y)
-        self.preds.append(pred)
-        self.targs.append(targ)
+        self.preds.append(to_detach(pred))
+        self.targs.append(to_detach(targ))
 
     @property
     def value(self):
