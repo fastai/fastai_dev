@@ -677,6 +677,8 @@ def trace(f):
 def compose(*funcs, order=None):
     "Create a function that composes all functions in `funcs`, passing along remaining `*args` and `**kwargs` to all"
     funcs = L(funcs)
+    if len(funcs)==0: return noop
+    if len(funcs)==1: return funs[0]
     if order is not None: funcs = funcs.sorted(order)
     def _inner(x, *args, **kwargs):
         for f in L(funcs): x = f(x, *args, **kwargs)

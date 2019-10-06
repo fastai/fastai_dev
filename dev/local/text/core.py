@@ -3,8 +3,8 @@
 __all__ = ['UNK', 'PAD', 'BOS', 'EOS', 'FLD', 'TK_REP', 'TK_WREP', 'TK_UP', 'TK_MAJ', 'spec_add_spaces',
            'rm_useless_spaces', 'replace_rep', 'replace_wrep', 'fix_html', 'replace_all_caps', 'replace_maj',
            'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer', 'TokenizeBatch', 'tokenize1',
-           'parallel_tokenize', 'tokenize_folder', 'tokenize_df', 'tokenize_csv', 'load_tokenized_csv',
-           'SentencePieceTokenizer']
+           'parallel_tokenize', 'fn_counter_pkl', 'tokenize_folder', 'tokenize_df', 'tokenize_csv',
+           'load_tokenized_csv', 'SentencePieceTokenizer']
 
 #Cell
 from ..torch_basics import *
@@ -144,17 +144,7 @@ def parallel_tokenize(items, tok_func, rules, as_gen=False, n_workers=defaults.c
                         rules=rules, n_workers=n_workers, **tok_kwargs)
 
 #Cell
-@patch
-def read(self:Path):
-    "Read the content of `fname`"
-    with self.open() as f: return f.read()
-
-#Cell
-@patch
-def write(self:Path, txt):
-    "Write `txt` to `self`, creating directories as needed"
-    self.parent.mkdir(parents=True,exist_ok=True)
-    with self.open('w') as f: f.write(txt)
+fn_counter_pkl = 'counter.pkl'
 
 #Cell
 def tokenize_folder(path, extensions=None, folders=None, output_dir=None, n_workers=defaults.cpus,
@@ -172,8 +162,7 @@ def tokenize_folder(path, extensions=None, folders=None, output_dir=None, n_work
         out.with_suffix('.len').write(str(len(tok)))
         counter.update(tok)
 
-#     pickle.dump(counter, open(output_dir/'counter.pkl','wb'))
-    (output_dir/'counter.pkl').save(counter)
+    (output_dir/fn_counter_pkl).save(counter)
 
 #Cell
 def _join_texts(df, mark_fields=False):
@@ -213,13 +202,17 @@ def tokenize_csv(fname, text_cols, outname=None, n_workers=4, rules=None, mark_f
         out.text = out.text.str.join(' ')
         out.to_csv(outname, header=(None,header)[i==0], index=False, mode=('a','w')[i==0])
         cnt.update(c)
-    return cnt
 
+    outname.with_suffix('.pkl').save(cnt)
+
+#Cell
 def load_tokenized_csv(fname):
+    "Utility function to quickly load a tokenized csv ans the corresponding counter"
+    fname = Path(fname)
     out = pd.read_csv(fname)
     for txt_col in out.columns[1:-1]:
         out[txt_col] = out[txt_col].str.split(' ')
-    return out,cnt
+    return out,fname.with_suffix('.pkl').load()
 
 #Cell
 class SentencePieceTokenizer():#TODO: pass the special tokens symbol to sp
