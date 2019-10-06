@@ -52,21 +52,27 @@ class TfmdDL(DataLoader):
 
     def _decode_batch(self, b, max_n=10, full=True):
         f = self.after_item.decode
-        f = compose(f, partial(getattr(self.dataset,'decode',noop), partial=not full))
+        f = compose(f, partial(getattr(self.dataset,'decode',noop), full = full))
         return L(batch_to_samples(b, max_n=max_n)).map(f)
 
-    def show_batch(self, b=None, max_n=10, ctxs=None, return_fig=False, **kwargs):
-        "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
-        if b is None: b = self.one_batch()
+    def _show_batch(self, b, ctxs, max_n=10, **kwargs):
         b = self.decode(b)
         if hasattr(b, 'show'): return b.show(max_n=max_n, **kwargs)
-        db = self._decode_batch(b, max_n, False)
+        db = self._decode_batch(b, max_n, full=False)
         if not is_listy(b): b,db = [b],L((o,) for o in db)
         b = b[:len(db[0])] #Sometimes b is longer than the elements of db, like in a Language Model
         for i,b_ in enumerate(b):
             ctxs = getattr(b_, 'show_multi', default_show_multi)(db.itemgot(i), max_n=max_n, ctxs=ctxs, **kwargs)
+        return ctxs
+
+    def show_batch(self, b=None, out=None, max_n=10, ctxs=None, **kwargs):
+        "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
+        if b is None: b = self.one_batch()
+        ctxs = self._show_batch(b, ctxs, max_n=max_n, **kwargs)
         for b_ in b: getattr(b_, 'display', noop)(ctxs)
-        if return_fig: return ctxs
+        if out is not None:
+            b_out = b[:self.n_inp] + (tuple(out) if is_listy(out) else (out,))
+            ctxs = self._show_batch(b_out, ctxs, max_n=max_n, **kwargs)
 
     @property
     def device(self):
@@ -177,7 +183,7 @@ class DataSource(FilteredBase):
     def __len__(self): return len(self.tls[0])
     def __iter__(self): return (self[i] for i in range(len(self)))
     def __repr__(self): return coll_repr(self)
-    def decode(self, o, partial=False): return tuple(tl.decode(o_, partial=partial) for o_,tl in zip(o,self.tls))
+    def decode(self, o, full=True): return tuple(tl.decode(o_, full=full) for o_,tl in zip(o,self.tls))
     def subset(self, i): return type(self)(tls=L(tl.subset(i) for tl in self.tls))
     def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, **kwargs)
     @property

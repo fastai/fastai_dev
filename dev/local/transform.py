@@ -280,20 +280,20 @@ class Pipeline:
     def __getattr__(self,k): return gather_attrs(self, k, 'fs')
     def __dir__(self): return super().__dir__() + gather_attr_names(self, 'fs')
 
-    def decode  (self, o, partial=False):
-        if not partial: return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, split_idx=self.split_idx)
+    def decode  (self, o, full=True):
+        if full: return compose_tfms(o, tfms=self.fs, is_enc=False, reverse=True, split_idx=self.split_idx)
+        #Not full means we decode up to the point the item knows how to show itself.
         for f in reversed(self.fs):
             if self._is_showable(o): return o
             o = f.decode(o, split_idx=self.split_idx)
         return o
 
     def show(self, o, ctx=None, **kwargs):
-        o = self.decode(o, partial=True)
+        o = self.decode(o, full=False)
         o1 = [o] if self.as_item or not is_listy(o) else o
         for o_ in o1:
             if hasattr(o_, 'show'): ctx = o_.show(ctx=ctx, **kwargs)
         return ctx
 
     def _is_showable(self, o):
-        o1 = [o] if self.as_item or not is_listy(o) else o
-        return all(hasattr(o_, 'show') for o_ in o1)
+        return all(hasattr(o_, 'show') for o_ in o) if is_listy(o) else hasattr(o, 'show')
