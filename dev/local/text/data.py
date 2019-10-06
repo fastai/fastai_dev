@@ -42,7 +42,6 @@ class Numericalize(Transform):
     def setup(self, dsrc):
         if dsrc is None: return
         if self.vocab is None:
-            dsrc = getattr(dsrc,'train',dsrc)
             count = Counter(p for o in dsrc for p in o)
             self.vocab = make_vocab(count, min_freq=self.min_freq, max_vocab=self.max_vocab)
             self.o2i = defaultdict(int, {v:k for k,v in enumerate(self.vocab) if v != 'xxfake'})

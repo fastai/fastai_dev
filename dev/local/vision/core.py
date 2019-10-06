@@ -202,7 +202,6 @@ class BBoxCategorize(Transform):
 
     def setups(self, dsrc):
         if not dsrc: return
-        dsrc = getattr(dsrc,'train',dsrc)
         vals = set()
         for bb in dsrc: vals = vals.union(set(bb.lbl))
         self.vocab,self.otoi = uniqueify(list(vals), sort=True, bidir=True, start='#bg')
