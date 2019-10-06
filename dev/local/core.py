@@ -743,6 +743,19 @@ Self = _SelfCls()
 
 #Cell
 @patch
+def read(self:Path):
+    "Read the content of `fname`"
+    with self.open() as f: return f.read()
+
+#Cell
+@patch
+def write(self:Path, txt):
+    "Write `txt` to `self`, creating directories as needed"
+    self.parent.mkdir(parents=True,exist_ok=True)
+    with self.open('w') as f: f.write(txt)
+
+#Cell
+@patch
 def save(fn:Path, o):
     "Save a pickle file, to a file name or opened file"
     if not isinstance(fn, io.IOBase): fn = open(fn,'wb')
