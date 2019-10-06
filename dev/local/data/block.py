@@ -40,8 +40,8 @@ class DataBlock():
             labellers = [itemgetter(i) for i in range_of(self.default_type_tfms)]
         else: labellers = [noop] * len(self.default_type_tfms)
         splits = (self.splitter or noop)(items)
-        if self.get_x: labellers[0] = self.get_x
-        if self.get_y: labellers[1] = self.get_y
+        if self.get_x: labellers[0] = compose(self.get_x)
+        if self.get_y: labellers[1] = compose(self.get_y)
         if type_tfms is None: type_tfms = [L() for t in self.default_type_tfms]
         type_tfms = L([self.default_type_tfms, type_tfms, labellers]).map_zip(
             lambda tt,tfm,l: L(l) + _merge_tfms(tt, tfm))
