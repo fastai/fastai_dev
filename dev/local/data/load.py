@@ -5,7 +5,6 @@ __all__ = ['fa_collate', 'fa_convert', 'DataLoader']
 #Cell
 from ..torch_basics import *
 from ..test import *
-from ..notebook.showdoc import *
 
 #Cell
 from torch.utils.data.dataloader import _MultiProcessingDataLoaderIter,_SingleProcessDataLoaderIter,_DatasetKind

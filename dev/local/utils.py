@@ -12,7 +12,6 @@ __all__ = ['ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrd
 from .test import *
 from .core import *
 from .imports import *
-from .notebook.showdoc import *
 
 #Cell
 def ifnone(a, b):

@@ -12,7 +12,6 @@ from .load import *
 from ..transform import *
 from .core import *
 from .external import *
-from ..notebook.showdoc import *
 from ..layers import *
 
 #Cell

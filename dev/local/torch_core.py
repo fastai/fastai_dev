@@ -11,7 +11,6 @@ __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'TensorBase', 'co
 from .test import *
 from .basics import *
 from .torch_imports import *
-from .notebook.showdoc import *
 from fastprogress import progress_bar,master_bar
 
 #Cell
@@ -272,6 +271,15 @@ def batch_to_samples(b, max_n=10):
     else:
         res = L(b).map(partial(batch_to_samples,max_n=max_n))
         return retain_types(res.zip(), [b])
+
+#Cell
+@patch
+def interp_1d(x:Tensor, xp, fp):
+    "Same as `np.interp`"
+    slopes = (fp[1:]-fp[:-1])/(xp[1:]-xp[:-1])
+    incx = fp[:-1] - (slopes*xp[:-1])
+    locs = (x[:,None]>=xp[None,:]).long().sum(1)-1
+    return slopes[locs]*x + incx[locs]
 
 #Cell
 def make_cross_image(bw=True):

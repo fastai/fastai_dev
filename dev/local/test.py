@@ -5,7 +5,6 @@ __all__ = ['test_fail', 'test', 'nequals', 'test_eq', 'test_eq_type', 'test_ne',
 
 #Cell
 from .imports import *
-from .notebook.showdoc import show_doc
 
 #Cell
 def test_fail(f, msg='', contains=''):

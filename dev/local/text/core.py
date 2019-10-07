@@ -11,7 +11,6 @@ from ..torch_basics import *
 from ..test import *
 from ..core import *
 from ..data.all import *
-from ..notebook.showdoc import show_doc
 
 #Cell
 import spacy,html

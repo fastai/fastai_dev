@@ -10,7 +10,6 @@ from .load import *
 from .external import *
 from .transforms import *
 from ..transform import *
-from ..notebook.showdoc import show_doc
 
 #Cell
 from inspect import isfunction,ismethod

@@ -9,7 +9,6 @@ from ..torch_basics import *
 from ..test import *
 from ..transform import *
 from .load import *
-from ..notebook.showdoc import *
 
 #Cell
 def default_show_batch(x, y, its, ctxs=None, max_n=10, **kwargs):

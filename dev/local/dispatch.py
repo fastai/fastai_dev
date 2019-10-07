@@ -6,7 +6,6 @@ __all__ = ['type_hints', 'anno_ret', 'cmp_instance', 'TypeDispatch', 'DispatchRe
 from .imports import *
 from .core import *
 from .test import *
-from .notebook.showdoc import show_doc
 
 #Cell
 def type_hints(f):
