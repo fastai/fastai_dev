@@ -39,8 +39,12 @@ class XResNet(nn.Sequential):
               for i in range(blocks)])
 
 #Cell
-def xresnet18 (**kwargs): return XResNet(1, [2, 2,  2, 2], **kwargs)
-def xresnet34 (**kwargs): return XResNet(1, [3, 4,  6, 3], **kwargs)
-def xresnet50 (**kwargs): return XResNet(4, [3, 4,  6, 3], **kwargs)
-def xresnet101(**kwargs): return XResNet(4, [3, 4, 23, 3], **kwargs)
-def xresnet152(**kwargs): return XResNet(4, [3, 8, 36, 3], **kwargs)
+def _xresnet(pretrained, expansion, layers, **kwargs):
+    assert not pretrained, 'Pretrained xresnet not yet available'
+    return XResNet(expansion, layers, **kwargs)
+
+def xresnet18 (pretrained=False, **kwargs): return _xresnet(pretrained, 1, [2, 2,  2, 2], **kwargs)
+def xresnet34 (pretrained=False, **kwargs): return _xresnet(pretrained, 1, [3, 4,  6, 3], **kwargs)
+def xresnet50 (pretrained=False, **kwargs): return _xresnet(pretrained, 4, [3, 4,  6, 3], **kwargs)
+def xresnet101(pretrained=False, **kwargs): return _xresnet(pretrained, 4, [3, 4, 23, 3], **kwargs)
+def xresnet152(pretrained=False, **kwargs): return _xresnet(pretrained, 4, [3, 8, 36, 3], **kwargs)
