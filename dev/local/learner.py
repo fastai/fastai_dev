@@ -10,7 +10,6 @@ from .torch_basics import *
 from .test import *
 from .layers import *
 from .data.all import *
-from .notebook.showdoc import *
 from .optimizer import *
 
 #Cell

@@ -7,4 +7,3 @@ from ..torch_basics import *
 from ..test import *
 from ..core import *
 from ..layers import *
-from ..notebook.showdoc import show_doc

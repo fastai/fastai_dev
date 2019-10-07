@@ -11,7 +11,6 @@ __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'TensorBase', 'co
 from .test import *
 from .basics import *
 from .torch_imports import *
-from .notebook.showdoc import *
 from fastprogress import progress_bar,master_bar
 
 #Cell

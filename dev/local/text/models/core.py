@@ -10,7 +10,6 @@ from ...core import *
 from ...layers import *
 from ...data.all import *
 from ..core import *
-from ...notebook.showdoc import show_doc
 from .awdlstm import *
 
 #Cell

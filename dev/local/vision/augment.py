@@ -11,7 +11,6 @@ from ..torch_basics import *
 from ..test import *
 from ..data.all import *
 from .core import *
-from ..notebook.showdoc import show_doc
 
 #Cell
 from torch import stack, zeros_like as t0, ones_like as t1

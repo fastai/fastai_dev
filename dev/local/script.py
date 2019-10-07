@@ -5,7 +5,6 @@ __all__ = ['Param', 'anno_parser', 'call_parse']
 #Cell
 from .basics import *
 from .test import *
-from .notebook.showdoc import show_doc
 
 from argparse import ArgumentParser
 

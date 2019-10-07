@@ -8,7 +8,6 @@ from ..test import *
 from ..core import *
 from ..data.all import *
 from .core import *
-from ..notebook.showdoc import show_doc
 
 #Cell
 try: import cudf,nvcategory

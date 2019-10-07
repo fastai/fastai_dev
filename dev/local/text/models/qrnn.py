@@ -10,7 +10,6 @@ from ...layers import *
 from ...data.all import *
 from ..core import *
 from .awdlstm import dropout_mask
-from ...notebook.showdoc import show_doc
 
 #Cell
 from torch.utils.cpp_extension import load

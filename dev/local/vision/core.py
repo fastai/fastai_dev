@@ -8,7 +8,6 @@ __all__ = ['Image', 'ToTensor', 'size', 'n_px', 'shape', 'aspect', 'load_image',
 from ..torch_basics import *
 from ..test import *
 from ..data.all import *
-from ..notebook.showdoc import show_doc
 
 from PIL import Image
 

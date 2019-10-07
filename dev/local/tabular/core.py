@@ -8,7 +8,6 @@ from ..torch_basics import *
 from ..test import *
 from ..core import *
 from ..data.all import *
-from ..notebook.showdoc import *
 
 #Cell
 pd.set_option('mode.chained_assignment','raise')
