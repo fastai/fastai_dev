@@ -232,6 +232,16 @@ def retain_types(new, old=None, typs=None):
     return type(new)(L(new, old, typs).map_zip(retain_type, cycled=True))
 
 #Cell
+@patch
+def split_arr(df:pd.DataFrame, from_col):
+    "Split col `from_col` (containing arrays) in `DataFrame` `df` into separate colums"
+    col = df[from_col]
+    n = len(col.iloc[0])
+    cols = [f'{from_col}{o}' for o in range(n)]
+    df[cols] = pd.DataFrame(df[from_col].values.tolist())
+    df.drop(columns=from_col, inplace=True)
+
+#Cell
 def show_title(o, ax=None, ctx=None, label=None, **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)

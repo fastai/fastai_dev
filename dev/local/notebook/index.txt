@@ -72,6 +72,7 @@
   "chunked": "01a_utils.ipynb",
   "retain_type": "01a_utils.ipynb",
   "retain_types": "01a_utils.ipynb",
+  "pd.DataFrame.split_arr": "01a_utils.ipynb",
   "show_title": "01c_torch_core.ipynb",
   "ShowTitle": "01a_utils.ipynb",
   "Int": "01a_utils.ipynb",
