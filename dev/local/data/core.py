@@ -56,6 +56,8 @@ class TfmdDL(DataLoader):
         db = self._decode_batch(b, max_n, full=False)
         if not is_listy(b): b,db = [b],L((o,) for o in db)
         b = b[:len(db[0])] #Sometimes b is longer than the elements of db, like in a Language Model
+        #pb = Problem(b, self.n_inp)
+        #pb.show_batch(db)
         for i,b_ in enumerate(b):
             ctxs = getattr(b_, 'show_multi', default_show_multi)(db.itemgot(i), max_n=max_n, ctxs=ctxs, **kwargs)
         return ctxs

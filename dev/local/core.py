@@ -282,8 +282,9 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         if (use_list is not None) or not _is_array(items):
             items = list(items) if use_list else _listify(items)
         if match is not None:
-            if len(items)==1: items = items*len(match)
-            else: assert len(items)==len(match), 'Match length mismatch'
+            if is_coll(match): match = len(match)
+            if len(items)==1: items = items*match
+            else: assert len(items)==match, 'Match length mismatch'
         super().__init__(items)
 
     def _new(self, items, *args, **kwargs): return type(self)(items, *args, use_list=None, **kwargs)
