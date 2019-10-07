@@ -14,7 +14,7 @@ from ..notebook.showdoc import *
 ShowBatch = TypeDispatch()
 
 #Cell
-def default_show_batch(x:None, y, db, ctxs=None, max_n=10, **kwargs):
+def default_show_batch(x:object, y, db, ctxs=None, max_n=10, **kwargs):
     if ctxs is None: ctxs = Inf.nones
     for i in range(1 if y is None else 2):
         ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(db.itemgot(i),ctxs,range(max_n))]
