@@ -210,4 +210,4 @@ class Pipeline:
         return ctx
 
     def _is_showable(self, o):
-        return all(hasattr(o_, 'show') for o_ in o) if is_listy(o) else hasattr(o, 'show')
+        return all(hasattr(o_, 'show') for o_ in o) if is_listy(o) and len(o) else hasattr(o, 'show')
