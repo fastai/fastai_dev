@@ -40,6 +40,8 @@ def show_batch(x:TensorImage, y, db, ctxs=None, max_n=10, rows=None, cols=None, 
         ctxs = ctxs.flatten()
         for ctx in ctxs[max_n:]: ctx.set_axis_off()
     ctxs = default_show_batch(x, y, db, ctxs=ctxs, max_n=max_n, **kwargs)
+    # Alternative approach (no need for separate function):
+    # ctxs = show_batch[object](x, y, db, ctxs=ctxs, max_n=max_n, **kwargs)
     return ctxs
 
 #Cell
