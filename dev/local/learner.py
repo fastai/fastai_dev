@@ -274,12 +274,12 @@ class Learner():
         full_dec = self.dbunch.decode_batch((*inp,dec_preds))[0][i:]
         return detuplify(full_dec),dec_preds[0],preds[0]
 
-    def show_results(self, ds_idx=0, dl=None, max_n=10):
+    def show_results(self, ds_idx=0, dl=None, max_n=10, **kwargs):
         dl = self.dbunch.dls[ds_idx] if dl is None else dl
         b = dl.one_batch()
         preds,_ = self.get_preds(dl=[b])
         preds = getattr(self.loss_func, "decodes", noop)(preds)
-        self.dbunch.show_batch(b=b, out=preds, max_n=max_n)
+        self.dbunch.show_results(b, preds, max_n=max_n, **kwargs)
 
     @contextmanager
     def no_logging(self): return replacing_yield(self, 'logger', noop)

@@ -117,7 +117,7 @@ class DispatchReg:
     "A global registry for `TypeDispatch` objects keyed by function name"
     def __init__(self): self.d = defaultdict(TypeDispatch)
     def __call__(self, f):
-        nm = f'{f.__module__}.{f.__qualname__}'
+        nm = f'{f.__qualname__}'
         self.d[nm].add(f)
         return self.d[nm]
 

@@ -41,10 +41,10 @@ def subplots(nrows=1, ncols=1, **kwargs):
     return fig,ax
 
 #Cell
-def _get_grid(n, rows=None, cols=None, figsize=None):
+def _get_grid(n, rows=None, cols=None, add_vert=0, figsize=None):
     rows = rows or int(np.ceil(math.sqrt(n)))
     cols = cols or int(np.ceil(n/rows))
-    figsize = (cols*3, rows*3) if figsize is None else figsize
+    figsize = (cols*3, rows*3+add_vert) if figsize is None else figsize
     _,axs = subplots(rows, cols, figsize=figsize)
     axs = axs.flatten()
     for ax in axs[n:]: ax.set_axis_off()
@@ -62,7 +62,7 @@ def show_batch(x:TensorImage, y, its, ctxs=None, max_n=10, rows=None, cols=None,
 #Cell
 @typedispatch
 def show_results(x:TensorImage, y, its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
-    if ctxs is None: ctxs = _get_grid(min(len(its), max_n), rows=rows, cols=cols, figsize=figsize)
+    if ctxs is None: ctxs = _get_grid(min(len(its), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize)
     ctxs = default_show_results(x, y, its, ctxs=ctxs, max_n=max_n, **kwargs)
     # Alternative approach (no need for separate function):
     # ctxs = show_results[object](x, y, db, ctxs=ctxs, max_n=max_n, **kwargs)
@@ -110,7 +110,7 @@ class TfmdDL(DataLoader):
 
     def _pre_show_batch(self, b, max_n=10, **kwargs):
         b = self.decode(b)
-        if hasattr(b, 'show'): return b.show(max_n=max_n, **kwargs)
+        if hasattr(b, 'show'): return b,None,None
         its = self._decode_batch(b, max_n, full=False)
         if not is_listy(b): b,its = [b],L((o,) for o in its)
         return detuplify(b[:self.n_inp]),detuplify(b[self.n_inp:]),its
@@ -123,9 +123,12 @@ class TfmdDL(DataLoader):
     def show_results(self, b, out, max_n=10, ctxs=None, **kwargs):
         x,y,its = self._pre_show_batch(b, max_n=max_n, **kwargs)
         b_out = b[:self.n_inp] + (tuple(out) if is_listy(out) else (out,))
-        _,_,outs = self._pre_show_batch(b_out, max_n=max_n, **kwargs)
-        its = L(i + o[self.n_inp:] for i,o in zip(its,outs))
-        show_results(x, y, its, ctxs=ctxs, max_n=max_n, **kwargs)
+        x1,y1,outs = self._pre_show_batch(b_out, max_n=max_n, **kwargs)
+        if its is not None:
+            its = L(i + o[self.n_inp:] for i,o in zip(its,outs))
+            show_results(x, y, its, ctxs=ctxs, max_n=max_n, **kwargs)
+        #its None means that a batch knos how to show itself as a whole, so we pass x, x1
+        else: show_results(x, x1, its, ctxs=ctxs, max_n=max_n, **kwargs)
 
     @property
     def device(self):
