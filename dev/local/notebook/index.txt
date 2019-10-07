@@ -140,6 +140,7 @@
   "bn_types": "01c_torch_core.ipynb",
   "bn_bias_params": "01c_torch_core.ipynb",
   "batch_to_samples": "01c_torch_core.ipynb",
+  "Tensor.interp_1d": "01c_torch_core.ipynb",
   "make_cross_image": "01c_torch_core.ipynb",
   "show_image": "01c_torch_core.ipynb",
   "show_titled_image": "01c_torch_core.ipynb",

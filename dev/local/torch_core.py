@@ -274,6 +274,15 @@ def batch_to_samples(b, max_n=10):
         return retain_types(res.zip(), [b])
 
 #Cell
+@patch
+def interp_1d(x:Tensor, xp, fp):
+    "Same as `np.interp`"
+    slopes = (fp[1:]-fp[:-1])/(xp[1:]-xp[:-1])
+    incx = fp[:-1] - (slopes*xp[:-1])
+    locs = (x[:,None]>=xp[None,:]).long().sum(1)-1
+    return slopes[locs]*x + incx[locs]
+
+#Cell
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:
