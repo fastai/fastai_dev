@@ -48,7 +48,7 @@ def as_dict(self:DcmDataset, fname, px_summ=True):
     return res
 
 #Cell
-def _dcm2dict(px_summ, fn): return fn.dcmread().as_dict(fn.name, px_summ=False)
+def _dcm2dict(px_summ, fn): return fn.dcmread().as_dict(fn.name, px_summ=px_summ)
 
 #Cell
 @delegates(parallel)
