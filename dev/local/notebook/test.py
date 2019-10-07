@@ -92,7 +92,8 @@ class NoExportPreprocessor(ExecutePreprocessor):
         #    return cell, resources
         for f in get_cell_flags(cell):
             if f not in self.flags:  return cell, resources
-        return super().preprocess_cell(cell, resources, index)
+        res = super().preprocess_cell(cell, resources, index)
+        return res
 
 #Cell
 def test_nb(fn, flags=None):
@@ -103,8 +104,11 @@ def test_nb(fn, flags=None):
         all_flag = check_all_flag(nb['cells'])
         if all_flag is not None and all_flag not in L(flags): return
         mod = find_default_export(nb['cells'])
-        if mod is not None: nb['cells'].insert(0, _add_import_cell(mod))
+        #if mod is not None: nb['cells'].insert(0, _add_import_cell(mod))
         ep = NoExportPreprocessor(L(flags), timeout=600, kernel_name='python3')
         pnb = nbformat.from_dict(nb)
         ep.preprocess(pnb)
+    except Exception as e:
+        print(f"Error in {fn}")
+        raise e
     finally: os.environ.pop("IN_TEST")
