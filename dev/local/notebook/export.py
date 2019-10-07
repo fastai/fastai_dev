@@ -370,7 +370,7 @@ def _script2notebook(fname, dic, silent=False):
     if not silent: print(f"Converted {fname}.")
 
 #Cell
-_manual_mods = ['__init__.py', 'imports.py', 'torch_imports.py', 'all.py', 'torch_basics.py', 'fp16_utils.py']
+_manual_mods = ['__init__.py imports.py torch_imports.py all.py torch_basics.py fp16_utils.py test_utils.py basics.py'.split()]
 
 #Cell
 def script2notebook(folder='local', silent=False):
