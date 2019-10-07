@@ -86,7 +86,7 @@ def tuplify(o, use_list=False, match=None):
 #Cell
 def detuplify(x):
     "If `x` is a tuple with one thing, extract it"
-    return x[0] if len(x)==1 else x
+    return None if len(x)==0 else x[0] if len(x)==1 else x
 
 #Cell
 def replicate(item,match):

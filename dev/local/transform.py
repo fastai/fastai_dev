@@ -168,7 +168,6 @@ class Pipeline:
             self.fs = L(ifnone(funcs,[noop])).map(mk_transform).sorted(key='order')
         for f in self.fs:
             name = camel2snake(type(f).__name__)
-            print(name)
             a = getattr(self,name,None)
             if a is not None: f = L(a)+f
             setattr(self, name, f)
