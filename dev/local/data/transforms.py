@@ -33,7 +33,7 @@ def get_files(path, extensions=None, recurse=True, folders=None):
         res = []
         for i,(p,d,f) in enumerate(os.walk(path)): # returns (dirpath, dirnames, filenames)
             if len(folders) !=0 and i==0: d[:] = [o for o in d if o in folders]
-            else:                            d[:] = [o for o in d if not o.startswith('.')]
+            else:                         d[:] = [o for o in d if not o.startswith('.')]
             res += _get_files(p, f, extensions)
     else:
         f = [o.name for o in os.scandir(path) if o.is_file()]
