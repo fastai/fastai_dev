@@ -158,6 +158,7 @@ class Learner():
         cb.learn = self
         setattr(self, cb.name, cb)
         self.cbs.append(cb)
+        return self
 
     def remove_cb(self, cb):
         cb.learn = None

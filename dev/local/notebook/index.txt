@@ -326,6 +326,7 @@
   "BCEWithLogitsLossFlat": "11_layers.ipynb",
   "BCELossFlat": "11_layers.ipynb",
   "MSELossFlat": "11_layers.ipynb",
+  "LabelSmoothingCrossEntropy": "11_layers.ipynb",
   "trunc_normal_": "11_layers.ipynb",
   "Embedding": "11_layers.ipynb",
   "SelfAttention": "11_layers.ipynb",

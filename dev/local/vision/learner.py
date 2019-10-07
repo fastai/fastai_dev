@@ -118,13 +118,13 @@ model_meta = {
 
 #Cell
 @delegates(Learner.__init__)
-def cnn_learner(dbunch, arch, cut=None, pretrained=True, lin_ftrs=None, ps=0.5, custom_head=None, splitter=None, bn_final=False,
+def cnn_learner(dbunch, arch, loss_func=None, cut=None, pretrained=True, lin_ftrs=None, ps=0.5, custom_head=None, splitter=None, bn_final=False,
                 init=nn.init.kaiming_normal_, concat_pool=True, **kwargs):
     "Build convnet style learner."
     meta = model_meta.get(arch, _default_meta)
     model = create_cnn_model(arch, get_c(dbunch), ifnone(cut, meta['cut']), pretrained, lin_ftrs, ps=ps, custom_head=custom_head,
         bn_final=bn_final, concat_pool=concat_pool)
-    learn = Learner(dbunch, model, splitter=ifnone(splitter, meta['split']), **kwargs)
+    learn = Learner(dbunch, model, loss_func=loss_func, splitter=ifnone(splitter, meta['split']), **kwargs)
     if pretrained: learn.freeze()
     if init: apply_init(model[1], init)
     return learn

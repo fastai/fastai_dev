@@ -120,4 +120,4 @@ class MixedPrecision(Callback):
 #Cell
 @delegates(MixedPrecision.__init__)
 @patch
-def to_fp16(self:Learner, **kwargs): self.add_cb(MixedPrecision(**kwargs))
+def to_fp16(self:Learner, **kwargs): return self.add_cb(MixedPrecision(**kwargs))
