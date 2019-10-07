@@ -38,6 +38,7 @@ class AccumMetric(Metric):
 
     @property
     def value(self):
+        if len(self.preds) == 0: return
         preds,targs = torch.cat(self.preds),torch.cat(self.targs)
         if self.to_np: preds,targs = preds.numpy(),targs.numpy()
         return self.func(targs, preds, **self.kwargs) if self.invert_args else self.func(preds, targs, **self.kwargs)
