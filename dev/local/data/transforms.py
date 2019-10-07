@@ -26,12 +26,13 @@ def _get_files(p, fs, extensions=None):
 def get_files(path, extensions=None, recurse=True, folders=None):
     "Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
     path = Path(path)
+    folders=L(folders)
     extensions = setify(extensions)
     extensions = {e.lower() for e in extensions}
     if recurse:
         res = []
         for i,(p,d,f) in enumerate(os.walk(path)): # returns (dirpath, dirnames, filenames)
-            if folders is not None and i==0: d[:] = [o for o in d if o in folders]
+            if len(folders) !=0 and i==0: d[:] = [o for o in d if o in folders]
             else:                            d[:] = [o for o in d if not o.startswith('.')]
             res += _get_files(p, f, extensions)
     else:
