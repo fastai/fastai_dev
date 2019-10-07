@@ -158,7 +158,6 @@ def tokenize_folder(path, extensions=None, folders=None, output_dir=None, n_work
     for i,tok in parallel_tokenize(fnames, tok_func, rules, as_gen=True, n_workers=n_workers, **tok_kwargs):
         out = output_dir/fnames[i].relative_to(path)
         out.write(' '.join(tok))
-        out.with_suffix('.len').write(str(len(tok)))
         counter.update(tok)
 
     (output_dir/fn_counter_pkl).save(counter)
@@ -185,7 +184,7 @@ def tokenize_df(df, text_cols, n_workers=defaults.cpus, rules=None, mark_fields=
 
     other_cols = df.columns[~df.columns.isin(text_cols)]
     res = df[other_cols].copy()
-    res['text'],res['text_lengths'] = outputs,outputs.map(len)
+    res['text'] = outputs
     return res,Counter(outputs.concat())
 
 #Cell

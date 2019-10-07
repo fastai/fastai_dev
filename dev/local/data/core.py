@@ -238,7 +238,7 @@ class DataSource(FilteredBase):
     def __len__(self): return len(self.tls[0])
     def __iter__(self): return (self[i] for i in range(len(self)))
     def __repr__(self): return coll_repr(self)
-    def decode(self, o, full=True): return tuple(tl.decode(o_, full=full) for o_,tl in zip(o,self.tls))
+    def decode(self, o, full=True): return tuple(tl.decode(o_, full=full) for o_,tl in zip(o,tuplify(self.tls, match=o)))
     def subset(self, i): return type(self)(tls=L(tl.subset(i) for tl in self.tls))
     def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, **kwargs)
     @property
