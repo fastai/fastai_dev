@@ -28,7 +28,7 @@ cmp_instance = functools.cmp_to_key(lambda a,b: 0 if a==b else 1 if issubclass(a
 def _p2_anno(f):
     "Get the 1st 2 annotations of `f`, defaulting to `object`"
     hints = type_hints(f)
-    ann = [o for n,o in hints.items() if n!='return']
+    ann = [object if o==NoneType else o for n,o in hints.items() if n!='return']
     while len(ann)<2: ann.append(object)
     return ann[:2]
 

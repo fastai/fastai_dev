@@ -2,8 +2,8 @@
 
 __all__ = ['CancelFitException', 'CancelEpochException', 'CancelTrainException', 'CancelValidException',
            'CancelBatchException', 'class2attr', 'Callback', 'TrainEvalCallback', 'GatherPredsCallback', 'event',
-           'replacing_yield', 'mk_metric', 'save_model', 'load_model', 'detuplify', 'Learner', 'VerboseCallback',
-           'Metric', 'AvgMetric', 'AvgLoss', 'AvgSmoothLoss', 'Recorder']
+           'replacing_yield', 'mk_metric', 'save_model', 'load_model', 'Learner', 'VerboseCallback', 'Metric',
+           'AvgMetric', 'AvgLoss', 'AvgSmoothLoss', 'Recorder']
 
 #Cell
 from .torch_basics import *
@@ -137,11 +137,6 @@ def load_model(file, model, opt, with_opt=None, device=None, strict=True):
         except:
             if with_opt: warn("Could not load the optimizer state.")
     elif with_opt: warn("Saved filed doesn't contain an optimizer state.")
-
-#Cell
-def detuplify(x):
-    "If `x` is a tuple with one thing, extract it"
-    return x[0] if len(x)==1 else x
 
 #Cell
 class Learner():

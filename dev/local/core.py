@@ -4,13 +4,13 @@ __all__ = ['defaults', 'FixSigMeta', 'PrePostInitMeta', 'NewChkMeta', 'BypassNew
            'patch_property', 'use_kwargs', 'delegates', 'funcs_kwargs', 'method', 'add_docs', 'docs', 'custom_dir',
            '_0', '_1', '_2', '_3', '_4', 'bind', 'GetAttr', 'delegate_attr', 'coll_repr', 'mask2idxs', 'listable_types',
            'CollBase', 'cycle', 'zip_cycle', 'is_indexer', 'L', 'ifnone', 'get_class', 'mk_class', 'wrap_class',
-           'store_attr', 'attrdict', 'properties', 'tuplify', 'replicate', 'uniqueify', 'setify', 'is_listy',
-           'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq',
-           'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types',
-           'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple',
-           'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped', 'instantiate', 'Self', 'Self', 'bunzip',
-           'join_path_file', 'sort_by_run', 'display_df', 'round_multiple', 'even_mults', 'num_cpus', 'add_props',
-           'camel2snake', 'PrettyString']
+           'store_attr', 'attrdict', 'properties', 'tuplify', 'detuplify', 'replicate', 'uniqueify', 'setify',
+           'is_listy', 'range_of', 'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le',
+           'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type',
+           'retain_types', 'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'num_methods', 'rnum_methods',
+           'inum_methods', 'Tuple', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped', 'instantiate',
+           'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'display_df', 'round_multiple', 'even_mults',
+           'num_cpus', 'add_props', 'camel2snake', 'PrettyString']
 
 #Cell
 from .test import *
@@ -441,6 +441,11 @@ def properties(cls, *ps):
 def tuplify(o, use_list=False, match=None):
     "Make `o` a tuple"
     return tuple(L(o, use_list=use_list, match=match))
+
+#Cell
+def detuplify(x):
+    "If `x` is a tuple with one thing, extract it"
+    return x[0] if len(x)==1 else x
 
 #Cell
 def replicate(item,match):
