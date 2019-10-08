@@ -5,7 +5,8 @@ __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugge
            'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
            'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention',
            'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
-           'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model']
+           'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model',
+           'in_channels']
 
 #Cell
 from .torch_basics import *
@@ -399,3 +400,10 @@ nn.Module.has_children = property(_has_children)
 def flatten_model(m):
     "Return the list of all submodules and parameters of `m`"
     return sum(map(flatten_model,children_and_parameters(m)),[]) if m.has_children else [m]
+
+#Cell
+def in_channels(m):
+    "Return the shape of the first weight layer in `m`."
+    for l in flatten_model(m):
+        if hasattr(l, 'weight'): return l.weight.shape[1]
+    raise Exception('No weight layer')
