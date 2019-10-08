@@ -6,7 +6,7 @@ __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugge
            'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention',
            'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
            'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model',
-           'in_channels']
+           'NoneReduce', 'in_channels']
 
 #Cell
 from .torch_basics import *
@@ -344,6 +344,7 @@ class SimpleCNN(nn.Sequential):
 #Cell
 class ResBlock(nn.Module):
     "Resnet block from `ni` to `nh` with `stride`"
+    @delegates(ConvLayer.__init__)
     def __init__(self, expansion, ni, nh, stride=1, norm_type=NormType.Batch, **kwargs):
         super().__init__()
         norm2 = NormType.BatchZero if norm_type==NormType.Batch else norm_type
@@ -400,6 +401,21 @@ nn.Module.has_children = property(_has_children)
 def flatten_model(m):
     "Return the list of all submodules and parameters of `m`"
     return sum(map(flatten_model,children_and_parameters(m)),[]) if m.has_children else [m]
+
+#Cell
+class NoneReduce():
+    "A context manager to evaluate `loss_func` with none reduce."
+    def __init__(self, loss_func): self.loss_func,self.old_red = loss_func,None
+
+    def __enter__(self):
+        if hasattr(self.loss_func, 'reduction'):
+            self.old_red = self.loss_func.reduction
+            self.loss_func.reduction = 'none'
+            return self.loss_func
+        else: return partial(self.loss_func, reduction='none')
+
+    def __exit__(self, type, value, traceback):
+        if self.old_red is not None: self.loss_func.reduction = self.old_red
 
 #Cell
 def in_channels(m):
