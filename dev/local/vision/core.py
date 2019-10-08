@@ -2,7 +2,8 @@
 
 __all__ = ['Image', 'ToTensor', 'size', 'n_px', 'shape', 'aspect', 'load_image', 'PILBase', 'PILImage', 'PILImageBW',
            'PILMask', 'TensorPoint', 'get_annotations', 'BBox', 'TensorBBox', 'image2byte', 'encodes', 'encodes',
-           'encodes', 'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad']
+           'encodes', 'PointScaler', 'BBoxScaler', 'BBoxCategorize', 'bb_pad', 'subplots', 'show_batch', 'show_results',
+           'show_results', 'show_results']
 
 #Cell
 from ..torch_basics import *
@@ -222,3 +223,55 @@ def bb_pad(samples, pad_idx=0):
         lbl  = torch.cat([lbl, lbl .new_zeros(max_len-lbl .shape[0])+pad_idx])
         return img,TensorBBox((bbox,lbl))
     return [_f(x,*y) for x,y in samples]
+
+#Cell
+@delegates(plt.subplots, keep=True)
+def subplots(nrows=1, ncols=1, **kwargs):
+    fig,ax = plt.subplots(nrows,ncols,**kwargs)
+    if nrows*ncols==1: ax = array([ax])
+    return fig,ax
+
+#Cell
+def _get_grid(n, rows=None, cols=None, add_vert=0, figsize=None, double=False):
+    rows = rows or int(np.ceil(math.sqrt(n)))
+    cols = cols or int(np.ceil(n/rows))
+    if double: cols*=2 ; n*=2
+    figsize = (cols*3, rows*3+add_vert) if figsize is None else figsize
+    _,axs = subplots(rows, cols, figsize=figsize)
+    axs = axs.flatten()
+    for ax in axs[n:]: ax.set_axis_off()
+    return axs
+
+#Cell
+@typedispatch
+def show_batch(x:TensorImage, y, its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+    if ctxs is None: ctxs = _get_grid(min(len(its), max_n), rows=rows, cols=cols, figsize=figsize)
+    ctxs = default_show_batch(x, y, its, ctxs=ctxs, max_n=max_n, **kwargs)
+    return ctxs
+
+#Cell
+@typedispatch
+def show_results(x:TensorImage, y, its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+    if ctxs is None: ctxs = _get_grid(min(len(its), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize)
+    ctxs = default_show_results(x, y, its, ctxs=ctxs, max_n=max_n, **kwargs)
+    return ctxs
+
+#Cell
+@typedispatch
+def show_results(x:TensorImage, y:TensorCategory, its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+    if ctxs is None: ctxs = _get_grid(min(len(its), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize)
+    for i in range(2):
+        ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs,range(max_n))]
+    ctxs = [r.show(ctx=c, color='green' if b==r else 'red', **kwargs)
+            for b,r,c,_ in zip(its.itemgot(1),its.itemgot(2),ctxs,range(max_n))]
+    return ctxs
+
+#Cell
+@typedispatch
+def show_results(x:TensorImage, y:TensorImageBase, its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+    if ctxs is None: ctxs = _get_grid(min(len(its), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize, double=True)
+    for i in range(2):
+        ctxs[::2] = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs[::2],range(max_n))]
+    for i in [0,2]:
+        ctxs[1::2] = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs[1::2],range(max_n))]
+    return ctxs
