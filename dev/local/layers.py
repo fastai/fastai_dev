@@ -186,9 +186,10 @@ def CrossEntropyLossFlat(*args, axis=-1, **kwargs):
     return BaseLoss(nn.CrossEntropyLoss, *args, axis=axis, activation=_act, decodes=_decodes, **kwargs)
 
 #Cell
-def BCEWithLogitsLossFlat(*args, axis=-1, floatify=True, **kwargs):
+def BCEWithLogitsLossFlat(*args, axis=-1, floatify=True, thresh=0.5, **kwargs):
     "Same as `nn.BCEWithLogitsLoss`, but flattens input and target."
-    return BaseLoss(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, activation=torch.sigmoid, **kwargs)
+    def _decodes(x): return x>thresh
+    return BaseLoss(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, activation=torch.sigmoid, decodes=_decodes, **kwargs)
 
 #Cell
 def BCELossFlat(*args, axis=-1, floatify=True, **kwargs):

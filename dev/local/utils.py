@@ -241,14 +241,14 @@ def split_arr(df:pd.DataFrame, from_col):
     df.drop(columns=from_col, inplace=True)
 
 #Cell
-def show_title(o, ax=None, ctx=None, label=None, **kwargs):
+def show_title(o, ax=None, ctx=None, label=None, color='black', **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
     if ax is None: print(o)
     elif hasattr(ax, 'set_title'):
         t = ax.title.get_text()
         if len(t) > 0: o = t+'\n'+str(o)
-        ax.set_title(o)
+        ax.set_title(o, color=color)
     elif isinstance(ax, pd.Series):
         while label in ax: label += '_'
         ax = ax.append(pd.Series({label: o}))
