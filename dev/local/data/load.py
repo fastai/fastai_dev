@@ -23,9 +23,11 @@ class _FakeLoader(GetAttr):
     def __init__(self, d, pin_memory, num_workers, timeout):
         self.dataset,self.default,self.worker_init_fn = self,d,_wif
         store_attr(self, 'd,pin_memory,num_workers,timeout')
-        self.multiprocessing_context = (None,multiprocessing)[num_workers>0]
 
     def __iter__(self): return iter(self.d.create_batches(self.d.sampler()))
+
+    @property
+    def multiprocessing_context(self): return (None,multiprocessing)[self.num_workers>0]
 
 _collate_types = (ndarray, Tensor, typing.Mapping, str)
 
@@ -91,13 +93,23 @@ class DataLoader(GetAttr):
 
     def new(self, dataset):
         kwargs = dict(bs=self.bs, shuffle=self.shuffle, drop_last=self.drop_last, indexed=self.indexed,
-                      num_workers=self.nw, pin_memory=self.pin_memory, timeout=self.timeout)
+                      num_workers=self.fake_l.num_workers, pin_memory=self.pin_memory, timeout=self.timeout)
         for n in self._methods: kwargs[n] = getattr(self, n)
         return self.__class__(dataset, **kwargs)
 
     def retain(self, res, b):  return retain_types(res, b[0] if is_listy(b) else b)
     def create_item(self, s):  return next(self.it) if s is None else self.dataset[s]
     def create_batch(self, b): return (fa_collate,fa_convert)[self.bs is None](b)
-    def one_batch(self):   return next(iter(self))
     def do_item(self, s):  return self.after_item(self.create_item(s))
     def do_batch(self, b): return self.retain(self.create_batch(self.before_batch(b)), b)
+
+    def one_batch(self):
+        with self.no_multiproc(): return next(iter(self))
+
+    @contextmanager
+    def no_multiproc(self):
+        old_nw = self.fake_l.num_workers
+        try:
+            self.fake_l.num_workers = 0
+            yield self
+        finally: self.fake_l.num_workers = old_nw
