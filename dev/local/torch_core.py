@@ -372,7 +372,7 @@ class ProcessPoolExecutor(concurrent.futures.ProcessPoolExecutor):
 
     def map(self, f, items, *args, **kwargs):
         g = partial(f, *args, **kwargs)
-        if self.not_parallel: return L(items).map(g)
+        if self.not_parallel: return map(g, items)
         try: return super().map(g, items)
         except Exception as e: self.on_exc(e)
 
