@@ -370,12 +370,13 @@ def apply_init(m, func=nn.init.kaiming_normal_):
 from multiprocessing import Process, Queue
 
 #Cell
+@delegates(concurrent.futures.ProcessPoolExecutor)
 class ProcessPoolExecutor(concurrent.futures.ProcessPoolExecutor):
-    def __init__(self, max_workers=None, mp_context=None, initializer=None, initargs=(), on_exc=print):
+    def __init__(self, max_workers=None, on_exc=print, **kwargs):
         self.not_parallel = max_workers==0
         self.on_exc = on_exc
         if self.not_parallel: max_workers=1
-        super().__init__(max_workers, mp_context, initializer=initializer, initargs=initializer)
+        super().__init__(max_workers, **kwargs)
 
     def map(self, f, items, *args, **kwargs):
         g = partial(f, *args, **kwargs)
