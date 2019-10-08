@@ -5,7 +5,8 @@ __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugge
            'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
            'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention',
            'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
-           'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model']
+           'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model',
+           'in_channels']
 
 #Cell
 from .torch_basics import *
@@ -186,9 +187,10 @@ def CrossEntropyLossFlat(*args, axis=-1, **kwargs):
     return BaseLoss(nn.CrossEntropyLoss, *args, axis=axis, activation=_act, decodes=_decodes, **kwargs)
 
 #Cell
-def BCEWithLogitsLossFlat(*args, axis=-1, floatify=True, **kwargs):
+def BCEWithLogitsLossFlat(*args, axis=-1, floatify=True, thresh=0.5, **kwargs):
     "Same as `nn.BCEWithLogitsLoss`, but flattens input and target."
-    return BaseLoss(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, activation=torch.sigmoid, **kwargs)
+    def _decodes(x): return x>thresh
+    return BaseLoss(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, activation=torch.sigmoid, decodes=_decodes, **kwargs)
 
 #Cell
 def BCELossFlat(*args, axis=-1, floatify=True, **kwargs):
@@ -398,3 +400,10 @@ nn.Module.has_children = property(_has_children)
 def flatten_model(m):
     "Return the list of all submodules and parameters of `m`"
     return sum(map(flatten_model,children_and_parameters(m)),[]) if m.has_children else [m]
+
+#Cell
+def in_channels(m):
+    "Return the shape of the first weight layer in `m`."
+    for l in flatten_model(m):
+        if hasattr(l, 'weight'): return l.weight.shape[1]
+    raise Exception('No weight layer')

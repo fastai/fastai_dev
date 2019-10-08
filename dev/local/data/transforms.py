@@ -123,7 +123,7 @@ class Categorize(Transform):
     def setups(self, dsrc):
         if self.vocab is None and dsrc is not None: self.vocab = CategoryMap(dsrc, add_na=self.add_na)
 
-    def encodes(self, o): return self.vocab.o2i[o]
+    def encodes(self, o): return TensorCategory(self.vocab.o2i[o])
     def decodes(self, o): return Category(self.vocab[o])
 
 #Cell
@@ -131,7 +131,8 @@ Category.create = Categorize
 
 #Cell
 class MultiCategory(L):
-    def show(self, ctx=None, sep=';', **kwargs): return show_title(sep.join(self.map(str)), ctx=ctx)
+    def show(self, ctx=None, sep=';', color='black', **kwargs):
+        return show_title(sep.join(self.map(str)), ctx=ctx, color=color)
 
 #Cell
 class MultiCategorize(Categorize):
@@ -145,8 +146,8 @@ class MultiCategorize(Categorize):
             self.vocab,self.o2i = uniqueify(list(vals), sort=True, bidir=True)
         setattr(dsrc, 'vocab', self.vocab)
 
-    def encodes(self, o):                return [self.o2i  [o_] for o_ in o]
-    def decodes(self, o): return MultiCategory([self.vocab[o_] for o_ in o])
+    def encodes(self, o): return TensorCategory([self.o2i  [o_] for o_ in o])
+    def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
 
 #Cell
 MultiCategory.create = MultiCategorize
