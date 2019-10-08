@@ -3,7 +3,7 @@
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Category', 'Categorize',
            'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'get_c', 'ToTensor', 'Cuda', 'ByteToFloatTensor',
-           'Normalize', 'broadcast_vec']
+           'broadcast_vec', 'Normalize']
 
 #Cell
 from ..torch_basics import *
@@ -202,22 +202,24 @@ class ByteToFloatTensor(Transform):
     def decodes(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
 
 #Cell
-@docs
-class Normalize(Transform):
-    "Normalize/denorm batch of `TensorImage`"
-    order=99
-    def __init__(self, mean, std): self.mean,self.std = mean,std
-    def encodes(self, x:TensorImage): return (x-self.mean) / self.std
-    def decodes(self, x:TensorImage):
-        f = to_cpu if x.device.type=='cpu' else noop
-        return (x*f(self.std) + f(self.mean))
-
-    _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
-
-#Cell
 def broadcast_vec(dim, ndim, *t, cuda=True):
     "Make a vector broadcastable over `dim` (out of `ndim` total) by prepending and appending unit axes"
     v = [1]*ndim
     v[dim] = -1
     f = to_device if cuda else noop
     return [f(tensor(o).view(*v)) for o in t]
+
+#Cell
+@docs
+class Normalize(Transform):
+    "Normalize/denorm batch of `TensorImage`"
+    order=99
+    def __init__(self, mean, std, dim=1, ndim=4, cuda=True):
+        self.mean,self.std = broadcast_vec(dim, ndim, mean, std, cuda=cuda)
+
+    def encodes(self, x:TensorImage): return (x-self.mean) / self.std
+    def decodes(self, x:TensorImage):
+        f = to_cpu if x.device.type=='cpu' else noop
+        return (x*f(self.std) + f(self.mean))
+
+    _docs=dict(encodes="Normalize batch", decodes="Denormalize batch")
