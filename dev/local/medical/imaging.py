@@ -29,6 +29,12 @@ def _split_elem(res,k,v):
 def dcmread(self:Path): return pydicom.dcmread(str(self))
 
 #Cell
+def _cast_dicom_special(x):
+    cls = x.__class__
+    if not cls.__module__.startswith('pydicom'): return x
+    return cls.__base__(x)
+
+#Cell
 @patch
 def as_dict(self:DcmDataset, fname, px_summ=True):
     pxdata = (0x7fe0,0x0010)
@@ -45,6 +51,7 @@ def as_dict(self:DcmDataset, fname, px_summ=True):
     except Exception as e:
         for f in stats: res['img_'+f] = 0
         print(res,e)
+    for k in res: res[k] = _cast_dicom_special(res[k])
     return res
 
 #Cell
