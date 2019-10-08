@@ -19,15 +19,18 @@ def _get_sz_change_idxs(sizes):
 #Cell
 class UnetBlock(Module):
     "A quasi-UNet block, using `PixelShuffle_ICNR upsampling`."
-    def __init__(self, up_in_c, x_in_c, hook, final_div=True, blur=False, act_cls=defaults.activation, self_attention=False, **kwargs):
+    @delegates(ConvLayer.__init__)
+    def __init__(self, up_in_c, x_in_c, hook, final_div=True, blur=False, act_cls=defaults.activation,
+                 self_attention=False, init=nn.init.kaiming_normal_, **kwargs):
         self.hook = hook
-        self.shuf = PixelShuffle_ICNR(up_in_c, up_in_c//2, blur=blur, act_cls=act_cls, **kwargs)
+        self.shuf = PixelShuffle_ICNR(up_in_c, up_in_c//2, blur=blur, act_cls=act_cls)
         self.bn = BatchNorm(x_in_c)
         ni = up_in_c//2 + x_in_c
         nf = ni if final_div else ni//2
         self.conv1 = ConvLayer(ni, nf, act_cls=act_cls, **kwargs)
         self.conv2 = ConvLayer(nf, nf, act_cls=act_cls, xtra=SelfAttention(nf) if self_attention else None, **kwargs)
         self.relu = act_cls()
+        apply_init(nn.Sequential(self.conv1, self.conv2), init)
 
     def forward(self, up_in):
         s = self.hook.stored
@@ -41,8 +44,9 @@ class UnetBlock(Module):
 #Cell
 class DynamicUnet(SequentialEx):
     "Create a U-Net from a given architecture."
-    def __init__(self, encoder, n_classes, img_size=(256,256), blur=False, blur_final=True, self_attention=False,
-                 y_range=None, last_cross=True, bottle=False, **kwargs):
+    def __init__(self, encoder, n_classes, img_size, blur=False, blur_final=True, self_attention=False,
+                 y_range=None, last_cross=True, bottle=False, act_cls=defaults.activation,
+                 init=nn.init.kaiming_normal_, **kwargs):
         imsize = img_size
         sizes = model_sizes(encoder, size=imsize)
         sz_chg_idxs = list(reversed(_get_sz_change_idxs(sizes)))
@@ -50,8 +54,8 @@ class DynamicUnet(SequentialEx):
         x = dummy_eval(encoder, imsize).detach()
 
         ni = sizes[-1][1]
-        middle_conv = nn.Sequential(ConvLayer(ni, ni*2, **kwargs),
-                                    ConvLayer(ni*2, ni, **kwargs)).eval()
+        middle_conv = nn.Sequential(ConvLayer(ni, ni*2, act_cls=act_cls, **kwargs),
+                                    ConvLayer(ni*2, ni, act_cls=act_cls, **kwargs)).eval()
         x = middle_conv(x)
         layers = [encoder, BatchNorm(ni), nn.ReLU(), middle_conv]
 
@@ -61,19 +65,20 @@ class DynamicUnet(SequentialEx):
             do_blur = blur and (not_final or blur_final)
             sa = self_attention and (i==len(sz_chg_idxs)-3)
             unet_block = UnetBlock(up_in_c, x_in_c, self.sfs[i], final_div=not_final, blur=do_blur, self_attention=sa,
-                                   **kwargs).eval()
+                                   act_cls=act_cls, init=init, **kwargs).eval()
             layers.append(unet_block)
             x = unet_block(x)
 
         ni = x.shape[1]
-        if imsize != sizes[0][-2:]: layers.append(PixelShuffle_ICNR(ni, **kwargs))
+        if imsize != sizes[0][-2:]: layers.append(PixelShuffle_ICNR(ni, act_cls=act_cls))
         x = PixelShuffle_ICNR(ni)(x)
         if imsize != x.shape[-2:]: layers.append(Lambda(lambda x: F.interpolate(x, imsize, mode='nearest')))
         if last_cross:
             layers.append(MergeLayer(dense=True))
             ni += in_channels(encoder)
-            layers.append(ResBlock(1, ni, ni//2 if bottle else ni, **kwargs))
+            layers.append(ResBlock(1, ni, ni//2 if bottle else ni, act_cls=act_cls, **kwargs))
         layers += [ConvLayer(ni, n_classes, ks=1, act_cls=None, **kwargs)]
+        apply_init(nn.Sequential(layers[2], *layers[-2:]), init)
         if y_range is not None: layers.append(SigmoidRange(*y_range))
         super().__init__(*layers)
 
