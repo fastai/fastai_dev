@@ -207,7 +207,6 @@
   "Category.create": "06_data_transforms.ipynb",
   "MultiCategory": "06_data_transforms.ipynb",
   "MultiCategorize": "06_data_transforms.ipynb",
-  "MultiCategory.create": "06_data_transforms.ipynb",
   "OneHotEncode": "06_data_transforms.ipynb",
   "get_c": "06_data_transforms.ipynb",
   "ToTensor": "06_data_transforms.ipynb",

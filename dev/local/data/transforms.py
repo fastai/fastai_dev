@@ -149,12 +149,9 @@ class MultiCategorize(Categorize):
     def encodes(self, o):
         idxs = [self.o2i  [o_] for o_ in o]
         if idxs: return TensorCategory(idxs)
-        return torch.empty(0)
+        return L()
 
     def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
-
-#Cell
-MultiCategory.create = MultiCategorize
 
 #Cell
 class OneHotEncode(Transform):
