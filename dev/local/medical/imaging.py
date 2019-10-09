@@ -101,7 +101,7 @@ dicom_windows = types.SimpleNamespace(
 @delegates(show_image)
 def show(self:DcmDataset, scale=True, cmap=plt.cm.bone, **kwargs):
     px = (self.windowed(*scale) if isinstance(scale,tuple)
-          else dcm.hist_scaled_px() if scale
+          else self.hist_scaled_px() if scale
           else self.scaled_px)
     show_image(px, cmap=cmap, **kwargs)
 

@@ -64,6 +64,14 @@ class TensorBase(Tensor, metaclass=BypassNewMeta):
         f = _fa_rebuild_qtensor if self.is_quantized else  _fa_rebuild_tensor
         return (f, args + (self.requires_grad, OrderedDict()))
 
+    def __getitem__(self,i):
+        old = type(i)
+        if issubclass(old,Tensor): i.__class__ = Tensor
+        res = super().__getitem__(i)
+        res.__class__ = self.__class__
+        if issubclass(old,Tensor): i.__class__ = old
+        return res
+
 #Cell
 def _patch_tb():
     def get_f(fn):
@@ -74,7 +82,7 @@ def _patch_tb():
         return _f
 
     t = tensor([1])
-    skips = '__class__ __deepcopy__ __delattr__ __dir__ __doc__ __getattribute__ __hash__ __init__ \
+    skips = '__getitem__ __class__ __deepcopy__ __delattr__ __dir__ __doc__ __getattribute__ __hash__ __init__ \
         __init_subclass__ __new__ __reduce__ __reduce_ex__ __module__ __setstate__'.split()
 
     for fn in dir(t):
