@@ -102,6 +102,18 @@ _re_patch_func = re.compile(r"""
 """, re.VERBOSE)
 
 #Cell
+_re_typedispatch_func = re.compile(r"""
+# Catches any function decorated with @typedispatch
+(@typedispatch  # At any place in the cell, catch a group with something that begins with @patch
+\s*def          # Any number of whitespace (including a new line probably) followed by def
+\s+             # One whitespace or more
+[^\(]*          # Anything but whitespace or an opening parenthesis (name of the function)
+\s*\(           # Any number of whitespace followed by an opening parenthesis
+[^\)]*          # Any number of character different of )
+\)\s*:)         # A closing parenthesis followed by whitespace and :
+""", re.VERBOSE)
+
+#Cell
 _re_class_func_def = re.compile(r"""
 # Catches any 0-indented function or class definition with its name in group 1
 ^              # Beginning of a line (since re.MULTILINE is passed)
@@ -134,6 +146,7 @@ def export_names(code, func_only=False):
         if cls is not None: return f"def {cls}.{nm}():"
         return '\n'.join([f"def {c}.{nm}():" for c in re.split(', *', t[1:-1])])
 
+    code = _re_typedispatch_func.sub('', code)
     code = _re_patch_func.sub(_f, code)
     names = _re_class_func_def.findall(code)
     if not func_only: names += _re_obj_def.findall(code)
