@@ -102,7 +102,6 @@ class DataLoader(GetAttr):
     def create_batch(self, b): return (fa_collate,fa_convert)[self.bs is None](b)
     def do_item(self, s):  return self.after_item(self.create_item(s))
     def do_batch(self, b): return self.retain(self.create_batch(self.before_batch(b)), b)
-
     def one_batch(self):
         with self.no_multiproc(): return next(iter(self))
 
