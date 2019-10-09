@@ -3,6 +3,7 @@ channels:
 - fastai
 - pytorch
 - defaults
+- conda-forge
 dependencies:
 - jupyter
 - pytorch>=1.2.0
@@ -20,3 +21,4 @@ dependencies:
 - spacy
 - pyarrow
 - scikit-image
+- pydicom
