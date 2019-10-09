@@ -18,4 +18,5 @@ dependencies:
 - scikit-learn
 - scipy
 - spacy
-
+- pyarrow
+- scikit-image
