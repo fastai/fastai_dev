@@ -130,9 +130,9 @@ class Chunks:
         self.totlen = self.cumlens[-1]
 
     def __getitem__(self,i):
-        if isinstance(i,slice): return self.getslice(i)
+        if isinstance(i,slice): return retain_type(self.getslice(i), old=self.chunks[0])
         di,idx = self.doc_idx(i)
-        return self.chunks[di][idx]
+        return retain_type(self.chunks[di][idx], old=self.chunks[0])
 
     def getslice(self, i):
         st_d,st_i = self.doc_idx(ifnone(i.start,0))
@@ -276,7 +276,7 @@ def bn_bias_params(m, with_bias=True):
 #Cell
 def batch_to_samples(b, max_n=10):
     "'Transposes' a batch to (at most `max_n`) samples"
-    if isinstance(b, Tensor): return list(b[:max_n])
+    if isinstance(b, Tensor): return retain_types(list(b[:max_n]), [b])
     else:
         res = L(b).map(partial(batch_to_samples,max_n=max_n))
         return retain_types(res.zip(), [b])
