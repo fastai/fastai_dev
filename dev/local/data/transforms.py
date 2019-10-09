@@ -143,10 +143,10 @@ class MultiCategorize(Categorize):
         if self.vocab is None:
             vals = set()
             for b in dsrc: vals = vals.union(set(b))
-            self.vocab,self.o2i = uniqueify(list(vals), sort=True, bidir=True)
+            self.vocab = CategoryMap(list(vals))
         setattr(dsrc, 'vocab', self.vocab)
 
-    def encodes(self, o): return [self.o2i  [o_] for o_ in o]
+    def encodes(self, o): return [self.vocab.o2i  [o_] for o_ in o]
     def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
 
 #Cell
