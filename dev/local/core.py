@@ -181,9 +181,6 @@ arg3 = _Arg(3)
 arg4 = _Arg(4)
 
 #Cell
-# _all_ = ['arg0', 'arg1', 'arg2', 'arg3', 'arg4']
-
-#Cell
 class bind:
     "Same as `partial`, except you can use `arg0` `arg1` etc param placeholders"
     def __init__(self, fn, *pargs, **pkwargs):
