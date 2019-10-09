@@ -28,6 +28,7 @@ def tensor(x, *rest, **kwargs):
     # Pytorch bug in dataloader using num_workers>0
     if isinstance(x, (tuple,list)) and len(x)==0: return tensor(0)
     res = (torch.tensor(x, **kwargs) if isinstance(x, (tuple,list))
+           else torch.from_numpy(x) if isinstance(x, ndarray)
            else as_tensor(x.values, **kwargs) if isinstance(x, (pd.Series, pd.DataFrame))
            else as_tensor(x, **kwargs) if hasattr(x, '__array__') or is_iter(x)
            else None)
@@ -282,6 +283,7 @@ def interp_1d(x:Tensor, xp, fp):
     slopes = (fp[1:]-fp[:-1])/(xp[1:]-xp[:-1])
     incx = fp[:-1] - (slopes*xp[:-1])
     locs = (x[:,None]>=xp[None,:]).long().sum(1)-1
+    locs = locs.clamp(0,len(slopes)-1)
     return slopes[locs]*x + incx[locs]
 
 #Cell

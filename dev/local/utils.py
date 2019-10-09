@@ -6,7 +6,7 @@ __all__ = ['ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrd
            'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle',
            'Int', 'Float', 'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple', 'TupleTitled', 'trace',
            'compose', 'maps', 'partialler', 'mapped', 'instantiate', 'Self', 'Self', 'bunzip', 'join_path_file',
-           'sort_by_run', 'round_multiple', 'even_mults', 'num_cpus', 'add_props']
+           'sort_by_run', 'subplots', 'round_multiple', 'even_mults', 'num_cpus', 'add_props']
 
 #Cell
 from .test import *
@@ -401,9 +401,15 @@ Self = _SelfCls()
 
 #Cell
 @patch
-def read(self:Path):
+def readlines(self:Path, hint=-1):
     "Read the content of `fname`"
-    with self.open() as f: return f.read()
+    with self.open() as f: return f.readlines(hint)
+
+#Cell
+@patch
+def read(self:Path, size=-1):
+    "Read the content of `fname`"
+    with self.open() as f: return f.read(size)
 
 #Cell
 @patch
@@ -431,11 +437,14 @@ def load(fn:Path):
 #Cell
 #NB: Please don't move this to a different line or module, since it's used in testing `get_source_link`
 @patch
-def ls(self:Path, file_type=None, file_exts=None):
+def ls(self:Path, n_max=None, file_type=None, file_exts=None):
     "Contents of path as a list"
     extns=L(file_exts)
     if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
-    return L(self.iterdir()).filter(lambda x: len(extns)==0 or x.suffix in extns)
+    has_extns = len(extns)==0
+    res = (o for o in self.iterdir() if has_extns or o.suffix in extns)
+    if n_max is not None: res = itertools.islice(res, n_max)
+    return L(res)
 
 #Cell
 def bunzip(fn):
@@ -478,6 +487,14 @@ def sort_by_run(fs):
                 break
         else: raise Exception("Impossible to sort")
     return res
+
+#Cell
+@delegates(plt.subplots, keep=True)
+def subplots(nrows=1, ncols=1, figsize=None, imsize=4, **kwargs):
+    if figsize is None: figsize=(imsize*ncols,imsize*nrows)
+    fig,ax = plt.subplots(nrows, ncols, figsize=figsize, **kwargs)
+    if nrows*ncols==1: ax = array([ax])
+    return fig,ax
 
 #Cell
 def round_multiple(x, mult, round_down=False):
