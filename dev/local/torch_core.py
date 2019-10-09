@@ -64,13 +64,10 @@ class TensorBase(Tensor, metaclass=BypassNewMeta):
         f = _fa_rebuild_qtensor if self.is_quantized else  _fa_rebuild_tensor
         return (f, args + (self.requires_grad, OrderedDict()))
 
-    def __getitem__(self,i):
-        old = type(i)
-        if issubclass(old,Tensor): i.__class__ = Tensor
-        res = super().__getitem__(i)
-        res.__class__ = self.__class__
-        if issubclass(old,Tensor): i.__class__ = old
-        return res
+    def gi(self, i):
+        cls = self.__class__
+        res = self[i]
+        return cls(res) if isinstance(res,Tensor) else res
 
 #Cell
 def _patch_tb():
