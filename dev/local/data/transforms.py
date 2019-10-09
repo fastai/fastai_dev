@@ -2,8 +2,8 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Category', 'Categorize',
-           'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'get_c', 'ToTensor', 'Cuda', 'ByteToFloatTensor',
-           'broadcast_vec', 'Normalize']
+           'MultiCategory', 'MultiCategorize', 'OneHotEncode', 'EncodedMultiCategorize', 'get_c', 'ToTensor', 'Cuda',
+           'ByteToFloatTensor', 'broadcast_vec', 'Normalize']
 
 #Cell
 from ..torch_basics import *
@@ -154,20 +154,28 @@ MultiCategory.create = MultiCategorize
 
 #Cell
 class OneHotEncode(Transform):
-    "One-hot encodes targets and optionally decodes with `vocab`"
+    "One-hot encodes targets"
     order=2
-    def __init__(self, do_encode=True, vocab=None): self.do_encode,self.vocab = do_encode,vocab
+    def __init__(self, c=None): self.c = c
 
     def setups(self, dsrc):
-        if self.vocab is not None:  self.c = len(self.vocab)
-        else: self.c = len(L(getattr(dsrc, 'vocab', None)))
-        if not self.c: warn("Couldn't infer the number of classes, please pass a `vocab` at init")
+        if self.c is None: self.c = len(L(getattr(dsrc, 'vocab', None)))
+        if not self.c: warn("Couldn't infer the number of classes, please pass a value for `c` at init")
 
-    def encodes(self, o): return one_hot(o, self.c) if self.do_encode else tensor(o).byte()
-    def decodes(self, o): return one_hot_decode(o, self.vocab)
+    def encodes(self, o): return one_hot(o, self.c).bool()
+    def decodes(self, o): return one_hot_decode(o, None)
+
+#Cell
+class EncodedMultiCategorize(Categorize):
+    "Transform of one-hot encoded multi-category that decodes with `vocab`"
+    loss_func,order=BCEWithLogitsLossFlat(),1
+    def __init__(self, vocab): self.vocab = vocab
+    def encodes(self, o): return TensorCategory(tensor(o).bool())
+    def decodes(self, o): return MultiCategory (one_hot_decode(o, self.vocab))
 
 #Cell
 def get_c(dbunch):
+    if getattr(dbunch, 'c', False): return dbunch.c
     vocab = getattr(dbunch, 'vocab', [])
     if len(vocab) > 0 and is_listy(vocab[-1]): vocab = vocab[-1]
     return len(vocab)
