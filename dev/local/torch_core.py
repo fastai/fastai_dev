@@ -25,8 +25,8 @@ def __array_eq__(self:Tensor,b):
 def tensor(x, *rest, **kwargs):
     "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
     if len(rest): x = (x,)+rest
-    # Pytorch bug in dataloader using num_workers>0
-    if isinstance(x, (tuple,list)) and len(x)==0: return tensor(0)
+    # There was a Pytorch bug in dataloader using num_workers>0. Haven't confirmed if fixed
+    # if isinstance(x, (tuple,list)) and len(x)==0: return tensor(0)
     res = (torch.tensor(x, **kwargs) if isinstance(x, (tuple,list))
            else torch.from_numpy(x) if isinstance(x, ndarray)
            else as_tensor(x.values, **kwargs) if isinstance(x, (pd.Series, pd.DataFrame))
