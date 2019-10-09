@@ -3,10 +3,11 @@
 __all__ = ['ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrdict', 'properties', 'class2attr',
            'tuplify', 'detuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of', 'groupby', 'merge',
            'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul',
-           'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'show_title', 'ShowTitle',
-           'Int', 'Float', 'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple', 'TupleTitled', 'trace',
-           'compose', 'maps', 'partialler', 'mapped', 'instantiate', 'Self', 'Self', 'bunzip', 'join_path_file',
-           'sort_by_run', 'round_multiple', 'even_mults', 'num_cpus', 'add_props']
+           'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types', 'split_arr', 'show_title',
+           'ShowTitle', 'Int', 'Float', 'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple', 'TupleTitled',
+           'trace', 'compose', 'maps', 'partialler', 'mapped', 'instantiate', 'Self', 'Self', 'read', 'write', 'save',
+           'load', 'ls', 'bunzip', 'join_path_file', 'sort_by_run', 'round_multiple', 'even_mults', 'num_cpus', 'cpus',
+           'add_props']
 
 #Cell
 from .test import *
