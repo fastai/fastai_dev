@@ -46,7 +46,9 @@ sidebar_d = {
     },
     'Core': {
         'Core': '/core',
+        'Utility functions': '/utils',
         'PyTorch Core': '/torch_core',
+        'Type dispatch': '/dispatch',
         'Transforms and Pipelines': '/transform',
         'Layers': '/layers',
         'Test': '/test',
@@ -78,6 +80,10 @@ sidebar_d = {
         'Tabular Core': '/tabular.core',
         'Tabular Model': '/tabular.model',
         'RapidsAI': '/tabular.rapids',
+    },
+    'Medical': {
+        'Medical imagery': '/medical.imaging',
+        'Medical text': '/medical.text',
     },
     'Notebook': {
         'Export to modules': '/notebook.export',

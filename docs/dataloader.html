@@ -26,6 +26,19 @@ summary: "summary"
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.notebook.showdoc</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -63,7 +76,7 @@ summary: "summary"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fa_collate" class="doc_header"><code>fa_collate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/load.py#L34" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_collate</code>(<strong><code>t</code></strong>)</p>
+<h4 id="fa_collate" class="doc_header"><code>fa_collate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/load.py#L35" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_collate</code>(<strong><code>t</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -107,7 +120,7 @@ summary: "summary"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fa_convert" class="doc_header"><code>fa_convert</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/load.py#L41" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_convert</code>(<strong><code>t</code></strong>)</p>
+<h4 id="fa_convert" class="doc_header"><code>fa_convert</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/load.py#L42" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fa_convert</code>(<strong><code>t</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -238,7 +251,7 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#0) []</pre>
+<pre>(#1) [0.09294619942899829]</pre>
 </div>
 
 </div>
@@ -267,7 +280,7 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#3) [4,4,4]</pre>
+<pre>(#2) [4,4]</pre>
 </div>
 
 </div>
@@ -281,7 +294,8 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span><span class="p">(</span><span class="n">RandDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dl</span> <span class="o">=</span> <span class="n">RandDL</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">L</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -296,11 +310,28 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#44) [4,4,4,4,4,4,4,4,4,4...]</pre>
+<pre>(#21) [4,4,4,4,4,4,4,4,4,4...]</pre>
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">dl</span><span class="o">.</span><span class="n">fake_l</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">dl</span><span class="o">.</span><span class="n">no_multiproc</span><span class="p">():</span> 
+    <span class="n">test_eq</span><span class="p">(</span><span class="n">dl</span><span class="o">.</span><span class="n">fake_l</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">L</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dl</span><span class="o">.</span><span class="n">fake_l</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -329,7 +360,7 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(#2) [0.40015444699845026,0.09729594589146273]</pre>
+<pre>(#1) [0.4977948163958834]</pre>
 </div>
 
 </div>
@@ -406,6 +437,9 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">twoepochs</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="s1">&#39;abcd efgh ijkl mnop qrst uvwx abcd efgh ijkl mnop qrst uvwx&#39;</span><span class="p">)</span>
 
+<span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">twoepochs</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="s1">&#39;abcd abcd&#39;</span><span class="p">)</span>
+
 <span class="n">ds1</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">twoepochs</span><span class="p">(</span><span class="n">ds1</span><span class="p">),</span> <span class="s1">&#39;abcd efgh ijkl mnop qrst uvwx yz abcd efgh ijkl mnop qrst uvwx yz&#39;</span><span class="p">)</span>
 
@@ -437,15 +471,35 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 
 <span class="n">t</span> <span class="o">=</span> <span class="n">SleepyDL</span><span class="p">(</span><span class="n">letters</span><span class="p">)</span>
 
-<span class="c1"># %time test_eq(DataLoader(t, num_workers=0), letters)</span>
-<span class="c1"># %time test_eq(DataLoader(t, num_workers=2), letters)</span>
-<span class="c1"># %time test_eq(DataLoader(t, num_workers=4), letters)</span>
+<span class="o">%</span><span class="k">time</span> test_eq(DataLoader(t, num_workers=0), letters)
+<span class="o">%</span><span class="k">time</span> test_eq(DataLoader(t, num_workers=2), letters)
+<span class="o">%</span><span class="k">time</span> test_eq(DataLoader(t, num_workers=4), letters)
+
 <span class="n">dl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">test_shuffled</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">dl</span><span class="p">),</span> <span class="n">letters</span><span class="p">)</span>
 <span class="n">test_shuffled</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">dl</span><span class="p">),</span> <span class="n">L</span><span class="p">(</span><span class="n">dl</span><span class="p">))</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 779 µs, sys: 4.07 ms, total: 4.85 ms
+Wall time: 312 ms
+CPU times: user 19.1 ms, sys: 24.7 ms, total: 43.7 ms
+Wall time: 228 ms
+CPU times: user 11 ms, sys: 61.8 ms, total: 72.8 ms
+Wall time: 240 ms
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -481,8 +535,8 @@ loading order and optional automatic batching (collation) and memory pinning.</p
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 20.5 ms, sys: 11.3 ms, total: 31.8 ms
-Wall time: 86.7 ms
+<pre>CPU times: user 24.2 ms, sys: 26 ms, total: 50.1 ms
+Wall time: 151 ms
 </pre>
 </div>
 </div>
@@ -497,16 +551,16 @@ Wall time: 86.7 ms
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TensorBase</span><span class="p">):</span> <span class="k">pass</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
 
 <span class="k">for</span> <span class="n">nw</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
-    <span class="n">tdl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">([</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">],</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">nw</span><span class="p">)</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tdl</span><span class="p">))</span>
-    <span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">A</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="n">dl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">([</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">],</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">nw</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dl</span><span class="p">))</span>
+    <span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">A</span><span class="p">)</span>
 
     <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])),)</span>
-    <span class="n">tdl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">([</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">],</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">nw</span><span class="p">)</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tdl</span><span class="p">))</span>
+    <span class="n">dl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">([</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">],</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">nw</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dl</span><span class="p">))</span>
     <span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">A</span><span class="p">)</span>
 </pre></div>
 
@@ -525,7 +579,7 @@ Wall time: 86.7 ms
 
 <span class="n">tdl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">([</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">],</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="n">to_device</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tdl</span><span class="p">))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">A</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">A</span><span class="p">)</span>
 
 <span class="c1"># Unknown attributes are delegated to `dataset`</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">tdl</span><span class="o">.</span><span class="n">pop</span><span class="p">(),</span> <span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>

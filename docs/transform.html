@@ -48,117 +48,6 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Helpers">Helpers<a class="anchor-link" href="#Helpers">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">type_hints</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-    <span class="s2">&quot;Same as `typing.get_type_hints` but returns `</span><span class="si">{}</span><span class="s2">` if not allowed type&quot;</span>
-    <span class="k">return</span> <span class="n">typing</span><span class="o">.</span><span class="n">get_type_hints</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">_allowed_types</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="type_hints" class="doc_header"><code>type_hints</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L13" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>type_hints</code>(<strong><code>f</code></strong>)</p>
-</blockquote>
-<p>Same as <code>typing.get_type_hints</code> but returns <code>{}</code> if not allowed type</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="anno_ret" class="doc_header"><code>anno_ret</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L18" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>anno_ret</code>(<strong><code>func</code></strong>)</p>
-</blockquote>
-<p>Get the return annotation of <code>func</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">td</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">td</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">cmp_instance</span><span class="p">),</span> <span class="p">[</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span> <span class="k">pass</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">_p1_anno</span><span class="p">(</span><span class="n">_f</span><span class="p">),</span> <span class="nb">object</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">str</span><span class="p">:</span> <span class="k">pass</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">_p1_anno</span><span class="p">(</span><span class="n">_f</span><span class="p">),</span> <span class="nb">object</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">float</span><span class="p">:</span> <span class="k">pass</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">_p1_anno</span><span class="p">(</span><span class="n">_f</span><span class="p">),</span> <span class="nb">str</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">float</span><span class="p">:</span> <span class="k">pass</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">_p1_anno</span><span class="p">(</span><span class="n">_f</span><span class="p">),</span> <span class="nb">str</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="nb">int</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">float</span><span class="p">:</span> <span class="k">pass</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">_p1_anno</span><span class="p">(</span><span class="n">_f</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">float</span><span class="p">:</span> <span class="k">pass</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">_p1_anno</span><span class="p">(</span><span class="n">_f</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">_p1_anno</span><span class="p">(</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)),</span> <span class="nb">object</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Types">Types<a class="anchor-link" href="#Types">&#182;</a></h2>
 </div>
 </div>
@@ -182,7 +71,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="subplots" class="doc_header"><code>subplots</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L36" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>subplots</code>(<strong><code>nrows</code></strong>=<em><code>1</code></em>, <strong><code>ncols</code></strong>=<em><code>1</code></em>, <strong><code>sharex</code></strong>=<em><code>False</code></em>, <strong><code>sharey</code></strong>=<em><code>False</code></em>, <strong><code>squeeze</code></strong>=<em><code>True</code></em>, <strong><code>subplot_kw</code></strong>=<em><code>None</code></em>, <strong><code>gridspec_kw</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="TensorImageBase" class="doc_header"><code>class</code> <code>TensorImageBase</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L13" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorImageBase</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/torch.core.html#TensorBase"><code>TensorBase</code></a></p>
 </blockquote>
 
 </div>
@@ -205,7 +94,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TensorImageBase" class="doc_header"><code>class</code> <code>TensorImageBase</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L43" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorImageBase</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/torch.core.html#TensorBase"><code>TensorBase</code></a></p>
+<h2 id="TensorImage" class="doc_header"><code>class</code> <code>TensorImage</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L19" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorImage</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transform.html#TensorImageBase"><code>TensorImageBase</code></a></p>
 </blockquote>
 
 </div>
@@ -228,7 +117,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TensorImage" class="doc_header"><code>class</code> <code>TensorImage</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L60" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorImage</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transform.html#TensorImageBase"><code>TensorImageBase</code></a></p>
+<h2 id="TensorImageBW" class="doc_header"><code>class</code> <code>TensorImageBW</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L22" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorImageBW</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transform.html#TensorImage"><code>TensorImage</code></a></p>
 </blockquote>
 
 </div>
@@ -251,30 +140,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TensorImageBW" class="doc_header"><code>class</code> <code>TensorImageBW</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L63" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorImageBW</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transform.html#TensorImage"><code>TensorImage</code></a></p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="TensorMask" class="doc_header"><code>class</code> <code>TensorMask</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L66" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorMask</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transform.html#TensorImageBase"><code>TensorImageBase</code></a></p>
+<h2 id="TensorMask" class="doc_header"><code>class</code> <code>TensorMask</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L25" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TensorMask</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/transform.html#TensorImageBase"><code>TensorImageBase</code></a></p>
 </blockquote>
 
 </div>
@@ -371,106 +237,6 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The following class is the basis that allows us to do type dipatch with type annotations. It contains a dictionary type -&gt; functions and ensures that the proper function is called when passed an object (depending on its type).</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="TypeDispatch" class="doc_header"><code>class</code> <code>TypeDispatch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L69" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TypeDispatch</code>(<strong>*<code>funcs</code></strong>)</p>
-</blockquote>
-<p>Dictionary-like object; <code>__getitem__</code> matches keys of types using <code>issubclass</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">f_col</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="n">typing</span><span class="o">.</span><span class="n">Collection</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span>
-<span class="k">def</span> <span class="nf">f_nin</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">int</span><span class="p">:</span>  <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span>
-<span class="k">def</span> <span class="nf">f_bti</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="n">TensorMask</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span>
-<span class="k">def</span> <span class="nf">f_fti</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="n">TensorImage</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span>
-<span class="k">def</span> <span class="nf">f_bll</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="nb">bool</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span>
-<span class="k">def</span> <span class="nf">f_num</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">TypeDispatch</span><span class="p">(</span><span class="n">f_nin</span><span class="p">,</span><span class="n">f_fti</span><span class="p">,</span><span class="n">f_num</span><span class="p">,</span><span class="n">f_bti</span><span class="p">,</span><span class="n">f_bll</span><span class="p">)</span>
-
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">f_nin</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">TensorImage</span><span class="p">],</span> <span class="n">f_fti</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">f_num</span><span class="p">)</span>
-<span class="n">t</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f_col</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">f_col</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">f_nin</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">returns</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
-<span class="n">t</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>{&#39;TensorMask&#39;: &#39;f_bti&#39;, &#39;TensorImage&#39;: &#39;f_fti&#39;, &#39;typing.Collection&#39;: &#39;f_col&#39;, &#39;bool&#39;: &#39;f_bll&#39;, &#39;Integral&#39;: &#39;f_nin&#39;, &#39;Number&#39;: &#39;f_num&#39;}</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">m_nin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:(</span><span class="nb">str</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">)):</span> <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;1&#39;</span>
-<span class="k">def</span> <span class="nf">m_bll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span><span class="nb">bool</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">foo</span><span class="o">=</span><span class="s1">&#39;a&#39;</span>
-<span class="k">def</span> <span class="nf">m_num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span>
-
-<span class="n">t</span> <span class="o">=</span> <span class="n">TypeDispatch</span><span class="p">(</span><span class="n">m_nin</span><span class="p">,</span><span class="n">m_num</span><span class="p">,</span><span class="n">m_bll</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="n">f</span> <span class="o">=</span> <span class="n">t</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;11&#39;</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mf">1.</span><span class="p">),</span> <span class="mf">1.</span><span class="p">)</span>
-<span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
@@ -489,7 +255,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Transform" class="doc_header"><code>class</code> <code>Transform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L142" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="Transform" class="doc_header"><code>class</code> <code>Transform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L57" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Delegates (<code>__call__</code>,<code>decode</code>,<code>setup</code>) to (<a href="/tabular.rapids.html#encodes"><code>encodes</code></a>,<code>decodes</code>,<a href="/tabular.rapids.html#setups"><code>setups</code></a>) if <code>split_idx</code> matches</p>
 
@@ -506,7 +272,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 <p>A <a href="/transform.html#Transform"><code>Transform</code></a> is the main building block of the fastai data pipelines. In the most general terms a transform can be any function you want to apply to your data, however the <a href="/transform.html#Transform"><code>Transform</code></a> class provides several mechanisms that make the process of building them easy and flexible.</p>
 <h3 id="The-main-Transform-features:">The main <a href="/transform.html#Transform"><code>Transform</code></a> features:<a class="anchor-link" href="#The-main-Transform-features:">&#182;</a></h3><ul>
 <li><strong>Type dispatch</strong> - Type annotations are used to determine if a transform should be applied to the given argument. It also gives an option to provide several implementations and it choses the one to run based on the type. This is useful for example when running both independent and dependent variables through the pipeline where some transforms only make sense for one and not the other. Another usecase is designing a transform that handles different data formats. Note that if a transform takes multiple arguments only the type of the first one is used for dispatch. </li>
-<li><strong>Handling of tuples</strong> - When a tuple (or another collection satisfying <a href="/core.html#is_listy"><code>is_listy</code></a>) of data is passed to a transform it will get applied to each element separately. Most comonly it will be a <em>(x,y)</em> tuple, but it can be anything for example a list of images. You can opt out of this behavior by setting the flag <code>as_item=True</code>. For transforms that must always operate on the tuple level you can set <code>as_item_force=True</code> which takes precedence over <code>as_item</code>, an example of that is <a href="/vision.core.html#PointScaler"><code>PointScaler</code></a>.</li>
+<li><strong>Handling of tuples</strong> - When a tuple (or another collection satisfying <a href="/utils.html#is_listy"><code>is_listy</code></a>) of data is passed to a transform it will get applied to each element separately. Most comonly it will be a <em>(x,y)</em> tuple, but it can be anything for example a list of images. You can opt out of this behavior by setting the flag <code>as_item=True</code>. For transforms that must always operate on the tuple level you can set <code>as_item_force=True</code> which takes precedence over <code>as_item</code>, an example of that is <a href="/vision.core.html#PointScaler"><code>PointScaler</code></a>.</li>
 <li><strong>Reversability</strong> - A transform can be made reversible by implementing the <code>decodes</code> method. This is mainly used to turn something like a category which is encoded as a number back into a label understandable by humans for showing purposes.</li>
 <li><strong>Type propagation</strong> - Whenever possible a transform tries to return data of the same type it received. Mainly used to maintain semantics of things like <a href="/transform.html#TensorImage"><code>TensorImage</code></a> which is a thin wrapper of pytorches <a href="https://pytorch.org/docs/stable/tensors.html#torch-tensor"><code>Tensor</code></a>. You can opt out of this behavior by adding <code>-&gt;None</code> return type annotation.</li>
 <li><strong>Preprocessing</strong> - The <code>setup</code> method can be used to perform any one-time calculations to be later used by the transform, for example generating a vocabulary to encode categorical data.</li>
@@ -594,6 +360,11 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">//</span><span class="mi">2</span>
 <span class="n">test_eq_type</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">test_eq_type</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
+
+<span class="nd">@Transform</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">test_eq_type</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -644,7 +415,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>A: False {&#39;TensorImage&#39;: &#39;encodes&#39;} {&#39;TensorImage&#39;: &#39;decodes&#39;}</pre>
+<pre>A: False (TensorImage,object) -&gt; encodes (TensorImage,object) -&gt; decodes</pre>
 </div>
 
 </div>
@@ -655,7 +426,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Without return annotation we get an <a href="/core.html#Int"><code>Int</code></a> back since that's what was passed.</p>
+<p>Without return annotation we get an <a href="/utils.html#Int"><code>Int</code></a> back since that's what was passed.</p>
 
 </div>
 </div>
@@ -735,7 +506,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Since <code>decodes</code> has no return annotation, but <a href="/tabular.rapids.html#encodes"><code>encodes</code></a> created an <a href="/core.html#Int"><code>Int</code></a> and we pass that result here to <code>decode</code>, we end up with an <a href="/core.html#Int"><code>Int</code></a>.</p>
+<p>Since <code>decodes</code> has no return annotation, but <a href="/tabular.rapids.html#encodes"><code>encodes</code></a> created an <a href="/utils.html#Int"><code>Int</code></a> and we pass that result here to <code>decode</code>, we end up with an <a href="/utils.html#Int"><code>Int</code></a>.</p>
 
 </div>
 </div>
@@ -870,7 +641,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="InplaceTransform" class="doc_header"><code>class</code> <code>InplaceTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L178" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>InplaceTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="InplaceTransform" class="doc_header"><code>class</code> <code>InplaceTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L93" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>InplaceTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>A <a href="/transform.html#Transform"><code>Transform</code></a> that modifies in-place and just returns whatever it's passed</p>
 
@@ -917,7 +688,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TupleTransform" class="doc_header"><code>class</code> <code>TupleTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L185" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="TupleTransform" class="doc_header"><code>class</code> <code>TupleTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L100" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TupleTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p><a href="/transform.html#Transform"><code>Transform</code></a> that always treats <code>as_item</code> as <code>False</code></p>
 
@@ -941,7 +712,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ItemTransform" class="doc_header"><code>class</code> <code>ItemTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L190" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ItemTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="ItemTransform" class="doc_header"><code>class</code> <code>ItemTransform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L105" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ItemTransform</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p><a href="/transform.html#Transform"><code>Transform</code></a> that always treats <code>as_item</code> as <code>True</code></p>
 
@@ -1168,7 +939,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_func" class="doc_header"><code>get_func</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L195" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_func</code>(<strong><code>t</code></strong>, <strong><code>name</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="get_func" class="doc_header"><code>get_func</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L110" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_func</code>(<strong><code>t</code></strong>, <strong><code>name</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Get the <code>t.name</code> (potentially partial-ized with <code>args</code> and <code>kwargs</code>) or <code>noop</code> if not defined</p>
 
@@ -1209,7 +980,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Transforms are built with multiple-dispatch: a given function can have several methods depending on the type of the object received. This is done directly with the <a href="/transform.html#TypeDispatch"><code>TypeDispatch</code></a> module and type-annotation in <a href="/transform.html#Transform"><code>Transform</code></a>, but you can also use the following class.</p>
+<p>Transforms are built with multiple-dispatch: a given function can have several methods depending on the type of the object received. This is done directly with the <a href="/dispatch.html#TypeDispatch"><code>TypeDispatch</code></a> module and type-annotation in <a href="/transform.html#Transform"><code>Transform</code></a>, but you can also use the following class.</p>
 
 </div>
 </div>
@@ -1226,7 +997,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Func" class="doc_header"><code>class</code> <code>Func</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L201" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Func</code>(<strong><code>name</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="Func" class="doc_header"><code>class</code> <code>Func</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L116" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Func</code>(<strong><code>name</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Basic wrapper around a <code>name</code> with <code>args</code> and <code>kwargs</code> to call on a given type</p>
 
@@ -1279,7 +1050,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Sig" class="doc_header"><code>Sig</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L211" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Sig</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Sig" class="doc_header"><code>Sig</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L126" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Sig</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -1324,7 +1095,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compose_tfms" class="doc_header"><code>compose_tfms</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L217" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compose_tfms</code>(<strong><code>x</code></strong>, <strong><code>tfms</code></strong>, <strong><code>is_enc</code></strong>=<em><code>True</code></em>, <strong><code>reverse</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="compose_tfms" class="doc_header"><code>compose_tfms</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L132" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compose_tfms</code>(<strong><code>x</code></strong>, <strong><code>tfms</code></strong>, <strong><code>is_enc</code></strong>=<em><code>True</code></em>, <strong><code>reverse</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Apply all <code>func_nm</code> attribute of <code>tfms</code> on <code>x</code>, maybe in <code>reverse</code> order</p>
 
@@ -1417,7 +1188,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mk_transform" class="doc_header"><code>mk_transform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L226" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mk_transform</code>(<strong><code>f</code></strong>, <strong><code>as_item</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="mk_transform" class="doc_header"><code>mk_transform</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L141" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mk_transform</code>(<strong><code>f</code></strong>, <strong><code>as_item</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Convert function <code>f</code> to <a href="/transform.html#Transform"><code>Transform</code></a> if it isn't already one</p>
 
@@ -1457,7 +1228,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="gather_attrs" class="doc_header"><code>gather_attrs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L232" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gather_attrs</code>(<strong><code>o</code></strong>, <strong><code>k</code></strong>, <strong><code>nm</code></strong>)</p>
+<h4 id="gather_attrs" class="doc_header"><code>gather_attrs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L147" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gather_attrs</code>(<strong><code>o</code></strong>, <strong><code>k</code></strong>, <strong><code>nm</code></strong>)</p>
 </blockquote>
 <p>Used in <strong>getattr</strong> to collect all attrs <code>k</code> from <code>self.{nm}</code></p>
 
@@ -1481,7 +1252,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="gather_attr_names" class="doc_header"><code>gather_attr_names</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L241" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gather_attr_names</code>(<strong><code>o</code></strong>, <strong><code>nm</code></strong>)</p>
+<h4 id="gather_attr_names" class="doc_header"><code>gather_attr_names</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L156" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gather_attr_names</code>(<strong><code>o</code></strong>, <strong><code>nm</code></strong>)</p>
 </blockquote>
 <p>Used in <strong>dir</strong> to collect all attrs <code>k</code> from <code>self.{nm}</code></p>
 
@@ -1505,7 +1276,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Pipeline" class="doc_header"><code>class</code> <code>Pipeline</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L246" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Pipeline</code>(<strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="Pipeline" class="doc_header"><code>class</code> <code>Pipeline</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L161" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Pipeline</code>(<strong><code>funcs</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>A pipeline of composed (for encode/decode) transforms, setup with types</p>
 
@@ -1539,7 +1310,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="/transform.html#Pipeline"><code>Pipeline</code></a> is a wrapper for <code>compose_tfm</code>. You can pass instances of <a href="/transform.html#Transform"><code>Transform</code></a> or regular functions in <code>funcs</code>, the <a href="/transform.html#Pipeline"><code>Pipeline</code></a> will wrap them all in <a href="/transform.html#Transform"><code>Transform</code></a> (and instantiate them if needed) during the initialization. It handles the transform <code>setup</code> by adding them one at a time and calling setup on each, goes through them in order in <code>__call__</code> or <code>decode</code> and can <code>show</code> an object by applying decoding the transforms up until the point it gets an object that knows how to show itself.</p>
+<p><a href="/transform.html#Pipeline"><code>Pipeline</code></a> is a wrapper for <code>compose_tfm</code>. You can pass instances of <a href="/transform.html#Transform"><code>Transform</code></a> or regular functions in <code>funcs</code>, the <a href="/transform.html#Pipeline"><code>Pipeline</code></a> will wrap them all in <a href="/transform.html#Transform"><code>Transform</code></a> (and instantiate them if needed) during the initialization. It handles the transform <code>setup</code> by adding them one at a time and calling setup on each, goes through them in order in <code>__call__</code> or <code>decode</code> and can <a href="/medical.imaging.html#show"><code>show</code></a> an object by applying decoding the transforms up until the point it gets an object that knows how to show itself.</p>
 
 </div>
 </div>
@@ -1838,7 +1609,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.__call__" class="doc_header"><code>Pipeline.__call__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L274" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.__call__</code>(<strong><code>o</code></strong>)</p>
+<h4 id="Pipeline.__call__" class="doc_header"><code>Pipeline.__call__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L189" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.__call__</code>(<strong><code>o</code></strong>)</p>
 </blockquote>
 <p>Call self as a function.</p>
 
@@ -1859,7 +1630,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.decode" class="doc_header"><code>Pipeline.decode</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L275" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.decode</code>(<strong><code>o</code></strong>)</p>
+<h4 id="Pipeline.decode" class="doc_header"><code>Pipeline.decode</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L197" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.decode</code>(<strong><code>o</code></strong>, <strong><code>full</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 
 </div>
@@ -1879,7 +1650,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.decode_batch" class="doc_header"><code>Pipeline.decode_batch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L278" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.decode_batch</code>(<strong><code>b</code></strong>, <strong><code>max_n</code></strong>=<em><code>10</code></em>)</p>
+<h4 id="Pipeline.decode_batch" class="doc_header"><code>Pipeline.decode_batch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L192" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.decode_batch</code>(<strong><code>b</code></strong>, <strong><code>max_n</code></strong>=<em><code>10</code></em>)</p>
 </blockquote>
 
 </div>
@@ -1915,7 +1686,7 @@ summary: "Definition of [`Transform`](/transform.html#Transform) and [`Pipeline`
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Pipeline.setup" class="doc_header"><code>Pipeline.setup</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L265" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.setup</code>(<strong><code>items</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="Pipeline.setup" class="doc_header"><code>Pipeline.setup</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L180" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Pipeline.setup</code>(<strong><code>items</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>

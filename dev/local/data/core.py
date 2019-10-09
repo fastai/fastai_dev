@@ -104,6 +104,9 @@ class TfmdDL(DataLoader):
         if not hasattr(self, '_n_inp'): self._one_pass()
         return self._n_inp
 
+    @property
+    def items(self): return self.tls[0].items
+
 #Cell
 @docs
 class DataBunch(GetAttr):

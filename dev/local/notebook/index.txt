@@ -571,6 +571,7 @@
   "FillMissing": "40_tabular_core.ipynb",
   "ReadTabBatch": "40_tabular_core.ipynb",
   "TabDataLoader": "40_tabular_core.ipynb",
+  "TabularGPU": "42_tabular_rapids.ipynb",
   "setups": "42_tabular_rapids.ipynb",
   "cudf.Series.median": "42_tabular_rapids.ipynb",
   "cudf.Series.idxmax": "42_tabular_rapids.ipynb",

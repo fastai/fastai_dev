@@ -30,13 +30,13 @@ summary: "Functions to show the doc cells in notebooks"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.core</span> <span class="k">import</span> <span class="n">compose</span><span class="p">,</span> <span class="n">add_docs</span><span class="p">,</span> <span class="n">patch</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.core</span> <span class="k">import</span> <span class="n">add_docs</span><span class="p">,</span> <span class="n">patch</span>
+<span class="kn">from</span> <span class="nn">local.utils</span> <span class="k">import</span> <span class="n">compose</span>
 <span class="kn">from</span> <span class="nn">local.transform</span> <span class="k">import</span> <span class="n">Pipeline</span>
-<span class="kn">from</span> <span class="nn">local.data.external</span> <span class="k">import</span> <span class="n">untar_data</span><span class="p">,</span> <span class="n">ConfigKey</span>
+<span class="kn">from</span> <span class="nn">local.data.external</span> <span class="k">import</span> <span class="n">untar_data</span>
 
 <span class="n">test_cases</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">Pipeline</span><span class="p">,</span>   <span class="c1">#Basic class</span>
-    <span class="n">ConfigKey</span><span class="p">,</span>  <span class="c1">#Enum</span>
     <span class="n">compose</span><span class="p">,</span>    <span class="c1">#Func with star args and type annotation</span>
     <span class="n">untar_data</span><span class="p">,</span> <span class="c1">#Func with defaults</span>
     <span class="n">add_docs</span><span class="p">,</span>   <span class="c1">#Func with kwargs</span>
@@ -91,7 +91,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">is_enum</span><span class="p">(</span><span class="n">ConfigKey</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#assert is_enum(ConfigKey)</span>
 <span class="k">assert</span> <span class="ow">not</span> <span class="n">is_enum</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">)</span>
 </pre></div>
 
@@ -374,7 +374,7 @@ summary: "Functions to show the doc cells in notebooks"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L244&#39;</pre>
+<pre>&#39;https://github.com/fastai/fastai_dev/tree/master/dev/local/transform.py#L161&#39;</pre>
 </div>
 
 </div>
@@ -426,7 +426,7 @@ summary: "Functions to show the doc cells in notebooks"
 <span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{FASTAI_NB_DEV}</span><span class="s1">01_core.ipynb#Foundational-functions&#39;</span>
 <span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="n">patch</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;01_core.ipynb#Foundational-functions&#39;</span>
-<span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="s1">&#39;Path.ls&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{FASTAI_NB_DEV}</span><span class="s1">01_core.ipynb#File-and-network-functions&#39;</span>
+<span class="k">assert</span> <span class="n">get_nb_source_link</span><span class="p">(</span><span class="s1">&#39;Path.ls&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{FASTAI_NB_DEV}</span><span class="s1">01a_utils.ipynb#File-and-network-functions&#39;</span>
 </pre></div>
 
     </div>
@@ -616,7 +616,7 @@ summary: "Functions to show the doc cells in notebooks"
     <span class="s1">&#39;**`url`**&#39;</span><span class="p">,</span>
     <span class="s1">&#39;**`fname`**=*`None`*&#39;</span><span class="p">,</span>
     <span class="s1">&#39;**`dest`**=*`None`*&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;**`c_key`**=*`ConfigKey.Data`*&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;**`c_key`**=*`&#39;data&#39;`*&quot;</span><span class="p">,</span>
     <span class="s1">&#39;**`force_download`**=*`False`*&#39;</span><span class="p">,</span>
     <span class="s2">&quot;**`extract_func`**=*`&#39;tar_extract&#39;`*&quot;</span><span class="p">]</span>
 
@@ -626,6 +626,40 @@ summary: "Functions to show the doc cells in notebooks"
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">params</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;**`url`**&#39;,
+ &#39;**`fname`**=*`None`*&#39;,
+ &#39;**`dest`**=*`None`*&#39;,
+ &#34;**`c_key`**=*`&#39;data&#39;`*&#34;,
+ &#39;**`force_download`**=*`False`*&#39;,
+ &#34;**`extract_func`**=*`&#39;tar_extract&#39;`*&#34;]</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -718,7 +752,7 @@ summary: "Functions to show the doc cells in notebooks"
 <div class="highlight"><pre><span></span><span class="n">show_doc</span><span class="p">(</span><span class="n">untar_data</span><span class="p">)</span>
 </pre></div>
 <p>will display</p>
-<h4 id="untar_data" class="doc_header"><code>untar_data</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/external.py#L182" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>untar_data</code>(<strong><code>url</code></strong>, <strong><code>fname</code></strong>=<em><code>None</code></em>, <strong><code>dest</code></strong>=<em><code>None</code></em>, <strong><code>c_key</code></strong>=<em><a href="/data.external.html#ConfigKey.Data"><code>ConfigKey.Data</code></a></em>, <strong><code>force_download</code></strong>=<em><code>False</code></em>, <strong><code>extract_func</code></strong>=<em><code>\'tar_extract\'</code></em>)</p>
+<h4 id="untar_data" class="doc_header"><code>untar_data</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/external.py#L182" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>untar_data</code>(<strong><code>url</code></strong>, <strong><code>fname</code></strong>=<em><code>None</code></em>, <strong><code>dest</code></strong>=<em><code>None</code></em>, <strong><code>c_key</code></strong>=<em><code>ConfigKey.Data</code></em>, <strong><code>force_download</code></strong>=<em><code>False</code></em>, <strong><code>extract_func</code></strong>=<em><code>\'tar_extract\'</code></em>)</p>
 </blockquote>
 <p>Download <code>url</code> to <code>fname</code> if <code>dest</code> doesn\'t exist, and un-tgz to folder <code>dest</code>.</p>
 

@@ -92,7 +92,7 @@ def language_model_learner(dbunch, arch, vocab, config=None, drop_mult=1., pretr
             if 'url' not in meta:
                 warn("There are no pretrained weights for that architecture yet!")
                 return learn
-            model_path = untar_data(meta['url'] , c_key=ConfigKey.Model)
+            model_path = untar_data(meta['url'] , c_key='model')
             fnames = [list(model_path.glob(f'*.{ext}'))[0] for ext in ['pth', 'pkl']]
         learn = learn.load_pretrained(*fnames, vocab)
     return learn
@@ -111,7 +111,7 @@ def text_classifier_learner(dbunch, arch, vocab, bptt=72, config=None, pretraine
         if 'url' not in meta:
             warn("There are no pretrained weights for that architecture yet!")
             return learn
-        model_path = untar_data(meta['url'], c_key=ConfigKey.Model)
+        model_path = untar_data(meta['url'], c_key='model')
         fnames = [list(model_path.glob(f'*.{ext}'))[0] for ext in ['pth', 'pkl']]
         learn = learn.load_pretrained(*fnames, vocab, strict=False)
         learn.freeze()

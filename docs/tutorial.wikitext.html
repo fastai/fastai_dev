@@ -32,7 +32,6 @@ summary: "Training a Language Model on WT2"
 <span class="kn">from</span> <span class="nn">local.core</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.layers</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.data.all</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">local.notebook.showdoc</span> <span class="k">import</span> <span class="n">show_doc</span>
 <span class="kn">from</span> <span class="nn">local.optimizer</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.learner</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">local.metrics</span> <span class="k">import</span> <span class="o">*</span>
@@ -231,19 +230,6 @@ summary: "Training a Language Model on WT2"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;texts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">t</span><span class="p">])</span>
 <span class="n">vocab</span> <span class="o">=</span> <span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val_txt</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val_txt</span><span class="p">)))]</span>
 <span class="n">tfm</span> <span class="o">=</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
 </pre></div>
 
@@ -257,7 +243,8 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;texts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">[</span><span class="n">tfm</span><span class="p">],</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val_txt</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val_txt</span><span class="p">)))]</span>
+<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[[</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;texts&quot;</span><span class="p">),</span> <span class="n">tfm</span><span class="p">]],</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">dl_type</span><span class="o">=</span><span class="n">LMDataLoader</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -271,8 +258,7 @@ summary: "Training a Language Model on WT2"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span><span class="p">,</span><span class="n">sl</span> <span class="o">=</span> <span class="mi">104</span><span class="p">,</span><span class="mi">72</span>
-<span class="n">train_dl</span> <span class="o">=</span> <span class="n">LMDataLoader</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span>   <span class="n">seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="p">[</span><span class="n">Cuda</span><span class="p">()],</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-<span class="n">valid_dl</span> <span class="o">=</span> <span class="n">LMDataLoader</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">valid</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">bs</span><span class="p">,</span> <span class="n">seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="p">[</span><span class="n">Cuda</span><span class="p">()],</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">dbch</span> <span class="o">=</span> <span class="n">dsrc</span><span class="o">.</span><span class="n">databunch</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span> <span class="n">after_batch</span><span class="o">=</span><span class="n">Cuda</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -285,8 +271,7 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dbch</span> <span class="o">=</span> <span class="n">DataBunch</span><span class="p">(</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">valid_dl</span><span class="p">)</span>
-<span class="n">dbch</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dbch</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -310,43 +295,43 @@ summary: "Training a Language Model on WT2"
   <tbody>
     <tr>
       <th>0</th>
-      <td>\n = French cruiser Sully = \n \n The French cruiser Sully was an armored cruiser of the Gloire class that was built for the French Navy in the early 1900s . She was named in honor of Maximilien de xxunk , Duke of Sully , trusted minister of King Henry IV . The ship struck a rock in xxunk Long Bay , French Indochina in 1905 , only eight months</td>
+      <td>\n = Valkyria Chronicles III = \n \n Senjō no Valkyria 3 : xxunk Chronicles ( Japanese : 戦場のヴァルキュリア3 , lit . Valkyria of the Battlefield 3 ) , commonly referred to as Valkyria Chronicles III outside Japan , is a tactical role @-@ playing video game developed by Sega and Media.Vision for the PlayStation Portable . Released in January 2011 in Japan , it is the third game in the</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>2005 . The song was written by band members Beyoncé , Kelly Rowland and Michelle Williams along with Rodney " xxunk " Jerkins , Ricky " Ric Rude " Lewis and Robert Waller , with Beyoncé , Rude and Jerkins handling its production . An R &amp; B ballad talking about a woman 's desire to cater to the male love interest of her life , " Cater 2 U " contains</td>
+      <td>" . He believed that the monument consisted of both a " chamber " and an " oval " of stones , suggesting that they were " two distinct xxunk " . In 1880 , the archaeologist Flinders Petrie included the existence of the stones at " xxunk " in his list of xxunk earthworks ; although noting that a previous commentator had described the stones as being in the shape of</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>first time in life . \n Pokiri was D 'Cruz 's breakthrough film in Telugu . In June 2006 , Trade analyst Sridhar xxunk said that the Andhra Pradesh trade felt that her glamour , screen presence , and on @-@ screen chemistry with Mahesh worked to the film 's advantage . xxunk called her the " new pin @-@ up girl of Telugu cinema " . Talking about being typecast after</td>
+      <td>compete with Amanda , while Amanda comments that Tessa is " ... quite refreshing in a xxunk sort of way . " xxunk played Amanda 's interaction with Tessa xxunk and a little xxunk . Tessa is usually jealous of MacLeod 's past lovers , but acknowledges in " Saving Grace " that " ... it would take me several lifetimes to find out everything in Duncan 's past . I know</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Victoria appointed her president of the Queen Victoria Jubilee Institute for xxunk in Scotland , the beginning of the district nurse system , which was to xxunk health care for the rural poor and sick in Britain . She was also interested in general improvements in standards of nursing . \n Like many of her Rothschild relatives she was also deeply involved with the welfare of young working @-@ class women of</td>
+      <td>Communities for freshmen and students with similar interests and concentrations . Participants meet people with similar interests , live on the same floor and take courses with others in their community , while receiving additional guidance related to those interests . The university 's Learning Community programs are divided into two categories , Freshman Learning Communities and Living Learning Communities . The freshman program offers 16 different concentrations , including business ,</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Resources confirmed a cougar sighting in Michigan 's Upper Peninsula . Typically , extreme @-@ range sightings of cougars involve young males , which can travel great distances to establish ranges away from established males ; all four confirmed cougar kills in Iowa since 2000 involved males . \n On April 14 , 2008 , police shot and killed a cougar on the north side of Chicago , Illinois . DNA tests</td>
+      <td>for one week on 17 May 1986 . In the United States , West End Girls debuted on the Billboard Hot 100 at number 71 , reaching the number one position on 10 May 1986 , and remained on the chart for 20 weeks . The song also peaked at number one on Billboard 's Hot Dance Music / Club Play chart for two weeks . \n \n = = Formats and</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>expected to be completed for many decades . \n Chess playing programs xxunk and Deep Thought defeated chess masters in 1989 . Both were developed by Carnegie xxunk University ; Deep Thought development paved the way for the Deep Blue . \n \n = = = The money returns : the fifth generation project = = = \n \n In 1981 , the Japanese Ministry of International Trade and Industry set aside</td>
+      <td>At about 3 pm , a single U.S. helicopter arrived on the battlefield to evacuate the casualties , but they only picked up the bodies of the four American crewmen , while South Vietnamese casualties were forced to wait for another helicopter to arrive . At 4 pm , Major Nguyễn Văn xxunk ordered the 4th Marine Battalion to carry their casualties back to the village , instead of continuing to wait</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>successful independence from Spain . The city served as the main port for the Texas Navy during the Texas Revolution , and later served as the capital of the Republic of Texas . \n During the 19th century , Galveston became a major U.S. commercial center and one of the largest ports in the United States . It was devastated by the 1900 Galveston Hurricane , whose effects included flooding and a</td>
+      <td>\n Of the three ships in its class , only Derfflinger was ordered as an addition to the fleet , under the provisional name " K " . The other two ships were to intended to replace obsolete vessels ; Lützow was ordered as Ersatz xxunk Augusta for the elderly protected cruiser xxunk Augusta and the contract for Hindenburg was issued under the provisional name Ersatz xxunk , to replace the protected</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>architectural style is Georgian . In the Mendip district , the greatest concentrations of these cluster around the cathedral and xxunk in Wells and in Glastonbury . North Somerset features bridges and piers along with a selection of Manor houses . The Sedgemoor district has many buildings related to trade and commerce centered on Bridgwater ; while in South Somerset xxunk , xxunk and xxunk predominate . Taunton Deane includes the defensive</td>
+      <td>Ouw Peh Tjoa ( Chinese : xxunk ; xxunk for Black and White xxunk ) , also known by the Malay @-@ language title xxunk Siloeman Oeler Poeti en Item ( meaning Two xxunk , One White and One Black ) , is a 1934 film from the Dutch East Indies ( now Indonesia ) . It was directed and produced by The Teng Chun . Adapted from Legend of the White</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>the small harbours at Port @-@ en @-@ Bessin and xxunk @-@ sur @-@ Mer . Most shipments were brought in over the beaches until the port of Cherbourg was cleared of mines and obstructions on 16 July . The most important use of the Mulberry harbour was the unloading of heavy machinery that could not be brought across the beaches . Artificial xxunk ( xxunk ) sheltered hundreds of ships during</td>
+      <td>writers certainly captured the spirit that fuels each of our ( playground ) builds – something that inspires volunteers to continue their great work and strive even harder to give back to their communities . " \n Within a week of the episode 's original broadcast , two deleted scenes from " Kaboom " were made available on the official Parks and Recreation website . The first two @-@ minute clip included</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>to add a musical tone within the poem . \n In terms of poetic meter , Keats relies on xxunk throughout his 1819 odes and in just over 8 % of his lines within " Ode to a Nightingale " , including line 12 : \n and line 25 : \n To Walter Jackson Bate , the use of spondees in lines 31 – 34 creates a feeling of slow flight ,</td>
+      <td>United Reserves \n The Central League winners : 1947 – 48 \n Chelsea \n Football League First Division winners : 1954 – 55 \n Crystal Palace \n Football League Fourth Division runners @-@ up : 1960 – 61 \n \n  \n = Hydnellum peckii = \n \n Hydnellum peckii is an inedible ( though not toxic ) fungus , and a member of the genus Hydnellum of the family Bankeraceae .</td>
     </tr>
   </tbody>
 </table>
