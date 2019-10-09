@@ -146,7 +146,7 @@ class MultiCategorize(Categorize):
             self.vocab,self.o2i = uniqueify(list(vals), sort=True, bidir=True)
         setattr(dsrc, 'vocab', self.vocab)
 
-    def encodes(self, o): return TensorCategory([self.o2i  [o_] for o_ in o])
+    def encodes(self, o): return [self.o2i  [o_] for o_ in o]
     def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
 
 #Cell
@@ -162,7 +162,7 @@ class OneHotEncode(Transform):
         if self.c is None: self.c = len(L(getattr(dsrc, 'vocab', None)))
         if not self.c: warn("Couldn't infer the number of classes, please pass a value for `c` at init")
 
-    def encodes(self, o): return one_hot(o, self.c).bool()
+    def encodes(self, o): return TensorCategory(one_hot(o, self.c).bool())
     def decodes(self, o): return one_hot_decode(o, None)
 
 #Cell
