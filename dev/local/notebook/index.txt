@@ -554,6 +554,7 @@
   "PoolingLinearClassifier": "33_text_models_core.ipynb",
   "get_text_classifier": "33_text_models_core.ipynb",
   "RNNTrainer": "34_callback_rnn.ipynb",
+  "load_cpp": "36_text_models_qrnn.ipynb",
   "dispatch_cuda": "36_text_models_qrnn.ipynb",
   "forget_mult_CPU": "36_text_models_qrnn.ipynb",
   "ForgetMultGPU": "36_text_models_qrnn.ipynb",
