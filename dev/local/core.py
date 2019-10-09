@@ -236,7 +236,9 @@ def mask2idxs(mask):
     if isinstance(mask,slice): return mask
     mask = list(mask)
     if len(mask)==0: return []
-    if isinstance(mask[0],(bool,NoneType)): return [i for i,m in enumerate(mask) if m]
+    it = mask[0]
+    if hasattr(it,'item'): it = it.item()
+    if isinstance(it,(bool,NoneType,np.bool_)): return [i for i,m in enumerate(mask) if m]
     return [int(i) for i in mask]
 
 #Cell
