@@ -240,7 +240,7 @@ def get_model(model):
 def one_hot(x, c):
     "One-hot encode `x` with `c` classes."
     res = torch.zeros(c, dtype=torch.uint8)
-    res[L(x)] = 1.
+    res[L(x, use_list=None)] = 1.
     return res
 
 #Cell
