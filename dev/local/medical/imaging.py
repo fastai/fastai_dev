@@ -67,8 +67,11 @@ def hist_scaled(self:Tensor, brks=None):
 
 #Cell
 @patch
-def hist_scaled_px(self:DcmDataset, brks=None):
-    return self.pixels.hist_scaled()
+def hist_scaled_px(self:DcmDataset, brks=None, min_px=None, max_px=None):
+    px = self.scaled_px
+    if min_px is not None: px[px<min_px] = min_px
+    if max_px is not None: px[px>max_px] = max_px
+    return px.hist_scaled()
 
 #Cell
 @patch
@@ -99,9 +102,9 @@ dicom_windows = types.SimpleNamespace(
 #Cell
 @patch
 @delegates(show_image)
-def show(self:DcmDataset, scale=True, cmap=plt.cm.bone, **kwargs):
+def show(self:DcmDataset, scale=True, cmap=plt.cm.bone, min_px=-1000, max_px=None, **kwargs):
     px = (self.windowed(*scale) if isinstance(scale,tuple)
-          else self.hist_scaled_px() if scale
+          else self.hist_scaled_px(min_px=min_px,max_px=max_px) if scale
           else self.scaled_px)
     show_image(px, cmap=cmap, **kwargs)
 
