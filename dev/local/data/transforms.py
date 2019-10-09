@@ -146,7 +146,11 @@ class MultiCategorize(Categorize):
             self.vocab,self.o2i = uniqueify(list(vals), sort=True, bidir=True)
         setattr(dsrc, 'vocab', self.vocab)
 
-    def encodes(self, o): return TensorCategory([self.o2i  [o_] for o_ in o])
+    def encodes(self, o):
+        idxs = [self.o2i  [o_] for o_ in o]
+        if idxs: return TensorCategory(idxs)
+        return torch.empty(0)
+
     def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
 
 #Cell
