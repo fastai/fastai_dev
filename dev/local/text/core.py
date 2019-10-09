@@ -2,9 +2,9 @@
 
 __all__ = ['UNK', 'PAD', 'BOS', 'EOS', 'FLD', 'TK_REP', 'TK_WREP', 'TK_UP', 'TK_MAJ', 'spec_add_spaces',
            'rm_useless_spaces', 'replace_rep', 'replace_wrep', 'fix_html', 'replace_all_caps', 'replace_maj',
-           'lowercase', 'replace_space', 'text_spec_tok', 'text_proc_rules', 'text_postproc_rules', 'BaseTokenizer',
-           'SpacyTokenizer', 'TokenizeBatch', 'tokenize1', 'parallel_tokenize', 'fn_counter_pkl', 'tokenize_folder',
-           'tokenize_df', 'tokenize_csv', 'load_tokenized_csv', 'SentencePieceTokenizer']
+           'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer', 'TokenizeBatch', 'tokenize1',
+           'parallel_tokenize', 'fn_counter_pkl', 'tokenize_folder', 'tokenize_df', 'tokenize_csv',
+           'load_tokenized_csv', 'SentencePieceTokenizer']
 
 #Cell
 from ..torch_basics import *
