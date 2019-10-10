@@ -337,7 +337,7 @@ def convert_all(path='.', dest_path='../docs', force_all=False):
     changed_cnt = 0
     for fname in path.glob("[0-9]*.ipynb"):
         # only rebuild modified files
-        if fname.name.startswith('_') or fname.name.startswith('36'): continue
+        if fname.name.startswith('_'): continue
         fname_out = Path(dest_path)/'.'.join(fname.with_suffix('.html').name.split('_')[1:])
         if not force_all and fname_out.exists() and os.path.getmtime(fname) < os.path.getmtime(fname_out):
             continue
