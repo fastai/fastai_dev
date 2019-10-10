@@ -8,8 +8,6 @@ from ..test import *
 from ..core import *
 from ..data.all import *
 from .core import *
-
-#Cell
 try: import cudf,nvcategory
 except: print("This requires rapids, see https://rapids.ai/ for installation details")
 
