@@ -232,29 +232,32 @@ def detuplify_pg(d):
     res = {}
     for k,v in d.items():
         if k == 'params': continue
-        if is_listy(v): res.update(**{f'{k}_{i}': v_ for i,v_ in enumerate(v)})
+        if is_listy(v): res.update(**{f'{k}__{i}': v_ for i,v_ in enumerate(v)})
         else: res[k] = v
     return res
 
 #Cell
 def set_item_pg(pg, k, v):
-    if '_' not in k: pg[k] = v
+    if '__' not in k: pg[k] = v
     else:
-        name,idx = k.split('_')
+        name,idx = k.split('__')
         pg[name] = tuple(v if i==int(idx) else pg[name][i] for i in range_of(pg[name]))
     return pg
 
 #Cell
-pytorch_hp_map = {'momentum': 'mom', 'weight_decay': 'wd', 'alpha': 'sqr_mom', 'betas_0': 'mom', 'betas_1': 'sqr_mom'}
+pytorch_hp_map = {'momentum': 'mom', 'weight_decay': 'wd', 'alpha': 'sqr_mom', 'betas__0': 'mom', 'betas__1': 'sqr_mom'}
 
 #Cell
 class OptimWrapper(_BaseOptimizer, GetAttr):
     _xtra=['zero_grad', 'step', 'state_dict', 'load_state_dict']
+    _default='opt'
     def __init__(self, opt, hp_map=None):
-        self.default = self.opt = opt
+        self.opt = opt
         if hp_map is None: hp_map = pytorch_hp_map
         self.fwd_map = {k: hp_map[k] if k in hp_map else k for k in detuplify_pg(opt.param_groups[0]).keys()}
         self.bwd_map = {v:k for k,v in self.fwd_map.items()}
+        self.state = defaultdict(dict, {})
+        self.frozen_idx = 0
 
     @property
     def param_groups(self): return [pg['params'] for pg in self.opt.param_groups]
