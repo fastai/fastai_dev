@@ -92,7 +92,8 @@ class Transform(metaclass=_TfmMeta):
         if split_idx!=self.split_idx and self.split_idx is not None: return x
         f = getattr(self, fn)
         if self.use_as_item or not is_listy(x): return self._do_call(f, x, **kwargs)
-        res = tuple(self._do_call(f, x_, **kwargs) for x_ in x)
+        g = (self._do_call(f, x_, **kwargs) for x_ in x)
+        res = type(x)(g)
         return retain_type(res, x)
 
     def _do_call(self, f, x, **kwargs):
