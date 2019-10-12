@@ -337,7 +337,9 @@ def _relimport2name(name, mod_name):
     if mod_name.endswith('.py'): mod_name = mod_name[:-3]
     mods = mod_name.split(os.path.sep)
     mods = mods[mods.index('local'):]
-    if name=='.': return '.'.join(mods[:-1])
+    if name=='.':
+        print("###",'.'.join(mods[:-1]))
+        return '.'.join(mods[:-1])
     i = 0
     while name[i] == '.': i += 1
     return '.'.join(mods[:-i] + [name[i:]])

@@ -4,9 +4,7 @@ __all__ = ['CollectDataCallback', 'WeightedSampleCallback']
 
 #Cell
 from ..test import *
-from ..data.all import *
-from ..optimizer import *
-from ..learner import *
+from ..basics import *
 
 #Cell
 class CollectDataCallback(Callback):

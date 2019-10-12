@@ -420,7 +420,7 @@ def parallel_gen(cls, items, n_workers=defaults.cpus, as_gen=False, **kwargs):
     def done(): return (queue.get() for _ in progress_bar(items, leave=False))
     yield from run_procs(f, done, L(batches,idx).zip())
 
-#Comes from 20_metrics.ipynb, cell
+#Comes from 13a_metrics.ipynb, cell
 def flatten_check(inp, targ, detach=True):
     "Check that `out` and `targ` have the same number of elements and flatten them."
     inp,targ = to_detach(inp.contiguous().view(-1)),to_detach(targ.contiguous().view(-1))

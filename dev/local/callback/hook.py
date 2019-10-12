@@ -5,9 +5,7 @@ __all__ = ['Hook', 'hook_output', 'Hooks', 'hook_outputs', 'dummy_eval', 'model_
 
 #Cell
 from ..test import *
-from ..data.all import *
-from ..optimizer import *
-from ..learner import *
+from ..basics import *
 
 #Cell
 @docs

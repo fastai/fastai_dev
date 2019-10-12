@@ -5,9 +5,7 @@ __all__ = ['TerminateOnNaNCallback', 'TrackerCallback', 'EarlyStoppingCallback',
 
 #Cell
 from ..test import *
-from ..data.all import *
-from ..optimizer import *
-from ..learner import *
+from ..basics import *
 from .progress import *
 
 #Cell

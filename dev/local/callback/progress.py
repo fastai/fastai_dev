@@ -4,9 +4,7 @@ __all__ = ['ProgressCallback', 'ShowGraphCallback', 'CSVLogger']
 
 #Cell
 from ..test import *
-from ..data.all import *
-from ..optimizer import *
-from ..learner import *
+from ..basics import *
 
 #Cell
 @docs

@@ -4,9 +4,7 @@ __all__ = ['get_master', 'to_master_grads', 'to_model_params', 'test_overflow', 
 
 #Cell
 from ..test import *
-from ..data.all import *
-from ..optimizer import *
-from ..learner import *
+from ..basics import *
 from .progress import *
 
 #Cell
