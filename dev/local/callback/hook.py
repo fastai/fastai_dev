@@ -4,9 +4,7 @@ __all__ = ['Hook', 'hook_output', 'Hooks', 'hook_outputs', 'dummy_eval', 'model_
            'has_params', 'HookCallback', 'ActivationStats', 'total_params', 'layer_info']
 
 #Cell
-from ..torch_basics import *
 from ..test import *
-from ..layers import *
 from ..data.all import *
 from ..optimizer import *
 from ..learner import *

@@ -3,10 +3,7 @@
 __all__ = ['match_embeds', 'RNNLearner', 'language_model_learner', 'text_classifier_learner']
 
 #Cell
-from ..torch_basics import *
 from ..test import *
-from ..core import *
-from ..layers import *
 from ..data.all import *
 from ..optimizer import *
 from ..learner import *

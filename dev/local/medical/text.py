@@ -3,10 +3,8 @@
 __all__ = []
 
 #Cell
-from ..torch_basics import *
 from ..test import *
 from ..core import *
-from ..layers import *
 from ..data.all import *
 from ..optimizer import *
 from ..learner import *

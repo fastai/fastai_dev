@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from local.notebook.export import diff_nb_script
 from os import environ
-from local.script import *
+from local.core.script import *
 
 @call_parse
 def main(

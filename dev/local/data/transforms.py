@@ -11,7 +11,6 @@ from ..test import *
 from .core import *
 from .load import *
 from .external import *
-from ..layers import *
 
 #Cell
 def _get_files(p, fs, extensions=None):

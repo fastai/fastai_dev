@@ -316,7 +316,9 @@ _re_cell = re.compile(r'^#Cell|^#Comes from\s+(\S+), cell')
 #Cell
 def _split(code):
     lines = code.split('\n')
-    default_nb = _re_default_nb.search(lines[0]).groups()[0]
+    default_nb = _re_default_nb.search(lines[0])
+    if not default_nb: set_trace()
+    default_nb = default_nb.groups()[0]
     s,res = 1,[]
     while _re_cell.search(lines[s]) is None: s += 1
     e = s+1
@@ -335,6 +337,7 @@ def _relimport2name(name, mod_name):
     if mod_name.endswith('.py'): mod_name = mod_name[:-3]
     mods = mod_name.split(os.path.sep)
     mods = mods[mods.index('local'):]
+    if name=='.': return '.'.join(mods[:-1])
     i = 0
     while name[i] == '.': i += 1
     return '.'.join(mods[:-i] + [name[i:]])
@@ -364,6 +367,7 @@ def _update_pkl(fname, cell):
 def _script2notebook(fname, dic, silent=False):
     "Put the content of `fname` back in the notebooks it came from."
     if os.environ.get('IN_TEST',0): return  # don't export if running tests
+    if not silent: print(f"Converting {fname}.")
     fname = Path(fname)
     with open(fname) as f: code = f.read()
     splits = _split(code)
@@ -380,10 +384,9 @@ def _script2notebook(fname, dic, silent=False):
                 nb['cells'][i]['source'] = l + '\n' + c
         NotebookNotary().sign(nb)
         nbformat.write(nb, nb_fname, version=4)
-    if not silent: print(f"Converted {fname}.")
 
 #Cell
-_manual_mods = ['__init__.py imports.py torch_imports.py all.py torch_basics.py fp16_utils.py test_utils.py basics.py'.split()]
+_manual_mods = 'version.py __init__.py imports.py torch_imports.py all.py torch_basics.py fp16_utils.py test_utils.py basics.py'.split()
 
 #Cell
 def script2notebook(folder='local', silent=False):

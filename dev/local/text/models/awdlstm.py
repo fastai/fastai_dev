@@ -5,10 +5,7 @@ __all__ = ['dropout_mask', 'RNNDropout', 'WeightDropout', 'EmbeddingDropout', 'A
            'awd_qrnn_clas_config']
 
 #Cell
-from ...torch_basics import *
 from ...test import *
-from ...core import *
-from ...layers import *
 from ...data.all import *
 from ..core import *
 

@@ -5,8 +5,6 @@ __all__ = []
 #Cell
 from ..torch_basics import *
 from ..test import *
-from ..core import *
-from ..layers import *
 from .core import *
 
 #Cell

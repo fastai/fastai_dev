@@ -3,10 +3,7 @@
 __all__ = ['RNNTrainer']
 
 #Cell
-from ..core.imports import *
 from ..test import *
-from ..core import *
-from ..layers import *
 from ..data.all import *
 from ..optimizer import *
 from ..learner import *

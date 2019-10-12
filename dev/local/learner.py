@@ -6,9 +6,7 @@ __all__ = ['CancelFitException', 'CancelEpochException', 'CancelTrainException',
            'AvgSmoothLoss', 'Recorder']
 
 #Cell
-from .torch_basics import *
 from .test import *
-from .layers import *
 from .data.all import *
 from .optimizer import *
 

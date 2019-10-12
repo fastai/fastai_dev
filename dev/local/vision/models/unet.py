@@ -5,7 +5,6 @@ __all__ = ['UnetBlock', 'DynamicUnet']
 #Cell
 from ...torch_basics import *
 from ...test import *
-from ...layers import *
 from ...callback.hook import *
 
 #Cell

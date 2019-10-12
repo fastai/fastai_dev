@@ -4,10 +4,7 @@ __all__ = ['LinearDecoder', 'SequentialRNN', 'get_language_model', 'SentenceEnco
            'PoolingLinearClassifier', 'get_text_classifier']
 
 #Cell
-from ...torch_basics import *
 from ...test import *
-from ...core import *
-from ...layers import *
 from ...data.all import *
 from ..core import *
 from .awdlstm import *
