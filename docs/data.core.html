@@ -23,6 +23,19 @@ summary: "Core functionality for gathering data"
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>TensorImage<span class="o">??</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -40,7 +53,7 @@ summary: "Core functionality for gathering data"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The classes here provide functionality for applying a list of transforms to a set of items (<a href="/data.core.html#TfmdList"><code>TfmdList</code></a>, <a href="/data.core.html#DataSource"><code>DataSource</code></a>) or a <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a> (<code>TfmdDl</code>) as well as the base class used to gatehr the data for model training: <a href="/data.core.html#DataBunch"><code>DataBunch</code></a>.</p>
+<p>The classes here provide functionality for applying a list of transforms to a set of items (<a href="/data.core.html#TfmdList"><code>TfmdList</code></a>, <a href="/data.core.html#DataSource"><code>DataSource</code></a>) or a <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a> (<code>TfmdDl</code>) as well as the base class used to gather the data for model training: <a href="/data.core.html#DataBunch"><code>DataBunch</code></a>.</p>
 
 </div>
 </div>
@@ -1039,13 +1052,31 @@ tfms - (#2) [Transform: True (object,object) -&gt; _lbl ,_Cat: True (object,obje
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
-<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="p">[[</span><span class="n">neg_tfm</span><span class="p">,</span><span class="n">int_tfm</span><span class="p">]])</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
-<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">,),(</span><span class="o">-</span><span class="mi">2</span><span class="p">,),(</span><span class="o">-</span><span class="mi">3</span><span class="p">,)])</span>
+<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="p">[[</span><span class="n">neg_tfm</span><span class="p">,</span><span class="n">int_tfm</span><span class="p">],</span> <span class="p">[</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)]])</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">dsrc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
 <span class="n">test_eq</span><span class="p">(</span><span class="n">dsrc</span><span class="o">.</span><span class="n">n_inp</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">dsrc</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(1.0, 2)</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 

@@ -100,7 +100,7 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="TensorText" class="doc_header"><code>class</code> <code>TensorText</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L23" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TensorText</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/torch.core.html#TensorBase"><code>TensorBase</code></a></p>
+<h3 id="TensorText" class="doc_header"><code>class</code> <code>TensorText</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L23" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TensorText</code>(<strong><code>x</code></strong>) :: <a href="/torch.core.html#TensorBase"><code>TensorBase</code></a></p>
 </blockquote>
 
 </div>
@@ -120,7 +120,7 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="LMTensorText" class="doc_header"><code>class</code> <code>LMTensorText</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L24" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>LMTensorText</code>(<strong><code>x</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/text.data.html#TensorText"><code>TensorText</code></a></p>
+<h3 id="LMTensorText" class="doc_header"><code>class</code> <code>LMTensorText</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L24" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>LMTensorText</code>(<strong><code>x</code></strong>) :: <a href="/text.data.html#TensorText"><code>TensorText</code></a></p>
 </blockquote>
 
 </div>
@@ -295,60 +295,6 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="(LMTensorText,object) -> show_batch
-(TensorText,object) -> show_batch
-(object,object) -> show_batch" class="doc_header"><code>(LMTensorText,object) -> show_batch
-(TensorText,object) -> show_batch
-(object,object) -> show_batch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L85" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>(LMTensorText,object) -> show_batch
-(TensorText,object) -> show_batch
-(object,object) -> show_batch</code>()</p>
-</blockquote>
-<p>Dictionary-like object; <code>__getitem__</code> matches keys of types using <code>issubclass</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="(LMTensorText,object) -> show_batch
-(TensorText,object) -> show_batch
-(object,object) -> show_batch" class="doc_header"><code>(LMTensorText,object) -> show_batch
-(TensorText,object) -> show_batch
-(object,object) -> show_batch</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L85" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>(LMTensorText,object) -> show_batch
-(TensorText,object) -> show_batch
-(object,object) -> show_batch</code>()</p>
-</blockquote>
-<p>Dictionary-like object; <code>__getitem__</code> matches keys of types using <code>issubclass</code></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
@@ -655,7 +601,7 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="pad_collate" class="doc_header"><code>pad_collate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L90" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>pad_collate</code>(<strong><code>samples</code></strong>, <strong><code>pad_idx</code></strong>=<em><code>1</code></em>, <strong><code>pad_first</code></strong>=<em><code>False</code></em>, <strong><code>backwards</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="pad_collate" class="doc_header"><code>pad_collate</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L91" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>pad_collate</code>(<strong><code>samples</code></strong>, <strong><code>pad_idx</code></strong>=<em><code>1</code></em>, <strong><code>pad_first</code></strong>=<em><code>False</code></em>, <strong><code>backwards</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Function that collect samples and adds padding. Flips token order if needed</p>
 
@@ -697,7 +643,7 @@ summary: "Functions and transforms to help gather text data in a [`DataSource`](
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="SortedDL" class="doc_header"><code>class</code> <code>SortedDL</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L105" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>SortedDL</code>(<strong><code>dataset</code></strong>, <strong><code>sort_func</code></strong>=<em><code>None</code></em>, <strong><code>res</code></strong>=<em><code>None</code></em>, <strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>num_workers</code></strong>=<em><code>None</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>n</code></strong>=<em><code>None</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>, <strong><code>get_idxs</code></strong>=<em><code>None</code></em>) :: <a href="/data.core.html#TfmdDL"><code>TfmdDL</code></a></p>
+<h3 id="SortedDL" class="doc_header"><code>class</code> <code>SortedDL</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/text/data.py#L106" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>SortedDL</code>(<strong><code>dataset</code></strong>, <strong><code>sort_func</code></strong>=<em><code>None</code></em>, <strong><code>res</code></strong>=<em><code>None</code></em>, <strong><code>bs</code></strong>=<em><code>16</code></em>, <strong><code>shuffle</code></strong>=<em><code>False</code></em>, <strong><code>num_workers</code></strong>=<em><code>None</code></em>, <strong><code>drop_last</code></strong>=<em><code>False</code></em>, <strong><code>indexed</code></strong>=<em><code>None</code></em>, <strong><code>pin_memory</code></strong>=<em><code>False</code></em>, <strong><code>timeout</code></strong>=<em><code>0</code></em>, <strong><code>n</code></strong>=<em><code>None</code></em>, <strong><code>wif</code></strong>=<em><code>None</code></em>, <strong><code>before_iter</code></strong>=<em><code>None</code></em>, <strong><code>create_batches</code></strong>=<em><code>None</code></em>, <strong><code>sampler</code></strong>=<em><code>None</code></em>, <strong><code>create_item</code></strong>=<em><code>None</code></em>, <strong><code>after_item</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>create_batch</code></strong>=<em><code>None</code></em>, <strong><code>retain</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_iter</code></strong>=<em><code>None</code></em>, <strong><code>get_idxs</code></strong>=<em><code>None</code></em>) :: <a href="/data.core.html#TfmdDL"><code>TfmdDL</code></a></p>
 </blockquote>
 <p>Transformed <a href="/dataloader.html#DataLoader"><code>DataLoader</code></a></p>
 

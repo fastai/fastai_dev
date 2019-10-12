@@ -1214,7 +1214,47 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="L" class="doc_header"><code>class</code> <code>L</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L275" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>L</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
+<h4 id="negate_func" class="doc_header"><code>negate_func</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L275" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>negate_func</code>(<strong><code>f</code></strong>)</p>
+</blockquote>
+<p>Create new function that negates result of <code>f</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span><span class="o">&gt;</span><span class="mi">0</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">negate_func</span><span class="p">(</span><span class="n">f</span><span class="p">)(</span><span class="mi">1</span><span class="p">),</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">negate_func</span><span class="p">(</span><span class="n">f</span><span class="p">)(</span><span class="n">a</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="L" class="doc_header"><code>class</code> <code>L</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L281" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>L</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
 </blockquote>
 <p>Behaves like a list of <code>items</code> but can also index with list of indices or masks</p>
 
@@ -1475,7 +1515,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.__getitem__" class="doc_header"><code>L.__getitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L290" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__getitem__</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="L.__getitem__" class="doc_header"><code>L.__getitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L296" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__getitem__</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
 <p>Retrieve <code>idx</code> (can be list of indices, or mask, or int) items</p>
 
@@ -1514,7 +1554,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.__setitem__" class="doc_header"><code>L.__setitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L299" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__setitem__</code>(<strong><code>idx</code></strong>, <strong><code>o</code></strong>)</p>
+<h4 id="L.__setitem__" class="doc_header"><code>L.__setitem__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L305" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.__setitem__</code>(<strong><code>idx</code></strong>, <strong><code>o</code></strong>)</p>
 </blockquote>
 <p>Set <code>idx</code> (can be list of indices, or mask, or int) items to <code>o</code> (which is broadcast if not iterable)</p>
 
@@ -1551,7 +1591,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.unique" class="doc_header"><code>L.unique</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L337" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.unique</code>()</p>
+<h4 id="L.unique" class="doc_header"><code>L.unique</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L348" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.unique</code>()</p>
 </blockquote>
 <p>Unique items, in stable order</p>
 
@@ -1585,7 +1625,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.val2idx" class="doc_header"><code>L.val2idx</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L339" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.val2idx</code>()</p>
+<h4 id="L.val2idx" class="doc_header"><code>L.val2idx</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L350" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.val2idx</code>()</p>
 </blockquote>
 <p>Dict from value to index</p>
 
@@ -1619,7 +1659,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.filter" class="doc_header"><code>L.filter</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L343" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.filter</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.filter" class="doc_header"><code>L.filter</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L343" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.filter</code>(<strong><code>f</code></strong>, <strong><code>negate</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> filtered by predicate <code>f</code>, passing <code>args</code> and <code>kwargs</code> to <code>f</code></p>
 
@@ -1636,7 +1676,37 @@ summary: "Basic functions used in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[0, 1, 2, 3, 1, 5, 2, 7, 8, 9, 10, 11]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span><span class="n">o</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">test_eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span><span class="n">o</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">,</span> <span class="n">negate</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -1653,7 +1723,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.map" class="doc_header"><code>L.map</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L331" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.map</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.map" class="doc_header"><code>L.map</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L337" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.map</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with <code>f</code> applied to all <code>items</code>, passing <code>args</code> and <code>kwargs</code> to <code>f</code></p>
 
@@ -1762,7 +1832,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.map_dict" class="doc_header"><code>L.map_dict</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L344" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.map_dict</code>(<strong><code>f</code></strong>=<em><code>'noop'</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.map_dict" class="doc_header"><code>L.map_dict</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L354" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.map_dict</code>(<strong><code>f</code></strong>=<em><code>'noop'</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Like <code>map</code>, but creates a dict from <code>items</code> to function results</p>
 
@@ -1797,7 +1867,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.zip" class="doc_header"><code>L.zip</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L346" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zip</code>(<strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.zip" class="doc_header"><code>L.zip</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L356" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zip</code>(<strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with <code>zip(*items)</code></p>
 
@@ -1847,7 +1917,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.map_zip" class="doc_header"><code>L.map_zip</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L348" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.map_zip</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.map_zip" class="doc_header"><code>L.map_zip</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L358" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.map_zip</code>(<strong><code>f</code></strong>, <strong>*<code>args</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Combine <code>zip</code> and <code>starmap</code></p>
 
@@ -1882,7 +1952,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.zipwith" class="doc_header"><code>L.zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L347" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipwith</code>(<strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.zipwith" class="doc_header"><code>L.zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L357" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.zipwith</code>(<strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with <code>self</code> zip with each of <code>*rest</code></p>
 
@@ -1918,7 +1988,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.map_zipwith" class="doc_header"><code>L.map_zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L349" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.map_zipwith</code>(<strong><code>f</code></strong>, <strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="L.map_zipwith" class="doc_header"><code>L.map_zipwith</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L359" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.map_zipwith</code>(<strong><code>f</code></strong>, <strong>*<code>rest</code></strong>, <strong><code>cycled</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Combine <code>zipwith</code> and <code>starmap</code></p>
 
@@ -1952,7 +2022,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.itemgot" class="doc_header"><code>L.itemgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L340" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.itemgot</code>(<strong><code>idx</code></strong>)</p>
+<h4 id="L.itemgot" class="doc_header"><code>L.itemgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L351" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.itemgot</code>(<strong><code>idx</code></strong>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with item <code>idx</code> of all <code>items</code></p>
 
@@ -1986,7 +2056,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.attrgot" class="doc_header"><code>L.attrgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L341" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.attrgot</code>(<strong><code>k</code></strong>, <strong><code>default</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="L.attrgot" class="doc_header"><code>L.attrgot</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L352" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.attrgot</code>(<strong><code>k</code></strong>, <strong><code>default</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Create new <a href="/core.html#L"><code>L</code></a> with attr <code>k</code> of all <code>items</code></p>
 
@@ -2021,7 +2091,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.sorted" class="doc_header"><code>L.sorted</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L317" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.sorted</code>(<strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>reverse</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="L.sorted" class="doc_header"><code>L.sorted</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L323" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.sorted</code>(<strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>reverse</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>New <a href="/core.html#L"><code>L</code></a> sorted by <code>key</code>. If key is str then use <code>attrgetter</code>. If key is int then use <code>itemgetter</code></p>
 
@@ -2055,7 +2125,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.split" class="doc_header"><code>L.split</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L323" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.split</code>(<strong><code>s</code></strong>, <strong><code>sep</code></strong>=<em><code>None</code></em>, <strong><code>maxsplit</code></strong>=<em><code>-1</code></em>)</p>
+<h4 id="L.split" class="doc_header"><code>L.split</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L329" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.split</code>(<strong><code>s</code></strong>, <strong><code>sep</code></strong>=<em><code>None</code></em>, <strong><code>maxsplit</code></strong>=<em><code>-1</code></em>)</p>
 </blockquote>
 <p>Same as builtin <code>str.split</code>, but returns an <a href="/core.html#L"><code>L</code></a></p>
 
@@ -2089,7 +2159,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.range" class="doc_header"><code>L.range</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L326" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.range</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>step</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="L.range" class="doc_header"><code>L.range</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L332" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.range</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>=<em><code>None</code></em>, <strong><code>step</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Same as builtin <code>range</code>, but returns an <a href="/core.html#L"><code>L</code></a>. Can pass a collection for <code>a</code>, to use <code>len(a)</code></p>
 
@@ -2124,7 +2194,7 @@ summary: "Basic functions used in the fastai library"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="L.concat" class="doc_header"><code>L.concat</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L350" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.concat</code>()</p>
+<h4 id="L.concat" class="doc_header"><code>L.concat</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L360" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>L.concat</code>()</p>
 </blockquote>
 <p>Concatenate all elements of list</p>
 
