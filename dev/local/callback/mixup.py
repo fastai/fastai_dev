@@ -29,14 +29,13 @@ class MixUp(Callback):
         if not self.training: return
         lam = self.distrib.sample((self.y.size(0),)).squeeze().to(self.x.device)
         lam = torch.stack([lam, 1-lam], 1)
-        set_trace()
-        self.lam = lam.max(1)[0][:,None,None,None]
+        self.lam = unsqueeze(lam.max(1)[0], n=3)
         shuffle = torch.randperm(self.y.size(0)).to(self.x.device)
-        xb1,self.yb1 = tuple(x[shuffle] for x in self.xb),tuple(y[shuffle] for y in self.yb)
-        self.learn.xb = tuple(torch.lerp(x1, x, self.lam) for x,x1 in zip(self.xb, xb1))
+        xb1,self.yb1 = tuple(L(self.xb).itemgot(shuffle)),tuple(L(self.yb).itemgot(shuffle))
+        self.learn.xb = tuple(L(xb1,self.xb).map_zip(torch.lerp,weight=self.lam))
 
     def lf(self, pred, *yb):
         if not self.in_train: return self.old_lf(pred, *yb)
-        with NoneReduce(self.old_lf) as lf: loss1,loss2 = lf(pred,*yb),lf(pred,*self.yb1)
-        loss = torch.lerp(loss2, loss1, self.lam)
+        with NoneReduce(self.old_lf) as lf:
+            loss = torch.lerp(lf(pred,*self.yb1), lf(pred,*yb), self.lam)
         return reduce_loss(loss, getattr(self.old_lf, 'reduction', 'mean'))

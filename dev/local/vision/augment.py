@@ -37,6 +37,8 @@ def _neg_axis(x, axis):
     x[...,axis] = -x[...,axis]
     return x
 
+TensorTypes = (TensorImage,TensorMask,TensorPoint,TensorBBox)
+
 #Cell
 @patch
 def flip_lr(x:Image.Image): return x.transpose(Image.FLIP_LEFT_RIGHT)
@@ -50,8 +52,6 @@ def flip_lr(x:TensorBBox):
     bb = _neg_axis(bb.view(-1,2), 0)
     return (bb.view(-1,4),lbl)
 
-TensorTypes = (TensorImage,TensorMask,TensorPoint,TensorBBox)
-
 #Cell
 class FlipItem(RandTransform):
     "Randomly flip with probability `p`"
@@ -63,15 +63,15 @@ class FlipItem(RandTransform):
 def dihedral(x:PILImage, k): return x if k==0 else x.transpose(k-1)
 @patch
 def dihedral(x:TensorImage, k):
-        if k in [1, 3, 4, 7]: x = x.flip(-1)
-        if k in [2, 4, 5, 7]: x = x.flip(-2)
-        if k in [3, 5, 6, 7]: x = x.transpose(-1,-2)
+        if k in [1,3,4,7]: x = x.flip(-1)
+        if k in [2,4,5,7]: x = x.flip(-2)
+        if k in [3,5,6,7]: x = x.transpose(-1,-2)
         return x
 @patch
 def dihedral(x:TensorPoint, k):
-        if k in [1, 3, 4, 7]: x = _neg_axis(x, 0)
-        if k in [2, 4, 5, 7]: x = _neg_axis(x, 1)
-        if k in [3, 5, 6, 7]: x = x.flip(1)
+        if k in [1,3,4,7]: x = _neg_axis(x, 0)
+        if k in [2,4,5,7]: x = _neg_axis(x, 1)
+        if k in [3,5,6,7]: x = x.flip(1)
         return x
 @patch
 def dihedral(x:TensorBBox, k):
@@ -230,6 +230,7 @@ def _init_mat(x):
     return mat.unsqueeze(0).expand(x.size(0), 3, 3)
 
 #Cell
+warnings.filterwarnings("ignore", category=UserWarning, module="torch.nn.functional")
 @patch
 def affine_coord(x: TensorImage, mat=None, coord_tfm=None, sz=None, mode='bilinear', pad_mode=PadMode.Reflection):
     if mat is None and coord_tfm is None: return x
@@ -237,7 +238,10 @@ def affine_coord(x: TensorImage, mat=None, coord_tfm=None, sz=None, mode='biline
     if mat is None: mat = _init_mat(x)[:,:2]
     coords = F.affine_grid(mat, x.shape[:2] + size)
     if coord_tfm is not None: coords = coord_tfm(coords)
-    return TensorImage(F.grid_sample(x, coords, mode=mode, padding_mode=pad_mode))
+    with warnings.catch_warnings(): #TODO: Find why this doesn't work.
+        #To avoid the warning that come from grid_sample. TODO: expose align_corners once 1.3.0 is the PyTorch dep
+        warnings.simplefilter("ignore")
+        return TensorImage(F.grid_sample(x, coords, mode=mode, padding_mode=pad_mode))
 
 @patch
 def affine_coord(x: TensorMask, mat=None, coord_tfm=None, sz=None, mode='nearest', pad_mode=PadMode.Reflection):

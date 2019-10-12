@@ -2,14 +2,47 @@
 
 __all__ = ['Optimizer', 'sgd_step', 'weight_decay', 'l2_reg', 'average_grad', 'average_sqr_grad', 'momentum_step',
            'SGD', 'rms_prop_step', 'RMSProp', 'step_stat', 'debias', 'adam_step', 'Adam', 'larc_layer_lr', 'larc_step',
-           'Larc', 'lamb_step', 'Lamb']
+           'Larc', 'lamb_step', 'Lamb', 'detuplify_pg', 'set_item_pg', 'pytorch_hp_map', 'OptimWrapper']
 
 #Cell
 from .torch_basics import *
 from .test import *
 
 #Cell
-class Optimizer():
+class _BaseOptimizer():
+    "Common functionality between `Optimizer` and `OptimWrapper`"
+
+    def _set_require_grad(self, pg, rg):
+        for p in pg: p.requires_grad_(rg or self.state[p].get('force_train', False))
+
+    def freeze_to(self, n):
+        self.frozen_idx = n if n >= 0 else len(self.param_groups) + n
+        if self.frozen_idx >= len(self.param_groups):
+            warn(f"Trying to freeze {self.frozen_idx} parameter groups when there are only {len(self.param_groups)}, the whole model is frozen.")
+        for pg in self.param_groups[:n]: self._set_require_grad(pg, False)
+        for pg in self.param_groups[n:]: self._set_require_grad(pg, True)
+
+    def freeze(self):
+        assert(len(self.param_groups)>1)
+        self.freeze_to(-1)
+
+    def unfreeze(self): self.freeze_to(0)
+    def set_hypers(self, **kwargs): L(kwargs.items()).starmap(self.set_hyper)
+
+    def _set_hyper(self, k, v):
+        for v_,h in zip(v, self.hypers): h[k] = v_
+
+    def set_hyper(self, k, v):
+        if isinstance(v, slice):
+            if v.start: v = even_mults(v.start, v.stop, len(self.param_groups))
+            else: v = [v.stop/10]*(len(self.param_groups)-1) + [v.stop]
+        v = L(v, use_list=None)
+        if len(v)==1: v = v*len(self.param_groups)
+        assert len(v) == len(self.hypers), f"Trying to set {len(v)} values for {k} but there are {len(self.param_groups)} parameter groups."
+        self._set_hyper(k, v)
+
+#Cell
+class Optimizer(_BaseOptimizer):
     "Base optimizer class for the fastai library, updating `params` with `steppers`"
     _keep_on_clear = ['force_train', 'do_wd']
     def __init__(self, params, steppers, stats=None, train_bn=True, **defaults):
@@ -39,21 +72,9 @@ class Optimizer():
             self.step_func(p, **{**state, **hyper})
             self.state[p] = state
 
-    def _set_require_grad(self, pg, rg):
-        for p in pg: p.requires_grad_(rg or self.state[p].get('force_train', False))
-
-    def freeze_to(self, n):
-        self.frozen_idx = n if n >= 0 else len(self.param_groups) + n
-        if self.frozen_idx >= len(self.param_groups):
-            warn(f"Trying to freeze {self.frozen_idx} parameter groups when there are only {len(self.param_groups)}, the whole model is frozen.")
-        for pg in self.param_groups[:n]: self._set_require_grad(pg, False)
-        for pg in self.param_groups[n:]: self._set_require_grad(pg, True)
-
-    def freeze(self):
-        assert(len(self.param_groups)>1)
-        self.freeze_to(-1)
-
-    def unfreeze(self): self.freeze_to(0)
+    def clear_state(self):
+        for pg in self.param_groups:
+            for p in pg: self.state[p] = {k: self.state[p][k] for k in self._keep_on_clear if k in self.state[p]}
 
     def state_dict(self):
         state = [self.state[p] for pg in self.param_groups for p in pg]
@@ -65,20 +86,6 @@ class Optimizer():
         self.hypers = sd['hypers']
         self.state = {p: s for p,s in zip([p for pg in self.param_groups for p in pg], sd['state'])}
 
-    def clear_state(self):
-        for pg in self.param_groups:
-            for p in pg: self.state[p] = {k: self.state[p][k] for k in self._keep_on_clear if k in self.state[p]}
-
-    def set_hypers(self, **kwargs): L(kwargs.items()).starmap(self.set_hyper)
-    def set_hyper(self, k, v):
-        if isinstance(v, slice):
-            if v.start: v = even_mults(v.start, v.stop, len(self.param_groups))
-            else: v = [v.stop/10]*(len(self.param_groups)-1) + [v.stop]
-        v = L(v, use_list=None)
-        if len(v)==1: v = v*len(self.param_groups)
-        assert len(v) == len(self.hypers), f"Trying to set {len(v)} values for {k} but there are {len(self.param_groups)} parameter groups."
-        for v_,h in zip(v, self.hypers): h[k] = v_
-
 #Cell
 def sgd_step(p, lr, **kwargs):
     p.data.add_(-lr, p.grad.data)
@@ -87,14 +94,14 @@ def sgd_step(p, lr, **kwargs):
 #Cell
 def weight_decay(p, lr, wd, do_wd=True, **kwargs):
     "Weight decay as decaying `p` with `lr*wd`"
-    if do_wd: p.data.mul_(1 - lr*wd)
+    if do_wd and wd!=0: p.data.mul_(1 - lr*wd)
     return p
 weight_decay.defaults = dict(wd=0.)
 
 #Cell
 def l2_reg(p, lr, wd, do_wd=True, **kwargs):
     "L2 regularization as adding `wd*p` to `p.grad`"
-    if do_wd: p.grad.data.add_(wd, p.data)
+    if do_wd and wd!=0: p.grad.data.add_(wd, p.data)
     return p
 l2_reg.defaults = dict(wd=0.)
 
@@ -126,7 +133,7 @@ def momentum_step(p, lr, grad_avg, **kwargs):
 #Cell
 def SGD(params, lr, mom=0., wd=0., decouple_wd=True):
     "A `Optimizer` for SGD with `lr` and `mom` and `params`"
-    steppers = [] if wd==0. else [weight_decay] if decouple_wd else [l2_reg]
+    steppers = [weight_decay] if decouple_wd else [l2_reg]
     steppers.append(sgd_step if mom==0 else momentum_step)
     if mom == 0.: return Optimizer(params, steppers, lr=lr, wd=wd)
     else: return Optimizer(params, steppers, stats=average_grad, lr=lr, mom=mom, wd=wd)
@@ -143,7 +150,7 @@ rms_prop_step.defaults = dict(eps=1e-8)
 #Cell
 def RMSProp(params, lr, sqr_mom=0.99, mom=0., wd=0., decouple_wd=True):
     "A `Optimizer` for RMSProp with `lr`, `sqr_mom`, `mom` and `params`"
-    steppers = [] if wd==0. else [weight_decay] if decouple_wd else [l2_reg]
+    steppers = [weight_decay] if decouple_wd else [l2_reg]
     steppers.append(rms_prop_step)
     stats = [average_sqr_grad] if mom==0. else [average_grad, average_sqr_grad]
     return Optimizer(params, steppers, stats=stats, lr=lr, mom=mom, sqr_mom=sqr_mom, wd=wd)
@@ -171,7 +178,7 @@ adam_step._defaults = dict(eps=1e-5)
 #Cell
 def Adam(params, lr, mom=0.9, sqr_mom=0.99, eps=1e-5, wd=0., decouple_wd=True):
     "A `Optimizer` for Adam with `lr`, `mom`, `sqr_mom`, `eps` and `params`"
-    steppers = [] if wd==0. else [weight_decay] if decouple_wd else [l2_reg]
+    steppers = [weight_decay] if decouple_wd else [l2_reg]
     steppers.append(adam_step)
     stats = [partial(average_grad, dampening=True), average_sqr_grad, step_stat]
     return Optimizer(params, steppers, stats=stats, lr=lr, mom=mom, sqr_mom=sqr_mom, eps=eps, wd=wd)
@@ -194,7 +201,7 @@ def larc_step(p, local_lr, grad_avg=None, **kwargs):
 #Cell
 def Larc(params, lr, mom=0.9, clip=True, trust_coeff=0.02, eps=1e-8, wd=0., decouple_wd=True):
     "A `Optimizer` for Adam with `lr`, `mom`, `sqr_mom`, `eps` and `params`"
-    steppers = [] if wd==0. else [weight_decay] if decouple_wd else [l2_reg]
+    steppers = [weight_decay] if decouple_wd else [l2_reg]
     steppers.append(larc_step)
     stats = [] if mom==0. else [average_grad]
     stats.append(partial(larc_layer_lr, clip=clip))
@@ -216,7 +223,54 @@ lamb_step._defaults = dict(eps=1e-6, wd=0.)
 #Cell
 def Lamb(params, lr, mom=0.9, sqr_mom=0.99, eps=1e-5, wd=0., decouple_wd=True):
     "A `Optimizer` for Adam with `lr`, `mom`, `sqr_mom`, `eps` and `params`"
-    steppers = [] if wd==0. else [weight_decay] if decouple_wd else [l2_reg]
+    steppers = [weight_decay] if decouple_wd else [l2_reg]
     steppers.append(lamb_step)
     stats = [partial(average_grad, dampening=True), average_sqr_grad, step_stat]
     return Optimizer(params, steppers, stats=stats, lr=lr, mom=mom, sqr_mom=sqr_mom, eps=eps, wd=wd)
+
+#Cell
+def detuplify_pg(d):
+    res = {}
+    for k,v in d.items():
+        if k == 'params': continue
+        if is_listy(v): res.update(**{f'{k}__{i}': v_ for i,v_ in enumerate(v)})
+        else: res[k] = v
+    return res
+
+#Cell
+def set_item_pg(pg, k, v):
+    if '__' not in k: pg[k] = v
+    else:
+        name,idx = k.split('__')
+        pg[name] = tuple(v if i==int(idx) else pg[name][i] for i in range_of(pg[name]))
+    return pg
+
+#Cell
+pytorch_hp_map = {'momentum': 'mom', 'weight_decay': 'wd', 'alpha': 'sqr_mom', 'betas__0': 'mom', 'betas__1': 'sqr_mom'}
+
+#Cell
+class OptimWrapper(_BaseOptimizer, GetAttr):
+    _xtra=['zero_grad', 'step', 'state_dict', 'load_state_dict']
+    _default='opt'
+    def __init__(self, opt, hp_map=None):
+        self.opt = opt
+        if hp_map is None: hp_map = pytorch_hp_map
+        self.fwd_map = {k: hp_map[k] if k in hp_map else k for k in detuplify_pg(opt.param_groups[0]).keys()}
+        self.bwd_map = {v:k for k,v in self.fwd_map.items()}
+        self.state = defaultdict(dict, {})
+        self.frozen_idx = 0
+
+    @property
+    def param_groups(self): return [pg['params'] for pg in self.opt.param_groups]
+    @param_groups.setter
+    def param_groups(self, v):
+        for pg,v_ in zip(self.opt.param_groups,v): pg['params'] = v_
+
+    @property
+    def hypers(self):
+        return [{self.fwd_map[k]:v for k,v in detuplify_pg(pg).items() if k != 'params'} for pg in self.opt.param_groups]
+
+    def _set_hyper(self, k, v):
+        for pg,v_ in zip(self.opt.param_groups,v): pg = set_item_pg(pg, self.bwd_map[k], v_)
+
+    def clear_state(self): self.opt.state = defaultdict(dict, {})

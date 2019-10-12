@@ -3,7 +3,7 @@
 __all__ = ['Image', 'ToTensor', 'imagenet_stats', 'cifar_stats', 'mnist_stats', 'size', 'n_px', 'shape', 'aspect',
            'load_image', 'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'TensorPoint', 'get_annotations', 'BBox',
            'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'BBoxScaler', 'BBoxCategorize',
-           'bb_pad', 'show_batch', 'show_results', 'show_results', 'show_results']
+           'bb_pad']
 
 #Cell
 from ..torch_basics import *
