@@ -3,7 +3,7 @@
 __all__ = ['in_ipython', 'IN_IPYTHON', 'in_colab', 'IN_COLAB', 'in_notebook', 'IN_NOTEBOOK', 'DocsTestClass']
 
 #Cell
-from ..imports import *
+from ..core.imports import *
 
 #Cell
 def in_ipython():

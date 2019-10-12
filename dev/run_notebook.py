@@ -3,7 +3,7 @@
 # TODO: parallel
 
 from pathlib import Path
-from local.script import *
+from local.core.script import *
 from local.notebook.test import test_nb
 
 def get_fns(path,max_num,fn):

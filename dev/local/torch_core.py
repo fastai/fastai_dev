@@ -10,7 +10,7 @@ __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'unsqueeze', 'uns
 
 #Cell
 from .test import *
-from .basics import *
+from .core.all import *
 from .torch_imports import *
 from fastprogress import progress_bar,master_bar
 

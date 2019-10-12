@@ -7,7 +7,6 @@ __all__ = ['RandTransform', 'TensorTypes', 'FlipItem', 'DihedralItem', 'clip_rem
            'aug_transforms']
 
 #Cell
-from ..torch_basics import *
 from ..test import *
 from ..data.all import *
 from .core import *

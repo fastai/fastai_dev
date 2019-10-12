@@ -4,7 +4,7 @@ __all__ = ['test_fail', 'test', 'nequals', 'test_eq', 'test_eq_type', 'test_ne',
            'test_shuffled', 'test_stdout', 'TEST_IMAGE', 'TEST_IMAGE_BW', 'test_fig_exists']
 
 #Cell
-from .imports import *
+from .core.imports import *
 
 #Cell
 def test_fail(f, msg='', contains=''):

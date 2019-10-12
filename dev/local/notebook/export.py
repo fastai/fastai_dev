@@ -4,7 +4,7 @@ __all__ = ['read_nb', 'check_re', 'is_export', 'find_default_export', 'export_na
            'get_name', 'qual_name', 'source_nb', 'script2notebook', 'diff_nb_script']
 
 #Cell
-from ..imports import *
+from ..core.imports import *
 from .core import *
 import nbformat,inspect
 from nbformat.sign import NotebookNotary
@@ -239,7 +239,7 @@ def _notebook2script(fname, silent=False, to_pkl=False):
     index = _get_index()
     exports = [is_export(c, default) for c in nb['cells']]
     cells = [(i,c,e) for i,(c,e) in enumerate(zip(nb['cells'],exports)) if e is not None]
-    for (i,c,e) in cells:
+    for i,c,e in cells:
         fname_out = Path.cwd()/'local'/f'{e}.py'
         orig = ('#C' if e==default else f'#Comes from {fname.name}, c') + 'ell\n'
         code = '\n\n' + orig + '\n'.join(_deal_import(c['source'].split('\n')[1:], fname_out))

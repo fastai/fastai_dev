@@ -5,7 +5,7 @@ __all__ = ['is_enum', 'add_pytorch_index', 'is_fastai_module', 'FASTAI_DOCS', 'd
            'format_param', 'show_doc', 'md2html', 'doc']
 
 #Cell
-from ..imports import *
+from ..core.imports import *
 from .core import *
 from .export import *
 import inspect,enum,nbconvert
