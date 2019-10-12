@@ -5,11 +5,7 @@ __all__ = ['DcmDataset', 'DcmTag', 'DcmMultiValue', 'dcmread', 'pixels', 'scaled
 
 #Cell
 from ..test import *
-from ..core import *
-from ..data.all import *
-from ..optimizer import *
-from ..learner import *
-from ..metrics import *
+from ..basics import *
 from ..vision import models
 
 import pydicom

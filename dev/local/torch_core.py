@@ -179,7 +179,7 @@ class TensorImage(TensorImageBase): pass
 class TensorImageBW(TensorImage): _show_args = ArrayImageBW._show_args
 
 #Cell
-class TensorMask(TensorImageBase): ArrayMask._show_args
+class TensorMask(TensorImageBase): _show_args = ArrayMask._show_args
 
 #Cell
 @patch
