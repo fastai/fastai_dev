@@ -562,7 +562,7 @@ class ArrayImage(ArrayImageBase): pass
 class ArrayImageBW(ArrayImage): _show_args = {'cmap':'Greys'}
 
 #Cell
-class ArrayMask(ArrayImageBase): _show_args = {'alpha':0.5, 'cmap':'tab20'}
+class ArrayMask(ArrayImageBase): _show_args = {'alpha':0.5, 'cmap':'tab20', 'interpolation':'nearest'}
 
 #Cell
 class PrettyString(str):
