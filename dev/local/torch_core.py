@@ -239,7 +239,7 @@ class Chunks:
 #Cell
 def one_param(m):
     "First parameter in `m`"
-    return next(iter(m.parameters()))
+    return first(m.parameters())
 
 #Cell
 def item_find(x, idx=0):

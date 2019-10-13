@@ -2,8 +2,8 @@
 
 __all__ = ['ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrdict', 'properties', 'camel2snake',
            'class2attr', 'hasattrs', 'tuplify', 'detuplify', 'replicate', 'uniqueify', 'setify', 'is_listy', 'range_of',
-           'groupby', 'merge', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add',
-           'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types',
+           'groupby', 'merge', 'first', 'shufflish', 'IterLen', 'ReindexCollection', 'lt', 'gt', 'le', 'ge', 'eq', 'ne',
+           'add', 'sub', 'mul', 'truediv', 'Inf', 'true', 'stop', 'gen', 'chunked', 'retain_type', 'retain_types',
            'show_title', 'ShowTitle', 'Int', 'Float', 'Str', 'num_methods', 'rnum_methods', 'inum_methods', 'Tuple',
            'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped', 'instantiate', 'Self', 'Self', 'bunzip',
            'join_path_file', 'sort_by_run', 'subplots', 'show_image', 'show_titled_image', 'ArrayBase',
@@ -143,6 +143,11 @@ def groupby(x, key):
 def merge(*ds):
     "Merge all dictionaries in `ds`"
     return {k:v for d in ds if d is not None for k,v in d.items()}
+
+#Cell
+def first(x):
+    "First element of `x`; i.e. a shortcut for `next(iter(x))`"
+    return next(iter(x))
 
 #Cell
 def shufflish(x, pct=0.04):
