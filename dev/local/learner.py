@@ -333,7 +333,7 @@ add_docs(Learner, "Group together a `model`, some `dbunch` and a `loss_func` to 
     get_preds="Get the predictions and targets on the `ds_idx`-th dbunchset or `dl`, optionally `with_input` and `with_loss`",
     predict="Return the prediction on `item`, fully decoded, loss function decoded and probabilities",
     show_results="Show some predictions on `ds_idx`-th dbunchset or `dl`",
-    show_training_loop="Show ",
+    show_training_loop="Show each step in the training loop",
     no_logging="Context manager to temporarily remove `logger`",
     loss_not_reduced="A context manager to evaluate `loss_func` with reduction set to none.",
     save="Save model and optimizer state (if `with_opt`) to `self.path/self.model_dir/file`",
