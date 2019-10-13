@@ -226,21 +226,41 @@ class RandomResizedCrop(CropPad):
 #Cell
 def _init_mat(x):
     mat = torch.eye(3, dtype=x.dtype, device=x.device)
-    return mat.unsqueeze(0).expand(x.size(0), 3, 3)
+    return mat.unsqueeze(0).expand(x.size(0), 3, 3).contiguous()
 
 #Cell
 warnings.filterwarnings("ignore", category=UserWarning, module="torch.nn.functional")
+def _grid_sample(x, coords, mode='bilinear', padding_mode='reflection'):
+    "Resample pixels in `coords` from `x` by `mode`, with `padding_mode` in ('reflection','border','zeros')."
+    #coords = coords.permute(0, 3, 1, 2).contiguous().permute(0, 2, 3, 1) # optimize layout for grid_sample
+    if mode=='bilinear': # hack to get smoother downwards resampling
+        mn,mx = coords.min(),coords.max()
+        # max amount we're affine zooming by (>1 means zooming in)
+        z = 1/(mx-mn).item()*2
+        # amount we're resizing by, with 100% extra margin
+        d = min(x.shape[-2]/coords.shape[-2], x.shape[-1]/coords.shape[-1])/2
+        # If we're resizing up by >200%, and we're zooming less than that, interpolate first
+        if d>1 and d>z:
+            print('Downsizing')
+            x = F.interpolate(x, scale_factor=1/d, mode='area')
+    with warnings.catch_warnings():
+        #To avoid the warning that come from grid_sample.
+        warnings.simplefilter("ignore")
+        return F.grid_sample(x, coords, mode=mode, padding_mode=padding_mode)
+
+#Cell
 @patch
 def affine_coord(x: TensorImage, mat=None, coord_tfm=None, sz=None, mode='bilinear', pad_mode=PadMode.Reflection):
-    if mat is None and coord_tfm is None: return x
+    if mat is None and coord_tfm is None and sz is None: return x
     size = tuple(x.shape[-2:]) if sz is None else (sz,sz) if isinstance(sz,int) else tuple(sz)
     if mat is None: mat = _init_mat(x)[:,:2]
     coords = F.affine_grid(mat, x.shape[:2] + size)
     if coord_tfm is not None: coords = coord_tfm(coords)
-    with warnings.catch_warnings(): #TODO: Find why this doesn't work.
-        #To avoid the warning that come from grid_sample. TODO: expose align_corners once 1.3.0 is the PyTorch dep
-        warnings.simplefilter("ignore")
-        return TensorImage(F.grid_sample(x, coords, mode=mode, padding_mode=pad_mode))
+    return TensorImage(_grid_sample(x, coords, mode=mode, padding_mode=pad_mode))
+    #with warnings.catch_warnings(): #TODO: Find why this doesn't work.
+    #    #To avoid the warning that come from grid_sample. TODO: expose align_corners once 1.3.0 is the PyTorch dep
+    #    warnings.simplefilter("ignore")
+    #    return TensorImage(F.grid_sample(x, coords, mode=mode, padding_mode=pad_mode))
 
 @patch
 def affine_coord(x: TensorMask, mat=None, coord_tfm=None, sz=None, mode='nearest', pad_mode=PadMode.Reflection):
@@ -270,6 +290,13 @@ def affine_coord(x: TensorBBox, mat=None, coord_tfm=None, sz=None, mode='nearest
     return TensorBBox(clip_remove_empty(torch.cat([tl, dr], dim=2), label))
 
 #Cell
+def _prepare_mat(x, mat):
+    h,w = x.shape[-2:]
+    mat[:,0,1] *= h/w
+    mat[:,1,0] *= w/h
+    return mat[:,:2]
+
+#Cell
 class AffineCoordTfm(RandTransform):
     "Combine and apply affine and coord transforms"
     order = 30
@@ -280,7 +307,7 @@ class AffineCoordTfm(RandTransform):
 
     def before_call(self, b, split_idx):
         if isinstance(b, tuple): b = b[0]
-        self.do,self.mat = True,self._get_affine_mat(b)[:,:2]
+        self.do,self.mat = True,self._get_affine_mat(b)
         for t in self.coord_fs: t.before_call(b)
 
     def compose(self, tfm):
@@ -293,7 +320,7 @@ class AffineCoordTfm(RandTransform):
         ms = [f(x) for f in self.aff_fs]
         ms = [m for m in ms if m is not None]
         for m in ms: aff_m = aff_m @ m
-        return aff_m
+        return _prepare_mat(x, aff_m)
 
     def _encode(self, x, mode, reverse=False):
         coord_func = None if len(self.coord_fs)==0 else partial(compose_tfms, tfms=self.coord_fs, reverse=reverse)
@@ -363,15 +390,18 @@ def dihedral_mat(x, p=0.5, draw=None):
     ys = tensor([1,1,-1,1,-1,-1,1,-1], device=x.device).gather(0, idx)
     m0 = tensor([1,1,1,0,1,0,0,0], device=x.device).gather(0, idx)
     m1 = tensor([0,0,0,1,0,1,1,1], device=x.device).gather(0, idx)
+    res = affine_mat(xs*m0,  xs*m1,  t0(xs),
+                      ys*m1,  ys*m0,  t0(xs)).float()
     return affine_mat(xs*m0,  xs*m1,  t0(xs),
                       ys*m1,  ys*m0,  t0(xs)).float()
-    mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
 
 #Cell
+#TODO: can't patch ,TensorPoint,TensorBBox because they don't know the size
 @patch
-def dihedral_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
+def dihedral_batch(x: (TensorImage,TensorMask), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
-    return x.affine_coord(mat=dihedral_mat(x0, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+    mat = _prepare_mat(x, dihedral_mat(x0, p=p, draw=draw))
+    return x.affine_coord(mat=mat, sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
@@ -387,11 +417,13 @@ def rotate_mat(x, max_deg=10, p=0.5, draw=None):
                      -thetas.sin(), thetas.cos(), t0(thetas))
 
 #Cell
+#TODO: can't patch ,TensorPoint,TensorBBox because they don't know the size
 @delegates(rotate_mat)
 @patch
-def rotate(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), size=None, mode=None, pad_mode=None, **kwargs):
+def rotate(x: (TensorImage,TensorMask), size=None, mode=None, pad_mode=None, **kwargs):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
-    return x.affine_coord(mat=rotate_mat(x0, **kwargs)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+    mat = _prepare_mat(x, rotate_mat(x0, **kwargs))
+    return x.affine_coord(mat=mat, sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def Rotate(max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
