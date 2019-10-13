@@ -272,7 +272,6 @@
   "imagenet_stats": "08_vision_core.ipynb",
   "cifar_stats": "08_vision_core.ipynb",
   "mnist_stats": "08_vision_core.ipynb",
-  "size": "07_vision_core.ipynb",
   "n_px": "08_vision_core.ipynb",
   "shape": "08_vision_core.ipynb",
   "aspect": "08_vision_core.ipynb",
