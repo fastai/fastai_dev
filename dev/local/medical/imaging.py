@@ -56,8 +56,8 @@ def freqhist_bins(self:Tensor, n_bins=100):
 @patch
 def hist_scaled(self:Tensor, brks=None):
     if brks is None: brks = self.freqhist_bins()
-    ys = torch.arange(len(brks), dtype=torch.float) / brks[-1]
-    return self.flatten().interp_1d(brks, ys).reshape(self.shape)
+    ys = torch.linspace(0., 1., len(brks))
+    return self.flatten().interp_1d(brks, ys).reshape(self.shape).clamp(0.,1.)
 
 #Cell
 @patch
