@@ -169,6 +169,8 @@ class Learner():
         yield
         self.remove_cbs(cbs)
 
+    def ordered_cbs(self, cb_func:str): return [cb for cb in sort_by_run(self.cbs) if hasattr(cb, cb_func)]
+
     def __call__(self, event_name): L(event_name).map(self._call_one)
     def _call_one(self, event_name):
         assert hasattr(event, event_name)
@@ -279,6 +281,20 @@ class Learner():
         preds = getattr(self.loss_func, "decodes", noop)(preds)
         self.dbunch.show_results(b, preds, max_n=max_n, **kwargs)
 
+    def show_training_loop(self):
+        loop = ['Start Fit', 'begin_fit', 'Start Epoch Loop', 'begin_epoch', 'Start Train', 'begin_train',
+                'Start Batch Loop', 'begin_batch', 'after_pred', 'after_loss', 'after_backward',
+                'after_step', 'after_cancel_batch', 'after_batch','End Batch Loop','End Train',
+                'after_cancel_train', 'after_train', 'Start Valid', 'begin_validate','Start Batch Loop',
+                '**CBs same as train batch**', 'End Batch Loop', 'End Valid', 'after_cancel_validate',
+                'after_validate', 'End Epoch Loop', 'after_cancel_epoch', 'after_epoch', 'End Fit',
+                'after_cancel_fit', 'after_fit']
+        indent = 0
+        for s in loop:
+            if s.startswith('Start'): print(f'{" "*indent}{s}'); indent += 2
+            elif s.startswith('End'): indent -= 2; print(f'{" "*indent}{s}')
+            else: print(f'{" "*indent} - {s:15}:', self.ordered_cbs(s))
+
     @contextmanager
     def no_logging(self): return replacing_yield(self, 'logger', noop)
 
@@ -308,6 +324,7 @@ add_docs(Learner, "Group together a `model`, some `dbunch` and a `loss_func` to 
     remove_cbs="Remove `cbs` from the list of `Callback` and deregister `self` as their learner",
     remove_cb="Add `cb` from the list of `Callback` and deregister `self` as their learner",
     added_cbs="Context manage that temporarily adds `cbs`",
+    ordered_cbs="Return a list of `Callback` for one step `cb_func` in the training loop",
     create_opt="Create an optimizer with `lr`",
     one_batch="Train or evaluate `self.model` on batch `(xb,yb)`",
     all_batches="Train or evaluate `self.model` on all batches of `self.dl`",
@@ -316,6 +333,7 @@ add_docs(Learner, "Group together a `model`, some `dbunch` and a `loss_func` to 
     get_preds="Get the predictions and targets on the `ds_idx`-th dbunchset or `dl`, optionally `with_input` and `with_loss`",
     predict="Return the prediction on `item`, fully decoded, loss function decoded and probabilities",
     show_results="Show some predictions on `ds_idx`-th dbunchset or `dl`",
+    show_training_loop="Show each step in the training loop",
     no_logging="Context manager to temporarily remove `logger`",
     loss_not_reduced="A context manager to evaluate `loss_func` with reduction set to none.",
     save="Save model and optimizer state (if `with_opt`) to `self.path/self.model_dir/file`",
