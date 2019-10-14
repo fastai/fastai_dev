@@ -26,13 +26,16 @@ def _merge_tfms(*tfms):
 class DataBlock():
     "Generic container to quickly build `DataSource` and `DataBunch`"
     get_x=get_items=splitter=get_y = None
+    dl_type = TfmdDL
     _methods = 'get_items splitter get_y get_x'.split()
-    def __init__(self, types=None, **kwargs):
+    def __init__(self, types=None, dl_type=None, **kwargs):
         types = L(getattr(self,'types',(float,float)) if types is None else types)
         self.default_type_tfms = types.map(
             lambda t: L(getattr(t,'create',None)) + L(getattr(t,'default_type_tfms',None)))
         self.default_item_tfms  = _merge_tfms(ToTensor, *types.attrgot('default_item_tfms',  L()))
         self.default_batch_tfms = _merge_tfms(Cuda,     *types.attrgot('default_batch_tfms', L()))
+        if dl_type is not None: self.dl_type = dl_type
+        self.databunch = delegates(self.dl_type.__init__)(self.databunch)
         assert not kwargs
 
     def datasource(self, source, type_tfms=None):
@@ -50,7 +53,7 @@ class DataBlock():
         if type_tfms is None: type_tfms = [L() for t in self.default_type_tfms]
         type_tfms = L([self.default_type_tfms, type_tfms, labellers]).map_zip(
             lambda tt,tfm,l: L(l) + _merge_tfms(tt, tfm))
-        return DataSource(items, tfms=type_tfms, splits=splits)
+        return DataSource(items, tfms=type_tfms, splits=splits, dl_type=self.dl_type)
 
     def databunch(self, source, type_tfms=None, item_tfms=None, batch_tfms=None, bs=16, **kwargs):
         dsrc = self.datasource(source, type_tfms=type_tfms)
