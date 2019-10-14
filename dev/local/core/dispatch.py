@@ -5,6 +5,7 @@ __all__ = ['type_hints', 'anno_ret', 'cmp_instance', 'TypeDispatch', 'DispatchRe
 #Cell
 from .imports import *
 from .foundation import *
+from .utils import *
 from ..test import *
 
 #Cell
@@ -58,7 +59,7 @@ class _TypeDict:
         return res[0] if len(res) else None
 
     def __repr__(self): return self.d.__repr__()
-    def first(self): return next(iter(self.d.values()))
+    def first(self): return first(self.d.values())
 
 #Cell
 class TypeDispatch:

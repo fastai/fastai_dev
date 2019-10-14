@@ -138,12 +138,13 @@ class FilteredBase:
     @property
     def n_subsets(self): return len(self.splits)
 
-    def databunch(self, bs=16, val_bs=None, shuffle_train=True, n=None, **kwargs):
+    def databunch(self, bs=16, val_bs=None, shuffle_train=True, n=None, dl_kwargs=None, **kwargs):
+        if dl_kwargs is None: dl_kwargs = [{}] * self.n_subsets
         ns = self.n_subsets-1
         bss = [bs] + [2*bs]*ns if val_bs is None else [bs] + [val_bs]*ns
         shuffles = [shuffle_train] + [False]*ns
-        dls = [self._dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, n=n if i==0 else None, **kwargs)
-               for i,(b,s) in enumerate(zip(bss, shuffles))]
+        dls = [self._dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, n=n if i==0 else None, **kwargs, **dk)
+               for i,(b,s,dk) in enumerate(zip(bss,shuffles,dl_kwargs))]
         return DataBunch(*dls)
 
 FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
@@ -154,7 +155,7 @@ class TfmdList(FilteredBase, L):
     _default='tfms'
     def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, split_idx=None, train_setup=True, splits=None):
         super().__init__(items, use_list=use_list)
-        self.splits = L([slice(None)] if splits is None else splits).map(mask2idxs)
+        self.splits = L([slice(None),[]] if splits is None else splits).map(mask2idxs)
         if isinstance(tfms,TfmdList): tfms = tfms.tfms
         if isinstance(tfms,Pipeline): do_setup=False
         self.tfms = Pipeline(tfms, as_item=as_item, split_idx=split_idx)

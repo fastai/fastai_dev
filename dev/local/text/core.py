@@ -133,7 +133,7 @@ class TokenizeBatch:
 #Cell
 def tokenize1(text, tok_func=SpacyTokenizer, rules=None, post_rules=None, **tok_kwargs):
     "Tokenize one `text` with an instance of `tok_func` and some `rules`"
-    return next(iter(TokenizeBatch(tok_func, rules, post_rules, **tok_kwargs)([text])))
+    return first(TokenizeBatch(tok_func, rules, post_rules, **tok_kwargs)([text]))
 
 #Cell
 def parallel_tokenize(items, tok_func, rules, as_gen=False, n_workers=defaults.cpus, **tok_kwargs):
