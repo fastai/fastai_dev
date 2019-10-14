@@ -133,17 +133,18 @@ class FilteredBase:
         self.databunch = delegates(self._dl_type.__init__)(self.databunch)
         super().__init__(*args, **kwargs)
 
-    def _new(self, items, **kwargs): return super()._new(items, splits=self.splits, **kwargs)
-    def subset(self): raise NotImplemented
     @property
     def n_subsets(self): return len(self.splits)
+    def _new(self, items, **kwargs): return super()._new(items, splits=self.splits, **kwargs)
+    def subset(self): raise NotImplemented
 
-    def databunch(self, bs=16, val_bs=None, shuffle_train=True, n=None, dl_kwargs=None, **kwargs):
+    def databunch(self, bs=16, val_bs=None, shuffle_train=True, n=None, dl_type=None, dl_kwargs=None, **kwargs):
         if dl_kwargs is None: dl_kwargs = [{}] * self.n_subsets
         ns = self.n_subsets-1
         bss = [bs] + [2*bs]*ns if val_bs is None else [bs] + [val_bs]*ns
         shuffles = [shuffle_train] + [False]*ns
-        dls = [self._dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, n=n if i==0 else None, **kwargs, **dk)
+        if dl_type is None: dl_type = self._dl_type
+        dls = [dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, n=n if i==0 else None, **kwargs, **dk)
                for i,(b,s,dk) in enumerate(zip(bss,shuffles,dl_kwargs))]
         return DataBunch(*dls)
 

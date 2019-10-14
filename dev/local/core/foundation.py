@@ -347,7 +347,11 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def unique(self): return L(dict.fromkeys(self).keys())
     def enumerate(self): return L(enumerate(self))
     def val2idx(self): return {v:k for k,v in self.enumerate()}
-    def itemgot(self, idx): return self.map(itemgetter(idx))
+    def itemgot(self, *idxs):
+        x = self
+        for idx in idxs: x = x.map(itemgetter(idx))
+        return x
+
     def attrgot(self, k, default=None): return self.map(lambda o:getattr(o,k,default))
     def cycle(self): return cycle(self)
     def map_dict(self, f=noop, *args, **kwargs): return {k:f(k, *args,**kwargs) for k in self}
