@@ -53,11 +53,10 @@ def fa_convert(t):
 
 #Cell
 @funcs_kwargs
-@delegates(Sampler)
 class DataLoader(GetAttr):
     wif=before_iter=after_item=before_batch=after_batch=after_iter = noops
     _methods = 'wif before_iter create_batches create_item after_item before_batch create_batch retain after_batch after_iter'.split()
-    _default,_sampler = 'dataset',Sampler
+    _default = 'dataset'
     def __init__(self, dataset=None, bs=None, num_workers=0, pin_memory=False, timeout=0,
                  shuffle=False, drop_last=False, indexed=None, n=None, **kwargs):
         assert not (bs is None and drop_last)
