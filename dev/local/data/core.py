@@ -103,9 +103,6 @@ class TfmdDL(DataLoader):
         if not hasattr(self, '_n_inp'): self._one_pass()
         return self._n_inp
 
-    @property
-    def items(self): return self.tls[0].items
-
 #Cell
 @docs
 class DataBunch(GetAttr):
@@ -213,6 +210,8 @@ class DataSource(FilteredBase):
     def splits(self): return self.tls[0].splits
     @property
     def split_idx(self): return self.tls[0].tfms.split_idx
+    @property
+    def items(self): return self.tls[0].items
 
     def show(self, o, ctx=None, **kwargs):
         for o_,tl in zip(o,self.tls): ctx = tl.show(o_, ctx=ctx, **kwargs)
