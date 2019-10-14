@@ -65,7 +65,7 @@ def hist_scaled_px(self:DcmDataset, brks=None, min_px=None, max_px=None):
     px = self.scaled_px
     if min_px is not None: px[px<min_px] = min_px
     if max_px is not None: px[px>max_px] = max_px
-    return px.hist_scaled()
+    return px.hist_scaled(brks=brks)
 
 #Cell
 @patch
@@ -98,6 +98,7 @@ dicom_windows = types.SimpleNamespace(
 @delegates(show_image)
 def show(self:DcmDataset, scale=True, cmap=plt.cm.bone, min_px=-1100, max_px=None, **kwargs):
     px = (self.windowed(*scale) if isinstance(scale,tuple)
+          else self.hist_scaled_px(min_px=min_px,max_px=max_px,brks=scale) if isinstance(scale,(ndarray,Tensor))
           else self.hist_scaled_px(min_px=min_px,max_px=max_px) if scale
           else self.scaled_px)
     show_image(px, cmap=cmap, **kwargs)
