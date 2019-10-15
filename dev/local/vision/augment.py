@@ -225,7 +225,7 @@ class RandomResizedCrop(CropPad):
 
 #Cell
 def _init_mat(x):
-    mat = torch.eye(3, dtype=x.dtype, device=x.device)
+    mat = torch.eye(3, device=x.device).float()
     return mat.unsqueeze(0).expand(x.size(0), 3, 3).contiguous()
 
 #Cell
@@ -299,7 +299,7 @@ def _prepare_mat(x, mat):
 #Cell
 class AffineCoordTfm(RandTransform):
     "Combine and apply affine and coord transforms"
-    order = 30
+    split_idx,order = None,30
     def __init__(self, aff_fs=None, coord_fs=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection, mode_mask='nearest'):
         self.aff_fs,self.coord_fs = L(aff_fs),L(coord_fs)
         store_attr(self, 'size,mode,pad_mode,mode_mask')
@@ -307,6 +307,7 @@ class AffineCoordTfm(RandTransform):
 
     def before_call(self, b, split_idx):
         if isinstance(b, tuple): b = b[0]
+        self.split_idx = split_idx
         self.do,self.mat = True,self._get_affine_mat(b)
         for t in self.coord_fs: t.before_call(b)
 
@@ -317,13 +318,14 @@ class AffineCoordTfm(RandTransform):
 
     def _get_affine_mat(self, x):
         aff_m = _init_mat(x)
+        if self.split_idx: return _prepare_mat(x, aff_m)
         ms = [f(x) for f in self.aff_fs]
         ms = [m for m in ms if m is not None]
         for m in ms: aff_m = aff_m @ m
         return _prepare_mat(x, aff_m)
 
     def _encode(self, x, mode, reverse=False):
-        coord_func = None if len(self.coord_fs)==0 else partial(compose_tfms, tfms=self.coord_fs, reverse=reverse)
+        coord_func = None if len(self.coord_fs)==0 or self.split_idx else partial(compose_tfms, tfms=self.coord_fs, reverse=reverse)
         return x.affine_coord(self.mat, coord_func, sz=self.size, mode=mode, pad_mode=self.pad_mode)
 
     def encodes(self, x:TensorImage): return self._encode(x, self.mode)
