@@ -598,6 +598,7 @@
   "dicom_windows": "60_medical_imaging.ipynb",
   "show": "60_medical_imaging.ipynb",
   "DcmDataset.zoom": "60_medical_imaging.ipynb",
+  "DcmDataset.pct_in_window": "60_medical_imaging.ipynb",
   "DcmDataset.as_dict": "60_medical_imaging.ipynb",
   "pd.DataFrame.from_dicoms": "60_medical_imaging.ipynb",
   "in_ipython": "90_notebook_core.ipynb",
