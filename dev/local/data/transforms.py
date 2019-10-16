@@ -172,7 +172,7 @@ class EncodedMultiCategorize(Categorize):
 #Cell
 class EncodedMultiCategory(MultiCategory):
     create = EncodedMultiCategorize
-    def __init__(self, vocab): self.create = EncodedMultiCategory(vocab)
+    def __init__(self, vocab): self.create = EncodedMultiCategorize(vocab)
 
     @classmethod
     def create(cls, *args, **kwargs): raise Exception("You need to use an instance of the type `EncodedMultiCategory` created with a vocab.")
