@@ -34,8 +34,11 @@ class DataBlock():
             lambda t: L(getattr(t,'create',None)) + L(getattr(t,'default_type_tfms',None)))
         self.default_item_tfms  = _merge_tfms(ToTensor, *types.attrgot('default_item_tfms',  L()))
         self.default_batch_tfms = _merge_tfms(Cuda,     *types.attrgot('default_batch_tfms', L()))
+        for t in types: self.dl_type = getattr(t, 'dl_type', self.dl_type)
         if dl_type is not None: self.dl_type = dl_type
         self.databunch = delegates(self.dl_type.__init__)(self.databunch)
+        self.dbunch_kwargs = {}
+        for t in types: self.dbunch_kwargs.update(getattr(t, 'dbunch_kwargs', {}))
         self.getters = L(getters)
         assert not kwargs
 
@@ -59,6 +62,7 @@ class DataBlock():
         dsrc = self.datasource(source, type_tfms=type_tfms)
         item_tfms = _merge_tfms(self.default_item_tfms, item_tfms)
         batch_tfms = _merge_tfms(self.default_batch_tfms, batch_tfms)
+        kwargs = {**self.dbunch_kwargs, **kwargs}
         return dsrc.databunch(bs=bs, after_item=item_tfms, after_batch=batch_tfms, **kwargs)
 
     _docs = dict(datasource="Create a `Datasource` from `source` with `tfms` and `tuple_tfms`",
