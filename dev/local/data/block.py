@@ -40,6 +40,7 @@ class DataBlock():
         self.dbunch_kwargs = {}
         for t in types: self.dbunch_kwargs.update(getattr(t, 'dbunch_kwargs', {}))
         self.getters = L(getters)
+        if getters is not None: assert self.get_x is None and self.get_y is None
         assert not kwargs
 
     def datasource(self, source, type_tfms=None):
@@ -60,10 +61,10 @@ class DataBlock():
 
     def databunch(self, source, type_tfms=None, item_tfms=None, batch_tfms=None, bs=16, **kwargs):
         dsrc = self.datasource(source, type_tfms=type_tfms)
-        item_tfms = _merge_tfms(self.default_item_tfms, item_tfms)
+        item_tfms  = _merge_tfms(self.default_item_tfms,  item_tfms)
         batch_tfms = _merge_tfms(self.default_batch_tfms, batch_tfms)
         kwargs = {**self.dbunch_kwargs, **kwargs}
         return dsrc.databunch(bs=bs, after_item=item_tfms, after_batch=batch_tfms, **kwargs)
 
-    _docs = dict(datasource="Create a `Datasource` from `source` with `tfms` and `tuple_tfms`",
-                 databunch="Create a `DataBunch` from `source` with `tfms`")
+    _docs = dict(datasource="Create a `Datasource` from `source` with `type_tfms`",
+                 databunch="Create a `DataBunch` from `source` with `item_tfms` and `batch_tfms`")
