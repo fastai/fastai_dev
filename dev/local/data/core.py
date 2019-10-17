@@ -41,8 +41,8 @@ class TfmdDL(DataLoader):
         if num_workers is None: num_workers = min(16, defaults.cpus)
         for nm in _batch_tfms:
             kwargs[nm] = Pipeline(kwargs.get(nm,None), as_item=(nm=='before_batch'))
-            kwargs[nm].setup(self)
         super().__init__(dataset, bs=bs, shuffle=shuffle, num_workers=num_workers, **kwargs)
+        for nm in _batch_tfms: kwargs[nm].setup(self)
 
     def _one_pass(self):
         its = self.after_batch(self.do_batch([self.do_item(0)]))

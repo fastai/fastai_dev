@@ -125,7 +125,10 @@ def to_np(x):
 
 #Cell
 class TensorBase(Tensor):
-    def __new__(cls, x): return torch.Tensor._make_subclass(cls, tensor(x))
+    def __new__(cls, x, **kwargs):
+        res = torch.Tensor._make_subclass(cls, tensor(x))
+        res._meta = kwargs
+        return res
 
     def __reduce_ex__(self,proto):
         torch.utils.hooks.warn_if_has_hooks(self)
