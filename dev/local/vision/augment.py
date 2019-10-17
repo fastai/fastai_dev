@@ -4,7 +4,7 @@ __all__ = ['RandTransform', 'TensorTypes', 'FlipItem', 'DihedralItem', 'clip_rem
            'RandomCrop', 'ResizeMethod', 'Resize', 'RandomResizedCrop', 'AffineCoordTfm', 'affine_mat', 'mask_tensor',
            'flip_mat', 'Flip', 'dihedral_mat', 'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs',
            'apply_perspective', 'Warp', 'logit', 'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms',
-           'aug_transforms', 'fns', 'mnist_fn', 'pnts', 'pnt_dsrc', 'pnt_tdl']
+           'aug_transforms']
 
 #Cell
 from ..test import *
@@ -622,17 +622,6 @@ def aug_transforms(do_flip=True, flip_vert=False, max_rotate=10., max_zoom=1.1, 
     "Utility func to easily create a list of flip, rotate, zoom, warp, lighting transforms."
     res,tkw = [],dict(size=size, mode=mode, pad_mode=pad_mode)
     ifmnist = untar_data(URLs.MNIST_TINY)
-fns = get_image_files(mnist)
-mnist_fn = fns[0]
-pnts = np.array([[0,0], [0,35], [28,0], [28,35], [9, 17]])
-# def _pnt_open(fn): return PILImage.create(fn).resize((28,35))
-def _pnt_lbl(fn)->None: return TensorPoint.create(pnts)
-
-pnt_dsrc = DataSource([mnist_fn]*10, [[PILImage.create, Resize((35,28))], _pnt_lbl])
-pnt_tdl = TfmdDL(pnt_dsrc.train, after_item=[PointScaler(), Resize(28), ToTensor()],
-                 after_batch=[Cuda(), ByteToFloatTensor(), *aug_transforms(max_warp=0)], bs=9)
-_,axs = plt.subplots(3,3, figsize=(9,9))
-pnt_tdl.show_batch(ctxs=axs.flatten()) do_flip:    res.append(Dihedral(p=0.5, **tkw) if flip_vert else Flip(p=0.5, **tkw))
     if max_warp:   res.append(Warp(magnitude=max_warp, p=p_affine, **tkw))
     if max_rotate: res.append(Rotate(max_deg=max_rotate, p=p_affine, **tkw))
     if max_zoom>1: res.append(Zoom(max_zoom=max_zoom, p=p_affine, **tkw))
