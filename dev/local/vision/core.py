@@ -91,9 +91,9 @@ class TensorPoint(TensorBase):
     _show_args = dict(s=10, marker='.', c='r')
 
     @classmethod
-    def create(cls, t)->None:
+    def create(cls, t, sz=None)->None:
         "Convert an array or a list of points `t` to a `Tensor`"
-        return cls(tensor(t).view(-1, 2).float())
+        return cls(tensor(t).view(-1, 2).float(), sz=sz)
 
     def show(self, ctx=None, **kwargs):
         if 'figsize' in kwargs: del kwargs['figsize']
@@ -166,37 +166,48 @@ def encodes(self, o:PILImageBW): return TensorImageBW(image2byte(o))
 def encodes(self, o:PILMask):  return TensorMask(image2byte(o)[0])
 
 #Cell
-def _scale_pnts(x, y, do_scale=True,y_first=False):
+def _scale_pnts(y, sz, do_scale=True, y_first=False):
     if y_first: y = y.flip(1)
-    sz = [x.shape[-1], x.shape[-2]] if isinstance(x, Tensor) else x.size
-    return y * 2/tensor(sz).float() - 1 if do_scale else y
+    res = y * 2/tensor(sz).float() - 1 if do_scale else y
+    return TensorPoint(res, sz=sz)
 
-def _unscale_pnts(x, y):
-    sz = [x.shape[-1], x.shape[-2]] if isinstance(x, Tensor) else x.size
-    return (y+1) * tensor(sz).float()/2
+def _unscale_pnts(y, sz): return TensorPoint((y+1) * tensor(sz).float()/2, sz=sz)
 
 #Cell
-#TODO: Transform on a whole tuple lose types, see if we can simplify that?
-class PointScaler(ItemTransform):
+class PointScaler(Transform):
     "Scale a tensor representing points"
     def __init__(self, do_scale=True, y_first=False): self.do_scale,self.y_first = do_scale,y_first
-    def encodes(self, o): return (o[0],TensorPoint(_scale_pnts(*o, self.do_scale, self.y_first)))
-    def decodes(self, o): return (o[0],TensorPoint(_unscale_pnts(*o)))
+    def _grab_sz(self, x):
+        self.sz = [x.shape[-1], x.shape[-2]] if isinstance(x, Tensor) else x.size
+        return x
+
+    def _get_sz(self, x):
+        sz = getattr(x, '_meta', {}).get('sz', None)
+        assert sz is not None or self.sz is not None, "Size could not be inferred, pass it in the init of your TensorPoint with `sz=...`"
+        return self.sz if sz is None else sz
+
+    def encodes(self, x:(PILBase,TensorImageBase)): return self._grab_sz(x)
+    def decodes(self, x:(PILBase,TensorImageBase)): return self._grab_sz(x)
+
+    def encodes(self, x:TensorPoint): return _scale_pnts(x, self._get_sz(x), self.do_scale, self.y_first)
+    def decodes(self, x:TensorPoint): return _unscale_pnts(x, self._get_sz(x))
 
 TensorPoint.default_item_tfms = PointScaler
 
 #Cell
 class BBoxScaler(PointScaler):
     "Scale a tensor representing bounding boxes"
-    def encodes(self, o):
-        x,y = o
-        scaled_bb = _scale_pnts(x, y.bbox.view(-1,2), self.do_scale, self.y_first)
-        return (x,TensorBBox((scaled_bb.view(-1,4),y.lbl)))
+    def encodes(self, x:(PILBase,TensorImageBase)): return self._grab_sz(x)
+    def decodes(self, x:(PILBase,TensorImageBase)): return self._grab_sz(x)
 
-    def decodes(self, o):
-        x,y = o
-        scaled_bb = _unscale_pnts(x, y.bbox.view(-1,2))
-        return (x, TensorBBox((scaled_bb.view(-1,4), y.lbl)))
+    def encodes(self, x:(BBox,TensorBBox)):
+        pnts = x.bbox.view(-1,2)
+        scaled_bb = _scale_pnts(pnts, self._get_sz(pnts), self.do_scale, self.y_first)
+        return TensorBBox((scaled_bb.view(-1,4),x.lbl))
+
+    def decodes(self, x:(BBox,TensorBBox)):
+        scaled_bb = _unscale_pnts(x.bbox.view(-1,2), self._get_sz(x.bbox.view(-1,2)))
+        return TensorBBox((scaled_bb.view(-1,4), x.lbl))
 
 #Cell
 class BBoxCategorize(Transform):

@@ -93,7 +93,7 @@ class DataLoader(GetAttr):
 
     def create_batches(self, samps):
         self.it = iter(self.dataset) if self.dataset is not None else None
-        res = filter(lambda o:o is not None, map(self.do_item, samps))
+        res = map(self.do_item, samps)
         yield from map(self.do_batch, self.chunkify(res))
 
     def new(self, dataset=None, cls=None, **kwargs):
