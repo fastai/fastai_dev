@@ -4,7 +4,7 @@ __all__ = ['RandTransform', 'TensorTypes', 'FlipItem', 'DihedralItem', 'clip_rem
            'RandomCrop', 'ResizeMethod', 'Resize', 'RandomResizedCrop', 'AffineCoordTfm', 'affine_mat', 'mask_tensor',
            'flip_mat', 'Flip', 'dihedral_mat', 'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs',
            'apply_perspective', 'Warp', 'logit', 'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms',
-           'aug_transforms']
+           'aug_transforms', 'fns', 'mnist_fn', 'pnts', 'pnt_dsrc', 'pnt_tdl']
 
 #Cell
 from ..test import *
@@ -124,15 +124,15 @@ def _do_crop_pad(x:Image.Image, sz, tl, orig_sz,
     return x
 
 @patch
-def _do_crop_pad(x:TensorPoint, sz, tl, orig_sz, pad_mode=PadMode.Zeros, **kwargs):
+def _do_crop_pad(x:TensorPoint, sz, tl, orig_sz, pad_mode=PadMode.Zeros, resize_to=None, **kwargs):
     #assert pad_mode==PadMode.Zeros,"Only zero padding is supported for `TensorPoint` and `TensorBBox`"
     orig_sz,sz,tl = map(FloatTensor, (orig_sz,sz,tl))
-    return TensorPoint((x+1)*orig_sz/sz - tl*2/sz - 1)
+    return TensorPoint((x+1)*orig_sz/sz - tl*2/sz - 1, sz=sz if resize_to is None else resize_to)
 
 @patch
-def _do_crop_pad(x:TensorBBox, sz, tl, orig_sz, pad_mode=PadMode.Zeros, **kwargs):
+def _do_crop_pad(x:TensorBBox, sz, tl, orig_sz, pad_mode=PadMode.Zeros, resize_to=None, **kwargs):
     bbox,label = x
-    bbox = TensorPoint._do_crop_pad(bbox.view(-1,2), sz, tl, orig_sz, pad_mode).view(-1,4)
+    bbox = TensorPoint._do_crop_pad(bbox.view(-1,2), sz, tl, orig_sz, pad_mode, resize_to).view(-1,4)
     return TensorBBox(clip_remove_empty(bbox, label))
 
 @patch
@@ -291,7 +291,7 @@ def affine_coord(x: TensorBBox, mat=None, coord_tfm=None, sz=None, mode='nearest
 
 #Cell
 def _prepare_mat(x, mat):
-    h,w = x.shape[-2:]
+    h,w = (x._meta['sz'] if hasattr(x, '_meta') and 'sz' in x._meta else x.shape[-2:])
     mat[:,0,1] *= h/w
     mat[:,1,0] *= w/h
     return mat[:,:2]
@@ -398,9 +398,9 @@ def dihedral_mat(x, p=0.5, draw=None):
                       ys*m1,  ys*m0,  t0(xs)).float()
 
 #Cell
-#TODO: can't patch ,TensorPoint,TensorBBox because they don't know the size
+#TODO: can't patch TensorBBox because they don't know the size
 @patch
-def dihedral_batch(x: (TensorImage,TensorMask), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
+def dihedral_batch(x: (TensorImage,TensorMask,TensorPoint), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
     mat = _prepare_mat(x, dihedral_mat(x0, p=p, draw=draw))
     return x.affine_coord(mat=mat, sz=size, mode=mode, pad_mode=pad_mode)
@@ -419,10 +419,10 @@ def rotate_mat(x, max_deg=10, p=0.5, draw=None):
                      -thetas.sin(), thetas.cos(), t0(thetas))
 
 #Cell
-#TODO: can't patch ,TensorPoint,TensorBBox because they don't know the size
+#TODO: can't patch TensorBBox because they don't know the size
 @delegates(rotate_mat)
 @patch
-def rotate(x: (TensorImage,TensorMask), size=None, mode=None, pad_mode=None, **kwargs):
+def rotate(x: (TensorImage,TensorMask,TensorPoint), size=None, mode=None, pad_mode=None, **kwargs):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
     mat = _prepare_mat(x, rotate_mat(x0, **kwargs))
     return x.affine_coord(mat=mat, sz=size, mode=mode, pad_mode=pad_mode)
@@ -621,7 +621,18 @@ def aug_transforms(do_flip=True, flip_vert=False, max_rotate=10., max_zoom=1.1, 
                    size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Utility func to easily create a list of flip, rotate, zoom, warp, lighting transforms."
     res,tkw = [],dict(size=size, mode=mode, pad_mode=pad_mode)
-    if do_flip:    res.append(Dihedral(p=0.5, **tkw) if flip_vert else Flip(p=0.5, **tkw))
+    ifmnist = untar_data(URLs.MNIST_TINY)
+fns = get_image_files(mnist)
+mnist_fn = fns[0]
+pnts = np.array([[0,0], [0,35], [28,0], [28,35], [9, 17]])
+# def _pnt_open(fn): return PILImage.create(fn).resize((28,35))
+def _pnt_lbl(fn)->None: return TensorPoint.create(pnts)
+
+pnt_dsrc = DataSource([mnist_fn]*10, [[PILImage.create, Resize((35,28))], _pnt_lbl])
+pnt_tdl = TfmdDL(pnt_dsrc.train, after_item=[PointScaler(), Resize(28), ToTensor()],
+                 after_batch=[Cuda(), ByteToFloatTensor(), *aug_transforms(max_warp=0)], bs=9)
+_,axs = plt.subplots(3,3, figsize=(9,9))
+pnt_tdl.show_batch(ctxs=axs.flatten()) do_flip:    res.append(Dihedral(p=0.5, **tkw) if flip_vert else Flip(p=0.5, **tkw))
     if max_warp:   res.append(Warp(magnitude=max_warp, p=p_affine, **tkw))
     if max_rotate: res.append(Rotate(max_deg=max_rotate, p=p_affine, **tkw))
     if max_zoom>1: res.append(Zoom(max_zoom=max_zoom, p=p_affine, **tkw))
