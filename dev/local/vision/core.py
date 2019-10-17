@@ -176,6 +176,7 @@ def _unscale_pnts(y, sz): return TensorPoint((y+1) * tensor(sz).float()/2, sz=sz
 #Cell
 class PointScaler(Transform):
     "Scale a tensor representing points"
+    loss_func = MSELossFlat()
     def __init__(self, do_scale=True, y_first=False): self.do_scale,self.y_first = do_scale,y_first
     def _grab_sz(self, x):
         self.sz = [x.shape[-1], x.shape[-2]] if isinstance(x, Tensor) else x.size
@@ -185,6 +186,11 @@ class PointScaler(Transform):
         sz = getattr(x, '_meta', {}).get('sz', None)
         assert sz is not None or self.sz is not None, "Size could not be inferred, pass it in the init of your TensorPoint with `sz=...`"
         return self.sz if sz is None else sz
+
+    def setup(self, dl):
+        its = dl.do_item(0)
+        for t in its:
+            if isinstance(t, TensorPoint): self.c = t.numel()
 
     def encodes(self, x:(PILBase,TensorImageBase)): return self._grab_sz(x)
     def decodes(self, x:(PILBase,TensorImageBase)): return self._grab_sz(x)
