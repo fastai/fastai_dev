@@ -137,13 +137,15 @@ def gauss_blur2d(x,s):
 
 #Cell
 @patch
-def mask_from_blur(x:Tensor, window, sigma=0.3, thresh=0.15):
-    return gauss_blur2d(x.windowed(*window), s=sigma*x.shape[-1])>thresh
+def mask_from_blur(x:Tensor, window, sigma=0.3, thresh=0.05, remove_max=True):
+    p = x.windowed(*window)
+    if remove_max: p[p==1] = 0
+    return gauss_blur2d(p, s=sigma*x.shape[-1])>thresh
 
 #Cell
 @patch
-def mask_from_blur(x:DcmDataset, window, sigma=0.3, thresh=0.15):
-    return x.scaled_px.mask_from_blur(window, sigma, thresh)
+def mask_from_blur(x:DcmDataset, window, sigma=0.3, thresh=0.05, remove_max=True):
+    return x.scaled_px.mask_from_blur(window, sigma, thresh, remove_max=remove_max)
 
 #Cell
 @patch
