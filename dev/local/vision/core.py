@@ -3,7 +3,7 @@
 __all__ = ['Image', 'ToTensor', 'imagenet_stats', 'cifar_stats', 'mnist_stats', 'n_px', 'shape', 'aspect', 'load_image',
            'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'OpenMask', 'TensorPoint', 'get_annotations', 'BBox',
            'TensorBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'BBoxScaler', 'BBoxCategorize',
-           'bb_pad']
+           'bb_pad', 'show_results']
 
 #Cell
 from ..test import *
@@ -103,7 +103,8 @@ class TensorPoint(TensorBase):
 
     def show(self, ctx=None, **kwargs):
         if 'figsize' in kwargs: del kwargs['figsize']
-        ctx.scatter(self[:, 0], self[:, 1], **{**self._show_args, **kwargs})
+        x = self.view(-1,2)
+        ctx.scatter(x[:, 0], x[:, 1], **{**self._show_args, **kwargs})
         return ctx
 
 #Cell
@@ -293,7 +294,7 @@ def show_results(x:TensorImage, y:TensorCategory, its, ctxs=None, max_n=10, rows
 
 #Cell
 @typedispatch
-def show_results(x:TensorImage, y:TensorImageBase, its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+def show_results(x:TensorImage, y:(TensorImageBase, TensorPoint, TensorBBox), its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
     if ctxs is None: ctxs = _get_grid(min(len(its), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize, double=True)
     for i in range(2):
         ctxs[::2] = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs[::2],range(max_n))]

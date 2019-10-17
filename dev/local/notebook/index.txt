@@ -299,6 +299,7 @@
   "BBox.default_type_tfms,BBox.default_item_tfms": "08_vision_core.ipynb",
   "bb_pad": "08_vision_core.ipynb",
   "BBox.dbunch_kwargs": "08_vision_core.ipynb",
+  "show_results": "08_vision_core.ipynb",
   "RandTransform": "09_vision_augment.ipynb",
   "TensorTypes": "09_vision_augment.ipynb",
   "Image.Image.flip_lr": "09_vision_augment.ipynb",
