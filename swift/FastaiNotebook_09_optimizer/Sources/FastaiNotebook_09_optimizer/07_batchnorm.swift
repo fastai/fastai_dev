@@ -104,13 +104,17 @@ struct BatchNormResult<Scalar : TensorFlowFloatingPoint> : Differentiable{
 }
 
 public struct TFBatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDependent, Norm {
+    // TF-920 workaround.
+    public typealias Input = Tensor<Scalar>
+    public typealias Output = Tensor<Scalar>
+    @noDerivative public var delegates: [(Self.Output) -> ()] = []
+
     // Configuration hyperparameters
     @noDerivative var momentum, epsilon: Scalar
     // Running statistics
     @noDerivative let runningMean, runningVariance: Reference<Tensor<Scalar>>
     // Trainable parameters
     public var scale, offset: Tensor<Scalar>
-    @noDerivative public var delegates: [(Self.Output) -> ()] = []
     
     public init(featureCount: Int, momentum: Scalar, epsilon: Scalar = 1e-5) {
         self.momentum = momentum

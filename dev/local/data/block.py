@@ -28,14 +28,18 @@ class DataBlock():
     get_x=get_items=splitter=get_y = None
     dl_type = TfmdDL
     _methods = 'get_items splitter get_y get_x'.split()
-    def __init__(self, types=None, dl_type=None, **kwargs):
+    def __init__(self, types=None, dl_type=None, getters=None, **kwargs):
         types = L(getattr(self,'types',(float,float)) if types is None else types)
         self.default_type_tfms = types.map(
             lambda t: L(getattr(t,'create',None)) + L(getattr(t,'default_type_tfms',None)))
         self.default_item_tfms  = _merge_tfms(ToTensor, *types.attrgot('default_item_tfms',  L()))
         self.default_batch_tfms = _merge_tfms(Cuda,     *types.attrgot('default_batch_tfms', L()))
+        for t in types: self.dl_type = getattr(t, 'dl_type', self.dl_type)
         if dl_type is not None: self.dl_type = dl_type
         self.databunch = delegates(self.dl_type.__init__)(self.databunch)
+        self.dbunch_kwargs = {}
+        for t in types: self.dbunch_kwargs.update(getattr(t, 'dbunch_kwargs', {}))
+        self.getters = L(getters)
         assert not kwargs
 
     def datasource(self, source, type_tfms=None):
@@ -46,10 +50,9 @@ class DataBlock():
             labellers = [itemgetter(i) for i in range_of(self.default_type_tfms)]
         else: labellers = [noop] * len(self.default_type_tfms)
         splits = (self.splitter or noop)(items)
-        if self.get_x: labellers[0] = self.get_x
-        if self.get_y: labellers[1] = self.get_y
-#         if self.get_x: labellers[0] = compose(self.get_x)
-#         if self.get_y: labellers[1] = compose(self.get_y)
+        if self.get_x:   labellers[0] = self.get_x
+        if self.get_y:   labellers[1] = self.get_y
+        if self.getters: labellers = getters
         if type_tfms is None: type_tfms = [L() for t in self.default_type_tfms]
         type_tfms = L([self.default_type_tfms, type_tfms, labellers]).map_zip(
             lambda tt,tfm,l: L(l) + _merge_tfms(tt, tfm))
@@ -59,6 +62,7 @@ class DataBlock():
         dsrc = self.datasource(source, type_tfms=type_tfms)
         item_tfms = _merge_tfms(self.default_item_tfms, item_tfms)
         batch_tfms = _merge_tfms(self.default_batch_tfms, batch_tfms)
+        kwargs = {**self.dbunch_kwargs, **kwargs}
         return dsrc.databunch(bs=bs, after_item=item_tfms, after_batch=batch_tfms, **kwargs)
 
     _docs = dict(datasource="Create a `Datasource` from `source` with `tfms` and `tuple_tfms`",

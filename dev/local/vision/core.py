@@ -231,6 +231,9 @@ def bb_pad(samples, pad_idx=0):
     return [_f(x,*y) for x,y in samples]
 
 #Cell
+BBox.dbunch_kwargs = {'before_batch': bb_pad}
+
+#Cell
 def _get_grid(n, rows=None, cols=None, add_vert=0, figsize=None, double=False):
     rows = rows or int(np.ceil(math.sqrt(n)))
     cols = cols or int(np.ceil(n/rows))
