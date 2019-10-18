@@ -11,6 +11,7 @@ _loaders = (_MultiProcessingDataLoaderIter,_SingleProcessDataLoaderIter)
 
 #Cell
 def _wif(worker_id):
+    set_num_threads(1)
     info = get_worker_info()
     ds = info.dataset.d
     ds.nw,ds.offs = info.num_workers,info.id

@@ -158,7 +158,7 @@ def mask_from_blur(x:Tensor, window, sigma=0.3, thresh=0.05, remove_max=True):
 #Cell
 @patch
 def mask_from_blur(x:DcmDataset, window, sigma=0.3, thresh=0.05, remove_max=True):
-    return x.scaled_px.cuda().mask_from_blur(window, sigma, thresh, remove_max=remove_max)
+    return to_device(x.scaled_px).mask_from_blur(window, sigma, thresh, remove_max=remove_max)
 
 #Cell
 def _px_bounds(x, dim):
@@ -210,11 +210,10 @@ def to_uint16(x:(Tensor,DcmDataset), bins=None):
 #Cell
 @patch
 def save_png16(x:(Tensor,DcmDataset), path, bins=None, compress_level=0):
-    Z_RLE=3
     fn = Path(path).with_suffix('.png')
     im = Image.fromarray(x.to_uint16(bins))
     if compress_level: im.save(fn, compress_level=compress_level)
-    else: im.save(fn, compress_type=Z_RLE)
+    else: im.save(fn, compress_type=Image.RLE)
 
 #Cell
 @patch
