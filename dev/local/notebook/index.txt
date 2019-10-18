@@ -119,6 +119,7 @@
   "num_cpus": "01a_utils.ipynb",
   "defaults.cpus": "01a_utils.ipynb",
   "add_props": "01a_utils.ipynb",
+  "set_num_threads": "01a_utils.ipynb",
   "type_hints": "01b_dispatch.ipynb",
   "anno_ret": "01b_dispatch.ipynb",
   "cmp_instance": "01b_dispatch.ipynb",

@@ -143,7 +143,7 @@ def uniform_blur2d(x,s):
 
 #Cell
 def gauss_blur2d(x,s):
-    s2 = int(s/2)*2+1
+    s2 = int(s/4)*2+1
     x2 = unsqueeze(x, dim=0, n=4-x.dim())
     res = kornia.filters.gaussian_blur2d(x2, (s2,s2), (s,s), 'replicate')
     return res.squeeze()
@@ -158,15 +158,18 @@ def mask_from_blur(x:Tensor, window, sigma=0.3, thresh=0.05, remove_max=True):
 #Cell
 @patch
 def mask_from_blur(x:DcmDataset, window, sigma=0.3, thresh=0.05, remove_max=True):
-    return x.scaled_px.mask_from_blur(window, sigma, thresh, remove_max=remove_max)
+    return x.scaled_px.cuda().mask_from_blur(window, sigma, thresh, remove_max=remove_max)
 
 #Cell
 def _px_bounds(x, dim):
     c = x.sum(dim).nonzero().cpu()
-    a = groupby(c,lambda o:o[0].item())
-    default_bounds = [tensor([0,0]), tensor([0,x.shape[-1]-1])]
-    b = [torch.stack(a.get(o, default_bounds))[:,1] for o in range(x.shape[0])]
-    return torch.stack([tensor(o.min(),o.max()) for o in b])
+    idxs,vals = torch.unique(c[:,0],return_counts=True)
+    vs = torch.split_with_sizes(c[:,1],tuple(vals))
+    d = {k.item():v for k,v in zip(idxs,vs)}
+    default_u = tensor([0,x.shape[-1]-1])
+    b = [d.get(o,default_u) for o in range(x.shape[0])]
+    b = [tensor([o.min(),o.max()]) for o in b]
+    return torch.stack(b)
 
 #Cell
 def mask2bbox(mask):
