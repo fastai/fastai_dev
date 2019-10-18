@@ -8,6 +8,7 @@ dependencies:
 - pytorch>=1.2.0
 - torchvision
 - matplotlib
+- mkl
 - pandas
 - requests
 - pyyaml
