@@ -85,7 +85,7 @@ class ReduceLROnPlateau(TrackerCallback):
 
     def begin_fit(self): self.wait = 0; super().begin_fit()
     def after_epoch(self):
-        "Compare the value monitored to its best score and maybe stop training."
+        "Compare the value monitored to its best score and reduce LR by `factor` if no improvement."
         super().after_epoch()
         if self.new_best: self.wait = 0
         else:
