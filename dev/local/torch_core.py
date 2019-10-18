@@ -398,10 +398,11 @@ class ProcessPoolExecutor(concurrent.futures.ProcessPoolExecutor):
         except Exception as e: self.on_exc(e)
 
 #Cell
-def parallel(f, items, *args, n_workers=defaults.cpus, **kwargs):
+def parallel(f, items, *args, n_workers=defaults.cpus, total=None, **kwargs):
     "Applies `func` in parallel to `items`, using `n_workers`"
+    if total is None: total = len(items)
     with ProcessPoolExecutor(n_workers) as ex:
-        return L(progress_bar(ex.map(f,items, *args, **kwargs), total=len(items), leave=False))
+        return L(progress_bar(ex.map(f,items, *args, **kwargs), total=total, leave=False))
 
 #Cell
 def run_procs(f, f_done, args):
