@@ -131,15 +131,18 @@ class Category(str, ShowTitle):
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
     loss_func,order=BCEWithLogitsLossFlat(),1
+    def __init__(self, vocab=None, add_na=False):
+        self.add_na = add_na
+        self.vocab = None if vocab is None else CategoryMap(vocab, add_na=add_na)
+
     def setups(self, dsrc):
         if not dsrc: return
         if self.vocab is None:
             vals = set()
             for b in dsrc: vals = vals.union(set(b))
-            self.vocab = CategoryMap(list(vals))
-        setattr(dsrc, 'vocab', self.vocab)
+            self.vocab = CategoryMap(list(vals), add_na=self.add_na)
 
-    def encodes(self, o): return [self.vocab.o2i  [o_] for o_ in o]
+    def encodes(self, o): return TensorMultiCategory([self.vocab.o2i  [o_] for o_ in o])
     def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
 
 #Cell
@@ -188,7 +191,6 @@ def get_c(dbunch):
 class ToTensor(Transform):
     "Convert item to appropriate tensor class"
     order = 15
-    def encodes(self, b): return tensor(b)
 
 #Cell
 @docs

@@ -2,7 +2,8 @@
 
 __all__ = ['Image', 'ToTensor', 'imagenet_stats', 'cifar_stats', 'mnist_stats', 'n_px', 'shape', 'aspect', 'load_image',
            'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'OpenMask', 'TensorPoint', 'get_annotations', 'TensorBBox',
-           'LabeledBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'bb_pad', 'show_results']
+           'LabeledBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'BBoxLabeler', 'decodes',
+           'encodes', 'decodes', 'bb_pad', 'show_results']
 
 #Cell
 from ..test import *
@@ -256,6 +257,39 @@ TensorPoint.default_item_tfms = PointScaler
 #        lbl  = torch.cat([lbl, lbl .new_zeros(max_len-lbl .shape[0])+pad_idx])
 #        return img,TensorBBox((bbox,lbl))
 #    return [_f(x,*y) for x,y in samples]
+
+#Cell
+class BBoxLabeler(Transform):
+    def setup(self, dl): self.vocab = dl.vocab
+    def before_call(self): self.bbox,self.lbls = None,None
+
+    def decode (self, x, **kwargs):
+        self.bbox,self.lbls = None,None
+        return self._call('decodes', x, **kwargs)
+
+    def decodes(self, x:TensorMultiCategory):
+        self.lbls = [self.vocab[a] for a in x]
+        return x if self.bbox is None else LabeledBBox(self.bbox, self.lbls)
+
+    def decodes(self, x:TensorBBox):
+        self.bbox = x
+        return self.bbox if self.lbls is None else LabeledBBox(self.bbox, self.lbls)
+
+#Cell
+#LabeledBBox can be sent in a tl with MultiCategorize (depending on the order of the tls) but it is already decoded.
+@MultiCategorize
+def decodes(self, x:LabeledBBox): return x
+
+#Cell
+@PointScaler
+def encodes(self, x:TensorBBox):
+    pnts = self.encodes(TensorPoint(x.view(-1,2), sz=x._meta['sz']))
+    return TensorBBox(pnts.view(-1, 4), sz=x._meta['sz'])
+
+@PointScaler
+def decodes(self, x:TensorBBox):
+    pnts = self.decodes(TensorPoint(x.view(-1,2), sz=x._meta['sz']))
+    return TensorBBox(pnts.view(-1, 4), sz=x._meta['sz'])
 
 #Cell
 #TODO tests
