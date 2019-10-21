@@ -2,11 +2,11 @@
 
 __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'unsqueeze', 'unsqueeze_', 'apply', 'to_detach',
            'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'to_np', 'TensorBase', 'TensorCategory',
-           'TensorImageBase', 'TensorImage', 'TensorImageBW', 'TensorMask', 'concat', 'Chunks', 'one_param',
-           'item_find', 'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode', 'params',
-           'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'make_cross_image', 'show_image_batch',
-           'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init', 'set_num_threads',
-           'ProcessPoolExecutor', 'parallel', 'run_procs', 'parallel_gen', 'flatten_check']
+           'TensorMultiCategory', 'TensorImageBase', 'TensorImage', 'TensorImageBW', 'TensorMask', 'concat', 'Chunks',
+           'one_param', 'item_find', 'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode',
+           'params', 'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'make_cross_image',
+           'show_image_batch', 'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init',
+           'set_num_threads', 'ProcessPoolExecutor', 'parallel', 'run_procs', 'parallel_gen', 'flatten_check']
 
 #Cell
 from .test import *
@@ -168,6 +168,9 @@ _patch_tb()
 
 #Cell
 class TensorCategory(TensorBase): pass
+
+#Cell
+class TensorMultiCategory(TensorBase): pass
 
 #Cell
 class TensorImageBase(TensorBase):
@@ -385,13 +388,11 @@ from multiprocessing import Process, Queue
 #Cell
 def set_num_threads(nt):
     "Get numpy (and others) to use `nt` threads"
-    mkl.set_num_threads(nt)
+    try: import mkl; mkl.set_num_threads(nt)
+    except: pass
     torch.set_num_threads(1)
-    nt = str(nt)
-    os.environ['OPENBLAS_NUM_THREADS'] = nt
-    os.environ['NUMEXPR_NUM_THREADS'] = nt
-    os.environ['OMP_NUM_THREADS'] = nt
-    os.environ['MKL_NUM_THREADS'] = nt
+    for o in ['OPENBLAS_NUM_THREADS','NUMEXPR_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS']:
+        os.environ[o] = str(nt)
 
 #Cell
 @delegates(concurrent.futures.ProcessPoolExecutor)

@@ -81,7 +81,7 @@ def GrandparentSplitter(train_name='train', valid_name='valid'):
 #Cell
 def parent_label(o, **kwargs):
     "Label `item` with the parent folder name."
-    return o.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-2]
+    return Path(o).parent.name
 
 #Cell
 def RegexLabeller(pat):
@@ -131,16 +131,19 @@ class Category(str, ShowTitle):
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
     loss_func,order=BCEWithLogitsLossFlat(),1
-    def encodes(self, o): return [self.vocab.o2i  [o_] for o_ in o]
-    def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
+    def __init__(self, vocab=None, add_na=False):
+        self.add_na = add_na
+        self.vocab = None if vocab is None else CategoryMap(vocab, add_na=add_na)
 
     def setups(self, dsrc):
         if not dsrc: return
         if self.vocab is None:
             vals = set()
             for b in dsrc: vals = vals.union(set(b))
-            self.vocab = CategoryMap(list(vals))
-        setattr(dsrc, 'vocab', self.vocab)
+            self.vocab = CategoryMap(list(vals), add_na=self.add_na)
+
+    def encodes(self, o): return TensorMultiCategory([self.vocab.o2i  [o_] for o_ in o])
+    def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
 
 #Cell
 class MultiCategory(L):

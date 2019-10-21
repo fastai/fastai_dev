@@ -11,14 +11,14 @@ from .load import *
 #Cell
 def default_show_batch(x, y, its, ctxs=None, max_n=10, **kwargs):
     if ctxs is None: ctxs = Inf.nones
-    for i in range(1 if y is None else 2):
+    for i in range(len(its[0])):
         ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs,range(max_n))]
     return ctxs
 
 #Cell
 def default_show_results(x, y, its, ctxs=None, max_n=10, **kwargs):
     if ctxs is None: ctxs = Inf.nones
-    for i in range(3):
+    for i in range(len(its[0])):
         ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs,range(max_n))]
     return ctxs
 
@@ -230,7 +230,8 @@ def test_set(dsrc, test_items):
     return DataSource(tls=test_tls)
 
 #Cell
-def test_dl(dbunch, test_items):
+@delegates(TfmdDL.__init__)
+def test_dl(dbunch, test_items, **kwargs):
     "Create a test dataloader from `test_items` using validation transforms of `dbunch`"
     test_ds = test_set(dbunch.valid_ds, test_items) if isinstance(dbunch.valid_ds, DataSource) else test_items
-    return dbunch.valid_dl.new(test_ds)
+    return dbunch.valid_dl.new(test_ds, **kwargs)
