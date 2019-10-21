@@ -81,7 +81,13 @@ def GrandparentSplitter(train_name='train', valid_name='valid'):
 #Cell
 def parent_label(o, **kwargs):
     "Label `item` with the parent folder name."
-    return o.parent.name if isinstance(o, Path) else o.split(os.path.sep)[-2]
+    if isinstance(o, Path):
+        return o.parent.name
+    else:
+        try:
+            return o.split(os.path.sep)[-2]
+        except IndexError:
+            return o.split(os.path.altsep)[-2]
 
 #Cell
 def RegexLabeller(pat):
