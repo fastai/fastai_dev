@@ -188,6 +188,7 @@ def get_c(dbunch):
 class ToTensor(Transform):
     "Convert item to appropriate tensor class"
     order = 15
+    def encodes(self, b): return tensor(b)
 
 #Cell
 @docs

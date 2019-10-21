@@ -2,11 +2,11 @@
 
 __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'unsqueeze', 'unsqueeze_', 'apply', 'to_detach',
            'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'to_np', 'TensorBase', 'TensorCategory',
-           'TensorImageBase', 'TensorImage', 'TensorImageBW', 'TensorMask', 'concat', 'Chunks', 'one_param',
-           'item_find', 'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode', 'params',
-           'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'make_cross_image', 'show_image_batch',
-           'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init', 'ProcessPoolExecutor', 'parallel',
-           'run_procs', 'parallel_gen', 'flatten_check']
+           'TensorMultiCategory', 'TensorImageBase', 'TensorImage', 'TensorImageBW', 'TensorMask', 'concat', 'Chunks',
+           'one_param', 'item_find', 'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode',
+           'params', 'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'make_cross_image',
+           'show_image_batch', 'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init',
+           'ProcessPoolExecutor', 'parallel', 'run_procs', 'parallel_gen', 'flatten_check']
 
 #Cell
 from .test import *
@@ -168,6 +168,9 @@ _patch_tb()
 
 #Cell
 class TensorCategory(TensorBase): pass
+
+#Cell
+class TensorMultiCategory(TensorBase): pass
 
 #Cell
 class TensorImageBase(TensorBase):
