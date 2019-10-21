@@ -46,10 +46,7 @@ def flip_lr(x:TensorImage): return x.flip(-1)
 @patch
 def flip_lr(x:TensorPoint): return _neg_axis(x, 0)
 @patch
-def flip_lr(x:TensorBBox):
-    bb,lbl = x
-    bb = _neg_axis(bb.view(-1,2), 0)
-    return (bb.view(-1,4),lbl)
+def flip_lr(x:TensorBBox):  return TensorBBox(TensorPoint(x.view(-1,2)).flip_lr().view(-1,4))
 
 #Cell
 class FlipItem(RandTransform):
@@ -74,9 +71,9 @@ def dihedral(x:TensorPoint, k):
         return x
 @patch
 def dihedral(x:TensorBBox, k):
-        pnts = TensorPoint.dihedral(x[0].view(-1,2), k).view(-1,2,2)
+        pnts = TensorPoint(x.view(-1,2)).dihedral(k).view(-1,2,2)
         tl,br = pnts.min(dim=1)[0],pnts.max(dim=1)[0]
-        return [torch.cat([tl, br], dim=1), x[1]]
+        return TensorBBox(torch.cat([tl, br], dim=1), sz=x._meta.get('sz', None))
 
 #Cell
 class DihedralItem(RandTransform):
@@ -90,6 +87,7 @@ class DihedralItem(RandTransform):
     def encodes(self, x:(Image.Image,*TensorTypes)): return x.dihedral(self.k)
 
 #Cell
+#TODO: merge with padding
 def clip_remove_empty(bbox, label):
     "Clip bounding boxes with image border and label background the empty ones."
     bbox = torch.clamp(bbox, -1, 1)
@@ -131,9 +129,8 @@ def _do_crop_pad(x:TensorPoint, sz, tl, orig_sz, pad_mode=PadMode.Zeros, resize_
 
 @patch
 def _do_crop_pad(x:TensorBBox, sz, tl, orig_sz, pad_mode=PadMode.Zeros, resize_to=None, **kwargs):
-    bbox,label = x
-    bbox = TensorPoint._do_crop_pad(bbox.view(-1,2), sz, tl, orig_sz, pad_mode, resize_to).view(-1,4)
-    return TensorBBox(clip_remove_empty(bbox, label))
+    bbox = TensorPoint._do_crop_pad(x.view(-1,2), sz, tl, orig_sz, pad_mode, resize_to).view(-1,4)
+    return TensorBBox(bbox, sz=x._meta.get('sz', None))
 
 @patch
 def crop_pad(x:(TensorBBox,TensorPoint,Image.Image),
@@ -257,10 +254,6 @@ def affine_coord(x: TensorImage, mat=None, coord_tfm=None, sz=None, mode='biline
     coords = F.affine_grid(mat, x.shape[:2] + size)
     if coord_tfm is not None: coords = coord_tfm(coords)
     return TensorImage(_grid_sample(x, coords, mode=mode, padding_mode=pad_mode))
-    #with warnings.catch_warnings(): #TODO: Find why this doesn't work.
-    #    #To avoid the warning that come from grid_sample. TODO: expose align_corners once 1.3.0 is the PyTorch dep
-    #    warnings.simplefilter("ignore")
-    #    return TensorImage(F.grid_sample(x, coords, mode=mode, padding_mode=pad_mode))
 
 @patch
 def affine_coord(x: TensorMask, mat=None, coord_tfm=None, sz=None, mode='nearest', pad_mode=PadMode.Reflection):
@@ -273,21 +266,21 @@ def affine_coord(x: TensorMask, mat=None, coord_tfm=None, sz=None, mode='nearest
 @patch
 def affine_coord(x: TensorPoint, mat=None, coord_tfm=None, sz=None, mode='nearest', pad_mode=PadMode.Zeros):
     #assert pad_mode==PadMode.Zeros, "Only zero padding is supported for `TensorPoint` and `TensorBBox`"
+    if sz is None: sz = x._meta.get('sz', None)
     if coord_tfm is not None: x = coord_tfm(x, invert=True)
     if mat is not None: x = (x - mat[:,:,2].unsqueeze(1)) @ torch.inverse(mat[:,:,:2].transpose(1,2))
-    return TensorPoint(x)
+    return TensorPoint(x, sz=sz)
 
 @patch
 def affine_coord(x: TensorBBox, mat=None, coord_tfm=None, sz=None, mode='nearest', pad_mode=PadMode.Zeros):
     if mat is None and coord_tfm is None: return x
-    bbox,label = x
-    bs,n = bbox.shape[:2]
-    pnts = stack([bbox[...,:2], stack([bbox[...,0],bbox[...,3]],dim=2),
-                  stack([bbox[...,2],bbox[...,1]],dim=2), bbox[...,2:]], dim=2)
-    pnts = TensorPoint.affine_coord(pnts.view(bs, 4*n, 2), mat, coord_tfm, sz, mode, pad_mode)
+    bs,n = x.shape[:2]
+    pnts = stack([x[...,:2], stack([x[...,0],x[...,3]],dim=2),
+                  stack([x[...,2],x[...,1]],dim=2), x[...,2:]], dim=2)
+    pnts = TensorPoint(TensorPoint(pnts.view(bs, 4*n, 2), sz=x._meta.get('sz', None))).affine_coord(mat, coord_tfm, sz, mode, pad_mode)
     pnts = pnts.view(bs, n, 4, 2)
     tl,dr = pnts.min(dim=2)[0],pnts.max(dim=2)[0]
-    return TensorBBox(clip_remove_empty(torch.cat([tl, dr], dim=2), label))
+    return TensorBBox(torch.cat([tl, dr], dim=2), sz=x._meta.get('sz', None) if sz is None else sz)
 
 #Cell
 def _prepare_mat(x, mat):
@@ -398,9 +391,8 @@ def dihedral_mat(x, p=0.5, draw=None):
                       ys*m1,  ys*m0,  t0(xs)).float()
 
 #Cell
-#TODO: can't patch TensorBBox because they don't know the size
 @patch
-def dihedral_batch(x: (TensorImage,TensorMask,TensorPoint), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
+def dihedral_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
     mat = _prepare_mat(x, dihedral_mat(x0, p=p, draw=draw))
     return x.affine_coord(mat=mat, sz=size, mode=mode, pad_mode=pad_mode)
@@ -419,10 +411,9 @@ def rotate_mat(x, max_deg=10, p=0.5, draw=None):
                      -thetas.sin(), thetas.cos(), t0(thetas))
 
 #Cell
-#TODO: can't patch TensorBBox because they don't know the size
 @delegates(rotate_mat)
 @patch
-def rotate(x: (TensorImage,TensorMask,TensorPoint), size=None, mode=None, pad_mode=None, **kwargs):
+def rotate(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), size=None, mode=None, pad_mode=None, **kwargs):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
     mat = _prepare_mat(x, rotate_mat(x0, **kwargs))
     return x.affine_coord(mat=mat, sz=size, mode=mode, pad_mode=pad_mode)

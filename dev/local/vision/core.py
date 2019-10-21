@@ -283,13 +283,13 @@ def decodes(self, x:LabeledBBox): return x
 #Cell
 @PointScaler
 def encodes(self, x:TensorBBox):
-    pnts = self.encodes(TensorPoint(x.view(-1,2), sz=x._meta['sz']))
-    return TensorBBox(pnts.view(-1, 4), sz=x._meta['sz'])
+    pnts = self.encodes(TensorPoint(x.view(-1,2), sz=x._meta.get('sz', None)))
+    return TensorBBox(pnts.view(-1, 4), sz=x._meta.get('sz', None))
 
 @PointScaler
 def decodes(self, x:TensorBBox):
-    pnts = self.decodes(TensorPoint(x.view(-1,2), sz=x._meta['sz']))
-    return TensorBBox(pnts.view(-1, 4), sz=x._meta['sz'])
+    pnts = self.decodes(TensorPoint(x.view(-1,2), sz=x._meta.get('sz', None)))
+    return TensorBBox(pnts.view(-1, 4), sz=x._meta.get('sz', None))
 
 #Cell
 #TODO tests
