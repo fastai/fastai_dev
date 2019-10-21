@@ -3,7 +3,7 @@
 __all__ = ['Image', 'ToTensor', 'imagenet_stats', 'cifar_stats', 'mnist_stats', 'n_px', 'shape', 'aspect', 'load_image',
            'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'OpenMask', 'TensorPoint', 'get_annotations', 'TensorBBox',
            'LabeledBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'BBoxLabeler', 'decodes',
-           'encodes', 'decodes', 'bb_pad', 'show_results']
+           'encodes', 'decodes', 'clip_remove_empty', 'bb_pad', 'show_results']
 
 #Cell
 from ..test import *
@@ -292,9 +292,19 @@ def decodes(self, x:TensorBBox):
     return TensorBBox(pnts.view(-1, 4), sz=x._meta.get('sz', None))
 
 #Cell
+#TODO: merge with padding
+def clip_remove_empty(bbox, label):
+    "Clip bounding boxes with image border and label background the empty ones."
+    bbox = torch.clamp(bbox, -1, 1)
+    empty = ((bbox[...,2] - bbox[...,0])*(bbox[...,3] - bbox[...,1]) < 0.)
+
+    return (bbox[~empty], [l for l,m in zip(label,empty) if not m])
+
+#Cell
 #TODO tests
 def bb_pad(samples, pad_idx=0):
     "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
+    samples = [(s[0], *clip_remove_empty(*s[1:])) for s in samples]
     max_len = max([len(s[2]) for s in samples])
     print(samples)
     def _f(img,bbox,lbl):
