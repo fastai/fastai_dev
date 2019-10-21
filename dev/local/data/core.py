@@ -230,7 +230,8 @@ def test_set(dsrc, test_items):
     return DataSource(tls=test_tls)
 
 #Cell
-def test_dl(dbunch, test_items):
+@delegates(TfmdDL.__init__)
+def test_dl(dbunch, test_items, **kwargs):
     "Create a test dataloader from `test_items` using validation transforms of `dbunch`"
     test_ds = test_set(dbunch.valid_ds, test_items) if isinstance(dbunch.valid_ds, DataSource) else test_items
-    return dbunch.valid_dl.new(test_ds)
+    return dbunch.valid_dl.new(test_ds, **kwargs)
