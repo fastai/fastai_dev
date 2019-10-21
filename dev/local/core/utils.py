@@ -8,7 +8,7 @@ __all__ = ['ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrd
            'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped', 'instantiate', 'Self', 'Self', 'bunzip',
            'join_path_file', 'sort_by_run', 'subplots', 'show_image', 'show_titled_image', 'show_images', 'ArrayBase',
            'ArrayImageBase', 'ArrayImage', 'ArrayImageBW', 'ArrayMask', 'PrettyString', 'display_df', 'round_multiple',
-           'even_mults', 'num_cpus', 'add_props', 'set_num_threads']
+           'even_mults', 'num_cpus', 'add_props']
 
 #Cell
 from ..test import *
@@ -612,13 +612,3 @@ defaults.cpus = num_cpus()
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))
-
-#Cell
-def set_num_threads(nt):
-    "Get numpy (and others) to use `nt` threads"
-    mkl.set_num_threads(nt)
-    nt = str(nt)
-    os.environ['OPENBLAS_NUM_THREADS'] = nt
-    os.environ['NUMEXPR_NUM_THREADS'] = nt
-    os.environ['OMP_NUM_THREADS'] = nt
-    os.environ['MKL_NUM_THREADS'] = nt

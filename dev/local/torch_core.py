@@ -5,8 +5,8 @@ __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'unsqueeze', 'uns
            'TensorImageBase', 'TensorImage', 'TensorImageBW', 'TensorMask', 'concat', 'Chunks', 'one_param',
            'item_find', 'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode', 'params',
            'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'make_cross_image', 'show_image_batch',
-           'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init', 'ProcessPoolExecutor', 'parallel',
-           'run_procs', 'parallel_gen', 'flatten_check']
+           'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init', 'set_num_threads',
+           'ProcessPoolExecutor', 'parallel', 'run_procs', 'parallel_gen', 'flatten_check']
 
 #Cell
 from .test import *
@@ -26,6 +26,7 @@ def __array_eq__(self:Tensor,b):
 def tensor(x, *rest, **kwargs):
     "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
     if len(rest): x = (x,)+rest
+    elif isinstance(x, ndarray) and x.dtype==np.uint16: x = x.astype(np.float32)
     # There was a Pytorch bug in dataloader using num_workers>0. Haven't confirmed if fixed
     # if isinstance(x, (tuple,list)) and len(x)==0: return tensor(0)
     res = (x if isinstance(x, Tensor)
@@ -138,9 +139,8 @@ class TensorBase(Tensor):
         return (f, args + (self.requires_grad, OrderedDict()))
 
     def gi(self, i):
-        cls = self.__class__
         res = self[i]
-        return cls(res) if isinstance(res,Tensor) else res
+        return type(self)(res) if isinstance(res,Tensor) else res
 
 #Cell
 def _patch_tb():
@@ -381,6 +381,17 @@ def apply_init(m, func=nn.init.kaiming_normal_):
 
 #Cell
 from multiprocessing import Process, Queue
+
+#Cell
+def set_num_threads(nt):
+    "Get numpy (and others) to use `nt` threads"
+    mkl.set_num_threads(nt)
+    torch.set_num_threads(1)
+    nt = str(nt)
+    os.environ['OPENBLAS_NUM_THREADS'] = nt
+    os.environ['NUMEXPR_NUM_THREADS'] = nt
+    os.environ['OMP_NUM_THREADS'] = nt
+    os.environ['MKL_NUM_THREADS'] = nt
 
 #Cell
 @delegates(concurrent.futures.ProcessPoolExecutor)

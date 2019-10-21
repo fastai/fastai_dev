@@ -131,6 +131,9 @@ class Category(str, ShowTitle):
 class MultiCategorize(Categorize):
     "Reversible transform of multi-category strings to `vocab` id"
     loss_func,order=BCEWithLogitsLossFlat(),1
+    def encodes(self, o): return [self.vocab.o2i  [o_] for o_ in o]
+    def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
+
     def setups(self, dsrc):
         if not dsrc: return
         if self.vocab is None:
@@ -138,9 +141,6 @@ class MultiCategorize(Categorize):
             for b in dsrc: vals = vals.union(set(b))
             self.vocab = CategoryMap(list(vals))
         setattr(dsrc, 'vocab', self.vocab)
-
-    def encodes(self, o): return [self.vocab.o2i  [o_] for o_ in o]
-    def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
 
 #Cell
 class MultiCategory(L):
