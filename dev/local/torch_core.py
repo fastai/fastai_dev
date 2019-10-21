@@ -170,7 +170,7 @@ _patch_tb()
 class TensorCategory(TensorBase): pass
 
 #Cell
-class TensorMultiCategory(TensorBase): pass
+class TensorMultiCategory(TensorCategory): pass
 
 #Cell
 class TensorImageBase(TensorBase):
@@ -283,7 +283,8 @@ def get_model(model):
 def one_hot(x, c):
     "One-hot encode `x` with `c` classes."
     res = torch.zeros(c, dtype=torch.uint8)
-    res[L(x, use_list=None)] = 1.
+    if isinstance(x, Tensor) and x.numel()>0: res[x] = 1.
+    else: res[list(L(x, use_list=None))] = 1.
     return res
 
 #Cell
