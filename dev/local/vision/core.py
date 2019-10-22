@@ -169,6 +169,11 @@ def image2tensor(img):
     return res.permute(2,0,1)
 
 #Cell
+PILImage  ._tensor_cls = TensorImage
+PILImageBW._tensor_cls = TensorImageBW
+PILMask   ._tensor_cls = TensorMask
+
+#Cell
 @ToTensor
 def encodes(self, o:PILBase): return o._tensor_cls(image2tensor(o))
 @ToTensor
