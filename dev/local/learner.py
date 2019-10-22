@@ -260,7 +260,7 @@ class Learner():
             self(_after_epoch)
             if act is None: act = getattr(self.loss_func, 'activation', noop)
             preds = act(torch.cat(cb.preds))
-            if decoded: preds = getattr(sellf.loss_func, 'decodes', noop)(preds)
+            if decoded: preds = getattr(self.loss_func, 'decodes', noop)(preds)
             res = (preds, detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
             if with_input: res = (tuple(torch.cat(o) for o in zip(*cb.inputs)),) + res
             if with_loss:  res = res + (torch.cat(cb.losses),)
