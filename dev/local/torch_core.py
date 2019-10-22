@@ -23,18 +23,22 @@ def __array_eq__(self:Tensor,b):
     return torch.equal(self,b) if self.dim() else self==b
 
 #Cell
+def _array2tensor(x):
+    if x.dtype==np.uint16: x = x.astype(np.float32)
+    return torch.from_numpy(x)
+
+#Cell
 def tensor(x, *rest, **kwargs):
     "Like `torch.as_tensor`, but handle lists too, and can pass multiple vector elements directly."
     if len(rest): x = (x,)+rest
-    elif isinstance(x, ndarray) and x.dtype==np.uint16: x = x.astype(np.float32)
     # There was a Pytorch bug in dataloader using num_workers>0. Haven't confirmed if fixed
     # if isinstance(x, (tuple,list)) and len(x)==0: return tensor(0)
     res = (x if isinstance(x, Tensor)
            else torch.tensor(x, **kwargs) if isinstance(x, (tuple,list))
-           else torch.from_numpy(x) if isinstance(x, ndarray)
+           else _array2tensor(x) if isinstance(x, ndarray)
            else as_tensor(x.values, **kwargs) if isinstance(x, (pd.Series, pd.DataFrame))
            else as_tensor(x, **kwargs) if hasattr(x, '__array__') or is_iter(x)
-           else as_tensor(array(x), **kwargs))
+           else _array2tensor(array(x), **kwargs))
     if res.dtype is torch.float64: return res.float()
     return res
 
