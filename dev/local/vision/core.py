@@ -2,8 +2,8 @@
 
 __all__ = ['Image', 'ToTensor', 'imagenet_stats', 'cifar_stats', 'mnist_stats', 'n_px', 'shape', 'aspect', 'load_image',
            'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'OpenMask', 'TensorPoint', 'get_annotations', 'TensorBBox',
-           'LabeledBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'BBoxLabeler', 'decodes',
-           'encodes', 'decodes', 'clip_remove_empty', 'bb_pad', 'show_results']
+           'LabeledBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'NotEncodedMultiCategory',
+           'BBoxLabeler', 'decodes', 'encodes', 'decodes', 'clip_remove_empty', 'bb_pad', 'show_results']
 
 #Cell
 from ..test import *
@@ -153,7 +153,7 @@ class LabeledBBox(Tuple):
     "Basic type for a list of bounding boxes in an image"
     def show(self, ctx=None, **kwargs):
         for b,l in zip(self.bbox, self.lbl):
-            if l != '#bg': ctx = retain_type(b, self.bbox).show(ctx=ctx, text=l)
+            if l != '#na#': ctx = retain_type(b, self.bbox).show(ctx=ctx, text=l)
         return ctx
 
     @classmethod
@@ -187,7 +187,7 @@ def _unscale_pnts(y, sz): return TensorPoint((y+1) * tensor(sz).float()/2, sz=sz
 #Cell
 class PointScaler(Transform):
     "Scale a tensor representing points"
-    loss_func = MSELossFlat()
+    order,loss_func = 1,MSELossFlat()
     def __init__(self, do_scale=True, y_first=False): self.do_scale,self.y_first = do_scale,y_first
     def _grab_sz(self, x):
         self.sz = [x.shape[-1], x.shape[-2]] if isinstance(x, Tensor) else x.size
@@ -259,6 +259,11 @@ TensorPoint.default_item_tfms = PointScaler
 #    return [_f(x,*y) for x,y in samples]
 
 #Cell
+class NotEncodedMultiCategory(MultiCategory):
+    create = MultiCategorize(add_na=True)
+    default_type_tfms = None
+
+#Cell
 class BBoxLabeler(Transform):
     def setup(self, dl): self.vocab = dl.vocab
     def before_call(self): self.bbox,self.lbls = None,None
@@ -274,6 +279,9 @@ class BBoxLabeler(Transform):
     def decodes(self, x:TensorBBox):
         self.bbox = x
         return self.bbox if self.lbls is None else LabeledBBox(self.bbox, self.lbls)
+
+#Cell
+TensorBBox.default_item_tfms = [PointScaler, BBoxLabeler]
 
 #Cell
 #LabeledBBox can be sent in a tl with MultiCategorize (depending on the order of the tls) but it is already decoded.
@@ -292,7 +300,6 @@ def decodes(self, x:TensorBBox):
     return TensorBBox(pnts.view(-1, 4), sz=x._meta.get('sz', None))
 
 #Cell
-#TODO: merge with padding
 def clip_remove_empty(bbox, label):
     "Clip bounding boxes with image border and label background the empty ones."
     bbox = torch.clamp(bbox, -1, 1)
@@ -300,7 +307,6 @@ def clip_remove_empty(bbox, label):
     return (bbox[~empty], label[~empty])
 
 #Cell
-#TODO tests
 def bb_pad(samples, pad_idx=0):
     "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
     samples = [(s[0], *clip_remove_empty(*s[1:])) for s in samples]

@@ -164,6 +164,8 @@ class OneHotEncode(Transform):
     def encodes(self, o): return TensorMultiCategory(one_hot(o, self.c).bool())
     def decodes(self, o): return one_hot_decode(o, None)
 
+MultiCategory.default_type_tfms = OneHotEncode
+
 #Cell
 class EncodedMultiCategorize(Categorize):
     "Transform of one-hot encoded multi-category that decodes with `vocab`"
