@@ -3,8 +3,7 @@
 __all__ = ['RandTransform', 'TensorTypes', 'FlipItem', 'DihedralItem', 'clip_remove_empty', 'PadMode', 'CropPad',
            'RandomCrop', 'ResizeMethod', 'Resize', 'RandomResizedCrop', 'AffineCoordTfm', 'affine_mat', 'mask_tensor',
            'flip_mat', 'Flip', 'dihedral_mat', 'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs',
-           'apply_perspective', 'Warp', 'logit', 'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms',
-           'aug_transforms']
+           'apply_perspective', 'Warp', 'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms', 'aug_transforms']
 
 #Cell
 from ..test import *
@@ -238,7 +237,6 @@ def _grid_sample(x, coords, mode='bilinear', padding_mode='reflection'):
         d = min(x.shape[-2]/coords.shape[-2], x.shape[-1]/coords.shape[-1])/2
         # If we're resizing up by >200%, and we're zooming less than that, interpolate first
         if d>1 and d>z:
-            print('Downsizing')
             x = F.interpolate(x, scale_factor=1/d, mode='area')
     with warnings.catch_warnings():
         #To avoid the warning that come from grid_sample.
@@ -508,12 +506,6 @@ def Warp(magnitude=0.2, p=0.5, draw_x=None, draw_y=None,size=None, mode='bilinea
     "Apply perspective warping with `magnitude` and `p` on a batch of matrices"
     return AffineCoordTfm(coord_fs=_WarpCoord(magnitude=magnitude, p=p, draw_x=draw_x, draw_y=draw_y),
                           size=size, mode=mode, pad_mode=pad_mode)
-
-#Cell
-def logit(x):
-    "Logit of `x`, clamped to avoid inf."
-    x = x.clamp(1e-7, 1-1e-7)
-    return -(1/x-1).log()
 
 #Cell
 @patch

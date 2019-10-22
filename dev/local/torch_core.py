@@ -4,7 +4,7 @@ __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'unsqueeze', 'uns
            'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'to_np', 'TensorBase', 'TensorCategory',
            'TensorMultiCategory', 'TensorImageBase', 'TensorImage', 'TensorImageBW', 'TensorMask', 'concat', 'Chunks',
            'one_param', 'item_find', 'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode',
-           'params', 'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'make_cross_image',
+           'params', 'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'logit', 'make_cross_image',
            'show_image_batch', 'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init',
            'set_num_threads', 'ProcessPoolExecutor', 'parallel', 'run_procs', 'parallel_gen', 'flatten_check']
 
@@ -328,6 +328,12 @@ def interp_1d(x:Tensor, xp, fp):
     locs = (x[:,None]>=xp[None,:]).long().sum(1)-1
     locs = locs.clamp(0,len(slopes)-1)
     return slopes[locs]*x + incx[locs]
+
+#Cell
+def logit(x):
+    "Logit of `x`, clamped to avoid inf."
+    x = x.clamp(1e-7, 1-1e-7)
+    return -(1/x-1).log()
 
 #Cell
 def make_cross_image(bw=True):

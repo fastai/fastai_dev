@@ -84,6 +84,10 @@ _alexnet_meta    = {'cut':-2, 'split':_alexnet_split}
 
 #Cell
 model_meta = {
+    models.xresnet.xresnet18 :{**_resnet_meta}, models.xresnet.xresnet34: {**_resnet_meta},
+    models.xresnet.xresnet50 :{**_resnet_meta}, models.xresnet.xresnet101:{**_resnet_meta},
+    models.xresnet.xresnet152:{**_resnet_meta},
+
     models.resnet18 :{**_resnet_meta}, models.resnet34: {**_resnet_meta},
     models.resnet50 :{**_resnet_meta}, models.resnet101:{**_resnet_meta},
     models.resnet152:{**_resnet_meta},

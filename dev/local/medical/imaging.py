@@ -209,9 +209,11 @@ def crop_resize(x, crops, new_sz):
     lows,szs = _bbs2sizes(crops, x.shape[-1])
     if not isinstance(new_sz,(list,tuple)): new_sz = (new_sz,new_sz)
     id_mat = tensor([[1.,0,0],[0,1,0]])[None].repeat((bs,1,1)).to(x.device)
-    sp = F.affine_grid(id_mat, (bs,1,*new_sz))+1.
-    grid = sp*unsqueeze(szs.t(),1,n=2)+unsqueeze(lows.t()*2.,1,n=2)
-    return F.grid_sample(x.unsqueeze(1), grid-1)
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore', category=UserWarning)
+        sp = F.affine_grid(id_mat, (bs,1,*new_sz))+1.
+        grid = sp*unsqueeze(szs.t(),1,n=2)+unsqueeze(lows.t()*2.,1,n=2)
+        return F.grid_sample(x.unsqueeze(1), grid-1)
 
 #Cell
 @patch
@@ -226,6 +228,12 @@ def save_png16(x:(Tensor,DcmDataset), path, bins=None, compress_level=0):
     im = Image.fromarray(x.to_uint16(bins))
     if compress_level: im.save(fn, compress_level=compress_level)
     else: im.save(fn, compress_type=Image.RLE)
+
+#Cell
+@patch
+def save_tif16(x:(Tensor,DcmDataset), path, bins=None, compress=True):
+    fn = Path(path).with_suffix('.tif')
+    Image.fromarray(x.to_uint16(bins)).save(str(fn), compression='tiff_deflate' if compress else None)
 
 #Cell
 @patch
