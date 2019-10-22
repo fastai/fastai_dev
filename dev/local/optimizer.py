@@ -67,7 +67,7 @@ class Optimizer(_BaseOptimizer):
             self.state[p] = state
 
     def clear_state(self):
-        for p,pg,state,hyper in self.all_params(with_grad=True):
+        for p,pg,state,hyper in self.all_params():
             self.state[p] = {k: state[k] for k in self._keep_on_clear if k in state}
 
     def state_dict(self):
