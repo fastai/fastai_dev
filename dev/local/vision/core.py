@@ -2,8 +2,8 @@
 
 __all__ = ['Image', 'ToTensor', 'imagenet_stats', 'cifar_stats', 'mnist_stats', 'n_px', 'shape', 'aspect', 'load_image',
            'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'OpenMask', 'TensorPoint', 'get_annotations', 'TensorBBox',
-           'LabeledBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'BBoxLabels', 'BBoxLabeler',
-           'decodes', 'encodes', 'decodes', 'clip_remove_empty', 'bb_pad', 'show_results']
+           'LabeledBBox', 'image2tensor', 'encodes', 'encodes', 'PointScaler', 'BBoxLabels', 'BBoxLabeler', 'decodes',
+           'encodes', 'decodes', 'clip_remove_empty', 'bb_pad', 'show_results']
 
 #Cell
 from ..test import *
@@ -63,7 +63,7 @@ def load_image(fn, mode=None, **kwargs):
 #Cell
 class PILBase(Image.Image, metaclass=BypassNewMeta):
     _bypass_type=Image.Image
-    default_batch_tfms = ByteToFloatTensor
+    default_batch_tfms = IntToFloatTensor
     _show_args = {'cmap':'viridis'}
     _open_args = {'mode': 'RGB'}
     @classmethod
@@ -162,19 +162,17 @@ class LabeledBBox(Tuple):
     bbox,lbl = add_props(lambda i,self: self[i])
 
 #Cell
-def image2byte(img):
+def image2tensor(img):
     "Transform image to byte tensor in `c*h*w` dim order."
-    res = torch.ByteTensor(torch.ByteStorage.from_buffer(img.tobytes()))
-    w,h = img.size
-    return res.view(h,w,-1).permute(2,0,1)
+    res = tensor(img)
+    if res.dim()==2: res = res.unsqueeze(-1)
+    return res.permute(2,0,1)
 
 #Cell
 @ToTensor
-def encodes(self, o:PILImage): return TensorImage(image2byte(o))
+def encodes(self, o:PILBase): return o._tensor_cls(image2tensor(o))
 @ToTensor
-def encodes(self, o:PILImageBW): return TensorImageBW(image2byte(o))
-@ToTensor
-def encodes(self, o:PILMask):  return TensorMask(image2byte(o)[0])
+def encodes(self, o:PILMask): return o._tensor_cls(image2tensor(o)[0])
 
 #Cell
 def _scale_pnts(y, sz, do_scale=True, y_first=False):

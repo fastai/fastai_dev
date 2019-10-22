@@ -34,13 +34,8 @@ def tensor(x, *rest, **kwargs):
            else torch.from_numpy(x) if isinstance(x, ndarray)
            else as_tensor(x.values, **kwargs) if isinstance(x, (pd.Series, pd.DataFrame))
            else as_tensor(x, **kwargs) if hasattr(x, '__array__') or is_iter(x)
-           else None)
-    if res is None:
-        res = as_tensor(array(x), **kwargs)
-        if res.dtype is torch.float64: return res.float()
-    if res.dtype is torch.int32:
-        warn('Tensor is int32: upgrading to int64; for better performance use int64 input')
-        return res.long()
+           else as_tensor(array(x), **kwargs))
+    if res.dtype is torch.float64: return res.float()
     return res
 
 #Cell
