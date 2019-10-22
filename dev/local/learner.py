@@ -432,7 +432,7 @@ class Recorder(Callback):
     def after_batch(self):
         "Update all metrics and records lr and smooth loss in training"
         if len(self.yb) == 0: return
-        mets = L(self.smooth_loss) + (self._train_mets if self.training else self._valid_mets)
+        mets = (L(self.smooth_loss) + self._train_mets) if self.training else self._valid_mets
         for met in mets: met.accumulate(self.learn)
         if not self.training: return
         self.lrs.append(self.opt.hypers[-1]['lr'])

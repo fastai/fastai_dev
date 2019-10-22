@@ -224,14 +224,16 @@ class DataSource(FilteredBase):
         subset="New `DataSource` that only includes subset `i`")
 
 #Cell
-def test_set(dsrc, test_items):
+def test_set(dsrc, test_items, rm_tfms=0):
     "Create a test set from `test_items` using validation transforms of `dsrc`"
     test_tls = [tl._new(test_items, split_idx=1) for tl in dsrc.tls[:dsrc.n_inp]]
+    rm_tfms = tuplify(rm_tfms, match=test_tls)
+    for i,j in enumerate(rm_tfms): test_tls[i].tfms.fs = test_tls[i].tfms.fs[j:]
     return DataSource(tls=test_tls)
 
 #Cell
 @delegates(TfmdDL.__init__)
-def test_dl(dbunch, test_items, **kwargs):
+def test_dl(dbunch, test_items, rm_type_tfms=0, **kwargs):
     "Create a test dataloader from `test_items` using validation transforms of `dbunch`"
-    test_ds = test_set(dbunch.valid_ds, test_items) if isinstance(dbunch.valid_ds, DataSource) else test_items
+    test_ds = test_set(dbunch.valid_ds, test_items, rm_tfms=rm_type_tfms) if isinstance(dbunch.valid_ds, DataSource) else test_items
     return dbunch.valid_dl.new(test_ds, **kwargs)
