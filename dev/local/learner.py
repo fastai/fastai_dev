@@ -251,7 +251,7 @@ class Learner():
             self(_after_epoch)
         return self.recorder.values[-1]
 
-    def get_preds(self, ds_idx=1, dl=None, with_input=False, with_loss=False, decoded=False, act=None):
+    def get_preds(self, ds_idx=1, dl=None, with_input=False, with_loss=False, with_decoded=False, act=None):
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         cb = GatherPredsCallback(with_input=with_input, with_loss=with_loss)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
@@ -260,8 +260,8 @@ class Learner():
             self(_after_epoch)
             if act is None: act = getattr(self.loss_func, 'activation', noop)
             preds = act(torch.cat(cb.preds))
-            if decoded: preds = getattr(self.loss_func, 'decodes', noop)(preds)
             res = (preds, detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
+            if with_decoded: res = res + (getattr(self.loss_func, 'decodes', noop)(preds),)
             if with_input: res = (tuple(torch.cat(o) for o in zip(*cb.inputs)),) + res
             if with_loss:  res = res + (torch.cat(cb.losses),)
             return res
