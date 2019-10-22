@@ -113,15 +113,7 @@ dicom_windows = types.SimpleNamespace(
 )
 
 #Cell
-class TensorCTScan(TensorImageBW):
-    _show_args = {'cmap':'bone'}
-    @classmethod
-    def create(cls, x):
-        if not isinstance(x,Tensor):
-            if not isinstance(x,ndarray): x = array(x)
-        res = cls(x)
-        if not res.dim()==3: res = res.unsqueeze(0)
-        return res
+class TensorCTScan(TensorImageBW): _show_args = {'cmap':'bone'}
 
 #Cell
 class PILCTScan(PILBase): _open_args,_tensor_cls = {},TensorCTScan
