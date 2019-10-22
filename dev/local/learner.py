@@ -266,8 +266,8 @@ class Learner():
             if with_loss:  res = res + (torch.cat(cb.losses),)
             return res
 
-    def predict(self, item):
-        dl = test_dl(self.dbunch, [item])
+    def predict(self, item, rm_type_tfms=0):
+        dl = test_dl(self.dbunch, [item], rm_type_tfms=rm_type_tfms)
         inp,preds,_ = self.get_preds(dl=dl, with_input=True)
         dec_preds = getattr(self.loss_func, 'decodes', noop)(preds)
         i = getattr(self.dbunch, 'n_inp', -1)
@@ -421,7 +421,7 @@ class Recorder(Callback):
 
     def begin_fit(self):
         "Prepare state for training"
-        self.lrs,self.losses,self.values = [],[],[]
+        self.lrs,self.iters,self.losses,self.values = [],[],[],[]
         names = self._valid_mets.attrgot('name')
         if self.train_metrics: names = names.map('train_{}') + names.map('valid_{}')
         else:                  names = L('train_loss', 'valid_loss') + names[1:]
@@ -457,6 +457,7 @@ class Recorder(Callback):
         self.values.append(self.log[1:].copy())
         if self.add_time: self.log.append(format_time(time.time() - self.start_epoch))
         self.logger(self.log)
+        self.iters.append(self.smooth_loss.count)
 
     @property
     def _train_mets(self):
@@ -468,7 +469,11 @@ class Recorder(Callback):
         if getattr(self, 'cancel_valid', False): return L()
         return L(self.loss) + self.metrics
 
-    def plot_loss(self, skip_start=5): plt.plot(self.losses[skip_start:])
+    def plot_loss(self, skip_start=5, with_valid=True):
+        plt.plot(self.losses[skip_start:], label='train')
+        if with_valid:
+            plt.plot(self.iters, L(self.values).itemgot(0), label='valid')
+            plt.legend()
 
 #Cell
 add_docs(Recorder,
