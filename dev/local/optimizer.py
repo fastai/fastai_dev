@@ -11,16 +11,17 @@ from .test import *
 #Cell
 class _BaseOptimizer():
     "Common functionality between `Optimizer` and `OptimWrapper`"
+    def all_params(self, n=slice(None), with_grad=False):
+        res = L((p,pg,self.state[p],hyper) for pg,hyper in zip(self.param_groups[n],self.hypers[n]) for p in pg)
+        return L(o for o in res if o[0].grad is not None) if with_grad else res
 
-    def _set_require_grad(self, pg, rg):
-        for p in pg: p.requires_grad_(rg or self.state[p].get('force_train', False))
-
+    def _set_require_grad(self, rg, p,pg,state,h): p.requires_grad_(rg or state.get('force_train', False))
     def freeze_to(self, n):
         self.frozen_idx = n if n >= 0 else len(self.param_groups) + n
         if self.frozen_idx >= len(self.param_groups):
-            warn(f"Trying to freeze {self.frozen_idx} parameter groups when there are only {len(self.param_groups)}, the whole model is frozen.")
-        for pg in self.param_groups[:n]: self._set_require_grad(pg, False)
-        for pg in self.param_groups[n:]: self._set_require_grad(pg, True)
+            warn(f"Freezing {self.frozen_idx} groups; model has {len(self.param_groups)}; whole model is frozen.")
+        for o in self.all_params(slice(n, None)): self._set_require_grad(True,  *o)
+        for o in self.all_params(slice(None, n)): self._set_require_grad(False, *o)
 
     def freeze(self):
         assert(len(self.param_groups)>1)
@@ -28,7 +29,6 @@ class _BaseOptimizer():
 
     def unfreeze(self): self.freeze_to(0)
     def set_hypers(self, **kwargs): L(kwargs.items()).starmap(self.set_hyper)
-
     def _set_hyper(self, k, v):
         for v_,h in zip(v, self.hypers): h[k] = v_
 
@@ -55,36 +55,30 @@ class Optimizer(_BaseOptimizer):
         self.set_hypers(**defaults)
         self.frozen_idx = 0
 
-    def _grad_params(self):
-        "Helper function to loop over param groups then params that have a grad"
-        return [(p,hyper) for pg,hyper in zip(self.param_groups,self.hypers)
-            for p in pg if p.grad is not None]
-
     def zero_grad(self):
-        for p,hyper in self._grad_params():
+        for p,*_ in self.all_params(with_grad=True):
             p.grad.detach_()
             p.grad.zero_()
 
     def step(self):
-        for p,hyper in self._grad_params():
-            state = self.state[p]
+        for p,pg,state,hyper in self.all_params(with_grad=True):
             for stat in self.stats: state = stat(state, p, **hyper)
             self.step_func(p, **{**state, **hyper})
             self.state[p] = state
 
     def clear_state(self):
-        for pg in self.param_groups:
-            for p in pg: self.state[p] = {k: self.state[p][k] for k in self._keep_on_clear if k in self.state[p]}
+        for p,pg,state,hyper in self.all_params(with_grad=True):
+            self.state[p] = {k: state[k] for k in self._keep_on_clear if k in state}
 
     def state_dict(self):
-        state = [self.state[p] for pg in self.param_groups for p in pg]
+        state = [self.state[p] for p,*_ in self.all_params()]
         return {'state': state, 'hypers': self.hypers}
 
     def load_state_dict(self, sd):
         assert len(sd["hypers"]) == len(self.param_groups)
         assert len(sd["state"])  == sum([len(pg) for pg in self.param_groups])
         self.hypers = sd['hypers']
-        self.state = {p: s for p,s in zip([p for pg in self.param_groups for p in pg], sd['state'])}
+        self.state = {p: s for p,s in zip(self.all_params().itemgot(0), sd['state'])}
 
 #Cell
 def sgd_step(p, lr, **kwargs):
