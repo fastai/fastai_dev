@@ -507,6 +507,7 @@
   "ProgressCallback": "16_callback_progress.ipynb",
   "ShowGraphCallback": "16_callback_progress.ipynb",
   "CSVLogger": "16_callback_progress.ipynb",
+  "FitOneBatchCallback": "17_callback_tracker.ipynb",
   "TerminateOnNaNCallback": "17_callback_tracker.ipynb",
   "TrackerCallback": "17_callback_tracker.ipynb",
   "EarlyStoppingCallback": "17_callback_tracker.ipynb",
