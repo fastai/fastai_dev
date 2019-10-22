@@ -3,7 +3,7 @@
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'GrandparentSplitter', 'parent_label', 'RegexLabeller', 'CategoryMap', 'Categorize', 'Category',
            'MultiCategorize', 'MultiCategory', 'OneHotEncode', 'EncodedMultiCategorize', 'EncodedMultiCategory',
-           'get_c', 'ToTensor', 'Cuda', 'ByteToFloatTensor', 'broadcast_vec', 'Normalize']
+           'get_c', 'ToTensor', 'Cuda', 'IntToFloatTensor', 'broadcast_vec', 'Normalize']
 
 #Cell
 from ..torch_basics import *
@@ -207,15 +207,15 @@ class Cuda(Transform):
     _docs=dict(encodes="Move batch to `device`", decodes="Return batch to CPU")
 
 #Cell
-class ByteToFloatTensor(Transform):
+class IntToFloatTensor(Transform):
     "Transform image to float tensor, optionally dividing by 255 (e.g. for images)."
     order = 20 #Need to run after CUDA if on the GPU
-    def __init__(self, div=True, div_mask=False, split_idx=None, as_item=True):
+    def __init__(self, div=255., div_mask=1, split_idx=None, as_item=True):
         super().__init__(split_idx=split_idx,as_item=as_item)
         self.div,self.div_mask = div,div_mask
 
-    def encodes(self, o:TensorImage): return o.float().div_(255.) if self.div else o.float()
-    def encodes(self, o:TensorMask ): return o.div_(255.).long() if self.div_mask else o.long()
+    def encodes(self, o:TensorImage): return o.float().div_(self.div)
+    def encodes(self, o:TensorMask ): return o.div_(self.div_mask).long()
     def decodes(self, o:TensorImage): return o.clamp(0., 1.) if self.div else o
 
 #Cell
