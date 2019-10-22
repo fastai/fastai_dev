@@ -2,8 +2,8 @@
 
 __all__ = ['Image', 'ToTensor', 'imagenet_stats', 'cifar_stats', 'mnist_stats', 'n_px', 'shape', 'aspect', 'load_image',
            'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'OpenMask', 'TensorPoint', 'get_annotations', 'TensorBBox',
-           'LabeledBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'NotEncodedMultiCategory',
-           'BBoxLabeler', 'decodes', 'encodes', 'decodes', 'clip_remove_empty', 'bb_pad', 'show_results']
+           'LabeledBBox', 'image2byte', 'encodes', 'encodes', 'encodes', 'PointScaler', 'BBoxLabels', 'BBoxLabeler',
+           'decodes', 'encodes', 'decodes', 'clip_remove_empty', 'bb_pad', 'show_results']
 
 #Cell
 from ..test import *
@@ -259,7 +259,7 @@ TensorPoint.default_item_tfms = PointScaler
 #    return [_f(x,*y) for x,y in samples]
 
 #Cell
-class NotEncodedMultiCategory(MultiCategory):
+class BBoxLabels(MultiCategory):
     create = MultiCategorize(add_na=True)
     default_type_tfms = None
 
@@ -281,7 +281,7 @@ class BBoxLabeler(Transform):
         return self.bbox if self.lbls is None else LabeledBBox(self.bbox, self.lbls)
 
 #Cell
-TensorBBox.default_item_tfms = [PointScaler, BBoxLabeler]
+BBoxLabels.default_item_tfms = BBoxLabeler
 
 #Cell
 #LabeledBBox can be sent in a tl with MultiCategorize (depending on the order of the tls) but it is already decoded.
