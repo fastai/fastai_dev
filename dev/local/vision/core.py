@@ -337,34 +337,34 @@ def get_grid(n, rows=None, cols=None, add_vert=0, figsize=None, double=False, ti
 
 #Cell
 @typedispatch
-def show_batch(x:TensorImage, y, its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
-    if ctxs is None: ctxs = get_grid(min(len(its), max_n), rows=rows, cols=cols, figsize=figsize)
-    ctxs = default_show_batch(x, y, its, ctxs=ctxs, max_n=max_n, **kwargs)
+def show_batch(x:TensorImage, y, samples, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+    if ctxs is None: ctxs = get_grid(min(len(samples), max_n), rows=rows, cols=cols, figsize=figsize)
+    ctxs = show_batch[object](x, y, samples, ctxs=ctxs, max_n=max_n, **kwargs)
     return ctxs
 
 #Cell
 @typedispatch
-def show_results(x:TensorImage, y, its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
-    if ctxs is None: ctxs = get_grid(min(len(its), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize)
-    ctxs = default_show_results(x, y, its, ctxs=ctxs, max_n=max_n, **kwargs)
+def show_results(x:TensorImage, y, samples, outs, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+    if ctxs is None: ctxs = get_grid(min(len(samples), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize)
+    ctxs = show_results[object](x, y, samples, outs, ctxs=ctxs, max_n=max_n, **kwargs)
     return ctxs
 
 #Cell
 @typedispatch
-def show_results(x:TensorImage, y:TensorCategory, its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
-    if ctxs is None: ctxs = get_grid(min(len(its), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize)
+def show_results(x:TensorImage, y:TensorCategory, samples, outs, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+    if ctxs is None: ctxs = get_grid(min(len(samples), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize)
     for i in range(2):
-        ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs,range(max_n))]
+        ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(samples.itemgot(i),ctxs,range(max_n))]
     ctxs = [r.show(ctx=c, color='green' if b==r else 'red', **kwargs)
-            for b,r,c,_ in zip(its.itemgot(1),its.itemgot(2),ctxs,range(max_n))]
+            for b,r,c,_ in zip(samples.itemgot(1),outs.itemgot(0),ctxs,range(max_n))]
     return ctxs
 
 #Cell
 @typedispatch
-def show_results(x:TensorImage, y:(TensorImageBase, TensorPoint, TensorBBox), its, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
-    if ctxs is None: ctxs = get_grid(min(len(its), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize, double=True)
+def show_results(x:TensorImage, y:(TensorImageBase, TensorPoint, TensorBBox), samples, outs, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
+    if ctxs is None: ctxs = get_grid(min(len(samples), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize, double=True)
     for i in range(2):
-        ctxs[::2] = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs[::2],range(max_n))]
-    for i in [0,2]:
-        ctxs[1::2] = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs[1::2],range(max_n))]
+        ctxs[::2] = [b.show(ctx=c, **kwargs) for b,c,_ in zip(samples.itemgot(i),ctxs[::2],range(max_n))]
+    for x in [samples,outs]:
+        ctxs[1::2] = [b.show(ctx=c, **kwargs) for b,c,_ in zip(x.itemgot(0),ctxs[1::2],range(max_n))]
     return ctxs

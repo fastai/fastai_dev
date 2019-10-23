@@ -24,11 +24,21 @@ def default_show_results(x, y, its, ctxs=None, max_n=10, **kwargs):
 
 #Cell
 @typedispatch
-def show_batch(*args, **kwargs): return default_show_batch(*args, **kwargs)
+def show_batch(x, y, samples, ctxs=None, max_n=10, **kwargs):
+    if ctxs is None: ctxs = Inf.nones
+    for i in range_of(samples[0]):
+        ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(samples.itemgot(i),ctxs,range(max_n))]
+    return ctxs
 
 #Cell
 @typedispatch
-def show_results(*args, **kwargs): return default_show_results(*args, **kwargs)
+def show_results(x, y, samples, outs, ctxs=None, max_n=10, **kwargs):
+    if ctxs is None: ctxs = Inf.nones
+    for i in range(len(samples[0])):
+        ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(samples.itemgot(i),ctxs,range(max_n))]
+    for i in range(len(outs[0])):
+        ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(outs.itemgot(i),ctxs,range(max_n))]
+    return ctxs
 
 #Cell
 _batch_tfms = ('after_item','before_batch','after_batch')
@@ -87,10 +97,9 @@ class TfmdDL(DataLoader):
         b_out = b[:self.n_inp] + (tuple(out) if is_listy(out) else (out,))
         x1,y1,outs = self._pre_show_batch(b_out, max_n=max_n)
         if its is not None:
-            its = L(i + o[self.n_inp:] for i,o in zip(its,outs))
-            show_results(x, y, its, ctxs=ctxs, max_n=max_n, **kwargs)
+            show_results(x, y, its, outs.itemgot(slice(self.n_inp,None)), ctxs=ctxs, max_n=max_n, **kwargs)
         #its None means that a batch knows how to show itself as a whole, so we pass x, x1
-        else: show_results(x, x1, its, ctxs=ctxs, max_n=max_n, **kwargs)
+        else: show_results(x, x1, its, outs, ctxs=ctxs, max_n=max_n, **kwargs)
 
     @property
     def device(self):
