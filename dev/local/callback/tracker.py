@@ -11,9 +11,11 @@ from .progress import *
 #Cell
 class ShortEpochCallback(Callback):
     "Fit just `pct` of an epoch, then stop"
-    def __init__(self,pct=0.01): self.pct=pct
+    def __init__(self,pct=0.01,short_valid=True): self.pct,self.short_valid = pct,short_valid
     def after_batch(self):
-        if self.iter/self.n_iter > self.pct: raise CancelTrainException if self.training else CancelValidException
+        if self.iter/self.n_iter < self.pct: return
+        if self.training:    raise CancelTrainException
+        if self.short_valid: raise CancelValidException
 
 #Cell
 class TerminateOnNaNCallback(Callback):
