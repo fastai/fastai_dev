@@ -248,7 +248,7 @@ class Learner():
 
     def validate(self, ds_idx=1, dl=None, cbs=None):
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
-        self.dl = self.dbunch.dls[ds_idx] if dl is None else dl
+        if dl is None: dl = self.dbunch.dls[ds_idx]
         with self.added_cbs(cbs), self.no_logging():
             self(_before_epoch)
             self._do_epoch_validate(ds_idx, dl)
@@ -279,10 +279,9 @@ class Learner():
         return detuplify(full_dec),dec_preds[0],preds[0]
 
     def show_results(self, ds_idx=0, dl=None, max_n=10, **kwargs):
-        dl = self.dbunch.dls[ds_idx] if dl is None else dl
+        if dl is None: dl = self.dbunch.dls[ds_idx]
         b = dl.one_batch()
-        preds,_ = self.get_preds(dl=[b])
-        preds = getattr(self.loss_func, "decodes", noop)(preds)
+        _,_,preds = self.get_preds(dl=[b], with_decoded=True)
         self.dbunch.show_results(b, preds, max_n=max_n, **kwargs)
 
     def show_training_loop(self):

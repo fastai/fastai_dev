@@ -70,7 +70,7 @@ class TfmdDL(DataLoader):
         f = compose(f, partial(getattr(self.dataset,'decode',noop), full = full))
         return L(batch_to_samples(b, max_n=max_n)).map(f)
 
-    def _pre_show_batch(self, b, max_n=10, **kwargs):
+    def _pre_show_batch(self, b, max_n=10):
         b = self.decode(b)
         if hasattr(b, 'show'): return b,None,None
         its = self._decode_batch(b, max_n, full=False)
@@ -80,16 +80,16 @@ class TfmdDL(DataLoader):
     def show_batch(self, b=None, max_n=10, ctxs=None, **kwargs):
         "Show `b` (defaults to `one_batch`), a list of lists of pipeline outputs (i.e. output of a `DataLoader`)"
         if b is None: b = self.one_batch()
-        show_batch(*self._pre_show_batch(b, max_n=max_n, **kwargs), ctxs=ctxs, max_n=max_n, **kwargs)
+        show_batch(*self._pre_show_batch(b, max_n=max_n), ctxs=ctxs, max_n=max_n, **kwargs)
 
     def show_results(self, b, out, max_n=10, ctxs=None, **kwargs):
-        x,y,its = self._pre_show_batch(b, max_n=max_n, **kwargs)
+        x,y,its = self._pre_show_batch(b, max_n=max_n)
         b_out = b[:self.n_inp] + (tuple(out) if is_listy(out) else (out,))
-        x1,y1,outs = self._pre_show_batch(b_out, max_n=max_n, **kwargs)
+        x1,y1,outs = self._pre_show_batch(b_out, max_n=max_n)
         if its is not None:
             its = L(i + o[self.n_inp:] for i,o in zip(its,outs))
             show_results(x, y, its, ctxs=ctxs, max_n=max_n, **kwargs)
-        #its None means that a batch knos how to show itself as a whole, so we pass x, x1
+        #its None means that a batch knows how to show itself as a whole, so we pass x, x1
         else: show_results(x, x1, its, ctxs=ctxs, max_n=max_n, **kwargs)
 
     @property
