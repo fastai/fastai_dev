@@ -525,6 +525,7 @@
   "Learner.to_fp16": "18_callback_fp16.ipynb",
   "reduce_loss": "19_callback_mixup.ipynb",
   "MixUp": "19_callback_mixup.ipynb",
+  "Interpretation": "20_interpret.ipynb",
   "has_pool_type": "21_vision_learner.ipynb",
   "create_body": "21_vision_learner.ipynb",
   "create_head": "21_vision_learner.ipynb",
