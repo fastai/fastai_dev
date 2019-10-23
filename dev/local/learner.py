@@ -132,6 +132,13 @@ def load_model(file, model, opt, with_opt=None, device=None, strict=True):
     elif with_opt: warn("Saved filed doesn't contain an optimizer state.")
 
 #Cell
+def _try_concat(o):
+    try:
+        return torch.cat(o)
+    except:
+        return sum([L(o_[i,:] for i in range_of(o_)) for o_ in o], L())
+
+#Cell
 class Learner():
     def __init__(self, dbunch, model, loss_func=None, opt_func=SGD, lr=defaults.lr, splitter=trainable_params, cbs=None,
                  cb_funcs=None, metrics=None, path=None, model_dir='models', wd_bn_bias=False, train_bn=True):
@@ -266,7 +273,7 @@ class Learner():
             preds = act(torch.cat(cb.preds))
             res = (preds, detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
             if with_decoded: res = res + (getattr(self.loss_func, 'decodes', noop)(preds),)
-            if with_input: res = (tuple(torch.cat(o) for o in zip(*cb.inputs)),) + res
+            if with_input: res = (tuple(_try_concat(o) for o in zip(*cb.inputs)),) + res
             if with_loss:  res = res + (torch.cat(cb.losses),)
             return res
 
