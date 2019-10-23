@@ -121,7 +121,8 @@ def save_model(file, model, opt, with_opt=True):
 def load_model(file, model, opt, with_opt=None, device=None, strict=True):
     "Load `model` from `file` along with `opt` (if available, and if `with_opt`)"
     if isinstance(device, int): device = torch.device('cuda', device)
-    state = torch.load(file)
+    elif device is None: device = 'cpu'
+    state = torch.load(file, map_location=device)
     hasopt = set(state)=={'model', 'opt'}
     model_state = state['model'] if hasopt else state
     get_model(model).load_state_dict(model_state, strict=strict)

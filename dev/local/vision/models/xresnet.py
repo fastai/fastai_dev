@@ -43,7 +43,7 @@ def _xresnet(pretrained, expansion, layers, **kwargs):
     # TODO pretrain all sizes. Currently will fail with non-xrn50
     url = 'https://s3.amazonaws.com/fast-ai-modelzoo/xrn50_940.pth'
     res = XResNet(expansion, layers, **kwargs)
-    if pretrained: res.load_state_dict(load_state_dict_from_url(url)['model'])
+    if pretrained: res.load_state_dict(load_state_dict_from_url(url)['model'], map_location='cpu')
     return res
 
 def xresnet18 (pretrained=False, **kwargs): return _xresnet(pretrained, 1, [2, 2,  2, 2], **kwargs)
