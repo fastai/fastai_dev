@@ -436,7 +436,7 @@ class Recorder(Callback):
     def after_batch(self):
         "Update all metrics and records lr and smooth loss in training"
         if len(self.yb) == 0: return
-        mets = (L(self.smooth_loss) + self._train_mets) if self.training else self._valid_mets
+        mets = self._train_mets if self.training else self._valid_mets
         for met in mets: met.accumulate(self.learn)
         if not self.training: return
         self.lrs.append(self.opt.hypers[-1]['lr'])
@@ -449,7 +449,7 @@ class Recorder(Callback):
         if self.add_time: self.start_epoch = time.time()
         self.log = L(getattr(self, 'epoch', 0))
 
-    def begin_train   (self): self._train_mets.map(Self.reset())
+    def begin_train   (self): self._train_mets[1:].map(Self.reset())
     def begin_validate(self): self._valid_mets.map(Self.reset())
     def after_train   (self): self.log += self._train_mets.map(_maybe_item)
     def after_validate(self): self.log += self._valid_mets.map(_maybe_item)
@@ -466,7 +466,7 @@ class Recorder(Callback):
     @property
     def _train_mets(self):
         if getattr(self, 'cancel_train', False): return L()
-        return L(self.loss) + (self.metrics if self.train_metrics else L())
+        return L(self.smooth_loss) + (self.metrics if self.train_metrics else L())
 
     @property
     def _valid_mets(self):
