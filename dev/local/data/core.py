@@ -163,6 +163,7 @@ class TfmdList(FilteredBase, L):
     def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
     def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
     def setup(self, train_setup=True): self.tfms.setup(getattr(self,'train',self) if train_setup else self)
+    def overlapping_splits(self): return L(Counter(self.splits.concat()).values()).filter(gt(1))
 
     def __getitem__(self, idx):
         res = super().__getitem__(idx)
@@ -201,6 +202,7 @@ class DataSource(FilteredBase):
     def decode(self, o, full=True): return tuple(tl.decode(o_, full=full) for o_,tl in zip(o,tuplify(self.tls, match=o)))
     def subset(self, i): return type(self)(tls=L(tl.subset(i) for tl in self.tls), n_inp=self.n_inp)
     def _new(self, items, *args, **kwargs): return super()._new(items, tfms=self.tfms, do_setup=False, **kwargs)
+    def overlapping_splits(self): return self.tls[0].overlapping_splits()
     @property
     def splits(self): return self.tls[0].splits
     @property
@@ -216,6 +218,7 @@ class DataSource(FilteredBase):
         decode="Compose `decode` of all `tuple_tfms` then all `tfms` on `i`",
         show="Show item `o` in `ctx`",
         databunch="Get a `DataBunch`",
+        overlapping_splits="All splits that are in more than one split",
         subset="New `DataSource` that only includes subset `i`")
 
 #Cell
