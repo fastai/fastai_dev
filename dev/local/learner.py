@@ -133,6 +133,13 @@ def load_model(file, model, opt, with_opt=None, device=None, strict=True):
     elif with_opt: warn("Saved filed doesn't contain an optimizer state.")
 
 #Cell
+def _try_concat(o):
+    try:
+        return torch.cat(o)
+    except:
+        return sum([L(o_[i,:] for i in range_of(o_)) for o_ in o], L())
+
+#Cell
 class Learner():
     def __init__(self, dbunch, model, loss_func=None, opt_func=SGD, lr=defaults.lr, splitter=trainable_params, cbs=None,
                  cb_funcs=None, metrics=None, path=None, model_dir='models', wd_bn_bias=False, train_bn=True):
@@ -249,7 +256,7 @@ class Learner():
 
     def validate(self, ds_idx=1, dl=None, cbs=None):
         self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
-        self.dl = self.dbunch.dls[ds_idx] if dl is None else dl
+        if dl is None: dl = self.dbunch.dls[ds_idx]
         with self.added_cbs(cbs), self.no_logging():
             self(_before_epoch)
             self._do_epoch_validate(ds_idx, dl)
@@ -267,7 +274,7 @@ class Learner():
             preds = act(torch.cat(cb.preds))
             res = (preds, detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
             if with_decoded: res = res + (getattr(self.loss_func, 'decodes', noop)(preds),)
-            if with_input: res = (tuple(torch.cat(o) for o in zip(*cb.inputs)),) + res
+            if with_input: res = (tuple(_try_concat(o) for o in zip(*cb.inputs)),) + res
             if with_loss:  res = res + (torch.cat(cb.losses),)
             return res
 
@@ -280,10 +287,9 @@ class Learner():
         return detuplify(full_dec),dec_preds[0],preds[0]
 
     def show_results(self, ds_idx=0, dl=None, max_n=10, **kwargs):
-        dl = self.dbunch.dls[ds_idx] if dl is None else dl
+        if dl is None: dl = self.dbunch.dls[ds_idx]
         b = dl.one_batch()
-        preds,_ = self.get_preds(dl=[b])
-        preds = getattr(self.loss_func, "decodes", noop)(preds)
+        _,_,preds = self.get_preds(dl=[b], with_decoded=True)
         self.dbunch.show_results(b, preds, max_n=max_n, **kwargs)
 
     def show_training_loop(self):
@@ -437,7 +443,7 @@ class Recorder(Callback):
     def after_batch(self):
         "Update all metrics and records lr and smooth loss in training"
         if len(self.yb) == 0: return
-        mets = (L(self.smooth_loss) + self._train_mets) if self.training else self._valid_mets
+        mets = self._train_mets if self.training else self._valid_mets
         for met in mets: met.accumulate(self.learn)
         if not self.training: return
         self.lrs.append(self.opt.hypers[-1]['lr'])
@@ -450,7 +456,7 @@ class Recorder(Callback):
         if self.add_time: self.start_epoch = time.time()
         self.log = L(getattr(self, 'epoch', 0))
 
-    def begin_train   (self): self._train_mets.map(Self.reset())
+    def begin_train   (self): self._train_mets[1:].map(Self.reset())
     def begin_validate(self): self._valid_mets.map(Self.reset())
     def after_train   (self): self.log += self._train_mets.map(_maybe_item)
     def after_validate(self): self.log += self._valid_mets.map(_maybe_item)
@@ -467,7 +473,7 @@ class Recorder(Callback):
     @property
     def _train_mets(self):
         if getattr(self, 'cancel_train', False): return L()
-        return L(self.loss) + (self.metrics if self.train_metrics else L())
+        return L(self.smooth_loss) + (self.metrics if self.train_metrics else L())
 
     @property
     def _valid_mets(self):

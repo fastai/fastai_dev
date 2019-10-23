@@ -77,16 +77,16 @@ def _get_empty_df(n):
 
 #Cell
 @typedispatch
-def show_batch(x: TensorText, y, its, ctxs=None, max_n=10, **kwargs):
-    if ctxs is None: ctxs = _get_empty_df(min(len(its), max_n))
-    ctxs = default_show_batch(x, y, its, max_n=max_n, ctxs=ctxs, **kwargs)
+def show_batch(x: TensorText, y, samples, ctxs=None, max_n=10, **kwargs):
+    if ctxs is None: ctxs = _get_empty_df(min(len(samples), max_n))
+    ctxs = show_batch[object](x, y, samples, max_n=max_n, ctxs=ctxs, **kwargs)
     display_df(pd.DataFrame(ctxs))
     return ctxs
 
 #Cell
 @typedispatch
-def show_batch(x: LMTensorText, y, its, ctxs=None, max_n=10, **kwargs):
-    return show_batch[TensorText](x, None, its, ctxs=ctxs, max_n=max_n, **kwargs)
+def show_batch(x: LMTensorText, y, samples, ctxs=None, max_n=10, **kwargs):
+    return show_batch[TensorText](x, None, samples, ctxs=ctxs, max_n=max_n, **kwargs)
 
 #Cell
 def pad_input(samples, pad_idx=1, pad_first=False, backwards=False):

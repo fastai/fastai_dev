@@ -130,3 +130,11 @@ def unet_learner(dbunch, arch, loss_func=None, pretrained=True, cut=None, splitt
     learn = Learner(dbunch, model, loss_func=loss_func, splitter=ifnone(splitter, meta['split']), **kwargs)
     if pretrained: learn.freeze()
     return learn
+
+#Cell
+@typedispatch
+def plot_top_losses(x: TensorImage, y:TensorCategory, samples, outs, raws, losses, rows=None, cols=None, figsize=None, **kwargs):
+    axs = get_grid(len(samples), rows=rows, cols=cols, add_vert=1, figsize=figsize, title='Prediction/Actual/Loss/Probability')
+    for ax,s,o,r,l in zip(axs, samples, outs, raws, losses):
+        s[0].show(ctx=ax, **kwargs)
+        ax.set_title(f'{o[0]}/{s[1]} / {l.item():.2f} / {r.max().item():.2f}')

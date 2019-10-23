@@ -147,7 +147,7 @@ class ReadTabBatch(ItemTransform):
 
 #Cell
 @typedispatch
-def show_batch(x: Tabular, y, its, max_n=10, ctxs=None):
+def show_batch(x: Tabular, y, samples, max_n=10, ctxs=None):
     x.show()
 
 #Cell

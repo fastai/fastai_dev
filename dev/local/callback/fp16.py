@@ -24,7 +24,7 @@ def get_master(opt, flat_master=False):
             if mp.grad is None: mp.grad = mp.new(*mp.size())
             master_params.append([mp])
     else:
-        master_params = [[nn.Parameter(param.clone().float().detach(), requires_grad=True) for param in pg] for pg in model_params]
+        master_params = [[nn.Parameter(param.data.clone().float().detach(), requires_grad=True) for param in pg] for pg in model_params]
     return model_params, master_params
 
 #Cell
@@ -79,7 +79,6 @@ class MixedPrecision(Callback):
         self.learn.model = convert_network(self.model, dtype=torch.float16)
         self.model_pgs,self.master_pgs = get_master(self.opt, self.flat_master)
         #Changes the optimizer so that the optimization step is done in FP32.
-        #self.learn.opt.param_groups = self.master_pgs
         _copy_state(self.learn.opt, self.model_pgs, self.master_pgs)
         if self.dynamic: self.count = 0
 
