@@ -5,6 +5,7 @@ __all__ = ['init_cnn', 'XResNet', 'xresnet18', 'xresnet34', 'xresnet50', 'xresne
 #Cell
 from ...torch_basics import *
 from ...test import *
+from torchvision.models.utils import load_state_dict_from_url
 
 #Cell
 def init_cnn(m):
@@ -39,8 +40,11 @@ class XResNet(nn.Sequential):
 
 #Cell
 def _xresnet(pretrained, expansion, layers, **kwargs):
-    assert not pretrained, 'Pretrained xresnet not yet available'
-    return XResNet(expansion, layers, **kwargs)
+    # TODO pretrain all sizes. Currently will fail with non-xrn50
+    url = 'https://s3.amazonaws.com/fast-ai-modelzoo/xrn50_940.pth'
+    res = XResNet(expansion, layers, **kwargs)
+    if pretrained: res.load_state_dict(load_state_dict_from_url(url)['model'])
+    return res
 
 def xresnet18 (pretrained=False, **kwargs): return _xresnet(pretrained, 1, [2, 2,  2, 2], **kwargs)
 def xresnet34 (pretrained=False, **kwargs): return _xresnet(pretrained, 1, [3, 4,  6, 3], **kwargs)

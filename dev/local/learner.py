@@ -135,7 +135,7 @@ def load_model(file, model, opt, with_opt=None, device=None, strict=True):
 class Learner():
     def __init__(self, dbunch, model, loss_func=None, opt_func=SGD, lr=defaults.lr, splitter=trainable_params, cbs=None,
                  cb_funcs=None, metrics=None, path=None, model_dir='models', wd_bn_bias=False, train_bn=True):
-        store_attr(self, "dbunch,model,opt_func,lr,splitter,model_dir,wd_bn_bias,train_bn")
+        store_attr(self, "dbunch,model,opt_func,lr,splitter,model_dir,wd_bn_bias,train_bn,metrics")
         self.training,self.logger,self.opt,self.cbs = False,print,None,L()
         #TODO: infer loss_func from data
         if loss_func is None:
@@ -143,10 +143,14 @@ class Learner():
             assert loss_func is not None, "Could not infer loss function from the data, please pass a loss function."
         self.loss_func = loss_func
         self.path = path if path is not None else getattr(dbunch, 'path', Path('.'))
-        self.metrics = L(metrics).map(mk_metric)
         self.add_cbs(cbf() for cbf in L(defaults.callbacks)+L(cb_funcs))
         self.add_cbs(cbs)
         self.model.to(self.dbunch.device)
+
+    @property
+    def metrics(self): return self._metrics
+    @metrics.setter
+    def metrics(self,v): self._metrics = L(v).map(mk_metric)
 
     def add_cbs(self, cbs): L(cbs).map(self.add_cb)
     def remove_cbs(self, cbs): L(cbs).map(self.remove_cb)

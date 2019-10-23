@@ -140,7 +140,7 @@ defaults.activation=nn.ReLU
 #Cell
 class ConvLayer(nn.Sequential):
     "Create a sequence of convolutional (`ni` to `nf`), ReLU (if `use_activ`) and `norm_type` layers."
-    def __init__(self, ni, nf, ks=3, stride=1, padding=None, bias=None, ndim=2, norm_type=NormType.Batch,
+    def __init__(self, ni, nf, ks=3, stride=1, padding=None, bias=None, ndim=2, norm_type=NormType.Batch, bn_1st=True,
                  act_cls=defaults.activation, transpose=False, init=nn.init.kaiming_normal_, xtra=None):
         if padding is None: padding = ((ks-1)//2 if not transpose else 0)
         bn = norm_type in (NormType.Batch, NormType.BatchZero)
@@ -150,8 +150,11 @@ class ConvLayer(nn.Sequential):
         if   norm_type==NormType.Weight:   conv = weight_norm(conv)
         elif norm_type==NormType.Spectral: conv = spectral_norm(conv)
         layers = [conv]
-        if act_cls is not None: layers.append(act_cls())
-        if bn: layers.append(BatchNorm(nf, norm_type=norm_type, ndim=ndim))
+        act_bn = []
+        if act_cls is not None: act_bn.append(act_cls())
+        if bn: act_bn.append(BatchNorm(nf, norm_type=norm_type, ndim=ndim))
+        if bn_1st: act_bn.reverse()
+        layers += act_bn
         if xtra: layers.append(xtra)
         super().__init__(*layers)
 
@@ -345,15 +348,15 @@ class SimpleCNN(nn.Sequential):
 class ResBlock(nn.Module):
     "Resnet block from `ni` to `nh` with `stride`"
     @delegates(ConvLayer.__init__)
-    def __init__(self, expansion, ni, nh, stride=1, norm_type=NormType.Batch, **kwargs):
+    def __init__(self, expansion, ni, nh, stride=1, norm_type=NormType.Batch, act_cls=defaults.activation, **kwargs):
         super().__init__()
         norm2 = NormType.BatchZero if norm_type==NormType.Batch else norm_type
         nf,ni = nh*expansion,ni*expansion
-        layers  = [ConvLayer(ni, nh, 3, stride=stride, norm_type=norm_type, **kwargs),
-                   ConvLayer(nh, nf, 3, norm_type=norm2, act_cls=None)
+        layers  = [ConvLayer(ni, nh, 3, stride=stride, norm_type=norm_type, act_cls=act_cls, **kwargs),
+                   ConvLayer(nh, nf, 3, norm_type=norm2, act_cls=None, **kwargs)
         ] if expansion == 1 else [
-                   ConvLayer(ni, nh, 1, norm_type=norm_type, **kwargs),
-                   ConvLayer(nh, nh, 3, stride=stride, norm_type=norm_type, **kwargs),
+                   ConvLayer(ni, nh, 1, norm_type=norm_type, act_cls=act_cls, **kwargs),
+                   ConvLayer(nh, nh, 3, stride=stride, norm_type=norm_type, act_cls=act_cls, **kwargs),
                    ConvLayer(nh, nf, 1, norm_type=norm2, act_cls=None, **kwargs)
         ]
         self.convs = nn.Sequential(*layers)
