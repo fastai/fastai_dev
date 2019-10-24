@@ -102,7 +102,7 @@ def windowed(self:DcmDataset, w, l):
 # From https://radiopaedia.org/articles/windowing-ct
 dicom_windows = types.SimpleNamespace(
     brain=(80,40),
-    subdural=(200,80),
+    subdural=(254,100),
     stroke=(8,32),
     brain_bone=(2800,600),
     brain_soft=(375,40),
@@ -213,6 +213,20 @@ def crop_resize(x, crops, new_sz):
 def to_uint16(x:(Tensor,DcmDataset), bins=None):
     d = x.hist_scaled(bins).clamp(0,1) * 2**16
     return d.numpy().astype(np.uint16)
+
+#Cell
+@patch
+def to_3chan(x:Tensor, win1, win2, bins=None):
+    return torch.stack([
+        x.windowed(*win1),
+        x.windowed(*win2),
+        x.hist_scaled(bins).clamp(0,1)
+    ])
+
+#Cell
+@patch
+def to_3chan(x:DcmDataset, win1, win2, bins=None):
+    return x.scaled_px.to_3chan(win1, win2, bins)
 
 #Cell
 @patch
