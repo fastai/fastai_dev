@@ -211,7 +211,6 @@
   "ConvLayer": "03a_layers.ipynb",
   "BaseLoss": "03a_layers.ipynb",
   "CrossEntropyLossFlat": "03a_layers.ipynb",
-  "@delegates(keep": "03a_layers.ipynb",
   "BCELossFlat": "03a_layers.ipynb",
   "MSELossFlat": "03a_layers.ipynb",
   "LabelSmoothingCrossEntropy": "03a_layers.ipynb",
