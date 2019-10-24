@@ -2,11 +2,11 @@
 
 __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugger', 'sigmoid_range', 'SigmoidRange',
            'AdaptiveConcatPool2d', 'PoolType', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm', 'BatchNorm1dFlat',
-           'BnDropLin', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', '@delegates(keep',
-           'CrossEntropyLossFlat', '@delegates(keep', 'BCELossFlat', 'MSELossFlat', 'LabelSmoothingCrossEntropy',
-           'trunc_normal_', 'Embedding', 'SelfAttention', 'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR',
-           'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN', 'ResBlock', 'ParameterModule', 'children_and_parameters',
-           'TstModule', 'tst', 'children', 'flatten_model', 'NoneReduce', 'in_channels']
+           'BnDropLin', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'CrossEntropyLossFlat',
+           'BCELossFlat', 'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention',
+           'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
+           'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model',
+           'NoneReduce', 'in_channels']
 
 #Cell
 from .core.all import *
