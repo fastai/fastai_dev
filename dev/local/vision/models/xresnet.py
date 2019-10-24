@@ -17,7 +17,7 @@ def init_cnn(m):
 class XResNet(nn.Sequential):
     def __init__(self, expansion, layers, c_in=3, c_out=1000):
         stem = []
-        sizes = [c_in,32,32,64]
+        sizes = [c_in,16,32,64] if c_in<3 else [c_in,32,32,64]
         for i in range(3):
             stem.append(ConvLayer(sizes[i], sizes[i+1], stride=2 if i==0 else 1))
 

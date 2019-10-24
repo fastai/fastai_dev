@@ -116,7 +116,7 @@ dicom_windows = types.SimpleNamespace(
 class TensorCTScan(TensorImageBW): _show_args = {'cmap':'bone'}
 
 #Cell
-class PILCTScan(PILBase): _open_args,_tensor_cls = {},TensorCTScan
+class PILCTScan(PILBase): _open_args,_tensor_cls,_show_args = {},TensorCTScan,TensorCTScan._show_args
 
 #Cell
 @patch
@@ -211,6 +211,14 @@ def crop_resize(x, crops, new_sz):
 def to_uint16(x:(Tensor,DcmDataset), bins=None):
     d = x.hist_scaled(bins).clamp(0,1) * 2**16
     return d.numpy().astype(np.uint16)
+
+#Cell
+@patch
+def save_jpg(x:(Tensor,DcmDataset), path, win1, win2, bins=None, quality=90):
+    fn = Path(path).with_suffix('.jpg')
+    x = (x.to_3chan(win1, win2, bins)*255).byte()
+    im = Image.fromarray(x.permute(1,2,0).numpy())
+    im.save(fn, quality=quality)
 
 #Cell
 @patch
