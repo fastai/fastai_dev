@@ -2,7 +2,7 @@
 
 __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugger', 'sigmoid_range', 'SigmoidRange',
            'AdaptiveConcatPool2d', 'PoolType', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm', 'BatchNorm1dFlat',
-           'BnDropLin', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'CrossEntropyLossFlat',
+           'BnDropLin', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat',
            'BCELossFlat', 'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention',
            'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
            'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model',
@@ -194,11 +194,11 @@ class CrossEntropyLossFlat(BaseLoss):
 
 #Cell
 @delegates(keep=True)
-class CrossEntropyLossFlat(BaseLoss):
+class BCEWithLogitsLossFlat(BaseLoss):
     "Same as `nn.CrossEntropyLoss`, but flattens input and target."
     def __init__(self, *args, axis=-1, floatify=True, thresh=0.5, **kwargs):
         super().__init__(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
-        self.thresh = tresh
+        self.thresh = thresh
 
     def decodes(self, x):    return x>self.thresh
     def activation(self, x): return torch.sigmoid(x)
