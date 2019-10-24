@@ -118,6 +118,8 @@ class MixedPrecision(Callback):
         state = {p:copy_clone(self.learn.opt.state[p]) for p in self.learn.opt.state.keys()}
         self.learn.create_opt()
         for p,v in state.items(): self.learn.opt.state[p] = v
+        delattr(self, "master_pgs")
+        delattr(self, "model_pgs")
 
     _docs = dict(begin_fit="Put the model in FP16 and prepare the two copies of the parameters",
                  begin_batch="Put the input in FP16",

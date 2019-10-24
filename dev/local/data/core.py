@@ -209,6 +209,9 @@ class DataSource(FilteredBase):
     def split_idx(self): return self.tls[0].tfms.split_idx
     @property
     def items(self): return self.tls[0].items
+    @items.setter
+    def items(self, v):
+        for tl in self.tls: tl.items = v
 
     def show(self, o, ctx=None, **kwargs):
         for o_,tl in zip(o,self.tls): ctx = tl.show(o_, ctx=ctx, **kwargs)
