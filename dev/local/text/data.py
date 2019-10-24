@@ -71,14 +71,9 @@ class LMDataLoader(TfmdDL):
         return LMTensorText(txt[:-1]),txt[1:]
 
 #Cell
-def _get_empty_df(n):
-    df = pd.DataFrame(index = range(n))
-    return [df.iloc[i] for i in range(n)]
-
-#Cell
 @typedispatch
 def show_batch(x: TensorText, y, samples, ctxs=None, max_n=10, **kwargs):
-    if ctxs is None: ctxs = _get_empty_df(min(len(samples), max_n))
+    if ctxs is None: ctxs = get_empty_df(min(len(samples), max_n))
     ctxs = show_batch[object](x, y, samples, max_n=max_n, ctxs=ctxs, **kwargs)
     display_df(pd.DataFrame(ctxs))
     return ctxs

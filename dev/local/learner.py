@@ -68,7 +68,10 @@ class GatherPredsCallback(Callback):
         "Save predictions, targets and potentially losses"
         self.preds.append(to_detach(self.pred))
         self.targets.append(to_detach(self.yb))
-        if self.with_loss:  self.losses.append(to_detach(self.loss))
+        if self.with_loss:
+            bs = find_bs(self.yb)
+            loss = self.loss if self.loss.numel() == bs else self.loss.view(bs,-1).mean(1)
+            self.losses.append(to_detach(loss))
 
 #Cell
 _ex_docs = dict(

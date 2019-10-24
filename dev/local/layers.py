@@ -9,7 +9,9 @@ __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugge
            'NoneReduce', 'in_channels']
 
 #Cell
-from .torch_basics import *
+from .core.all import *
+from .torch_imports import *
+from .torch_core import *
 from .test import *
 from torch.nn.utils import weight_norm, spectral_norm
 
@@ -183,11 +185,12 @@ class BaseLoss():
         return self.func.__call__(inp, targ.view(-1) if self.flatten else targ, **kwargs)
 
 #Cell
-def CrossEntropyLossFlat(*args, axis=-1, **kwargs):
+@delegates(keep=True)
+class CrossEntropyLossFlat(BaseLoss):
     "Same as `nn.CrossEntropyLoss`, but flattens input and target."
-    def _decodes(x): return x.argmax(dim=axis)
-    def _act(x): return F.softmax(x, dim=axis)
-    return BaseLoss(nn.CrossEntropyLoss, *args, axis=axis, activation=_act, decodes=_decodes, **kwargs)
+    def __init__(self, *args, axis=-1, **kwargs): super().__init__(nn.CrossEntropyLoss, *args, axis=axis, **kwargs)
+    def decodes(self, x):    return x.argmax(dim=self.axis)
+    def activation(self, x): return F.softmax(x, dim=self.axis)
 
 #Cell
 def BCEWithLogitsLossFlat(*args, axis=-1, floatify=True, thresh=0.5, **kwargs):

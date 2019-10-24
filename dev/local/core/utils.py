@@ -8,7 +8,7 @@ __all__ = ['ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrd
            'rnum_methods', 'inum_methods', 'Tuple', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped',
            'instantiate', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'subplots', 'show_image',
            'show_titled_image', 'show_images', 'ArrayBase', 'ArrayImageBase', 'ArrayImage', 'ArrayImageBW', 'ArrayMask',
-           'PrettyString', 'display_df', 'round_multiple', 'even_mults', 'num_cpus', 'add_props']
+           'PrettyString', 'get_empty_df', 'display_df', 'round_multiple', 'even_mults', 'num_cpus', 'add_props']
 
 #Cell
 from ..test import *
@@ -577,6 +577,12 @@ class ArrayMask(ArrayImageBase): _show_args = {'alpha':0.5, 'cmap':'tab20', 'int
 class PrettyString(str):
     "Little hack to get strings to show properly in Jupyter."
     def __repr__(self): return self
+
+#Cell
+def get_empty_df(n):
+    "Return `n` empty rows of a dataframe"
+    df = pd.DataFrame(index = range(n))
+    return [df.iloc[i] for i in range(n)]
 
 #Cell
 def display_df(df):

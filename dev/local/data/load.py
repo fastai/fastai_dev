@@ -91,6 +91,7 @@ class DataLoader(GetAttr):
         self.before_iter()
         for b in _loaders[self.fake_l.num_workers==0](self.fake_l): yield self.after_batch(b)
         self.after_iter()
+        if hasattr(self, 'it'): delattr(self, 'it')
 
     def create_batches(self, samps):
         self.it = iter(self.dataset) if self.dataset is not None else None

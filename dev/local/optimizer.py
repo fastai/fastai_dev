@@ -46,11 +46,11 @@ class Optimizer(_BaseOptimizer):
     "Base optimizer class for the fastai library, updating `params` with `steppers`"
     _keep_on_clear = ['force_train', 'do_wd']
     def __init__(self, params, steppers, stats=None, train_bn=True, **defaults):
-        steppers,params = L(steppers),L(params)
-        self.stats,self.state,self.train_bn = L(stats),defaultdict(dict),train_bn
-        defaults = merge(*self.stats.attrgot('defaults'), *steppers.attrgot('defaults'), defaults)
+        params = L(params)
+        self.steppers,self.stats,self.state,self.train_bn = L(steppers),L(stats),defaultdict(dict),train_bn
+        defaults = merge(*self.stats.attrgot('defaults'), *self.steppers.attrgot('defaults'), defaults)
         self.param_groups = L(L(p) for p in params) if isinstance(params[0], (L,list)) else L([params])
-        self.step_func = compose(*steppers)
+        #self.step_func = compose(*steppers)
         self.hypers = L({} for _ in range_of(self.param_groups))
         self.set_hypers(**defaults)
         self.frozen_idx = 0
@@ -62,8 +62,8 @@ class Optimizer(_BaseOptimizer):
 
     def step(self):
         for p,pg,state,hyper in self.all_params(with_grad=True):
-            for stat in self.stats: state = stat(state, p, **hyper)
-            self.step_func(p, **{**state, **hyper})
+            for stat in self.stats:    state = stat(state, p, **hyper)
+            for step in self.steppers: step(p, **{**state, **hyper})
             self.state[p] = state
 
     def clear_state(self):
