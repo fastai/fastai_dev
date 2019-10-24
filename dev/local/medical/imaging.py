@@ -39,6 +39,7 @@ def scaled_px(self:DcmDataset):
 
 #Cell
 def array_freqhist_bins(self, n_bins=100):
+    "A numpy based function to split the range of pixel values into groups, such that each group has around the same number of pixels"
     imsd = np.sort(self.flatten())
     t = np.array([0.001])
     t = np.append(t, np.arange(n_bins)/n_bins+(1/2/n_bins))
@@ -49,6 +50,7 @@ def array_freqhist_bins(self, n_bins=100):
 #Cell
 @patch
 def freqhist_bins(self:Tensor, n_bins=100):
+    "A function to split the range of pixel values into groups, such that each group has around the same number of pixels"
     imsd = self.view(-1).sort()[0]
     t = torch.cat([tensor([0.001]),
                    torch.arange(n_bins).float()/n_bins+(1/2/n_bins),
