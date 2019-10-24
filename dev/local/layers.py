@@ -2,11 +2,11 @@
 
 __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugger', 'sigmoid_range', 'SigmoidRange',
            'AdaptiveConcatPool2d', 'PoolType', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm', 'BatchNorm1dFlat',
-           'BnDropLin', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat',
-           'BCELossFlat', 'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention',
-           'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
-           'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model',
-           'NoneReduce', 'in_channels']
+           'BnDropLin', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', '@delegates(keep',
+           'CrossEntropyLossFlat', '@delegates(keep', 'BCELossFlat', 'MSELossFlat', 'LabelSmoothingCrossEntropy',
+           'trunc_normal_', 'Embedding', 'SelfAttention', 'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR',
+           'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN', 'ResBlock', 'ParameterModule', 'children_and_parameters',
+           'TstModule', 'tst', 'children', 'flatten_model', 'NoneReduce', 'in_channels']
 
 #Cell
 from .core.all import *
@@ -193,10 +193,15 @@ class CrossEntropyLossFlat(BaseLoss):
     def activation(self, x): return F.softmax(x, dim=self.axis)
 
 #Cell
-def BCEWithLogitsLossFlat(*args, axis=-1, floatify=True, thresh=0.5, **kwargs):
-    "Same as `nn.BCEWithLogitsLoss`, but flattens input and target."
-    def _decodes(x): return x>thresh
-    return BaseLoss(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, activation=torch.sigmoid, decodes=_decodes, **kwargs)
+@delegates(keep=True)
+class CrossEntropyLossFlat(BaseLoss):
+    "Same as `nn.CrossEntropyLoss`, but flattens input and target."
+    def __init__(self, *args, axis=-1, floatify=True, thresh=0.5, **kwargs):
+        super().__init__(nn.BCEWithLogitsLoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
+        self.thresh = tresh
+
+    def decodes(self, x):    return x>self.thresh
+    def activation(self, x): return torch.sigmoid(x)
 
 #Cell
 def BCELossFlat(*args, axis=-1, floatify=True, **kwargs):
