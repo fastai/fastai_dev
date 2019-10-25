@@ -141,6 +141,7 @@ class Categorize(Transform):
 
     def setups(self, dsrc):
         if self.vocab is None and dsrc is not None: self.vocab = CategoryMap(dsrc, add_na=self.add_na)
+        self.c = len(self.vocab)
 
     def encodes(self, o): return TensorCategory(self.vocab.o2i[o])
     def decodes(self, o): return Category(self.vocab[o])
