@@ -15,7 +15,9 @@ from .torch_imports import *
 from fastprogress import progress_bar,master_bar
 
 #Cell
-if torch.cuda.is_available(): torch.cuda.set_device(int(os.environ.get('DEFAULT_GPU') or 0))
+if torch.cuda.is_available():
+    torch.cuda.set_device(int(os.environ.get('DEFAULT_GPU') or 0))
+    torch.backends.cudnn.benchmark = True
 
 #Cell
 @patch
