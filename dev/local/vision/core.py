@@ -3,7 +3,7 @@
 __all__ = ['Image', 'ToTensor', 'imagenet_stats', 'cifar_stats', 'mnist_stats', 'n_px', 'shape', 'aspect', 'load_image',
            'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'OpenMask', 'TensorPoint', 'get_annotations', 'TensorBBox',
            'LabeledBBox', 'image2tensor', 'encodes', 'encodes', 'PointScaler', 'BBoxLabels', 'BBoxLabeler', 'decodes',
-           'encodes', 'decodes', 'clip_remove_empty', 'bb_pad', 'get_grid', 'show_results']
+           'encodes', 'decodes']
 
 #Cell
 from ..test import *
@@ -215,53 +215,6 @@ class PointScaler(Transform):
 TensorPoint.default_item_tfms = PointScaler
 
 #Cell
-#class BBoxScaler(PointScaler):
-#    "Scale a tensor representing bounding boxes"
-#    def encodes(self, x:(PILBase,TensorImageBase)): return self._grab_sz(x)
-#    def decodes(self, x:(PILBase,TensorImageBase)): return self._grab_sz(x)
-#
-#    def encodes(self, x:(BBox,TensorBBox)):
-#        pnts = x.bbox.view(-1,2)
-#        scaled_bb = _scale_pnts(pnts, self._get_sz(pnts), self.do_scale, self.y_first)
-#        return TensorBBox((scaled_bb.view(-1,4),x.lbl))
-#
-#    def decodes(self, x:(BBox,TensorBBox)):
-#        scaled_bb = _unscale_pnts(x.bbox.view(-1,2), self._get_sz(x.bbox.view(-1,2)))
-#        return TensorBBox((scaled_bb.view(-1,4), x.lbl))
-
-#Cell
-#class BBoxCategorize(Transform):
-#    "Reversible transform of category string to `vocab` id"
-#    order,state_args=1,'vocab'
-#    def __init__(self, vocab=None):
-#        self.vocab = vocab
-#        self.o2i = None if vocab is None else {v:k for k,v in enumerate(vocab)}
-#
-#    def setups(self, dsrc):
-#        if not dsrc: return
-#        vals = set()
-#        for bb in dsrc: vals = vals.union(set(bb.lbl))
-#        self.vocab,self.otoi = uniqueify(list(vals), sort=True, bidir=True, start='#bg')
-#
-#    def encodes(self, o:BBox):
-#        return TensorBBox.create((o.bbox,tensor([self.otoi[o_] for o_ in o.lbl if o_ in self.otoi])))
-#    def decodes(self, o:TensorBBox):
-#        return BBox((o.bbox,[self.vocab[i_] for i_ in o.lbl]))
-#
-#BBox.default_type_tfms,BBox.default_item_tfms = BBoxCategorize,BBoxScaler
-
-#Cell
-#TODO tests
-#def bb_pad(samples, pad_idx=0):
-#    "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
-#    max_len = max([len(s[1][1]) for s in samples])
-#    def _f(img,bbox,lbl):
-#        bbox = torch.cat([bbox,bbox.new_zeros(max_len-bbox.shape[0], 4)])
-#        lbl  = torch.cat([lbl, lbl .new_zeros(max_len-lbl .shape[0])+pad_idx])
-#        return img,TensorBBox((bbox,lbl))
-#    return [_f(x,*y) for x,y in samples]
-
-#Cell
 class BBoxLabels(MultiCategory):
     create = MultiCategorize(add_na=True)
     default_type_tfms = None
@@ -301,70 +254,3 @@ def encodes(self, x:TensorBBox):
 def decodes(self, x:TensorBBox):
     pnts = self.decodes(TensorPoint(x.view(-1,2), sz=x._meta.get('sz', None)))
     return TensorBBox(pnts.view(-1, 4), sz=x._meta.get('sz', None))
-
-#Cell
-def clip_remove_empty(bbox, label):
-    "Clip bounding boxes with image border and label background the empty ones."
-    bbox = torch.clamp(bbox, -1, 1)
-    empty = ((bbox[...,2] - bbox[...,0])*(bbox[...,3] - bbox[...,1]) < 0.)
-    return (bbox[~empty], label[~empty])
-
-#Cell
-def bb_pad(samples, pad_idx=0):
-    "Function that collect `samples` of labelled bboxes and adds padding with `pad_idx`."
-    samples = [(s[0], *clip_remove_empty(*s[1:])) for s in samples]
-    max_len = max([len(s[2]) for s in samples])
-    def _f(img,bbox,lbl):
-        bbox = torch.cat([bbox,bbox.new_zeros(max_len-bbox.shape[0], 4)])
-        lbl  = torch.cat([lbl, lbl .new_zeros(max_len-lbl .shape[0])+pad_idx])
-        return img,bbox,lbl
-    return [_f(*s) for s in samples]
-
-#Cell
-TensorBBox.dbunch_kwargs = {'before_batch': bb_pad}
-
-#Cell
-def get_grid(n, rows=None, cols=None, add_vert=0, figsize=None, double=False, title=None):
-    rows = rows or int(np.ceil(math.sqrt(n)))
-    cols = cols or int(np.ceil(n/rows))
-    if double: cols*=2 ; n*=2
-    figsize = (cols*3, rows*3+add_vert) if figsize is None else figsize
-    fig,axs = subplots(rows, cols, figsize=figsize)
-    axs = axs.flatten()
-    for ax in axs[n:]: ax.set_axis_off()
-    if title is not None: fig.suptitle(title, weight='bold', size=14)
-    return axs
-
-#Cell
-@typedispatch
-def show_batch(x:TensorImage, y, samples, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
-    if ctxs is None: ctxs = get_grid(min(len(samples), max_n), rows=rows, cols=cols, figsize=figsize)
-    ctxs = show_batch[object](x, y, samples, ctxs=ctxs, max_n=max_n, **kwargs)
-    return ctxs
-
-#Cell
-@typedispatch
-def show_results(x:TensorImage, y, samples, outs, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
-    if ctxs is None: ctxs = get_grid(min(len(samples), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize)
-    ctxs = show_results[object](x, y, samples, outs, ctxs=ctxs, max_n=max_n, **kwargs)
-    return ctxs
-
-#Cell
-@typedispatch
-def show_results(x:TensorImage, y:TensorCategory, samples, outs, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
-    if ctxs is None: ctxs = get_grid(min(len(samples), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize)
-    for i in range(2):
-        ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(samples.itemgot(i),ctxs,range(max_n))]
-    ctxs = [r.show(ctx=c, color='green' if b==r else 'red', **kwargs)
-            for b,r,c,_ in zip(samples.itemgot(1),outs.itemgot(0),ctxs,range(max_n))]
-    return ctxs
-
-#Cell
-@typedispatch
-def show_results(x:TensorImage, y:(TensorImageBase, TensorPoint, TensorBBox), samples, outs, ctxs=None, max_n=10, rows=None, cols=None, figsize=None, **kwargs):
-    if ctxs is None: ctxs = get_grid(min(len(samples), max_n), rows=rows, cols=cols, add_vert=1, figsize=figsize, double=True)
-    for i in range(2):
-        ctxs[::2] = [b.show(ctx=c, **kwargs) for b,c,_ in zip(samples.itemgot(i),ctxs[::2],range(max_n))]
-    for x in [samples,outs]:
-        ctxs[1::2] = [b.show(ctx=c, **kwargs) for b,c,_ in zip(x.itemgot(0),ctxs[1::2],range(max_n))]
-    return ctxs
