@@ -372,6 +372,7 @@
   "Contrast": "09_vision_augment.ipynb",
   "setup_aug_tfms": "09_vision_augment.ipynb",
   "aug_transforms": "09_vision_augment.ipynb",
+  "ImageDataBunch": "09a_vision_data.ipynb",
   "get_grid": "09a_vision_data.ipynb",
   "clip_remove_empty": "09a_vision_data.ipynb",
   "bb_pad": "09a_vision_data.ipynb",

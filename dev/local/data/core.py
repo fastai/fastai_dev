@@ -114,12 +114,18 @@ class DataBunch(GetAttr):
     train_dl,valid_dl = add_props(lambda i,x: x[i])
     train_ds,valid_ds = add_props(lambda i,x: x[i].dataset)
 
+    @classmethod
+    @delegates(TfmdDL.__init__)
+    def from_dblock(cls, dblock, source, type_tfms=None, item_tfms=None, batch_tfms=None, **kwargs):
+        return dblock.databunch(source, type_tfms=type_tfms, item_tfms=item_tfms, batch_tfms=batch_tfms, **kwargs)
+
     _docs=dict(__getitem__="Retrieve `DataLoader` at `i` (`0` is training, `1` is validation)",
                train_dl="Training `DataLoader`",
                valid_dl="Validation `DataLoader`",
                train_ds="Training `Dataset`",
                valid_ds="Validation `Dataset`",
-               new_empty="Create a new empty version of `self` with the same transforms")
+               new_empty="Create a new empty version of `self` with the same transforms",
+               from_dblock="Create a databunch from a given `dblock`")
 
 #Cell
 class FilteredBase:
