@@ -336,6 +336,7 @@
   "TensorPoint.affine_coord": "09_vision_augment.ipynb",
   "TensorBBox.affine_coord": "09_vision_augment.ipynb",
   "AffineCoordTfm": "09_vision_augment.ipynb",
+  "RandomResizedCropGPU": "09_vision_augment.ipynb",
   "affine_mat": "09_vision_augment.ipynb",
   "mask_tensor": "09_vision_augment.ipynb",
   "flip_mat": "09_vision_augment.ipynb",
