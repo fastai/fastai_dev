@@ -435,6 +435,7 @@
   "Learner.freeze_to": "13_learner.ipynb",
   "Learner.freeze": "13_learner.ipynb",
   "Learner.unfreeze": "13_learner.ipynb",
+  "Learner.export": "13_learner.ipynb",
   "flatten_check": "13a_metrics.ipynb",
   "AccumMetric": "13a_metrics.ipynb",
   "skm_to_fastai": "13a_metrics.ipynb",

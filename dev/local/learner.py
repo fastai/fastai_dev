@@ -517,3 +517,16 @@ add_docs(Learner,
          freeze_to="Freeze parameter groups up to `n`",
          freeze="Freeze up to last parameter group",
          unfreeze="Unfreeze the entire model")
+
+#Cell
+@patch
+def export(self:Learner, fname='export.pkl'):
+    "Export the content of `self` without the items and the optimizer state for inference"
+    old_dbunch = self.dbunch
+    self.dbunch = dbunch.new_empty()
+    state = self.opt.state_dict()
+    self.opt = None
+    torch.save(self, open(self.path/fname, 'wb'))
+    self.create_opt()
+    self.opt.load_state_dict(state)
+    self.dbunch = old_dbunch
