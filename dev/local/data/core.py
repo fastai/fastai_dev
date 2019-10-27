@@ -154,7 +154,7 @@ class FilteredBase:
 FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
 
 #Cell
-class TfmdList(FilteredBase, L):
+class TfmdList(FilteredBase, L, GetAttr):
     "A `Pipeline` of `tfms` applied to a collection of `items`"
     _default='tfms'
     def __init__(self, items, tfms, use_list=None, do_setup=True, as_item=True, split_idx=None, train_setup=True, splits=None):

@@ -279,7 +279,7 @@ def negate_func(f):
     return _f
 
 #Cell
-class L(CollBase, GetAttr, metaclass=NewChkMeta):
+class L(CollBase, metaclass=NewChkMeta):
     "Behaves like a list of `items` but can also index with list of indices or masks"
     _default='items'
     def __init__(self, items=None, *rest, use_list=False, match=None):
@@ -297,6 +297,7 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
     def _xtra(self): return None
     def _new(self, items, *args, **kwargs): return type(self)(items, *args, use_list=None, **kwargs)
     def __getitem__(self, idx): return self._get(idx) if is_indexer(idx) else L(self._get(idx), use_list=None)
+    def copy(self): return self._new(self.items.copy())
 
     def _get(self, i):
         if is_indexer(i) or isinstance(i,slice): return getattr(self.items,'iloc',self.items)[i]
@@ -370,11 +371,23 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
         random.shuffle(it)
         return self._new(it)
 
+    def append(self,o): return self.items.append(o)
+    def remove(self,o): return self.items.remove(o)
+    def count (self,o): return self.items.count(o)
+    def reverse(self ): return self.items.reverse()
+    def pop(self,o=-1): return self.items.pop(o)
+    def clear(self   ): return self.items.clear()
+    def index(self, value, start=0, stop=sys.maxsize): return self.items.index(value, start=start, stop=stop)
+    def sort(self, key=None, reverse=False): return self.items.sort(key=key, reverse=reverse)
+
 #Cell
+_docs = {o:"Passthru to `list` method" for o in
+         'append count remove reverse sort pop clear index'.split()}
 add_docs(L,
          __getitem__="Retrieve `idx` (can be list of indices, or mask, or int) items",
-         range="Same as builtin `range`, but returns an `L`. Can pass a collection for `a`, to use `len(a)`",
-         split="Same as builtin `str.split`, but returns an `L`",
+         range="Same as `range`, but returns an `L`. Can pass a collection for `a`, to use `len(a)`",
+         split="Same as `str.split`, but returns an `L`",
+         copy="Same as `list.copy`, but returns an `L`",
          sorted="New `L` sorted by `key`. If key is str then use `attrgetter`. If key is int then use `itemgetter`",
          unique="Unique items, in stable order",
          val2idx="Dict from value to index",
@@ -391,4 +404,6 @@ add_docs(L,
          map_zip="Combine `zip` and `starmap`",
          map_zipwith="Combine `zipwith` and `starmap`",
          concat="Concatenate all elements of list",
-         shuffle="Same as `random.shuffle`, but not inplace")
+         shuffle="Same as `random.shuffle`, but not inplace",
+         **_docs
+        )

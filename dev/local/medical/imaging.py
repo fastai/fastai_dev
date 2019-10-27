@@ -251,14 +251,6 @@ def save_jpg(x:(Tensor,DcmDataset), path, wins, bins=None, quality=90):
 
 #Cell
 @patch
-def save_png16(x:(Tensor,DcmDataset), path, bins=None, compress_level=0):
-    fn = Path(path).with_suffix('.png')
-    im = Image.fromarray(x.to_uint16(bins))
-    if compress_level: im.save(fn, compress_level=compress_level)
-    else: im.save(fn, compress_type=Image.RLE)
-
-#Cell
-@patch
 def save_tif16(x:(Tensor,DcmDataset), path, bins=None, compress=True):
     fn = Path(path).with_suffix('.tif')
     Image.fromarray(x.to_uint16(bins)).save(str(fn), compression='tiff_deflate' if compress else None)
