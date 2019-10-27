@@ -10,6 +10,7 @@ __all__ = ['RandTransform', 'TensorTypes', 'FlipItem', 'DihedralItem', 'PadMode'
 from ..test import *
 from ..data.all import *
 from .core import *
+from .data import *
 
 #Cell
 from torch import stack, zeros_like as t0, ones_like as t1
@@ -626,7 +627,7 @@ def aug_transforms(do_flip=True, flip_vert=False, max_rotate=10., max_zoom=1.1, 
                    size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Utility func to easily create a list of flip, rotate, zoom, warp, lighting transforms."
     res,tkw = [],dict(size=size, mode=mode, pad_mode=pad_mode)
-    ifmnist = untar_data(URLs.MNIST_TINY)
+    if do_flip: res.append(Dihedral(p=0.5, **tkw) if flip_vert else Flip(p=0.5, **tkw))
     if max_warp:   res.append(Warp(magnitude=max_warp, p=p_affine, **tkw))
     if max_rotate: res.append(Rotate(max_deg=max_rotate, p=p_affine, **tkw))
     if max_zoom>1: res.append(Zoom(max_zoom=max_zoom, p=p_affine, **tkw))
