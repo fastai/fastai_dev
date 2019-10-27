@@ -644,8 +644,6 @@
   "DcmDataset.to_nchan": "60_medical_imaging.ipynb",
   "Tensor.save_jpg": "60_medical_imaging.ipynb",
   "DcmDataset.save_jpg": "60_medical_imaging.ipynb",
-  "Tensor.save_png16": "60_medical_imaging.ipynb",
-  "DcmDataset.save_png16": "60_medical_imaging.ipynb",
   "Tensor.save_tif16": "60_medical_imaging.ipynb",
   "DcmDataset.save_tif16": "60_medical_imaging.ipynb",
   "DcmDataset.set_pixels": "60_medical_imaging.ipynb",
