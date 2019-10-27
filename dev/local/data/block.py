@@ -59,12 +59,12 @@ class DataBlock():
             lambda tt,tfm,l: L(l) + _merge_tfms(tt, tfm))
         return DataSource(items, tfms=type_tfms, splits=splits, dl_type=self.dl_type, n_inp=self.n_inp)
 
-    def databunch(self, source, type_tfms=None, item_tfms=None, batch_tfms=None, **kwargs):
+    def databunch(self, source, path='.', type_tfms=None, item_tfms=None, batch_tfms=None, **kwargs):
         dsrc = self.datasource(source, type_tfms=type_tfms)
         item_tfms  = _merge_tfms(self.default_item_tfms,  item_tfms)
         batch_tfms = _merge_tfms(self.default_batch_tfms, batch_tfms)
         kwargs = {**self.dbunch_kwargs, **kwargs}
-        return dsrc.databunch(after_item=item_tfms, after_batch=batch_tfms, **kwargs)
+        return dsrc.databunch(path=path, after_item=item_tfms, after_batch=batch_tfms, **kwargs)
 
     _docs = dict(datasource="Create a `Datasource` from `source` with `type_tfms`",
                  databunch="Create a `DataBunch` from `source` with `item_tfms` and `batch_tfms`")

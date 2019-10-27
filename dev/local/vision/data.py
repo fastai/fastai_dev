@@ -21,18 +21,18 @@ class ImageDataBunch(DataBunch):
                            get_items=get_image_files,
                            splitter=splitter,
                            get_y=parent_label)
-        return cls.from_dblock(dblock, path, **kwargs)
+        return cls.from_dblock(dblock, path, path=path, **kwargs)
 
     @classmethod
     @delegates(DataBunch.from_dblock)
-    def from_name_re(cls, fnames, pat, valid_pct=0.2, seed=None, **kwargs):
-        "Create from list of `fnames` with re expression `pat`."
+    def from_name_re(cls, path, fnames, pat, valid_pct=0.2, seed=None, **kwargs):
+        "Create from list of `fnames` in `path`s with re expression `pat`."
         splitter = RandomSplitter(valid_pct, seed=seed)
         dblock = DataBlock(types=(PILImage, Category),
                            get_items=noop,
                            splitter=splitter,
                            get_y=RegexLabeller(pat))
-        return cls.from_dblock(dblock, fnames, **kwargs)
+        return cls.from_dblock(dblock, fnames, path=path, **kwargs)
 
 #Cell
 def get_grid(n, rows=None, cols=None, add_vert=0, figsize=None, double=False, title=None):
