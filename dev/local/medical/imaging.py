@@ -230,10 +230,23 @@ def to_3chan(x:DcmDataset, win1, win2, bins=None):
 
 #Cell
 @patch
-def save_jpg(x:(Tensor,DcmDataset), path, win1, win2, bins=None, quality=90):
+def to_nchan(x:Tensor, wins, bins=None):
+    return torch.stack([
+        *(x.windowed(*win) for win in wins),
+        x.hist_scaled(bins).clamp(0,1)
+    ])
+
+#Cell
+@patch
+def to_nchan(x:DcmDataset, wins, bins=None):
+    return x.scaled_px.to_nchan(wins, bins)
+
+#Cell
+@patch
+def save_jpg(x:(Tensor,DcmDataset), path, wins, bins=None, quality=90):
     fn = Path(path).with_suffix('.jpg')
-    x = (x.to_3chan(win1, win2, bins)*255).byte()
-    im = Image.fromarray(x.permute(1,2,0).numpy())
+    x = (x.to_nchan(wins, bins)*255).byte()
+    im = Image.fromarray(x.permute(1,2,0).numpy(), mode=['RGB','CMYK'][x.shape[0]==4])
     im.save(fn, quality=quality)
 
 #Cell

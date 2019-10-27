@@ -199,11 +199,13 @@ class GetAttr:
     "Inherit from this to have all attr accesses in `self._xtra` passed down to `self.default`"
     _default='default'
     @property
-    def _xtra(self): return [o for o in dir(getattr(self,self._default)) if not o.startswith('_')]
+    def _xtra(self): return self._dir()
+    def _dir(self): return [o for o in dir(getattr(self,self._default)) if not o.startswith('_')]
     def __getattr__(self,k):
-        if k not in ('_xtra',self._default) and (self._xtra is None or k in self._xtra): return getattr(getattr(self,self._default), k)
+        if k not in ('_xtra',self._default) and (self._xtra is None or k in self._xtra):
+            return getattr(getattr(self,self._default), k)
         raise AttributeError(k)
-    def __dir__(self): return custom_dir(self, self._xtra)
+    def __dir__(self): return custom_dir(self, self._dir() if self._xtra is None else self._dir())
     def __setstate__(self,data): self.__dict__.update(data)
 
 #Cell
@@ -291,6 +293,8 @@ class L(CollBase, GetAttr, metaclass=NewChkMeta):
             else: assert len(items)==match, 'Match length mismatch'
         super().__init__(items)
 
+    @property
+    def _xtra(self): return None
     def _new(self, items, *args, **kwargs): return type(self)(items, *args, use_list=None, **kwargs)
     def __getitem__(self, idx): return self._get(idx) if is_indexer(idx) else L(self._get(idx), use_list=None)
 
