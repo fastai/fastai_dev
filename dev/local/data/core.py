@@ -107,14 +107,25 @@ class DataBunch(GetAttr):
     def __init__(self, *dls): self.dls = dls
     def __getitem__(self, i): return self.dls[i]
 
+    def new_empty(self):
+        dls = [dl.new(dl.dataset.new_empty()) for dl in self.dls]
+        return type(self)(*dls)
+
     train_dl,valid_dl = add_props(lambda i,x: x[i])
     train_ds,valid_ds = add_props(lambda i,x: x[i].dataset)
 
+    @classmethod
+    @delegates(TfmdDL.__init__)
+    def from_dblock(cls, dblock, source, type_tfms=None, item_tfms=None, batch_tfms=None, **kwargs):
+        return dblock.databunch(source, type_tfms=type_tfms, item_tfms=item_tfms, batch_tfms=batch_tfms, **kwargs)
+
     _docs=dict(__getitem__="Retrieve `DataLoader` at `i` (`0` is training, `1` is validation)",
-              train_dl="Training `DataLoader`",
-              valid_dl="Validation `DataLoader`",
-              train_ds="Training `Dataset`",
-              valid_ds="Validation `Dataset`")
+               train_dl="Training `DataLoader`",
+               valid_dl="Validation `DataLoader`",
+               train_ds="Training `Dataset`",
+               valid_ds="Validation `Dataset`",
+               new_empty="Create a new empty version of `self` with the same transforms",
+               from_dblock="Create a databunch from a given `dblock`")
 
 #Cell
 class FilteredBase:
@@ -217,12 +228,17 @@ class DataSource(FilteredBase):
         for o_,tl in zip(o,self.tls): ctx = tl.show(o_, ctx=ctx, **kwargs)
         return ctx
 
+    def new_empty(self):
+        tls = [tl._new([], split_idx=tl.split_idx) for tl in self.tls]
+        return type(self)(tls=tls, n_inp=self.n_inp)
+
     _docs=dict(
         decode="Compose `decode` of all `tuple_tfms` then all `tfms` on `i`",
         show="Show item `o` in `ctx`",
         databunch="Get a `DataBunch`",
         overlapping_splits="All splits that are in more than one split",
-        subset="New `DataSource` that only includes subset `i`")
+        subset="New `DataSource` that only includes subset `i`",
+        new_empty="Create a new empty version of the `self`, keeping only the transforms")
 
 #Cell
 def test_set(dsrc, test_items, rm_tfms=0):
