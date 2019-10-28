@@ -181,6 +181,7 @@ class BaseLoss():
         inp  = inp .transpose(self.axis,-1).contiguous()
         targ = targ.transpose(self.axis,-1).contiguous()
         if self.floatify and targ.dtype!=torch.float16: targ = targ.float()
+        if targ.dtype in [torch.int8, torch.int16, torch.int32]: targ = targ.long()
         if self.flatten: inp = inp.view(-1,inp.shape[-1]) if self.is_2d else inp.view(-1)
         return self.func.__call__(inp, targ.view(-1) if self.flatten else targ, **kwargs)
 
