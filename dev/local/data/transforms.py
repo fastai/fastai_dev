@@ -3,8 +3,7 @@
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'IndexSplitter', 'GrandparentSplitter', 'FuncSplitter', 'MaskSplitter', 'parent_label', 'RegexLabeller',
            'CategoryMap', 'Categorize', 'Category', 'MultiCategorize', 'MultiCategory', 'OneHotEncode',
-           'EncodedMultiCategorize', 'EncodedMultiCategory', 'get_c', 'ToTensor', 'Cuda', 'IntToFloatTensor',
-           'broadcast_vec', 'Normalize']
+           'EncodedMultiCategorize', 'get_c', 'ToTensor', 'Cuda', 'IntToFloatTensor', 'broadcast_vec', 'Normalize']
 
 #Cell
 from ..torch_basics import *
@@ -144,13 +143,10 @@ class Categorize(Transform):
         self.c = len(self.vocab)
 
     def encodes(self, o): return TensorCategory(self.vocab.o2i[o])
-    def decodes(self, o): return Category(self.vocab[o])
+    def decodes(self, o): return Category      (self.vocab    [o])
 
 #Cell
-class Category(str, ShowTitle):
-    _show_args = {'label': 'category'}
-    create = Categorize
-    def __init__(self, vocab=None, add_na=False): self.create = Categorize(vocab=vocab, add_na=add_na)
+class Category(str, ShowTitle): _show_args = {'label': 'category'}
 
 #Cell
 class MultiCategorize(Categorize):
@@ -167,12 +163,11 @@ class MultiCategorize(Categorize):
             for b in dsrc: vals = vals.union(set(b))
             self.vocab = CategoryMap(list(vals), add_na=self.add_na)
 
-    def encodes(self, o): return TensorMultiCategory([self.vocab.o2i  [o_] for o_ in o])
-    def decodes(self, o): return MultiCategory ([self.vocab[o_] for o_ in o])
+    def encodes(self, o): return TensorMultiCategory([self.vocab.o2i[o_] for o_ in o])
+    def decodes(self, o): return MultiCategory      ([self.vocab    [o_] for o_ in o])
 
 #Cell
 class MultiCategory(L):
-    create = MultiCategorize
     def show(self, ctx=None, sep=';', color='black', **kwargs):
         return show_title(sep.join(self.map(str)), ctx=ctx, color=color, **kwargs)
 
@@ -189,23 +184,13 @@ class OneHotEncode(Transform):
     def encodes(self, o): return TensorMultiCategory(one_hot(o, self.c).bool())
     def decodes(self, o): return one_hot_decode(o, None)
 
-MultiCategory.default_type_tfms = OneHotEncode
-
 #Cell
 class EncodedMultiCategorize(Categorize):
     "Transform of one-hot encoded multi-category that decodes with `vocab`"
     loss_func,order=BCEWithLogitsLossFlat(),1
-    def __init__(self, vocab): self.vocab = vocab
+    def __init__(self, vocab): self.vocab,self.c = vocab,len(vocab)
     def encodes(self, o): return TensorCategory(tensor(o).bool())
     def decodes(self, o): return MultiCategory (one_hot_decode(o, self.vocab))
-
-#Cell
-class EncodedMultiCategory(MultiCategory):
-    create = EncodedMultiCategorize
-    def __init__(self, vocab): self.create = EncodedMultiCategorize(vocab)
-
-    @classmethod
-    def create(cls, *args, **kwargs): raise Exception("You need to use an instance of the type `EncodedMultiCategory` created with a vocab.")
 
 #Cell
 def get_c(dbunch):

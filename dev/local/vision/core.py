@@ -2,8 +2,8 @@
 
 __all__ = ['Image', 'ToTensor', 'imagenet_stats', 'cifar_stats', 'mnist_stats', 'n_px', 'shape', 'aspect', 'load_image',
            'PILBase', 'PILImage', 'PILImageBW', 'PILMask', 'OpenMask', 'TensorPoint', 'get_annotations', 'TensorBBox',
-           'LabeledBBox', 'image2tensor', 'encodes', 'encodes', 'PointScaler', 'BBoxLabels', 'BBoxLabeler', 'decodes',
-           'encodes', 'decodes']
+           'LabeledBBox', 'image2tensor', 'encodes', 'encodes', 'PointScaler', 'BBoxLabeler', 'decodes', 'encodes',
+           'decodes']
 
 #Cell
 from ..test import *
@@ -63,7 +63,6 @@ def load_image(fn, mode=None, **kwargs):
 #Cell
 class PILBase(Image.Image, metaclass=BypassNewMeta):
     _bypass_type=Image.Image
-    default_batch_tfms = IntToFloatTensor
     _show_args = {'cmap':'viridis'}
     _open_args = {'mode': 'RGB'}
     @classmethod
@@ -156,9 +155,6 @@ class LabeledBBox(Tuple):
             if l != '#na#': ctx = retain_type(b, self.bbox).show(ctx=ctx, text=l)
         return ctx
 
-    @classmethod
-    def create(cls, x): return cls(x)
-
     bbox,lbl = add_props(lambda i,self: self[i])
 
 #Cell
@@ -212,13 +208,6 @@ class PointScaler(Transform):
     def encodes(self, x:TensorPoint): return _scale_pnts(x, self._get_sz(x), self.do_scale, self.y_first)
     def decodes(self, x:TensorPoint): return _unscale_pnts(x, self._get_sz(x))
 
-TensorPoint.default_item_tfms = PointScaler
-
-#Cell
-class BBoxLabels(MultiCategory):
-    create = MultiCategorize(add_na=True)
-    default_type_tfms = None
-
 #Cell
 class BBoxLabeler(Transform):
     def setup(self, dl): self.vocab = dl.vocab
@@ -235,9 +224,6 @@ class BBoxLabeler(Transform):
     def decodes(self, x:TensorBBox):
         self.bbox = x
         return self.bbox if self.lbls is None else LabeledBBox(self.bbox, self.lbls)
-
-#Cell
-BBoxLabels.default_item_tfms = BBoxLabeler
 
 #Cell
 #LabeledBBox can be sent in a tl with MultiCategorize (depending on the order of the tls) but it is already decoded.
