@@ -2,7 +2,7 @@
 
 __all__ = ['get_files', 'FileGetter', 'image_extensions', 'get_image_files', 'ImageGetter', 'RandomSplitter',
            'IndexSplitter', 'GrandparentSplitter', 'FuncSplitter', 'MaskSplitter', 'parent_label', 'RegexLabeller',
-           'CategoryMap', 'Categorize', 'Category', 'MultiCategorize', 'MultiCategory', 'OneHotEncode',
+           'ColReader', 'CategoryMap', 'Categorize', 'Category', 'MultiCategorize', 'MultiCategory', 'OneHotEncode',
            'EncodedMultiCategorize', 'get_c', 'ToTensor', 'Cuda', 'IntToFloatTensor', 'broadcast_vec', 'Normalize']
 
 #Cell
@@ -115,6 +115,20 @@ class RegexLabeller():
         res = self.pat.search(str(o))
         assert res,f'Failed to find "{self.pat}" in "{o}"'
         return res.group(1)
+
+#Cell
+class ColReader():
+    "Read `cols` in `row` with potnetial `pref` and `suff`"
+    def __init__(self, cols, pref='', suff='', label_delim=None):
+        store_attr(self, 'pref,suff,label_delim')
+        self.cols = L(cols)
+
+    def _do_one(self, r, c):
+        o = r[c] if isinstance(c, int) else getattr(r, c)
+        if self.label_delim is None: return f'{self.pref}{o}{self.suff}'
+        else: return o.split(self.label_delim) if len(o)>0 else []
+
+    def __call__(self, o, **kwargs): return detuplify(tuple(self._do_one(o, c) for c in self.cols))
 
 #Cell
 class CategoryMap(CollBase):

@@ -262,6 +262,7 @@
   "MaskSplitter": "06_data_transforms.ipynb",
   "parent_label": "06_data_transforms.ipynb",
   "RegexLabeller": "06_data_transforms.ipynb",
+  "ColReader": "06_data_transforms.ipynb",
   "CategoryMap": "06_data_transforms.ipynb",
   "Categorize": "06_data_transforms.ipynb",
   "Category": "06_data_transforms.ipynb",
