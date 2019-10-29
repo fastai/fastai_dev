@@ -535,6 +535,7 @@
   "test_overflow": "18_callback_fp16.ipynb",
   "grad_overflow": "18_callback_fp16.ipynb",
   "copy_clone": "18_callback_fp16.ipynb",
+  "MixedPrecisionBeginning": "18_callback_fp16.ipynb",
   "MixedPrecision": "18_callback_fp16.ipynb",
   "Learner.to_fp16": "18_callback_fp16.ipynb",
   "reduce_loss": "19_callback_mixup.ipynb",

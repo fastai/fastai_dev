@@ -63,7 +63,7 @@ def main(
             )
     if dump: print(learn.model); exit()
     if mixup: learn = learn.mixup(alpha=mixup)
-    #learn = learn.to_fp16()
+    learn = learn.to_fp16()
     if gpu is None:       learn.to_parallel()
     elif num_distrib()>1: learn.to_distributed(gpu) # Requires `-m fastai.launch`
 
