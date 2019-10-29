@@ -11,7 +11,6 @@ def main(
     # Loosely based on torch.distributed.launch
     current_env = os.environ.copy()
     gpus = list(range(torch.cuda.device_count())) if gpus=='all' else list(gpus)
-    print(gpus)
     current_env["WORLD_SIZE"] = str(len(gpus))
     current_env["MASTER_ADDR"] = '127.0.0.1'
     current_env["MASTER_PORT"] = '29500'
