@@ -407,7 +407,7 @@ class AvgLoss(Metric):
     def reset(self):           self.total,self.count = 0.,0
     def accumulate(self, learn):
         bs = find_bs(learn.yb)
-        self.total += to_detach(learn.loss.mean())*bs
+        self.total += to_detach(_maybe_reduce(learn.loss.mean()))*bs
         self.count += bs
     @property
     def value(self): return self.total/self.count if self.count != 0 else None
