@@ -380,13 +380,21 @@ class Metric():
         value="The value of the metric")
 
 #Cell
+def _maybe_reduce(val):
+    if num_distrib()>1:
+        val = val.clone()
+        torch.distributed.all_reduce(val, op=torch.distributed.ReduceOp.SUM)
+        val /= num_distrib()
+    return val
+
+#Cell
 class AvgMetric(Metric):
     "Average the values of `func` taking into account potential different batch sizes"
     def __init__(self, func):  self.func = func
     def reset(self):           self.total,self.count = 0.,0
     def accumulate(self, learn):
         bs = find_bs(learn.yb)
-        self.total += to_detach(self.func(learn.pred, *learn.yb))*bs
+        self.total += to_detach(_maybe_reduce(self.func(learn.pred, *learn.yb)))*bs
         self.count += bs
     @property
     def value(self): return self.total/self.count if self.count != 0 else None
