@@ -676,6 +676,7 @@
   "DcmDataset.as_dict": "60_medical_imaging.ipynb",
   "pd.DataFrame.from_dicoms": "60_medical_imaging.ipynb",
   "WandbCallback": "70_callback_wandb.ipynb",
+  "wand_process": "70_callback_wandb.ipynb",
   "in_ipython": "90_notebook_core.ipynb",
   "IN_IPYTHON": "90_notebook_core.ipynb",
   "in_colab": "90_notebook_core.ipynb",

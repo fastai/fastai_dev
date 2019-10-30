@@ -6,7 +6,6 @@ __all__ = ['has_pool_type', 'create_body', 'create_head', 'create_cnn_model', 'c
 #Cell
 from ..test import *
 from ..basics import *
-from ..callback.all import *
 from .core import *
 from .data import *
 from .augment import *
@@ -48,6 +47,9 @@ def create_head(nf, nc, lin_ftrs=None, ps=0.5, concat_pool=True, bn_final=False)
         layers += BnDropLin(ni, no, True, p, actn)
     if bn_final: layers.append(nn.BatchNorm1d(lin_ftrs[-1], momentum=0.01))
     return nn.Sequential(*layers)
+
+#Cell
+from ..callback.hook import num_features_model
 
 #Cell
 def create_cnn_model(arch, nc, cut, pretrained, lin_ftrs=None, ps=0.5, custom_head=None,
