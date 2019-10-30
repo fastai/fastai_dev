@@ -318,7 +318,7 @@ class Learner():
         else: return replacing_yield(self, 'loss_func', partial(self.loss_func, reduction='none'))
 
     def save(self, file, with_opt=True):
-        #TODO: if rank_distrib(): return # don't save if slave proc
+        if rank_distrib(): return # don't save if slave proc
         file = join_path_file(file, self.path/self.model_dir, ext='.pth')
         save_model(file, self.model, getattr(self,'opt',None), with_opt)
 
@@ -530,6 +530,7 @@ add_docs(Learner,
 @patch
 def export(self:Learner, fname='export.pkl'):
     "Export the content of `self` without the items and the optimizer state for inference"
+    if rank_distrib(): return # don't export if slave proc
     old_dbunch = self.dbunch
     self.dbunch = dbunch.new_empty()
     state = self.opt.state_dict()
