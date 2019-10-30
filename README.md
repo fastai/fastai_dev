@@ -13,6 +13,13 @@ conda env create -f environment.yml
 
 Then, you can install fastai v2 with pip: `pip install git+https://github.com/fastai/fastai_dev`. Or clone this repo, cd to its directory, and `pip install -e .` for an *editable install* (which is probably the best approach at the moment, since fastai v2 is under heavy development).
 
+To use `fastai2.medical.imaging` you'll also need to:
+
+```bash
+conda install pyarrow
+pip install pydicom kornia opencv-python
+```
+
 ## Tests
 
 To run the tests in parallel, do something like this:

@@ -181,6 +181,7 @@ class BaseLoss():
         inp  = inp .transpose(self.axis,-1).contiguous()
         targ = targ.transpose(self.axis,-1).contiguous()
         if self.floatify and targ.dtype!=torch.float16: targ = targ.float()
+        if targ.dtype in [torch.int8, torch.int16, torch.int32]: targ = targ.long()
         if self.flatten: inp = inp.view(-1,inp.shape[-1]) if self.is_2d else inp.view(-1)
         return self.func.__call__(inp, targ.view(-1) if self.flatten else targ, **kwargs)
 
@@ -188,6 +189,7 @@ class BaseLoss():
 @delegates(keep=True)
 class CrossEntropyLossFlat(BaseLoss):
     "Same as `nn.CrossEntropyLoss`, but flattens input and target."
+    y_int = True
     def __init__(self, *args, axis=-1, **kwargs): super().__init__(nn.CrossEntropyLoss, *args, axis=axis, **kwargs)
     def decodes(self, x):    return x.argmax(dim=self.axis)
     def activation(self, x): return F.softmax(x, dim=self.axis)
@@ -215,6 +217,7 @@ def MSELossFlat(*args, axis=-1, floatify=True, **kwargs):
 
 #Cell
 class LabelSmoothingCrossEntropy(Module):
+    y_int = True
     def __init__(self, eps:float=0.1, reduction='mean'): self.eps,self.reduction = eps,reduction
 
     def forward(self, output, target):

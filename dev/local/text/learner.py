@@ -45,6 +45,7 @@ class RNNLearner(Learner):
 
     def save_encoder(self, file):
         "Save the encoder to `self.path/self.model_dir/file`"
+        if rank_distrib(): return # don't save if slave proc
         encoder = get_model(self.model)[0]
         if hasattr(encoder, 'module'): encoder = encoder.module
         torch.save(encoder.state_dict(), join_path_file(file,self.path/self.model_dir, ext='.pth'))
@@ -115,7 +116,8 @@ def text_classifier_learner(dbunch, arch, vocab, bptt=72, config=None, pretraine
     return learn
 
 #Cell
-from .data import _get_empty_df
+#from local.text.data import _get_empty_df
+from ..core.utils import get_empty_df
 
 @typedispatch
 def show_results(x: LMTensorText, y, samples, outs, ctxs=None, max_n=10, **kwargs):

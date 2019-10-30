@@ -104,7 +104,7 @@ class DataBunch(GetAttr):
     "Basic wrapper around several `DataLoader`s."
     _default='train_dl'
 
-    def __init__(self, *dls): self.dls = dls
+    def __init__(self, *dls, path='.'): self.dls,self.path = dls,Path(path)
     def __getitem__(self, i): return self.dls[i]
 
     def new_empty(self):
@@ -116,8 +116,8 @@ class DataBunch(GetAttr):
 
     @classmethod
     @delegates(TfmdDL.__init__)
-    def from_dblock(cls, dblock, source, type_tfms=None, item_tfms=None, batch_tfms=None, **kwargs):
-        return dblock.databunch(source, type_tfms=type_tfms, item_tfms=item_tfms, batch_tfms=batch_tfms, **kwargs)
+    def from_dblock(cls, dblock, source, path='.', type_tfms=None, item_tfms=None, batch_tfms=None, **kwargs):
+        return dblock.databunch(source, path=path, type_tfms=type_tfms, item_tfms=item_tfms, batch_tfms=batch_tfms, **kwargs)
 
     _docs=dict(__getitem__="Retrieve `DataLoader` at `i` (`0` is training, `1` is validation)",
                train_dl="Training `DataLoader`",
@@ -141,7 +141,7 @@ class FilteredBase:
     def _new(self, items, **kwargs): return super()._new(items, splits=self.splits, **kwargs)
     def subset(self): raise NotImplemented
 
-    def databunch(self, bs=16, val_bs=None, shuffle_train=True, n=None, dl_type=None, dl_kwargs=None, **kwargs):
+    def databunch(self, bs=16, val_bs=None, shuffle_train=True, n=None, path='.', dl_type=None, dl_kwargs=None, **kwargs):
         if dl_kwargs is None: dl_kwargs = [{}] * self.n_subsets
         ns = self.n_subsets-1
         bss = [bs] + [2*bs]*ns if val_bs is None else [bs] + [val_bs]*ns
@@ -149,7 +149,7 @@ class FilteredBase:
         if dl_type is None: dl_type = self._dl_type
         dls = [dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, n=n if i==0 else None, **kwargs, **dk)
                for i,(b,s,dk) in enumerate(zip(bss,shuffles,dl_kwargs))]
-        return DataBunch(*dls)
+        return DataBunch(*dls, path=path)
 
 FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
 

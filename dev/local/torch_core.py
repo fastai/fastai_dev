@@ -4,10 +4,11 @@ __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'unsqueeze', 'uns
            'to_half', 'to_float', 'default_device', 'to_device', 'to_cpu', 'to_np', 'TensorBase', 'TensorCategory',
            'TensorMultiCategory', 'TensorImageBase', 'TensorImage', 'TensorImageBW', 'TensorMask', 'concat', 'Chunks',
            'one_param', 'item_find', 'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode',
-           'params', 'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'logit', 'make_cross_image',
-           'show_image_batch', 'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init',
-           'set_num_threads', 'ProcessPoolExecutor', 'parallel', 'run_procs', 'parallel_gen', 'script_use_ctx',
-           'script_save_ctx', 'script_fwd', 'script_bwd', 'grad_module', 'flatten_check']
+           'params', 'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'logit', 'num_distrib',
+           'rank_distrib', 'make_cross_image', 'show_image_batch', 'requires_grad', 'init_default', 'cond_init',
+           'apply_leaf', 'apply_init', 'set_num_threads', 'ProcessPoolExecutor', 'parallel', 'run_procs',
+           'parallel_gen', 'script_use_ctx', 'script_save_ctx', 'script_fwd', 'script_bwd', 'grad_module',
+           'flatten_check']
 
 #Cell
 from .test import *
@@ -340,6 +341,16 @@ def logit(x):
     return -(1/x-1).log()
 
 #Cell
+def num_distrib():
+    "Return the number of processes in distributed training (if applicable)."
+    return int(os.environ.get('WORLD_SIZE', 0))
+
+#Cell
+def rank_distrib():
+    "Return the distributed rank of this process (if applicable)."
+    return int(os.environ.get('RANK', 0))
+
+#Cell
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:
@@ -490,8 +501,8 @@ def grad_module(cls):
     return _c
 
 #Comes from 13a_metrics.ipynb, cell
-def flatten_check(inp, targ, detach=True):
+def flatten_check(inp, targ):
     "Check that `out` and `targ` have the same number of elements and flatten them."
-    inp,targ = to_detach(inp.contiguous().view(-1)),to_detach(targ.contiguous().view(-1))
+    inp,targ = inp.contiguous().view(-1),targ.contiguous().view(-1)
     test_eq(len(inp), len(targ))
     return inp,targ

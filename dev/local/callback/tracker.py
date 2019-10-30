@@ -40,7 +40,7 @@ class TrackerCallback(Callback):
         "Prepare the monitored value"
         self.best = float('inf') if self.comp == np.less else -float('inf')
         assert self.monitor in self.recorder.metric_names[1:]
-        self.idx = self.recorder.metric_names[1:].index(self.monitor)
+        self.idx = list(self.recorder.metric_names[1:]).index(self.monitor)
 
     def after_epoch(self):
         "Compare the last value to the best up to know"
