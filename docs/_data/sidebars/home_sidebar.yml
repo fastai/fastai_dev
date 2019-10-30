@@ -86,20 +86,20 @@ entries:
     title: Data
   - folderitems:
     - output: web,pdf
-      title: Core
-      url: /core.html
+      title: Foundation
+      url: /core.foundation.html
     - output: web,pdf
       title: Utility functions
-      url: /utils.html
+      url: /core.utils.html
     - output: web,pdf
       title: PyTorch Core
-      url: /torch_core.html
+      url: /torchcore.html
     - output: web,pdf
       title: Type dispatch
-      url: /dispatch.html
+      url: /core.dispatch.html
     - output: web,pdf
       title: Transforms and Pipelines
-      url: /transform.html
+      url: /core.transform.html
     - output: web,pdf
       title: Layers
       url: /layers.html
