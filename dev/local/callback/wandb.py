@@ -9,13 +9,11 @@ from .progress import *
 
 #Cell
 import wandb
-from .tracker import SaveModelCallback
 
 #Cell
 class WandbCallback(Callback):
     "Saves model topology, losses & metrics"
     # Record if watch has been called previously (even in another instance)
-    run_after=SaveModelCallback
     _watch_called = False
 
     def __init__(self, log="gradients", log_preds=True, valid_dl=None, n_preds=36, seed=12345):
