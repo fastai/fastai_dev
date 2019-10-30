@@ -17,7 +17,7 @@ To use `fastai2.medical.imaging` you'll also need to:
 
 ```bash
 conda install pyarrow
-pip install pydicom kornia
+pip install pydicom kornia opencv-python
 ```
 
 ## Tests
