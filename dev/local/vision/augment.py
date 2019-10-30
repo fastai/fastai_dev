@@ -187,9 +187,9 @@ class Resize(CropPad):
 #Cell
 class RandomResizedCrop(CropPad):
     "Picks a random scaled crop of an image and resize it to `size`"
-    def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), resamples=(Image.BILINEAR, Image.NEAREST), **kwargs):
+    def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), resamples=(Image.BILINEAR, Image.NEAREST), valid_scale=1., **kwargs):
         super().__init__(size, **kwargs)
-        self.min_scale,self.ratio = min_scale,ratio
+        store_attr(self, 'min_scale,ratio,valid_scale')
         self.mode,self.mode_mask = resamples
 
     def before_call(self, b, split_idx):
@@ -209,6 +209,7 @@ class RandomResizedCrop(CropPad):
         if   w/h < self.ratio[0]: self.cp_size = (w, int(w/self.ratio[0]))
         elif w/h > self.ratio[1]: self.cp_size = (int(h*self.ratio[1]), h)
         else:                     self.cp_size = (w, h)
+        if split_idx: self.cp_size = (self.cp_size[0]*self.valid_scale, self.cp_size[1]*self.valid_scale)
         self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
 
 #Cell
