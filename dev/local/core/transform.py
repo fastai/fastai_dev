@@ -68,8 +68,9 @@ class _TfmMeta(type):
 class Transform(metaclass=_TfmMeta):
     "Delegates (`__call__`,`decode`,`setup`) to (`encodes`,`decodes`,`setups`) if `split_idx` matches"
     split_idx,init_enc,as_item_force,as_item,order = None,False,None,True,0
-    def __init__(self, enc=None, dec=None, split_idx=None, as_item=False):
+    def __init__(self, enc=None, dec=None, split_idx=None, as_item=False, order=None):
         self.split_idx,self.as_item = ifnone(split_idx, self.split_idx),as_item
+        if order is not None: self.order=order
         self.init_enc = enc or dec
         if not self.init_enc: return
 

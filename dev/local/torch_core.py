@@ -6,7 +6,8 @@ __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'unsqueeze', 'uns
            'one_param', 'item_find', 'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode',
            'params', 'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'logit', 'make_cross_image',
            'show_image_batch', 'requires_grad', 'init_default', 'cond_init', 'apply_leaf', 'apply_init',
-           'set_num_threads', 'ProcessPoolExecutor', 'parallel', 'run_procs', 'parallel_gen', 'flatten_check']
+           'set_num_threads', 'ProcessPoolExecutor', 'parallel', 'run_procs', 'parallel_gen', 'script_use_ctx',
+           'script_save_ctx', 'script_fwd', 'script_bwd', 'grad_module', 'flatten_check']
 
 #Cell
 from .test import *
@@ -16,7 +17,8 @@ from fastprogress import progress_bar,master_bar
 
 #Cell
 if torch.cuda.is_available():
-    torch.cuda.set_device(int(os.environ.get('DEFAULT_GPU') or 0))
+    if torch.cuda.current_device()==0:
+        torch.cuda.set_device(int(os.environ.get('DEFAULT_GPU') or 0))
     torch.backends.cudnn.benchmark = True
 
 #Cell
@@ -447,6 +449,45 @@ def parallel_gen(cls, items, n_workers=defaults.cpus, as_gen=False, **kwargs):
         for i,b in enumerate(cls(**kwargs)(batch)): queue.put((start_idx+i,b))
     def done(): return (queue.get() for _ in progress_bar(items, leave=False))
     yield from run_procs(f, done, L(batches,idx).zip())
+
+#Cell
+def script_use_ctx(f):
+    "Decorator: create jit script and pass everything in `ctx.saved_variables to `f`, after `*args`"
+    sf = torch.jit.script(f)
+    def _f(ctx, *args, **kwargs): return sf(*args, *ctx.saved_variables, **kwargs)
+    return update_wrapper(_f,f)
+
+#Cell
+def script_save_ctx(static, *argidx):
+    "Decorator: create jit script and save args with indices `argidx` using `ctx.save_for_backward`"
+    def _dec(f):
+        sf = torch.jit.script(f)
+        def _f(ctx, *args, **kwargs):
+            if argidx:
+                save = [args[o] for o in argidx]
+                ctx.save_for_backward(*save)
+            if not argidx: args = [ctx]+args
+            return sf(*args, **kwargs)
+        if static: _f = staticmethod(_f)
+        return update_wrapper(_f,f)
+    return _dec
+
+#Cell
+def script_fwd(*argidx):
+    "Decorator: create static jit script and save args with indices `argidx` using `ctx.save_for_backward`"
+    return script_save_ctx(True, *argidx)
+
+#Cell
+def script_bwd(f):
+    "Decorator: create static jit script and pass everything in `ctx.saved_variables to `f`, after `*args`"
+    return staticmethod(script_use_ctx(f))
+
+#Cell
+def grad_module(cls):
+    "Decorator: convert `cls` into an autograd function"
+    class _c(nn.Module):
+        def forward(self, *args, **kwargs): return cls.apply(*args, **kwargs)
+    return _c
 
 #Comes from 13a_metrics.ipynb, cell
 def flatten_check(inp, targ, detach=True):
