@@ -69,16 +69,21 @@ class EarlyStoppingCallback(TrackerCallback):
 #Cell
 class SaveModelCallback(TrackerCallback):
     "A `TrackerCallback` that saves the model's best during training and loads it at the end."
-    def __init__(self, monitor='valid_loss', comp=None, min_delta=0., fname='model', every_epoch=False):
+    def __init__(self, monitor='valid_loss', comp=None, min_delta=0., fname='model', every_epoch=False, add_save=None, with_opt=False):
         super().__init__(monitor=monitor, comp=comp, min_delta=min_delta)
-        store_attr(self, 'fname,every_epoch')
+        store_attr(self, 'fname,every_epoch,add_save,with_opt')
+
+    def _save(self, name):
+        self.learn.save(name, with_opt=self.with_opt)
+        if self.add_save is not None:
+            with self.add_save.open('wb') as f: self.learn.save(f, with_opt=self.with_opt)
 
     def after_epoch(self):
         "Compare the value monitored to its best score and save if best."
-        if self.every_epoch: self.learn.save(f'{self.fname}_{self.epoch}')
+        if self.every_epoch: self._save(f'{self.fname}_{self.epoch}')
         else: #every improvement
             super().after_epoch()
-            if self.new_best: self.learn.save(f'{self.fname}')
+            if self.new_best: self._save(f'{self.fname}')
 
     def on_train_end(self, **kwargs):
         "Load the best model."
