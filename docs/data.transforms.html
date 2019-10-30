@@ -725,7 +725,7 @@ summary: "Functions for getting, splitting, and labeling data, as well as generi
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CategoryMap" class="doc_header"><code>class</code> <code>CategoryMap</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L134" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CategoryMap</code>(<strong><code>col</code></strong>, <strong><code>sort</code></strong>=<em><code>True</code></em>, <strong><code>add_na</code></strong>=<em><code>False</code></em>) :: <a href="/core.html#CollBase"><code>CollBase</code></a></p>
+<h2 id="CategoryMap" class="doc_header"><code>class</code> <code>CategoryMap</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L134" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CategoryMap</code>(<strong><code>col</code></strong>, <strong><code>sort</code></strong>=<em><code>True</code></em>, <strong><code>add_na</code></strong>=<em><code>False</code></em>) :: <a href="/core.foundation.html#CollBase"><code>CollBase</code></a></p>
 </blockquote>
 <p>Collection of categories with the reverse mapping in <code>o2i</code></p>
 
@@ -811,7 +811,7 @@ summary: "Functions for getting, splitting, and labeling data, as well as generi
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Categorize" class="doc_header"><code>class</code> <code>Categorize</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L148" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Categorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>, <strong><code>add_na</code></strong>=<em><code>False</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="Categorize" class="doc_header"><code>class</code> <code>Categorize</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L148" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Categorize</code>(<strong><code>vocab</code></strong>=<em><code>None</code></em>, <strong><code>add_na</code></strong>=<em><code>False</code></em>) :: <a href="/core.transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Reversible transform of category string to <code>vocab</code> id</p>
 
@@ -927,7 +927,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="MultiCategory" class="doc_header"><code>class</code> <code>MultiCategory</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L184" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategory</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.html#L"><code>L</code></a></p>
+<h2 id="MultiCategory" class="doc_header"><code>class</code> <code>MultiCategory</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L184" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MultiCategory</code>(<strong><code>items</code></strong>=<em><code>None</code></em>, <strong>*<code>rest</code></strong>, <strong><code>use_list</code></strong>=<em><code>False</code></em>, <strong><code>match</code></strong>=<em><code>None</code></em>) :: <a href="/core.foundation.html#L"><code>L</code></a></p>
 </blockquote>
 <p>Behaves like a list of <code>items</code> but can also index with list of indices or masks</p>
 
@@ -972,7 +972,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="OneHotEncode" class="doc_header"><code>class</code> <code>OneHotEncode</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L189" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>OneHotEncode</code>(<strong><code>c</code></strong>=<em><code>None</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="OneHotEncode" class="doc_header"><code>class</code> <code>OneHotEncode</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L189" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>OneHotEncode</code>(<strong><code>c</code></strong>=<em><code>None</code></em>) :: <a href="/core.transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>One-hot encodes targets</p>
 
@@ -1253,7 +1253,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ToTensor" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L217" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>, <strong><code>order</code></strong>=<em><code>None</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="ToTensor" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L217" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>enc</code></strong>=<em><code>None</code></em>, <strong><code>dec</code></strong>=<em><code>None</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>False</code></em>, <strong><code>order</code></strong>=<em><code>None</code></em>) :: <a href="/core.transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Convert item to appropriate tensor class</p>
 
@@ -1277,7 +1277,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Cuda" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L223" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>None</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="Cuda" class="doc_header"><code>class</code> <code>Cuda</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L223" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cuda</code>(<strong><code>device</code></strong>=<em><code>None</code></em>) :: <a href="/core.transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Move batch to <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-device"><code>device</code></a> (defaults to <code>default_device()</code>)</p>
 
@@ -1312,7 +1312,7 @@ errors defaults to 'strict'.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that, like all <a href="/transform.html#Transform"><code>Transform</code></a>s, <a href="/tabular.rapids.html#encodes"><code>encodes</code></a> is called by <code>tfm()</code> and <a href="/vision.core.html#decodes"><code>decodes</code></a> is called by <code>tfm.decode()</code>.</p>
+<p>Note that, like all <a href="/core.transform.html#Transform"><code>Transform</code></a>s, <a href="/tabular.rapids.html#encodes"><code>encodes</code></a> is called by <code>tfm()</code> and <a href="/vision.core.html#decodes"><code>decodes</code></a> is called by <code>tfm.decode()</code>.</p>
 
 </div>
 </div>
@@ -1401,7 +1401,7 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="IntToFloatTensor" class="doc_header"><code>class</code> <code>IntToFloatTensor</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L234" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IntToFloatTensor</code>(<strong><code>div</code></strong>=<em><code>255.0</code></em>, <strong><code>div_mask</code></strong>=<em><code>1</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="IntToFloatTensor" class="doc_header"><code>class</code> <code>IntToFloatTensor</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L234" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IntToFloatTensor</code>(<strong><code>div</code></strong>=<em><code>255.0</code></em>, <strong><code>div_mask</code></strong>=<em><code>1</code></em>, <strong><code>split_idx</code></strong>=<em><code>None</code></em>, <strong><code>as_item</code></strong>=<em><code>True</code></em>) :: <a href="/core.transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
 <p>Transform image to float tensor, optionally dividing by 255 (e.g. for images).</p>
 
@@ -1470,9 +1470,9 @@ errors defaults to 'strict'.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L255" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>, <strong><code>dim</code></strong>=<em><code>1</code></em>, <strong><code>ndim</code></strong>=<em><code>4</code></em>, <strong><code>cuda</code></strong>=<em><code>True</code></em>) :: <a href="/transform.html#Transform"><code>Transform</code></a></p>
+<h2 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/data/transforms.py#L255" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>mean</code></strong>, <strong><code>std</code></strong>, <strong><code>dim</code></strong>=<em><code>1</code></em>, <strong><code>ndim</code></strong>=<em><code>4</code></em>, <strong><code>cuda</code></strong>=<em><code>True</code></em>) :: <a href="/core.transform.html#Transform"><code>Transform</code></a></p>
 </blockquote>
-<p>Normalize/denorm batch of <a href="/torch.core.html#TensorImage"><code>TensorImage</code></a></p>
+<p>Normalize/denorm batch of <a href="/torchcore.html#TensorImage"><code>TensorImage</code></a></p>
 
 </div>
 

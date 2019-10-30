@@ -219,7 +219,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 <div class="output_text output_subarea output_execute_result">
 <pre>{&#39;cell_type&#39;: &#39;code&#39;,
- &#39;execution_count&#39;: None,
+ &#39;execution_count&#39;: 1,
  &#39;metadata&#39;: {&#39;hide_input&#39;: False},
  &#39;outputs&#39;: [],
  &#39;source&#39;: &#39;# export\nfrom local.core.imports import *\nfrom local.notebook.core import *\nimport nbformat,inspect\nfrom nbformat.sign import NotebookNotary&#39;}</pre>
@@ -770,7 +770,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For properties defined using <code>property</code> or our own <a href="/utils.html#add_props"><code>add_props</code></a> helper, we approximate the name by looking at their getter functions, since we don't seem to have access to the property name itself. If everything fails (a getter cannot be found), we return the name of the object that contains the property. This suffices for <a href="/notebook.export.html#source_nb"><code>source_nb</code></a> to work.</p>
+<p>For properties defined using <code>property</code> or our own <a href="/core.utils.html#add_props"><code>add_props</code></a> helper, we approximate the name by looking at their getter functions, since we don't seem to have access to the property name itself. If everything fails (a getter cannot be found), we return the name of the object that contains the property. This suffices for <a href="/notebook.export.html#source_nb"><code>source_nb</code></a> to work.</p>
 
 </div>
 </div>
