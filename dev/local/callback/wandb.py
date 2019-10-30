@@ -43,6 +43,10 @@ class WandbCallback(Callback):
             test_tls = [tl._new(items, split_idx=1) for tl in self.dbunch.valid_ds.tls]
             self.valid_dl = self.dbunch.valid_dl.new(DataSource(tls=test_tls), bs=self.n_preds)
 
+    def after_batch(self):
+        hypers = {f'{k}_{i}':v for i,h in enumerate(self.opt.hypers) for k,v in h.items()}
+        wandb.log({'train_loss': self.smooth_loss, **hypers})
+
     def after_epoch(self):
         "Log training loss, validation loss and custom metrics & log prediction samples & save model"
         # Log sample predictions
@@ -54,7 +58,7 @@ class WandbCallback(Callback):
             x,y,its,outs = self.valid_dl.show_results(b, out, show=False, max_n=self.n_preds)
             pred_log = sum([wand_process(x, y, s, o) for s,o in zip(its, outs)], [])
             wandb.log({"Prediction Samples": pred_log}, commit=False)
-        wandb.log({n:s for n,s in zip(self.recorder.metric_names, self.recorder.log)})
+        wandb.log({n:s for n,s in zip(self.recorder.metric_names, self.recorder.log) if n!='train_loss'})
 
 #Cell
 @typedispatch
