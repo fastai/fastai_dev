@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from local.notebook.export2html import convert_nb
-from local.script import *
+from local.core.script import *
 from local.torch_basics import *
 import yaml, os, sys
 from pathlib import Path
