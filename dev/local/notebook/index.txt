@@ -560,6 +560,7 @@
   "create_head": "21_vision_learner.ipynb",
   "create_cnn_model": "21_vision_learner.ipynb",
   "cnn_config": "21_vision_learner.ipynb",
+  "default_split": "21_vision_learner.ipynb",
   "model_meta": "21_vision_learner.ipynb",
   "cnn_learner": "21_vision_learner.ipynb",
   "unet_config": "21_vision_learner.ipynb",
