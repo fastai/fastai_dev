@@ -12,7 +12,7 @@ from nbformat.sign import NotebookNotary
 #Cell
 def read_nb(fname):
     "Read the notebook in `fname`."
-    with open(Path(fname),'r') as f: return nbformat.reads(f.read(), as_version=4)
+    with open(Path(fname),'r', encoding='utf8') as f: return nbformat.reads(f.read(), as_version=4)
 
 #Cell
 def check_re(cell, pat, code_only=True):
@@ -180,12 +180,12 @@ def extra_add(code):
 #Cell
 def _add2add(fname, names, line_width=120):
     if len(names) == 0: return
-    with open(fname, 'r') as f: text = f.read()
+    with open(fname, 'r', encoding='utf8') as f: text = f.read()
     tw = TextWrapper(width=120, initial_indent='', subsequent_indent=' '*11, break_long_words=False)
     re_all = _re__all__def.search(text)
     start,end = re_all.start(),re_all.end()
     text_all = tw.wrap(f"{text[start:end-1]}{'' if text[end-2]=='[' else ', '}{', '.join(names)}]")
-    with open(fname, 'w') as f: f.write(text[:start] + '\n'.join(text_all) + text[end:])
+    with open(fname, 'w', encoding='utf8') as f: f.write(text[:start] + '\n'.join(text_all) + text[end:])
 
 #Cell
 def _relative_import(name, fname):
@@ -215,12 +215,12 @@ def _deal_import(code_lines, fname):
 #Cell
 def _get_index():
     if not (Path(__file__).parent/'index.txt').exists(): return {}
-    return json.load(open(Path(__file__).parent/'index.txt', 'r'))
+    return json.load(open(Path(__file__).parent/'index.txt', 'r', encoding='utf8'))
 
 def _save_index(index):
     fname = Path(__file__).parent/'index.txt'
     fname.parent.mkdir(parents=True, exist_ok=True)
-    json.dump(index, open(fname, 'w'), indent=2)
+    json.dump(index, open(fname, 'w', encoding='utf8'), indent=2)
 
 def _reset_index():
     if (Path(__file__).parent/'index.txt').exists():
@@ -252,7 +252,7 @@ def _notebook2script(fname, silent=False, to_pkl=False):
         if code != '\n\n' + orig[:-1]:
             if to_pkl: _update_pkl(fname_out, (i, fname, code))
             else:
-                with open(fname_out, 'a') as f: f.write(code)
+                with open(fname_out, 'a', encoding='utf8') as f: f.write(code)
     _save_index(index)
     if not silent: print(f"Converted {fname}.")
 
@@ -371,7 +371,7 @@ def _script2notebook(fname, dic, silent=False):
     if os.environ.get('IN_TEST',0): return  # don't export if running tests
     if not silent: print(f"Converting {fname}.")
     fname = Path(fname)
-    with open(fname) as f: code = f.read()
+    with open(fname, encoding='utf8') as f: code = f.read()
     splits = _split(code)
     assert len(splits)==len(dic[fname]), f"Exported file from notebooks should have {len(dic[fname])} cells but has {len(splits)}."
     assert np.all([c1[0]==c2[1]] for c1,c2 in zip(splits, dic[fname]))
