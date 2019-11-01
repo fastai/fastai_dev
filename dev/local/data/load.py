@@ -79,11 +79,12 @@ class DataLoader(GetAttr):
 
     def get_idxs(self):
         idxs = Inf.count if self.indexed else Inf.nones
-        return idxs if self.n is None else list(itertools.islice(idxs, self.n))
+        if self.n is not None: idxs = list(itertools.islice(idxs, self.n))
+        if self.shuffle: idxs = self.shuffle_fn(idxs)
+        return idxs
 
     def sample(self):
         idxs = self.get_idxs()
-        if self.shuffle: idxs = self.shuffle_fn(idxs)
         return (b for i,b in enumerate(idxs) if i//(self.bs or 1)%self.nw==self.offs)
 
     def __iter__(self):

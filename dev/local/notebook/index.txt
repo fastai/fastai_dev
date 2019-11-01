@@ -214,7 +214,7 @@
   "NormType": "03a_layers.ipynb",
   "BatchNorm": "03a_layers.ipynb",
   "BatchNorm1dFlat": "03a_layers.ipynb",
-  "BnDropLin": "03a_layers.ipynb",
+  "LinBnDrop": "03a_layers.ipynb",
   "defaults.activation": "03a_layers.ipynb",
   "ConvLayer": "03a_layers.ipynb",
   "BaseLoss": "03a_layers.ipynb",

@@ -37,14 +37,16 @@ def create_body(arch, pretrained=True, cut=None):
 #Cell
 def create_head(nf, nc, lin_ftrs=None, ps=0.5, concat_pool=True, bn_final=False):
     "Model head that takes `nf` features, runs through `lin_ftrs`, and out `nc` classes."
-    lin_ftrs = [nf, 512, nc] if lin_ftrs is None else [nf] + lin_ftrs + [nc]
+    lin_ftrs = [nf, 512] if lin_ftrs is None else [nf] + lin_ftrs
     ps = L(ps)
-    if len(ps) == 1: ps = [ps[0]/2] * (len(lin_ftrs)-2) + ps
-    actns = [nn.ReLU(inplace=True)] * (len(lin_ftrs)-2) + [None]
+    if len(ps) == 1: ps = [ps[0]/2] * (len(lin_ftrs)-1) + ps
+    actns = [nn.ReLU(inplace=True)] * (len(lin_ftrs)-1) + [None]
     pool = AdaptiveConcatPool2d() if concat_pool else nn.AdaptiveAvgPool2d(1)
     layers = [pool, Flatten()]
+    layers.append(nn.Dropout(ps.pop(0)))
     for ni,no,p,actn in zip(lin_ftrs[:-1], lin_ftrs[1:], ps, actns):
-        layers += BnDropLin(ni, no, True, p, actn)
+        layers += LinBnDrop(ni, no, bn=True, p=p, act=actn)
+    layers.append(nn.Linear(lin_ftrs[-1], nc))
     if bn_final: layers.append(nn.BatchNorm1d(lin_ftrs[-1], momentum=0.01))
     return nn.Sequential(*layers)
 

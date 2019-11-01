@@ -2,7 +2,7 @@
 
 __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugger', 'sigmoid_range', 'SigmoidRange',
            'AdaptiveConcatPool2d', 'PoolType', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm', 'BatchNorm1dFlat',
-           'BnDropLin', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat',
+           'LinBnDrop', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat',
            'BCELossFlat', 'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention',
            'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
            'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model',
@@ -113,13 +113,13 @@ class BatchNorm1dFlat(nn.BatchNorm1d):
         return super().forward(x).view(*f,l)
 
 #Cell
-class BnDropLin(nn.Sequential):
+class LinBnDrop(nn.Sequential):
     "Module grouping `BatchNorm1d`, `Dropout` and `Linear` layers"
     def __init__(self, n_in, n_out, bn=True, p=0., act=None):
-        layers = [BatchNorm(n_in, ndim=1)] if bn else []
-        if p != 0: layers.append(nn.Dropout(p))
-        layers.append(nn.Linear(n_in, n_out))
+        layers = [nn.Linear(n_in, n_out, bias=not bn)]
         if act is not None: layers.append(act)
+        if bn: layers.append(BatchNorm(n_out, ndim=1))
+        if p != 0: layers.append(nn.Dropout(p))
         super().__init__(*layers)
 
 #Cell
