@@ -37,7 +37,7 @@ class TrainEvalCallback(Callback):
         "Update the iter counter (in training mode)"
         if not self.training: return
         self.learn.pct_train += 1./(self.n_iter*self.n_epoch)
-        self.learn.train_iter   += 1
+        self.learn.train_iter += 1
 
     def begin_train(self):
         "Set the model in training mode"
