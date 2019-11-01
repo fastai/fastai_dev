@@ -311,9 +311,9 @@ bn_types = (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)
 #Cell
 def bn_bias_params(m, with_bias=True):
     "Return all bias and BatchNorm parameters"
-    if isinstance(m, bn_types): return L(m.parameters())
+    if isinstance(m, bn_types): return L(m.parameters()) if with_bias else L(m.weight)
     res = L(m.children()).map(bn_bias_params, with_bias=with_bias).concat()
-    if with_bias and hasattr(m, 'bias'): res.append(m.bias)
+    #if with_bias and hasattr(m, 'bias'): res.append(m.bias)
     return res
 
 #Cell
