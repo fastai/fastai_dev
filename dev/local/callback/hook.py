@@ -184,9 +184,14 @@ def summary(self:Learner):
     return PrettyString(res)
 
 #Cell
+@delegates()
 class ActivationStats(HookCallback):
     "Callback that record the mean and std of activations."
     run_before=TrainEvalCallback
+    def __init__(self, with_hist=False, **kwargs):
+        super().__init__(**kwargs)
+        self.with_hist = with_hist
+
     def begin_fit(self):
         "Initialize stats."
         super().begin_fit()
@@ -194,7 +199,9 @@ class ActivationStats(HookCallback):
 
     def hook(self, m, i, o):
         o = o.float()
-        return {'mean': o.mean().item(), 'std': o.std().item(), 'hist': o.histc(40,0,10)}
+        res = {'mean': o.mean().item(), 'std': o.std().item(), 'percent_null': (o<=0.05).long().sum().item()/o.numel()}
+        if self.with_hist: res['hist'] = o.histc(40,0,10)
+        return res
 
     def after_batch(self):
         "Take the stored results and puts it in `self.stats`"
