@@ -102,17 +102,17 @@ def has_params(m):
     return len(list(m.parameters())) > 0
 
 #Cell
+@funcs_kwargs
 class HookCallback(Callback):
     "`Callback` that can be used to register hooks on `modules`"
-    def __init__(self, hook=None, modules=None, do_remove=True, is_forward=True, detach=True, cpu=False):
-        self.modules,self.do_remove = modules,do_remove
-        self.is_forward,self.detach,self.cpu = is_forward,detach,cpu
-        if hook is not None: setattr(self, 'hook', hook)
+    _methods = ["hook"]
+    def __init__(self, modules=None, do_remove=True, is_forward=True, detach=True, cpu=False, **kwargs):
+        store_attr(self, 'modules,do_remove,is_forward,detach,cpu')
+        assert not kwargs
 
     def begin_fit(self):
         "Register the `Hooks` on `self.modules`."
-        if not self.modules:
-            self.modules = [m for m in flatten_model(self.model) if has_params(m)]
+        if self.modules is None: self.modules = [m for m in flatten_model(self.model) if has_params(m)]
         self.hooks = Hooks(self.modules, self.hook, self.is_forward, self.detach, self.cpu)
 
     def after_fit(self):
@@ -128,7 +128,6 @@ class HookCallback(Callback):
 @docs
 class ActivationStats(HookCallback):
     "Callback that record the mean and std of activations."
-
     def begin_fit(self):
         "Initialize stats."
         super().begin_fit()
