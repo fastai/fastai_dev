@@ -69,7 +69,7 @@ ImageDataBunch.from_csv = delegates(to=ImageDataBunch.from_df)(ImageDataBunch.fr
 ImageDataBunch.from_name_re = delegates(to=ImageDataBunch.from_name_func)(ImageDataBunch.from_name_re)
 
 #Cell
-def get_grid(n, rows=None, cols=None, add_vert=0, figsize=None, double=False, title=None):
+def get_grid(n, rows=None, cols=None, add_vert=0, figsize=None, double=False, title=None, return_fig=False):
     rows = rows or int(np.ceil(math.sqrt(n)))
     cols = cols or int(np.ceil(n/rows))
     if double: cols*=2 ; n*=2
@@ -78,7 +78,7 @@ def get_grid(n, rows=None, cols=None, add_vert=0, figsize=None, double=False, ti
     axs = axs.flatten()
     for ax in axs[n:]: ax.set_axis_off()
     if title is not None: fig.suptitle(title, weight='bold', size=14)
-    return axs
+    return (fig,axs) if return_fig else axs
 
 #Cell
 @typedispatch

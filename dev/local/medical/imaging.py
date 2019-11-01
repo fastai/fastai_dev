@@ -282,6 +282,7 @@ def shape(self:DcmDataset): return self.Rows,self.Columns
 def _cast_dicom_special(x):
     cls = type(x)
     if not cls.__module__.startswith('pydicom'): return x
+    if cls.__base__ == object: return x
     return cls.__base__(x)
 
 def _split_elem(res,k,v):

@@ -424,22 +424,22 @@ Self = _SelfCls()
 
 #Cell
 @patch
-def readlines(self:Path, hint=-1):
+def readlines(self:Path, hint=-1, encoding='utf8'):
     "Read the content of `fname`"
-    with self.open() as f: return f.readlines(hint)
+    with self.open(encoding=encoding) as f: return f.readlines(hint)
 
 #Cell
 @patch
-def read(self:Path, size=-1):
+def read(self:Path, size=-1, encoding='utf8'):
     "Read the content of `fname`"
-    with self.open() as f: return f.read(size)
+    with self.open(encoding=encoding) as f: return f.read(size)
 
 #Cell
 @patch
-def write(self:Path, txt):
+def write(self:Path, txt, encoding='utf8'):
     "Write `txt` to `self`, creating directories as needed"
     self.parent.mkdir(parents=True,exist_ok=True)
-    with self.open('w') as f: f.write(txt)
+    with self.open('w', encoding=encoding) as f: f.write(txt)
 
 #Cell
 @patch

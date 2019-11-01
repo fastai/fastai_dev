@@ -119,8 +119,8 @@ class URLs():
 
     #Pretrained models
     OPENAI_TRANSFORMER = f'{S3_MODEL}transformer.tgz'
-    WT103_FWD          = f'{S3_MODEL}wt103-fwd'
-    WT103_BWD          = f'{S3_MODEL}wt103-bwd'
+    WT103_FWD          = f'{S3_MODEL}wt103-fwd.tgz'
+    WT103_BWD          = f'{S3_MODEL}wt103-bwd.tgz'
 
     def path(url, c_key='archive'):
         fname = url.split('/')[-1]
