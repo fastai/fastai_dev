@@ -19,8 +19,9 @@ import sklearn.metrics as skm
 #Cell
 class AccumMetric(Metric):
     "Stores predictions and targets on CPU in accumulate to perform final calculations with `func`."
-    def __init__(self, func, dim_argmax=None, sigmoid=False, thresh=None, to_np=False, invert_arg=False, **kwargs):
-        self.func,self.dim_argmax,self.sigmoid,self.thresh = func,dim_argmax,sigmoid,thresh
+    def __init__(self, func, dim_argmax=None, sigmoid=False, thresh=None, to_np=False, invert_arg=False,
+                 flatten=True, **kwargs):
+        store_attr(self,'func,dim_argmax,sigmoid,thresh,flatten')
         self.to_np,self.invert_args,self.kwargs = to_np,invert_arg,kwargs
 
     def reset(self): self.targs,self.preds = [],[]
@@ -29,7 +30,8 @@ class AccumMetric(Metric):
         pred = learn.pred.argmax(dim=self.dim_argmax) if self.dim_argmax else learn.pred
         if self.sigmoid: pred = torch.sigmoid(pred)
         if self.thresh:  pred = (pred >= self.thresh)
-        pred,targ = flatten_check(pred, learn.y)
+        targ = learn.y
+        if self.flatten: pred,targ = flatten_check(pred,targ)
         self.preds.append(to_detach(pred))
         self.targs.append(to_detach(targ))
 

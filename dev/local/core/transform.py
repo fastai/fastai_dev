@@ -79,7 +79,7 @@ class Transform(metaclass=_TfmMeta):
         self.encodes,self.decodes,self.setups = TypeDispatch(),TypeDispatch(),TypeDispatch()
         if enc:
             self.encodes.add(enc)
-            self.order = getattr(self.encodes,'order',self.order)
+            self.order = getattr(enc,'order',self.order)
         if dec: self.decodes.add(dec)
 
     @property
