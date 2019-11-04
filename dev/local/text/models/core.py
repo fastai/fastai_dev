@@ -105,7 +105,7 @@ class PoolingLinearClassifier(Module):
         mod_layers = []
         if len(ps) != len(dims)-1: raise ValueError("Number of layers and dropout values do not match.")
         acts = [nn.ReLU(inplace=True)] * (len(dims) - 2) + [None]
-        layers = [BnDropLin(i, o, p=p, act=a) for i,o,p,a in zip(dims[:-1], dims[1:], ps, acts)]
+        layers = [LinBnDrop(i, o, p=p, act=a) for i,o,p,a in zip(dims[:-1], dims[1:], ps, acts)]
         self.layers = nn.Sequential(*layers)
 
     def forward(self, input):
