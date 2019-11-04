@@ -751,6 +751,8 @@
   "synth_dbunch": "97_utils_test.ipynb",
   "RegModel": "97_utils_test.ipynb",
   "synth_learner": "97_utils_test.ipynb",
+  "ProdLayer": "xse_resnext.ipynb",
+  "inplace_relu": "xse_resnext.ipynb",
   "SEModule": "xse_resnext.ipynb",
   "ResnetBlock": "xse_resnext.ipynb",
   "Bottleneck": "xse_resnext.ipynb",
