@@ -195,7 +195,7 @@ class OneHotEncode(Transform):
         if self.c is None: self.c = len(L(getattr(dsrc, 'vocab', None)))
         if not self.c: warn("Couldn't infer the number of classes, please pass a value for `c` at init")
 
-    def encodes(self, o): return TensorMultiCategory(one_hot(o, self.c).bool())
+    def encodes(self, o): return TensorMultiCategory(one_hot(o, self.c).float())
     def decodes(self, o): return one_hot_decode(o, None)
 
 #Cell
@@ -203,7 +203,7 @@ class EncodedMultiCategorize(Categorize):
     "Transform of one-hot encoded multi-category that decodes with `vocab`"
     loss_func,order=BCEWithLogitsLossFlat(),1
     def __init__(self, vocab): self.vocab,self.c = vocab,len(vocab)
-    def encodes(self, o): return TensorCategory(tensor(o).bool())
+    def encodes(self, o): return TensorCategory(tensor(o).float())
     def decodes(self, o): return MultiCategory (one_hot_decode(o, self.vocab))
 
 #Cell

@@ -25,7 +25,7 @@ def has_pool_type(m):
 #Cell
 def create_body(arch, pretrained=True, cut=None):
     "Cut off the body of a typically pretrained `arch` as determined by `cut`"
-    model = arch(pretrained)
+    model = arch(pretrained=pretrained)
     #cut = ifnone(cut, cnn_config(arch)['cut'])
     if cut is None:
         ll = list(enumerate(model.children()))
@@ -76,13 +76,15 @@ def cnn_config(**kwargs):
 def default_split(m:nn.Module): return L(m[0], m[1:]).map(params)
 
 #Cell
-def _resnet_split(m): return L(m[0][:6], m[0][6:], m[1:]).map(params)
+def _xresnet_split(m): return L(m[0][:3], m[0][3:], m[1:]).map(params)
+def  _resnet_split(m): return L(m[0][:6], m[0][6:], m[1:]).map(params)
 def _squeezenet_split(m:nn.Module): return L(m[0][0][:5], m[0][0][5:], m[1:]).map(params)
 def _densenet_split(m:nn.Module): return L(m[0][0][:7],m[0][0][7:], m[1:]).map(params)
 def _vgg_split(m:nn.Module): return L(m[0][0][:22], m[0][0][22:], m[1:]).map(params)
 def _alexnet_split(m:nn.Module): return L(m[0][0][:6], m[0][0][6:], m[1:]).map(params)
 
 _default_meta    = {'cut':None, 'split':default_split}
+_xresnet_meta    = {'cut':-3, 'split':_xresnet_split }
 _resnet_meta     = {'cut':-2, 'split':_resnet_split }
 _squeezenet_meta = {'cut':-1, 'split': _squeezenet_split}
 _densenet_meta   = {'cut':-1, 'split':_densenet_split}
@@ -91,9 +93,9 @@ _alexnet_meta    = {'cut':-2, 'split':_alexnet_split}
 
 #Cell
 model_meta = {
-    models.xresnet.xresnet18 :{**_resnet_meta}, models.xresnet.xresnet34: {**_resnet_meta},
-    models.xresnet.xresnet50 :{**_resnet_meta}, models.xresnet.xresnet101:{**_resnet_meta},
-    models.xresnet.xresnet152:{**_resnet_meta},
+    models.xresnet.xresnet18 :{**_xresnet_meta}, models.xresnet.xresnet34: {**_xresnet_meta},
+    models.xresnet.xresnet50 :{**_xresnet_meta}, models.xresnet.xresnet101:{**_xresnet_meta},
+    models.xresnet.xresnet152:{**_xresnet_meta},
 
     models.resnet18 :{**_resnet_meta}, models.resnet34: {**_resnet_meta},
     models.resnet50 :{**_resnet_meta}, models.resnet101:{**_resnet_meta},

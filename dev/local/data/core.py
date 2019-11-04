@@ -10,7 +10,7 @@ from .load import *
 
 #Cell
 @typedispatch
-def show_batch(x, y, samples, ctxs=None, max_n=10, **kwargs):
+def show_batch(x, y, samples, ctxs=None, max_n=9, **kwargs):
     if ctxs is None: ctxs = Inf.nones
     for i in range_of(samples[0]):
         ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(samples.itemgot(i),ctxs,range(max_n))]
@@ -18,7 +18,7 @@ def show_batch(x, y, samples, ctxs=None, max_n=10, **kwargs):
 
 #Cell
 @typedispatch
-def show_results(x, y, samples, outs, ctxs=None, max_n=10, **kwargs):
+def show_results(x, y, samples, outs, ctxs=None, max_n=9, **kwargs):
     if ctxs is None: ctxs = Inf.nones
     for i in range(len(samples[0])):
         ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(samples.itemgot(i),ctxs,range(max_n))]
@@ -59,14 +59,14 @@ class TfmdDL(DataLoader):
             if isinstance(f,Pipeline): f.split_idx=split_idx
 
     def decode(self, b): return self.before_batch.decode(self.after_batch.decode(self._retain_dl(b)))
-    def decode_batch(self, b, max_n=10, full=True): return self._decode_batch(self.decode(b), max_n, full)
+    def decode_batch(self, b, max_n=9, full=True): return self._decode_batch(self.decode(b), max_n, full)
 
-    def _decode_batch(self, b, max_n=10, full=True):
+    def _decode_batch(self, b, max_n=9, full=True):
         f = self.after_item.decode
         f = compose(f, partial(getattr(self.dataset,'decode',noop), full = full))
         return L(batch_to_samples(b, max_n=max_n)).map(f)
 
-    def _pre_show_batch(self, b, max_n=10):
+    def _pre_show_batch(self, b, max_n=9):
         "Decode `b` to be ready for `show_batch`"
         b = self.decode(b)
         if hasattr(b, 'show'): return b,None,None
@@ -74,12 +74,12 @@ class TfmdDL(DataLoader):
         if not is_listy(b): b,its = [b],L((o,) for o in its)
         return detuplify(b[:self.n_inp]),detuplify(b[self.n_inp:]),its
 
-    def show_batch(self, b=None, max_n=10, ctxs=None, show=True, **kwargs):
+    def show_batch(self, b=None, max_n=9, ctxs=None, show=True, **kwargs):
         if b is None: b = self.one_batch()
         if not show: return self._pre_show_batch(b, max_n=max_n)
         show_batch(*self._pre_show_batch(b, max_n=max_n), ctxs=ctxs, max_n=max_n, **kwargs)
 
-    def show_results(self, b, out, max_n=10, ctxs=None, show=True, **kwargs):
+    def show_results(self, b, out, max_n=9, ctxs=None, show=True, **kwargs):
         x,y,its = self.show_batch(b, max_n=max_n, show=False)
         b_out = b[:self.n_inp] + (tuple(out) if is_listy(out) else (out,))
         x1,y1,outs = self.show_batch(b_out, max_n=max_n, show=False)
@@ -144,7 +144,7 @@ class FilteredBase:
     def databunch(self, bs=16, val_bs=None, shuffle_train=True, n=None, path='.', dl_type=None, dl_kwargs=None, **kwargs):
         if dl_kwargs is None: dl_kwargs = [{}] * self.n_subsets
         ns = self.n_subsets-1
-        bss = [bs] + [2*bs]*ns if val_bs is None else [bs] + [val_bs]*ns
+        bss = [bs] + [3*bs//2]*ns if val_bs is None else [bs] + [val_bs]*ns
         shuffles = [shuffle_train] + [False]*ns
         if dl_type is None: dl_type = self._dl_type
         dls = [dl_type(self.subset(i), bs=b, shuffle=s, drop_last=s, n=n if i==0 else None, **kwargs, **dk)
