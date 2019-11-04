@@ -143,12 +143,12 @@ defaults.activation=nn.ReLU
 class ConvLayer(nn.Sequential):
     "Create a sequence of convolutional (`ni` to `nf`), ReLU (if `use_activ`) and `norm_type` layers."
     def __init__(self, ni, nf, ks=3, stride=1, padding=None, bias=None, ndim=2, norm_type=NormType.Batch, bn_1st=True,
-                 act_cls=defaults.activation, transpose=False, init=nn.init.kaiming_normal_, xtra=None):
+                 act_cls=defaults.activation, transpose=False, init=nn.init.kaiming_normal_, xtra=None, **kwargs):
         if padding is None: padding = ((ks-1)//2 if not transpose else 0)
         bn = norm_type in (NormType.Batch, NormType.BatchZero)
         if bias is None: bias = not bn
         conv_func = _conv_func(ndim, transpose=transpose)
-        conv = init_default(conv_func(ni, nf, kernel_size=ks, bias=bias, stride=stride, padding=padding), init)
+        conv = init_default(conv_func(ni, nf, kernel_size=ks, bias=bias, stride=stride, padding=padding, **kwargs), init)
         if   norm_type==NormType.Weight:   conv = weight_norm(conv)
         elif norm_type==NormType.Spectral: conv = spectral_norm(conv)
         layers = [conv]
