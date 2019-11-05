@@ -281,6 +281,11 @@ class Lookahead(Optimizer, GetAttr):
     def _init_state(self): self.count,self.slow_weights = 0,None
     def _copy_weights(self): self.slow_weights = L(L(p.clone().detach() for p in pg) for pg in self.param_groups)
 
+    @property
+    def param_groups(self): return self.opt.param_groups
+    @param_groups.setter
+    def param_groups(self, v): self.opt.param_groups = v
+
 #Cell
 def detuplify_pg(d):
     res = {}
