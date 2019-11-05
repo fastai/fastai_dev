@@ -2,7 +2,7 @@
 
 __all__ = ['Optimizer', 'sgd_step', 'weight_decay', 'l2_reg', 'average_grad', 'average_sqr_grad', 'momentum_step',
            'SGD', 'rms_prop_step', 'RMSProp', 'step_stat', 'debias', 'adam_step', 'Adam', 'larc_layer_lr', 'larc_step',
-           'Larc', 'lamb_step', 'Lamb', 'detuplify_pg', 'set_item_pg', 'pytorch_hp_map', 'OptimWrapper']
+           'Larc', 'lamb_step', 'Lamb', 'LookAhead', 'detuplify_pg', 'set_item_pg', 'pytorch_hp_map', 'OptimWrapper']
 
 #Cell
 from .torch_basics import *
@@ -221,6 +221,41 @@ def Lamb(params, lr, mom=0.9, sqr_mom=0.99, eps=1e-5, wd=0., decouple_wd=True):
     steppers.append(lamb_step)
     stats = [partial(average_grad, dampening=True), average_sqr_grad, step_stat]
     return Optimizer(params, steppers, stats=stats, lr=lr, mom=mom, sqr_mom=sqr_mom, eps=eps, wd=wd)
+
+#Cell
+class LookAhead(Optimizer, GetAttr):
+    "Wrap `opt` in a lookahead optimizer"
+    _default='opt'
+    def __init__(self, opt, k=6, alpha=0.5):
+        store_attr(self, 'opt,k,alpha')
+        self._init_state()
+
+    def step(self):
+        if self.slow_weights is None: self._copy_weights()
+        self.opt.step()
+        self.count += 1
+        if self.count%self.k != 0: return
+        for slow_pg,fast_pg in zip(self.slow_weights,self.param_groups):
+            for slow_p,fast_p in zip(slow_pg,fast_pg):
+                slow_p.data.add_(self.alpha, fast_p.data-slow_p.data)
+                fast_p.data.copy_(slow_p.data)
+
+    def clear_state(self):
+        self.opt.clear_state()
+        self._init_state()
+
+    def state_dict(self):
+        state = self.opt.state_dict()
+        state.update({'count': self.count, 'slow_weights': self.slow_weights})
+        return state
+
+    def load_state_dict(self, sd):
+        self.count = sd.pop('count')
+        self.slow_weights = sd.pop('slow_weights')
+        self.opt.load_state_dict(sd)
+
+    def _init_state(self): self.count,self.slow_weights = 0,None
+    def _copy_weights(self): self.slow_weights = L(L(p.clone().detach() for p in pg) for pg in self.param_groups)
 
 #Cell
 def detuplify_pg(d):
