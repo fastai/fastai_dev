@@ -421,6 +421,8 @@
   "debias": "12_optimizer.ipynb",
   "adam_step": "12_optimizer.ipynb",
   "Adam": "12_optimizer.ipynb",
+  "radam_step": "12_optimizer.ipynb",
+  "RAdam": "12_optimizer.ipynb",
   "larc_layer_lr": "12_optimizer.ipynb",
   "larc_layer_lr.defaults": "12_optimizer.ipynb",
   "larc_step": "12_optimizer.ipynb",
