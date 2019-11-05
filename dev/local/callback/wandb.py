@@ -62,18 +62,7 @@ class WandbCallback(Callback):
             wandb.log({"Prediction Samples": wandb_process(x, y, its, outs)}, step=self.step)
         wandb.log({n:s for n,s in zip(self.recorder.metric_names, self.recorder.log) if n not in ['train_loss', 'epoch']}, step=self.step)
 
-    def after_fit(self):
-        for p,v in self.recorder.hps.items():
-            fig,ax = plt.subplots()
-            ax.plot(v)
-            ax.set_title(p)
-            wandb.log({p: wandb.Image(fig)}, commit=False)
-            plt.close(fig)
-        fig,ax = plt.subplots()
-        ax.plot(self.recorder.losses)
-        ax.set_title('train_loss')
-        wandb.log({'train_loss': wandb.Image(fig)})
-        plt.close(fig)
+    def after_fit(self): wandb.log({}) #To trigger one last synch
 
 #Cell
 @typedispatch
