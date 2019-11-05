@@ -509,6 +509,7 @@
   "ParamScheduler": "14_callback_schedule.ipynb",
   "Learner.fit_one_cycle": "14_callback_schedule.ipynb",
   "Recorder.plot_sched": "14_callback_schedule.ipynb",
+  "Learner.fit_flat_cos": "14_callback_schedule.ipynb",
   "Learner.fit_sgdr": "14_callback_schedule.ipynb",
   "LRFinder": "14_callback_schedule.ipynb",
   "Recorder.plot_lr_find": "14_callback_schedule.ipynb",
