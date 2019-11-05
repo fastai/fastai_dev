@@ -429,7 +429,7 @@
   "Larc": "12_optimizer.ipynb",
   "lamb_step": "12_optimizer.ipynb",
   "Lamb": "12_optimizer.ipynb",
-  "LookAhead": "12_optimizer.ipynb",
+  "Lookahead": "12_optimizer.ipynb",
   "detuplify_pg": "12_optimizer.ipynb",
   "set_item_pg": "12_optimizer.ipynb",
   "pytorch_hp_map": "12_optimizer.ipynb",

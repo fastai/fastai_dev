@@ -2,7 +2,7 @@
 
 __all__ = ['Optimizer', 'sgd_step', 'weight_decay', 'l2_reg', 'average_grad', 'average_sqr_grad', 'momentum_step',
            'SGD', 'rms_prop_step', 'RMSProp', 'step_stat', 'debias', 'adam_step', 'Adam', 'radam_step', 'RAdam',
-           'larc_layer_lr', 'larc_step', 'Larc', 'lamb_step', 'Lamb', 'LookAhead', 'detuplify_pg', 'set_item_pg',
+           'larc_layer_lr', 'larc_step', 'Larc', 'lamb_step', 'Lamb', 'Lookahead', 'detuplify_pg', 'set_item_pg',
            'pytorch_hp_map', 'OptimWrapper']
 
 #Cell
@@ -247,7 +247,7 @@ def Lamb(params, lr, mom=0.9, sqr_mom=0.99, eps=1e-5, wd=0., decouple_wd=True):
     return Optimizer(params, steppers, stats=stats, lr=lr, mom=mom, sqr_mom=sqr_mom, eps=eps, wd=wd)
 
 #Cell
-class LookAhead(Optimizer, GetAttr):
+class Lookahead(Optimizer, GetAttr):
     "Wrap `opt` in a lookahead optimizer"
     _default='opt'
     def __init__(self, opt, k=6, alpha=0.5):
