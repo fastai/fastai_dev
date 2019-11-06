@@ -232,13 +232,22 @@ class DataSource(FilteredBase):
         tls = [tl._new([], split_idx=tl.split_idx) for tl in self.tls]
         return type(self)(tls=tls, n_inp=self.n_inp)
 
+    @contextmanager
+    def set_split_idx(self, i):
+        old_split_idx = self.split_idx
+        for tl in self.tls: tl.tfms.split_idx = i
+        yield self
+        for tl in self.tls: tl.tfms.split_idx = old_split_idx
+
     _docs=dict(
         decode="Compose `decode` of all `tuple_tfms` then all `tfms` on `i`",
         show="Show item `o` in `ctx`",
         databunch="Get a `DataBunch`",
         overlapping_splits="All splits that are in more than one split",
         subset="New `DataSource` that only includes subset `i`",
-        new_empty="Create a new empty version of the `self`, keeping only the transforms")
+        new_empty="Create a new empty version of the `self`, keeping only the transforms",
+        set_split_idx="Contextmanager to use the same `DataSource` with another `split_idx`"
+    )
 
 #Cell
 def test_set(dsrc, test_items, rm_tfms=0):

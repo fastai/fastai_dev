@@ -2,9 +2,9 @@
 
 __all__ = ['RandTransform', 'TensorTypes', 'FlipItem', 'DihedralItem', 'PadMode', 'CropPad', 'RandomCrop',
            'ResizeMethod', 'Resize', 'RandomResizedCrop', 'AffineCoordTfm', 'RandomResizedCropGPU', 'affine_mat',
-           'mask_tensor', 'flip_mat', 'Flip', 'dihedral_mat', 'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom',
-           'find_coeffs', 'apply_perspective', 'Warp', 'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms',
-           'aug_transforms']
+           'mask_tensor', 'flip_mat', 'Flip', 'DeterministicDraw', 'DeterministicFlip', 'dihedral_mat', 'Dihedral',
+           'DeterministicDihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs', 'apply_perspective',
+           'Warp', 'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms', 'aug_transforms']
 
 #Cell
 from ..test import *
@@ -365,9 +365,21 @@ def mask_tensor(x, p=0.5, neutral=0.):
     return x.add_(neutral) if neutral != 0 else x
 
 #Cell
-def flip_mat(x, p=0.5):
+def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0.):
+    if draw is None: draw=def_draw
+    if callable(draw): res=draw(x)
+    elif is_listy(draw):
+        test_eq(len(draw), x.size(0))
+        res = tensor(draw, dtype=x.dtype, device=x.device)
+    else: res = x.new_zeros(x.size(0)) + draw
+    return mask_tensor(res, p=p, neutral=neutral)
+
+#Cell
+def flip_mat(x, p=0.5, draw=None):
     "Return a random flip matrix"
-    mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
+    def _def_draw(x): return x.new_ones(x.size(0))
+    mask = x.new_ones(x.size(0)) - 2*_draw_mask(x, _def_draw, draw=draw, p=p)
+    #mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
     return affine_mat(mask,     t0(mask), t0(mask),
                       t0(mask), t1(mask), t0(mask))
 
@@ -380,24 +392,29 @@ def _get_default(x, mode=None, pad_mode=None):
 
 #Cell
 @patch
-def flip_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, size=None, mode=None, pad_mode=None):
+def flip_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
-    return x.affine_coord(mat=flip_mat(x0, p=p)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+    return x.affine_coord(mat=flip_mat(x0, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
-def Flip(p=0.5, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+def Flip(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Randomly flip a batch of images with a probability `p`"
-    return AffineCoordTfm(aff_fs=partial(flip_mat, p=p), size=size, mode=mode, pad_mode=pad_mode)
+    return AffineCoordTfm(aff_fs=partial(flip_mat, p=p, draw=draw), size=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
-def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0.):
-    if draw is None: draw=def_draw
-    if callable(draw): return draw(x)
-    elif is_listy(draw):
-        test_eq(len(draw), x.size(0))
-        res = tensor(draw, dtype=x.dtype, device=x.device)
-    else: res = x.new_zeros(x.size(0)) + draw
-    return mask_tensor(res, p=p, neutral=neutral)
+class DeterministicDraw():
+    def __init__(self, vals):
+        store_attr(self, 'vals')
+        self.count=-1
+
+    def __call__(self, x):
+        self.count += 1
+        return x.new_zeros(x.size(0)) + self.vals[self.count%len(self.vals)]
+
+#Cell
+def DeterministicFlip(size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+    "Flip the batch every other call"
+    return Flip(p=1., draw=DeterministicDraw([0,1]))
 
 #Cell
 def dihedral_mat(x, p=0.5, draw=None):
@@ -424,6 +441,11 @@ def dihedral_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, dr
 def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Apply a random dihedral transformation to a batch of images with a probability `p`"
     return AffineCoordTfm(aff_fs=partial(dihedral_mat, p=p, draw=draw), size=size, mode=mode, pad_mode=pad_mode)
+
+#Cell
+def DeterministicDihedral(size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+    "Flip the batch every other call"
+    return Dihedral(p=1., draw=DeterministicDraw(list(range(8))))
 
 #Cell
 def rotate_mat(x, max_deg=10, p=0.5, draw=None):

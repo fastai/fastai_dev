@@ -4,9 +4,10 @@ __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugge
            'AdaptiveConcatPool2d', 'PoolType', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm', 'BatchNorm1dFlat',
            'LinBnDrop', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat',
            'BCELossFlat', 'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention',
-           'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
-           'ResBlock', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model',
-           'NoneReduce', 'in_channels']
+           'PooledSelfAttention2d', 'SimpleSelfAttention', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx',
+           'MergeLayer', 'Cat', 'SimpleCNN', 'ResBlock', 'swish', 'Swish', 'MishJitAutoFn', 'mish', 'MishJit',
+           'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model', 'NoneReduce',
+           'in_channels']
 
 #Cell
 from .core.all import *
@@ -143,12 +144,12 @@ defaults.activation=nn.ReLU
 class ConvLayer(nn.Sequential):
     "Create a sequence of convolutional (`ni` to `nf`), ReLU (if `use_activ`) and `norm_type` layers."
     def __init__(self, ni, nf, ks=3, stride=1, padding=None, bias=None, ndim=2, norm_type=NormType.Batch, bn_1st=True,
-                 act_cls=defaults.activation, transpose=False, init=nn.init.kaiming_normal_, xtra=None):
+                 act_cls=defaults.activation, transpose=False, init=nn.init.kaiming_normal_, xtra=None, **kwargs):
         if padding is None: padding = ((ks-1)//2 if not transpose else 0)
         bn = norm_type in (NormType.Batch, NormType.BatchZero)
         if bias is None: bias = not bn
         conv_func = _conv_func(ndim, transpose=transpose)
-        conv = init_default(conv_func(ni, nf, kernel_size=ks, bias=bias, stride=stride, padding=padding), init)
+        conv = init_default(conv_func(ni, nf, kernel_size=ks, bias=bias, stride=stride, padding=padding, **kwargs), init)
         if   norm_type==NormType.Weight:   conv = weight_norm(conv)
         elif norm_type==NormType.Spectral: conv = spectral_norm(conv)
         layers = [conv]
@@ -288,6 +289,36 @@ class PooledSelfAttention2d(nn.Module):
         return self.gamma * o + x
 
 #Cell
+def _conv1d_spect(ni:int, no:int, ks:int=1, stride:int=1, padding:int=0, bias:bool=False):
+    "Create and initialize a `nn.Conv1d` layer with spectral normalization."
+    conv = nn.Conv1d(ni, no, ks, stride=stride, padding=padding, bias=bias)
+    nn.init.kaiming_normal_(conv.weight)
+    if bias: conv.bias.data.zero_()
+    return spectral_norm(conv)
+
+#Cell
+class SimpleSelfAttention(Module):
+    def __init__(self, n_in:int, ks=1, sym=False):
+        self.sym,self.n_in = sym,n_in
+        self.conv = _conv1d_spect(n_in, n_in, ks, padding=ks//2, bias=False)
+        self.gamma = nn.Parameter(tensor([0.]))
+
+    def forward(self,x):
+        if self.sym:
+            c = self.conv.weight.view(self.n_in,self.n_in)
+            c = (c + c.t())/2
+            self.conv.weight = c.view(self.n_in,self.n_in,1)
+
+        size = x.size()
+        x = x.view(*size[:2],-1)
+
+        convx = self.conv(x)
+        xxT = torch.bmm(x,x.permute(0,2,1).contiguous())
+        o = torch.bmm(xxT, convx)
+        o = self.gamma * o + x
+        return o.view(*size).contiguous()
+
+#Cell
 def icnr_init(x, scale=2, init=nn.init.kaiming_normal_):
     "ICNR init of `x`, with `scale` and `init` function"
     ni,nf,h,w = x.shape
@@ -359,7 +390,8 @@ class SimpleCNN(nn.Sequential):
 class ResBlock(nn.Module):
     "Resnet block from `ni` to `nh` with `stride`"
     @delegates(ConvLayer.__init__)
-    def __init__(self, expansion, ni, nh, stride=1, norm_type=NormType.Batch, act_cls=defaults.activation, **kwargs):
+    def __init__(self, expansion, ni, nh, stride=1, sa=False, sym=False,
+                 norm_type=NormType.Batch, act_cls=defaults.activation, **kwargs):
         super().__init__()
         norm2 = NormType.BatchZero if norm_type==NormType.Batch else norm_type
         nf,ni = nh*expansion,ni*expansion
@@ -371,11 +403,69 @@ class ResBlock(nn.Module):
                    ConvLayer(nh, nf, 1, norm_type=norm2, act_cls=None, **kwargs)
         ]
         self.convs = nn.Sequential(*layers)
+        self.sa = SimpleSelfAttention(nf,ks=1,sym=sym) if sa else noop
         self.idconv = noop if ni==nf else ConvLayer(ni, nf, 1, act_cls=None, **kwargs)
         self.pool = noop if stride==1 else nn.AvgPool2d(2, ceil_mode=True)
         self.act = defaults.activation(inplace=True)
 
-    def forward(self, x): return self.act(self.convs(x) + self.idconv(self.pool(x)))
+    def forward(self, x): return self.act(self.sa(self.convs(x)) + self.idconv(self.pool(x)))
+
+#Cell
+from torch.jit import script
+
+@script
+def _swish_jit_fwd(x): return x.mul(torch.sigmoid(x))
+
+@script
+def _swish_jit_bwd(x, grad_output):
+    x_sigmoid = torch.sigmoid(x)
+    return grad_output * (x_sigmoid * (1 + x * (1 - x_sigmoid)))
+
+class _SwishJitAutoFn(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, x):
+        ctx.save_for_backward(x)
+        return _swish_jit_fwd(x)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        x = ctx.saved_variables[0]
+        return _swish_jit_bwd(x, grad_output)
+
+#Cell
+def swish(x, inplace=False): return _SwishJitAutoFn.apply(x)
+
+#Cell
+class Swish(Module):
+    def forward(self, x): return _SwishJitAutoFn.apply(x)
+
+#Cell
+@script
+def _mish_jit_fwd(x): return x.mul(torch.tanh(F.softplus(x)))
+
+@script
+def _mish_jit_bwd(x, grad_output):
+    x_sigmoid = torch.sigmoid(x)
+    x_tanh_sp = F.softplus(x).tanh()
+    return grad_output.mul(x_tanh_sp + x * x_sigmoid * (1 - x_tanh_sp * x_tanh_sp))
+
+class MishJitAutoFn(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, x):
+        ctx.save_for_backward(x)
+        return _mish_jit_fwd(x)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        x = ctx.saved_variables[0]
+        return _mish_jit_bwd(x, grad_output)
+
+#Cell
+def mish(x): return MishJitAutoFn.apply(x)
+
+#Cell
+class MishJit(Module):
+    def forward(self, x): return MishJitAutoFn.apply(x)
 
 #Cell
 class ParameterModule(Module):
