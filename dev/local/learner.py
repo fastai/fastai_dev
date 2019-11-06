@@ -514,6 +514,7 @@ defaults.callbacks = [TrainEvalCallback, Recorder]
 def freeze_to(self:Learner, n):
     if self.opt is None: self.create_opt()
     self.opt.freeze_to(n)
+    self.opt.clear_state()
 
 @patch
 def freeze(self:Learner): self.freeze_to(-1)

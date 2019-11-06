@@ -108,7 +108,7 @@ public struct TFBatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
     public typealias Input = Tensor<Scalar>
     public typealias Output = Tensor<Scalar>
     @noDerivative public var delegates: [(Self.Output) -> ()] = []
-
+    
     // Configuration hyperparameters
     @noDerivative var momentum, epsilon: Scalar
     // Running statistics
@@ -203,6 +203,10 @@ public struct ConvBN<Scalar: TensorFlowFloatingPoint>: FALayer {
 }
 
 public struct CnnModelBN: Layer {
+    // TF-944 workaround
+    public typealias Input = TF
+    public typealias Output = TF
+    
     public var convs: [ConvBN<Float>]
     public var pool = FAGlobalAvgPool2D<Float>()
     public var linear: FADense<Float>
