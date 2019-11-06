@@ -2,8 +2,9 @@
 
 __all__ = ['ProdLayer', 'inplace_relu', 'SEModule', 'SEResNetBlock', 'SEBlock', 'SEResNeXtBlock', 'XSENet',
            'xse_resnet18', 'xse_resnext18_32x4d', 'xse_resnet34', 'xse_resnext34_32x4d', 'xse_resnet50',
-           'xse_resnext50_32x4d', 'xse_resnet101', 'xse_resnext101_32x4d', 'xse_resnet152', 'xsenet154', 'se_kwargs1',
-           'se_kwargs2', 'g0', 'g1', 'g2', 'g3']
+           'xse_resnext50_32x4d', 'xse_resnet101', 'xse_resnext101_32x4d', 'xse_resnet152', 'xsenet154',
+           'xse_resnext18_deep', 'xse_resnext34_deep', 'xse_resnext50_deep', 'xse_resnext18_deeper',
+           'xse_resnext34_deeper', 'xse_resnext50_deeper', 'se_kwargs1', 'se_kwargs2', 'g0', 'g1', 'g2', 'g3']
 
 #Cell
 from ...torch_basics import *
@@ -99,3 +100,9 @@ def xse_resnext101_32x4d(c_out=1000, pretrained=False): return XSENet(SEResNeXtB
 def xse_resnet152(c_out=1000, pretrained=False):        return XSENet(SEResNetBlock,  4, g3, c_out=c_out, **se_kwargs1)
 def xsenet154(c_out=1000, pretrained=False):
     return SENet(SEBlock, g3, groups=64, reduction=16, p=0.2, c_out=c_out)
+def xse_resnext18_deep  (c_out=1000, pretrained=False):  return XSENet(SEResNeXtBlock, 1, g0+[1,1], c_out=c_out, **se_kwargs2)
+def xse_resnext34_deep  (c_out=1000, pretrained=False):  return XSENet(SEResNeXtBlock, 1, g1+[1,1], c_out=c_out, **se_kwargs2)
+def xse_resnext50_deep  (c_out=1000, pretrained=False):  return XSENet(SEResNeXtBlock, 4, g1+[1,1], c_out=c_out, **se_kwargs2)
+def xse_resnext18_deeper(c_out=1000, pretrained=False):  return XSENet(SEResNeXtBlock, 1, [2,2,1,1,1,1,1,1], c_out=c_out, **se_kwargs2)
+def xse_resnext34_deeper(c_out=1000, pretrained=False):  return XSENet(SEResNeXtBlock, 1, [3,4,4,2,2,1,1,1], c_out=c_out, **se_kwargs2)
+def xse_resnext50_deeper(c_out=1000, pretrained=False):  return XSENet(SEResNeXtBlock, 4, [3,4,4,2,2,1,1,1], c_out=c_out, **se_kwargs2)
