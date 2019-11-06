@@ -4,9 +4,10 @@ __all__ = ['Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugge
            'AdaptiveConcatPool2d', 'PoolType', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm', 'BatchNorm1dFlat',
            'LinBnDrop', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat',
            'BCELossFlat', 'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention',
-           'PooledSelfAttention2d', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
-           'SimpleSelfAttention', 'ResBlock', 'swish', 'Swish', 'MishJitAutoFn', 'mish', 'MishJit', 'ParameterModule',
-           'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model', 'NoneReduce', 'in_channels']
+           'PooledSelfAttention2d', 'SimpleSelfAttention', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx',
+           'MergeLayer', 'Cat', 'SimpleCNN', 'ResBlock', 'swish', 'Swish', 'MishJitAutoFn', 'mish', 'MishJit',
+           'ParameterModule', 'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model', 'NoneReduce',
+           'in_channels']
 
 #Cell
 from .core.all import *
@@ -288,6 +289,36 @@ class PooledSelfAttention2d(nn.Module):
         return self.gamma * o + x
 
 #Cell
+def _conv1d_spect(ni:int, no:int, ks:int=1, stride:int=1, padding:int=0, bias:bool=False):
+    "Create and initialize a `nn.Conv1d` layer with spectral normalization."
+    conv = nn.Conv1d(ni, no, ks, stride=stride, padding=padding, bias=bias)
+    nn.init.kaiming_normal_(conv.weight)
+    if bias: conv.bias.data.zero_()
+    return spectral_norm(conv)
+
+#Cell
+class SimpleSelfAttention(Module):
+    def __init__(self, n_in:int, ks=1, sym=False):
+        self.sym,self.n_in = sym,n_in
+        self.conv = _conv1d_spect(n_in, n_in, ks, padding=ks//2, bias=False)
+        self.gamma = nn.Parameter(tensor([0.]))
+
+    def forward(self,x):
+        if self.sym:
+            c = self.conv.weight.view(self.n_in,self.n_in)
+            c = (c + c.t())/2
+            self.conv.weight = c.view(self.n_in,self.n_in,1)
+
+        size = x.size()
+        x = x.view(*size[:2],-1)
+
+        convx = self.conv(x)
+        xxT = torch.bmm(x,x.permute(0,2,1).contiguous())
+        o = torch.bmm(xxT, convx)
+        o = self.gamma * o + x
+        return o.view(*size).contiguous()
+
+#Cell
 def icnr_init(x, scale=2, init=nn.init.kaiming_normal_):
     "ICNR init of `x`, with `scale` and `init` function"
     ni,nf,h,w = x.shape
@@ -354,36 +385,6 @@ class SimpleCNN(nn.Sequential):
                   norm_type=(NormType.Batch if bn and i<nl-1 else None)) for i in range(nl)]
         layers.append(PoolFlatten())
         super().__init__(*layers)
-
-#Cell
-def _conv1d_spect(ni:int, no:int, ks:int=1, stride:int=1, padding:int=0, bias:bool=False):
-    "Create and initialize a `nn.Conv1d` layer with spectral normalization."
-    conv = nn.Conv1d(ni, no, ks, stride=stride, padding=padding, bias=bias)
-    nn.init.kaiming_normal_(conv.weight)
-    if bias: conv.bias.data.zero_()
-    return spectral_norm(conv)
-
-#Cell
-class SimpleSelfAttention(Module):
-    def __init__(self, n_in:int, ks=1, sym=False):
-        self.sym,self.n_in = sym,n_in
-        self.conv = _conv1d_spect(n_in, n_in, ks, padding=ks//2, bias=False)
-        self.gamma = nn.Parameter(tensor([0.]))
-
-    def forward(self,x):
-        if self.sym:
-            c = self.conv.weight.view(self.n_in,self.n_in)
-            c = (c + c.t())/2
-            self.conv.weight = c.view(self.n_in,self.n_in,1)
-
-        size = x.size()
-        x = x.view(*size[:2],-1)
-
-        convx = self.conv(x)
-        xxT = torch.bmm(x,x.permute(0,2,1).contiguous())
-        o = torch.bmm(xxT, convx)
-        o = self.gamma * o + x
-        return o.view(*size).contiguous()
 
 #Cell
 class ResBlock(nn.Module):
