@@ -147,7 +147,7 @@ class Learner():
     def __init__(self, dbunch, model, loss_func=None, opt_func=Adam, lr=defaults.lr, splitter=trainable_params, cbs=None,
                  cb_funcs=None, metrics=None, path=None, model_dir='models', wd_bn_bias=False, train_bn=True):
         store_attr(self, "dbunch,model,opt_func,lr,splitter,model_dir,wd_bn_bias,train_bn,metrics")
-        self.training,self.logger,self.opt,self.cbs = False,print,None,L()
+        self.training,self.create_mbar,self.logger,self.opt,self.cbs = False,True,print,None,L()
         #TODO: infer loss_func from data
         if loss_func is None:
             loss_func = getattr(dbunch.train_ds, 'loss_func', None)
@@ -157,6 +157,7 @@ class Learner():
         self.add_cbs(cbf() for cbf in L(defaults.callbacks)+L(cb_funcs))
         self.add_cbs(cbs)
         self.model.to(self.dbunch.device)
+        self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
 
     @property
     def metrics(self): return self._metrics
@@ -258,18 +259,18 @@ class Learner():
             finally:                               self('after_fit')
 
     def validate(self, ds_idx=1, dl=None, cbs=None):
-        self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
+        #self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         if dl is None: dl = self.dbunch.dls[ds_idx]
-        with self.added_cbs(cbs), self.no_logging():
+        with self.added_cbs(cbs), self.no_logging(), self.no_mbar():
             self(_before_epoch)
             self._do_epoch_validate(ds_idx, dl)
             self(_after_epoch)
         return self.recorder.values[-1]
 
     def get_preds(self, ds_idx=1, dl=None, with_input=False, with_loss=False, with_decoded=False, act=None):
-        self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
+        #self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         cb = GatherPredsCallback(with_input=with_input, with_loss=with_loss)
-        with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced():
+        with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced(), self.no_mbar():
             self(_before_epoch)
             self._do_epoch_validate(ds_idx, dl)
             self(_after_epoch)
@@ -311,6 +312,8 @@ class Learner():
 
     @contextmanager
     def no_logging(self): return replacing_yield(self, 'logger', noop)
+    @contextmanager
+    def no_mbar(self):    return replacing_yield(self, 'create_mbar', False)
 
     @contextmanager
     def loss_not_reduced(self):
@@ -350,6 +353,7 @@ add_docs(Learner, "Group together a `model`, some `dbunch` and a `loss_func` to 
     show_results="Show some predictions on `ds_idx`-th dbunchset or `dl`",
     show_training_loop="Show each step in the training loop",
     no_logging="Context manager to temporarily remove `logger`",
+    no_mbar="Context manager to temporarily prevent the master progress bar from being created",
     loss_not_reduced="A context manager to evaluate `loss_func` with reduction set to none.",
     save="Save model and optimizer state (if `with_opt`) to `self.path/self.model_dir/file`",
     load="Load model and optimizer state (if `with_opt`) from `self.path/self.model_dir/file` using `device`"
@@ -544,3 +548,21 @@ def export(self:Learner, fname='export.pkl'):
     self.create_opt()
     self.opt.load_state_dict(state)
     self.dbunch = old_dbunch
+
+#Cell
+@patch
+def tta(self:Learner, ds_idx=1, dl=None, n=4, item_tfms=None, batch_tfms=None, beta=0.5):
+    "Return predictions on the `ds_idx` dataset or `dl` using Test Time Augmentation"
+    if dl is None: dl = self.dbunch.dls[ds_idx]
+    if item_tfms is not None or batch_tfms is not None: dl = dl.new(after_item=item_tfms, after_batch=batch_tfms)
+    with dl.dataset.set_split_idx(0), self.no_mbar():
+        self.progress.mbar = master_bar(list(range(n+1)))
+        aug_preds = []
+        for i in self.progress.mbar:
+            self.epoch = i #To keep track of progress on mbar since the progress callback will use self.epoch
+            aug_preds.append(self.get_preds(dl=dl)[0][None])
+    aug_preds = torch.cat(aug_preds).mean(0)
+    self.epoch = n
+    preds,targs = self.get_preds(dl=dl)
+    preds = torch.lerp(aug_preds, preds, beta)
+    return preds,targs

@@ -2,8 +2,9 @@
 
 __all__ = ['ProdLayer', 'inplace_relu', 'SEModule', 'SEResNetBlock', 'SEBlock', 'SEResNeXtBlock', 'XSENet',
            'xse_resnet18', 'xse_resnext18_32x4d', 'xse_resnet34', 'xse_resnext34_32x4d', 'xse_resnet50',
-           'xse_resnext50_32x4d', 'xse_resnet101', 'xse_resnext101_32x4d', 'xse_resnet152', 'xsenet154', 'se_kwargs1',
-           'se_kwargs2', 'g0', 'g1', 'g2', 'g3']
+           'xse_resnext50_32x4d', 'xse_resnet101', 'xse_resnext101_32x4d', 'xse_resnet152', 'xsenet154',
+           'xse_resnext18_deep', 'xse_resnext34_deep', 'xse_resnext50_deep', 'xse_resnext18_deeper',
+           'xse_resnext34_deeper', 'xse_resnext50_deeper', 'se_kwargs1', 'se_kwargs2', 'g0', 'g1', 'g2', 'g3']
 
 #Cell
 from ...torch_basics import *
@@ -27,7 +28,8 @@ def SEModule(ch, reduction):
 #Cell
 class SEResNetBlock(Module):
     "SE block from `ni` to `nh` with `stride`"
-    def __init__(self, expansion, ni, nf, groups, reduction, nh1=None, nh2=None, stride=1, act_cls=inplace_relu):
+    def __init__(self, expansion, ni, nf, groups, reduction, nh1=None, nh2=None, stride=1,
+                  sa=False, sym=False, act_cls=inplace_relu):
         if nh2 is None: nh2 = nf
         if nh1 is None: nh1 = nh2
         nf,ni = nf*expansion,ni*expansion
@@ -39,32 +41,35 @@ class SEResNetBlock(Module):
                    ConvLayer(nh2, nf,  1, act_cls=None, norm_type=NormType.BatchZero)
         ]
         self.convs = nn.Sequential(*layers)
+        self.sa = SimpleSelfAttention(nf,ks=1,sym=sym) if sa else noop
         self.idconv = noop if ni==nf else ConvLayer(ni, nf, 1, act_cls=None)
         self.pool = noop if stride==1 else nn.AvgPool2d(2, ceil_mode=True)
         self.se = SEModule(nf, reduction=reduction)
         self.act = act_cls()
 
-    def forward(self, x): return self.act(self.se(self.convs(x)) + self.idconv(self.pool(x)))
+    def forward(self, x): return self.act(self.sa(self.se(self.convs(x))) + self.idconv(self.pool(x)))
 
 #Cell
-def SEBlock(expansion, ni, nf, groups, reduction, stride=1, act_cls=inplace_relu):
-    return SEResNetBlock(expansion, ni, nf, groups, reduction, nh1=nf*2, nh2=nf*expansion, stride=stride, act_cls=act_cls)
+def SEBlock(expansion, ni, nf, groups, reduction, stride=1, **kwargs):
+    return SEResNetBlock(expansion, ni, nf, groups, reduction, nh1=nf*2, nh2=nf*expansion, stride=stride, **kwargs)
 
 #Cell
-def SEResNeXtBlock(expansion, ni, nf, groups, reduction, stride=1, act_cls=inplace_relu, base_width=4):
+def SEResNeXtBlock(expansion, ni, nf, groups, reduction, stride=1, base_width=4, **kwargs):
     w = math.floor(nf * (base_width / 64)) * groups
-    return SEResNetBlock(expansion, ni, nf, groups, reduction, nh2=w, stride=stride, act_cls=act_cls)
+    return SEResNetBlock(expansion, ni, nf, groups, reduction, nh2=w, stride=stride, **kwargs)
 
 #Cell
 class XSENet(nn.Sequential):
-    def __init__(self, block, expansion, layers, groups, reduction, p=0.2, c_in=3, c_out=1000):
+    def __init__(self, block, expansion, layers, groups, reduction, p=0.2, c_in=3, c_out=1000,
+                 sa=False, sym=False, act_cls=defaults.activation):
         stem = []
         sizes = [c_in,16,32,64] if c_in<3 else [c_in,32,32,64]
         for i in range(3):
             stem.append(ConvLayer(sizes[i], sizes[i+1], stride=2 if i==0 else 1))
 
         block_szs = [64//expansion,64,128,256,512] +[256]*(len(layers)-4)
-        blocks = [self._make_layer(block, expansion, block_szs[i], block_szs[i+1], l, groups, reduction, 1 if i==0 else 2)
+        blocks = [self._make_layer(block, expansion, block_szs[i], block_szs[i+1], l, groups, reduction,
+                                   stride=1 if i==0 else 2, sa=sa if i==len(layers)-4 else False, sym=sym, act_cls=act_cls)
                   for i,l in enumerate(layers)]
         drop = [] if p is None else [nn.Dropout(p)]
         super().__init__(
@@ -75,9 +80,10 @@ class XSENet(nn.Sequential):
             init_default(nn.Linear(block_szs[-1]*expansion, c_out)),
         )
 
-    def _make_layer(self, block, expansion, ni, nf, blocks, groups, reduction, stride):
+    def _make_layer(self, block, expansion, ni, nf, blocks, groups, reduction, stride, sa, sym, act_cls):
         return nn.Sequential(
-            *[block(expansion, ni if i==0 else nf, nf, groups, reduction, stride=stride if i==0 else 1)
+            *[block(expansion, ni if i==0 else nf, nf, groups, reduction, stride=stride if i==0 else 1,
+                   sa=sa if i==blocks else False, sym=sym, act_cls=act_cls)
               for i in range(blocks)])
 
 #Cell
@@ -88,14 +94,20 @@ g1 = [3,4,6,3]
 g2 = [3,4,23,3]
 g3 = [3,8,36,3]
 
-def xse_resnet18(c_out=1000, pretrained=False):         return XSENet(SEResNetBlock,  1, g0, c_out=c_out, **se_kwargs1)
-def xse_resnext18_32x4d(c_out=1000, pretrained=False):  return XSENet(SEResNeXtBlock, 1, g0, c_out=c_out, **se_kwargs2)
-def xse_resnet34(c_out=1000, pretrained=False):         return XSENet(SEResNetBlock,  1, g1, c_out=c_out, **se_kwargs1)
-def xse_resnext34_32x4d(c_out=1000, pretrained=False):  return XSENet(SEResNeXtBlock, 1, g1, c_out=c_out, **se_kwargs2)
-def xse_resnet50(c_out=1000, pretrained=False):         return XSENet(SEResNetBlock,  4, g1, c_out=c_out, **se_kwargs1)
-def xse_resnext50_32x4d(c_out=1000, pretrained=False):  return XSENet(SEResNeXtBlock, 4, g1, c_out=c_out, **se_kwargs2)
-def xse_resnet101(c_out=1000, pretrained=False):        return XSENet(SEResNetBlock,  4, g2, c_out=c_out, **se_kwargs1)
-def xse_resnext101_32x4d(c_out=1000, pretrained=False): return XSENet(SEResNeXtBlock, 4, g2, c_out=c_out, **se_kwargs2)
-def xse_resnet152(c_out=1000, pretrained=False):        return XSENet(SEResNetBlock,  4, g3, c_out=c_out, **se_kwargs1)
-def xsenet154(c_out=1000, pretrained=False):
+def xse_resnet18(c_out=1000, pretrained=False, **kwargs):         return XSENet(SEResNetBlock,  1, g0, c_out=c_out, **se_kwargs1, **kwargs)
+def xse_resnext18_32x4d(c_out=1000, pretrained=False, **kwargs):  return XSENet(SEResNeXtBlock, 1, g0, c_out=c_out, **se_kwargs2, **kwargs)
+def xse_resnet34(c_out=1000, pretrained=False, **kwargs):         return XSENet(SEResNetBlock,  1, g1, c_out=c_out, **se_kwargs1, **kwargs)
+def xse_resnext34_32x4d(c_out=1000, pretrained=False, **kwargs):  return XSENet(SEResNeXtBlock, 1, g1, c_out=c_out, **se_kwargs2, **kwargs)
+def xse_resnet50(c_out=1000, pretrained=False, **kwargs):         return XSENet(SEResNetBlock,  4, g1, c_out=c_out, **se_kwargs1, **kwargs)
+def xse_resnext50_32x4d(c_out=1000, pretrained=False, **kwargs):  return XSENet(SEResNeXtBlock, 4, g1, c_out=c_out, **se_kwargs2, **kwargs)
+def xse_resnet101(c_out=1000, pretrained=False, **kwargs):        return XSENet(SEResNetBlock,  4, g2, c_out=c_out, **se_kwargs1, **kwargs)
+def xse_resnext101_32x4d(c_out=1000, pretrained=False, **kwargs): return XSENet(SEResNeXtBlock, 4, g2, c_out=c_out, **se_kwargs2, **kwargs)
+def xse_resnet152(c_out=1000, pretrained=False, **kwargs):        return XSENet(SEResNetBlock,  4, g3, c_out=c_out, **se_kwargs1, **kwargs)
+def xsenet154(c_out=1000, pretrained=False, **kwargs):
     return SENet(SEBlock, g3, groups=64, reduction=16, p=0.2, c_out=c_out)
+def xse_resnext18_deep  (c_out=1000, pretrained=False, **kwargs):  return XSENet(SEResNeXtBlock, 1, g0+[1,1], c_out=c_out, **se_kwargs2, **kwargs)
+def xse_resnext34_deep  (c_out=1000, pretrained=False, **kwargs):  return XSENet(SEResNeXtBlock, 1, g1+[1,1], c_out=c_out, **se_kwargs2, **kwargs)
+def xse_resnext50_deep  (c_out=1000, pretrained=False, **kwargs):  return XSENet(SEResNeXtBlock, 4, g1+[1,1], c_out=c_out, **se_kwargs2, **kwargs)
+def xse_resnext18_deeper(c_out=1000, pretrained=False, **kwargs):  return XSENet(SEResNeXtBlock, 1, [2,2,1,1,1,1,1,1], c_out=c_out, **se_kwargs2, **kwargs)
+def xse_resnext34_deeper(c_out=1000, pretrained=False, **kwargs):  return XSENet(SEResNeXtBlock, 1, [3,4,4,2,2,1,1,1], c_out=c_out, **se_kwargs2, **kwargs)
+def xse_resnext50_deeper(c_out=1000, pretrained=False, **kwargs):  return XSENet(SEResNeXtBlock, 4, [3,4,4,2,2,1,1,1], c_out=c_out, **se_kwargs2, **kwargs)
