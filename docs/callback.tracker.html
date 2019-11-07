@@ -31,19 +31,7 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.notebook.showdoc</span> <span class="k">import</span> <span class="o">*</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.test_utils</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">local.test_utils</span> <span class="k">import</span> <span class="o">*</span>
 </pre></div>
 
     </div>
@@ -63,7 +51,120 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TerminateOnNaNCallback" class="doc_header"><code>class</code> <code>TerminateOnNaNCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L16" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TerminateOnNaNCallback</code>() :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+<h2 id="ShortEpochCallback" class="doc_header"><code>class</code> <code>ShortEpochCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L12" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ShortEpochCallback</code>(<strong><code>pct</code></strong>=<em><code>0.01</code></em>, <strong><code>short_valid</code></strong>=<em><code>True</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+</blockquote>
+<p>Fit just <code>pct</code> of an epoch, then stop</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">()</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">ShortEpochCallback</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>00:00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">synth_learner</span><span class="p">()</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">ShortEpochCallback</span><span class="p">(</span><span class="n">short_valid</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>17.764324</td>
+      <td>00:00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="TerminateOnNaNCallback" class="doc_header"><code>class</code> <code>TerminateOnNaNCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L21" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TerminateOnNaNCallback</code>() :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 <p>A <a href="/learner.html#Callback"><code>Callback</code></a> that terminates training if loss is NaN.</p>
 
@@ -107,7 +208,7 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
   <tbody>
     <tr>
       <td>0</td>
-      <td>inf</td>
+      <td>5547467203706772942241842633302343680.000000</td>
       <td>00:00</td>
     </tr>
   </tbody>
@@ -147,7 +248,7 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TrackerCallback" class="doc_header"><code>class</code> <code>TrackerCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L25" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TrackerCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+<h2 id="TrackerCallback" class="doc_header"><code>class</code> <code>TrackerCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L30" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TrackerCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 <p>A <a href="/learner.html#Callback"><code>Callback</code></a> that keeps track of the best value in <code>monitor</code>.</p>
 
@@ -179,7 +280,7 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="EarlyStoppingCallback" class="doc_header"><code>class</code> <code>EarlyStoppingCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L47" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>EarlyStoppingCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>patience</code></strong>=<em><code>1</code></em>) :: <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a></p>
+<h2 id="EarlyStoppingCallback" class="doc_header"><code>class</code> <code>EarlyStoppingCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L52" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>EarlyStoppingCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>patience</code></strong>=<em><code>1</code></em>) :: <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a></p>
 </blockquote>
 <p>A <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a> that terminates training when monitored quantity stops improving.</p>
 
@@ -230,20 +331,20 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
   <tbody>
     <tr>
       <td>0</td>
-      <td>7.887365</td>
-      <td>8.094821</td>
+      <td>24.463264</td>
+      <td>26.827616</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>7.887353</td>
-      <td>8.094801</td>
+      <td>24.486588</td>
+      <td>26.827549</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>7.887331</td>
-      <td>8.094774</td>
+      <td>24.481529</td>
+      <td>26.827450</td>
       <td>00:00</td>
     </tr>
   </tbody>
@@ -276,9 +377,9 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SaveModelCallback" class="doc_header"><code>class</code> <code>SaveModelCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L65" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SaveModelCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>fname</code></strong>=<em><code>'model'</code></em>, <strong><code>every_epoch</code></strong>=<em><code>False</code></em>) :: <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a></p>
+<h2 id="SaveModelCallback" class="doc_header"><code>class</code> <code>SaveModelCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L70" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SaveModelCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>fname</code></strong>=<em><code>'model'</code></em>, <strong><code>every_epoch</code></strong>=<em><code>False</code></em>, <strong><code>add_save</code></strong>=<em><code>None</code></em>, <strong><code>with_opt</code></strong>=<em><code>False</code></em>) :: <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a></p>
 </blockquote>
-<p>A <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a> that terminates training when monitored quantity stops improving.</p>
+<p>A <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a> that saves the model's best during training and loads it at the end.</p>
 
 </div>
 
@@ -331,14 +432,14 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
   <tbody>
     <tr>
       <td>0</td>
-      <td>16.986134</td>
-      <td>16.711008</td>
+      <td>8.691293</td>
+      <td>15.863786</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>16.697437</td>
-      <td>16.257027</td>
+      <td>8.646807</td>
+      <td>15.632414</td>
       <td>00:00</td>
     </tr>
   </tbody>
@@ -363,14 +464,14 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
   <tbody>
     <tr>
       <td>0</td>
-      <td>16.195871</td>
-      <td>15.609791</td>
+      <td>8.448142</td>
+      <td>15.299534</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>15.499868</td>
-      <td>14.834436</td>
+      <td>8.356396</td>
+      <td>14.907957</td>
       <td>00:00</td>
     </tr>
   </tbody>
@@ -401,7 +502,7 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReduceLROnPlateau" class="doc_header"><code>class</code> <code>ReduceLROnPlateau</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L84" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReduceLROnPlateau</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>patience</code></strong>=<em><code>1</code></em>, <strong><code>factor</code></strong>=<em><code>10.0</code></em>) :: <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a></p>
+<h2 id="ReduceLROnPlateau" class="doc_header"><code>class</code> <code>ReduceLROnPlateau</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/tracker.py#L94" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReduceLROnPlateau</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>patience</code></strong>=<em><code>1</code></em>, <strong><code>factor</code></strong>=<em><code>10.0</code></em>) :: <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a></p>
 </blockquote>
 <p>A <a href="/callback.tracker.html#TrackerCallback"><code>TrackerCallback</code></a> that reduces learning rate when a metric has stopped improving.</p>
 
@@ -445,26 +546,26 @@ summary: "Callbacks that make decisions depending how a monitored metric/loss be
   <tbody>
     <tr>
       <td>0</td>
-      <td>16.207018</td>
-      <td>13.869708</td>
+      <td>4.921773</td>
+      <td>7.793866</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>16.206995</td>
-      <td>13.869673</td>
+      <td>4.924647</td>
+      <td>7.793851</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>16.206947</td>
-      <td>13.869625</td>
+      <td>4.928479</td>
+      <td>7.793831</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>16.206902</td>
-      <td>13.869619</td>
+      <td>4.931184</td>
+      <td>7.793829</td>
       <td>00:00</td>
     </tr>
   </tbody>

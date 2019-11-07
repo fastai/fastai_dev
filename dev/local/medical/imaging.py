@@ -63,12 +63,14 @@ def freqhist_bins(self:Tensor, n_bins=100):
 def hist_scaled_pt(self:Tensor, brks=None):
     # Pytorch-only version - switch to this if/when interp_1d can be optimized
     if brks is None: brks = self.freqhist_bins()
-    ys = torch.linspace(0., 1., len(brks))
+    brks = brks.to(self.device)
+    ys = torch.linspace(0., 1., len(brks)).to(self.device)
     return self.flatten().interp_1d(brks, ys).reshape(self.shape).clamp(0.,1.)
 
 #Cell
 @patch
 def hist_scaled(self:Tensor, brks=None):
+    if self.device.type=='cuda': return self.hist_scaled_pt(brks)
     if brks is None: brks = self.freqhist_bins()
     ys = np.linspace(0., 1., len(brks))
     x = self.numpy().flatten()
@@ -210,31 +212,11 @@ def crop_resize(x, crops, new_sz):
 
 #Cell
 @patch
-def to_uint16(x:(Tensor,DcmDataset), bins=None):
-    d = x.hist_scaled(bins).clamp(0,1) * 2**16
-    return d.numpy().astype(np.uint16)
-
-#Cell
-@patch
-def to_3chan(x:Tensor, win1, win2, bins=None):
-    return torch.stack([
-        x.windowed(*win1),
-        x.windowed(*win2),
-        x.hist_scaled(bins).clamp(0,1)
-    ])
-
-#Cell
-@patch
-def to_3chan(x:DcmDataset, win1, win2, bins=None):
-    return x.scaled_px.to_3chan(win1, win2, bins)
-
-#Cell
-@patch
 def to_nchan(x:Tensor, wins, bins=None):
-    return torch.stack([
-        *(x.windowed(*win) for win in wins),
-        x.hist_scaled(bins).clamp(0,1)
-    ])
+    res = [x.windowed(*win) for win in wins]
+    if not isinstance(bins,int) or bins!=0: res.append(x.hist_scaled(bins).clamp(0,1))
+    dim = [0,1][x.dim()==3]
+    return TensorCTScan(torch.stack(res, dim=dim))
 
 #Cell
 @patch
@@ -243,11 +225,27 @@ def to_nchan(x:DcmDataset, wins, bins=None):
 
 #Cell
 @patch
+def to_3chan(x:Tensor, win1, win2, bins=None):
+    return x.to_nchan([win1,win2],bins=bins)
+
+#Cell
+@patch
+def to_3chan(x:DcmDataset, win1, win2, bins=None):
+    return x.scaled_px.to_3chan(win1, win2, bins)
+
+#Cell
+@patch
 def save_jpg(x:(Tensor,DcmDataset), path, wins, bins=None, quality=90):
     fn = Path(path).with_suffix('.jpg')
     x = (x.to_nchan(wins, bins)*255).byte()
     im = Image.fromarray(x.permute(1,2,0).numpy(), mode=['RGB','CMYK'][x.shape[0]==4])
     im.save(fn, quality=quality)
+
+#Cell
+@patch
+def to_uint16(x:(Tensor,DcmDataset), bins=None):
+    d = x.hist_scaled(bins).clamp(0,1) * 2**16
+    return d.numpy().astype(np.uint16)
 
 #Cell
 @patch
@@ -284,6 +282,7 @@ def shape(self:DcmDataset): return self.Rows,self.Columns
 def _cast_dicom_special(x):
     cls = type(x)
     if not cls.__module__.startswith('pydicom'): return x
+    if cls.__base__ == object: return x
     return cls.__base__(x)
 
 def _split_elem(res,k,v):

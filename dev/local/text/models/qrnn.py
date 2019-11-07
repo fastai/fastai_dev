@@ -16,7 +16,8 @@ from torch.autograd import Function
 import local
 
 def load_cpp(name, files, path):
-    return cpp_extension.load(name='forget_mult_cuda', sources=[fastai_path/f for f in files], build_directory=Config().model)
+    os.makedirs(Config().model/'qrnn', exist_ok=True)
+    return cpp_extension.load(name='forget_mult_cuda', sources=[fastai_path/f for f in files], build_directory=Config().model/'qrnn')
 
 if torch.cuda.is_available():
     #fastai_path = Path(fastai.__path__[0])/'text'/'models'

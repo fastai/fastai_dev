@@ -59,8 +59,8 @@ summary: "Callback and helper function to add hooks in models"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Hooks are function you can attach to a particular layer in your model and that will be executed in the foward pass (for forward hooks) or backward pass (for backward hooks). Here we begin with an introduction around hooks, but you should jump to <a href="/callback.hook.html#HookCallback"><code>HookCallback</code></a> if you quickly want to implemet one (and read the following example <a href="/callback.hook.html#ActivationStats"><code>ActivationStats</code></a>).</p>
-<p>Forward hooks are functions that take three arguments, the layer it's applied to, the input of that layer and the output of that layer.</p>
+<p>Hooks are functions you can attach to a particular layer in your model and that will be executed in the foward pass (for forward hooks) or backward pass (for backward hooks). Here we begin with an introduction around hooks, but you should jump to <a href="/callback.hook.html#HookCallback"><code>HookCallback</code></a> if you quickly want to implement one (and read the following example <a href="/callback.hook.html#ActivationStats"><code>ActivationStats</code></a>).</p>
+<p>Forward hooks are functions that take three arguments: the layer it's applied to, the input of that layer and the output of that layer.</p>
 
 </div>
 </div>
@@ -154,7 +154,7 @@ summary: "Callback and helper function to add hooks in models"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Hooks can change the input/output of a layer, or the gradients, print values or shapes. If you want to store something related to theses inputs/outputs, it's best to have you hook associated to a class so that it can put it in the state of an instance of that class.</p>
+<p>Hooks can change the input/output of a layer, or the gradients, print values or shapes. If you want to store something related to theses inputs/outputs, it's best to have your hook associated to a class so that it can put it in the state of an instance of that class.</p>
 
 </div>
 </div>
@@ -171,7 +171,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Hook" class="doc_header"><code>class</code> <code>Hook</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L16" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Hook</code>(<strong><code>m</code></strong>, <strong><code>hook_func</code></strong>, <strong><code>is_forward</code></strong>=<em><code>True</code></em>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="Hook" class="doc_header"><code>class</code> <code>Hook</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L12" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Hook</code>(<strong><code>m</code></strong>, <strong><code>hook_func</code></strong>, <strong><code>is_forward</code></strong>=<em><code>True</code></em>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Create a hook on <code>m</code> with <code>hook_func</code>.</p>
 
@@ -215,7 +215,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Hook.hook_fn" class="doc_header"><code>Hook.hook_fn</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L24" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hook.hook_fn</code>(<strong><code>module</code></strong>, <strong><code>input</code></strong>, <strong><code>output</code></strong>)</p>
+<h4 id="Hook.hook_fn" class="doc_header"><code>Hook.hook_fn</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L20" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hook.hook_fn</code>(<strong><code>module</code></strong>, <strong><code>input</code></strong>, <strong><code>output</code></strong>)</p>
 </blockquote>
 <p>Applies <code>hook_func</code> to <code>module</code>, <code>input</code>, <code>output</code>.</p>
 
@@ -236,7 +236,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Hook.remove" class="doc_header"><code>Hook.remove</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L29" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hook.remove</code>()</p>
+<h4 id="Hook.remove" class="doc_header"><code>Hook.remove</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L25" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hook.remove</code>()</p>
 </blockquote>
 <p>Remove the hook from the model.</p>
 
@@ -295,7 +295,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Hook.__enter__" class="doc_header"><code>Hook.__enter__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L35" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hook.__enter__</code>(<strong>*<code>args</code></strong>)</p>
+<h4 id="Hook.__enter__" class="doc_header"><code>Hook.__enter__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L31" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hook.__enter__</code>(<strong>*<code>args</code></strong>)</p>
 </blockquote>
 <p>Register the hook</p>
 
@@ -316,7 +316,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Hook.__exit__" class="doc_header"><code>Hook.__exit__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L36" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hook.__exit__</code>(<strong>*<code>args</code></strong>)</p>
+<h4 id="Hook.__exit__" class="doc_header"><code>Hook.__exit__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L32" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hook.__exit__</code>(<strong>*<code>args</code></strong>)</p>
 </blockquote>
 <p>Remove the hook</p>
 
@@ -358,7 +358,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="hook_output" class="doc_header"><code>hook_output</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L44" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>hook_output</code>(<strong><code>module</code></strong>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>, <strong><code>grad</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="hook_output" class="doc_header"><code>hook_output</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L40" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>hook_output</code>(<strong><code>module</code></strong>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>, <strong><code>grad</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Return a <a href="/callback.hook.html#Hook"><code>Hook</code></a> that stores activations of <code>module</code> in <code>self.stored</code></p>
 
@@ -429,7 +429,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Hooks" class="doc_header"><code>class</code> <code>Hooks</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L50" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Hooks</code>(<strong><code>ms</code></strong>, <strong><code>hook_func</code></strong>, <strong><code>is_forward</code></strong>=<em><code>True</code></em>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="Hooks" class="doc_header"><code>class</code> <code>Hooks</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L46" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Hooks</code>(<strong><code>ms</code></strong>, <strong><code>hook_func</code></strong>, <strong><code>is_forward</code></strong>=<em><code>True</code></em>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Create several hooks on the modules in <code>ms</code> with <code>hook_func</code>.</p>
 
@@ -489,7 +489,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Hooks.remove" class="doc_header"><code>Hooks.remove</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L61" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hooks.remove</code>()</p>
+<h4 id="Hooks.remove" class="doc_header"><code>Hooks.remove</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L57" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hooks.remove</code>()</p>
 </blockquote>
 <p>Remove the hooks from the model.</p>
 
@@ -523,7 +523,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Hooks.__enter__" class="doc_header"><code>Hooks.__enter__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L65" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hooks.__enter__</code>(<strong>*<code>args</code></strong>)</p>
+<h4 id="Hooks.__enter__" class="doc_header"><code>Hooks.__enter__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L61" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hooks.__enter__</code>(<strong>*<code>args</code></strong>)</p>
 </blockquote>
 <p>Register the hooks</p>
 
@@ -544,7 +544,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Hooks.__exit__" class="doc_header"><code>Hooks.__exit__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L66" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hooks.__exit__</code>(<strong>*<code>args</code></strong>)</p>
+<h4 id="Hooks.__exit__" class="doc_header"><code>Hooks.__exit__</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L62" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Hooks.__exit__</code>(<strong>*<code>args</code></strong>)</p>
 </blockquote>
 <p>Remove the hooks</p>
 
@@ -587,7 +587,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="hook_outputs" class="doc_header"><code>hook_outputs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L73" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>hook_outputs</code>(<strong><code>modules</code></strong>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>, <strong><code>grad</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="hook_outputs" class="doc_header"><code>hook_outputs</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L69" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>hook_outputs</code>(<strong><code>modules</code></strong>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>, <strong><code>grad</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Return <a href="/callback.hook.html#Hooks"><code>Hooks</code></a> that store activations of all <code>modules</code> in <code>self.stored</code></p>
 
@@ -666,9 +666,9 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="dummy_eval" class="doc_header"><code>dummy_eval</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L78" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dummy_eval</code>(<strong><code>m</code></strong>, <strong><code>size</code></strong>=<em><code>(64, 64)</code></em>)</p>
+<h4 id="dummy_eval" class="doc_header"><code>dummy_eval</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L74" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dummy_eval</code>(<strong><code>m</code></strong>, <strong><code>size</code></strong>=<em><code>(64, 64)</code></em>)</p>
 </blockquote>
-<p>Evaluate <code>m</code> on a dummy input of a certain <a href="/vision.core.html#size"><code>size</code></a></p>
+<p>Evaluate <code>m</code> on a dummy input of a certain <code>size</code></p>
 
 </div>
 
@@ -690,7 +690,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="model_sizes" class="doc_header"><code>model_sizes</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L85" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>model_sizes</code>(<strong><code>m</code></strong>, <strong><code>size</code></strong>=<em><code>(64, 64)</code></em>)</p>
+<h4 id="model_sizes" class="doc_header"><code>model_sizes</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L81" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>model_sizes</code>(<strong><code>m</code></strong>, <strong><code>size</code></strong>=<em><code>(64, 64)</code></em>)</p>
 </blockquote>
 <p>Pass a dummy input through the model <code>m</code> to get the various sizes of activations.</p>
 
@@ -728,7 +728,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="num_features_model" class="doc_header"><code>num_features_model</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L92" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>num_features_model</code>(<strong><code>m</code></strong>)</p>
+<h4 id="num_features_model" class="doc_header"><code>num_features_model</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L88" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>num_features_model</code>(<strong><code>m</code></strong>)</p>
 </blockquote>
 <p>Return the number of output features for <code>m</code>.</p>
 
@@ -775,7 +775,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="has_params" class="doc_header"><code>has_params</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L104" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>has_params</code>(<strong><code>m</code></strong>)</p>
+<h4 id="has_params" class="doc_header"><code>has_params</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L100" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>has_params</code>(<strong><code>m</code></strong>)</p>
 </blockquote>
 <p>Check if <code>m</code> has at least one parameter</p>
 
@@ -814,7 +814,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="HookCallback" class="doc_header"><code>class</code> <code>HookCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L109" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>HookCallback</code>(<strong><code>hook</code></strong>=<em><code>None</code></em>, <strong><code>modules</code></strong>=<em><code>None</code></em>, <strong><code>do_remove</code></strong>=<em><code>True</code></em>, <strong><code>is_forward</code></strong>=<em><code>True</code></em>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
+<h2 id="HookCallback" class="doc_header"><code>class</code> <code>HookCallback</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L105" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>HookCallback</code>(<strong><code>hook</code></strong>=<em><code>None</code></em>, <strong><code>modules</code></strong>=<em><code>None</code></em>, <strong><code>do_remove</code></strong>=<em><code>True</code></em>, <strong><code>is_forward</code></strong>=<em><code>True</code></em>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>) :: <a href="/learner.html#Callback"><code>Callback</code></a></p>
 </blockquote>
 <p><a href="/learner.html#Callback"><code>Callback</code></a> that can be used to register hooks on <code>modules</code></p>
 
@@ -912,7 +912,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="HookCallback.begin_fit" class="doc_header"><code>HookCallback.begin_fit</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L116" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>HookCallback.begin_fit</code>()</p>
+<h4 id="HookCallback.begin_fit" class="doc_header"><code>HookCallback.begin_fit</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L112" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>HookCallback.begin_fit</code>()</p>
 </blockquote>
 <p>Register the <a href="/callback.hook.html#Hooks"><code>Hooks</code></a> on <code>self.modules</code>.</p>
 
@@ -933,7 +933,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="HookCallback.after_fit" class="doc_header"><code>HookCallback.after_fit</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L122" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>HookCallback.after_fit</code>()</p>
+<h4 id="HookCallback.after_fit" class="doc_header"><code>HookCallback.after_fit</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L118" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>HookCallback.after_fit</code>()</p>
 </blockquote>
 <p>Remove the <a href="/callback.hook.html#Hooks"><code>Hooks</code></a>.</p>
 
@@ -994,7 +994,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ActivationStats" class="doc_header"><code>class</code> <code>ActivationStats</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L133" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ActivationStats</code>(<strong><code>hook</code></strong>=<em><code>None</code></em>, <strong><code>modules</code></strong>=<em><code>None</code></em>, <strong><code>do_remove</code></strong>=<em><code>True</code></em>, <strong><code>is_forward</code></strong>=<em><code>True</code></em>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>) :: <a href="/callback.hook.html#HookCallback"><code>HookCallback</code></a></p>
+<h2 id="ActivationStats" class="doc_header"><code>class</code> <code>ActivationStats</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L129" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ActivationStats</code>(<strong><code>hook</code></strong>=<em><code>None</code></em>, <strong><code>modules</code></strong>=<em><code>None</code></em>, <strong><code>do_remove</code></strong>=<em><code>True</code></em>, <strong><code>is_forward</code></strong>=<em><code>True</code></em>, <strong><code>detach</code></strong>=<em><code>True</code></em>, <strong><code>cpu</code></strong>=<em><code>False</code></em>) :: <a href="/callback.hook.html#HookCallback"><code>HookCallback</code></a></p>
 </blockquote>
 <p>Callback that record the mean and std of activations.</p>
 
@@ -1090,7 +1090,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="total_params" class="doc_header"><code>total_params</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L155" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>total_params</code>(<strong><code>m</code></strong>)</p>
+<h4 id="total_params" class="doc_header"><code>total_params</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L151" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>total_params</code>(<strong><code>m</code></strong>)</p>
 </blockquote>
 <p>Give the number of parameters of a module and if it's trainable or not</p>
 
@@ -1134,7 +1134,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="layer_info" class="doc_header"><code>layer_info</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L162" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>layer_info</code>(<strong><code>learn</code></strong>)</p>
+<h4 id="layer_info" class="doc_header"><code>layer_info</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L158" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>layer_info</code>(<strong><code>learn</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -1183,30 +1183,6 @@ summary: "Callback and helper function to add hooks in models"
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="PrettyString" class="doc_header"><code>class</code> <code>PrettyString</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/core.py#L407" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PrettyString</code>() :: <code>str</code></p>
-</blockquote>
-<p>Little hack to get strings to show properly in Jupyter.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -1217,7 +1193,7 @@ summary: "Callback and helper function to add hooks in models"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Learner.summary" class="doc_header"><code>Learner.summary</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L177" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.summary</code>()</p>
+<h4 id="Learner.summary" class="doc_header"><code>Learner.summary</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/callback/hook.py#L173" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Learner.summary</code>()</p>
 </blockquote>
 <p>Print a summary of the model, optimizer and loss function.</p>
 

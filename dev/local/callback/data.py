@@ -22,6 +22,7 @@ class WeightedDL(TfmdDL):
 
     def get_idxs(self):
         if self.n==0: return []
+        if not self.shuffle: return super().get_idxs()
         return list(np.random.choice(self.n, self.n, p=self.wgts))
 
 #Cell

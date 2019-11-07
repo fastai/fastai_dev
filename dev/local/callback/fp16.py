@@ -84,6 +84,7 @@ class MixedPrecision(Callback):
     def begin_fit(self):
         if self.learn.opt is None: self.learn.create_opt()
         self.model_pgs,self.master_pgs = get_master(self.opt, self.flat_master)
+        self.old_pgs = self.opt.param_groups
         #Changes the optimizer so that the optimization step is done in FP32.
         _copy_state(self.learn.opt, self.model_pgs, self.master_pgs)
         if self.dynamic: self.count = 0
@@ -120,11 +121,10 @@ class MixedPrecision(Callback):
 
     def after_fit(self):
         _copy_state(self.learn.opt, self.master_pgs, self.model_pgs)
-        state = {p:copy_clone(self.learn.opt.state[p]) for p in self.learn.opt.state.keys()}
-        self.learn.create_opt()
-        for p,v in state.items(): self.learn.opt.state[p] = v
+        self.learn.opt.param_groups  = self.old_pgs
         delattr(self, "master_pgs")
         delattr(self, "model_pgs")
+        delattr(self, "old_pgs")
 
     _docs = dict(begin_fit="Put the model in FP16 and prepare the two copies of the parameters",
                  begin_batch="Put the input in FP16",

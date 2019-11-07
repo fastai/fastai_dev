@@ -2,9 +2,9 @@
 
 __all__ = ['RandTransform', 'TensorTypes', 'FlipItem', 'DihedralItem', 'PadMode', 'CropPad', 'RandomCrop',
            'ResizeMethod', 'Resize', 'RandomResizedCrop', 'AffineCoordTfm', 'RandomResizedCropGPU', 'affine_mat',
-           'mask_tensor', 'flip_mat', 'Flip', 'dihedral_mat', 'Dihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom',
-           'find_coeffs', 'apply_perspective', 'Warp', 'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms',
-           'aug_transforms']
+           'mask_tensor', 'flip_mat', 'Flip', 'DeterministicDraw', 'DeterministicFlip', 'dihedral_mat', 'Dihedral',
+           'DeterministicDihedral', 'rotate_mat', 'Rotate', 'zoom_mat', 'Zoom', 'find_coeffs', 'apply_perspective',
+           'Warp', 'LightingTfm', 'Brightness', 'Contrast', 'setup_aug_tfms', 'aug_transforms']
 
 #Cell
 from ..test import *
@@ -187,9 +187,9 @@ class Resize(CropPad):
 #Cell
 class RandomResizedCrop(CropPad):
     "Picks a random scaled crop of an image and resize it to `size`"
-    def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), resamples=(Image.BILINEAR, Image.NEAREST), **kwargs):
+    def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), resamples=(Image.BILINEAR, Image.NEAREST), valid_scale=1., **kwargs):
         super().__init__(size, **kwargs)
-        self.min_scale,self.ratio = min_scale,ratio
+        store_attr(self, 'min_scale,ratio,valid_scale')
         self.mode,self.mode_mask = resamples
 
     def before_call(self, b, split_idx):
@@ -209,6 +209,7 @@ class RandomResizedCrop(CropPad):
         if   w/h < self.ratio[0]: self.cp_size = (w, int(w/self.ratio[0]))
         elif w/h > self.ratio[1]: self.cp_size = (int(h*self.ratio[1]), h)
         else:                     self.cp_size = (w, h)
+        if split_idx: self.cp_size = (self.cp_size[0]*self.valid_scale, self.cp_size[1]*self.valid_scale)
         self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
 
 #Cell
@@ -319,10 +320,10 @@ class AffineCoordTfm(RandTransform):
 class RandomResizedCropGPU(RandTransform):
     "Picks a random scaled crop of an image and resize it to `size`"
     split_idx,order = None,30
-    def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), mode='bilinear', **kwargs):
+    def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), mode='bilinear', valid_scale=1., **kwargs):
         super().__init__(**kwargs)
         self.size = (size,size) if isinstance(size, int) else size
-        store_attr(self, 'min_scale,ratio,mode')
+        store_attr(self, 'min_scale,ratio,mode,valid_scale')
 
     def before_call(self, b, split_idx):
         self.do = True
@@ -340,6 +341,7 @@ class RandomResizedCropGPU(RandTransform):
         if   w/h < self.ratio[0]: self.cp_size = (int(w/self.ratio[0]), w)
         elif w/h > self.ratio[1]: self.cp_size = (h, int(h*self.ratio[1]))
         else:                     self.cp_size = (h, w)
+        if split_idx: self.cp_size = (int(self.cp_size[0]*self.valid_scale), int(self.cp_size[1]*self.valid_scale))
         self.tl = ((h-self.cp_size[0])//2,(w-self.cp_size[1])//2)
 
     def encodes(self, x:TensorImage):
@@ -363,9 +365,21 @@ def mask_tensor(x, p=0.5, neutral=0.):
     return x.add_(neutral) if neutral != 0 else x
 
 #Cell
-def flip_mat(x, p=0.5):
+def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0.):
+    if draw is None: draw=def_draw
+    if callable(draw): res=draw(x)
+    elif is_listy(draw):
+        test_eq(len(draw), x.size(0))
+        res = tensor(draw, dtype=x.dtype, device=x.device)
+    else: res = x.new_zeros(x.size(0)) + draw
+    return mask_tensor(res, p=p, neutral=neutral)
+
+#Cell
+def flip_mat(x, p=0.5, draw=None):
     "Return a random flip matrix"
-    mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
+    def _def_draw(x): return x.new_ones(x.size(0))
+    mask = x.new_ones(x.size(0)) - 2*_draw_mask(x, _def_draw, draw=draw, p=p)
+    #mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
     return affine_mat(mask,     t0(mask), t0(mask),
                       t0(mask), t1(mask), t0(mask))
 
@@ -378,24 +392,29 @@ def _get_default(x, mode=None, pad_mode=None):
 
 #Cell
 @patch
-def flip_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, size=None, mode=None, pad_mode=None):
+def flip_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
-    return x.affine_coord(mat=flip_mat(x0, p=p)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+    return x.affine_coord(mat=flip_mat(x0, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
-def Flip(p=0.5, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+def Flip(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Randomly flip a batch of images with a probability `p`"
-    return AffineCoordTfm(aff_fs=partial(flip_mat, p=p), size=size, mode=mode, pad_mode=pad_mode)
+    return AffineCoordTfm(aff_fs=partial(flip_mat, p=p, draw=draw), size=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
-def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0.):
-    if draw is None: draw=def_draw
-    if callable(draw): return draw(x)
-    elif is_listy(draw):
-        test_eq(len(draw), x.size(0))
-        res = tensor(draw, dtype=x.dtype, device=x.device)
-    else: res = x.new_zeros(x.size(0)) + draw
-    return mask_tensor(res, p=p, neutral=neutral)
+class DeterministicDraw():
+    def __init__(self, vals):
+        store_attr(self, 'vals')
+        self.count=-1
+
+    def __call__(self, x):
+        self.count += 1
+        return x.new_zeros(x.size(0)) + self.vals[self.count%len(self.vals)]
+
+#Cell
+def DeterministicFlip(size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+    "Flip the batch every other call"
+    return Flip(p=1., draw=DeterministicDraw([0,1]))
 
 #Cell
 def dihedral_mat(x, p=0.5, draw=None):
@@ -422,6 +441,11 @@ def dihedral_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, dr
 def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     "Apply a random dihedral transformation to a batch of images with a probability `p`"
     return AffineCoordTfm(aff_fs=partial(dihedral_mat, p=p, draw=draw), size=size, mode=mode, pad_mode=pad_mode)
+
+#Cell
+def DeterministicDihedral(size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+    "Flip the batch every other call"
+    return Dihedral(p=1., draw=DeterministicDraw(list(range(8))))
 
 #Cell
 def rotate_mat(x, max_deg=10, p=0.5, draw=None):

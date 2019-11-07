@@ -153,7 +153,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
   &#39;name&#39;: &#39;python&#39;,
   &#39;nbconvert_exporter&#39;: &#39;python&#39;,
   &#39;pygments_lexer&#39;: &#39;ipython3&#39;,
-  &#39;version&#39;: &#39;3.7.3&#39;}}</pre>
+  &#39;version&#39;: &#39;3.7.4&#39;}}</pre>
 </div>
 
 </div>
@@ -219,10 +219,10 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 <div class="output_text output_subarea output_execute_result">
 <pre>{&#39;cell_type&#39;: &#39;code&#39;,
- &#39;execution_count&#39;: 2,
+ &#39;execution_count&#39;: 1,
  &#39;metadata&#39;: {&#39;hide_input&#39;: False},
  &#39;outputs&#39;: [],
- &#39;source&#39;: &#39;# export\nfrom local.imports import *\nfrom local.notebook.core import *\nimport nbformat,inspect\nfrom nbformat.sign import NotebookNotary&#39;}</pre>
+ &#39;source&#39;: &#39;# export\nfrom local.core.imports import *\nfrom local.notebook.core import *\nimport nbformat,inspect\nfrom nbformat.sign import NotebookNotary&#39;}</pre>
 </div>
 
 </div>
@@ -236,6 +236,19 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 <h3 id="Finding-patterns">Finding patterns<a class="anchor-link" href="#Finding-patterns">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_test_eq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">assert</span> <span class="n">a</span><span class="o">==</span><span class="n">b</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{a}</span><span class="s1">, </span><span class="si">{b}</span><span class="s1">&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -385,7 +398,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">find_default_export</span><span class="p">(</span><span class="n">test_nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;notebook.export&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_test_eq</span><span class="p">(</span><span class="n">find_default_export</span><span class="p">(</span><span class="n">test_nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]),</span> <span class="s1">&#39;notebook.export&#39;</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">find_default_export</span><span class="p">(</span><span class="n">test_nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">:])</span> <span class="ow">is</span> <span class="kc">None</span>
 </pre></div>
 
@@ -480,6 +493,9 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 <span class="k">assert</span> <span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;@patch</span><span class="se">\n</span><span class="s2">def my_func(x:Class):</span><span class="se">\n</span><span class="s2">  pass&quot;</span><span class="p">,</span> <span class="n">func_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;Class.my_func&quot;</span><span class="p">]</span>
 <span class="k">assert</span> <span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;some code</span><span class="se">\n</span><span class="s2">@patch</span><span class="se">\n</span><span class="s2">def my_func(x:Class, y):</span><span class="se">\n</span><span class="s2">  pass&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;Class.my_func&quot;</span><span class="p">]</span>
 <span class="k">assert</span> <span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;some code</span><span class="se">\n</span><span class="s2">@patch</span><span class="se">\n</span><span class="s2">def my_func(x:(Class1,Class2), y):</span><span class="se">\n</span><span class="s2">  pass&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;Class1.my_func&quot;</span><span class="p">,</span> <span class="s2">&quot;Class2.my_func&quot;</span><span class="p">]</span>
+
+<span class="c1">#Check delegates</span>
+<span class="k">assert</span> <span class="n">export_names</span><span class="p">(</span><span class="s2">&quot;@delegates(keep=True)</span><span class="se">\n</span><span class="s2">class someClass:</span><span class="se">\n</span><span class="s2">  pass&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;someClass&quot;</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -556,13 +572,13 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Bla</span><span class="se">\n</span><span class="s2">__all__ = [my_file, MyClas]</span><span class="se">\n</span><span class="s2">Bli&quot;</span><span class="p">)</span>
 <span class="n">_add2add</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;new_function&#39;</span><span class="p">])</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> 
-    <span class="k">assert</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Bla</span><span class="se">\n</span><span class="s2">__all__ = [my_file, MyClas, new_function]</span><span class="se">\n</span><span class="s2">Bli&quot;</span>
+    <span class="n">_test_eq</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="s2">&quot;Bla</span><span class="se">\n</span><span class="s2">__all__ = [my_file, MyClas, new_function]</span><span class="se">\n</span><span class="s2">Bli&quot;</span><span class="p">)</span>
 <span class="n">_add2add</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="s1">&#39;new_function</span><span class="si">{i}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)])</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> 
-    <span class="k">assert</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;&quot;Bla</span>
+    <span class="n">_test_eq</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="s2">&quot;&quot;&quot;Bla</span>
 <span class="s2">__all__ = [my_file, MyClas, new_function, new_function0, new_function1, new_function2, new_function3, new_function4,</span>
 <span class="s2">           new_function5, new_function6, new_function7, new_function8, new_function9]</span>
-<span class="s2">Bli&quot;&quot;&quot;</span>
+<span class="s2">Bli&quot;&quot;&quot;</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
 </pre></div>
 
@@ -611,7 +627,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_notebook2script</span><span class="p">(</span><span class="s1">&#39;09_vision_augment.ipynb&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_notebook2script</span><span class="p">(</span><span class="s1">&#39;03a_layers.ipynb&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -624,7 +640,7 @@ summary: "The functions that transform the dev notebooks in the fastai library"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Converted 09_vision_augment.ipynb.
+<pre>Converted 03a_layers.ipynb.
 </pre>
 </div>
 </div>
@@ -742,8 +758,8 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">get_name</span><span class="p">(</span><span class="n">in_ipython</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;in_ipython&#39;</span>
-<span class="k">assert</span> <span class="n">get_name</span><span class="p">(</span><span class="n">DocsTestClass</span><span class="o">.</span><span class="n">test</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_test_eq</span><span class="p">(</span><span class="n">get_name</span><span class="p">(</span><span class="n">in_ipython</span><span class="p">),</span> <span class="s1">&#39;in_ipython&#39;</span><span class="p">)</span>
+<span class="n">_test_eq</span><span class="p">(</span><span class="n">get_name</span><span class="p">(</span><span class="n">DocsTestClass</span><span class="o">.</span><span class="n">test</span><span class="p">),</span> <span class="s1">&#39;test&#39;</span><span class="p">)</span>
 <span class="c1"># assert get_name(Union[Tensor, float]) == &#39;Union&#39;</span>
 </pre></div>
 
@@ -754,7 +770,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For properties defined using <code>property</code> or our own <a href="/utils.html#add_props"><code>add_props</code></a> helper, we approximate the name by looking at their getter functions, since we don't seem to have access to the property name itself. If everything fails (a getter cannot be found), we return the name of the object that contains the property. This suffices for <a href="/notebook.export.html#source_nb"><code>source_nb</code></a> to work.</p>
+<p>For properties defined using <code>property</code> or our own <a href="/core.utils.html#add_props"><code>add_props</code></a> helper, we approximate the name by looking at their getter functions, since we don't seem to have access to the property name itself. If everything fails (a getter cannot be found), we return the name of the object that contains the property. This suffices for <a href="/notebook.export.html#source_nb"><code>source_nb</code></a> to work.</p>
 
 </div>
 </div>
@@ -788,8 +804,8 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">qual_name</span><span class="p">(</span><span class="n">DocsTestClass</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;DocsTestClass&#39;</span>
-<span class="k">assert</span> <span class="n">qual_name</span><span class="p">(</span><span class="n">DocsTestClass</span><span class="o">.</span><span class="n">test</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;DocsTestClass.test&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_test_eq</span><span class="p">(</span><span class="n">qual_name</span><span class="p">(</span><span class="n">DocsTestClass</span><span class="p">),</span> <span class="s1">&#39;DocsTestClass&#39;</span><span class="p">)</span>
+<span class="n">_test_eq</span><span class="p">(</span><span class="n">qual_name</span><span class="p">(</span><span class="n">DocsTestClass</span><span class="o">.</span><span class="n">test</span><span class="p">),</span> <span class="s1">&#39;DocsTestClass.test&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -813,22 +829,33 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.transform</span> <span class="k">import</span> <span class="n">Transform</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">local.core.transform</span> <span class="k">import</span> <span class="n">Transform</span>
 <span class="kn">from</span> <span class="nn">local.test</span> <span class="k">import</span> <span class="n">test_fail</span>
+</pre></div>
 
-<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">test_fail</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;00_test.ipynb&#39;</span>
-<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">Transform</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;04_transform.ipynb&#39;</span>
-<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="n">Transform</span><span class="o">.</span><span class="n">decode</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;04_transform.ipynb&#39;</span>
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="n">test_fail</span><span class="p">),</span> <span class="s1">&#39;00_test.ipynb&#39;</span><span class="p">)</span>
+<span class="n">_test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="n">Transform</span><span class="p">),</span> <span class="s1">&#39;01c_transform.ipynb&#39;</span><span class="p">)</span>
+<span class="n">_test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="n">Transform</span><span class="o">.</span><span class="n">decode</span><span class="p">),</span> <span class="s1">&#39;01c_transform.ipynb&#39;</span><span class="p">)</span>
 <span class="c1">#opt_call is in the core module but defined in 02</span>
 <span class="c1"># from local.core import opt_call</span>
-<span class="c1"># assert source_nb(opt_call) == &#39;02_data_pipeline.ipynb&#39; # TODO: find something else</span>
+<span class="c1"># _test_eq(source_nb(opt_call), &#39;02_data_pipeline.ipynb&#39; # TODO: find something else)</span>
 <span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
 <span class="c1">#Added through a monkey-patch</span>
-<span class="k">assert</span> <span class="n">source_nb</span><span class="p">(</span><span class="s1">&#39;Path.ls&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;01a_utils.ipynb&#39;</span>
+<span class="n">_test_eq</span><span class="p">(</span><span class="n">source_nb</span><span class="p">(</span><span class="s1">&#39;Path.ls&#39;</span><span class="p">),</span> <span class="s1">&#39;01a_utils.ipynb&#39;</span><span class="p">)</span>
 
 <span class="c1">#Test with name TODO:Investigate</span>
-<span class="c1">#assert source_nb(&#39;DocsTestClass&#39;) == &#39;90_notebook_core.ipynb&#39;</span>
-<span class="c1">#assert source_nb(&#39;DocsTestClass.test&#39;) == &#39;90_notebook_core.ipynb&#39;</span>
+<span class="c1">#_test_eq(source_nb(&#39;DocsTestClass&#39;), &#39;90_notebook_core.ipynb&#39;)</span>
+<span class="c1">#_test_eq(source_nb(&#39;DocsTestClass.test&#39;), &#39;90_notebook_core.ipynb&#39;)</span>
 
 <span class="c1">#Test return_all</span>
 <span class="c1">#assert source_nb(DocsTestClass, return_all=True) == (&#39;DocsTestClass&#39;,&#39;90_notebook_core.ipynb&#39;)</span>
@@ -861,7 +888,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;local&#39;</span><span class="o">/</span><span class="s1">&#39;core.py&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="n">code</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">/</span><span class="s1">&#39;local&#39;</span><span class="o">/</span><span class="s1">&#39;core&#39;</span><span class="o">/</span><span class="s1">&#39;foundation.py&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="n">code</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -934,7 +961,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Converted /home/sgugger/git/fastai_dev/dev/local/tabular/core.py.
+<pre>Converting /home/sgugger/git/fastai_dev/dev/local/tabular/core.py.
 </pre>
 </div>
 </div>
@@ -958,7 +985,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="script2notebook" class="doc_header"><code>script2notebook</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L389" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>script2notebook</code>(<strong><code>folder</code></strong>=<em><code>'local'</code></em>, <strong><code>silent</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="script2notebook" class="doc_header"><code>script2notebook</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L394" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>script2notebook</code>(<strong><code>folder</code></strong>=<em><code>'local'</code></em>, <strong><code>silent</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -1006,7 +1033,7 @@ notebook2script --all_fs=*_*.ipynb --up_to=10   # Parse all files with an '_' an
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="diff_nb_script" class="doc_header"><code>diff_nb_script</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L409" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>diff_nb_script</code>(<strong><code>lib_folder</code></strong>=<em><code>'local'</code></em>)</p>
+<h4 id="diff_nb_script" class="doc_header"><code>diff_nb_script</code><a href="https://github.com/fastai/fastai_dev/tree/master/dev/local/notebook/export.py#L414" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>diff_nb_script</code>(<strong><code>lib_folder</code></strong>=<em><code>'local'</code></em>)</p>
 </blockquote>
 <p>Print the diff between the notebooks and the library in <code>lib_folder</code></p>
 

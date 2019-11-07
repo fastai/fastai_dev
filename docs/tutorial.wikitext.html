@@ -82,7 +82,7 @@ summary: "Training a Language Model on WT2"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The dataset comes with all the wrticles concatenated. We split them to be able to shuffle at the beginning of each epoch.</p>
+<p>The dataset comes with the articles in two csv files, so we read it and concatenate them in one dataframe.</p>
 
 </div>
 </div>
@@ -92,43 +92,9 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">istitle</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^ = [^=]* = $&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span>
-
-<span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="n">articles</span> <span class="o">=</span> <span class="n">L</span><span class="p">()</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-    <span class="n">current_article</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
-        <span class="n">current_article</span> <span class="o">+=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;unk&gt;&#39;</span><span class="p">,</span> <span class="n">UNK</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39; </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">and</span> <span class="n">istitle</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]):</span>
-            <span class="n">articles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_article</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
-            <span class="n">current_article</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="n">articles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_article</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">articles</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Then we put our list of tokenized texts together in an <code>LM_Dataset</code>. It will return tuples of sequences of <code>seq_len</code>, with the second sequence between the first one shifted by one on the right.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">trn_txt</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train.txt&#39;</span><span class="p">)</span>
-<span class="n">val_txt</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;valid.txt&#39;</span><span class="p">)</span>
-<span class="n">tst_txt</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;test.txt&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;train.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">df_valid</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;test.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_train</span><span class="p">,</span> <span class="n">df_valid</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -141,9 +107,7 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_texts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">val_txt</span><span class="p">,</span> <span class="n">trn_txt</span><span class="p">,</span> <span class="n">tst_txt</span><span class="p">])</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;texts&#39;</span><span class="p">:</span><span class="n">all_texts</span><span class="p">})</span>
-<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_all</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -175,29 +139,29 @@ summary: "Training a Language Model on WT2"
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>texts</th>
+      <th>0</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>0</td>
-      <td>[, \n, =, Homarus, gammarus, =, \n, \n, Homarus, gammarus, ,, known, as, the, European, lobster, or, common, lobster, ,, is, a, species, of, xxunk, lobster, from, the, eastern, Atlantic, Ocean, ,, Mediterranean, Sea, and, parts, of, the, Black, Sea, ., It, is, closely, related, to, the, American, lobster, ,, H., americanus, ., It, may, grow, to, a, length, of, 60, cm, (, 24, in, ), and, a, mass, of, 6, kilograms, (, 13, lb, ), ,, and, bears, a, conspicuous, pair, of, claws, ., In, life, ,, the, lobsters, are, blue, ,, only, becoming, ", lobster, red, ", on, ...]</td>
+      <td>\n = 2013 – 14 York City F.C. season = \n \n The 2013 – 14 season was the &lt;unk&gt; season of competitive association football and 77th season in the Football League played by York City Football Club , a professional football club based in York , North Yorkshire , England . Their 17th @-@ place finish in 2012 – 13 meant it was their second consecutive season in League Two . The season ran from 1 July 2013 to 30 June 2014 . \n Nigel Worthington , starting his first full season as York manager , made eight permanent summer signings . By the turn of the year York were only above the relegation z...</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>[, \n, =, Frank, xxunk, =, \n, \n, Air, Vice, Marshal, Frank, xxunk, ,, CB, ,, CBE, (, 15, July, 1914, –, 23, December, 1976, ), was, a, senior, commander, in, the, Royal, Australian, Air, Force, (, RAAF, ), ., Born, and, educated, in, Tasmania, ,, he, joined, the, RAAF, as, an, air, cadet, in, January, 1934, ., He, specialised, in, flying, instruction, and, navigation, before, the, outbreak, of, World, War, II, ., In, April, 1941, ,, he, became, commanding, officer, of, No., 2, Squadron, ,, which, operated, Lockheed, xxunk, ., The, squadron, was, deployed, to, Dutch, Timor, in, December, ...</td>
+      <td>\n = Big Boy ( song ) = \n \n " Big Boy " &lt;unk&gt; " I 'm A Big Boy Now " was the first single ever recorded by the Jackson 5 , which was released by Steeltown Records in January 1968 . The group played instruments on many of their Steeltown compositions , including " Big Boy " . The song was neither a critical nor commercial success , but the Jackson family were delighted with the outcome nonetheless . \n The Jackson 5 would release a second single with Steeltown Records before moving to Motown Records . The group 's recordings at Steeltown Records were thought to be lost , but they were re...</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>[, \n, =, M, @-@, 82, (, Michigan, highway, ), =, \n, \n, M, @-@, 82, is, a, state, trunkline, in, the, Lower, Peninsula, in, the, US, state, of, Michigan, that, travels, between, xxunk, and, Howard, City, ., The, section, between, xxunk, and, Howard, City, travels, through, xxunk, and, along, the, southern, edge, of, xxunk, National, Forest, ., The, current, version, of, M, @-@, 82, is, actually, the, second, in, the, state, ;, the, first, usage, appeared, in, the, Upper, Peninsula, by, 1919, ., The, Lower, Peninsula, routing, has, been, in, use, since, the, 1920s, ., Various, extensions,...</td>
+      <td>\n = The Remix ( Lady Gaga album ) = \n \n The Remix is a remix album by American recording artist Lady Gaga . Released in Japan on March 3 , 2010 , it contains remixes of the songs from her first studio album , The Fame ( 2008 ) , and her third extended play , The Fame Monster ( 2009 ) . A revised version of the track list was prepared for release in additional markets , beginning with Mexico on May 3 , 2010 . A number of recording artists have produced the songs , including Pet Shop Boys , Passion Pit and The Sound of Arrows . The remixed versions feature both uptempo and &lt;unk&gt; composit...</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>[, \n, =, xxunk, xxunk, =, \n, \n, xxunk, xxunk, (, xxunk, xxunk, ,, xxunk, xxunk, ), is, a, fictional, character, in, the, xxunk, manga, and, anime, series, created, by, xxunk, xxunk, ., In, the, anime, and, manga, ,, xxunk, is, a, ninja, affiliated, with, the, village, of, xxunk, ., He, is, a, member, of, Team, 10, ,, a, group, of, ninja, consisting, of, himself, ,, xxunk, xxunk, ,, xxunk, xxunk, ,, and, team, leader, xxunk, xxunk, ., xxunk, is, portrayed, as, a, lazy, character, ,, unwilling, to, apply, his, prodigious, intelligence, ;, xxunk, has, noted, that, he, likes, xxunk, ...]</td>
+      <td>\n = New Year 's Eve ( Up All Night ) = \n \n " New Year 's Eve " is the twelfth episode of the first season of the American comedy television series Up All Night . The episode originally aired on NBC in the United States on January 12 , 2012 . It was written by Erica &lt;unk&gt; and was directed by Beth McCarthy @-@ Miller . The episode also featured a guest appearance from Jason Lee as Chris and Reagan 's neighbor and Ava 's boyfriend , Kevin . \n During Reagan ( Christina Applegate ) and Chris 's ( Will &lt;unk&gt; ) first New Year 's Eve game night , Reagan 's competitiveness comes out causing Ch...</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>[, \n, =, Meridian, ,, Mississippi, =, \n, \n, Meridian, is, the, sixth, largest, city, in, the, state, of, Mississippi, ,, in, the, United, States, ., It, is, the, county, seat, of, Lauderdale, County, and, the, principal, city, of, the, Meridian, ,, Mississippi, xxunk, Statistical, Area, ., Along, major, highways, ,, the, city, is, 93, mi, (, 150, km, ), east, of, Jackson, ,, Mississippi, ;, 154, mi, (, xxunk, km, ), west, of, Birmingham, ,, Alabama, ;, 202, mi, (, 325, km, ), northeast, of, New, Orleans, ,, Louisiana, ;, and, 231, mi, (, 372, km, ), southeast, of, ...]</td>
+      <td>\n = Geopyxis carbonaria = \n \n Geopyxis carbonaria is a species of fungus in the genus Geopyxis , family &lt;unk&gt; . First described to science in 1805 , and given its current name in 1889 , the species is commonly known as the charcoal loving elf @-@ cup , dwarf &lt;unk&gt; cup , &lt;unk&gt; &lt;unk&gt; cup , or pixie cup . The small , &lt;unk&gt; @-@ shaped fruitbodies of the fungus are reddish @-@ brown with a whitish fringe and measure up to 2 cm ( 0 @.@ 8 in ) across . They have a short , tapered stalk . Fruitbodies are commonly found on soil where brush has recently been burned , sometimes in great numbers ....</td>
     </tr>
   </tbody>
 </table>
@@ -210,26 +174,99 @@ summary: "Training a Language Model on WT2"
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We could tokenize it based on spaces to compare (as is usually done) but here we'll use the standard fastai tokenizer.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#df_tok,count = tokenize_df(df, [&#39;texts&#39;])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_tok</span><span class="p">,</span><span class="n">count</span> <span class="o">=</span> <span class="n">tokenize_df</span><span class="p">(</span><span class="n">df_all</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df_tok</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>[xxbos, =, 2013, –, 14, xxmaj, york, xxmaj, city, xxup, f.c, ., season, =, \n▁\n▁, xxmaj, the, 2013, –, 14, season, was, the, xxunk, season, of, competitive, association, football, and, 77th, season, in, the, xxmaj, football, xxmaj, league, played, by, xxmaj, york, xxmaj, city, xxmaj, football, xxmaj, club, ,, a, professional, football, club, based, in, xxmaj, york, ,, xxmaj, north, xxmaj, yorkshire, ,, xxmaj, england, ., xxmaj, their, 17th, -, place, finish, in, 2012, –, 13, meant, it, was, their, second, consecutive, season, in, xxmaj, league, xxmaj, two, ., xxmaj, the, season, ran, from...</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>[xxbos, =, xxmaj, big, xxmaj, boy, (, song, ), =, \n▁\n▁, ", xxmaj, big, xxmaj, boy, ", xxunk, ", i, ', m, a, xxmaj, big, xxmaj, boy, xxmaj, now, ", was, the, first, single, ever, recorded, by, the, xxmaj, jackson, 5, ,, which, was, released, by, xxmaj, steeltown, xxmaj, records, in, xxmaj, january, 1968, ., xxmaj, the, group, played, instruments, on, many, of, their, xxmaj, steeltown, compositions, ,, including, ", xxmaj, big, xxmaj, boy, ", ., xxmaj, the, song, was, neither, a, critical, nor, commercial, success, ,, but, the, xxmaj, jackson, family, were, delighted, with, the, outcome, n...</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>[xxbos, =, xxmaj, the, xxmaj, remix, (, xxmaj, lady, xxmaj, gaga, album, ), =, \n▁\n▁, xxmaj, the, xxmaj, remix, is, a, remix, album, by, xxmaj, american, recording, artist, xxmaj, lady, xxmaj, gaga, ., xxmaj, released, in, xxmaj, japan, on, xxmaj, march, 3, ,, 2010, ,, it, contains, remixes, of, the, songs, from, her, first, studio, album, ,, xxmaj, the, xxmaj, fame, (, 2008, ), ,, and, her, third, extended, play, ,, xxmaj, the, xxmaj, fame, xxmaj, monster, (, 2009, ), ., a, revised, version, of, the, track, list, was, prepared, for, release, in, additional, markets, ,, beginning, with, x...</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>[xxbos, =, xxmaj, new, xxmaj, year, 's, xxmaj, eve, (, xxmaj, up, xxmaj, all, xxmaj, night, ), =, \n▁\n▁, ", xxmaj, new, xxmaj, year, 's, xxmaj, eve, ", is, the, twelfth, episode, of, the, first, season, of, the, xxmaj, american, comedy, television, series, xxmaj, up, xxmaj, all, xxmaj, night, ., xxmaj, the, episode, originally, aired, on, xxup, nbc, in, the, xxmaj, united, xxmaj, states, on, xxmaj, january, 12, ,, 2012, ., xxmaj, it, was, written, by, xxmaj, erica, xxunk, and, was, directed, by, xxmaj, beth, mccarthy, -, miller, ., xxmaj, the, episode, also, featured, a, guest, appearance...</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>[xxbos, =, xxmaj, geopyxis, carbonaria, =, \n▁\n▁, xxmaj, geopyxis, carbonaria, is, a, species, of, fungus, in, the, genus, xxmaj, geopyxis, ,, family, xxunk, ., xxmaj, first, described, to, science, in, 1805, ,, and, given, its, current, name, in, 1889, ,, the, species, is, commonly, known, as, the, charcoal, loving, elf, -, cup, ,, dwarf, xxunk, cup, ,, xxunk, xxunk, cup, ,, or, pixie, cup, ., xxmaj, the, small, ,, xxunk, -, shaped, fruitbodies, of, the, fungus, are, reddish, -, brown, with, a, whitish, fringe, and, measure, up, to, 2, cm, (, 0.8, in, ), across, ., xxmaj, they, have, a, ...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The tokenize function returns a new dataframe with the tokenized texts and a counter with the frequency of each word. We use that counter to create a vocab, then a <a href="/text.data.html#Numericalize"><code>Numericalize</code></a> transform.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;texts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">t</span><span class="p">])</span>
-<span class="n">vocab</span> <span class="o">=</span> <span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vocab</span> <span class="o">=</span> <span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
 <span class="n">tfm</span> <span class="o">=</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
 </pre></div>
 
@@ -243,8 +280,8 @@ summary: "Training a Language Model on WT2"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val_txt</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val_txt</span><span class="p">)))]</span>
-<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[[</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;texts&quot;</span><span class="p">),</span> <span class="n">tfm</span><span class="p">]],</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">dl_type</span><span class="o">=</span><span class="n">LMDataLoader</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">range_of</span><span class="p">(</span><span class="n">df_train</span><span class="p">)),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_all</span><span class="p">)))]</span>
+<span class="n">dsrc</span> <span class="o">=</span> <span class="n">DataSource</span><span class="p">(</span><span class="n">df_tok</span><span class="p">,</span> <span class="p">[[</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">),</span> <span class="n">tfm</span><span class="p">]],</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">dl_type</span><span class="o">=</span><span class="n">LMDataLoader</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -295,43 +332,43 @@ summary: "Training a Language Model on WT2"
   <tbody>
     <tr>
       <th>0</th>
-      <td>\n = Valkyria Chronicles III = \n \n Senjō no Valkyria 3 : xxunk Chronicles ( Japanese : 戦場のヴァルキュリア3 , lit . Valkyria of the Battlefield 3 ) , commonly referred to as Valkyria Chronicles III outside Japan , is a tactical role @-@ playing video game developed by Sega and Media.Vision for the PlayStation Portable . Released in January 2011 in Japan , it is the third game in the</td>
+      <td>xxbos = xxmaj moment of xxmaj surrender = \n▁\n▁ " xxmaj moment of xxmaj surrender " is a song by rock band xxup u2 and the third track on their 2009 album xxmaj no xxmaj line on the xxmaj horizon . xxmaj during the initial recording sessions for the album in 2007 in xxmaj fez , xxmaj morocco , the band wrote the song with producers xxmaj brian xxmaj eno and xxmaj</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>" . He believed that the monument consisted of both a " chamber " and an " oval " of stones , suggesting that they were " two distinct xxunk " . In 1880 , the archaeologist Flinders Petrie included the existence of the stones at " xxunk " in his list of xxunk earthworks ; although noting that a previous commentator had described the stones as being in the shape of</td>
+      <td>, xxmaj bart starts to enjoy being a member of the xxmaj junior xxmaj campers , which xxmaj homer mocks him relentlessly for . xxmaj next , a father - son rafting trip is to be held , so xxmaj bart has to bring xxmaj homer . xxmaj homer does not enjoy the experience , especially when he learns that he and xxmaj bart have to share a raft with xxmaj ned</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>compete with Amanda , while Amanda comments that Tessa is " ... quite refreshing in a xxunk sort of way . " xxunk played Amanda 's interaction with Tessa xxunk and a little xxunk . Tessa is usually jealous of MacLeod 's past lovers , but acknowledges in " Saving Grace " that " ... it would take me several lifetimes to find out everything in Duncan 's past . I know</td>
+      <td>xxmaj february 1895 , making the 1894 – 95 winter the xxunk on record . xxmaj annual rainfall averages well over 40 inches ( 1 @,@ xxrep 3 0 mm ) a year with some areas typically receiving over 50 inches ( 1 @,@ 300 mm ) . \n▁ xxmaj hurricanes are an ever - present threat during the summer and fall season , which puts xxmaj galveston in xxmaj coastal xxunk</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Communities for freshmen and students with similar interests and concentrations . Participants meet people with similar interests , live on the same floor and take courses with others in their community , while receiving additional guidance related to those interests . The university 's Learning Community programs are divided into two categories , Freshman Learning Communities and Living Learning Communities . The freshman program offers 16 different concentrations , including business ,</td>
+      <td>of stylistic xxunk including folk metal and others , while some contemporary music groups stick closer to a " traditional " sound . \n▁ xxmaj the earliest known xxmaj irish graphic art and sculpture are xxmaj neolithic carvings found at sites such as xxunk and is traced through xxmaj bronze age artefacts and the religious carvings and illuminated manuscripts of the medieval period . xxmaj during the course of the 19th and</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>for one week on 17 May 1986 . In the United States , West End Girls debuted on the Billboard Hot 100 at number 71 , reaching the number one position on 10 May 1986 , and remained on the chart for 20 weeks . The song also peaked at number one on Billboard 's Hot Dance Music / Club Play chart for two weeks . \n \n = = Formats and</td>
+      <td>showed a report in xxmaj june 2014 that found 2 million men to be stay - at - home dads . xxmaj however , in 2010 , the number of stay - at - home dads had reached its highest point of 2.2 million . \n▁ xxmaj though the role is subject to many stereotypes , and men may have difficulties accessing parenting benefits , communities , and services targeted at mothers</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>At about 3 pm , a single U.S. helicopter arrived on the battlefield to evacuate the casualties , but they only picked up the bodies of the four American crewmen , while South Vietnamese casualties were forced to wait for another helicopter to arrive . At 4 pm , Major Nguyễn Văn xxunk ordered the 4th Marine Battalion to carry their casualties back to the village , instead of continuing to wait</td>
+      <td>and inexperienced students alike , throwing them as if in real combat . xxmaj he reasoned that this behavior was a measure of respect towards his students , but it was often misunderstood and frightened many youngsters , who would abandon him in favor of other professors . \n▁\n▁ = = = xxmaj prelude to xxmaj kodokan 's expansion = = = \n▁\n▁ xxmaj in 1879 , xxmaj ulysses xxup s. xxmaj</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>\n Of the three ships in its class , only Derfflinger was ordered as an addition to the fleet , under the provisional name " K " . The other two ships were to intended to replace obsolete vessels ; Lützow was ordered as Ersatz xxunk Augusta for the elderly protected cruiser xxunk Augusta and the contract for Hindenburg was issued under the provisional name Ersatz xxunk , to replace the protected</td>
+      <td>population density of around 23 @,@ 400 inhabitants per square kilometre ( 61 @,@ xxrep 3 0 / sq mi ) . xxmaj as of xxmaj september 2014 , the xxmaj ministry of xxmaj planning and xxmaj international xxmaj cooperation is scheduled to launch the first population census for xxmaj somalia in over two decades . xxmaj the xxunk assisted the xxmaj ministry in the project , which is slated to be</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>Ouw Peh Tjoa ( Chinese : xxunk ; xxunk for Black and White xxunk ) , also known by the Malay @-@ language title xxunk Siloeman Oeler Poeti en Item ( meaning Two xxunk , One White and One Black ) , is a 1934 film from the Dutch East Indies ( now Indonesia ) . It was directed and produced by The Teng Chun . Adapted from Legend of the White</td>
+      <td>xxmaj federer and xxmaj djokovic have met 45 times with xxmaj djokovic leading 23 – 22 wins . xxmaj they are tied 17 – 17 on hard - courts and 4 – 4 on clay while xxmaj djokovic leads 2 – 1 on grass . xxmaj the xxmaj federer – xxmaj djokovic rivalry is the largest rivalry in men 's xxmaj grand xxmaj slam tournament history with a record 15 matches played</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>writers certainly captured the spirit that fuels each of our ( playground ) builds – something that inspires volunteers to continue their great work and strive even harder to give back to their communities . " \n Within a week of the episode 's original broadcast , two deleted scenes from " Kaboom " were made available on the official Parks and Recreation website . The first two @-@ minute clip included</td>
+      <td>in xxmaj columbus from fans and management who felt they finally had a number one center to play alongside of their best player , xxmaj rick xxmaj nash . xxmaj next , they traded for the negotiating rights of soon to be free agent xxmaj james xxmaj wisniewski . xxmaj wisniewski scored a career high 51 points during the 2010 – 11 season , splitting time between the xxmaj new xxmaj york</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>United Reserves \n The Central League winners : 1947 – 48 \n Chelsea \n Football League First Division winners : 1954 – 55 \n Crystal Palace \n Football League Fourth Division runners @-@ up : 1960 – 61 \n \n  \n = Hydnellum peckii = \n \n Hydnellum peckii is an inedible ( though not toxic ) fungus , and a member of the genus Hydnellum of the family Bankeraceae .</td>
+      <td>xxmaj april 2007 . \n▁ " xxmaj cambodia : xxmaj communists on the xxunk " . xxmaj time . 4 xxmaj may 1970 . xxmaj retrieved 10 xxmaj april 2007 . \n▁ " xxmaj between the xxmaj lines " . xxmaj time . 4 xxmaj may 1970 . xxmaj retrieved 10 xxmaj april 2007 . \n▁ " xxmaj the xxmaj new xxunk of xxmaj war " . xxmaj time . 11 xxmaj</td>
     </tr>
   </tbody>
 </table>
@@ -424,11 +461,11 @@ summary: "Training a Language Model on WT2"
   <tbody>
     <tr>
       <td>0</td>
-      <td>7.002256</td>
-      <td>6.007985</td>
-      <td>0.170773</td>
-      <td>406.662903</td>
-      <td>00:27</td>
+      <td>7.410782</td>
+      <td>6.331675</td>
+      <td>0.155463</td>
+      <td>562.097351</td>
+      <td>00:45</td>
     </tr>
   </tbody>
 </table>
