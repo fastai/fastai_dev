@@ -216,10 +216,14 @@ class GetAttr:
     def _xtra(self): return self._dir()
     def _dir(self): return [o for o in dir(getattr(self,self._default)) if not o.startswith('_')]
     def __getattr__(self,k):
-        if k not in ('_xtra',self._default) and (self._xtra is None or k in self._xtra):
-            return getattr(getattr(self,self._default), k)
+        if k.startswith('__') or k in ('_xtra',self._default): raise AttributeError(k)
+        xtra = getattr(self, '_xtra', None)
+        if xtra is None or k in xtra:
+            attr = getattr(self,self._default,None)
+            if attr is not None: return getattr(attr, k)
         raise AttributeError(k)
     def __dir__(self): return custom_dir(self, self._dir() if self._xtra is None else self._dir())
+#     def __getstate__(self): return self.__dict__
     def __setstate__(self,data): self.__dict__.update(data)
 
 #Cell

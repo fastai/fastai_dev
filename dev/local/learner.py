@@ -544,7 +544,7 @@ def export(self:Learner, fname='export.pkl'):
     with warnings.catch_warnings():
         #To avoid the warning that come from PyTorch about model not being checked
         warnings.simplefilter("ignore")
-        torch.save(self, open(self.path/fname, 'wb'))
+        torch.save(self, self.path/fname)
     self.create_opt()
     self.opt.load_state_dict(state)
     self.dbunch = old_dbunch

@@ -203,6 +203,7 @@
   "script_fwd": "03_torchcore.ipynb",
   "script_bwd": "03_torchcore.ipynb",
   "grad_module": "03_torchcore.ipynb",
+  "Identity": "03a_layers.ipynb",
   "Lambda": "03a_layers.ipynb",
   "PartialLambda": "03a_layers.ipynb",
   "View": "03a_layers.ipynb",
