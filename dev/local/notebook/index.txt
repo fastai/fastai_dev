@@ -185,6 +185,7 @@
   "logit": "03_torchcore.ipynb",
   "num_distrib": "03_torchcore.ipynb",
   "rank_distrib": "03_torchcore.ipynb",
+  "distrib_barrier": "03_torchcore.ipynb",
   "make_cross_image": "03_torchcore.ipynb",
   "show_image_batch": "03_torchcore.ipynb",
   "requires_grad": "03_torchcore.ipynb",

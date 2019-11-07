@@ -87,8 +87,7 @@ class SaveModelCallback(TrackerCallback):
 
     def on_train_end(self, **kwargs):
         "Load the best model."
-        if not self.every_epoch and (self.learn.path/f'{self.learn.model_dir}/{self.fname}.pth').is_file():
-            self.learn.load(f'{self.fname}')
+        if not self.every_epoch: self.learn.load(f'{self.fname}')
 
 #Cell
 class ReduceLROnPlateau(TrackerCallback):
