@@ -325,6 +325,7 @@ class Learner():
     def load(self, file, with_opt=None, device=None, strict=True):
         if device is None: device = self.dbunch.device
         if self.opt is None: self.create_opt()
+        distrib_barrier()
         file = join_path_file(file, self.path/self.model_dir, ext='.pth')
         load_model(file, self.model, self.opt, with_opt=with_opt, device=device, strict=strict)
         return self

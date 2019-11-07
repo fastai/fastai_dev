@@ -351,6 +351,11 @@ def rank_distrib():
     return int(os.environ.get('RANK', 0))
 
 #Cell
+def distrib_barrier():
+    "Place a synchronization barrier in distributed training so that ALL sub-processes in the pytorch process group must arrive here before proceeding."
+    if num_distrib() > 1: torch.distributed.barrier()
+
+#Cell
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:

@@ -55,6 +55,7 @@ class RNNLearner(Learner):
         encoder = get_model(self.model)[0]
         if device is None: device = self.dbunch.device
         if hasattr(encoder, 'module'): encoder = encoder.module
+        distrib_barrier()
         encoder.load_state_dict(torch.load(join_path_file(file,self.path/self.model_dir, ext='.pth'), map_location=device))
         self.freeze()
         return self
