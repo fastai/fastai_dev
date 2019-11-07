@@ -406,7 +406,7 @@ class ResBlock(nn.Module):
         self.sa = SimpleSelfAttention(nf,ks=1,sym=sym) if sa else noop
         self.idconv = noop if ni==nf else ConvLayer(ni, nf, 1, act_cls=None, **kwargs)
         self.pool = noop if stride==1 else nn.AvgPool2d(2, ceil_mode=True)
-        self.act = defaults.activation(inplace=True)
+        self.act = defaults.activation(inplace=True) if act_cls is defaults.activation else act_cls()
 
     def forward(self, x): return self.act(self.sa(self.convs(x)) + self.idconv(self.pool(x)))
 
