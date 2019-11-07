@@ -21,6 +21,7 @@ class WandbCallback(Callback):
     def __init__(self, log="gradients", log_preds=True, valid_dl=None, n_preds=36, seed=12345):
         # W&B log step (number of training updates)
         self.step = 0
+        self.epoch = 0
         # Check if wandb.init has been called
         if wandb.run is None:
             raise ValueError('You must call wandb.init() before WandbCallback()')
@@ -48,11 +49,15 @@ class WandbCallback(Callback):
     def after_batch(self):
         if self.training:
             self.step += 1
+            self.epoch += 1/self.n_iter
             hypers = {f'{k}_{i}':v for i,h in enumerate(self.opt.hypers) for k,v in h.items()}
-            wandb.log({'epoch': self.step/self.n_iter,'train_loss': self.smooth_loss, **hypers}, step=self.step)
+            wandb.log({'epoch': self.epoch,'train_loss': self.smooth_loss, **hypers}, step=self.step)
 
     def after_epoch(self):
         "Log training loss, validation loss and custom metrics & log prediction samples & save model"
+        # Correct any epoch rounding error and overwrite value
+        self.epoch = round(self.epoch)
+        wandb.log({'epoch': self.epoch}, step=self.step)
         # Log sample predictions
         if self.log_preds:
             b = self.valid_dl.one_batch()
