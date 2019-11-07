@@ -229,7 +229,7 @@ class DataSource(FilteredBase):
         return ctx
 
     def new_empty(self):
-        tls = [tl._new([], split_idx=tl.split_idx) for tl in self.tls]
+        tls = [tl._new([self.items[0]], split_idx=tl.split_idx) for tl in self.tls]
         return type(self)(tls=tls, n_inp=self.n_inp)
 
     @contextmanager

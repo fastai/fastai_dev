@@ -19,7 +19,8 @@ def _wif(worker_id):
     ds.wif()
 
 class _FakeLoader(GetAttr):
-    _auto_collation,collate_fn,drop_last,dataset_kind,_dataset_kind,_index_sampler = False,noops,False,_DatasetKind.Iterable,_DatasetKind.Iterable,Inf.count
+    _auto_collation,collate_fn,drop_last,dataset_kind,_dataset_kind,_index_sampler = (
+        False,noops,False,_DatasetKind.Iterable,_DatasetKind.Iterable,Inf.count)
     def __init__(self, d, pin_memory, num_workers, timeout):
         self.dataset,self.default,self.worker_init_fn = self,d,_wif
         store_attr(self, 'd,pin_memory,num_workers,timeout')
@@ -122,4 +123,6 @@ class DataLoader(GetAttr):
     def create_batch(self, b): return (fa_collate,fa_convert)[self.prebatched](b)
     def do_batch(self, b): return self.retain(self.create_batch(self.before_batch(b)), b)
     def one_batch(self):
-        with self.fake_l.no_multiproc(): return first(self)
+        with self.fake_l.no_multiproc(): res = first(self)
+        if hasattr(self, 'it'): delattr(self, 'it')
+        return res
