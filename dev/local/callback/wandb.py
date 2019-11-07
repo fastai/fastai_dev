@@ -61,7 +61,7 @@ class WandbCallback(Callback):
             out = getattr(self.loss_func, 'decodes', noop)(preds)
             x,y,its,outs = self.valid_dl.show_results(b, out, show=False, max_n=self.n_preds)
             wandb.log({"Prediction Samples": wandb_process(x, y, its, outs)}, step=self.step)
-        wandb.log({n:s for n,s in zip(self.recorder.metric_names, self.recorder.log) if n not in ['train_loss', 'epoch']}, step=self.step)
+        wandb.log({n:s for n,s in zip(self.recorder.metric_names, self.recorder.log) if n not in ['train_loss', 'epoch', 'time']}, step=self.step)
 
     def after_fit(self): wandb.log({}) #To trigger one last synch
 
