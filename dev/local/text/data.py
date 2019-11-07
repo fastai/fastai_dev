@@ -86,21 +86,18 @@ def show_batch(x: LMTensorText, y, samples, ctxs=None, max_n=10, **kwargs):
 #Cell
 def pad_input(samples, pad_idx=1, pad_fields=0, pad_first=False, backwards=False):
     "Function that collect samples and adds padding. Flips token order if needed"
-    if not is_listy(pad_fields): pad_fields = [pad_fields]
-    def _max_len_field(field):
-        return max([len(s[field]) for s in samples])
-    max_len_l = L(map(_max_len_field, pad_fields))
+    pad_fields = L(pad_fields)
+    max_len_l = pad_fields.map(lambda f: max([len(s[f]) for s in samples]))
     if backwards: pad_first = not pad_first
     def _f(field_idx, x):
-        if field_idx not in pad_fields:
-            return x
-        idx = pad_fields.index(field_idx)
+        if field_idx not in pad_fields: return x
+        idx = pad_fields.items.index(field_idx) #TODO: remove items if L.index is fixed
         sl = slice(-len(x), sys.maxsize) if pad_first else slice(0, len(x))
         pad =  x.new_zeros(max_len_l[idx]-x.shape[0])+pad_idx
         x1 = torch.cat([pad, x] if pad_first else [x, pad])
         if backwards: x1 = x1.flip(0)
         return retain_type(x1, x)
-    return [list(map(lambda idxx: _f(*idxx), enumerate(s))) for s in samples]
+    return [tuple(map(lambda idxx: _f(*idxx), enumerate(s))) for s in samples]
 
 #Cell
 def _default_sort(x): return len(x[0])

@@ -5,8 +5,8 @@ __all__ = ['progress_bar', 'master_bar', 'tensor', 'set_seed', 'unsqueeze', 'uns
            'TensorMultiCategory', 'TensorImageBase', 'TensorImage', 'TensorImageBW', 'TensorMask', 'concat', 'Chunks',
            'one_param', 'item_find', 'find_device', 'find_bs', 'Module', 'get_model', 'one_hot', 'one_hot_decode',
            'params', 'trainable_params', 'bn_types', 'bn_bias_params', 'batch_to_samples', 'logit', 'num_distrib',
-           'rank_distrib', 'make_cross_image', 'show_image_batch', 'requires_grad', 'init_default', 'cond_init',
-           'apply_leaf', 'apply_init', 'set_num_threads', 'ProcessPoolExecutor', 'parallel', 'run_procs',
+           'rank_distrib', 'distrib_barrier', 'make_cross_image', 'show_image_batch', 'requires_grad', 'init_default',
+           'cond_init', 'apply_leaf', 'apply_init', 'set_num_threads', 'ProcessPoolExecutor', 'parallel', 'run_procs',
            'parallel_gen', 'script_use_ctx', 'script_save_ctx', 'script_fwd', 'script_bwd', 'grad_module',
            'flatten_check']
 
