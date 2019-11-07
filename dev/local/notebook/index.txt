@@ -277,6 +277,7 @@
   "GrandparentSplitter": "06_data_transforms.ipynb",
   "FuncSplitter": "06_data_transforms.ipynb",
   "MaskSplitter": "06_data_transforms.ipynb",
+  "FileSplitter": "06_data_transforms.ipynb",
   "parent_label": "06_data_transforms.ipynb",
   "RegexLabeller": "06_data_transforms.ipynb",
   "ColReader": "06_data_transforms.ipynb",
