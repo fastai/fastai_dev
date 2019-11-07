@@ -538,7 +538,7 @@ def export(self:Learner, fname='export.pkl'):
     "Export the content of `self` without the items and the optimizer state for inference"
     if rank_distrib(): return # don't export if slave proc
     old_dbunch = self.dbunch
-    self.dbunch = dbunch.new_empty()
+    self.dbunch = self.dbunch.new_empty()
     state = self.opt.state_dict()
     self.opt = None
     with warnings.catch_warnings():
