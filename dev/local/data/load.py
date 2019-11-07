@@ -19,7 +19,8 @@ def _wif(worker_id):
     ds.wif()
 
 class _FakeLoader(GetAttr):
-    _auto_collation,collate_fn,drop_last,dataset_kind,_dataset_kind,_index_sampler = False,noops,False,_DatasetKind.Iterable,_DatasetKind.Iterable,Inf.count
+    _auto_collation,collate_fn,drop_last,dataset_kind,_dataset_kind,_index_sampler = (
+        False,noops,False,_DatasetKind.Iterable,_DatasetKind.Iterable,Inf.count)
     def __init__(self, d, pin_memory, num_workers, timeout):
         self.dataset,self.default,self.worker_init_fn = self,d,_wif
         store_attr(self, 'd,pin_memory,num_workers,timeout')
@@ -58,8 +59,10 @@ class SkipItemException(Exception): pass
 #Cell
 @funcs_kwargs
 class DataLoader(GetAttr):
-    wif=before_iter=after_item=before_batch=after_batch=after_iter = noops
-    _methods = 'wif before_iter create_batches create_item after_item before_batch create_batch retain after_batch after_iter'.split()
+    _noop_methods = 'wif before_iter after_item before_batch after_batch after_iter'.split()
+    for o in _noop_methods:
+        exec(f"def {o}(self, x=None, *args, **kwargs): return x")
+    _methods = _noop_methods + 'create_batches create_item create_batch retain'.split()
     _default = 'dataset'
     def __init__(self, dataset=None, bs=None, num_workers=0, pin_memory=False, timeout=0,
                  shuffle=False, drop_last=False, indexed=None, n=None, **kwargs):
@@ -120,4 +123,6 @@ class DataLoader(GetAttr):
     def create_batch(self, b): return (fa_collate,fa_convert)[self.prebatched](b)
     def do_batch(self, b): return self.retain(self.create_batch(self.before_batch(b)), b)
     def one_batch(self):
-        with self.fake_l.no_multiproc(): return first(self)
+        with self.fake_l.no_multiproc(): res = first(self)
+        if hasattr(self, 'it'): delattr(self, 'it')
+        return res
