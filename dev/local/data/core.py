@@ -151,7 +151,7 @@ class FilteredBase:
                for i,(b,s,dk) in enumerate(zip(bss,shuffles,dl_kwargs))]
         return DataBunch(*dls, path=path)
 
-FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
+FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i))
 
 #Cell
 class TfmdList(FilteredBase, L, GetAttr):
@@ -171,8 +171,8 @@ class TfmdList(FilteredBase, L, GetAttr):
     def __repr__(self): return f"{self.__class__.__name__}: {self.items}\ntfms - {self.tfms.fs}"
     def __iter__(self): return (self[i] for i in range(len(self)))
     def show(self, o, **kwargs): return self.tfms.show(o, **kwargs)
-    def decode(self, x, **kwargs): return self.tfms.decode(x, **kwargs)
-    def __call__(self, x, **kwargs): return self.tfms.__call__(x, **kwargs)
+    def decode(self, o, **kwargs): return self.tfms.decode(o, **kwargs)
+    def __call__(self, o, **kwargs): return self.tfms.__call__(o, **kwargs)
     def setup(self, train_setup=True): self.tfms.setup(getattr(self,'train',self) if train_setup else self)
     def overlapping_splits(self): return L(Counter(self.splits.concat()).values()).filter(gt(1))
 
