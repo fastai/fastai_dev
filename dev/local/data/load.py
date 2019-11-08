@@ -134,4 +134,4 @@ class DataLoader(GetAttr):
     def create_iterator(self):
         self.it = iter(self.dataset) if self.dataset is not None else None
         yield None
-        if hasattr(self, 'it'): delattr(self, 'it')
+        delattr(self, 'it')
