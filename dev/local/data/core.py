@@ -154,7 +154,7 @@ class FilteredBase:
                for i,(b,s,dk) in enumerate(zip(bss,shuffles,dl_kwargs))]
         return DataBunch(*dls, path=path)
 
-FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i), 2)
+FilteredBase.train,FilteredBase.valid = add_props(lambda i,x: x.subset(i))
 
 #Cell
 class TfmdIterableBase(GetAttr):
