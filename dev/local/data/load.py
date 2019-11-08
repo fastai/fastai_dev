@@ -125,10 +125,10 @@ class DataLoader(GetAttr):
         with self.fake_l.no_multiproc(): res = first(self)
         return res
     def one_item(self):
-        # Same call to get one item wether the dataset is indexed or not
+        # Same call to get one item whether the dataset is indexed or not
         with self.create_iterator():
             item = self.create_item(0 if self.indexed else None)
-            return self.do_batch([self.after_item(item)])
+            return self.after_item(item)
 
     @contextmanager
     def create_iterator(self):

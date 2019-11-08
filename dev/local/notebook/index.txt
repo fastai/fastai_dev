@@ -259,12 +259,15 @@
   "DataLoader": "04_data_load.ipynb",
   "TfmdDL": "05_data_core.ipynb",
   "DataBunch": "05_data_core.ipynb",
+  "IterableDataBunch": "05_data_core.ipynb",
   "FilteredBase": "05_data_core.ipynb",
   "FilteredBase.train,FilteredBase.valid": "05_data_core.ipynb",
   "TfmdList": "05_data_core.ipynb",
+  "TfmdIterator": "05_data_core.ipynb",
   "decode_at": "05_data_core.ipynb",
   "show_at": "05_data_core.ipynb",
   "DataSource": "05_data_core.ipynb",
+  "IterableDataSource": "05_data_core.ipynb",
   "test_set": "05_data_core.ipynb",
   "test_dl": "05_data_core.ipynb",
   "get_files": "06_data_transforms.ipynb",
@@ -807,7 +810,6 @@
   "g1": "xse_resnext.ipynb",
   "g2": "xse_resnext.ipynb",
   "g3": "xse_resnext.ipynb",
-  "IterableDataBunch": "05_data_core.ipynb",
-  "TfmdIterator": "05_data_core.ipynb",
-  "IterableDataSource": "05_data_core.ipynb"
+  "DataBunchBase": "05_data_core.ipynb",
+  "TfmdIterableBase": "05_data_core.ipynb"
 }
