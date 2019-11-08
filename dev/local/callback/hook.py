@@ -11,7 +11,7 @@ from ..basics import *
 @docs
 class Hook():
     "Create a hook on `m` with `hook_func`."
-    def __init__(self, m, hook_func, is_forward=True, detach=True, cpu=False):
+    def __init__(self, m, hook_func, is_forward=True, detach=True, cpu=False, gather=False):
         self.hook_func,self.detach,self.cpu,self.stored = hook_func,detach,cpu,None
         f = m.register_forward_hook if is_forward else m.register_backward_hook
         self.hook = f(self.hook_fn)
@@ -19,7 +19,8 @@ class Hook():
 
     def hook_fn(self, module, input, output):
         "Applies `hook_func` to `module`, `input`, `output`."
-        if self.detach: input,output = to_detach(input, cpu=self.cpu),to_detach(output, cpu=self.cpu)
+        if self.detach:
+            input,output = to_detach(input, cpu=self.cpu, gather=self.gather),to_detach(output, cpu=self.cpu, gather=self.gather)
         self.stored = self.hook_func(module, input, output)
 
     def remove(self):

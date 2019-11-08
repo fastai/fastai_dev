@@ -112,7 +112,7 @@ class AWD_LSTM(Module):
             raw_outputs.append(raw_output)
             if l != self.n_layers - 1: raw_output = hid_dp(raw_output)
             outputs.append(raw_output)
-        self.hidden = to_detach(new_hidden, cpu=False)
+        self.hidden = to_detach(new_hidden, cpu=False, gather=False)
         return raw_outputs, outputs
 
     def _one_rnn(self, n_in, n_out, bidir, weight_p, l):
