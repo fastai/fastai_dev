@@ -806,5 +806,8 @@
   "g0": "xse_resnext.ipynb",
   "g1": "xse_resnext.ipynb",
   "g2": "xse_resnext.ipynb",
-  "g3": "xse_resnext.ipynb"
+  "g3": "xse_resnext.ipynb",
+  "IterableDataBunch": "05_data_core.ipynb",
+  "TfmdIterator": "05_data_core.ipynb",
+  "IterableDataSource": "05_data_core.ipynb"
 }

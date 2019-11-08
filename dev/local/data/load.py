@@ -93,12 +93,11 @@ class DataLoader(GetAttr):
     def __iter__(self):
         self.randomize()
         self.before_iter()
-        for b in _loaders[self.fake_l.num_workers==0](self.fake_l): yield self.after_batch(b)
+        with self.create_iterator():
+            for b in _loaders[self.fake_l.num_workers==0](self.fake_l): yield self.after_batch(b)
         self.after_iter()
-        if hasattr(self, 'it'): delattr(self, 'it')
 
     def create_batches(self, samps):
-        self.it = iter(self.dataset) if self.dataset is not None else None
         res = filter(lambda o:o is not None, map(self.do_item, samps))
         yield from map(self.do_batch, self.chunkify(res))
 
@@ -124,5 +123,15 @@ class DataLoader(GetAttr):
     def do_batch(self, b): return self.retain(self.create_batch(self.before_batch(b)), b)
     def one_batch(self):
         with self.fake_l.no_multiproc(): res = first(self)
-        if hasattr(self, 'it'): delattr(self, 'it')
         return res
+    def one_item(self):
+        # Same call to get one item wether the dataset is indexed or not
+        with self.create_iterator():
+            item = self.create_item(0 if self.indexed else None)
+            return self.do_batch([self.after_item(item)])
+
+    @contextmanager
+    def create_iterator(self):
+        self.it = iter(self.dataset) if self.dataset is not None else None
+        yield None
+        if hasattr(self, 'it'): delattr(self, 'it')
