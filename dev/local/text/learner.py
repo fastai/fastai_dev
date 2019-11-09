@@ -45,6 +45,7 @@ class RNNLearner(Learner):
 
     def save_encoder(self, file):
         "Save the encoder to `self.path/self.model_dir/file`"
+        if rank_distrib(): return # don't save if slave proc
         encoder = get_model(self.model)[0]
         if hasattr(encoder, 'module'): encoder = encoder.module
         torch.save(encoder.state_dict(), join_path_file(file,self.path/self.model_dir, ext='.pth'))
@@ -54,6 +55,7 @@ class RNNLearner(Learner):
         encoder = get_model(self.model)[0]
         if device is None: device = self.dbunch.device
         if hasattr(encoder, 'module'): encoder = encoder.module
+        distrib_barrier()
         encoder.load_state_dict(torch.load(join_path_file(file,self.path/self.model_dir, ext='.pth'), map_location=device))
         self.freeze()
         return self
@@ -115,21 +117,33 @@ def text_classifier_learner(dbunch, arch, vocab, bptt=72, config=None, pretraine
     return learn
 
 #Cell
-from .data import _get_empty_df
+#from local.text.data import _get_empty_df
+from ..core.utils import get_empty_df
 
 @typedispatch
-def show_results(x: LMTensorText, y, its, ctxs=None, max_n=10, **kwargs):
-    if ctxs is None: ctxs = _get_empty_df(min(len(its), max_n))
-    for i,l in enumerate(['input', 'target', 'pred']):
-        ctxs = [b.show(ctx=c, label=l, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs,range(max_n))]
+def show_results(x: LMTensorText, y, samples, outs, ctxs=None, max_n=10, **kwargs):
+    if ctxs is None: ctxs = get_empty_df(min(len(samples), max_n))
+    for i,l in enumerate(['input', 'target']):
+        ctxs = [b.show(ctx=c, label=l, **kwargs) for b,c,_ in zip(samples.itemgot(i),ctxs,range(max_n))]
+    ctxs = [b.show(ctx=c, label='pred', **kwargs) for b,c,_ in zip(outs.itemgot(0),ctxs,range(max_n))]
     display_df(pd.DataFrame(ctxs))
     return ctxs
 
 #Cell
 @typedispatch
-def show_results(x: TensorText, y, its, ctxs=None, max_n=10, **kwargs):
-    if ctxs is None: ctxs = _get_empty_df(min(len(its), max_n))
-    for i in range(3):
-        ctxs = [b.show(ctx=c, **kwargs) for b,c,_ in zip(its.itemgot(i),ctxs,range(max_n))]
+def show_results(x: TensorText, y, samples, outs, ctxs=None, max_n=10, **kwargs):
+    if ctxs is None: ctxs = get_empty_df(min(len(samples), max_n))
+    ctxs = show_results[object](x, y, samples, outs, ctxs=ctxs, max_n=max_n, **kwargs)
     display_df(pd.DataFrame(ctxs))
     return ctxs
+
+#Cell
+@typedispatch
+def plot_top_losses(x: TensorText, y:TensorCategory, samples, outs, raws, losses, **kwargs):
+    rows = get_empty_df(len(samples))
+    for i,l in enumerate(['input', 'target']):
+        rows = [b.show(ctx=c, label=l, **kwargs) for b,c in zip(samples.itemgot(i),rows)]
+    outs = L(o + (Float(r.max().item()), Float(l.item())) for o,r,l in zip(outs, raws, losses))
+    for i,l in enumerate(['predicted', 'probability', 'loss']):
+        rows = [b.show(ctx=c, label=l, **kwargs) for b,c in zip(outs.itemgot(i),rows)]
+    display_df(pd.DataFrame(rows))

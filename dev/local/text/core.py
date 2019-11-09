@@ -147,12 +147,12 @@ fn_counter_pkl = 'counter.pkl'
 
 #Cell
 def tokenize_folder(path, extensions=None, folders=None, output_dir=None, n_workers=defaults.cpus,
-                    rules=None, tok_func=SpacyTokenizer, **tok_kwargs):
+                    rules=None, tok_func=SpacyTokenizer, encoding='utf8', **tok_kwargs):
     "Tokenize text files in `path` in parallel using `n_workers`"
     path,extensions = Path(path),ifnone(extensions, ['.txt'])
     fnames = get_files(path, extensions=extensions, recurse=True, folders=folders)
     output_dir = Path(ifnone(output_dir, path.parent/f'{path.name}_tok'))
-    rules = Path.read + L(ifnone(rules, defaults.text_proc_rules.copy()))
+    rules = partial(Path.read, encoding=encoding) + L(ifnone(rules, defaults.text_proc_rules.copy()))
 
     counter = Counter()
     for i,tok in parallel_tokenize(fnames, tok_func, rules, as_gen=True, n_workers=n_workers, **tok_kwargs):

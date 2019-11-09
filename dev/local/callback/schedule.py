@@ -110,6 +110,17 @@ def plot_sched(self:Recorder, figsize=None):
 
 #Cell
 @patch
+def fit_flat_cos(self:Learner, n_epoch, lr=None, div_final=1e5, pct_start=0.75, wd=defaults.wd,
+                 cbs=None, reset_opt=False):
+    "Fit `self.model` for `n_epoch` at flat `lr` before a cosine annealing."
+    if self.opt is None: self.create_opt()
+    self.opt.set_hyper('lr', self.lr if lr is None else lr)
+    lr = np.array([h['lr'] for h in self.opt.hypers])
+    scheds = {'lr': combined_cos(pct_start, lr, lr, lr/div_final)}
+    self.fit(n_epoch, cbs=ParamScheduler(scheds)+L(cbs), reset_opt=reset_opt, wd=wd)
+
+#Cell
+@patch
 def fit_sgdr(self:Learner, n_cycles, cycle_len, lr_max=None, cycle_mult=2, cbs=None, reset_opt=False, wd=defaults.wd):
     "Fit `self.model` for `n_cycles` of `cycle_len` using SGDR."
     if self.opt is None: self.create_opt()
@@ -161,7 +172,7 @@ class LRFinder(ParamScheduler):
 
 #Cell
 @patch
-def plot_lr_find(self:Recorder, skip_end=0):
+def plot_lr_find(self:Recorder, skip_end=5):
     "Plot the result of an LR Finder test (won't work if you didn't do `learn.lr_find()` before)"
     lrs    = self.lrs    if skip_end==0 else self.lrs   [:-skip_end]
     losses = self.losses if skip_end==0 else self.losses[:-skip_end]
@@ -170,13 +181,12 @@ def plot_lr_find(self:Recorder, skip_end=0):
     ax.set_ylabel("Loss")
     ax.set_xlabel("Learning Rate")
     ax.set_xscale('log')
-    return fig
 
 #Cell
 @patch
-def lr_find(self:Learner, start_lr=1e-7, end_lr=10, num_it=100, stop_div=True):
+def lr_find(self:Learner, start_lr=1e-7, end_lr=10, num_it=100, stop_div=True, show_plot=True):
     "Launch a mock training to find a good learning rate"
     n_epoch = num_it//len(self.dbunch.train_dl) + 1
     cb=LRFinder(start_lr=start_lr, end_lr=end_lr, num_it=num_it, stop_div=stop_div)
     with self.no_logging(): self.fit(n_epoch, cbs=cb)
-    self.recorder.plot_lr_find()
+    if show_plot: self.recorder.plot_lr_find()

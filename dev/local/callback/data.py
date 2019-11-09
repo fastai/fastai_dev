@@ -22,6 +22,7 @@ class WeightedDL(TfmdDL):
 
     def get_idxs(self):
         if self.n==0: return []
+        if not self.shuffle: return super().get_idxs()
         return list(np.random.choice(self.n, self.n, p=self.wgts))
 
 #Cell
@@ -29,4 +30,4 @@ class WeightedDL(TfmdDL):
 @delegates(DataSource.databunch)
 def weighted_databunch(self:DataSource, wgts, bs=16, **kwargs):
     xtra_kwargs = [{}] * (self.n_subsets-1)
-    return dsrc.databunch(bs=bs, dl_type=WeightedDL, dl_kwargs=({'wgts':wgts}, *xtra_kwargs), **kwargs)
+    return self.databunch(bs=bs, dl_type=WeightedDL, dl_kwargs=({'wgts':wgts}, *xtra_kwargs), **kwargs)
