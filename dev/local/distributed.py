@@ -79,7 +79,7 @@ class DistributedDL(TfmdDL):
     def from_dl(cls, dl, rank, world_size, **kwargs):
         cur_kwargs = dict(num_workers=dl.fake_l.num_workers, pin_memory=dl.pin_memory, timeout=dl.timeout,
                           bs=dl.bs, shuffle=dl.shuffle, drop_last=dl.drop_last, indexed=dl.indexed)
-        cur_kwargs.update({n: getattr(dl, n) for n in cls._methods if n not in "sample shuffle_fn create_item".split()})
+        cur_kwargs.update({n: getattr(dl, n) for n in cls._methods if n not in "get_idxs sample shuffle_fn create_item".split()})
         return cls(dl.dataset, rank, world_size, **merge(cur_kwargs, kwargs))
 
 #Cell
