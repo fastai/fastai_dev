@@ -133,5 +133,5 @@ class DataLoader(GetAttr):
     @contextmanager
     def create_iterator(self):
         self.it = iter(self.dataset) if self.dataset is not None else None
-        yield None
+        yield
         delattr(self, 'it')

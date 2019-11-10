@@ -199,6 +199,9 @@ class TfmdIterator(TfmdIterableBase): # TODO docs
         super().__init__(tfms, **kwargs)
         store_attr(self, "items")
 
+    def __len__(self):
+        return len(self.items)
+
     def __iter__(self):
         for b in self.items:
             if self._after_item is None: yield b
@@ -280,8 +283,10 @@ class IterableDataSource(DataSourceBase):
         self.tls = L(tls if tls else [TfmdIterator(items, t, **kwargs) for t in L(ifnone(tfms,[None]))])
         self.n_inp = (1 if len(self.tls)==1 else len(self.tls)-1) if n_inp is None else n_inp
 
+    def __len__(self):
+        return len(self.tls[0])
     def __iter__(self):
-        yield from zip(*[tt for tt in self.tls])
+        yield from zip(*[tl for tl in self.tls])
     def show(self, o, ctx=None, **kwargs):
         for o_,tl in zip(o,self.tls): ctx = tl.show(o_, ctx=ctx, **kwargs)
         return ctx

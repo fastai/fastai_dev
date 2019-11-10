@@ -205,7 +205,8 @@ class Learner():
         self.xb,self.yb = b[:i],b[i:]
 
     def all_batches(self):
-        self.n_iter = len(self.dl)
+        try: self.n_iter = len(self.dl)
+        except TypeError: self.n_iter = float("inf")
         for o in enumerate(self.dl): self.one_batch(*o)
 
     def one_batch(self, i, b):
