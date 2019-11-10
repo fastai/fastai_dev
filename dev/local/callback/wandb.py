@@ -29,6 +29,7 @@ class WandbCallback(Callback):
 
     def begin_fit(self):
         "Call watch method to log model topology, gradients & weights"
+        if hasattr(self.learn, 'lr_finder'): return
         if not WandbCallback._wandb_watch_called:
             WandbCallback._wandb_watch_called = True
             # Logs model topology and optionally gradients and weights
@@ -47,6 +48,8 @@ class WandbCallback(Callback):
             self.valid_dl = self.dbunch.valid_dl.new(DataSource(tls=test_tls), bs=self.n_preds)
 
     def after_batch(self):
+        "Log hyper-parameters and training loss"
+        if hasattr(self.learn, 'lr_finder'): return
         if self.training:
             self._wandb_step += 1
             self._wandb_epoch += 1/self.n_iter
@@ -54,7 +57,8 @@ class WandbCallback(Callback):
             wandb.log({'epoch': self._wandb_epoch,'train_loss': self.smooth_loss, **hypers}, step=self._wandb_step)
 
     def after_epoch(self):
-        "Log training loss, validation loss and custom metrics & log prediction samples & save model"
+        "Log validation loss and custom metrics & log prediction samples"
+        if hasattr(self.learn, 'lr_finder'): return
         # Correct any epoch rounding error and overwrite value
         self._wandb_epoch = round(self._wandb_epoch)
         wandb.log({'epoch': self._wandb_epoch}, step=self._wandb_step)
@@ -68,7 +72,9 @@ class WandbCallback(Callback):
             wandb.log({"Prediction Samples": wandb_process(x, y, its, outs)}, step=self._wandb_step)
         wandb.log({n:s for n,s in zip(self.recorder.metric_names, self.recorder.log) if n not in ['train_loss', 'epoch', 'time']}, step=self._wandb_step)
 
-    def after_fit(self): wandb.log({}) #To trigger one last synch
+    def after_fit(self):
+        if hasattr(self.learn, 'lr_finder'): return
+        wandb.log({}) #To trigger one last synch
 
 #Cell
 @typedispatch
