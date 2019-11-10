@@ -46,7 +46,7 @@ def _xresnet(pretrained, expansion, layers, **kwargs):
     # TODO pretrain all sizes. Currently will fail with non-xrn50
     url = 'https://s3.amazonaws.com/fast-ai-modelzoo/xrn50_940.pth'
     res = XResNet(expansion, layers, **kwargs)
-    if pretrained: res.load_state_dict(load_state_dict_from_url(url, map_location='cpu')['model'])
+    if pretrained: res.load_state_dict(load_state_dict_from_url(url, map_location='cpu')['model'], strict=False)
     return res
 
 def xresnet18 (pretrained=False, **kwargs): return _xresnet(pretrained, 1, [2, 2,  2, 2], **kwargs)
@@ -58,5 +58,5 @@ def xresnet18_deep  (pretrained=False, **kwargs): return _xresnet(pretrained, 1,
 def xresnet34_deep  (pretrained=False, **kwargs): return _xresnet(pretrained, 1, [3,4,6,3,1,1], **kwargs)
 def xresnet50_deep  (pretrained=False, **kwargs): return _xresnet(pretrained, 4, [3,4,6,3,1,1], **kwargs)
 def xresnet18_deeper(pretrained=False, **kwargs): return _xresnet(pretrained, 1, [2,2,1,1,1,1,1,1], **kwargs)
-def xresnet34_deeper(pretrained=False, **kwargs): return _xresnet(pretrained, 1, [3,4,4,2,2,1,1,1], **kwargs)
-def xresnet50_deeper(pretrained=False, **kwargs): return _xresnet(pretrained, 4, [3,4,4,2,2,1,1,1], **kwargs)
+def xresnet34_deeper(pretrained=False, **kwargs): return _xresnet(pretrained, 1, [3,4,6,3,1,1,1,1], **kwargs)
+def xresnet50_deeper(pretrained=False, **kwargs): return _xresnet(pretrained, 4, [3,4,6,3,1,1,1,1], **kwargs)

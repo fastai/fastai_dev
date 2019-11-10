@@ -366,6 +366,27 @@ def distrib_barrier():
     if num_distrib() > 1: torch.distributed.barrier()
 
 #Cell
+# Saving arrays requires pytables - optional dependency
+try: import tables
+except: pass
+
+#Cell
+def _comp_filter(lib='lz4',lvl=3): return tables.Filters(complib=f'blosc:{lib}', complevel=lvl)
+
+#Cell
+@patch
+def save_array(p:Path, o, complib='lz4', lvl=3):
+    "Save numpy array to a compressed `pytables` file, using compression level `lvl`"
+    if isinstance(o,Tensor): o = to_np(o)
+    with tables.open_file(p, mode='w', filters=_comp_filter(lib=complib,lvl=lvl)) as f: f.create_carray('/', 'data', obj=o)
+
+#Cell
+@patch
+def load_array(p:Path):
+    "Save numpy array to a `pytables` file"
+    with tables.open_file(p, 'r') as f: return f.root.data.read()
+
+#Cell
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:
