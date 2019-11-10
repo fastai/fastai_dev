@@ -39,7 +39,7 @@ class TabularModel(Module):
         sizes = [n_emb + n_cont] + layers + [out_sz]
         actns = [nn.ReLU(inplace=True) for _ in range(len(sizes)-2)] + [None]
         _layers = [LinBnDrop(sizes[i], sizes[i+1], bn=use_bn and (i!=len(actns)-1 or bn_final), p=p, act=a)
-                       for i,(p,a) in enumerate(zip([0.]+ps,actns))]
+                       for i,(p,a) in enumerate(zip(ps+[0.],actns))]
         self.layers = nn.Sequential(*_layers)
 
     def forward(self, x_cat, x_cont):
