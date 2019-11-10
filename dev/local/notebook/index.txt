@@ -812,5 +812,7 @@
   "g0": "xse_resnext.ipynb",
   "g1": "xse_resnext.ipynb",
   "g2": "xse_resnext.ipynb",
-  "g3": "xse_resnext.ipynb"
+  "g3": "xse_resnext.ipynb",
+  "qhadam_step": "12_optimizer.ipynb",
+  "QHAdam": "12_optimizer.ipynb"
 }
