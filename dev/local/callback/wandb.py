@@ -14,12 +14,14 @@ import wandb
 #Cell
 class WandbCallback(Callback):
     "Saves model topology, losses & metrics"
+    toward_end = True
     # Record if watch has been called previously (even in another instance)
-    _watch_called = False
+    _wandb_watch_called = False
 
     def __init__(self, log="gradients", log_preds=True, valid_dl=None, n_preds=36, seed=12345):
         # W&B log step (number of training updates)
-        self.step = 0
+        self._wandb_step = 0
+        self._wandb_epoch = 0
         # Check if wandb.init has been called
         if wandb.run is None:
             raise ValueError('You must call wandb.init() before WandbCallback()')
@@ -27,8 +29,9 @@ class WandbCallback(Callback):
 
     def begin_fit(self):
         "Call watch method to log model topology, gradients & weights"
-        if not WandbCallback._watch_called:
-            WandbCallback._watch_called = True
+        if hasattr(self.learn, 'lr_finder'): return
+        if not WandbCallback._wandb_watch_called:
+            WandbCallback._wandb_watch_called = True
             # Logs model topology and optionally gradients and weights
             wandb.watch(self.learn.model, log=self.log)
 
@@ -45,13 +48,20 @@ class WandbCallback(Callback):
             self.valid_dl = self.dbunch.valid_dl.new(DataSource(tls=test_tls), bs=self.n_preds)
 
     def after_batch(self):
+        "Log hyper-parameters and training loss"
+        if hasattr(self.learn, 'lr_finder'): return
         if self.training:
-            self.step += 1
+            self._wandb_step += 1
+            self._wandb_epoch += 1/self.n_iter
             hypers = {f'{k}_{i}':v for i,h in enumerate(self.opt.hypers) for k,v in h.items()}
-            wandb.log({'epoch': self.step/self.n_iter,'train_loss': self.smooth_loss, **hypers}, step=self.step)
+            wandb.log({'epoch': self._wandb_epoch,'train_loss': self.smooth_loss, **hypers}, step=self._wandb_step)
 
     def after_epoch(self):
-        "Log training loss, validation loss and custom metrics & log prediction samples & save model"
+        "Log validation loss and custom metrics & log prediction samples"
+        if hasattr(self.learn, 'lr_finder'): return
+        # Correct any epoch rounding error and overwrite value
+        self._wandb_epoch = round(self._wandb_epoch)
+        wandb.log({'epoch': self._wandb_epoch}, step=self._wandb_step)
         # Log sample predictions
         if self.log_preds:
             b = self.valid_dl.one_batch()
@@ -59,10 +69,12 @@ class WandbCallback(Callback):
             preds = getattr(self.loss_func, 'activation', noop)(self.pred)
             out = getattr(self.loss_func, 'decodes', noop)(preds)
             x,y,its,outs = self.valid_dl.show_results(b, out, show=False, max_n=self.n_preds)
-            wandb.log({"Prediction Samples": wandb_process(x, y, its, outs)}, step=self.step)
-        wandb.log({n:s for n,s in zip(self.recorder.metric_names, self.recorder.log) if n not in ['train_loss', 'epoch']}, step=self.step)
+            wandb.log({"Prediction Samples": wandb_process(x, y, its, outs)}, step=self._wandb_step)
+        wandb.log({n:s for n,s in zip(self.recorder.metric_names, self.recorder.log) if n not in ['train_loss', 'epoch', 'time']}, step=self._wandb_step)
 
-    def after_fit(self): wandb.log({}) #To trigger one last synch
+    def after_fit(self):
+        if hasattr(self.learn, 'lr_finder'): return
+        wandb.log({}) #To trigger one last synch
 
 #Cell
 @typedispatch
