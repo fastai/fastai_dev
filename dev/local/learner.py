@@ -53,7 +53,8 @@ class TrainEvalCallback(Callback):
 #Cell
 class GatherPredsCallback(Callback):
     "`Callback` that saves the predictions and targets, optionally `with_loss`"
-    def __init__(self, with_input=False, with_loss=False): store_attr(self, "with_input,with_loss")
+    def __init__(self, with_input=False, with_loss=False, save_preds=None, save_targs=None):
+        store_attr(self, "with_input,with_loss,save_preds,save_targs")
 
     def begin_batch(self):
         if self.with_input: self.inputs.append((to_detach(self.xb)))
@@ -61,13 +62,21 @@ class GatherPredsCallback(Callback):
     def begin_validate(self):
         "Initialize containers"
         self.preds,self.targets = [],[]
-        if self.with_input: self.inputs=[]
-        if self.with_loss: self.losses = []
+        if self.with_input: self.inputs = []
+        if self.with_loss:  self.losses = []
 
     def after_batch(self):
         "Save predictions, targets and potentially losses"
-        self.preds.append(to_detach(self.pred))
-        self.targets.append(to_detach(self.yb))
+        preds = to_detach(self.pred)
+        if self.save_preds is None: self.preds.append(preds)
+        else:
+            (self.save_preds/str(self.iter)).save_array(preds)
+#             self.preds.append(preds[0][None])
+        targs = to_detach(self.yb)
+        if self.save_targs is None: self.targets.append(targs)
+        else:
+            (self.save_targs/str(self.iter)).save_array(targs[0])
+#             self.targets.append(targs[0][None])
         if self.with_loss:
             bs = find_bs(self.yb)
             loss = self.loss if self.loss.numel() == bs else self.loss.view(bs,-1).mean(1)
@@ -235,10 +244,13 @@ class Learner():
     def _do_epoch_validate(self, ds_idx=1, dl=None):
         if dl is None: dl = self.dbunch.dls[ds_idx]
         try:
+            dl.shuffle,old_shuffle = False,dl.shuffle
+            dl.drop_last,old_drop = False,dl.drop_last
             self.dl = dl;                                    self('begin_validate')
             with torch.no_grad(): self.all_batches()
         except CancelValidException:                         self('after_cancel_validate')
-        finally:                                             self('after_validate')
+        finally:
+            dl.shuffle,dl.drop_last = old_shuffle,old_drop;  self('after_validate')
 
     def fit(self, n_epoch, lr=None, wd=defaults.wd, cbs=None, reset_opt=False):
         with self.added_cbs(cbs):
@@ -267,19 +279,23 @@ class Learner():
             self(_after_epoch)
         return self.recorder.values[-1]
 
-    def get_preds(self, ds_idx=1, dl=None, with_input=False, with_loss=False, with_decoded=False, act=None):
+    def get_preds(self, ds_idx=1, dl=None, with_input=False, with_loss=False, with_decoded=False, act=None,
+                 save_preds=None, save_targs=None):
         #self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
-        cb = GatherPredsCallback(with_input=with_input, with_loss=with_loss)
+        cb = GatherPredsCallback(with_input=with_input, with_loss=with_loss, save_preds=save_preds, save_targs=save_targs)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced(), self.no_mbar():
             self(_before_epoch)
             self._do_epoch_validate(ds_idx, dl)
             self(_after_epoch)
             if act is None: act = getattr(self.loss_func, 'activation', noop)
-            preds = act(torch.cat(cb.preds))
-            res = (preds, detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
-            if with_decoded: res = res + (getattr(self.loss_func, 'decodes', noop)(preds),)
-            if with_input: res = (tuple(_try_concat(o) for o in zip(*cb.inputs)),) + res
-            if with_loss:  res = res + (torch.cat(cb.losses),)
+            res = []
+            if len(cb.preds):
+                preds = act(torch.cat(cb.preds))
+                res.append(preds)
+                if with_decoded: res.append(getattr(self.loss_func, 'decodes', noop)(preds))
+            res.append(detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
+            if with_input: res = [tuple(_try_concat(o) for o in zip(*cb.inputs))] + res
+            if with_loss:  res.append(torch.cat(cb.losses))
             return res
 
     def predict(self, item, rm_type_tfms=0):
@@ -551,18 +567,19 @@ def export(self:Learner, fname='export.pkl'):
 
 #Cell
 @patch
-def tta(self:Learner, ds_idx=1, dl=None, n=4, item_tfms=None, batch_tfms=None, beta=0.5):
+def tta(self:Learner, ds_idx=1, dl=None, n=4, item_tfms=None, batch_tfms=None, beta=0.25):
     "Return predictions on the `ds_idx` dataset or `dl` using Test Time Augmentation"
     if dl is None: dl = self.dbunch.dls[ds_idx]
     if item_tfms is not None or batch_tfms is not None: dl = dl.new(after_item=item_tfms, after_batch=batch_tfms)
     with dl.dataset.set_split_idx(0), self.no_mbar():
-        self.progress.mbar = master_bar(list(range(n+1)))
+        if hasattr(self,'progress'): self.progress.mbar = master_bar(list(range(n)))
         aug_preds = []
-        for i in self.progress.mbar:
+        for i in self.progress.mbar if hasattr(self,'progress') else range(n):
             self.epoch = i #To keep track of progress on mbar since the progress callback will use self.epoch
-            aug_preds.append(self.get_preds(dl=dl)[0][None])
+#             aug_preds.append(self.get_preds(dl=dl)[0][None])
+            aug_preds.append(self.get_preds(ds_idx)[0][None])
     aug_preds = torch.cat(aug_preds).mean(0)
     self.epoch = n
-    preds,targs = self.get_preds(dl=dl)
-    preds = torch.lerp(aug_preds, preds, beta)
+    with dl.dataset.set_split_idx(1): preds,targs = self.get_preds(ds_idx)
+    preds = (aug_preds,preds) if beta is None else torch.lerp(aug_preds, preds, beta)
     return preds,targs

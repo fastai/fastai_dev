@@ -161,8 +161,10 @@ class LRFinder(ParamScheduler):
     def begin_validate(self): raise CancelValidException()
 
     def after_fit(self):
-        self.learn.load('_tmp')
-        os.remove(self.path/self.model_dir/'_tmp.pth')
+        tmp_f = self.path/self.model_dir/'_tmp.pth'
+        if tmp_f.exists():
+            self.learn.load('_tmp')
+            os.remove(tmp_f)
 
     _docs = {"begin_fit": "Initialize container for hyper-parameters and save the model",
              "begin_batch": "Set the proper hyper-parameters in the optimizer",
