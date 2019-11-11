@@ -152,7 +152,7 @@ def Recall(axis=-1, labels=None, pos_label=1, average='binary', sample_weight=No
 def RocAuc(axis=-1, average='macro', sample_weight=None, max_fpr=None):
     "Area Under the Receiver Operating Characteristic Curve for single-label binary classification problems"
     return skm_to_fastai(skm.recall_score, axis=axis,
-                         laverage=average, sample_weight=sample_weight, max_fpr=max_fpr)
+                         average=average, sample_weight=sample_weight, max_fpr=max_fpr)
 
 #Cell
 class Perplexity(AvgLoss):

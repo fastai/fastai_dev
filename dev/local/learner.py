@@ -51,6 +51,14 @@ class TrainEvalCallback(Callback):
         self.learn.training=False
 
 #Cell
+def _maybe_reduce(val):
+    if num_distrib()>1:
+        val = val.clone()
+        torch.distributed.all_reduce(val, op=torch.distributed.ReduceOp.SUM)
+        val /= num_distrib()
+    return val
+
+#Cell
 class GatherPredsCallback(Callback):
     "`Callback` that saves the predictions and targets, optionally `with_loss`"
     def __init__(self, with_input=False, with_loss=False): store_attr(self, "with_input,with_loss")
