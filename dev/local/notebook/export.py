@@ -388,7 +388,7 @@ def _script2notebook(fname, dic, silent=False):
         nbformat.write(nb, nb_fname, version=4)
 
 #Cell
-_manual_mods = 'version.py __init__.py imports.py torch_imports.py all.py torch_basics.py fp16_utils.py test_utils.py basics.py launch.py'.split()
+_manual_mods = 'version.py __init__.py imports.py torch_imports.py patch_tables.py all.py torch_basics.py fp16_utils.py test_utils.py basics.py launch.py'.split()
 
 #Cell
 def script2notebook(folder='local', silent=False):
