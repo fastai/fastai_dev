@@ -39,7 +39,7 @@ def forget_mult_CPU(x, f, first_h=None, batch_first=True, backward=False):
     dim = (1 if batch_first else 0)
     forgets = f.split(1, dim=dim)
     inputs =  x.split(1, dim=dim)
-    prev_h = None if first_h is None else first_h.unsqueeze(1 if batch_first else 0)
+    prev_h = None if first_h is None else first_h.unsqueeze(dim)
     idx_range = range(len(inputs)-1,-1,-1) if backward else range(len(inputs))
     for i in idx_range:
         prev_h = inputs[i] * forgets[i] if prev_h is None else inputs[i] * forgets[i] + (1-forgets[i]) * prev_h
