@@ -8,7 +8,8 @@ __all__ = ['ifnone', 'get_class', 'mk_class', 'wrap_class', 'store_attr', 'attrd
            'rnum_methods', 'inum_methods', 'Tuple', 'TupleTitled', 'trace', 'compose', 'maps', 'partialler', 'mapped',
            'instantiate', 'Self', 'Self', 'bunzip', 'join_path_file', 'sort_by_run', 'subplots', 'show_image',
            'show_titled_image', 'show_images', 'ArrayBase', 'ArrayImageBase', 'ArrayImage', 'ArrayImageBW', 'ArrayMask',
-           'PrettyString', 'get_empty_df', 'display_df', 'round_multiple', 'even_mults', 'num_cpus', 'add_props']
+           'PrettyString', 'get_empty_df', 'display_df', 'round_multiple', 'even_mults', 'num_cpus', 'add_props',
+           'change_attr', 'change_attrs']
 
 #Cell
 from ..test import *
@@ -625,3 +626,21 @@ defaults.cpus = num_cpus()
 def add_props(f, n=2):
     "Create properties passing each of `range(n)` to f"
     return (property(partial(f,i)) for i in range(n))
+
+#Cell
+def change_attr(o, name, new_val):
+    "Change the attr `name` in `o` with `new_val` if it exists and return the old value"
+    old = getattr(o, name, None)
+    if hasattr(o, 'name'): setattr(o, name, new_val)
+    return o,old,hasattr(o, 'name')
+
+#Cell
+def change_attrs(o, names, new_vals, do=None):
+    "Change the attr `names` in `o` with `new_vals` if it exists and return the old values"
+    olds,has = L(),L()
+    if do is None: do = L(True) * len(names)
+    for n,v,d in zip(names, new_vals, do):
+        if d:
+            o,old,h = change_attr(o, n, v)
+            olds.append(old); has.append(h)
+    return o,olds,has

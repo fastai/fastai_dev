@@ -154,10 +154,8 @@ def load_model(file, model, opt, with_opt=None, device=None, strict=True):
 
 #Cell
 def _try_concat(o):
-    try:
-        return torch.cat(o)
-    except:
-        return sum([L(o_[i,:] for i in range_of(o_)) for o_ in o], L())
+    try:    return torch.cat(o)
+    except: return sum([L(o_[i,:] for i in range_of(o_)) for o_ in o], L())
 
 #Cell
 class Learner():
@@ -251,14 +249,14 @@ class Learner():
 
     def _do_epoch_validate(self, ds_idx=1, dl=None):
         if dl is None: dl = self.dbunch.dls[ds_idx]
+        names = ['shuffle', 'drop_last']
         try:
-            dl.shuffle,old_shuffle = False,dl.shuffle
-            dl.drop_last,old_drop = False,dl.drop_last
+            dl,old,has = change_attrs(dl, names, [False,False])
             self.dl = dl;                                    self('begin_validate')
             with torch.no_grad(): self.all_batches()
         except CancelValidException:                         self('after_cancel_validate')
         finally:
-            dl.shuffle,dl.drop_last = old_shuffle,old_drop;  self('after_validate')
+            dl,*_ = change_attrs(dl, names, old, has);       self('after_validate')
 
     def fit(self, n_epoch, lr=None, wd=defaults.wd, cbs=None, reset_opt=False):
         with self.added_cbs(cbs):

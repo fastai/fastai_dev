@@ -123,6 +123,8 @@
   "num_cpus": "01a_core_utils.ipynb",
   "defaults.cpus": "01a_core_utils.ipynb",
   "add_props": "01a_core_utils.ipynb",
+  "change_attr": "01a_core_utils.ipynb",
+  "change_attrs": "01a_core_utils.ipynb",
   "type_hints": "01b_core_dispatch.ipynb",
   "anno_ret": "01b_core_dispatch.ipynb",
   "cmp_instance": "01b_core_dispatch.ipynb",
