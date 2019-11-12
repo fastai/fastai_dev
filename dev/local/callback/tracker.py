@@ -38,6 +38,7 @@ class TrackerCallback(Callback):
 
     def begin_fit(self):
         "Prepare the monitored value"
+        self.run = not hasattr(self, "lr_finder")
         self.best = float('inf') if self.comp == np.less else -float('inf')
         assert self.monitor in self.recorder.metric_names[1:]
         self.idx = list(self.recorder.metric_names[1:]).index(self.monitor)
@@ -47,6 +48,8 @@ class TrackerCallback(Callback):
         val = self.recorder.values[-1][self.idx]
         if self.comp(val - self.min_delta, self.best): self.best,self.new_best = val,True
         else: self.new_best = False
+
+    def after_fit(self): self.run=True
 
 #Cell
 class EarlyStoppingCallback(TrackerCallback):

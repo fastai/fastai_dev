@@ -356,29 +356,30 @@ def affine_mat(*ms):
                   stack([t0(ms[0]), t0(ms[0]), t1(ms[0])], dim=1)], dim=1)
 
 #Cell
-def mask_tensor(x, p=0.5, neutral=0.):
+def mask_tensor(x, p=0.5, neutral=0., batch=False):
     "Mask elements of `x` with `neutral` with probability `1-p`"
     if p==1.: return x
+    if batch: return x if random.random() < p else x.new_zeros(*x.size()) + neutral
     if neutral != 0: x.add_(-neutral)
     mask = x.new_empty(*x.size()).bernoulli_(p)
     x.mul_(mask)
     return x.add_(neutral) if neutral != 0 else x
 
 #Cell
-def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0.):
+def _draw_mask(x, def_draw, draw=None, p=0.5, neutral=0., batch=False):
     if draw is None: draw=def_draw
     if callable(draw): res=draw(x)
     elif is_listy(draw):
         test_eq(len(draw), x.size(0))
         res = tensor(draw, dtype=x.dtype, device=x.device)
     else: res = x.new_zeros(x.size(0)) + draw
-    return mask_tensor(res, p=p, neutral=neutral)
+    return mask_tensor(res, p=p, neutral=neutral, batch=batch)
 
 #Cell
-def flip_mat(x, p=0.5, draw=None):
+def flip_mat(x, p=0.5, draw=None, batch=False):
     "Return a random flip matrix"
     def _def_draw(x): return x.new_ones(x.size(0))
-    mask = x.new_ones(x.size(0)) - 2*_draw_mask(x, _def_draw, draw=draw, p=p)
+    mask = x.new_ones(x.size(0)) - 2*_draw_mask(x, _def_draw, draw=draw, p=p, batch=batch)
     #mask = mask_tensor(-x.new_ones(x.size(0)), p=p, neutral=1.)
     return affine_mat(mask,     t0(mask), t0(mask),
                       t0(mask), t1(mask), t0(mask))
@@ -392,14 +393,14 @@ def _get_default(x, mode=None, pad_mode=None):
 
 #Cell
 @patch
-def flip_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
+def flip_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, draw=None, size=None, mode=None, pad_mode=None, batch=False):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
-    return x.affine_coord(mat=flip_mat(x0, p=p, draw=draw)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
+    return x.affine_coord(mat=flip_mat(x0, p=p, draw=draw, batch=batch)[:,:2], sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
-def Flip(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+def Flip(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection, batch=False):
     "Randomly flip a batch of images with a probability `p`"
-    return AffineCoordTfm(aff_fs=partial(flip_mat, p=p, draw=draw), size=size, mode=mode, pad_mode=pad_mode)
+    return AffineCoordTfm(aff_fs=partial(flip_mat, p=p, draw=draw, batch=batch), size=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 class DeterministicDraw():
@@ -417,30 +418,29 @@ def DeterministicFlip(size=None, mode='bilinear', pad_mode=PadMode.Reflection):
     return Flip(p=1., draw=DeterministicDraw([0,1]))
 
 #Cell
-def dihedral_mat(x, p=0.5, draw=None):
+def dihedral_mat(x, p=0.5, draw=None, batch=False):
     "Return a random dihedral matrix"
-    def _def_draw(x): return torch.randint(0,8, (x.size(0),), device=x.device)
-    idx = _draw_mask(x, _def_draw, draw=draw, p=p).long()
+    def _def_draw(x):   return torch.randint(0,8, (x.size(0),), device=x.device)
+    def _def_draw_b(x): return random.randint(0,7) + x.new_zeros((x.size(0),)).long()
+    idx = _draw_mask(x, _def_draw_b if batch else _def_draw, draw=draw, p=p, batch=batch).long()
     xs = tensor([1,-1,1,-1,-1,1,1,-1], device=x.device).gather(0, idx)
     ys = tensor([1,1,-1,1,-1,-1,1,-1], device=x.device).gather(0, idx)
     m0 = tensor([1,1,1,0,1,0,0,0], device=x.device).gather(0, idx)
     m1 = tensor([0,0,0,1,0,1,1,1], device=x.device).gather(0, idx)
-    res = affine_mat(xs*m0,  xs*m1,  t0(xs),
-                      ys*m1,  ys*m0,  t0(xs)).float()
     return affine_mat(xs*m0,  xs*m1,  t0(xs),
                       ys*m1,  ys*m0,  t0(xs)).float()
 
 #Cell
 @patch
-def dihedral_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, draw=None, size=None, mode=None, pad_mode=None):
+def dihedral_batch(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), p=0.5, draw=None, size=None, mode=None, pad_mode=None, batch=False):
     x0,mode,pad_mode = _get_default(x, mode, pad_mode)
-    mat = _prepare_mat(x, dihedral_mat(x0, p=p, draw=draw))
+    mat = _prepare_mat(x, dihedral_mat(x0, p=p, draw=draw, batch=batch))
     return x.affine_coord(mat=mat, sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
-def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+def Dihedral(p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection, batch=False):
     "Apply a random dihedral transformation to a batch of images with a probability `p`"
-    return AffineCoordTfm(aff_fs=partial(dihedral_mat, p=p, draw=draw), size=size, mode=mode, pad_mode=pad_mode)
+    return AffineCoordTfm(aff_fs=partial(dihedral_mat, p=p, draw=draw, batch=batch), size=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
 def DeterministicDihedral(size=None, mode='bilinear', pad_mode=PadMode.Reflection):
@@ -448,10 +448,11 @@ def DeterministicDihedral(size=None, mode='bilinear', pad_mode=PadMode.Reflectio
     return Dihedral(p=1., draw=DeterministicDraw(list(range(8))))
 
 #Cell
-def rotate_mat(x, max_deg=10, p=0.5, draw=None):
+def rotate_mat(x, max_deg=10, p=0.5, draw=None, batch=False):
     "Return a random rotation matrix with `max_deg` and `p`"
-    def _def_draw(x): return x.new(x.size(0)).uniform_(-max_deg, max_deg)
-    thetas = _draw_mask(x, _def_draw, draw=draw, p=p) * math.pi/180
+    def _def_draw(x):   return x.new(x.size(0)).uniform_(-max_deg, max_deg)
+    def _def_draw_b(x): return x.new_zeros(x.size(0)) + random.uniform(-max_deg, max_deg)
+    thetas = _draw_mask(x, _def_draw_b if batch else _def_draw, draw=draw, p=p, batch=batch) * math.pi/180
     return affine_mat(thetas.cos(), thetas.sin(), t0(thetas),
                      -thetas.sin(), thetas.cos(), t0(thetas))
 
@@ -464,19 +465,22 @@ def rotate(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), size=None, mode=N
     return x.affine_coord(mat=mat, sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
-def Rotate(max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+def Rotate(max_deg=10, p=0.5, draw=None, size=None, mode='bilinear', pad_mode=PadMode.Reflection, batch=False):
     "Apply a random rotation of at most `max_deg` with probability `p` to a batch of images"
-    return AffineCoordTfm(partial(rotate_mat, max_deg=max_deg, p=p, draw=draw),
+    return AffineCoordTfm(partial(rotate_mat, max_deg=max_deg, p=p, draw=draw, batch=batch),
                           size=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
-def zoom_mat(x, max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None):
+def zoom_mat(x, max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None, batch=False):
     "Return a random zoom matrix with `max_zoom` and `p`"
-    def _def_draw(x):     return x.new(x.size(0)).uniform_(1, max_zoom)
-    def _def_draw_ctr(x): return x.new(x.size(0)).uniform_(0,1)
-    s = 1/_draw_mask(x, _def_draw, draw=draw, p=p, neutral=1.)
-    col_pct = _draw_mask(x, _def_draw_ctr, draw=draw_x, p=1.)
-    row_pct = _draw_mask(x, _def_draw_ctr, draw=draw_y, p=1.)
+    def _def_draw(x):       return x.new(x.size(0)).uniform_(1, max_zoom)
+    def _def_draw_b(x):     return x.new_zeros(x.size(0)) + random.uniform(1, max_zoom)
+    def _def_draw_ctr(x):   return x.new(x.size(0)).uniform_(0,1)
+    def _def_draw_ctr_b(x): return x.new_zeros(x.size(0)) + random.uniform(0,1)
+    s = 1/_draw_mask(x, _def_draw_b if batch else _def_draw, draw=draw, p=p, neutral=1., batch=batch)
+    def_draw_c = _def_draw_ctr_b if batch else _def_draw_ctr
+    col_pct = _draw_mask(x, def_draw_c, draw=draw_x, p=1., batch=batch)
+    row_pct = _draw_mask(x, def_draw_c, draw=draw_y, p=1., batch=batch)
     col_c = (1-s) * (2*col_pct - 1)
     row_c = (1-s) * (2*row_pct - 1)
     return affine_mat(s,     t0(s), col_c,
@@ -491,9 +495,9 @@ def zoom(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), size=None, mode='bi
 
 #Cell
 def Zoom(max_zoom=1.1, p=0.5, draw=None, draw_x=None, draw_y=None, size=None, mode='bilinear',
-         pad_mode=PadMode.Reflection):
+         pad_mode=PadMode.Reflection, batch=False):
     "Apply a random zoom of at most `max_zoom` with probability `p` to a batch of images"
-    return AffineCoordTfm(partial(zoom_mat, max_zoom=max_zoom, p=p, draw=draw, draw_x=draw_x, draw_y=draw_y),
+    return AffineCoordTfm(partial(zoom_mat, max_zoom=max_zoom, p=p, draw=draw, draw_x=draw_x, draw_y=draw_y, batch=batch),
                           size=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
@@ -522,13 +526,17 @@ def apply_perspective(coords, coeffs):
 
 #Cell
 class _WarpCoord():
-    def __init__(self, magnitude=0.2, p=0.5, draw_x=None, draw_y=None):
-        self.coeffs,self.magnitude,self.p,self.draw_x,self.draw_y = None,magnitude,p,draw_x,draw_y
+    def __init__(self, magnitude=0.2, p=0.5, draw_x=None, draw_y=None, batch=False):
+        store_attr(self, "magnitude,p,draw_x,draw_y,batch")
+        self.coeffs = None
 
-    def _def_draw(self, x): return x.new(x.size(0)).uniform_(-self.magnitude, self.magnitude)
+    def _def_draw(self, x):
+        if not self.batch: return x.new(x.size(0)).uniform_(-self.magnitude, self.magnitude)
+        return x.new_zeros(x.size(0)) + random.uniform(-self.magnitude, self.magnitude)
+
     def before_call(self, x):
-        x_t = _draw_mask(x, self._def_draw, self.draw_x, p=self.p)
-        y_t = _draw_mask(x, self._def_draw, self.draw_y, p=self.p)
+        x_t = _draw_mask(x, self._def_draw, self.draw_x, p=self.p, batch=self.batch)
+        y_t = _draw_mask(x, self._def_draw, self.draw_y, p=self.p, batch=self.batch)
         orig_pts = torch.tensor([[-1,-1], [-1,1], [1,-1], [1,1]], dtype=x.dtype, device=x.device)
         self.orig_pts = orig_pts.unsqueeze(0).expand(x.size(0),4,2)
         targ_pts = stack([stack([-1-y_t, -1-x_t]), stack([-1+y_t, 1+x_t]),
@@ -549,9 +557,9 @@ def warp(x: (TensorImage,TensorMask,TensorPoint,TensorBBox), size=None, mode='bi
     return x.affine_coord(coord_tfm=coord_tfm, sz=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
-def Warp(magnitude=0.2, p=0.5, draw_x=None, draw_y=None,size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+def Warp(magnitude=0.2, p=0.5, draw_x=None, draw_y=None,size=None, mode='bilinear', pad_mode=PadMode.Reflection, batch=False):
     "Apply perspective warping with `magnitude` and `p` on a batch of matrices"
-    return AffineCoordTfm(coord_fs=_WarpCoord(magnitude=magnitude, p=p, draw_x=draw_x, draw_y=draw_y),
+    return AffineCoordTfm(coord_fs=_WarpCoord(magnitude=magnitude, p=p, draw_x=draw_x, draw_y=draw_y, batch=batch),
                           size=size, mode=mode, pad_mode=pad_mode)
 
 #Cell
@@ -577,13 +585,15 @@ class LightingTfm(RandTransform):
 
 #Cell
 class _BrightnessLogit():
-    def __init__(self, max_lighting=0.2, p=0.75, draw=None):
-        self.max_lighting,self.p,self.draw = max_lighting,p,draw
+    def __init__(self, max_lighting=0.2, p=0.75, draw=None, batch=False):
+        store_attr(self, 'max_lighting,p,draw,batch')
 
-    def _def_draw(self, x): return x.new(x.size(0)).uniform_(0.5*(1-self.max_lighting), 0.5*(1+self.max_lighting))
+    def _def_draw(self, x):
+        if not self.batch: return x.new(x.size(0)).uniform_(0.5*(1-self.max_lighting), 0.5*(1+self.max_lighting))
+        return x.new_zeros(x.size(0)) + random.uniform(0.5*(1-self.max_lighting), 0.5*(1+self.max_lighting))
 
     def before_call(self, x):
-        self.change = _draw_mask(x, self._def_draw, draw=self.draw, p=self.p, neutral=0.5)
+        self.change = _draw_mask(x, self._def_draw, draw=self.draw, p=self.p, neutral=0.5, batch=self.batch)
 
     def __call__(self, x): return x.add_(logit(self.change[:,None,None,None]))
 
@@ -596,20 +606,22 @@ def brightness(x: TensorImage, **kwargs):
     return x.lighting(func)
 
 #Cell
-def Brightness(max_lighting=0.2, p=0.75, draw=None):
+def Brightness(max_lighting=0.2, p=0.75, draw=None, batch=False):
     "Apply change in brightness of `max_lighting` to batch of images with probability `p`."
-    return LightingTfm(_BrightnessLogit(max_lighting, p, draw))
+    return LightingTfm(_BrightnessLogit(max_lighting, p, draw, batch))
 
 #Cell
 class _ContrastLogit():
-    def __init__(self, max_lighting=0.2, p=0.75, draw=None):
-        self.max_lighting,self.p,self.draw = max_lighting,p,draw
+    def __init__(self, max_lighting=0.2, p=0.75, draw=None, batch=False):
+        store_attr(self, 'max_lighting,p,draw,batch')
 
     def _def_draw(self, x):
-        return torch.exp(x.new(x.size(0)).uniform_(math.log(1-self.max_lighting), -math.log(1-self.max_lighting)))
+        if not self.batch: res = x.new(x.size(0)).uniform_(math.log(1-self.max_lighting), -math.log(1-self.max_lighting))
+        else: res = x.new_zeros(x.size(0)) + random.uniform(math.log(1-self.max_lighting), -math.log(1-self.max_lighting))
+        return torch.exp(res)
 
     def before_call(self, x):
-        self.change = _draw_mask(x, self._def_draw, draw=self.draw, p=self.p, neutral=1.)
+        self.change = _draw_mask(x, self._def_draw, draw=self.draw, p=self.p, neutral=1., batch=self.batch)
 
     def __call__(self, x): return x.mul_(self.change[:,None,None,None])
 
@@ -622,9 +634,9 @@ def contrast(x: TensorImage, **kwargs):
     return x.lighting(func)
 
 #Cell
-def Contrast(max_lighting=0.2, p=0.75, draw=None):
+def Contrast(max_lighting=0.2, p=0.75, draw=None, batch=False):
     "Apply change in contrast of `max_lighting` to batch of images with probability `p`."
-    return LightingTfm(_ContrastLogit(max_lighting, p, draw))
+    return LightingTfm(_ContrastLogit(max_lighting, p, draw, batch))
 
 #Cell
 def _compose_same_tfms(tfms):
@@ -648,9 +660,9 @@ def setup_aug_tfms(tfms):
 #Cell
 def aug_transforms(do_flip=True, flip_vert=False, max_rotate=10., max_zoom=1.1, max_lighting=0.2,
                    max_warp=0.2, p_affine=0.75, p_lighting=0.75, xtra_tfms=None,
-                   size=None, mode='bilinear', pad_mode=PadMode.Reflection):
+                   size=None, mode='bilinear', pad_mode=PadMode.Reflection, batch=False):
     "Utility func to easily create a list of flip, rotate, zoom, warp, lighting transforms."
-    res,tkw = [],dict(size=size, mode=mode, pad_mode=pad_mode)
+    res,tkw = [],dict(size=size, mode=mode, pad_mode=pad_mode, batch=batch)
     if do_flip: res.append(Dihedral(p=0.5, **tkw) if flip_vert else Flip(p=0.5, **tkw))
     if max_warp:   res.append(Warp(magnitude=max_warp, p=p_affine, **tkw))
     if max_rotate: res.append(Rotate(max_deg=max_rotate, p=p_affine, **tkw))
