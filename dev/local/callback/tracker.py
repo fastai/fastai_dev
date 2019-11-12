@@ -44,6 +44,7 @@ class TrackerCallback(Callback):
 
     def after_epoch(self):
         "Compare the last value to the best up to know"
+        if hasattr(self, "lr_finder"): return
         val = self.recorder.values[-1][self.idx]
         if self.comp(val - self.min_delta, self.best): self.best,self.new_best = val,True
         else: self.new_best = False
@@ -59,6 +60,7 @@ class EarlyStoppingCallback(TrackerCallback):
     def after_epoch(self):
         "Compare the value monitored to its best score and maybe stop training."
         super().after_epoch()
+        if hasattr(self, "lr_finder"): return
         if self.new_best: self.wait = 0
         else:
             self.wait += 1
@@ -80,6 +82,7 @@ class SaveModelCallback(TrackerCallback):
 
     def after_epoch(self):
         "Compare the value monitored to its best score and save if best."
+        if hasattr(self, "lr_finder"): return
         if self.every_epoch: self._save(f'{self.fname}_{self.epoch}')
         else: #every improvement
             super().after_epoch()
@@ -100,6 +103,7 @@ class ReduceLROnPlateau(TrackerCallback):
     def after_epoch(self):
         "Compare the value monitored to its best score and reduce LR by `factor` if no improvement."
         super().after_epoch()
+        if hasattr(self, "lr_finder"): return
         if self.new_best: self.wait = 0
         else:
             self.wait += 1
