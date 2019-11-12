@@ -13,12 +13,12 @@ from .optimizer import *
 #Cell
 class Callback(GetAttr):
     "Basic class handling tweaks of the training loop by changing a `Learner` in various events"
-    _default,learn = 'learn',None
+    _default,learn,run = 'learn',None,True
     def __repr__(self): return type(self).__name__
 
     def __call__(self, event_name):
         "Call `self.{event_name}` if it's defined"
-        getattr(self, event_name, noop)()
+        if self.run: getattr(self, event_name, noop)()
 
     @property
     def name(self):
