@@ -2,12 +2,12 @@
 
 __all__ = ['Identity', 'Lambda', 'PartialLambda', 'View', 'ResizeBatch', 'Flatten', 'Debugger', 'sigmoid_range',
            'SigmoidRange', 'AdaptiveConcatPool2d', 'PoolType', 'pool_layer', 'PoolFlatten', 'NormType', 'BatchNorm',
-           'BatchNorm1dFlat', 'LinBnDrop', 'init_default', 'ConvLayer', 'BaseLoss', 'CrossEntropyLossFlat',
-           'BCEWithLogitsLossFlat', 'BCELossFlat', 'MSELossFlat', 'LabelSmoothingCrossEntropy', 'trunc_normal_',
-           'Embedding', 'SelfAttention', 'PooledSelfAttention2d', 'SimpleSelfAttention', 'icnr_init',
-           'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN', 'ResBlock', 'swish', 'Swish',
-           'MishJitAutoFn', 'mish', 'MishJit', 'ParameterModule', 'children_and_parameters', 'TstModule', 'tst',
-           'children', 'flatten_model', 'NoneReduce', 'in_channels']
+           'BatchNorm1dFlat', 'LinBnDrop', 'init_default', 'ConvLayer', 'AdaptiveAvgPool', 'MaxPool', 'AvgPool',
+           'BaseLoss', 'CrossEntropyLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat', 'MSELossFlat',
+           'LabelSmoothingCrossEntropy', 'trunc_normal_', 'Embedding', 'SelfAttention', 'PooledSelfAttention2d',
+           'SimpleSelfAttention', 'icnr_init', 'PixelShuffle_ICNR', 'SequentialEx', 'MergeLayer', 'Cat', 'SimpleCNN',
+           'ResBlock', 'swish', 'Swish', 'MishJitAutoFn', 'mish', 'MishJit', 'ParameterModule',
+           'children_and_parameters', 'TstModule', 'tst', 'children', 'flatten_model', 'NoneReduce', 'in_channels']
 
 #Cell
 from .core.all import *
@@ -165,6 +165,24 @@ class ConvLayer(nn.Sequential):
         layers += act_bn
         if xtra: layers.append(xtra)
         super().__init__(*layers)
+
+#Cell
+def AdaptiveAvgPool(sz=1, ndim=2):
+    "nn.AdaptiveAvgPool layer for `ndim`"
+    assert 1 <= ndim <= 3
+    return getattr(nn, f"AdaptiveAvgPool{ndim}d")(sz)
+
+#Cell
+def MaxPool(ks=2, stride=None, padding=0, ndim=2):
+    "nn.MaxPool layer for `ndim`"
+    assert 1 <= ndim <= 3
+    return getattr(nn, f"MaxPool{ndim}d")(ks, stride=stride, padding=padding)
+
+#Cell
+def AvgPool(ks=2, stride=None, padding=0, ndim=2, ceil_mode=False):
+    "nn.AvgPool layer for `ndim`"
+    assert 1 <= ndim <= 3
+    return getattr(nn, f"AvgPool{ndim}d")(ks, stride=stride, padding=padding, ceil_mode=ceil_mode)
 
 #Cell
 @funcs_kwargs
@@ -396,21 +414,21 @@ class ResBlock(nn.Module):
     "Resnet block from `ni` to `nh` with `stride`"
     @delegates(ConvLayer.__init__)
     def __init__(self, expansion, ni, nh, stride=1, sa=False, sym=False,
-                 norm_type=NormType.Batch, act_cls=defaults.activation, **kwargs):
+                 norm_type=NormType.Batch, act_cls=defaults.activation, ndim=2, **kwargs):
         super().__init__()
         norm2 = NormType.BatchZero if norm_type==NormType.Batch else norm_type
         nf,ni = nh*expansion,ni*expansion
-        layers  = [ConvLayer(ni, nh, 3, stride=stride, norm_type=norm_type, act_cls=act_cls, **kwargs),
-                   ConvLayer(nh, nf, 3, norm_type=norm2, act_cls=None, **kwargs)
+        layers  = [ConvLayer(ni, nh, 3, stride=stride, norm_type=norm_type, act_cls=act_cls, ndim=ndim, **kwargs),
+                   ConvLayer(nh, nf, 3, norm_type=norm2, act_cls=None, ndim=ndim, **kwargs)
         ] if expansion == 1 else [
-                   ConvLayer(ni, nh, 1, norm_type=norm_type, act_cls=act_cls, **kwargs),
-                   ConvLayer(nh, nh, 3, stride=stride, norm_type=norm_type, act_cls=act_cls, **kwargs),
-                   ConvLayer(nh, nf, 1, norm_type=norm2, act_cls=None, **kwargs)
+                   ConvLayer(ni, nh, 1, norm_type=norm_type, act_cls=act_cls, ndim=ndim, **kwargs),
+                   ConvLayer(nh, nh, 3, stride=stride, norm_type=norm_type, act_cls=act_cls, ndim=ndim, **kwargs),
+                   ConvLayer(nh, nf, 1, norm_type=norm2, act_cls=None, ndim=ndim, **kwargs)
         ]
         self.convs = nn.Sequential(*layers)
         self.sa = SimpleSelfAttention(nf,ks=1,sym=sym) if sa else noop
-        self.idconv = noop if ni==nf else ConvLayer(ni, nf, 1, act_cls=None, **kwargs)
-        self.pool = noop if stride==1 else nn.AvgPool2d(2, ceil_mode=True)
+        self.idconv = noop if ni==nf else ConvLayer(ni, nf, 1, act_cls=None, ndim=ndim, **kwargs)
+        self.pool = noop if stride==1 else AvgPool(2, ndim=ndim, ceil_mode=True)
         self.act = defaults.activation(inplace=True) if act_cls is defaults.activation else act_cls()
 
     def forward(self, x): return self.act(self.sa(self.convs(x)) + self.idconv(self.pool(x)))
