@@ -93,6 +93,9 @@ class DistributedTrainer(Callback):
         self.learn.dbunch.dls = [DistributedDL.from_dl(dl, rank_distrib(), num_distrib()) for dl in self.dbunch.dls]
         if rank_distrib() > 0: self.learn.logger=noop
 
+    def _wrap_dl(self, dl):
+        return dl if isinstance(dl, DistributedDL) else DistributedDL.from_dl(dl, rank_distrib(), num_distrib())
+
     def begin_epoch(self):
         for dl in self.dbunch.dls: dl.set_epoch(self.epoch)
 
