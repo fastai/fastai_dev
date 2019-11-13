@@ -159,6 +159,7 @@
   "to_device": "03_torchcore.ipynb",
   "to_cpu": "03_torchcore.ipynb",
   "to_np": "03_torchcore.ipynb",
+  "to_concat": "03_torchcore.ipynb",
   "TensorBase": "03_torchcore.ipynb",
   "TensorCategory": "03_torchcore.ipynb",
   "TensorMultiCategory": "03_torchcore.ipynb",

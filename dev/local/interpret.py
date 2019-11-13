@@ -31,6 +31,7 @@ class Interpretation():
 
     def plot_top_losses(self, k, largest=True, **kwargs):
         losses,idx = self.top_losses(k, largest)
+        if not isinstance(self.inputs, tuple): self.inputs = (self.inputs,)
         if isinstance(self.inputs[0], Tensor): inps = tuple(o[idx] for o in self.inputs)
         else: inps = self.dl.create_batch(self.dl.before_batch([tuple(o[i] for o in self.inputs) for i in idx]))
         b = inps + tuple(o[idx] for o in (self.targs if is_listy(self.targs) else (self.targs,)))
@@ -38,7 +39,7 @@ class Interpretation():
         b_out = inps + tuple(o[idx] for o in (self.decoded if is_listy(self.decoded) else (self.decoded,)))
         x1,y1,outs = self.dl._pre_show_batch(b_out, max_n=k)
         if its is not None:
-            plot_top_losses(x, y, its, outs.itemgot(slice(len(self.inputs), None)), self.preds[idx], losses,  **kwargs)
+            plot_top_losses(x, y, its, outs.itemgot(slice(len(inps), None)), self.preds[idx], losses,  **kwargs)
         #TODO: figure out if this is needed
         #its None means that a batch knos how to show itself as a whole, so we pass x, x1
         #else: show_results(x, x1, its, ctxs=ctxs, max_n=max_n, **kwargs)

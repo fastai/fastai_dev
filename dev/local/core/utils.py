@@ -111,7 +111,7 @@ def tuplify(o, use_list=False, match=None):
 #Cell
 def detuplify(x):
     "If `x` is a tuple with one thing, extract it"
-    return None if len(x)==0 else x[0] if len(x)==1 else x
+    return None if len(x)==0 else x[0] if len(x)==1 and getattr(x, 'ndim', 1)==1 else x
 
 #Cell
 def replicate(item,match):
@@ -120,7 +120,7 @@ def replicate(item,match):
 
 #Cell
 def uniqueify(x, sort=False, bidir=False, start=None):
-    "Return the unique elements in `x`, optionally `sort`-ed, optionally return the reverse correspondance."
+    "Return the unique elements in `x`, optionally `sort`-ed, optionally return the reverse correspondence."
     res = L(x).unique()
     if start is not None: res = start+res
     if sort: res.sort()

@@ -39,7 +39,9 @@ class ProgressCallback(Callback):
         self.pbar.update(0)
 
     def after_fit(self):
-        if getattr(self, 'mbar', False): self.mbar.on_iter_end()
+        if getattr(self, 'mbar', False):
+            self.mbar.on_iter_end()
+            delattr(self, 'mbar')
         self.learn.logger = self.old_logger
 
     def _write_stats(self, log):

@@ -51,14 +51,7 @@ class TrainEvalCallback(Callback):
         self.learn.training=False
 
 #Cell
-def _maybe_reduce(val):
-    if num_distrib()>1:
-        val = val.clone()
-        torch.distributed.all_reduce(val, op=torch.distributed.ReduceOp.SUM)
-        val /= num_distrib()
-    return val
-
-#Cell
+#TODO: save_targs and save_preds only handle preds/targets that have one tensor, not tuples of tensors.
 class GatherPredsCallback(Callback):
     "`Callback` that saves the predictions and targets, optionally `with_loss`"
     def __init__(self, with_input=False, with_loss=False, save_preds=None, save_targs=None):
@@ -75,20 +68,28 @@ class GatherPredsCallback(Callback):
 
     def after_batch(self):
         "Save predictions, targets and potentially losses"
-        preds = to_detach(self.pred)
+        preds,targs = to_detach(self.pred),to_detach(self.yb)
         if self.save_preds is None: self.preds.append(preds)
-        else:
-            (self.save_preds/str(self.iter)).save_array(preds)
-#             self.preds.append(preds[0][None])
-        targs = to_detach(self.yb)
+        else: (self.save_preds/str(self.iter)).save_array(preds)
         if self.save_targs is None: self.targets.append(targs)
-        else:
-            (self.save_targs/str(self.iter)).save_array(targs[0])
-#             self.targets.append(targs[0][None])
+        else: (self.save_targs/str(self.iter)).save_array(targs[0])
         if self.with_loss:
             bs = find_bs(self.yb)
             loss = self.loss if self.loss.numel() == bs else self.loss.view(bs,-1).mean(1)
             self.losses.append(to_detach(loss))
+
+    def after_fit(self):
+        "Concatenate all recorded tensors"
+        if self.with_input:     self.inputs  = detuplify(to_concat(self.inputs))
+        if not self.save_preds: self.preds   = detuplify(to_concat(self.preds))
+        if not self.save_targs: self.targets = detuplify(to_concat(self.targets))
+        if self.with_loss:      self.losses  = to_concat(self.losses)
+
+    def all_tensors(self):
+        res = [None if self.save_preds else self.preds, None if self.save_targs else self.targets]
+        if self.with_input: res = [self.inputs] + res
+        if self.with_loss:  res.append(self.losses)
+        return res
 
 #Cell
 _ex_docs = dict(
@@ -111,6 +112,15 @@ mk_class('event', **_events.map_dict(),
 
 _before_epoch = [event.begin_fit, event.begin_epoch]
 _after_epoch  = [event.after_epoch, event.after_fit]
+
+#Cell
+_loop = ['Start Fit', 'begin_fit', 'Start Epoch Loop', 'begin_epoch', 'Start Train', 'begin_train',
+         'Start Batch Loop', 'begin_batch', 'after_pred', 'after_loss', 'after_backward',
+         'after_step', 'after_cancel_batch', 'after_batch','End Batch Loop','End Train',
+         'after_cancel_train', 'after_train', 'Start Valid', 'begin_validate','Start Batch Loop',
+         '**CBs same as train batch**', 'End Batch Loop', 'End Valid', 'after_cancel_validate',
+         'after_validate', 'End Epoch Loop', 'after_cancel_epoch', 'after_epoch', 'End Fit',
+         'after_cancel_fit', 'after_fit']
 
 #Cell
 defaults.lr = slice(3e-3)
@@ -277,7 +287,6 @@ class Learner():
             finally:                               self('after_fit')
 
     def validate(self, ds_idx=1, dl=None, cbs=None):
-        #self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
         if dl is None: dl = self.dbunch.dls[ds_idx]
         with self.added_cbs(cbs), self.no_logging(), self.no_mbar():
             self(_before_epoch)
@@ -285,31 +294,27 @@ class Learner():
             self(_after_epoch)
         return self.recorder.values[-1]
 
-    def get_preds(self, ds_idx=1, dl=None, with_input=False, with_loss=False, with_decoded=False, act=None,
-                 save_preds=None, save_targs=None):
-        #self.epoch,self.n_epoch,self.loss = 0,1,tensor(0.)
-        cb = GatherPredsCallback(with_input=with_input, with_loss=with_loss, save_preds=save_preds, save_targs=save_targs)
+    @delegates(GatherPredsCallback.__init__)
+    def get_preds(self, ds_idx=1, dl=None, with_input=False, with_decoded=False, act=None, **kwargs):
+        cb = GatherPredsCallback(with_input=with_input, **kwargs)
         with self.no_logging(), self.added_cbs(cb), self.loss_not_reduced(), self.no_mbar():
             self(_before_epoch)
             self._do_epoch_validate(ds_idx, dl)
             self(_after_epoch)
             if act is None: act = getattr(self.loss_func, 'activation', noop)
-            res = []
-            if len(cb.preds):
-                preds = act(torch.cat(cb.preds))
-                res.append(preds)
-                if with_decoded: res.append(getattr(self.loss_func, 'decodes', noop)(preds))
-            res.append(detuplify(tuple(torch.cat(o) for o in zip(*cb.targets))))
-            if with_input: res = [tuple(_try_concat(o) for o in zip(*cb.inputs))] + res
-            if with_loss:  res.append(torch.cat(cb.losses))
-            return res
+            res = cb.all_tensors()
+            pred_i = 1 if with_input else 0
+            if res[pred_i] is not None:
+                res[pred_i] = act(res[pred_i])
+                if with_decoded: res.insert(pred_i+2, getattr(self.loss_func, 'decodes', noop)(res[pred_i]))
+            return tuple(res)
 
     def predict(self, item, rm_type_tfms=0):
         dl = test_dl(self.dbunch, [item], rm_type_tfms=rm_type_tfms)
-        inp,preds,_ = self.get_preds(dl=dl, with_input=True)
-        dec_preds = getattr(self.loss_func, 'decodes', noop)(preds)
+        inp,preds,_,dec_preds = self.get_preds(dl=dl, with_input=True, with_decoded=True)
+        #dec_preds = getattr(self.loss_func, 'decodes', noop)(preds)
         i = getattr(self.dbunch, 'n_inp', -1)
-        full_dec = self.dbunch.decode_batch((*inp,dec_preds))[0][i:]
+        full_dec = self.dbunch.decode_batch((*tuplify(inp),*tuplify(dec_preds)))[0][i:]
         return detuplify(full_dec),dec_preds[0],preds[0]
 
     def show_results(self, ds_idx=0, dl=None, max_n=10, **kwargs):
@@ -319,15 +324,8 @@ class Learner():
         self.dbunch.show_results(b, preds, max_n=max_n, **kwargs)
 
     def show_training_loop(self):
-        loop = ['Start Fit', 'begin_fit', 'Start Epoch Loop', 'begin_epoch', 'Start Train', 'begin_train',
-                'Start Batch Loop', 'begin_batch', 'after_pred', 'after_loss', 'after_backward',
-                'after_step', 'after_cancel_batch', 'after_batch','End Batch Loop','End Train',
-                'after_cancel_train', 'after_train', 'Start Valid', 'begin_validate','Start Batch Loop',
-                '**CBs same as train batch**', 'End Batch Loop', 'End Valid', 'after_cancel_validate',
-                'after_validate', 'End Epoch Loop', 'after_cancel_epoch', 'after_epoch', 'End Fit',
-                'after_cancel_fit', 'after_fit']
         indent = 0
-        for s in loop:
+        for s in _loop:
             if s.startswith('Start'): print(f'{" "*indent}{s}'); indent += 2
             elif s.startswith('End'): indent -= 2; print(f'{" "*indent}{s}')
             else: print(f'{" "*indent} - {s:15}:', self.ordered_cbs(s))
