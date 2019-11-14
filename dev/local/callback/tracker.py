@@ -38,7 +38,7 @@ class TrackerCallback(Callback):
 
     def begin_fit(self):
         "Prepare the monitored value"
-        self.run = not hasattr(self, "lr_finder")
+        self.run = not hasattr(self, "lr_finder") and not hasattr(self, "gather_preds")
         self.best = float('inf') if self.comp == np.less else -float('inf')
         assert self.monitor in self.recorder.metric_names[1:]
         self.idx = list(self.recorder.metric_names[1:]).index(self.monitor)
