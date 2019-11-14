@@ -40,9 +40,9 @@ extension Learner {
                 if let yb = learner.currentTarget as? Tensor<Float>{
                     var lambda = Tensor<Float>(distribution.next(Int(yb.shape[0])))
                     lambda = max(lambda, 1-lambda)
-                    let shuffle = Raw.randomShuffle(value: Tensor<Int32>(0..<Int32(yb.shape[0])))
-                    let xba = Raw.gather(params: xb, indices: shuffle)
-                    let yba = Raw.gather(params: yb, indices: shuffle)
+                    let shuffle = _Raw.randomShuffle(value: Tensor<Int32>(0..<Int32(yb.shape[0])))
+                    let xba = _Raw.gather(params: xb, indices: shuffle)
+                    let yba = _Raw.gather(params: yb, indices: shuffle)
                     lambda = lambda.expandingShape(at: 1)
                     learner.currentInput = lambda * xb + (1-lambda) * xba
                     learner.currentTarget = (lambda * yb + (1-lambda) * yba) as? Label

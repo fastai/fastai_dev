@@ -19,7 +19,7 @@ public func downloadImagenette(path: Path = dataPath, sz:String="-160") -> Path 
     try! path.mkdir(.p)
     if !file.exists {
         downloadFile(url, dest:(path/"\(fname).tgz").string)
-        _ = "/bin/tar".shell("-xzf", (path/"\(fname).tgz").string, "-C", path.string)
+        _ = "/usr/bin/env".shell("tar", "-xzf", (path/"\(fname).tgz").string, "-C", path.string)
     }
     return file
 }
@@ -236,7 +236,7 @@ where I: TensorGroup, TI: TensorGroup & Differentiable, L: TensorGroup{
 
 public func openAndResize(fname: StringTensor, size: Int) -> TF{
     let decodedImg = StringTensor(readFile: fname).decodeJpeg(channels: 3)
-    let resizedImg = Tensor<Float>(Raw.resizeBilinear(
+    let resizedImg = Tensor<Float>(_Raw.resizeBilinear(
         images: Tensor<UInt8>([decodedImg]), 
         size: Tensor<Int32>([Int32(size), Int32(size)]))) / 255.0
     return resizedImg.reshaped(to: TensorShape(size, size, 3))

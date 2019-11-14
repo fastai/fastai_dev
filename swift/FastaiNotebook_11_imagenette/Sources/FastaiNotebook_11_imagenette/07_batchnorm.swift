@@ -151,7 +151,7 @@ public struct TFBatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
     static func fusedBatchNorm(
         _ x : Tensor<Scalar>, scale: Tensor<Scalar>, offset: Tensor<Scalar>, epsilon: Scalar
     ) -> BatchNormResult<Scalar> {
-        let ret = Raw.fusedBatchNormV2(
+        let ret = _Raw.fusedBatchNormV2(
             x, scale: scale, offset: offset, 
             mean: Tensor<Scalar>([] as [Scalar]), variance: Tensor<Scalar>([] as [Scalar]), 
             epsilon: Double(epsilon))
@@ -172,7 +172,7 @@ public struct TFBatchNorm<Scalar: TensorFlowFloatingPoint>: LearningPhaseDepende
         return (
             bnresult, 
             {v in 
-                let res = Raw.fusedBatchNormGradV2(
+                let res = _Raw.fusedBatchNormGradV2(
                     yBackprop: v.y, x, scale: Tensor<Float>(scale), 
                     reserveSpace1: bnresult.reserveSpace1, 
                     reserveSpace2: bnresult.reserveSpace2, 

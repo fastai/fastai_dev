@@ -15,12 +15,12 @@ public extension StringTensor {
         self.init(readFile: StringTensor(filename))
     }
     init(readFile filename: StringTensor) {
-        self = Raw.readFile(filename: filename)
+        self = _Raw.readFile(filename: filename)
     }
 
     // Decode a StringTensor holding a JPEG file into a Tensor<UInt8>.
     func decodeJpeg(channels: Int = 0) -> Tensor<UInt8> {
-        return Raw.decodeJpeg(contents: self, channels: Int64(channels), dctMethod: "") 
+        return _Raw.decodeJpeg(contents: self, channels: Int64(channels), dctMethod: "") 
     }
 }
 
