@@ -214,7 +214,6 @@ qhadam_step._defaults = dict(eps=1e-8)
 #Cell
 def QHAdam(params, lr, mom=0.999, sqr_mom=0.999, nu_1=0.7, nu_2 = 1.0, eps=1e-8, wd=0., decouple_wd=True):
     "An `Optimizer` for Adam with `lr`, `mom`, `sqr_mom`, `nus`, eps` and `params`"
-    from functools  import partial
     steppers = [weight_decay] if decouple_wd else [l2_reg]
     steppers.append(qhadam_step)
     stats = [partial(average_grad, dampening=True), partial(average_sqr_grad, dampening=True), step_stat]
