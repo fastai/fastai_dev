@@ -2,8 +2,8 @@
 
 __all__ = ['Optimizer', 'sgd_step', 'weight_decay', 'l2_reg', 'average_grad', 'average_sqr_grad', 'momentum_step',
            'SGD', 'rms_prop_step', 'RMSProp', 'step_stat', 'debias', 'adam_step', 'Adam', 'radam_step', 'RAdam',
-           'larc_layer_lr', 'larc_step', 'Larc', 'lamb_step', 'Lamb', 'Lookahead', 'detuplify_pg', 'set_item_pg',
-           'pytorch_hp_map', 'OptimWrapper']
+           'qhadam_step', 'QHAdam', 'larc_layer_lr', 'larc_step', 'Larc', 'lamb_step', 'Lamb', 'Lookahead',
+           'detuplify_pg', 'set_item_pg', 'pytorch_hp_map', 'OptimWrapper']
 
 #Cell
 from .torch_basics import *
@@ -200,6 +200,25 @@ def RAdam(params, lr, mom=0.9, sqr_mom=0.99, eps=1e-5, wd=0., decouple_wd=True):
     steppers.append(radam_step)
     stats = [partial(average_grad, dampening=True), average_sqr_grad, step_stat]
     return Optimizer(params, steppers, stats=stats, lr=lr, mom=mom, sqr_mom=sqr_mom, eps=eps, wd=wd)
+
+#Cell
+def qhadam_step(p, lr, mom, sqr_mom, sqr_avg, nu_1, nu_2, step, grad_avg, eps, **kwargs):
+    debias1 = debias(mom,     1-mom,     step)
+    debias2 = debias(sqr_mom, 1-sqr_mom, step)
+    p.data.addcdiv_(-lr, ((1-nu_1) * p.grad.data) + (nu_1 * (grad_avg / debias1)),
+                    (((1 - nu_2) * (p.grad.data)**2) + (nu_2 * (sqr_avg / debias2))).sqrt() + eps)
+    return p
+
+qhadam_step._defaults = dict(eps=1e-8)
+
+#Cell
+def QHAdam(params, lr, mom=0.999, sqr_mom=0.999, nu_1=0.7, nu_2 = 1.0, eps=1e-8, wd=0., decouple_wd=True):
+    "An `Optimizer` for Adam with `lr`, `mom`, `sqr_mom`, `nus`, eps` and `params`"
+    steppers = [weight_decay] if decouple_wd else [l2_reg]
+    steppers.append(qhadam_step)
+    stats = [partial(average_grad, dampening=True), partial(average_sqr_grad, dampening=True), step_stat]
+    return Optimizer(params, steppers, stats=stats, lr=lr, nu_1=nu_1, nu_2=nu_2 ,
+                     mom=mom, sqr_mom=sqr_mom, eps=eps, wd=wd)
 
 #Cell
 def larc_layer_lr(state, p, lr, trust_coeff, wd, eps, clip=True, **kwargs):
