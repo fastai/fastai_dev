@@ -128,7 +128,8 @@ class RegexLabeller():
 class ColReader():
     "Read `cols` in `row` with potnetial `pref` and `suff`"
     def __init__(self, cols, pref='', suff='', label_delim=None):
-        store_attr(self, 'pref,suff,label_delim')
+        store_attr(self, 'suff,label_delim')
+        self.pref = str(pref) + os.path.separator if isinstance(pref, Path) else pref
         self.cols = L(cols)
 
     def _do_one(self, r, c):

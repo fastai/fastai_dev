@@ -424,7 +424,7 @@ class AvgMetric(Metric):
     @property
     def value(self): return self.total/self.count if self.count != 0 else None
     @property
-    def name(self):  return self.func.__name__
+    def name(self):  return self.func.func.__name__ if hasattr(self.func, 'func') else  self.func.__name__
 
 #Cell
 class AvgLoss(Metric):

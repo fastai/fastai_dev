@@ -43,13 +43,16 @@ class AccumMetric(Metric):
         if self.to_np: preds,targs = preds.numpy(),targs.numpy()
         return self.func(targs, preds, **self.kwargs) if self.invert_args else self.func(preds, targs, **self.kwargs)
 
+    @property
+    def name(self):  return self.func.func.__name__ if hasattr(self.func, 'func') else  self.func.__name__
+
 #Cell
 def skm_to_fastai(func, is_class=True, thresh=None, axis=-1, sigmoid=None, **kwargs):
     "Convert `func` from sklearn.metrics to a fastai metric"
     dim_argmax = axis if is_class and thresh is None else None
     sigmoid = sigmoid if sigmoid is not None else (is_class and thresh is not None)
     return AccumMetric(func, dim_argmax=dim_argmax, sigmoid=sigmoid, thresh=thresh,
-                     to_np=True, invert_arg=True, **kwargs)
+                       to_np=True, invert_arg=True, **kwargs)
 
 #Cell
 def optim_metric(f, argname, bounds, tol=0.01, do_neg=True, get_x=False):
@@ -175,60 +178,60 @@ def accuracy_multi(inp, targ, thresh=0.5, sigmoid=True):
 #Cell
 def APScoreMulti(thresh=0.5, sigmoid=True, average='macro', pos_label=1, sample_weight=None):
     "Average Precision for multi-label classification problems"
-    return skm_to_fastai(skm.average_precision_score, thresh=thresh, sigmoid=sigmoid,
+    return skm_to_fastai(skm.average_precision_score, thresh=thresh, sigmoid=sigmoid, flatten=False,
                          average=average, pos_label=pos_label, sample_weight=sample_weight)
 
 #Cell
 def BrierScoreMulti(thresh=0.5, sigmoid=True, sample_weight=None, pos_label=None):
     "Brier score for multi-label classification problems"
-    return skm_to_fastai(skm.brier_score_loss, thresh=thresh, sigmoid=sigmoid,
+    return skm_to_fastai(skm.brier_score_loss, thresh=thresh, sigmoid=sigmoid, flatten=False,
                          sample_weight=sample_weight, pos_label=pos_label)
 
 #Cell
-def F1ScoreMulti(thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='binary', sample_weight=None):
+def F1ScoreMulti(thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='macro', sample_weight=None):
     "F1 score for multi-label classification problems"
-    return skm_to_fastai(skm.f1_score, thresh=thresh, sigmoid=sigmoid,
+    return skm_to_fastai(skm.f1_score, thresh=thresh, sigmoid=sigmoid, flatten=False,
                          labels=labels, pos_label=pos_label, average=average, sample_weight=sample_weight)
 
 #Cell
-def FBetaMulti(beta, thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='binary', sample_weight=None):
+def FBetaMulti(beta, thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='macro', sample_weight=None):
     "FBeta score with `beta` for multi-label classification problems"
-    return skm_to_fastai(skm.fbeta_score, thresh=thresh, sigmoid=sigmoid,
+    return skm_to_fastai(skm.fbeta_score, thresh=thresh, sigmoid=sigmoid, flatten=False,
                 beta=beta, labels=labels, pos_label=pos_label, average=average, sample_weight=sample_weight)
 
 #Cell
 def HammingLossMulti(thresh=0.5, sigmoid=True, labels=None, sample_weight=None):
     "Cohen kappa for multi-label classification problems"
-    return skm_to_fastai(skm.hamming_loss, thresh=thresh, sigmoid=sigmoid,
+    return skm_to_fastai(skm.hamming_loss, thresh=thresh, sigmoid=sigmoid, flatten=False,
                          labels=labels, sample_weight=sample_weight)
 
 #Cell
-def JaccardMulti(thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='binary', sample_weight=None):
+def JaccardMulti(thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='macro', sample_weight=None):
     "Jaccard score for multi-label classification problems"
-    return skm_to_fastai(skm.jaccard_similarity_score, thresh=thresh, sigmoid=sigmoid,
+    return skm_to_fastai(skm.jaccard_similarity_score, thresh=thresh, sigmoid=sigmoid, flatten=False,
                          labels=labels, pos_label=pos_label, average=average, sample_weight=sample_weight)
 
 #Cell
 def MatthewsCorrCoefMulti(thresh=0.5, sigmoid=True, sample_weight=None):
     "Matthews correlation coefficient for multi-label classification problems"
-    return skm_to_fastai(skm.matthews_corrcoef, thresh=thresh, sigmoid=sigmoid, sample_weight=sample_weight)
+    return skm_to_fastai(skm.matthews_corrcoef, thresh=thresh, sigmoid=sigmoid, flatten=False, sample_weight=sample_weight)
 
 #Cell
-def PrecisionMulti(thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='binary', sample_weight=None):
+def PrecisionMulti(thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='macro', sample_weight=None):
     "Precision for multi-label classification problems"
-    return skm_to_fastai(skm.precision_score, thresh=thresh, sigmoid=sigmoid,
+    return skm_to_fastai(skm.precision_score, thresh=thresh, sigmoid=sigmoid, flatten=False,
                          labels=labels, pos_label=pos_label, average=average, sample_weight=sample_weight)
 
 #Cell
-def RecallMulti(thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='binary', sample_weight=None):
+def RecallMulti(thresh=0.5, sigmoid=True, labels=None, pos_label=1, average='macro', sample_weight=None):
     "Recall for multi-label classification problems"
-    return skm_to_fastai(skm.recall_score, thresh=thresh, sigmoid=sigmoid,
+    return skm_to_fastai(skm.recall_score, thresh=thresh, sigmoid=sigmoid, flatten=False,
                          labels=labels, pos_label=pos_label, average=average, sample_weight=sample_weight)
 
 #Cell
 def RocAucMulti(thresh=0.5, sigmoid=True, average='macro', sample_weight=None, max_fpr=None):
     "Area Under the Receiver Operating Characteristic Curve for multi-label binary classification problems"
-    return skm_to_fastai(skm.recall_score, thresh=thresh, sigmoid=sigmoid,
+    return skm_to_fastai(skm.recall_score, thresh=thresh, sigmoid=sigmoid, flatten=False,
                          laverage=average, sample_weight=sample_weight, max_fpr=max_fpr)
 
 #Cell
