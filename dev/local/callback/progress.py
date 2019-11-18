@@ -14,9 +14,7 @@ class ProgressCallback(Callback):
 
     def begin_fit(self):
         assert hasattr(self.learn, 'recorder')
-        if self.create_mbar:
-            self.mbar = master_bar(list(range(self.n_epoch)))
-            self.mbar.on_iter_begin()
+        if self.create_mbar: self.mbar = master_bar(list(range(self.n_epoch)))
         if self.learn.logger != noop:
             self.old_logger,self.learn.logger = self.logger,self._write_stats
             self._write_stats(self.recorder.metric_names)
