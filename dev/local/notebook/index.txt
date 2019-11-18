@@ -302,7 +302,7 @@
   "Cuda": "06_data_transforms.ipynb",
   "IntToFloatTensor": "06_data_transforms.ipynb",
   "broadcast_vec": "06_data_transforms.ipynb",
-  "Normalize": "40_tabular_core.ipynb",
+  "Normalize": "06_data_transforms.ipynb",
   "TransformBlock": "07_data_block.ipynb",
   "CategoryBlock": "07_data_block.ipynb",
   "MultiCategoryBlock": "07_data_block.ipynb",
