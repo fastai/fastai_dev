@@ -6,7 +6,7 @@ exec(open('dev/local/version.py').read())
 with open('README.md') as readme_file: readme = readme_file.read()
 
 requirements = """
-    torch>=1.2.0 torchvision matplotlib pandas requests pyyaml fastprogress pillow scikit-learn scipy spacy
+    torch>=1.2.0 torchvision matplotlib pandas requests pyyaml fastprogress>=0.1.22 pillow scikit-learn scipy spacy
 """.split()
 
 setup_requirements = ['setuptools>=36.2']

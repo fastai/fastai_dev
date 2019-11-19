@@ -3,8 +3,8 @@
 __all__ = ['UNK', 'PAD', 'BOS', 'EOS', 'FLD', 'TK_REP', 'TK_WREP', 'TK_UP', 'TK_MAJ', 'spec_add_spaces',
            'rm_useless_spaces', 'replace_rep', 'replace_wrep', 'fix_html', 'replace_all_caps', 'replace_maj',
            'lowercase', 'replace_space', 'BaseTokenizer', 'SpacyTokenizer', 'TokenizeBatch', 'tokenize1',
-           'parallel_tokenize', 'fn_counter_pkl', 'tokenize_folder', 'tokenize_df', 'tokenize_csv',
-           'load_tokenized_csv', 'SentencePieceTokenizer']
+           'parallel_tokenize', 'fn_counter_pkl', 'tokenize_folder', 'read_tokenized_file', 'tokenize_df',
+           'tokenize_csv', 'load_tokenized_csv', 'SentencePieceTokenizer']
 
 #Cell
 from ..torch_basics import *
@@ -161,6 +161,9 @@ def tokenize_folder(path, extensions=None, folders=None, output_dir=None, n_work
         counter.update(tok)
 
     (output_dir/fn_counter_pkl).save(counter)
+
+#Cell
+def read_tokenized_file(f): return L(f.read().split(' '))
 
 #Cell
 def _join_texts(df, mark_fields=False):

@@ -11,7 +11,7 @@ dependencies:
 - pandas
 - requests
 - pyyaml
-- fastprogress
+- fastprogress>=0.1.22
 - pillow
 - python>=3.6
 - pip

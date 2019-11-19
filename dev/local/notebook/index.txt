@@ -626,6 +626,7 @@
   "parallel_tokenize": "30_text_core.ipynb",
   "fn_counter_pkl": "30_text_core.ipynb",
   "tokenize_folder": "30_text_core.ipynb",
+  "read_tokenized_file": "30_text_core.ipynb",
   "tokenize_df": "30_text_core.ipynb",
   "tokenize_csv": "30_text_core.ipynb",
   "load_tokenized_csv": "30_text_core.ipynb",
