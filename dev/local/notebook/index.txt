@@ -339,7 +339,7 @@
   "RandTransform": "09_vision_augment.ipynb",
   "TensorTypes": "09_vision_augment.ipynb",
   "Image.Image.flip_lr": "09_vision_augment.ipynb",
-  "TensorImage.flip_lr": "09_vision_augment.ipynb",
+  "TensorImageBase.flip_lr": "09_vision_augment.ipynb",
   "TensorPoint.flip_lr": "09_vision_augment.ipynb",
   "TensorBBox.flip_lr": "09_vision_augment.ipynb",
   "FlipItem": "09_vision_augment.ipynb",

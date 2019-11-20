@@ -43,9 +43,9 @@ TensorTypes = (TensorImage,TensorMask,TensorPoint,TensorBBox)
 @patch
 def flip_lr(x:Image.Image): return x.transpose(Image.FLIP_LEFT_RIGHT)
 @patch
-def flip_lr(x:TensorImage): return x.flip(-1)
+def flip_lr(x:TensorImageBase): return x.flip(-1)
 @patch
-def flip_lr(x:TensorPoint): return _neg_axis(x, 0)
+def flip_lr(x:TensorPoint): return TensorPoint(_neg_axis(x.clone(), 0))
 @patch
 def flip_lr(x:TensorBBox):  return TensorBBox(TensorPoint(x.view(-1,2)).flip_lr().view(-1,4))
 
