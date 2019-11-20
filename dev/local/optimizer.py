@@ -179,27 +179,27 @@ def Adam(params, lr, mom=0.9, sqr_mom=0.99, eps=1e-5, wd=0., decouple_wd=True):
     return Optimizer(params, steppers, stats=stats, lr=lr, mom=mom, sqr_mom=sqr_mom, eps=eps, wd=wd)
 
 #Cell
-def radam_step(p, lr, mom, step, sqr_mom, grad_avg, sqr_avg, eps, **kwargs):
+def radam_step(p, lr, mom, step, sqr_mom, grad_avg, sqr_avg, eps, var_thresh, **kwargs):
     "Step for RAdam with `lr` on `p`"
     debias1 = debias(mom,     1-mom,     step)
     debias2 = debias(sqr_mom, 1-sqr_mom, step)
     r_inf = 2/(1-sqr_mom) - 1
     r = r_inf - 2*step*sqr_mom**step/(1-sqr_mom**step)
-    if r > 4:
+    if r > var_thresh:
         v = math.sqrt(((r-4) * (r-2) * r_inf)/((r_inf-4)*(r_inf-2)*r))
         p.data.addcdiv_(-lr*v / debias1, grad_avg, (sqr_avg/debias2).sqrt() + eps)
     else: p.data.add_(-lr / debias1, grad_avg)
     return p
 
-radam_step._defaults = dict(eps=1e-5)
+radam_step._defaults = dict(eps=1e-5, var_thresh=4)
 
 #Cell
-def RAdam(params, lr, mom=0.9, sqr_mom=0.99, eps=1e-5, wd=0., decouple_wd=True):
+def RAdam(params, lr, mom=0.9, sqr_mom=0.99, eps=1e-5, wd=0., decouple_wd=True, var_thresh=4):
     "A `Optimizer` for Adam with `lr`, `mom`, `sqr_mom`, `eps` and `params`"
     steppers = [weight_decay] if decouple_wd else [l2_reg]
     steppers.append(radam_step)
     stats = [partial(average_grad, dampening=True), average_sqr_grad, step_stat]
-    return Optimizer(params, steppers, stats=stats, lr=lr, mom=mom, sqr_mom=sqr_mom, eps=eps, wd=wd)
+    return Optimizer(params, steppers, stats=stats, lr=lr, mom=mom, sqr_mom=sqr_mom, eps=eps, wd=wd, var_thresh=var_thresh)
 
 #Cell
 def qhadam_step(p, lr, mom, sqr_mom, sqr_avg, nu_1, nu_2, step, grad_avg, eps, **kwargs):
