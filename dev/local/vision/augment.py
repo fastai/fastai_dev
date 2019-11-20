@@ -187,17 +187,20 @@ class Resize(CropPad):
 #Cell
 class RandomResizedCrop(CropPad):
     "Picks a random scaled crop of an image and resize it to `size`"
-    def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), resamples=(Image.BILINEAR, Image.NEAREST), valid_scale=1., **kwargs):
+    def __init__(self, size, min_scale=0.08, ratio=(3/4, 4/3), resamples=(Image.BILINEAR, Image.NEAREST), val_xtra_size=32, **kwargs):
         super().__init__(size, **kwargs)
-        store_attr(self, 'min_scale,ratio,valid_scale')
+        store_attr(self, 'min_scale,ratio,val_xtra_size')
         self.mode,self.mode_mask = resamples
 
     def before_call(self, b, split_idx):
         super().before_call(b, split_idx)
+        if split_idx:
+            self.final_size = (self.size[0]+self.val_xtra_size, self.size[1]+self.val_xtra_size)
+            self.tl,self.cp_size = (0,0),self.orig_sz
+            return
         self.final_size = self.size
         w,h = self.orig_sz
         for attempt in range(10):
-            if split_idx: break
             area = random.uniform(self.min_scale,1.) * w * h
             ratio = math.exp(random.uniform(math.log(self.ratio[0]), math.log(self.ratio[1])))
             nw = int(round(math.sqrt(area * ratio)))
@@ -209,8 +212,13 @@ class RandomResizedCrop(CropPad):
         if   w/h < self.ratio[0]: self.cp_size = (w, int(w/self.ratio[0]))
         elif w/h > self.ratio[1]: self.cp_size = (int(h*self.ratio[1]), h)
         else:                     self.cp_size = (w, h)
-        if split_idx: self.cp_size = (self.cp_size[0]*self.valid_scale, self.cp_size[1]*self.valid_scale)
         self.tl = ((w-self.cp_size[0])//2, (h-self.cp_size[1])//2)
+
+    def encodes(self, x:(Image.Image,TensorBBox,TensorPoint)):
+        res = x.crop_pad(self.cp_size, self.tl, orig_sz=self.orig_sz, pad_mode=self.pad_mode,
+            resize_mode=self.mode_mask if isinstance(x,PILMask) else self.mode, resize_to=self.final_size)
+        if self.final_size != self.size: res = res.crop_pad(self.size) #Validation set: one final center crop
+        return res
 
 #Cell
 def _init_mat(x):
