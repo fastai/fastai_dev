@@ -54,7 +54,8 @@ class DataBlock():
         self.default_type_tfms = blocks.attrgot('type_tfms', L())
         self.default_item_tfms  = _merge_tfms(*blocks.attrgot('item_tfms',  L()))
         self.default_batch_tfms = _merge_tfms(*blocks.attrgot('batch_tfms', L()))
-        for t in blocks: self.dl_type = getattr(t, 'dl_type', self.dl_type)
+        for t in blocks:
+            if getattr(t, 'dl_type', None) is not None: self.dl_type = t.dl_type
         if dl_type is not None: self.dl_type = dl_type
         self.databunch = delegates(self.dl_type.__init__)(self.databunch)
         self.dbunch_kwargs = merge(*blocks.attrgot('dbunch_kwargs', {}))
