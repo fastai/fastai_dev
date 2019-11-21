@@ -607,6 +607,7 @@
   "cnn_learner": "21_vision_learner.ipynb",
   "unet_config": "21_vision_learner.ipynb",
   "unet_learner": "21_vision_learner.ipynb",
+  "show_results": "21_vision_learner.ipynb",
   "spec_add_spaces": "30_text_core.ipynb",
   "rm_useless_spaces": "30_text_core.ipynb",
   "replace_rep": "30_text_core.ipynb",
