@@ -2,7 +2,7 @@
 
 from setuptools import setup,find_packages
 
-exec(open('dev/local/version.py').read())
+exec(open('dev/fastai2/version.py').read())
 with open('README.md') as readme_file: readme = readme_file.read()
 
 requirements = """
