@@ -33,7 +33,6 @@ class ProgressCallback(Callback):
 
     def _launch_pbar(self):
         self.pbar = progress_bar(self.dl, parent=getattr(self, 'mbar', None), leave=False)
-        if self.pbar.parent is None: self.pbar.on_iter_begin()
         self.pbar.update(0)
 
     def after_fit(self):

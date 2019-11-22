@@ -312,7 +312,6 @@ class Learner():
     def predict(self, item, rm_type_tfms=0):
         dl = test_dl(self.dbunch, [item], rm_type_tfms=rm_type_tfms)
         inp,preds,_,dec_preds = self.get_preds(dl=dl, with_input=True, with_decoded=True)
-        #dec_preds = getattr(self.loss_func, 'decodes', noop)(preds)
         i = getattr(self.dbunch, 'n_inp', -1)
         full_dec = self.dbunch.decode_batch((*tuplify(inp),*tuplify(dec_preds)))[0][i:]
         return detuplify(full_dec),dec_preds[0],preds[0]
