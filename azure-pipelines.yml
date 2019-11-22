@@ -42,6 +42,7 @@ jobs:
     # Install nbformat
   - script: |
       pip install nbformat ipykernel notebook matplotlib pandas requests pyyaml fastprogress pillow scipy numpy typeguard
+    pip install git+https://github.com/fastai/nbdev.git
     displayName: 'Install nbformat'
     continueOnError: false
     
