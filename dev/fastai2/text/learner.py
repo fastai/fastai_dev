@@ -117,7 +117,7 @@ def text_classifier_learner(dbunch, arch, vocab, bptt=72, config=None, pretraine
     return learn
 
 #Cell
-#from local.text.data import _get_empty_df
+#from fastai2.text.data import _get_empty_df
 from ..core.utils import get_empty_df
 
 @typedispatch
