@@ -25,7 +25,7 @@ pip install pydicom kornia opencv-python
 To run the tests in parallel, do something like this:
 
 ```bash
-for i in {0,1,2}*.ipynb; do sleep 1; python run_notebook.py --fn $i & done
+tools/test_nbs
 ```
 
 ## Contributing
