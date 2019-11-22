@@ -67,7 +67,7 @@ jobs:
   - script: |
       echo "Diff nbs/module"
       pushd dev
-      if [ -n "$(python diff_nb_script.py)" ]; then echo -e "!!! Diff between nbs and scripts\n!!!Remember to run notebook2script.py or script2notebook.py"; false; fi
+      if [ -n "$(tools/diff_nb_script)" ]; then echo -e "!!! Diff between nbs and scripts\n!!!Remember to run notebook2script.py or script2notebook.py"; false; fi
     displayName: 'Detect diff module/nbs'
     failOnStderr: true
     continueOnError: false
