@@ -24,27 +24,11 @@ public protocol LearningPhaseDependent: FALayer {
 }
 
 extension LearningPhaseDependent {
-    // This `@differentiable` attribute is necessary, to tell the compiler that this satisfies the FALayer
-    // protocol requirement, even though there is a `@differentiating(forward)` method below.
-    // TODO: It seems nondeterministically necessary. Some subsequent notebooks import this successfully without it,
-    // some require it. Investigate.
     @differentiable
     public func forward(_ input: Input) -> Output {
         switch Context.local.learningPhase {
         case .training:  return forwardTraining(input)
         case .inference: return forwardInference(input)
-        }
-    }
-
-    @differentiating(forward)
-    func gradForward(_ input: Input) ->
-        (value: Output, pullback: (Self.Output.TangentVector) ->
-            (Self.TangentVector, Self.Input.TangentVector)) {
-        switch Context.local.learningPhase {
-        case .training:
-            return valueWithPullback(at: input) { $0.forwardTraining ($1) }
-        case .inference:
-            return valueWithPullback(at: input) { $0.forwardInference($1) }
         }
     }
 }
