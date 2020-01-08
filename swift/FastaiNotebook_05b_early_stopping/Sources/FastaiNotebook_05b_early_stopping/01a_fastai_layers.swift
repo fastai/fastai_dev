@@ -45,19 +45,14 @@ public protocol FALayer: Layer {
 }
 
 public extension FALayer {
-    @differentiable(vjp: callGrad)
+    @differentiable
     @differentiable(wrt: (self))
     func callAsFunction(_ input: Input) -> Output {
         let activation = forward(input)
         for d in delegates { d(activation) }
         return activation
     }
-       
-    func callGrad(_ input: Input) ->
-        (Output, (Self.Output.TangentVector) -> (Self.TangentVector, Self.Input.TangentVector)) {
-        return Swift.valueWithPullback(at: self, input) { (m, i) in m.forward(i) }
-    }
-    
+
     mutating func addDelegate(_ d: @escaping (Output) -> ()) { delegates.append(d) }
 }
 
