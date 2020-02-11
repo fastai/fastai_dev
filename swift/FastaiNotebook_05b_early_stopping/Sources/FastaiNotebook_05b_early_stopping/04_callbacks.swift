@@ -95,7 +95,7 @@ public final class Learner<Label: TensorGroup,
     /// A wrapper class to hold the loss function, to work around
     // https://forums.fast.ai/t/fix-ad-crash-in-learner/42970.
     public final class LossFunction {
-        public typealias F = @differentiable (Model.Output, @nondiff Label) -> Loss
+        public typealias F = @differentiable (Model.Output, @noDerivative Label) -> Loss
         public var f: F
         init(_ f: @escaping F) { self.f = f }
     }
@@ -159,7 +159,7 @@ extension Learner {
     
     private func train(onBatch batch: DataBatch<Input, Label>) throws {
         let (xb,yb) = (currentInput!,currentTarget!) //We still have to force-unwrap those for AD...
-        (currentLoss, currentGradient) = model.valueWithGradient { model -> Loss in 
+        (currentLoss, currentGradient) = valueWithGradient(at: model) { model -> Loss in
             let y = model(xb)                                      
             self.currentOutput = y
             return self.lossFunc.f(y, yb)
