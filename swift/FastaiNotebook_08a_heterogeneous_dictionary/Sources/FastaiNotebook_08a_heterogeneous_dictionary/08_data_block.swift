@@ -223,7 +223,7 @@ public func intsToTensor(_ items: [Int32]) -> Tensor<Int32> { return Tensor<Int3
 
 public func transformData<I,TI,L>(
     _ data: DataBunch<LabeledElement<I,L>>, 
-    nWorkers:Int=4,
+    nWorkers:Int=1,
     tfmItem: (I) -> TI
 ) -> DataBunch<DataBatch<TI,L>> 
 where I: TensorGroup, TI: TensorGroup & Differentiable, L: TensorGroup{
@@ -239,7 +239,7 @@ public func openAndResize(fname: StringTensor, size: Int) -> TF{
     let resizedImg = Tensor<Float>(_Raw.resizeBilinear(
         images: Tensor<UInt8>([decodedImg]), 
         size: Tensor<Int32>([Int32(size), Int32(size)]))) / 255.0
-    return resizedImg.reshaped(to: TensorShape(size, size, 3))
+    return resizedImg[0]
 }
 
 public extension FADataset {
