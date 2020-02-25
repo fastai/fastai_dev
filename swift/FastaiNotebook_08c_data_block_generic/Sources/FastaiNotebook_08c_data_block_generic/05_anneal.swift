@@ -9,7 +9,11 @@ file to edit: 05_anneal.ipynb
 import Path
 import TensorFlow
 
-import Python
+#if canImport(PythonKit)
+    import PythonKit
+#else
+    import Python
+#endif
 public let np = Python.import("numpy")
 public let plt = Python.import("matplotlib.pyplot")
 

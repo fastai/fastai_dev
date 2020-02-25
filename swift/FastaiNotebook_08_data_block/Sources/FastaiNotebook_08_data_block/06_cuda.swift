@@ -8,7 +8,11 @@ file to edit: 06_cuda.ipynb
 
 import Path
 import TensorFlow
-import Python
+#if canImport(PythonKit)
+    import PythonKit
+#else
+    import Python
+#endif
 
 extension Learner {
     public class AddChannel: Delegate {

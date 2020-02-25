@@ -8,7 +8,11 @@ file to edit: 07_batchnorm.ipynb
 
 import Path
 import TensorFlow
-import Python
+#if canImport(PythonKit)
+    import PythonKit
+#else
+    import Python
+#endif
 
 public class Reference<T> {
     public var value: T
