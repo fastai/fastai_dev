@@ -8,7 +8,11 @@ file to edit: 05b_early_stopping.ipynb
 
 import Path
 import TensorFlow
-import Python
+#if canImport(PythonKit)
+    import PythonKit
+#else
+    import Python
+#endif
 
 //TODO: when recorder can be accessed as a property, remove it from the return
 extension Learner where Opt.Scalar: PythonConvertible {

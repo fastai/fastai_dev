@@ -8,7 +8,11 @@ file to edit: 08c_data_block_generic.ipynb
 
 import Path
 import TensorFlow
-import Python
+#if canImport(PythonKit)
+    import PythonKit
+#else
+    import Python
+#endif
 
 public let dataPath = Path.home/".fastai"/"data"
 

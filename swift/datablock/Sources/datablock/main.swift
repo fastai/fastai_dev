@@ -1,6 +1,10 @@
 import Path
 import TensorFlow
-import Python
+#if canImport(PythonKit)
+    import PythonKit
+#else
+    import Python
+#endif
 import FastaiNotebook_08c_data_block_generic
 import SwiftCV
 SetNumThreads(0)
