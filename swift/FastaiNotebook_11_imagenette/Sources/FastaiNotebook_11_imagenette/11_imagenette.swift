@@ -28,32 +28,6 @@ public struct ConvLayer: Layer {
     }
 }
 
-//A layer that you can switch off to do the identity instead
-public protocol SwitchableLayer: Layer {
-    associatedtype Input
-    var isOn: Bool { get set }
-    
-    @differentiable func forward(_ input: Input) -> Input
-}
-
-public extension SwitchableLayer {
-    func callAsFunction(_ input: Input) -> Input {
-        return isOn ? forward(input) : input
-    }
-
-    @differentiating(callAsFunction)
-    func gradForward(_ input: Input) ->
-           (value: Input,
-            pullback: (Self.Input.TangentVector) ->
-                                  (Self.TangentVector, Self.Input.TangentVector)) {
-        if isOn {
-            return valueWithPullback(at: input) { $0.forward($1) } 
-        } else {
-            return (input, { (Self.TangentVector.zero, $0) }) 
-        }
-    }
-}
-
 public struct MaybeAvgPool2D: ParameterlessLayer {
     @noDerivative let poolSize: (Int, Int, Int, Int)
     @noDerivative let strides: (Int, Int, Int, Int)
