@@ -118,6 +118,14 @@ extension StatefulOptimizer: Optimizer{
             for i in hpGroups.indices {self.hpGroups[i][HyperParams.lr] = newValue[i] } 
         }
     }
+    
+    public required init(copying other: StatefulOptimizer, to device: Device) {
+        hpGroups = other.hpGroups
+        splitDict = other.splitDict
+        states = other.states //TODO, actually copy to device
+        stats = other.stats
+        steppers = other.steppers
+    }
 }
 
 extension StatefulOptimizer{
