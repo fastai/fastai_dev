@@ -57,7 +57,7 @@ public func initializeState<Model: Layer>(for model: Model, names: [String])
         keys: model.differentiableVectorView.keyPaths)
 }
 
-public class StatefulOptimizer<Model: Layer> {
+public class StatefulOptimizer<Model: Layer>: Optimizer {
     public typealias ModelKeyPath = WritableKeyPath<Model.TangentVector, TF>
     public typealias SplitDict = [ModelKeyPath: Int]
     public var hpGroups: [[String:Float]]
@@ -102,9 +102,8 @@ public class StatefulOptimizer<Model: Layer> {
         }
         model.move(along: params-model.differentiableVectorView)
     }
-}
-
-extension StatefulOptimizer: Optimizer{
+    
+    //OPtimizer conformace can't be in a separate extension cause... Idk
     public var learningRate: Float {
         get { return hpGroups.last![HyperParams.lr]! } 
         set { 
