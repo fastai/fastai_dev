@@ -29,6 +29,9 @@ public struct ConvLayer: Layer {
 }
 
 public struct MaybeAvgPool2D: ParameterlessLayer {
+    // swift-apis#1037 workaround.
+    public typealias TangentVector = EmptyTangentVector
+
     @noDerivative let poolSize: (Int, Int, Int, Int)
     @noDerivative let strides: (Int, Int, Int, Int)
     @noDerivative let padding: Padding
