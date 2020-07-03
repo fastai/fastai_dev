@@ -223,8 +223,8 @@ public extension FAConv2D {
 
 @frozen
 public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer,ParameterlessLayer {
+    // swift-apis#1037 workaround.
     public typealias TangentVector = EmptyTangentVector
-
     // TF-603 workaround.
     public typealias Input = Tensor<Scalar>
     public typealias Output = Tensor<Scalar>
@@ -265,8 +265,8 @@ public struct FAAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer,Parameterles
 
 @frozen
 public struct FAGlobalAvgPool2D<Scalar: TensorFlowFloatingPoint>: FALayer,ParameterlessLayer {
+    // swift-apis#1037 workaround.
     public typealias TangentVector = EmptyTangentVector
-
     // TF-603 workaround.
     public typealias Input = Tensor<Scalar>
     public typealias Output = Tensor<Scalar>
